@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -44,32 +45,7 @@ namespace Models.PMF.SimplePlantModels
 
         ///<summary></summary> 
         [JsonIgnore] public string[] ParamName { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] ParamUnit { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Maize { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Apple { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] RyeGrass { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Clover { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Wheat { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Hemp { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] OSR { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Grapevine { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Macadamia{ get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Lemons { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Avocado { get; set; }
-        ///<summary></summary> 
-        [JsonIgnore] public string[] Description { get; set; }
+      
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> Current { get; set; }
 
@@ -80,9 +56,6 @@ namespace Models.PMF.SimplePlantModels
 
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
-
-        //[Link(Type = LinkType.Scoped, ByName = true)]
-        //private Weather weather = null;
 
         [Link(Type = LinkType.Scoped)]
         private Soil soil = null;
@@ -102,44 +75,21 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar derochild = null;
 
+        private string fullFileName = null;
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        private Dictionary<string, string> getCurrentParams(DataTable tab, string cropName)
-        {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-            for (int i = 0; i < tab.Rows.Count; i++)
-            {
-                ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
-            }
-            return ret;
-        }
 
         private void setCropCoefficients()
         {
             Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
-            string fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
+            fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
 
             ApsimTextFile textFile = new ApsimTextFile();
             textFile.Open(fullFileName);
             CropCoeffs = textFile.ToTable();
             textFile.Close();
 
-            ParamName = repack(CropCoeffs, 0);
-            ParamUnit = repack(CropCoeffs, 1);
-            Description = repack(CropCoeffs, 2);
-            Maize = repack(CropCoeffs, 3);
-            Apple = repack(CropCoeffs, 4);
-            RyeGrass = repack(CropCoeffs, 5);
-            Clover = repack(CropCoeffs, 6);
-            Wheat = repack(CropCoeffs, 7);
-            Hemp = repack(CropCoeffs, 8);
-            OSR = repack(CropCoeffs, 9);
-            Grapevine = repack(CropCoeffs, 10);
-            Macadamia = repack(CropCoeffs, 11);
-            Lemons = repack(CropCoeffs, 12);
-            Avocado = repack(CropCoeffs, 13);
-            Current = getCurrentParams(CropCoeffs, CropName);
+            //Current = getCurrentParams(CropCoeffs, CropName);
         }
 
         private string[] repack(DataTable tab, int colIndex)
@@ -152,63 +102,119 @@ namespace Models.PMF.SimplePlantModels
             return ret;
         }
 
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
+        /// <summary>Gets or sets the table of values.</summary>
         [JsonIgnore]
         public List<GridTable> Tables
         {
             get
             {
-                setCropCoefficients();
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                int i = 0;
-                foreach (DataColumn col in CropCoeffs.Columns)
+                List<GridTable> tables = new List<GridTable>
                 {
-                    string[] newCol = repack(CropCoeffs, i);
-                    columns.Add(new GridTableColumn(col.ColumnName, new VariableProperty(this, GetType().GetProperty(col.ColumnName))));
-                }
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
+                    new GridTable("", new List<GridTableColumn>(), this)
+                };
                 return tables;
             }
         }
 
         /// <summary>
-        /// Renames column headers for display
+        /// Reads in the csv data and sends it as a datatable to the grid
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
-            dt.Columns["ParamName"].ColumnName = "Param Name";
-            dt.Columns["ParamUnit"].ColumnName = "Units";
-            dt.Columns["Description"].ColumnName = "Description";
-            dt.Columns["Maize"].ColumnName = "Maize";
-            dt.Columns["Apple"].ColumnName = "Apple";
-            return dt;
+            try
+            {
+                Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
+                fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
+                ApsimTextFile textFile = new ApsimTextFile();
+                textFile.Open(fullFileName);
+                CropCoeffs = textFile.ToTable();
+                textFile.Close();
+            }
+            catch
+            {
+                CropCoeffs = new DataTable();
+            }
+            return CropCoeffs;
         }
 
         /// <summary>
-        /// Renames the columns back to model property names
+        /// Writes out changes from the grid to the csv file
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            dt.Columns["Param Name"].ColumnName = "ParamName";
-            dt.Columns["Units"].ColumnName = "ParamUnit";
-            dt.Columns["Description"].ColumnName = "Description";
-            dt.Columns["Maize"].ColumnName = "Maize";
-            dt.Columns["Apple"].ColumnName = "Apple";
-            return dt;
+            saveToCSV(fullFileName, dt);
+            
+            return new DataTable();
         }
 
-        private string clean(string dirty)
+        /// <summary>
+        /// Writes the data from the grid to the csv file
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="dt"></param>
+        /// <exception cref="Exception"></exception>
+        private void saveToCSV(string filepath, DataTable dt)
         {
-            string ret = dirty.Replace("(", "").Replace(")", "");
-            Regex sWhitespace = new Regex(@"\s+");
-            return sWhitespace.Replace(ret, ",");
+            try
+            {
+                string contents = "";
+
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    if (!Convert.IsDBNull(dt.Columns[i].ColumnName))
+                    {
+                        contents += dt.Columns[i].ColumnName.ToString();
+                    }
+                    if (i < dt.Columns.Count - 1)
+                    {
+                        contents += ",";
+                    }
+                }
+                contents += "\n";
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        if (!Convert.IsDBNull(dr[i]))
+                        {
+                            contents += dr[i].ToString();
+                        }
+                        if (i < dt.Columns.Count - 1)
+                        {
+                            contents += ",";
+                        }
+                    }
+                    contents += "\n";
+                }
+
+                StreamWriter s = new StreamWriter(filepath, false);
+                s.Write(contents);
+                s.Close();
+            }
+            catch
+            {
+                throw new Exception("Error Writing File");
+            }
         }
+
+        /// <summary>
+        /// Gets the parameter set from the CoeffientFil for the CropName specified and returns in a dictionary maped to paramter names.
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="cropName"></param>
+        /// <returns></returns>
+        private Dictionary<string, string> getCurrentParams(DataTable tab, string cropName)
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            for (int i = 0; i < tab.Rows.Count; i++)
+            {
+                //ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
+                ret.Add("test", tab.Rows[i][cropName].ToString());
+            }
+            return ret;
+        }
+
         ////// This secton contains the components take the coeffcient values and write them into the DEROPAPY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// instance to give a model parameterised with the values in the grid for the current simulation   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -217,7 +223,8 @@ namespace Models.PMF.SimplePlantModels
         {
             if (!deropapy.IsAlive)
             {
-                setCropCoefficients();
+                Current = getCurrentParams(CropCoeffs, CropName);
+                //setCropCoefficients();
                 Establish();
             }
         }
@@ -351,6 +358,17 @@ namespace Models.PMF.SimplePlantModels
             return deroValues;
         }
 
+        /// <summary>
+        /// Helper method that takes data from cs and gets into format needed to be a for Cultivar overwrite
+        /// </summary>
+        /// <param name="dirty"></param>
+        /// <returns></returns>
+        private string clean(string dirty)
+        {
+            string ret = dirty.Replace("(", "").Replace(")", "");
+            Regex sWhitespace = new Regex(@"\s+");
+            return sWhitespace.Replace(ret, ",");
+        }
         /// <summary>
         /// Base dictionary with DEROPAPY parameters and the locations they map to in the DEROPAPY.json model.
         /// </summary>
