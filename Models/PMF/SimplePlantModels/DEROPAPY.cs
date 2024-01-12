@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -32,6 +33,7 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
+        [Display(Type = DisplayType.FileName)]
         public string CoeffientFile { get; set; }
 
         /// <summary>Establishemnt Date</summary>
@@ -100,6 +102,18 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar derochild = null;
 
+        ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        private Dictionary<string, string> getCurrentParams(DataTable tab, string cropName)
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            for (int i = 0; i < tab.Rows.Count; i++)
+            {
+                ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
+            }
+            return ret;
+        }
 
         private void setCropCoefficients()
         {
@@ -128,17 +142,6 @@ namespace Models.PMF.SimplePlantModels
             Current = getCurrentParams(CropCoeffs, CropName);
         }
 
-        private Dictionary<string, string> getCurrentParams(DataTable tab, string cropName)
-        {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-            for (int i = 0; i < tab.Rows.Count; i++)
-            {
-                ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
-            }
-            return ret;
-        }
-
-
         private string[] repack(DataTable tab, int colIndex)
         {
             string[] ret = new string[tab.Rows.Count];
@@ -148,7 +151,6 @@ namespace Models.PMF.SimplePlantModels
             }
             return ret;
         }
-
 
         /// <summary>
         /// Gets or sets the table of values.
@@ -201,6 +203,15 @@ namespace Models.PMF.SimplePlantModels
             return dt;
         }
 
+        private string clean(string dirty)
+        {
+            string ret = dirty.Replace("(", "").Replace(")", "");
+            Regex sWhitespace = new Regex(@"\s+");
+            return sWhitespace.Replace(ret, ",");
+        }
+        ////// This secton contains the components take the coeffcient values and write them into the DEROPAPY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ////// instance to give a model parameterised with the values in the grid for the current simulation   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
@@ -210,9 +221,6 @@ namespace Models.PMF.SimplePlantModels
                 Establish();
             }
         }
-
-        //private bool RootThyNeighbour = false;
-        //private double AgeAtSimulationStart = 1.0;
         
         /// <summary> Method that sets DEROPAPY running</summary>
         public void Establish()
@@ -282,18 +290,13 @@ namespace Models.PMF.SimplePlantModels
                 , MessageType.Information);
         }
 
-
-        private string clean(string dirty)
-        {
-            string ret = dirty.Replace("(", "").Replace(")", "");
-            Regex sWhitespace = new Regex(@"\s+");
-            return sWhitespace.Replace(ret,",");
-        }
-
-
         /// <summary>
-        /// Data structure that holds DEROPAPY parameter names and the cultivar overwrite they map to
+        /// Data structure that appends a parameter value to each address in the base deroParams dictionary 
+        /// then writes them into a commands property in a Cultivar object.
         /// </summary>
+        /// <returns>a Cultivar object with the overwrites set for the CropName selected using the parameters displayed 
+        /// in the grid view that come from the CoeffientFile selected 
+        /// </returns>
         public Cultivar coeffCalc()
         {
             Dictionary<string, string> thisDero = new Dictionary<string, string>(deroParams);
@@ -348,6 +351,9 @@ namespace Models.PMF.SimplePlantModels
             return deroValues;
         }
 
+        /// <summary>
+        /// Base dictionary with DEROPAPY parameters and the locations they map to in the DEROPAPY.json model.
+        /// </summary>
         [JsonIgnore]
         private Dictionary<string, string> deroParams = new Dictionary<string, string>()
         {
