@@ -312,10 +312,10 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.CSVCrops:
                     DisplayMethod = PropertyType.DropDown;
-                    PropertyInfo coeffsPropInfo = model.GetType().GetProperty("CropCoeffs");
-                    DataTable coeffs = coeffsPropInfo?.GetValue(model) as DataTable;
-                    if (coeffs != null)
-                        DropDownOptions = coeffs.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
+                    PropertyInfo namesPropInfo = model.GetType().GetProperty("CropNames");
+                    string[] names = namesPropInfo?.GetValue(model) as string[] ;
+                    if (names != null)
+                        DropDownOptions = names;
                     break;
                 case DisplayType.CropPhaseName:
                     DisplayMethod = PropertyType.DropDown;

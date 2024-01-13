@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -38,7 +39,7 @@ namespace Models.PMF.SimplePlantModels
         public string CoeffientFile
         {
             get { return coefficientFile; }
-            set { coefficientFile = value; readCSVtoDataTable(); }
+            set { coefficientFile = value; readCSVandUpdateProperties(); }
         }
         private string coefficientFile = null;
         
@@ -49,13 +50,13 @@ namespace Models.PMF.SimplePlantModels
         [Display(Type = DisplayType.CSVCrops)]
         public string CurrentCropName { get; set; }
 
-        /// <summary>
-        /// The DataTable holding the data from the CoefficientFile
-        /// </summary>
-        public DataTable CropCoeffs { get; set; }
-
         ///<summary></summary> 
         [JsonIgnore] public string[] ParamName { get; set; }
+
+        /// <summary>
+        /// List of crops specified in the CoefficientFile
+        /// </summary>
+        [JsonIgnore] public string[] CropNames { get; set; }
       
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
@@ -89,15 +90,21 @@ namespace Models.PMF.SimplePlantModels
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        private void readCSVtoDataTable()
+        private DataTable readCSVandUpdateProperties()
         {
             //Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
             //fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
             fullFileName = "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\" + CoeffientFile;
-            ApsimTextFile textFile = new ApsimTextFile();
-            textFile.Open(fullFileName);
-            CropCoeffs = textFile.ToTable();
-            textFile.Close();
+            DataTable readData = new DataTable();
+            readData =  ApsimTextFile.ToTable(fullFileName);
+            if (readData.Rows.Count == 0)
+                throw new Exception("Failed to read any rows of data from " + fullFileName);
+            if (CurrentCropName != null)
+            {
+                CurrentCropParams = getCurrentParams(readData, CurrentCropName);
+            }
+            CropNames = readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
+            return readData;
         }
         
         /// <summary>Gets or sets the table of values.</summary>
@@ -119,15 +126,16 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
+            DataTable dt2 = new DataTable();
             try
             {
-                readCSVtoDataTable();
+                dt2 = readCSVandUpdateProperties();
             }
             catch
             {
-                CropCoeffs = new DataTable();
+                dt2 = new DataTable();
             }
-            return CropCoeffs;
+            return dt2;
         }
 
         /// <summary>
@@ -215,8 +223,7 @@ namespace Models.PMF.SimplePlantModels
         {
             if (!deropapy.IsAlive)
             {
-                readCSVtoDataTable();
-                CurrentCropParams = getCurrentParams(CropCoeffs, CurrentCropName);
+                readCSVandUpdateProperties();
                 Establish();
             }
         }
