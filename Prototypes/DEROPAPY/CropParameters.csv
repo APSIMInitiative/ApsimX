@@ -1,5 +1,5 @@
 ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover,Wheat,Hemp,OSR,Grapevine,Macadamia,Lemons,Avocado
-CropType,string,type of crop used for organic matter residues types,Wheat,Grapevine,pasture,whiteclover,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine
+CropType,string,type of crop used for organic matter residues types,Maize,Grapevine,pasture,whiteclover,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
 D_StartGrowth_00,DAWS,Earliest"" day after winter solstice when sowing/end-dorm is resumed every year,72,102,0,0,74,74,74,102,102,102,102

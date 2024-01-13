@@ -35,22 +35,32 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
-        public string CoeffientFile { get; set; }
+        public string CoeffientFile
+        {
+            get { return coefficientFile; }
+            set { coefficientFile = value; readCSVtoDataTable(); }
+        }
+        private string coefficientFile = null;
+        
+        /// <summary>
+        /// The Name of the crop from the CSV table to be grown in this simulation
+        /// </summary>
+        [Description("The Name of the crop from the CSV table to be grown in this simulation")]
+        [Display(Type = DisplayType.CSVCrops)]
+        public string CurrentCropName { get; set; }
 
-        /// <summary>Establishemnt Date</summary>
-        [Description("Name of the crop to in simulation")]
-        public string CropName { get; set; }
-
-        [JsonIgnore] private DataTable CropCoeffs { get; set; }
+        /// <summary>
+        /// The DataTable holding the data from the CoefficientFile
+        /// </summary>
+        public DataTable CropCoeffs { get; set; }
 
         ///<summary></summary> 
         [JsonIgnore] public string[] ParamName { get; set; }
       
         ///<summary></summary> 
-        [JsonIgnore] public Dictionary<string, string> Current { get; set; }
+        [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
-
-        /// <summary>The plant</summary>
+         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
 
@@ -79,29 +89,17 @@ namespace Models.PMF.SimplePlantModels
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        private void setCropCoefficients()
+        private void readCSVtoDataTable()
         {
-            Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
-            fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
-
+            //Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
+            //fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
+            fullFileName = "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\" + CoeffientFile;
             ApsimTextFile textFile = new ApsimTextFile();
             textFile.Open(fullFileName);
             CropCoeffs = textFile.ToTable();
             textFile.Close();
-
-            //Current = getCurrentParams(CropCoeffs, CropName);
         }
-
-        private string[] repack(DataTable tab, int colIndex)
-        {
-            string[] ret = new string[tab.Rows.Count];
-            for (int i = 0; i < tab.Rows.Count; i++)
-            {
-                ret[i] = tab.Rows[i][colIndex].ToString();
-            }
-            return ret;
-        }
-
+        
         /// <summary>Gets or sets the table of values.</summary>
         [JsonIgnore]
         public List<GridTable> Tables
@@ -123,12 +121,7 @@ namespace Models.PMF.SimplePlantModels
         {
             try
             {
-                Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
-                fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
-                ApsimTextFile textFile = new ApsimTextFile();
-                textFile.Open(fullFileName);
-                CropCoeffs = textFile.ToTable();
-                textFile.Close();
+                readCSVtoDataTable();
             }
             catch
             {
@@ -199,7 +192,7 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>
-        /// Gets the parameter set from the CoeffientFil for the CropName specified and returns in a dictionary maped to paramter names.
+        /// Gets the parameter set from the CoeffientFile for the CropName specified and returns in a dictionary maped to paramter names.
         /// </summary>
         /// <param name="tab"></param>
         /// <param name="cropName"></param>
@@ -209,8 +202,7 @@ namespace Models.PMF.SimplePlantModels
             Dictionary<string, string> ret = new Dictionary<string, string>();
             for (int i = 0; i < tab.Rows.Count; i++)
             {
-                //ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
-                ret.Add("test", tab.Rows[i][cropName].ToString());
+                ret.Add(tab.Rows[i]["ParamName"].ToString(), tab.Rows[i][cropName].ToString());
             }
             return ret;
         }
@@ -223,8 +215,8 @@ namespace Models.PMF.SimplePlantModels
         {
             if (!deropapy.IsAlive)
             {
-                Current = getCurrentParams(CropCoeffs, CropName);
-                //setCropCoefficients();
+                readCSVtoDataTable();
+                CurrentCropParams = getCurrentParams(CropCoeffs, CurrentCropName);
                 Establish();
             }
         }
@@ -250,9 +242,9 @@ namespace Models.PMF.SimplePlantModels
                     break;
             }
 
-            double rootDepth = Math.Min(Double.Parse(Current["MaxRootDepth"]), soilDepthMax);
+            double rootDepth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]), soilDepthMax);
 
-            bool RootThyNeighbour = bool.Parse(Current["RootTheNeighboursZone"]);
+            bool RootThyNeighbour = bool.Parse(CurrentCropParams["RootTheNeighboursZone"]);
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
@@ -282,9 +274,9 @@ namespace Models.PMF.SimplePlantModels
                 }
             }
 
-            double AgeAtSimulationStart = Double.Parse(Current["AgeAtStartSimulation"]);
+            double AgeAtSimulationStart = Double.Parse(CurrentCropParams["AgeAtStartSimulation"]);
             string cropName = this.Name;
-            double depth = Math.Min(Double.Parse(Current["MaxRootDepth"]) * AgeAtSimulationStart / Double.Parse(Current["AgeToMaxDimension"]), rootDepth);
+            double depth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]) * AgeAtSimulationStart / Double.Parse(CurrentCropParams["AgeToMaxDimension"]), rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -308,49 +300,49 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> thisDero = new Dictionary<string, string>(deroParams);
 
-            thisDero["CropType"] += clean(Current["CropType"]);
-            thisDero["TT_Temp_X"] += clean(Current["TT_Temp_X"]);
-            thisDero["TT_Acc_Y"] += clean(Current["TT_Acc_Y"]);
-            thisDero["D_StartGrowth_00"] += clean(Current["D_StartGrowth_00"]);
-            thisDero["T_StartGrowth_00"] += clean(Current["T_StartGrowth_00"]);
-            thisDero["Tt_Vegetative_01"] += clean(Current["Tt_Vegetative_01"]);
-            thisDero["DefoliateOrDevelop"] += clean(Current["DefoliateOrDevelop"]);
-            thisDero["Pp_Reproductive_02"] += clean(Current["Pp_Reproductive_02"]);
-            thisDero["Tt_Reproductive_02"] += clean(Current["Tt_Reproductive_02"]);
-            thisDero["Tt_Senescent_03"] += clean(Current["Tt_Senescent_03"]);
-            thisDero["Tt_Mature_04"] += clean(Current["Tt_Mature_04"]);
-            thisDero["EndOrHarvest"] += clean(Current["EndOrHarvest"]);
-            thisDero["Chill_Temp_X"] += clean(Current["Chill_Temp_X"]);
-            thisDero["Chill_Acc_Y"] += clean(Current["Chill_Acc_Y"]);
-            thisDero["AC_Dormant_05"] += clean(Current["AC_Dormant_05"]);
-            thisDero["Tt_Dormant_05"] += clean(Current["Tt_Dormant_05"]);
-            thisDero["MaxCanopyBaseHeight"] += clean(Current["MaxCanopyBaseHeight"]);
-            thisDero["MaxCanopyPrunedHeight"] += clean(Current["MaxCanopyPrunedHeight"]);
-            thisDero["MaxCanopyHeight"] += clean(Current["MaxCanopyHeight"]);
-            thisDero["MaxCanopyPrunedWidth"] += clean(Current["MaxCanopyPrunedWidth"]);
-            thisDero["MaxCanopyWidth"] += clean(Current["MaxCanopyWidth"]);
-            thisDero["AgeToMaxDimension"] += clean(Current["AgeToMaxDimension"]);
-            thisDero["SeasonalDimensionPattern"] += clean(Current["SeasonalDimensionPattern"]);
-            thisDero["LAImax"] += clean(Current["LAImax"]);
-            thisDero["ExtCoeff"] += clean(Current["ExtCoeff"]);
-            thisDero["LAIWaterStressSens"] += clean(Current["LAIWaterStressSens"]);
-            thisDero["ExtCoeffWaterStressSens"] += clean(Current["ExtCoeffWaterStressSens"]);
-            thisDero["RUEtotal"] += clean(Current["RUEtotal"]);
-            thisDero["RUETempThresholds"] += clean(Current["RUETempThresholds"]);
-            thisDero["PhotosynthesisType"] += clean(Current["PhotosynthesisType"]);
-            thisDero["LeafPartitionFrac"] += clean(Current["LeafPartitionFrac"]);
-            thisDero["ProductPartitionFrac"] += clean(Current["ProductPartitionFrac"]);
-            thisDero["RootPartitionFrac"] += clean(Current["RootPartitionFrac"]);
-            thisDero["TrunkPartitionFrac"] += clean(Current["TrunkPartitionFrac"]);
-            thisDero["LeafMaxNConc"] += clean(Current["LeafMaxNConc"]);
-            thisDero["LeafMinNConc"] += clean(Current["LeafMinNConc"]);
-            thisDero["ProductMaxNConc"] += clean(Current["ProductMaxNConc"]);
-            thisDero["ProductMinNConc"] += clean(Current["ProductMinNConc"]);
-            thisDero["RootMaxNConc"] += clean(Current["RootMaxNConc"]);
-            thisDero["RootMinNConc"] += clean(Current["RootMinNConc"]);
-            thisDero["TrunkMaxNConc"] += clean(Current["TrunkMaxNConc"]);
-            thisDero["TrunkMinNConc"] += clean(Current["TrunkMinNConc"]);
-            thisDero["MaxRootDepth"] += clean(Current["MaxRootDepth"]);
+            thisDero["CropType"] += clean(CurrentCropParams["CropType"]);
+            thisDero["TT_Temp_X"] += clean(CurrentCropParams["TT_Temp_X"]);
+            thisDero["TT_Acc_Y"] += clean(CurrentCropParams["TT_Acc_Y"]);
+            thisDero["D_StartGrowth_00"] += clean(CurrentCropParams["D_StartGrowth_00"]);
+            thisDero["T_StartGrowth_00"] += clean(CurrentCropParams["T_StartGrowth_00"]);
+            thisDero["Tt_Vegetative_01"] += clean(CurrentCropParams["Tt_Vegetative_01"]);
+            thisDero["DefoliateOrDevelop"] += clean(CurrentCropParams["DefoliateOrDevelop"]);
+            thisDero["Pp_Reproductive_02"] += clean(CurrentCropParams["Pp_Reproductive_02"]);
+            thisDero["Tt_Reproductive_02"] += clean(CurrentCropParams["Tt_Reproductive_02"]);
+            thisDero["Tt_Senescent_03"] += clean(CurrentCropParams["Tt_Senescent_03"]);
+            thisDero["Tt_Mature_04"] += clean(CurrentCropParams["Tt_Mature_04"]);
+            thisDero["EndOrHarvest"] += clean(CurrentCropParams["EndOrHarvest"]);
+            thisDero["Chill_Temp_X"] += clean(CurrentCropParams["Chill_Temp_X"]);
+            thisDero["Chill_Acc_Y"] += clean(CurrentCropParams["Chill_Acc_Y"]);
+            thisDero["AC_Dormant_05"] += clean(CurrentCropParams["AC_Dormant_05"]);
+            thisDero["Tt_Dormant_05"] += clean(CurrentCropParams["Tt_Dormant_05"]);
+            thisDero["MaxCanopyBaseHeight"] += clean(CurrentCropParams["MaxCanopyBaseHeight"]);
+            thisDero["MaxCanopyPrunedHeight"] += clean(CurrentCropParams["MaxCanopyPrunedHeight"]);
+            thisDero["MaxCanopyHeight"] += clean(CurrentCropParams["MaxCanopyHeight"]);
+            thisDero["MaxCanopyPrunedWidth"] += clean(CurrentCropParams["MaxCanopyPrunedWidth"]);
+            thisDero["MaxCanopyWidth"] += clean(CurrentCropParams["MaxCanopyWidth"]);
+            thisDero["AgeToMaxDimension"] += clean(CurrentCropParams["AgeToMaxDimension"]);
+            thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
+            thisDero["LAImax"] += clean(CurrentCropParams["LAImax"]);
+            thisDero["ExtCoeff"] += clean(CurrentCropParams["ExtCoeff"]);
+            thisDero["LAIWaterStressSens"] += clean(CurrentCropParams["LAIWaterStressSens"]);
+            thisDero["ExtCoeffWaterStressSens"] += clean(CurrentCropParams["ExtCoeffWaterStressSens"]);
+            thisDero["RUEtotal"] += clean(CurrentCropParams["RUEtotal"]);
+            thisDero["RUETempThresholds"] += clean(CurrentCropParams["RUETempThresholds"]);
+            thisDero["PhotosynthesisType"] += clean(CurrentCropParams["PhotosynthesisType"]);
+            thisDero["LeafPartitionFrac"] += clean(CurrentCropParams["LeafPartitionFrac"]);
+            thisDero["ProductPartitionFrac"] += clean(CurrentCropParams["ProductPartitionFrac"]);
+            thisDero["RootPartitionFrac"] += clean(CurrentCropParams["RootPartitionFrac"]);
+            thisDero["TrunkPartitionFrac"] += clean(CurrentCropParams["TrunkPartitionFrac"]);
+            thisDero["LeafMaxNConc"] += clean(CurrentCropParams["LeafMaxNConc"]);
+            thisDero["LeafMinNConc"] += clean(CurrentCropParams["LeafMinNConc"]);
+            thisDero["ProductMaxNConc"] += clean(CurrentCropParams["ProductMaxNConc"]);
+            thisDero["ProductMinNConc"] += clean(CurrentCropParams["ProductMinNConc"]);
+            thisDero["RootMaxNConc"] += clean(CurrentCropParams["RootMaxNConc"]);
+            thisDero["RootMinNConc"] += clean(CurrentCropParams["RootMinNConc"]);
+            thisDero["TrunkMaxNConc"] += clean(CurrentCropParams["TrunkMaxNConc"]);
+            thisDero["TrunkMinNConc"] += clean(CurrentCropParams["TrunkMinNConc"]);
+            thisDero["MaxRootDepth"] += clean(CurrentCropParams["MaxRootDepth"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);

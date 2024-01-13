@@ -36,6 +36,11 @@ namespace Models.Core
         CropStageName,
 
         /// <summary>
+        /// A list of crops parameterised as columns in a csv input file
+        /// </summary>
+        CSVCrops,
+
+        /// <summary>
         /// A phase name selector.
         /// </summary>
         CropPhaseName,

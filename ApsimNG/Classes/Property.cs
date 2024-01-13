@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -308,6 +309,13 @@ namespace UserInterface.Classes
                     Plant planty = model.FindInScope<Plant>();
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
+                    break;
+                case DisplayType.CSVCrops:
+                    DisplayMethod = PropertyType.DropDown;
+                    PropertyInfo coeffsPropInfo = model.GetType().GetProperty("CropCoeffs");
+                    DataTable coeffs = coeffsPropInfo?.GetValue(model) as DataTable;
+                    if (coeffs != null)
+                        DropDownOptions = coeffs.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
                     break;
                 case DisplayType.CropPhaseName:
                     DisplayMethod = PropertyType.DropDown;
