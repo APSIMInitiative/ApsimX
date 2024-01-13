@@ -86,19 +86,15 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar derochild = null;
 
-        private string fullFileName = null;
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         private DataTable readCSVandUpdateProperties()
         {
-            //Simulation sim = (Simulation)this.FindAllAncestors<Simulation>().FirstOrDefault();
-            //fullFileName = PathUtilities.GetAbsolutePath(CoeffientFile, sim.FileName);
-            fullFileName = "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\" + CoeffientFile;
             DataTable readData = new DataTable();
-            readData =  ApsimTextFile.ToTable(fullFileName);
+            readData =  ApsimTextFile.ToTable(CoeffientFile);
             if (readData.Rows.Count == 0)
-                throw new Exception("Failed to read any rows of data from " + fullFileName);
+                throw new Exception("Failed to read any rows of data from " + CoeffientFile);
             if (CurrentCropName != null)
             {
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
@@ -143,7 +139,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            saveToCSV(fullFileName, dt);
+            saveToCSV(CoeffientFile, dt);
             
             return new DataTable();
         }
