@@ -201,7 +201,10 @@ namespace Models.PMF
         /// <summary>Root depth.</summary>
         [JsonIgnore]
         [Units("mm")]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { 
+            get { return PlantZone.Depth; }
+            set { PlantZone.Depth = value; }
+        }
 
         /// <summary>Root length.</summary>
         [JsonIgnore]

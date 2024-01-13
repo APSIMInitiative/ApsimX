@@ -42,7 +42,7 @@ namespace Models.PMF.SimplePlantModels
             set { coefficientFile = value; readCSVandUpdateProperties(); }
         }
         private string coefficientFile = null;
-        
+
         /// <summary>
         /// The Name of the crop from the CSV table to be grown in this simulation
         /// </summary>
@@ -57,11 +57,11 @@ namespace Models.PMF.SimplePlantModels
         /// List of crops specified in the CoefficientFile
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
-      
+
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
-         /// <summary>The plant</summary>
+        /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
 
@@ -92,7 +92,7 @@ namespace Models.PMF.SimplePlantModels
         private DataTable readCSVandUpdateProperties()
         {
             DataTable readData = new DataTable();
-            readData =  ApsimTextFile.ToTable(CoeffientFile);
+            readData = ApsimTextFile.ToTable(CoeffientFile);
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + CoeffientFile);
             if (CurrentCropName != null)
@@ -102,7 +102,7 @@ namespace Models.PMF.SimplePlantModels
             CropNames = readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
             return readData;
         }
-        
+
         /// <summary>Gets or sets the table of values.</summary>
         [JsonIgnore]
         public List<GridTable> Tables
@@ -140,7 +140,7 @@ namespace Models.PMF.SimplePlantModels
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
             saveToCSV(CoeffientFile, dt);
-            
+
             return new DataTable();
         }
 
@@ -223,7 +223,7 @@ namespace Models.PMF.SimplePlantModels
                 Establish();
             }
         }
-        
+
         /// <summary> Method that sets DEROPAPY running</summary>
         public void Establish()
         {
@@ -291,6 +291,43 @@ namespace Models.PMF.SimplePlantModels
                 " Additional info that may be useful.  " + this.Name + " is established as " + AgeAtSimulationStart.ToString() + " Year old plant "
                 , MessageType.Information);
         }
+
+
+        /// <summary>
+        /// Procedures that occur for crops that go into the EndCrop Phase
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        [EventSubscribe("EndCrop")]
+        private void onEndCrop(object sender, EventArgs e)
+        {
+            //Set Root Depth back to zero.
+            root.Depth = 0;
+        }
+
+        /// <summary>
+        /// Procedures that occur for crops that go into the HarvestAndPrune Phase
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        [EventSubscribe("Harvesting")]
+        private void onHarvesting(object sender, EventArgs e)
+        { 
+
+        }
+
+        /// <summary>
+        /// Procedures that occur for crops that go into the Graze Phase
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        [EventSubscribe("Grazing")]
+        private void onGrazing(object sender, EventArgs e)
+        {
+
+        }
+
+
 
         /// <summary>
         /// Data structure that appends a parameter value to each address in the base deroParams dictionary 

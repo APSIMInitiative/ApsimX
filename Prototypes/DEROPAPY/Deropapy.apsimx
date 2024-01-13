@@ -3370,35 +3370,73 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.DivideFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "RootFrontVelocity",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].Network.MaximumRootDepth",
-                          "Name": "MaxRootDepth",
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "mmPeroCd",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].Network.MaximumRootDepth",
+                              "Name": "MaxRootDepth",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ExpressionFunction, Models",
+                              "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                              "Name": "RootTtDuration",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "RootGrowthDuration",
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "YearsToMaxDepthFactor",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.0,
-                              "Units": "years",
-                              "Name": "YearsToMaxDepth",
+                              "Units": "g/plant",
+                              "Name": "One",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                              "NumeratorErrVal": 1.0,
+                              "DenominatorErrVal": 1.0,
+                              "Name": "ProportionOfTotalRootGrowthAnnually",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                  "Name": "Param value set at establishment",
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": "g/plant",
+                                  "Name": "One",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                  "Name": "YearsToMaxDimension",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -3407,18 +3445,17 @@
                               ],
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 365.0,
-                              "Units": null,
-                              "Name": "DaysInAYear",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTime",
+                          "Name": "ThermalTime",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -21562,35 +21599,73 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.DivideFunction, Models",
+                                "$type": "Models.Functions.MultiplyFunction, Models",
                                 "Name": "RootFrontVelocity",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Root].Network.MaximumRootDepth",
-                                    "Name": "MaxRootDepth",
+                                    "$type": "Models.Functions.DivideFunction, Models",
+                                    "Name": "mmPeroCd",
                                     "ResourceName": null,
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Models.Functions.VariableReference, Models",
+                                        "VariableName": "[Root].Network.MaximumRootDepth",
+                                        "Name": "MaxRootDepth",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ExpressionFunction, Models",
+                                        "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                                        "Name": "RootTtDuration",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      }
+                                    ],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   },
                                   {
-                                    "$type": "Models.Functions.MultiplyFunction, Models",
-                                    "Name": "RootGrowthDuration",
+                                    "$type": "Models.Functions.MinimumFunction, Models",
+                                    "Name": "YearsToMaxDepthFactor",
                                     "ResourceName": null,
                                     "Children": [
                                       {
                                         "$type": "Models.Functions.Constant, Models",
                                         "FixedValue": 1.0,
-                                        "Units": "years",
-                                        "Name": "YearsToMaxDepth",
+                                        "Units": "g/plant",
+                                        "Name": "One",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                        "NumeratorErrVal": 1.0,
+                                        "DenominatorErrVal": 1.0,
+                                        "Name": "ProportionOfTotalRootGrowthAnnually",
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Memo, Models",
-                                            "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                            "Name": "Param value set at establishment",
+                                            "$type": "Models.Functions.Constant, Models",
+                                            "FixedValue": 1.0,
+                                            "Units": "g/plant",
+                                            "Name": "One",
+                                            "ResourceName": null,
+                                            "Children": [],
+                                            "Enabled": true,
+                                            "ReadOnly": false
+                                          },
+                                          {
+                                            "$type": "Models.Functions.VariableReference, Models",
+                                            "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                            "Name": "YearsToMaxDimension",
                                             "ResourceName": null,
                                             "Children": [],
                                             "Enabled": true,
@@ -21599,18 +21674,17 @@
                                         ],
                                         "Enabled": true,
                                         "ReadOnly": false
-                                      },
-                                      {
-                                        "$type": "Models.Functions.Constant, Models",
-                                        "FixedValue": 365.0,
-                                        "Units": null,
-                                        "Name": "DaysInAYear",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
                                       }
                                     ],
+                                    "Enabled": true,
+                                    "ReadOnly": false
+                                  },
+                                  {
+                                    "$type": "Models.Functions.VariableReference, Models",
+                                    "VariableName": "[Phenology].ThermalTime",
+                                    "Name": "ThermalTime",
+                                    "ResourceName": null,
+                                    "Children": [],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   }
@@ -25460,6 +25534,333 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sum(NO3.kgha + NH4.kgha + Urea.kgha)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "Deropapy.Phenology.CurrentStageName",
+                      "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Stress",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FW",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Photosynthesis.FW",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "Deropapy.Phenology.CurrentStageName",
+                      "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FN",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Photosynthesis.FN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "Deropapy.Phenology.CurrentStageName",
+                      "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FT",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Photosynthesis.FT",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "Deropapy.Phenology.CurrentStageName",
+                      "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FCO2",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Photosynthesis.FCO2",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -50529,35 +50930,73 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.DivideFunction, Models",
+                                "$type": "Models.Functions.MultiplyFunction, Models",
                                 "Name": "RootFrontVelocity",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Root].Network.MaximumRootDepth",
-                                    "Name": "MaxRootDepth",
+                                    "$type": "Models.Functions.DivideFunction, Models",
+                                    "Name": "mmPeroCd",
                                     "ResourceName": null,
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Models.Functions.VariableReference, Models",
+                                        "VariableName": "[Root].Network.MaximumRootDepth",
+                                        "Name": "MaxRootDepth",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ExpressionFunction, Models",
+                                        "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                                        "Name": "RootTtDuration",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      }
+                                    ],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   },
                                   {
-                                    "$type": "Models.Functions.MultiplyFunction, Models",
-                                    "Name": "RootGrowthDuration",
+                                    "$type": "Models.Functions.MinimumFunction, Models",
+                                    "Name": "YearsToMaxDepthFactor",
                                     "ResourceName": null,
                                     "Children": [
                                       {
                                         "$type": "Models.Functions.Constant, Models",
                                         "FixedValue": 1.0,
-                                        "Units": "years",
-                                        "Name": "YearsToMaxDepth",
+                                        "Units": "g/plant",
+                                        "Name": "One",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                        "NumeratorErrVal": 1.0,
+                                        "DenominatorErrVal": 1.0,
+                                        "Name": "ProportionOfTotalRootGrowthAnnually",
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Memo, Models",
-                                            "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                            "Name": "Param value set at establishment",
+                                            "$type": "Models.Functions.Constant, Models",
+                                            "FixedValue": 1.0,
+                                            "Units": "g/plant",
+                                            "Name": "One",
+                                            "ResourceName": null,
+                                            "Children": [],
+                                            "Enabled": true,
+                                            "ReadOnly": false
+                                          },
+                                          {
+                                            "$type": "Models.Functions.VariableReference, Models",
+                                            "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                            "Name": "YearsToMaxDimension",
                                             "ResourceName": null,
                                             "Children": [],
                                             "Enabled": true,
@@ -50566,18 +51005,17 @@
                                         ],
                                         "Enabled": true,
                                         "ReadOnly": false
-                                      },
-                                      {
-                                        "$type": "Models.Functions.Constant, Models",
-                                        "FixedValue": 365.0,
-                                        "Units": null,
-                                        "Name": "DaysInAYear",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
                                       }
                                     ],
+                                    "Enabled": true,
+                                    "ReadOnly": false
+                                  },
+                                  {
+                                    "$type": "Models.Functions.VariableReference, Models",
+                                    "VariableName": "[Phenology].ThermalTime",
+                                    "Name": "ThermalTime",
+                                    "ResourceName": null,
+                                    "Children": [],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   }
@@ -56202,35 +56640,73 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.DivideFunction, Models",
+                                "$type": "Models.Functions.MultiplyFunction, Models",
                                 "Name": "RootFrontVelocity",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Root].Network.MaximumRootDepth",
-                                    "Name": "MaxRootDepth",
+                                    "$type": "Models.Functions.DivideFunction, Models",
+                                    "Name": "mmPeroCd",
                                     "ResourceName": null,
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Models.Functions.VariableReference, Models",
+                                        "VariableName": "[Root].Network.MaximumRootDepth",
+                                        "Name": "MaxRootDepth",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ExpressionFunction, Models",
+                                        "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                                        "Name": "RootTtDuration",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      }
+                                    ],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   },
                                   {
-                                    "$type": "Models.Functions.MultiplyFunction, Models",
-                                    "Name": "RootGrowthDuration",
+                                    "$type": "Models.Functions.MinimumFunction, Models",
+                                    "Name": "YearsToMaxDepthFactor",
                                     "ResourceName": null,
                                     "Children": [
                                       {
                                         "$type": "Models.Functions.Constant, Models",
                                         "FixedValue": 1.0,
-                                        "Units": "years",
-                                        "Name": "YearsToMaxDepth",
+                                        "Units": "g/plant",
+                                        "Name": "One",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                        "NumeratorErrVal": 1.0,
+                                        "DenominatorErrVal": 1.0,
+                                        "Name": "ProportionOfTotalRootGrowthAnnually",
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Memo, Models",
-                                            "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                            "Name": "Param value set at establishment",
+                                            "$type": "Models.Functions.Constant, Models",
+                                            "FixedValue": 1.0,
+                                            "Units": "g/plant",
+                                            "Name": "One",
+                                            "ResourceName": null,
+                                            "Children": [],
+                                            "Enabled": true,
+                                            "ReadOnly": false
+                                          },
+                                          {
+                                            "$type": "Models.Functions.VariableReference, Models",
+                                            "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                            "Name": "YearsToMaxDimension",
                                             "ResourceName": null,
                                             "Children": [],
                                             "Enabled": true,
@@ -56239,18 +56715,17 @@
                                         ],
                                         "Enabled": true,
                                         "ReadOnly": false
-                                      },
-                                      {
-                                        "$type": "Models.Functions.Constant, Models",
-                                        "FixedValue": 365.0,
-                                        "Units": null,
-                                        "Name": "DaysInAYear",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
                                       }
                                     ],
+                                    "Enabled": true,
+                                    "ReadOnly": false
+                                  },
+                                  {
+                                    "$type": "Models.Functions.VariableReference, Models",
+                                    "VariableName": "[Phenology].ThermalTime",
+                                    "Name": "ThermalTime",
+                                    "ResourceName": null,
+                                    "Children": [],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   }
