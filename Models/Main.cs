@@ -31,6 +31,8 @@ namespace Models
         public static int Main(string[] args)
         {
             bool isApplyOptionPresent = false;
+            // Resets exitCode to help with unit testing.
+            exitCode = 0;
             // Required to allow the --apply switch functionality of not including
             // an apsimx file path on the command line.
             if (args.Length > 0 && args[0].Equals("--apply"))
