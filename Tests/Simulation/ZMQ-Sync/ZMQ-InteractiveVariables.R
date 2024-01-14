@@ -4,29 +4,6 @@ library(processx)
 
 # Exercise the Interactive protocol
 
-apsimDir <- "/home/mwmaster/Documents/oasis_sim/oasis_sim"
-#apsimDir <- "/usr/local/lib/apsim/"
-
-# Set up a listening server on a random port
-testProto2 <- function() {
-  apsim <- list()
-
-  # The simulation will connect back to this port:
-  apsim$apsimSocket <- open_zmq2(port = 0)
-  apsim$randomPort <- unlist(strsplit(get.last.endpoint(apsim$apsimSocket),":"))[3]
-  cat("Listening on", get.last.endpoint(apsim$apsimSocket), "\n")
-
-  apsim$process <- process$new("/usr/bin/dotnet", args=c(
-    paste0(apsimDir, "/bin/Debug/net6.0/ApsimZMQServer.dll"),
-    "-p", apsim$randomPort,
-    "-P", "interactive",
-    "-f", paste0(apsimDir, "/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx")),
-    stdout="", stderr="")
-
-  cat("Started Apsim process id ", apsim$process$get_pid(), "\n")
-  return(apsim)
-}
-
 # Set up a listening (response) socket that the simulation will connect to
 open_zmq2 <- function(port) {
   zcontext <<- init.context()  # This needs to be kept around (global environment)..
@@ -210,6 +187,10 @@ poll_zmq2 <- function(socket) {
   }
 }
 
-apsim <- testProto2()
+apsim <- list()
+
+# The simulation will connect back to this port:
+apsim$apsimSocket <- open_zmq2(port = 23465)
+
 poll_zmq2(apsim$apsimSocket)
 close_zmq2(apsim)
