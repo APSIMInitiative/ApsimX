@@ -635,7 +635,6 @@ namespace Models.PMF
         /// <param name="detached"></param>
         /// <param name="liveRemoved"></param>
         /// <param name="deadRemoved"></param>
-
         public void PartitionBiomassThroughSoil(OrganNutrientsState reAllocated, OrganNutrientsState reTranslocated,
                                              OrganNutrientsState allocated, OrganNutrientsState senesced,
                                              OrganNutrientsState detached,
@@ -645,28 +644,29 @@ namespace Models.PMF
             foreach (NetworkZoneState Z in Zones)
                 TotalRAw += Z.RAw.Sum();
 
-            if ((parentPlant.IsAlive) && (TotalRAw > 0))
+            //if ((parentPlant.IsAlive) && (TotalRAw > 0))
+            //{
+            foreach (NetworkZoneState Z in Zones)
             {
-                foreach (NetworkZoneState Z in Zones)
+                //if (Depth > 0)
+                //{
+                for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
                 {
-                    if (Depth > 0)
-                    {
-                        for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
-                        {
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reAllocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reTranslocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (senesced * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (liveRemoved * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
+                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(liveRemoved, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(reAllocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(reTranslocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(senesced, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    
+                    double fracAlloc = MathUtilities.Divide(Z.RAw[layer], TotalRAw,0);
+                    Z.LayerLive[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
 
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (allocated * Z.RAw[layer] / TotalRAw), parentOrgan.Cconc);
-
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (senesced * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (detached * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (deadRemoved * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                        }
-                    }
+                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(senesced, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(detached, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(deadRemoved, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
                 }
             }
+            //}
+            //}
         }
 
 

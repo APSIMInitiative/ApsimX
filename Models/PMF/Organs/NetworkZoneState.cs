@@ -202,10 +202,17 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeBiomassProportions()
         {
+            OrganNutrientsState totalLiveWt = new OrganNutrientsState();
+            OrganNutrientsState totalDeadWt = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.Live;
-                LayerDeadProportion[i] = LayerDead[i] / parentNetwork.parentOrgan.Dead;
+                totalLiveWt =  OrganNutrientsState.add(totalLiveWt, LayerLive[i],parentNetwork.parentOrgan.Cconc);
+                totalDeadWt =  OrganNutrientsState.add(totalDeadWt, LayerDead[i],parentNetwork.parentOrgan.Cconc);
+            }
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLiveWt, parentNetwork.parentOrgan.Cconc);
+                LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDeadWt, parentNetwork.parentOrgan.Cconc);
             }
         }
 
@@ -226,7 +233,7 @@ namespace Models.PMF.Organs
                 LayerLive = new OrganNutrientsState[Physical.Thickness.Length];
                 LayerDead = new OrganNutrientsState[Physical.Thickness.Length];
                 LayerLiveProportion = new OrganNutrientsState[Physical.Thickness.Length];
-                LayerDeadProportion = new OrganNutrientsState[Physical.Thickness.Length];
+                LayerDeadProportion = new OrganNutrientsState[Physical.Thickness.Length]; ;
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {

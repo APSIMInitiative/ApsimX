@@ -77,6 +77,12 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Scoped)]
         private RootNetwork root = null;
 
+        [Link(Type = LinkType.Scoped)]
+        private EnergyBalance canopy = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Organ Leaf = null;
+
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
 
@@ -303,6 +309,8 @@ namespace Models.PMF.SimplePlantModels
         {
             //Set Root Depth back to zero.
             root.Depth = 0;
+            //ClearCanopy
+            canopy.resetCanopy();
         }
 
         /// <summary>
@@ -312,8 +320,23 @@ namespace Models.PMF.SimplePlantModels
         /// <param name="sender"></param>
         [EventSubscribe("Harvesting")]
         private void onHarvesting(object sender, EventArgs e)
-        { 
+        {
+            canopy.resetCanopy();
+        }
 
+        /// <summary>
+        /// Procedures that occur when new growth cycle starts.  initial biomass etc
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("NewGrowthPhaseStarting")]
+        private void onStartNewGrowthCycle(object sender, EventArgs e)
+        {
+            //Reset leaf biomass so it is ready for new growth
+            if (CurrentCropParams["DefoliateOrDevelop"] == "Reproductive")
+            {
+                Leaf.initialiseBiomass();
+            }
         }
 
         /// <summary>
