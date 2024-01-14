@@ -239,6 +239,7 @@ namespace Models.PMF
             WaterAllocation = 0.0;
             WaterDemand = 0.0;
             _PotentialEP = 0.0;
+            LightProfile = new CanopyEnergyBalanceInterceptionlayerType[0];
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -305,6 +306,14 @@ namespace Models.PMF
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        /// <summary>
+        /// Called when canopy is reset but crop not ended.  Used for deciduious crops
+        /// </summary>
+        public void resetCanopy()
         {
             Clear();
         }
