@@ -25,6 +25,9 @@ namespace Models.PMF.Phen
         [Link]
         private Weather weather = null;
 
+        /// <summary>Occurs when a New grpwth phase starts.</summary>
+        public event EventHandler NewGrowthPhaseStarting;
+
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -73,6 +76,7 @@ namespace Models.PMF.Phen
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
+                NewGrowthPhaseStarting?.Invoke(this, EventArgs.Empty);
             }
             return proceedToNextPhase;
         }
