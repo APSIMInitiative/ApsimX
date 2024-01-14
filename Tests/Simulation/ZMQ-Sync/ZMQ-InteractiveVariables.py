@@ -1,15 +1,14 @@
+#!/usr/bin/env python
+
 import zmq
 import msgpack
-
-apsimDir = "/home/mwmaster/Documents/oasis_sim/oasis_sim"
-# apsimDir = "/usr/local/lib/apsim/"
 
 
 def open_zmq2(port=27746):
     context = zmq.Context()
     #  Socket to talk to server
     print("Connecting to server...")
-    socket = context.socket(zmq.REQ)
+    socket = context.socket(zmq.REP)
     socket.connect(f"tcp://localhost:{port}")
     print('    ...connected.')
     # print(context.closed)
@@ -17,39 +16,60 @@ def open_zmq2(port=27746):
     return context, socket
 
 
-def close_zmq2(socket, port=27746):
+def close_zmq2(socket : zmq.Socket, port=27746):
     socket.disconnect(f"tcp://localhost:{port}")
     print('disconnected from server')
 
 
-def sendCommand(socket, command):
-    """ currently only work with commands represented as iterables
-    of strings """
+def sendCommand(socket : zmq.Socket, command : str, args=None):
+    """Sends a string command and optional arguments to the server
+    
+    The objects in args can be any serializable type. Internally uses
+    msgpack.packb for serialization.
+    
+    Args
+    ----
+    socket: ZeroMQ created socket
+    command: Command string
+    args: List of arguments 
+    """
 
-    print(f'Sending command \'{command}\' to server...')
+    print(f"Sending command '{command}' to server...")
+    
+    socket.send_string(command, flags=zmq.SNDMORE)
+    
+    print("Command send")
+   
+    # check for additional arguments 
+    if args:  
+        print("Sending arguments...")
+    
+        # list of data to send
+        msg = []
+    
+        # loop over them
+        for arg in args:
+            # serialize using msgpack
+            ser = msgpack.packb(arg)
+            msg.append(ser)
 
-    msg_parts = None
-    msg = []
-    try:
-        msg_parts = len(command)
-    except TypeError:
-        msg_parts = 1
-    for i in range(msg_parts):
-        msg.append(command[i].encode())  # Python3 string.encode() default is UTF-8
     socket.send_multipart(msg)
-    print('    ...command sent.')
+    print('    ...arguments ssent.')
 
 
 if __name__ == '__main__':
     # initialize connection
     context, socket = open_zmq2(port=5555)
-    msg = 'message for test'
-    command = [msg] + ['arg1', 'arg2']
-    sendCommand(socket, command)
+    
+    start_str = socket.recv_string()
+    if start_str != "connect":
+        raise ValueError(f"Did not get correct start starting, got {start_str}, expected 'connect'")
+    
+    sendCommand(socket, "get", ["[Manager].Script.cumsumfert"])
 
     print('Do we get a reply?')
     reply = socket.recv_multipart()
-    print('    Reply: ', [tmp.decode() for tmp in reply])
+    print(reply)
 
     # make a clean getaway
     # close_zmq2(socket)
