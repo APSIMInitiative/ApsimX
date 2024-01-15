@@ -3,28 +3,25 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using UserInterface.Commands;
-using Models;
-using Models.Core;
-using Models.Factorial;
-using Models.Soils;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using APSIM.Interop.Documentation;
+using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
-using Models.Storage;
-using Utility;
+using Gtk;
+using Models;
+using Models.Climate;
+using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using System.Reflection;
-using System.Linq;
-using System.Text;
+using Models.Factorial;
 using Models.Functions;
-using Models.Climate;
-using APSIM.Interop.Documentation;
-using System.Threading.Tasks;
-using System.Threading;
-using APSIM.Server.Sensibility;
-using ApsimNG.Properties;
-using Gtk;
-using Models.CLEM.Interfaces;
+using Models.Soils;
+using Models.Storage;
+using UserInterface.Commands;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -312,6 +309,55 @@ namespace UserInterface.Presenters
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// User has clicked Duplicate
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Duplicate", ShortcutKey = "Ctrl+d")]
+        public void OnDuplicateClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                if (model != null)
+                {
+                    // Set the clipboard text.
+                    string st = FileFormat.WriteToString(model);
+                    this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
+                    //this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
+                }
+
+                string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
+                //string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
+
+                //string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
+                string text = internalCBText;
+
+
+
+                if (!string.IsNullOrEmpty(text))
+                {
+
+                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                    IModel parentNode = explorerPresenter.CurrentNode.Parent as IModel;
+                    if (parentNode != null)
+                    {
+                        ICommand command = new AddModelCommand(parentNode, text, explorerPresenter.GetNodeDescription);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+            finally
+            {
+                this.explorerPresenter.SetClipboardText("", "_APSIM_MODEL");
             }
         }
 
@@ -942,7 +988,7 @@ namespace UserInterface.Presenters
                 {
                     modelToDocument = currentN.Clone();
                     explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
-                }               
+                }
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
@@ -970,7 +1016,7 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-            finally 
+            finally
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
