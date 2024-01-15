@@ -962,18 +962,27 @@ namespace Models.CLEM
     /// </summary>
     public enum FeedType
     {
-        /// <summary>
-        /// Forage style feed
-        /// </summary>
-        Forage,
+
         /// <summary>
         /// Concentrate style feed with Ether extract included in metabolisable energy content calculation.
         /// </summary>
         Concentrate,
         /// <summary>
+        /// Hay and silage, e.g. non-grazed forage 
+        /// </summary>
+        HaySilage,
+        /// <summary>
         /// Milk
         /// </summary>
-        Milk
+        Milk,
+        /// <summary>
+        /// Temperate pastures, grazed 
+        /// </summary>
+        PastureTemperate,
+        /// <summary>
+        /// Tropical pastures, grazed 
+        /// </summary>
+        PastureTropical
     }
 
     /// <summary>

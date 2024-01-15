@@ -40,5 +40,14 @@ namespace Models.CLEM.Resources
             Actual = 0;
         }
 
+        /// <summary>
+        /// Adjust all amounts to change rate
+        /// </summary>
+        /// <param name="factor"></param>
+        public void AdjustAmounts(double factor)
+        {
+            Expected *= factor;
+            Actual *= factor;
+        }
     }
 }

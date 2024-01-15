@@ -54,9 +54,29 @@ namespace Models.CLEM.Resources
                 }
                 return TypeOfFeed switch
                 {
-                    FeedType.Forage => ((0.172 * DryMatterDigestibility) - 1.707),
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => ((0.172 * DryMatterDigestibility) - 1.707),
                     FeedType.Concentrate => ((0.134 * DryMatterDigestibility) + (0.235 * FatContent) + 1.23),
                     _ => throw new NotImplementedException($"Cannot provide MEContent for the TypeOfFeed: {TypeOfFeed}."),
+                };
+            }
+        }
+
+        /// <summary>
+        /// Fermetable Metabolic Energy Content of the food resource packet
+        /// </summary>
+        public double FMEContent
+        {
+            get
+            {
+                return TypeOfFeed switch
+                {
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => MEContent,
+                    FeedType.Concentrate => MEContent - (36 * FatContent / 100) - (14* UndegradableCrudeProteinContent/100),
+                    _ => throw new NotImplementedException($"Cannot provide FMEContent for the TypeOfFeed: {TypeOfFeed}."),
                 };
             }
         }
@@ -103,7 +123,9 @@ namespace Models.CLEM.Resources
             {
                 return TypeOfFeed switch
                 {
-                    FeedType.Forage => CrudeProtein * Math.Min(0.84 * DryMatterDigestibility + 0.33, 1),
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => CrudeProtein * Math.Min(0.84 * DryMatterDigestibility + 0.33, 1),
                     FeedType.Concentrate => RumenDegradableProteinContent * Amount,
                     FeedType.Milk => 0,
                     _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),
@@ -144,5 +166,6 @@ namespace Models.CLEM.Resources
                 NitrogenToCrudeProteinFactor = NitrogenToCrudeProteinFactor
             };
         }
+
     }
 }

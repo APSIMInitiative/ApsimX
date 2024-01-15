@@ -1,13 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
-using Docker.DotNet.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Models.CLEM.Interfaces;
-using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
@@ -25,13 +19,13 @@ namespace Models.CLEM.Resources
         /// The potential and actual milk intake of the individual.
         /// </summary>
         [JsonIgnore]
-        public ExpectedActualContainer Milk { get; private set; } = new ExpectedActualContainer();
+        public ExpectedActualContainer Milk { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
-        /// The potential and actual feed intake of the individual.
+        /// The potential and actual solids intake of the individual.
         /// </summary>
         [JsonIgnore]
-        public ExpectedActualContainer Feed { get; private set; } = new ExpectedActualContainer();
+        public ExpectedActualContainer Solids { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
@@ -51,7 +45,7 @@ namespace Models.CLEM.Resources
                 if (packet.TypeOfFeed == FeedType.Milk)
                     Milk.Actual += packet.Amount;
                 else
-                    Feed.Actual += packet.Amount;
+                    Solids.Actual += packet.Amount;
             }
         }
 
@@ -73,9 +67,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Milk.Actual + Feed.Actual <= 0)
+                if (Milk.Actual + Solids.Actual <= 0)
                     return 0;
-                return Milk.Actual / (Milk.Actual + Feed.Actual);
+                return Milk.Actual / (Milk.Actual + Solids.Actual);
             }
         }
 
@@ -86,10 +80,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                //TODO: is it right to add kg and L in calculation?
-                if (Feed.Expected + Milk.Expected <= 0)
+                if (Solids.Expected + Milk.Expected <= 0)
                     return 0;
-                return (Feed.Actual + Milk.Actual) / (Feed.Expected + Milk.Expected);
+                return (Solids.Actual + Milk.Actual) / (Solids.Expected + Milk.Expected);
             }
         }
 
@@ -116,12 +109,31 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Get all food stores available
+        /// </summary>
+        public Dictionary<FeedType, FoodResourceStore> GetAllStores { get { return feedTypeStoreDict; } }
+
+        /// <summary>
         /// Reset all intake values.
         /// </summary>
         public void Reset()
         {
-            Feed.Reset();
-            Milk.Reset();
+            // ToDo: consider clearing dictionary. Is there any benefit keeping old stores for loops?
+            // clearing each time-step (for each individual e.g. 30,0000 head)
+            // * would remove milk store after weaning (could add special clear)
+            // * clearing would allow smallest number of feed types each step and variable feeding rules to be efficient
+            // * reduce looping for kg and FMEI (across number of types fed in time-step)
+            // * multiple garbage collection required for all ruminants every time-step (expensive, memory and cpu)
+            // * ? how much are time-step feed types really likely to vary?
+            // * just how many feed types are expected in most runs? I expect only few.
+            // leaving them only means they don't have be be recreated each time fed (time-step), but 
+            // * check if exists (happens regardless, may be faster with fewer entries), dictionary should be optimised
+            // * saves .. if not present create object and add to dictionary
+            // * saves loops over types and resetting
+            // Outcome
+            // * I think leaving them might be most optimised
+            // * ensure they are cleared and removed on disposal of individual.
+
             foreach (var item in feedTypeStoreDict)
             {
                 item.Value.Reset();
@@ -162,6 +174,29 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Metabolisable energy from Milk intake.
+        /// </summary>
+        public double MilkME
+        {
+            get
+            {
+                return feedTypeStoreDict.Where(a => a.Key == FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
+            }
+        }
+
+        /// <summary>
+        /// Metabolisable energy from solids (non-milk) intake.
+        /// </summary>
+        public double SolidsME
+        {
+            get
+            {
+                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
+            }
+        }
+
+
+        /// <summary>
         /// Metabolisable energy density from solids intake.
         /// </summary>
         public double MDSolid
@@ -185,13 +220,10 @@ namespace Models.CLEM.Resources
             {
                 double sumDMD = 0;
                 double sumAmount = 0;
-                foreach (var item in feedTypeStoreDict)
+                foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk))
                 {
-                    if(item.Key != FeedType.Milk)
-                    {
-                        sumDMD += item.Value.Details.DryMatterDigestibility * item.Value.Details.Amount;
-                        sumAmount += item.Value.Details.Amount;
-                    }
+                    sumDMD += item.Value.Details.DryMatterDigestibility * item.Value.Details.Amount;
+                    sumAmount += item.Value.Details.Amount;
                 }
                 if (sumAmount <= 0)
                     return 0;
@@ -209,16 +241,13 @@ namespace Models.CLEM.Resources
         {
             if (reductionFactor >= 1) return false;
 
-            Feed.Actual = 0;
+            Solids.Actual = 0;
 
             // reduce all solid intake amounts
-            foreach (var item in feedTypeStoreDict)
+            foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk))
             {
-                if (item.Key != FeedType.Milk)
-                {
-                    item.Value.Details.Amount *= reductionFactor;
-                    Feed.Actual += item.Value.Details.Amount;
-                }
+                item.Value.Details.Amount *= reductionFactor;
+                Solids.Actual += item.Value.Details.Amount;
             }
             return true;
         }
@@ -240,7 +269,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Method to calculate the digestible protein leaving the stomach based on RDP required.
+        /// Method to calculate the digestible protein leaving the stomach (Metabolisable Protein) based on RDP required.
         /// </summary>
         /// <param name="rdpRequired">The Rumen Digestible Protein (RDP) requirement</param>
         /// <param name="milkProteinDigestibility">The milk protein digestibility of the breed</param>
@@ -260,7 +289,8 @@ namespace Models.CLEM.Resources
                     dpls += item.Value.DUDP * item.Value.UndegradableCrudeProtein;
                 }
             }
-            dpls += (0.6 * RDPRequired); // ToDo: add 0.6 as property
+            // add mircobial crude protein from RDP (CA7 0.6)
+            dpls += (0.6 * RDPRequired); 
         }
 
         /// <summary>
@@ -306,14 +336,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Reduce the rumen degradable protein by a proportion provided.
+        /// Adjust all amounts to change rate
         /// </summary>
-        /// <param name="feedType">The type of feed this applies to.</param>
-        /// <param name="factor">The reduction factor.</param>
-        public void ReduceDegradableProtein(FeedType feedType, double factor)
+        /// <param name="factor"></param>
+        public void AdjustAmounts(double factor)
         {
-            if (feedTypeStoreDict.TryGetValue(feedType, out FoodResourceStore frs))
-                frs.ReduceDegradableProtein(factor);
+            foreach (var item in feedTypeStoreDict)
+            {
+                item.Value.Details.Amount *= factor;
+            }
+            Solids.AdjustAmounts(factor);
+            Milk.AdjustAmounts(factor);
         }
     }
 }

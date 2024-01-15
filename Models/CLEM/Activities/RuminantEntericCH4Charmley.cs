@@ -19,7 +19,6 @@ namespace Models.CLEM.Activities
     public class RuminantEntericCH4Charmley: CLEMRuminantActivityBase
     {
         private GreenhouseGasesType methaneEmissions;
-        private RuminantHerd ruminantHerd;
 
         /// <summary>
         /// Transaction grouping style
@@ -37,7 +36,8 @@ namespace Models.CLEM.Activities
         {
             // find first GreenhouseGasType flagged to autocollect methane. 
             methaneEmissions = FindAllInScope<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
-            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
+            if(methaneEmissions is not null)
+                InitialiseHerd(false, true);
         }
 
         /// <summary>Function to calculate enteric methane from values saved to each individual by Grow activities</summary>
@@ -46,17 +46,29 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            // As this model is a child of RuminantActivityGrow it will be preformed after weight gain in growth
-            // The CLEMAnimalWeightGain event is used for the calulation of all energy and growth.
-            
+            // As this model is a child of RuminantActivityGrow and will be performed after CLEMAnimalWeightGain in growth.
             if (methaneEmissions is null)
                 return;
             Status = ActivityStatus.NotNeeded;
 
-            foreach (var ruminant in ruminantHerd.Herd)
+            // Blaxter and Claperton 1965
+            //ind.Output.Methane = ind.BreedParams.CH1 * (ind.Intake.Feed.Actual) * ((ind.BreedParams.CH2 + ind.BreedParams.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.BreedParams.CH4 + ind.BreedParams.CH5 * ind.Intake.MDSolid));
+
+            // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
+            // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+            // methane is methaneProduced / 55.28 * 1000; // grams per day
+
+            // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
+            // per day at this point.
+            //ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily * events.Interval;
+
+
+
+            var herd = CurrentHerd(true);
+            foreach (var ruminant in herd)
             {
                 // Charmley et al 2016 can be substituted by MethaneProductionIntercept = 0 and MethaneProductionCoefficient = 20.7
-                ruminant.Output.Methane = ruminant.Parameters.General.MethaneProductionCoefficient * ruminant.Intake.Feed.Actual;
+                ruminant.Output.Methane = ruminant.Parameters.General.MethaneProductionCoefficient * ruminant.Intake.Solids.Actual;
             }
 
             // determine grouping style to report emissions
@@ -64,22 +76,22 @@ namespace Models.CLEM.Activities
             switch (GroupingStyle)
             {
                 case RuminantEmissionsGroupingStyle.ByIndividual:
-                    aa = ruminantHerd.Herd.GroupBy(a => a.ID).Select(t => new Tuple<string, double> ($"Rum_{t.Key}", t.Sum(u => u.Output.Methane) ));
+                    aa = herd.GroupBy(a => a.ID).Select(t => new Tuple<string, double> ($"Rum_{t.Key}", t.Sum(u => u.Output.Methane) ));
                     break;
                 case RuminantEmissionsGroupingStyle.ByClass:
-                    aa = ruminantHerd.Herd.GroupBy(a => a.Class).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                    aa = herd.GroupBy(a => a.Class).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
                     break;
                 case RuminantEmissionsGroupingStyle.BySexAndClass:
-                    aa = ruminantHerd.Herd.GroupBy(a => a.SexAndClass).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                    aa = herd.GroupBy(a => a.SexAndClass).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
                     break;
                 case RuminantEmissionsGroupingStyle.ByHerd:
-                    aa = ruminantHerd.Herd.GroupBy(a => a.HerdName).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                    aa = herd.GroupBy(a => a.HerdName).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
                     break;
                 case RuminantEmissionsGroupingStyle.ByBreed:
-                    aa = ruminantHerd.Herd.GroupBy(a => a.Breed).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                    aa = herd.GroupBy(a => a.Breed).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
                     break;
                 case RuminantEmissionsGroupingStyle.Combined:
-                    aa = ruminantHerd.Herd.GroupBy(a => "All").Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                    aa = herd.GroupBy(a => "All").Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
                     break;
             }
 

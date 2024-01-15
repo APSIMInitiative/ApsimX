@@ -291,12 +291,12 @@ namespace Models.CLEM.Activities
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.Parameters.Grow.Name == breed).OrderByDescending(a => a.AgeInDays))
                 {
-                    ind.MetabolicIntake = ind.Intake.Feed.Actual;
+                    ind.MetabolicIntake = ind.Intake.Solids.Actual;
                     Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
                         // check that they had some food
-                        if (ind.Intake.Feed.Actual == 0)
+                        if (ind.Intake.Solids.Actual == 0)
                             unfed++;
 
                         // calculate protein concentration
@@ -332,9 +332,9 @@ namespace Models.CLEM.Activities
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
-                        ind.Intake.Feed.Actual = Math.Min(ind.Intake.Feed.Actual, ind.Intake.Feed.Expected);
+                        ind.Intake.Solids.Actual = Math.Min(ind.Intake.Solids.Actual, ind.Intake.Solids.Expected);
                         // when discarding intake can we be specific and hang onto N?
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.Feed.Actual);
+                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.Solids.Actual);
                     }
                     else
                     {
@@ -342,15 +342,15 @@ namespace Models.CLEM.Activities
                         // these individuals have access to milk or are separated from mother and must survive on calf calculated pasture intake
 
                         // if potential intake = 0 they have not needed to consume pasture and intake will be zero.
-                        if (MathUtilities.IsGreaterThanOrEqual(ind.Intake.Feed.Expected, 0.0))
+                        if (MathUtilities.IsGreaterThanOrEqual(ind.Intake.Solids.Expected, 0.0))
                         {
-                            ind.Intake.Feed.Actual = Math.Min(ind.Intake.Feed.Actual, ind.Intake.Feed.Expected);
-                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.Feed.Actual);
+                            ind.Intake.Solids.Actual = Math.Min(ind.Intake.Solids.Actual, ind.Intake.Solids.Expected);
+                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.Solids.Actual);
                         }
 
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
 
-                        if (MathUtilities.IsLessThanOrEqual(ind.Intake.Milk.Actual + ind.Intake.Feed.Actual, 0))
+                        if (MathUtilities.IsLessThanOrEqual(ind.Intake.Milk.Actual + ind.Intake.Solids.Actual, 0))
                             unfedcalves++;
                     }
 
@@ -401,7 +401,7 @@ namespace Models.CLEM.Activities
                 // sort by animal location
                 foreach (var item in ruminantHerd.Herd.GroupBy(a => a.Location))
                 {
-                    double manureProduced = item.Sum(a => a.Intake.Feed.Actual * ((100 - a.Intake.DMD) / 100));
+                    double manureProduced = item.Sum(a => a.Intake.Solids.Actual * ((100 - a.Intake.DMD) / 100));
                     manureStore.AddUncollectedManure(item.Key ?? "", manureProduced);
                 }
             }

@@ -70,7 +70,9 @@ namespace Models.CLEM.Resources
             {
                 return Details.TypeOfFeed switch
                 {
-                    FeedType.Forage => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
+                    FeedType.HaySilage or 
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
                     FeedType.Concentrate => 0.9 * (1 - ((Details.AcidDetergentInsoluableProtein / Details.UndegradableCrudeProteinContent))),
                     _ => 0,
                 };
@@ -81,6 +83,11 @@ namespace Models.CLEM.Resources
         /// Metabolisable energy.
         /// </summary>
         public double ME { get { return Details.MEContent * Details.Amount; } }
+
+        /// <summary>
+        /// Fermentable metabolisable energy.
+        /// </summary>
+        public double FME { get { return Details.FMEContent * Details.Amount; } }
 
         /// <summary>
         /// Reset running stores.

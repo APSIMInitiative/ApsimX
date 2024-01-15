@@ -92,15 +92,17 @@ namespace Models.CLEM.Resources
         public double MilkProteinDigestability_CA5 { get; set; }
 
         /// <summary>
-        /// (SCA CA7)
+        /// Digestability of microbial protein (SCA CA7)
         /// </summary>
-        [Description("[CA7]")]
-        public double RENAME_XXXX_CA7 { get; set; }
+        [Description("Digestability of microbial protein [CA7]")]
+        [System.ComponentModel.DefaultValue(0.6)]
+        public double MicrobialProteinDigestibility_CA7 { get; set; }
 
         /// <summary>
         /// Faecal protein from MCP (SCA CA8)
         /// </summary>
         [Description("Faecal protein from MCP [CA8]")]
+        [System.ComponentModel.DefaultValue(0.25)]
         public double FaecalProteinFromMCP_CA8 { get; set; }
 
         // UDP digestibility in concentrates
@@ -215,7 +217,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region CH#
+        #region Methane CH#
 
         /// <summary>
         /// 
@@ -249,17 +251,10 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region Efficiency CK#
+        #region Efficiency of... CK#
 
-        // CK3
+        // CK3 Efficiency of milk energy used for maintenance 0.85
 
-        /// <summary>
-        /// Energy lactation efficiency coefficient (SCA CK6)
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy lactation efficiency coefficient [CK6]")]
-        [Required, GreaterThanValue(0)]
-        public double ELactationEfficiencyCoefficient_CK6 { get; set; }
         /// <summary>
         /// Energy lactation efficiency intercept (SCA CK5)
         /// </summary>
@@ -267,6 +262,13 @@ namespace Models.CLEM.Resources
         [Description("Energy lactation efficiency intercept [CK5]")]
         [Required, GreaterThanValue(0)]
         public double ELactationEfficiencyIntercept_CK5 { get; set; }
+        /// <summary>
+        /// Energy lactation efficiency coefficient (SCA CK6)
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Energy lactation efficiency coefficient [CK6]")]
+        [Required, GreaterThanValue(0)]
+        public double ELactationEfficiencyCoefficient_CK6 { get; set; }
 
         #endregion
 
@@ -604,25 +606,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region dddd
-
-        /// <summary>
-        /// First intercept of equation to determine energy fat mass (MJ day-1)
-        /// </summary>
-        [Description("Fat gain intercept number 1")]
-        public double FatGainIntercept1 { get; set; }
-
-        /// <summary>
-        /// Second intercept of equation to determine energy fat mass (MJ day-1)
-        /// </summary>
-        [Description("Fat gain intercept number 2")]
-        public double FatGainIntercept2 { get; set; }
-
-        /// <summary>
-        /// Slope of equation to determine energy fat mass (MJ day-1)
-        /// </summary>
-        [Description("Fat gain slope")]
-        public double FatGainSlope { get; set; }
+        #region add to #
 
         /// <summary>
         /// 

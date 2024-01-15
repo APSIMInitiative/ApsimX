@@ -371,7 +371,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.Intake.Feed.Expected * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Feed.Actual);
+                                details.Amount = ((ind.Intake.Solids.Expected * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Solids.Actual);
                                 details.Amount *= feedLimit;
                                 details.Amount *= ind.Weight/totalWeight;
                                 break;
@@ -384,11 +384,11 @@ namespace Models.CLEM.Activities
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = iChild.CurrentValue * ind.Intake.Feed.Expected;
+                                details.Amount = iChild.CurrentValue * ind.Intake.Solids.Expected;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = iChild.CurrentValue * (ind.Intake.Feed.Required);
+                                details.Amount = iChild.CurrentValue * (ind.Intake.Solids.Required);
                                 details.Amount *= feedLimit;
                                 break;
                             default:
@@ -396,8 +396,8 @@ namespace Models.CLEM.Activities
                         }
                         // check amount meets intake limits
                         if (usingPotentialIntakeMultiplier)
-                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Feed.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual))
-                                details.Amount = (ind.Intake.Feed.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual;
+                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Solids.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Solids.Expected)) - ind.Intake.Solids.Actual))
+                                details.Amount = (ind.Intake.Solids.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Solids.Expected)) - ind.Intake.Solids.Actual;
                         ind.Intake.AddFeed(details);
                     }
                 }
