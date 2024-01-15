@@ -208,18 +208,14 @@
                         }
                         else
                         {
-                            if (xMin != double.NaN)
-                                if (x < xMin)
-                                    isOutside = true;
-                            if (xMax != double.NaN)
-                                if (x > xMax)
-                                    isOutside = true;
-                            if (yMin != double.NaN)
-                                if (y < yMin)
-                                    isOutside = true;
-                            if (yMax != double.NaN)
-                                if (y > yMax)
-                                    isOutside = true;
+                            if (!double.IsNaN(xMin) && x < xMin)
+                                isOutside = true;
+                            if (!double.IsNaN(xMax) && x > xMax)
+                                isOutside = true;
+                            if (!double.IsNaN(yMin) && y < yMin)
+                                isOutside = true;
+                            if (!double.IsNaN(yMax) && y > yMax)
+                                isOutside = true;
 
                             if (isOutside)
                                 pointsOutsideAxis += 1;
