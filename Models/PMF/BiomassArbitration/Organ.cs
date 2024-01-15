@@ -478,7 +478,7 @@ namespace Models.PMF
         [EventSubscribe("DoUpdate")]
         protected void OnDoUpdate(object sender, EventArgs e)
         {
-            if (parentPlant.IsEmerged)
+            if (parentPlant.IsAlive)
             {
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");

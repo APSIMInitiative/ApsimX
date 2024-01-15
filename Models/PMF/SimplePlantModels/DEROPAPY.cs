@@ -65,6 +65,12 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
 
+        /// <summary>
+        /// clock
+        /// </summary>
+        [Link]
+        public Clock clock = null;
+
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
 
