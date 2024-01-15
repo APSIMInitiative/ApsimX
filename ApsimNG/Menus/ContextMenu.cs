@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -1156,6 +1157,32 @@ namespace UserInterface.Presenters
                     outputNames += simName + ", ";
                 explorerPresenter.MainPresenter.ShowMessage($"Could not add {outputNames} to Playlist called '{playlistName}'", Simulation.MessageType.Warning);
             }
+        }
+
+        /// <summary>
+        /// Reset axes of a graph.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Reset Graph Axes",
+                     AppliesTo = new Type[] { typeof(Models.Graph) })]
+        public void ResetGraphAxes(object sender, EventArgs e)
+        {
+            Models.Graph selectedGraph = this.explorerPresenter.CurrentNode as Models.Graph;
+            if (selectedGraph.Axis.Count() > 0)
+            {
+                foreach (var axis in selectedGraph.Axis)
+                {
+                    axis.Maximum = null;
+                    axis.Minimum = null;
+                }
+                // Refreshes the view with new resets.
+                this.explorerPresenter.HideRightHandPanel();
+                this.explorerPresenter.ShowRightHandPanel();
+                this.explorerPresenter.MainPresenter.ShowMessage($"{selectedGraph.Name}: axis minimum and maximum reset.", Simulation.MessageType.Information);
+            }
+
+
         }
 
     }
