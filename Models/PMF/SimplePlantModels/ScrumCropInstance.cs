@@ -29,8 +29,8 @@ namespace Models.PMF.SimplePlantModels
         public double HarvestIndex { get; set; }
 
         /// <summary>Moisture percentage of product</summary>
-        [Description("Moisture percentage of product (%)")]
-        public double MoisturePc { get; set; }
+        [Description("Product DM conc (g/g)")]
+        public double DryMatterContent { get; set; }
 
         /// <summary>Root biomass proportion</summary>
         [Description("Root Biomass proportion (0-1)")]
@@ -46,7 +46,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Maximum green cover</summary>
         [Description("Maximum green cover (0-0.97)")]
-        public double Acover { get; set; }
+        public double MaxCover { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Description("Extinction coefficient (0-1)")]
@@ -81,9 +81,17 @@ namespace Models.PMF.SimplePlantModels
         [Description("Maximum temperature for crop (oC)")]
         public double MaxT { get; set; }
 
+        /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
+        [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
+        public double GSMax { get; set; }
+
+        /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
+        [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
+        public double R50 { get; set; }
+
         /// <summary>Is the crop a legume</summary>
-        [Description("Is the crop a legume")]
-        public bool Legume { get; set; }
+        [Description("Proportion of crop that is leguem (0-1)")]
+        public double LegumePropn { get; set; }
 
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
@@ -190,7 +198,6 @@ namespace Models.PMF.SimplePlantModels
         public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
             { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
 
-
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -200,14 +207,17 @@ namespace Models.PMF.SimplePlantModels
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
             {"RootProportion","[Root].RootProportion.FixedValue = "},
             {"ProductNConc","[Product].MaxNConcAtMaturity.FixedValue = "},
-            {"StoverNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
+            {"ResidueNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"SeedlingNConc","[SCRUM].MaxNConcAtSeedling.FixedValue = " },
-            {"FixationRate","[Nodule].FixationRate.FixedValue = "},
+            {"LegumePropn","[SCRUM].LegumePropn.FixedValue = "},
             {"ExtinctCoeff","[Stover].ExtinctionCoefficient.FixedValue = "},
-            {"ACover","[Stover].Cover.Expanding.SigCoverFunction.Ymax.FixedValue = "},
-            {"XoCover","[Stover].Cover.Expanding.SigCoverFunction.Xo.FixedValue = "},
-            {"bCover","[Stover].Cover.Expanding.SigCoverFunction.b.FixedValue = "},
+            {"CoverTestAmax","[Stover].CoverOld.Expanding.SigCoverFunction.Ymax.FixedValue = "},
+            {"CoverTestX0","[Stover].CoverOld.Expanding.SigCoverFunction.Xo.FixedValue = "},
+            {"CoverTestb","[Stover].CoverOld.Expanding.SigCoverFunction.b.FixedValue = "},
+            {"XoCover","[SCRUM].Stover.Cover.Growth.Expansion.Delta.Integral.Xo.FixedValue = " },
+            {"bCover","[SCRUM].Stover.Cover.Growth.Expansion.Delta.Integral.b.FixedValue = " },
+            {"ACover","[SCRUM].Stover.Cover.Growth.Expansion.Delta.Integral.Ymax.FixedValue =" },
             {"XoBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.Xo.FixedValue = "},
             {"bBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.b.FixedValue = " },
             {"MaxHeight","[Stover].HeightFunction.Ymax.FixedValue = "},
@@ -223,11 +233,16 @@ namespace Models.PMF.SimplePlantModels
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
             {"InitialStoverWt","[Stover].InitialWt.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
+            {"InitialCover","[SCRUM].Stover.Cover.InitialCover.FixedValue = " },
             {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
             {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
             {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
             {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
-            {"WaterStressSens","[Stover].Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "}
+            {"GSMax","[SCRUM].Stover.Gsmax350 = " },
+            {"R50","[SCRUM].Stover.R50 = " },
+            {"WaterStressPhoto","[SCRUM].Stover.Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SCRUM].Stover.Cover.Growth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[SCRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>
@@ -258,19 +273,19 @@ namespace Models.PMF.SimplePlantModels
             if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
                 throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
-            crop = coeffCalc(management);
+            crop = CoeffCalc(management);
             scrum.Children.Add(crop);
             double population = 1.0;
             double rowWidth = 0.0;
 
-            scrum.Sow(CropName, population,this._plantingDepth, rowWidth, maxCover: this.Acover);
+            scrum.Sow(CropName, population,this._plantingDepth, rowWidth, maxCover: this.MaxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
             }
             summary.WriteMessage(this, "Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
-                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoisturePc +
+                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.DryMatterContent +
                 " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") +
                 ", " + this.ttEmergeToHarv.ToString() + " oCd from now.", MessageType.Information);
         }
@@ -278,34 +293,41 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Data structure that holds SCRUM parameter names and the cultivar overwrite they map to
         /// </summary>
-        public Cultivar coeffCalc(ScrumManagementInstance management)
+        public Cultivar CoeffCalc(ScrumManagementInstance management)
         {
             Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
 
-            if (this.Legume)
-                cropParams["FixationRate"] += "1000";
-            else
-                cropParams["FixationRate"] += "0.0";
             if (this.WaterStress)
-                cropParams["WaterStressSens"] += "0.0";
+            {
+                cropParams["WaterStressPhoto"] += "0.0";
+                cropParams["WaterStressCover"] += "0.0";
+                cropParams["WaterStressNUptake"] += "0.0";
+            }
             else
-                cropParams["WaterStressSens"] += "1.0";
+            {
+                cropParams["WaterStressPhoto"] += "1.0";
+                cropParams["WaterStressCover"] += "1.0";
+                cropParams["WaterStressNUptake"] += "1.0";
+            }
 
             cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
-            double dmc = (100 - this.MoisturePc) / 100;
+            double dmc = (100 - this.DryMatterContent) / 100;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
             cropParams["ExpectedYield"] += ey.ToString();
             cropParams["HarvestIndex"] += this.HarvestIndex.ToString();
             cropParams["ProductNConc"] += this.ProductNConc.ToString();
-            cropParams["StoverNConc"] += this.StoverNConc.ToString();
+            cropParams["ResidueNConc"] += this.StoverNConc.ToString();
             cropParams["RootNConc"] += this.RootNConc.ToString();
             cropParams["SeedlingNConc"] += this.SeedlingNConc.ToString();
             cropParams["MaxRootDepth"] += this.MaxRD.ToString();
             cropParams["MaxHeight"] += this.MaxHeight.ToString();
             cropParams["RootProportion"] += this.Proot.ToString();
-            cropParams["ACover"] += this.Acover.ToString();
+            cropParams["ACover"] += this.MaxCover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
+            cropParams["LegumePropn"] += LegumePropn.ToString();
+            cropParams["GSMax"] += GSMax.ToString();
+            cropParams["R50"] += R50.ToString();
 
 
 
@@ -366,6 +388,10 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
+            cropParams["CoverTestX0"] += Xo_cov.ToString();
+            cropParams["CoverTestb"] += b_cov.ToString();
+            cropParams["CoverTestAmax"] += this.MaxCover.ToString();
+
             cropParams["TtSeedling"] += (Tt_mat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
             cropParams["TtVegetative"] += (Tt_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
             cropParams["TtEarlyReproductive"] += (Tt_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
@@ -378,6 +404,8 @@ namespace Models.PMF.SimplePlantModels
             double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
             cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot)).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
+            double tTpreEstab = Tt_mat * PropnTt[management.EstablishStage];
+            cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) /b_cov))).ToString();
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
