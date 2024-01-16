@@ -278,9 +278,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
-        [Units("0-1")]
-        public double fRadnAllZones { get; set; }
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
