@@ -86,7 +86,6 @@ namespace UserInterface.Presenters
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-
             managerView.CursorLocation = manager.cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;

@@ -322,15 +322,14 @@ namespace UserInterface.Views
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
 
+            //To make the scrollbars work correctly, the text editor should sit within a box and a viewport
             VBox vBox = new VBox();
             vBox.Add(textEditor);
-
             Viewport view = new Viewport();
             view.Add(vBox);
 
             scroller.Add(view);
 
-            scroller.Vadjustment.Configure(500, 0, 1520, 83.5, 751.5, 835);
             InitialiseWidget();
         }
 

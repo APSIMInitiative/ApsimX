@@ -15,6 +15,10 @@ namespace UserInterface.Views
         private ManagerCursorLocation cursor;
         private int drawCount; //used to count how many times the screen has been drawn for drawn event handler
 
+        //constants for the tab indicies
+        private const int TAB_PROPERTY = 0;
+        private const int TAB_SCRIPT = 1;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -46,7 +50,12 @@ namespace UserInterface.Views
         /// </summary>
         public void OnPageChanged(object sender, EventArgs e)
         {
-            if (cursor != null)
+            //if we are switching from the script page, save the position
+            if (this.TabIndex == TAB_PROPERTY)
+            {
+                cursor = scriptEditor.Location;
+            }
+            else if (cursor != null)
             {
                 scriptEditor.Location = cursor;
                 scriptEditor.Refresh();
@@ -64,13 +73,13 @@ namespace UserInterface.Views
             {
                 drawCount += 1;
             }
-            else if (cursor != null && this.TabIndex == 1)
+            else if (cursor != null && this.TabIndex == TAB_SCRIPT)
             {
                 //We then only do this once and disable the event
                 notebook.Drawn -= OnDrawn;
                 scriptEditor.Location = cursor;
                 scriptEditor.Refresh();
-            } else if (this.TabIndex == 0)
+            } else if (this.TabIndex == TAB_PROPERTY)
             { //on the other tab, disable the event
                 notebook.Drawn -= OnDrawn;
             }
@@ -106,7 +115,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Indicates the index of the currently active tab
+        /// The values for the cursor and scrollbar position in the script editor
         /// </summary>
         public ManagerCursorLocation CursorLocation
         {
@@ -146,7 +155,7 @@ namespace UserInterface.Views
         int TabIndex { get; set; }
 
         /// <summary>
-        /// Indicates the position of the cursor
+        /// The values for the cursor and scrollbar position in the script editor
         /// </summary>
         ManagerCursorLocation CursorLocation { get; set; }
     }
