@@ -1042,11 +1042,9 @@ namespace UserInterface.Presenters
                         Model model = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
-                            this.HideRightHandPanel();
                             this.ApsimXFile.Locator.ClearEntry(model.FullPath);
                             RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
-                            this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
                         }
                     }
