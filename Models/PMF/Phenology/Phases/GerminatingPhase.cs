@@ -44,7 +44,7 @@ namespace Models.PMF.Phen
         private ISoilTemperature soilTemperature = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction temperature = null;
+        private IFunction minSoilTemperature = null;
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= temperature.Value())
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= minSoilTemperature.Value())
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }
