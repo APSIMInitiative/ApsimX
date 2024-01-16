@@ -273,7 +273,7 @@ namespace Models.PMF.SimplePlantModels
             if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
                 throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
-            crop = coeffCalc(management);
+            crop = CoeffCalc(management);
             scrum.Children.Add(crop);
             double population = 1.0;
             double rowWidth = 0.0;
@@ -293,7 +293,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Data structure that holds SCRUM parameter names and the cultivar overwrite they map to
         /// </summary>
-        public Cultivar coeffCalc(ScrumManagementInstance management)
+        public Cultivar CoeffCalc(ScrumManagementInstance management)
         {
             Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
 
