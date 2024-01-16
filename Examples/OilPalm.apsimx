@@ -13,7 +13,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:\\Users\\RIC394\\source\\repos\\ApsimX\\Examples\\WeatherFiles\\PG_Popondetta.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\PG_Popondetta.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
