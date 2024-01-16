@@ -1,9 +1,12 @@
-﻿namespace Shared.Utilities
+﻿using System;
+
+namespace Shared.Utilities
 {
     /// <summary>
     /// Helper class that defines the variables needed to restore the cursor and scrollbar positions of the manager script view.
     /// These values allow the view to stay the same when saving the file with a scripot open.
     /// </summary>
+    [Serializable]
     public class ManagerCursorLocation
     {
         /// <summary>
@@ -60,6 +63,7 @@
     /// Used by ManagerCursorLocation to hold all the values for a gtk adjustment scroller so that
     /// it can be reset to a specific position.
     /// </summary>
+    [Serializable]
     public class ScrollerAdjustmentValues {
 
         /// <summary>
