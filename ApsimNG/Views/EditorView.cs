@@ -251,8 +251,8 @@ namespace UserInterface.Views
             {
                 textEditor.GrabFocus();
 
-                scroller.Hadjustment = new Adjustment(0, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
-                scroller.Vadjustment = new Adjustment(0, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
+                scroller.Hadjustment.Configure(value.ScrollV.Value, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
+                scroller.Vadjustment.Configure(value.ScrollV.Value, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
 
                 // x is column, y is line number.
                 TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Line, value.Column);
@@ -316,11 +316,21 @@ namespace UserInterface.Views
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
+            
             textEditor = new SourceView();
             textEditor.DragDataReceived += TextEditorDragDataReceived;
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
-            scroller.Add(textEditor);
+
+            VBox vBox = new VBox();
+            vBox.Add(textEditor);
+
+            Viewport view = new Viewport();
+            view.Add(vBox);
+
+            scroller.Add(view);
+
+            scroller.Vadjustment.Configure(500, 0, 1520, 83.5, 751.5, 835);
             InitialiseWidget();
         }
 

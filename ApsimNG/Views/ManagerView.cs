@@ -12,7 +12,8 @@ namespace UserInterface.Views
         private PropertyView propertyEditor;
         private IEditorView scriptEditor;
         private Notebook notebook;
-
+        private ManagerCursorLocation cursor;
+        private int drawCount; //used to count how many times the screen has been drawn for drawn event handler
 
         /// <summary>
         /// Constructor
@@ -32,6 +33,47 @@ namespace UserInterface.Views
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
+
+            drawCount = 0;
+
+            notebook.SwitchPage += OnPageChanged;
+            notebook.Drawn += OnDrawn;
+            
+        }
+
+        /// <summary>
+        /// OnPageChanged event handler.
+        /// </summary>
+        public void OnPageChanged(object sender, EventArgs e)
+        {
+            if (cursor != null)
+            {
+                scriptEditor.Location = cursor;
+                scriptEditor.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// OnDrawn event handler for setting the scrollbar on the script editor
+        /// </summary>
+        public void OnDrawn(object sender, EventArgs e)
+        {
+            //We can move the scrollbar until everything is displayed on screen,
+            //So we skip the first two draw calls and move it on the 3rd.
+            if (drawCount < 2)
+            {
+                drawCount += 1;
+            }
+            else if (cursor != null && this.TabIndex == 1)
+            {
+                //We then only do this once and disable the event
+                notebook.Drawn -= OnDrawn;
+                scriptEditor.Location = cursor;
+                scriptEditor.Refresh();
+            } else if (this.TabIndex == 0)
+            { //on the other tab, disable the event
+                notebook.Drawn -= OnDrawn;
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
@@ -43,6 +85,9 @@ namespace UserInterface.Views
                 (scriptEditor as ViewBase)?.Dispose();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
+                notebook.SwitchPage -= OnPageChanged;
+                notebook.Drawn -= OnDrawn;
+
                 owner = null;
             }
             catch (Exception err)
@@ -71,8 +116,8 @@ namespace UserInterface.Views
                 return pos;
             }
             set {
-                this.TabIndex = value.TabIndex;
-                scriptEditor.Location = value; 
+                cursor = value;
+                TabIndex = value.TabIndex;
             }
         }
 

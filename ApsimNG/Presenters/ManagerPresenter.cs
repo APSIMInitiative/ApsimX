@@ -55,6 +55,7 @@ namespace UserInterface.Presenters
         {
             manager = model as Manager;
             managerView = view as IManagerView;
+
             explorerPresenter = presenter;
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -85,7 +86,7 @@ namespace UserInterface.Presenters
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.TabIndex = manager.cursor.TabIndex;
+
             managerView.CursorLocation = manager.cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
