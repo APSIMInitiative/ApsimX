@@ -1,17 +1,17 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Globalization;
 
 namespace UnitTests.Weather
 {
@@ -128,13 +128,13 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
-        
+
         [Test]
         public void TestGetAnyDayMetData()
         {
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Dalby.met"));
 
             Simulation baseSim = new Simulation()
             {
