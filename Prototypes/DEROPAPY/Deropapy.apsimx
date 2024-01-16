@@ -6915,7 +6915,7 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.DEROPAPY, Models",
-                  "CoeffientFile": "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\CropParameters.csv",
+                  "CoefficientFile": "CropParameters.csv",
                   "CurrentCropName": "Maize",
                   "Name": "ThisDero",
                   "ResourceName": null,
@@ -35575,7 +35575,7 @@
             },
             {
               "$type": "Models.PMF.SimplePlantModels.DEROPAPY, Models",
-              "CoeffientFile": "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\CropParameters.csv",
+              "CoefficientFile": null,
               "CurrentCropName": "Apple",
               "Name": "ThisDero",
               "ResourceName": null,
@@ -41816,7 +41816,7 @@
             },
             {
               "$type": "Models.PMF.SimplePlantModels.DEROPAPY, Models",
-              "CoeffientFile": "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\CropParameters.csv",
+              "CoefficientFile": null,
               "CurrentCropName": "RyeGrass",
               "Name": "ThisDero",
               "ResourceName": null,
@@ -43132,8 +43132,8 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.DEROPAPY, Models",
-                  "CoeffientFile": "C:\\GitHubRepos\\ApsimX\\Prototypes\\DEROPAPY\\CropParameters.csv",
-                  "CurrentCropName": null,
+                  "CoefficientFile": "CropParameters.csv",
+                  "CurrentCropName": "Maize",
                   "Name": "ThisDero",
                   "ResourceName": null,
                   "Children": [],

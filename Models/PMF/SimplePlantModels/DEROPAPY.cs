@@ -36,12 +36,39 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
-        public string CoeffientFile
+        public string CoefficientFile { get; set ; }
+        
+        
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this.
+        /// </summary>
+        [JsonIgnore]
+        public string FullFileName
         {
-            get { return coefficientFile; }
-            set { coefficientFile = value; readCSVandUpdateProperties(); }
+            get
+            {
+                Simulation simulation = FindAncestor<Simulation>();
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulation.FileName);
+                else
+                {
+                    Simulations simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulations.FileName);
+                    else
+                        return this.CoefficientFile;
+                }
+            }
+            set
+            {
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null)
+                    this.CoefficientFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.CoefficientFile = value;
+                readCSVandUpdateProperties();
+            }
         }
-        private string coefficientFile = null;
 
         /// <summary>
         /// The Name of the crop from the CSV table to be grown in this simulation
@@ -104,9 +131,9 @@ namespace Models.PMF.SimplePlantModels
         private DataTable readCSVandUpdateProperties()
         {
             DataTable readData = new DataTable();
-            readData = ApsimTextFile.ToTable(CoeffientFile);
+            readData = ApsimTextFile.ToTable(FullFileName);
             if (readData.Rows.Count == 0)
-                throw new Exception("Failed to read any rows of data from " + CoeffientFile);
+                throw new Exception("Failed to read any rows of data from " + FullFileName);
             if (CurrentCropName != null)
             {
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
@@ -151,7 +178,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            saveToCSV(CoeffientFile, dt);
+            saveToCSV(FullFileName, dt);
 
             return new DataTable();
         }
