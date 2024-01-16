@@ -84,10 +84,16 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
-        /// List all files that are referenced by an .apsimx file(s)
+        /// List all files that are referenced by an .apsimx file(s) with absolute paths.
         /// </summary>
-        [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s).")]
+        [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s) as an absolute path.")]
         public bool ListReferencedFileNames { get; set; }
+
+        /// <summary>
+        /// List all files that are referenced by an .apsimx file(s) as they are. 
+        /// </summary>
+        [Option("list-referenced-filenames-unmodified", HelpText = "List all files that are referenced by an .apsimx file(s) as is.")]
+        public bool ListReferencedFileNamesUnmodified { get; set; }
 
         /// <summary>
         /// Run all simulations sequentially on a single thread.

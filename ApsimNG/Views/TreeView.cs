@@ -1,11 +1,11 @@
-using APSIM.Shared.Utilities;
-using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
+using APSIM.Shared.Utilities;
+using Gtk;
 using UserInterface.Interfaces;
 using Utility;
 using TreeModel = Gtk.ITreeModel;
@@ -781,16 +781,6 @@ namespace UserInterface.Views
             {
                 TreePath path = e.Path.Copy();
                 path.Down();
-                bool stop = false;
-                while (!stop)
-                {
-                    path.Next();
-                    treeview1.Model.GetIter(out TreeIter iter, path);
-                    var value = treeview1.Model.GetValue(iter, 0);
-                    if (value == null)
-                        stop = true;
-                }
-                path.Prev();
                 treeview1.ScrollToCell(path, null, false, 0, 0);
             }
             catch (Exception err)
