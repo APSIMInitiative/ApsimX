@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Extensions;
 using ApsimNG.Classes;
-using ApsimNG.Utility;
+using Shared.Utilities;
 using Gtk;
 using Markdig.Helpers;
 using Models;

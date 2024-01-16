@@ -6,7 +6,7 @@ using Models;
 using Models.Core;
 using UserInterface.Views;
 using UserInterface.Interfaces;
-using ApsimNG.Utility;
+using Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -85,7 +85,9 @@ namespace UserInterface.Presenters
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.TabIndex = manager.ActiveTabIndex;
+            managerView.TabIndex = manager.cursor.TabIndex;
+            managerView.CursorLocation = manager.cursor;
+
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
 
             //Try building the script to show errors
@@ -97,7 +99,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            manager.ActiveTabIndex = managerView.TabIndex;
+            manager.cursor.TabIndex = managerView.TabIndex;
+            manager.cursor = managerView.CursorLocation;
 
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script

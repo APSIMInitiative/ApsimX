@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using ApsimNG.Utility;
+using Shared.Utilities;
 using Gtk;
 using GtkSource;
 using UserInterface.EventArguments;
@@ -232,8 +232,18 @@ namespace UserInterface.Views
                 location.TabIndex = 0;
                 location.Column = CurrentColumnNumber;
                 location.Line = CurrentLineNumber - 1;
-                location.ScrollH = scroller.Hadjustment;
-                location.ScrollV = scroller.Vadjustment;
+                location.ScrollH = new ScrollerAdjustmentValues(scroller.Hadjustment.Value,
+                                                                scroller.Hadjustment.Lower,
+                                                                scroller.Hadjustment.Upper,
+                                                                scroller.Hadjustment.StepIncrement,
+                                                                scroller.Hadjustment.PageIncrement,
+                                                                scroller.Hadjustment.PageSize);
+                location.ScrollV = new ScrollerAdjustmentValues(scroller.Vadjustment.Value,
+                                                                scroller.Vadjustment.Lower, 
+                                                                scroller.Vadjustment.Upper,
+                                                                scroller.Vadjustment.StepIncrement,
+                                                                scroller.Vadjustment.PageIncrement,
+                                                                scroller.Vadjustment.PageSize);
                 return location;
             }
 
@@ -241,8 +251,8 @@ namespace UserInterface.Views
             {
                 textEditor.GrabFocus();
 
-                scroller.Hadjustment = value.ScrollH;
-                scroller.Vadjustment = value.ScrollV;
+                scroller.Hadjustment = new Adjustment(0, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
+                scroller.Vadjustment = new Adjustment(0, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
 
                 // x is column, y is line number.
                 TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Line, value.Column);

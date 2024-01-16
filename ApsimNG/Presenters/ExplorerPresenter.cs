@@ -13,7 +13,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Utility;
 using UserInterface.Views;
-using ApsimNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -313,14 +312,8 @@ namespace UserInterface.Presenters
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
-            // Need to hide the right hand panel because some views may not have saved
-            // their contents until they get a 'Detach' call.
-            ManagerCursorLocation cursor = null;
             try
             {
-                if (this.currentRightHandPresenter is ManagerPresenter)
-                    cursor = (this.currentRightHandPresenter as ManagerPresenter).CursorLocation;
-
                 HideRightHandPanel();
                 if (string.IsNullOrEmpty(ApsimXFile.FileName))
                     SaveAs();
@@ -334,11 +327,7 @@ namespace UserInterface.Presenters
             }
             finally
             {
-                ShowRightHandPanel();
-
-                if (cursor != null)
-                    if (this.currentRightHandPresenter is ManagerPresenter)
-                        (this.currentRightHandPresenter as ManagerPresenter).CursorLocation = cursor;         
+                ShowRightHandPanel();       
             }
 
             return false;

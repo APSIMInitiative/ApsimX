@@ -1,7 +1,7 @@
 ﻿using System;
-using ApsimNG.Utility;
 using Gtk;
 using UserInterface.EventArguments;
+using Shared.Utilities;
 
 namespace UserInterface.Interfaces
 {

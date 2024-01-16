@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
+using Shared.Utilities;
 
 namespace Models
 {
@@ -107,11 +107,11 @@ namespace Models
         public List<KeyValuePair<string, string>> Parameters { get; set; }
 
         /// <summary>
-        /// Stores whether we are currently on the tab displaying the script.
+        /// Stores the cursor position so the page location is saved when moving around the GUI
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore]
-        public int ActiveTabIndex { get; set; }
+        public ManagerCursorLocation cursor { get; set; } = new ManagerCursorLocation();
 
         /// <summary>
         /// Stores the success of the last compile
