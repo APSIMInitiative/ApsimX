@@ -40,10 +40,10 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
-        [Link(IsOptional = true)]
+        [Link]
         private ISoilTemperature soilTemperature = null;
 
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction temperature = null;
 
         // 2. Private and protected fields
@@ -81,13 +81,6 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public string GerminationDate { get; set; }
 
-        /// <summary>
-        /// Date for germination to occur.  null by default so model is used
-        /// </summary>
-        [JsonIgnore]
-        [Units("oC")]
-        public double GerminationTemperature { get { return temperature == null ? -999 : temperature.Value(); } }
-
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -96,7 +89,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            double sowLayerTemperature = soilTemperature != null ? soilTemperature.Value[SowLayer] : 999;
+            double sowLayerTemperature = soilTemperature.Value[SowLayer];
 
             if (GerminationDate != null)
             {
@@ -106,7 +99,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= GerminationTemperature)
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= temperature.Value())
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }
