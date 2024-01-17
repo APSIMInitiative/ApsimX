@@ -161,10 +161,18 @@
                 int pointsInsideAxis = 0;
                 foreach (SeriesDefinition definition in definitions)
                 {
+                    string seriesName = graph.Name + " (" + definition.Series.Name + ")";
                     double xMin = graphView.AxisMinimum(definition.XAxis);
                     double xMax = graphView.AxisMaximum(definition.XAxis);
-                    bool isOutside = false;
-                    bool valuesContainNaNs = false;
+                    int xNaNCount = 0;
+                    int yNaNCount = 0;
+                    int bothNaNCount = 0;
+                    double yMin = graphView.AxisMinimum(definition.YAxis);
+                    double yMax = graphView.AxisMaximum(definition.YAxis);
+
+                    List<double> valuesX = new List<double>();
+                    List<double> valuesY = new List<double>();
+
                     foreach (var x in definition.X)
                     {
                         double xDouble = 0;
@@ -172,27 +180,8 @@
                             xDouble = ((DateTime)x).ToOADate();
                         else
                             xDouble = Convert.ToDouble(x);
-
-                        if (double.IsNaN(xDouble))
-                        {
-                            valuesContainNaNs = true;
-                        }
-                        else
-                        {
-                            if (xMin != double.NaN)
-                                if (xDouble < xMin)
-                                    isOutside = true;
-                            if (xMax != double.NaN)
-                                if (xDouble > xMax)
-                                    isOutside = true;
-                        }
+                        valuesX.Add(xDouble);
                     }
-                    if (valuesContainNaNs)
-                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: X Axis values contain NaN values.", Simulation.MessageType.Warning, false);
-
-                    double yMin = graphView.AxisMinimum(definition.YAxis);
-                    double yMax = graphView.AxisMaximum(definition.YAxis);
-                    valuesContainNaNs = false;
                     foreach (var y in definition.Y)
                     {
                         double yDouble = 0;
@@ -200,28 +189,51 @@
                             yDouble = ((DateTime)y).ToOADate();
                         else
                             yDouble = Convert.ToDouble(y);
+                        valuesY.Add(yDouble);
+                    }
 
-                        if (double.IsNaN(yDouble))
+                    for (int i = 0; i < valuesX.Count; i++)
+                    {
+                        bool isOutside = false;
+                        double x = valuesX[i];
+                        double y = valuesY[i];
+                        if (double.IsNaN(x) && !double.IsNaN(y))
                         {
-                            valuesContainNaNs = true;
+                            xNaNCount += 1;
+                        } else if (!double.IsNaN(x) && double.IsNaN(y))
+                        {
+                            yNaNCount += 1;
+                        } else if (double.IsNaN(x) && double.IsNaN(y))
+                        {
+                            bothNaNCount += 1;
                         }
                         else
                         {
-                            if (yMin != double.NaN)
-                                if (yDouble < yMin)
-                                    isOutside = true;
-                            if (yMax != double.NaN)
-                                if (yDouble > yMax)
-                                    isOutside = true;
+                            if (!double.IsNaN(xMin) && x < xMin)
+                                isOutside = true;
+                            if (!double.IsNaN(xMax) && x > xMax)
+                                isOutside = true;
+                            if (!double.IsNaN(yMin) && y < yMin)
+                                isOutside = true;
+                            if (!double.IsNaN(yMax) && y > yMax)
+                                isOutside = true;
+
+                            if (isOutside)
+                                pointsOutsideAxis += 1;
+                            else
+                                pointsInsideAxis += 1;
                         }
                     }
-                    if (valuesContainNaNs)
-                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: Y Axis values contain NaN values.", Simulation.MessageType.Warning, false);
-
-                    if (isOutside)
-                        pointsOutsideAxis += 1;
-                    else
-                        pointsInsideAxis += 1;
+                    if (xNaNCount > 0 || yNaNCount > 0 || bothNaNCount > 0)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: NaN Values found in points. These may be empty cells in the datastore.", Simulation.MessageType.Information, false);
+                        if (xNaNCount > 0)
+                            explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: {xNaNCount} points where X is NaN, but Y is valid.", Simulation.MessageType.Information, false);
+                        if (yNaNCount > 0)
+                            explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: {yNaNCount} points where Y is NaN, but X is valid.", Simulation.MessageType.Information, false);
+                        if (bothNaNCount > 0)
+                            explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: {bothNaNCount} points where both values are NaN.", Simulation.MessageType.Information, false);
+                    }
                 }
 
                 if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
