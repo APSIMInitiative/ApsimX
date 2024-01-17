@@ -190,7 +190,7 @@ poll_zmq2 <- function(socket) {
 apsim <- list()
 
 # The simulation will connect back to this port:
-apsim$apsimSocket <- open_zmq2(port = 23465)
+apsim$apsimSocket <- open_zmq2(port = 27746)
 
 poll_zmq2(apsim$apsimSocket)
 close_zmq2(apsim)

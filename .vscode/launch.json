@@ -47,8 +47,9 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
-                "-v", "-a", "127.0.0.1", 
-                "-p", "5555", // "-P", "interactive",
+                "-a", "127.0.0.1", 
+                //"-p", "5555",
+                "-P", "interactive",
                 "-f", "${workspaceRoot}/Tests/Simulation/ZMQ-Sync/fallow_field/fallow.apsimx"
             ],
             "cwd": "${workspaceFolder}",
