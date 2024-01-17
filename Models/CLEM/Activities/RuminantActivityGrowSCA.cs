@@ -107,7 +107,7 @@ namespace Models.CLEM.Activities
             {
                 foreach (var ind in groupInd)
                 {
-                    // reset actual expected containers as we'll se expected during CalculatePotentialIntake
+                    // reset actual expected containers as expected determined during CalculatePotentialIntake
                     ind.Intake.Solids.Actual = 0;
                     ind.Intake.Milk.Actual = 0;
 
@@ -127,10 +127,20 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Individual for which potential intake is determined.</param>
         private void CalculatePotentialIntake(Ruminant ind)
         {
+            // CF EQ3
+
+            // YF EQ4
+
+            //TF - not included yet EQ5
+
+            // LF EQ8
+
+            // EQ2
+
             // all in units per day and multiplied at end of this section
             if (!ind.Weaned)
             {
-                // potential milk intake/animal/day
+                // potential milk intake/animal/day   B term of EQ71 with y = 1
                 ind.Intake.Milk.Expected = ind.Parameters.GrowSCA.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
 
                 // get estimated milk available
@@ -139,8 +149,11 @@ namespace Models.CLEM.Activities
 
                 // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
                 // Todo: implement rumen development to predict ability to eat fodder/pasture.
+
+                // Use young factor of APSIM
                 if (MathUtilities.IsLessThan(actualMilk, ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion))
                     ind.Intake.Solids.Expected = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - actualMilk * ind.BreedParams.ProportionalDiscountDueToMilk);
+                // Calculate Young factor for EQ2
             }
             else
             {
@@ -148,6 +161,8 @@ namespace Models.CLEM.Activities
                 // Normalised weight now performed at allocation of weight in Ruminant
 
                 // Reference: SCA Metabolic LWTs
+                // EQ2 Intake max 
+
                 if (ind.IsWeaner)
                 {
                     ind.Intake.Solids.Expected = ind.BreedParams.IntakeCoefficient * ind.StandardReferenceWeight * (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)) * (ind.BreedParams.IntakeIntercept - (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)));
@@ -172,6 +187,8 @@ namespace Models.CLEM.Activities
                         // replaces (A), (B) and (C) 
                         double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((femaleind.DaysLactating(events.Interval/2.0) / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (femaleind.DaysLactating(events.Interval / 2.0) / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * ind.RelativeCondition);
 
+                        // LF factor for EQ2
+
                         ind.Intake.Solids.Expected *= intakeMilkMultiplier;
 
                         // calculate estimated milk production for time step here
@@ -187,6 +204,7 @@ namespace Models.CLEM.Activities
                 }
 
                 //TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
+                // TF temperature factor of EQ2
 
                 //TODO: reduce intake based on high fat to protein concentration.
                 //TODO: what actually stops an animal growing when feed better than maintenance energy.. just add fat until fat reduces hunger?
