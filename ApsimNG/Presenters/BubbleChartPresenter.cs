@@ -334,7 +334,7 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                currentEditor = (sender as EditorView).MainWidget.Name.Split(':')[1];
+                currentEditor = (sender as EditorView).MainWidget.TooltipText;
 
                 if (!e.ControlShiftSpace)
                 {

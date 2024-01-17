@@ -8,7 +8,6 @@ using UserInterface.EventArguments;
 using Gtk;
 using UserInterface.Interfaces;
 using Utility;
-using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -289,6 +288,7 @@ namespace UserInterface.Views
                     codeEditor.Text = code;
                     Frame codeOutline = new Frame();
                     codeEditor.MainWidget.Name = property.ID.ToString();
+                    codeEditor.MainWidget.TooltipText = property.Name;
                     codeEditor.DisposeEditor += OnEntryFocusOut;
                     codeOutline.Add(codeEditor.MainWidget);
                     codeOutline.HeightRequest = 100;
