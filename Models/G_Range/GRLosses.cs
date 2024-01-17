@@ -10,10 +10,6 @@ namespace Models
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "g_range";
 
-        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
-        [Units("0-1")]
-        public double fRadnAllZones { get; set; }
-
         /// <summary>
         /// Partition the litter into structural and metabolic components, based on the lignin C to N ratio (PARTLITR in Savanna, kept in DECOMP.F)
         /// </summary>
