@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using MathNet.Numerics.Integration;
 using Models.Factorial;
+using Models.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -122,93 +123,152 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate the potential intake for the time step.
+        /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and lactation.
         /// </summary>
         /// <param name="ind">Individual for which potential intake is determined.</param>
         private void CalculatePotentialIntake(Ruminant ind)
         {
-            // CF EQ3
+            // CF - Condition factor SCA Eq.3
+            double cf = 1.0;
+            double bc = ind.BodyCondition;
+            if(bc > 1)
+            {
+                cf = bc * (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - bc) / (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - 1);
+            }
 
-            // YF EQ4
-
-            //TF - not included yet EQ5
-
-            // LF EQ8
-
-            // EQ2
-
-            // all in units per day and multiplied at end of this section
+            // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
+            double yf = 1.0;
             if (!ind.Weaned)
             {
-                // potential milk intake/animal/day   B term of EQ71 with y = 1
-                ind.Intake.Milk.Expected = ind.Parameters.GrowSCA.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
-
-                // get estimated milk available
-                // this will be updated to the corrected milk available in the calculate energy section when this method is called again.
-                double actualMilk = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable);
-
-                // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
-                // Todo: implement rumen development to predict ability to eat fodder/pasture.
-
-                // Use young factor of APSIM
-                if (MathUtilities.IsLessThan(actualMilk, ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion))
-                    ind.Intake.Solids.Expected = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - actualMilk * ind.BreedParams.ProportionalDiscountDueToMilk);
-                // Calculate Young factor for EQ2
+                // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
+                ind.Intake.Milk.Expected = ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays, 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkCurveSuckling_CL3 * ind.AgeInDays));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
+                double milkactual = ind.Mother.MilkProductionPotential / ind.Mother.SucklingOffspringList.Count();
+                // calculate YF
+                // ToDo check that this is the potential milk calculation needed.
+                yf = (1 - (milkactual / ind.Intake.Milk.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowSCA.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays - ind.Parameters.GrowSCA.RumenDevelopmentAge_CI4))); 
             }
-            else
+
+            // TF - Temperature factor. SCA Eq.5
+            // NOT INCLUDED
+            double tf = 1.0;
+
+            // LF - Lactation factor SCA Eq.8
+            double lf = 1.0;
+            if(ind is RuminantFemale female)
             {
-                double liveWeightForIntake = Math.Min(ind.HighWeight, ind.NormalisedAnimalWeight);
-                // Normalised weight now performed at allocation of weight in Ruminant
-
-                // Reference: SCA Metabolic LWTs
-                // EQ2 Intake max 
-
-                if (ind.IsWeaner)
+                if (female.IsLactating)
                 {
-                    ind.Intake.Solids.Expected = ind.BreedParams.IntakeCoefficient * ind.StandardReferenceWeight * (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)) * (ind.BreedParams.IntakeIntercept - (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)));
-                }
-                else // weaned individuals >= 12 months
-                {
-                    ind.Intake.Solids.Expected = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / ind.StandardReferenceWeight);
-                }
-
-                if (ind is RuminantFemale femaleind)
-                {
-                    // Increase potential intake for lactating breeder
-                    if (femaleind.IsLactating)
+                    // age of young (Ay) is the same as female DaysLactating
+                    double mi = female.DaysLactating() / ind.Parameters.GrowSCA.PeakLactationIntakeDay_CI8; // SCA Eq.9
+                    lf = 1 + ind.Parameters.GrowSCA.PeakLactationIntakeLevel_CI19[female.SucklingOffspringList.Count()] * Math.Pow(mi, ind.Parameters.GrowSCA.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowSCA.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
+                    double lb = 1.0;
+                    double wl = ind.RelativeSize * ((female.BodyConditionParturition - ind.BodyCondition) / female.DaysLactating()); // SCA Eq.12
+                    if (female.DaysLactating() >= ind.Parameters.GrowSCA.MilkPeakDay_CL2 && wl > ind.Parameters.GrowSCA.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.GrowSCA.LactationConditionLossThreshold_CI13 * female.DaysLactating(), 2.0)))
                     {
-                        // move to half way through timestep is now in female.DaysLactating
-                        // Reference: Intake multiplier for lactating cow (M.Freer)
-                        // double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
-                        // To make this flexible for sheep and goats, added three new Ruminant Coeffs
-                        // Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
-                        // For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
-                        // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
-                        // replaces (A), (B) and (C) 
-                        double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((femaleind.DaysLactating(events.Interval/2.0) / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (femaleind.DaysLactating(events.Interval / 2.0) / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * ind.RelativeCondition);
-
-                        // LF factor for EQ2
-
-                        ind.Intake.Solids.Expected *= intakeMilkMultiplier;
-
-                        // calculate estimated milk production for time step here
-                        // assuming average feed quality if no previous diet values
-                        // This needs to happen before suckling potential intake can be determined.
-                        double tempMilkProtein = 0;
-                        _ = CalculateLactationEnergy(femaleind, false, ref tempMilkProtein);
+                        lb = 1 - ((ind.Parameters.GrowSCA.LactationConditionLossAdjustment_CI12 * wl) / ind.Parameters.GrowSCA.LactationConditionLossThreshold_CI13); // (Eq.11)
+                    }
+                    if (female.SucklingOffspringList.Any())
+                    {
+                        // lf * lb * la (Eq.10)
+                        lf *= lb * (1 - ind.Parameters.GrowSCA.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.GrowSCA.ConditionAtParturitionAdjustment_CI15 * female.BodyConditionParturition);
                     }
                     else
                     {
-                        femaleind.Milk.Reset();
+                        // non suckling - e.g. dairy.
+                        // lf * lb * lc (Eq.13)
+
+                        //
+                        // CI10 and CI11 do not exist in the table
+                        //
+
+                        lf *= lb * (1 + ind.Parameters.GrowSCA.CI10 * ((WMPeak - ind.Parameters.GrowSCA.CI11 * ind.StandardReferenceWeight) / (ind.Parameters.GrowSCA.CI11 * ind.StandardReferenceWeight)));
                     }
+
+                    // calculate estimated milk production for time step here
+                    // assuming average feed quality if no previous diet values
+                    // This needs to happen before suckling potential intake can be determined.
+                    double tempMilkProtein = 0;
+                    _ = CalculateLactationEnergy(female, false, ref tempMilkProtein);
                 }
-
-                //TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
-                // TF temperature factor of EQ2
-
-                //TODO: reduce intake based on high fat to protein concentration.
-                //TODO: what actually stops an animal growing when feed better than maintenance energy.. just add fat until fat reduces hunger?
+                else
+                    female.Milk.Reset();
             }
+
+            // ToDo: does SRW have a male multiplier?
+            // ToDo: does relative size include the larges size achieved?
+
+            // Intake max SCA Eq.2
+            ind.Intake.Solids.Expected = ind.Parameters.GrowSCA.RelativeSizeScalar_CI1 * ind.StandardReferenceWeight * ind.RelativeSize * (ind.Parameters.GrowSCA.RelativeSizeQuadratic_CI2 - ind.RelativeSize) * cf * yf * tf * lf;
+
+            #region old CLEM code
+
+            //// all in units per day and multiplied at end of this section
+            //if (!ind.Weaned)
+            //{
+            //    // potential milk intake/animal/day   B term of EQ71 with y = 1
+            //    ind.Intake.Milk.Expected = ind.Parameters.GrowSCA.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
+
+            //    // get estimated milk available
+            //    // this will be updated to the corrected milk available in the calculate energy section when this method is called again.
+            //    //double actualMilk = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable);
+
+            //    // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
+            //    // Todo: implement rumen development to predict ability to eat fodder/pasture.
+
+            //    // Use young factor of APSIM
+            //    if (MathUtilities.IsLessThan(actualMilk, ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion))
+            //        ind.Intake.Solids.Expected = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - actualMilk * ind.BreedParams.ProportionalDiscountDueToMilk);
+            //}
+            //else
+            //{
+            //    double liveWeightForIntake = Math.Min(ind.HighWeight, ind.NormalisedAnimalWeight);
+            //    // Normalised weight now performed at allocation of weight in Ruminant
+
+            //    // Reference: SCA Metabolic LWTs
+            //    // EQ2 Intake max 
+
+            //    if (ind.IsWeaner)
+            //    {
+            //        ind.Intake.Solids.Expected = ind.BreedParams.IntakeCoefficient * ind.StandardReferenceWeight * (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)) * (ind.BreedParams.IntakeIntercept - (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(ind.StandardReferenceWeight, 0.75)));
+            //    }
+            //    else // weaned individuals >= 12 months
+            //    {
+            //        ind.Intake.Solids.Expected = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / ind.StandardReferenceWeight);
+            //    }
+
+            //    if (ind is RuminantFemale femaleind)
+            //    {
+            //        // Increase potential intake for lactating breeder
+            //        if (femaleind.IsLactating)
+            //        {
+            //            // move to half way through timestep is now in female.DaysLactating
+            //            // Reference: Intake multiplier for lactating cow (M.Freer)
+            //            // double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
+            //            // To make this flexible for sheep and goats, added three new Ruminant Coeffs
+            //            // Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
+            //            // For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
+            //            // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
+            //            // replaces (A), (B) and (C) 
+            //            double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((femaleind.DaysLactating(events.Interval/2.0) / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (femaleind.DaysLactating(events.Interval / 2.0) / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * ind.RelativeCondition);
+
+            //            // LF factor for EQ2
+
+            //            ind.Intake.Solids.Expected *= intakeMilkMultiplier;
+
+            //            // calculate estimated milk production for time step here
+            //            // assuming average feed quality if no previous diet values
+            //            // This needs to happen before suckling potential intake can be determined.
+            //            double tempMilkProtein = 0;
+            //            _ = CalculateLactationEnergy(femaleind, false, ref tempMilkProtein);
+            //        }
+            //        else
+            //        {
+            //            femaleind.Milk.Reset();
+            //        }
+            //    }
+            //}
+            #endregion
+
             // set monthly potential intake
             ind.Intake.Solids.Expected *= events.Interval;
         }
@@ -235,11 +295,9 @@ namespace Models.CLEM.Activities
                         unfedcalves++;
 
                     // Adjusting potential intake for digestability of fodder is now done in RuminantActivityGrazePasture.
-                    // ToDo: check that the new protein requirements don't provide this functionality. 
 
                     CalculateEnergy(ind);
                 }
-
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
             }
         }
@@ -280,9 +338,6 @@ namespace Models.CLEM.Activities
 
             if (ind.Weaned)
             {
-                // TODO: rename params.EMainIntercept ->  HPVisceraFL  HeatProduction FeedLevel
-                // TODO: rename params.EMainCoefficient ->  FHPScalar
-
                 CalculateMaintenanceEnergy(ind, km, sexEffectME);
 
                 if (ind is RuminantFemale indFemale)
@@ -319,40 +374,24 @@ namespace Models.CLEM.Activities
                         kg = km / 0.8; // represents tissue mobilisation
                     }
                 }
-
-                // we implemented this in the equation above, but this uses a parameter. Can we delete this parameter and assume fixed 6 years for all ruminants?
-                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergyMaintenanceMaximumAge (in years)
-                //double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
-
-                // Reference: SCA p.24
-                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
-                // 0.000082 is -0.03 Age in Years/365 for days 
-                // TODO: delete ind.BreedParams.EMaintCoefficient
-                // TODO: delete ind.BreedParams.EMaintExponent
-                // TODO: delete ind.BreedParams.EMaintIntercept
             }
             else // Unweaned
             {
                 // unweaned individuals are assumed to be suckling as natural weaning rate set regardless of inclusion of a wean activity.
                 // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
-                // CLEM has a rule for how much these individuals can eat which is defined in PotentialIntake()
+                // YoungFactor in CalculatePotentialIntake determines how much these individuals can eat when milk is in shortfall
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable * events.Interval);
+                ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable/ind.Mother.SucklingOffspringList.Count());
                 // remove consumed milk from mother.
                 ind.Mother?.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
                 double milkIntakeME = ind.Intake.MilkME;
                 double solidsIntakeME = ind.Intake.SolidsME;
 
-                // ToDo: check that this comment is indeed wrong.
-                // all milkintake in kg and kml eqn is milk energy
-
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 //double kgl = 1; overwrite kg in statement below so it can be used in common code outside weaned loop
                 kg = (0.006 + ind.Intake.MDSolid * 0.042) + 0.7 * (milkIntakeME / (milkIntakeME + solidsIntakeME)); // MJ milk/MJ total intake;
-
-                // ToDo: everything in following should be using milkIntakeDaily not MilkIntake for timestep right?
 
                 if (MathUtilities.IsPositive(ind.Intake.Milk.Actual + ind.Intake.Solids.Actual))
                 {
@@ -363,11 +402,9 @@ namespace Models.CLEM.Activities
                     kg = ((milkIntakeME * 0.7) + (solidsIntakeME * kg)) / (milkIntakeME + solidsIntakeME);
                 }
 
-                // ToDo: ensure MilkIntakeMaximum is daily and add units to summary description
-
                 milkPacket.MetabolisableEnergyContent = ind.Parameters.GrowSCA.EnergyContentMilk_CL6;
                 //milkPacket.NitrogenContent = ind.Parameters.Breeding.XXXXXX Need to set this still.
-                milkPacket.Amount = Math.Min(ind.Parameters.GrowSCA.MilkIntakeMaximum, ind.Intake.Milk.Actual); // keep daily for energy calculations;
+                milkPacket.Amount = ind.Intake.Milk.Actual;
                 ind.Intake.AddFeed(milkPacket);
 
                 CalculateMaintenanceEnergy(ind, kml, sexEffectME);

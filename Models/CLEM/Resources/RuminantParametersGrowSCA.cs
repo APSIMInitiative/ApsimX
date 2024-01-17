@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using DocumentFormat.OpenXml.Presentation;
+using Models.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -248,6 +249,144 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("")]
         public double CH5 { get; set; }
+
+        #endregion
+
+        #region Intake CI#
+
+        /// <summary>
+        /// Relative size scalar (SCA CI1)
+        /// </summary>
+        [Description("Relative size scalar [CI1]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.025)]
+        public double RelativeSizeScalar_CI1 { get; set; }
+
+        /// <summary>
+        /// Relative size quadratic (SCA CI2)
+        /// </summary>
+        [Description("Relative size quadratic [CI2]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1.7)]
+        public double RelativeSizeQuadratic_CI2 { get; set; }
+
+        /// <summary>
+        /// Rumen Development Curvature (SCA CI3)
+        /// </summary>
+        [Description("Rumen Development Curvature [CI3]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.22)]
+        public double RumenDevelopmentCurvature_CI3 { get; set; }
+
+        /// <summary>
+        /// Rumen Development Age (SCA CI4)
+        /// </summary>
+        [Description("Rumen Development Age [CI4]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(60)]
+        public double RumenDevelopmentAge_CI4 { get; set; }
+
+        // CI5 highTempEffect 0.02
+        // CI6 maxTempThreshold 25
+        // CI7 minTempThreshold 22
+
+        /// <summary>
+        /// Peak lactation intake day (SCA CI8)
+        /// </summary>
+        [Description("Peak lactation intake day [CI8]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(62)]
+        public double PeakLactationIntakeDay_CI8 { get; set; }
+
+        /// <summary>
+        /// Lactation response curvature (SCA CI9)
+        /// </summary>
+        [Description("Lactation response curvature [CI9]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1.7)]
+        public double LactationResponseCurvature_CI9 { get; set; }
+
+        /// <summary>
+        ///  (SCA CI10)
+        /// </summary>
+        [Description(" [CI10]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.375)]
+        public double _CI10 { get; set; }
+
+        /// <summary>
+        ///  (SCA CI11)
+        /// </summary>
+        [Description(" [CI11]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.375)]
+        public double _CI11 { get; set; }
+
+        /// <summary>
+        /// Lactation Condition Loss Adjustment (SCA CI12)
+        /// </summary>
+        [Description("Lactation Condition Loss Adjustment [CI12]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.15)]
+        public double LactationConditionLossAdjustment_CI12 { get; set; }
+
+        /// <summary>
+        /// Lactation Condition Loss Threshold (SCA CI13)
+        /// </summary>
+        [Description("Lactation Condition Loss Threshold [CI13]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.005)]
+        public double LactationConditionLossThreshold_CI13 { get; set; }
+
+        /// <summary>
+        /// Lactation condition loss threshold decay (SCA CI14)
+        /// </summary>
+        [Description("Lactation condition loss threshold decay [CI14]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.005)]
+        public double LactationConditionLossThresholdDecay_CI14 { get; set; }
+
+        /// <summary>
+        /// Condition at parturition adjustment (SCA CI15).
+        /// </summary>
+        [Description("Condition at parturition adjustment [CI15]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.01)] // 0.5 cattle, 0.01 B.indicus
+        public double ConditionAtParturitionAdjustment_CI15 { get; set; }
+
+        // CI16 EMPTY
+
+        /// <summary>
+        /// Low temperature effect (SCA CI17)
+        /// </summary>
+        [Description("Low temperature effect [CI17]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.01)]
+        public double LowTemperatureEffect_CI17 { get; set; }
+
+        /// <summary>
+        /// Rainfall scalar (SCA CI18)
+        /// </summary>
+        [Description("Rainfall scalar [CI18]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(20.0)]
+        public double RainfallScalar_CI18 { get; set; }
+
+        /// <summary>
+        /// Peak lactation intake level (SCA CI19)
+        /// </summary>
+        [Description("Peak lactation intake level [CI19]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.416)]
+        public double[] PeakLactationIntakeLevel_CI19 { get; set; }
+
+        /// <summary>
+        /// Relative condition effect (SCA CI20)
+        /// </summary>
+        [Description("Relative condition effect [CI20]")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1.5)]
+        public double RelativeConditionEffect_CI20 { get; set; }
 
         #endregion
 

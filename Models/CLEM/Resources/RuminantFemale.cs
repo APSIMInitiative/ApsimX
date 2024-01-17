@@ -154,6 +154,16 @@ namespace Models.CLEM.Resources
         public double WeightAtConception { get; set; }
 
         /// <summary>
+        /// Weight at time of conception
+        /// </summary>
+        public double ConceptusWeight { get; set; } = 0;
+
+        /// <summary>
+        /// Body condition at parturition
+        /// </summary>
+        public double BodyConditionParturition { get; set; }
+
+        /// <summary>
         /// Highest weight achieved when not pregnant
         /// </summary>
         public double HighWeightWhenNotPregnant { get; set; }
@@ -274,6 +284,7 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
+            BodyConditionParturition = BodyCondition;
             DateOfLastBirth = date;
             ProportionMilkProductionAchieved = 1;
             MilkLag = 1;

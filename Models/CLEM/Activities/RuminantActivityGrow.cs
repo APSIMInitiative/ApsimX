@@ -364,8 +364,8 @@ namespace Models.CLEM.Activities
                     totalMethane += methane;
 
                     // grow wool and cashmere
-                    ind.Wool += ind.Parameters.Grow.WoolCoefficient * ind.MetabolicIntake;
-                    ind.Cashmere += ind.Parameters.Grow.CashmereCoefficient * ind.MetabolicIntake;
+                    ind.WoolWeight += ind.Parameters.Grow.WoolCoefficient * ind.MetabolicIntake;
+                    ind.CashmereWeight += ind.Parameters.Grow.CashmereCoefficient * ind.MetabolicIntake;
                 }
 
                 // alert user to unfed animals in the month as this should not happen

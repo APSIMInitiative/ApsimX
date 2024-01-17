@@ -114,7 +114,7 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
-            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Wool + a.Cashmere > 0);
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.WoolWeight + a.CashmereWeight > 0);
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
@@ -144,7 +144,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per kg fleece":
-                                amountToDo = uniqueIndividuals.Sum(a => a.Wool + a.Cashmere);
+                                amountToDo = uniqueIndividuals.Sum(a => a.WoolWeight + a.CashmereWeight);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -194,12 +194,12 @@ namespace Models.CLEM.Activities
                 int shorn = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    kgWoolShorn += ruminant.Wool;
-                    amountToDo -= ruminant.Wool;
-                    kgCashmereShorn += ruminant.Cashmere;
-                    amountToDo -= ruminant.Cashmere;
-                    ruminant.Wool = 0;
-                    ruminant.Cashmere = 0;
+                    kgWoolShorn += ruminant.WoolWeight;
+                    amountToDo -= ruminant.WoolWeight;
+                    kgCashmereShorn += ruminant.CashmereWeight;
+                    amountToDo -= ruminant.CashmereWeight;
+                    ruminant.WoolWeight = 0;
+                    ruminant.CashmereWeight = 0;
                     shorn++;
                     if (amountToDo <= 0)
                         break;

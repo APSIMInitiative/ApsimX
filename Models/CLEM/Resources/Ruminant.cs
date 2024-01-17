@@ -268,13 +268,13 @@ namespace Models.CLEM.Resources
         /// Amount of wool on individual
         /// </summary>
         [FilterByProperty]
-        public double Wool { get; set; }
+        public double WoolWeight { get; set; }
 
         /// <summary>
         /// Amount of cashmere on individual
         /// </summary>
         [FilterByProperty]
-        public double Cashmere { get; set; }
+        public double CashmereWeight { get; set; }
 
         /// <summary>
         /// Indicates if this individual has died before removal from herd
@@ -634,7 +634,32 @@ namespace Models.CLEM.Resources
             get
             {
                 //TODO check that conceptus weight does not need to be removed for pregnant females.
+
                 return Weight / NormalisedAnimalWeight;
+            }
+        }
+
+        /// <summary>
+        /// Base weight
+        /// </summary>
+        [FilterByProperty]
+        public double BaseWeight
+        {
+            get
+            {
+                return weight - (this as RuminantFemale)?.ConceptusWeight ?? 0 - WoolWeight;
+            }
+        }
+
+        /// <summary>
+        /// Body condition
+        /// </summary>
+        [FilterByProperty]
+        public double BodyCondition
+        {
+            get
+            {
+                return BaseWeight / NormalisedAnimalWeight;
             }
         }
 
@@ -897,8 +922,8 @@ namespace Models.CLEM.Resources
             //ToDo: setup protein mass and fat mass for new individual
 
             Number = 1;
-            Wool = 0;
-            Cashmere = 0;
+            WoolWeight = 0;
+            CashmereWeight = 0;
 
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
