@@ -1946,7 +1946,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 40.0,
+                                      "FixedValue": 50.0,
                                       "Units": "mm",
                                       "Name": "Rate",
                                       "ResourceName": null,
@@ -1967,7 +1967,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 80.0,
+                                      "FixedValue": 90.0,
                                       "Units": "mm",
                                       "Name": "Rate",
                                       "ResourceName": null,
@@ -1997,6 +1997,94 @@
                                       "ReadOnly": false
                                     }
                                   ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                              "MaximumTemperatureWeighting": 0.5,
+                              "Name": "TemperatureEffect",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "X|Y\n-|-\n8|0\n25|1\n35|1\n45|0\n\nChange to:\n\nX|Y\n-|-\n10|0\n23.5|1\n32|1\n45|0\n\n============================\n\nSEE PHD CONATY\n\n============================\n\nBase temp of 10 oC from:\n\nSnider, J.L. et al., 2022. Net photosynthesis acclimates to low growth temperature in cotton seedlings by shifting temperature thresholds for photosynthetic component processes and respiration. Environ. Exp. Bot., 196.\n\nCombing data from:\n\n**FIG. 2**\n\n* *Conaty, W.C., Burke, J.J., Mahan, J.R., Neilsen, J.E. and Sutton, B.G., 2012. Determining the Optimum Plant Temperature of Cotton Physiology and Yield to Improve Plant-Based* Irrigation Scheduling. Crop Sci., 52(4): 1828-1836.\n\n**FIG. 22.4**\n\n* *Snider, J., Bange, M. and Heitholt, J., 2021. Chapter 22. Cotton. In: V.O. Sadras and D.F. Calderini (Editors), Crop Physiology. Case Histories for Major Crops, pp. 715-746.*\n\nUsing a base temp of 10 oC\n\nOZCOT uses base temperature of 8 oC for assimilate production\n\nFrom:\n\n* *Constable, G.A. and Bange, M.P., 2015. The yield potential of cotton (Gossypium hirsutum L.). Field Crops Res., 182: 98-106.*\n\n--> With a base temperature for development of 11.4–15 ◦C (Moraghan et al., 1968; Constable, 1976; Kerby et al., 1987), thermal kinetic window of 23.5–32.0 ◦C (Burke et al., 1988), and physiological optimum of 28 ◦C (Conaty et al., 2012).",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    7.0,
+                                    27.0,
+                                    32.0,
+                                    40.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.5
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "VPDEffect",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    20.0,
+                                    25.0,
+                                    30.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    0.5,
+                                    0.0
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Weather].VPD",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -8121,6 +8209,177 @@
                   "Name": "EventNamesOnGraph",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "CombinedResults",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "NodeNumber",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "FolderName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Cotton.Leaf.NodeNumber",
+                  "YFieldName": "Predicted.Cotton.Leaf.NodeNumber",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Height",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "FolderName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Cotton.Leaf.Height",
+                  "YFieldName": "Predicted.Cotton.Leaf.Height",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -77389,6 +77648,11 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
+                            "[Weather].MaxT",
+                            "[Weather].MeanT",
+                            "[Weather].MinT",
+                            "[Weather].VPD",
+                            "",
                             "[Cotton].DaysAfterSowing",
                             "[Cotton].Leaf.NodeNumber",
                             "[Cotton].Leaf.LAI",
@@ -79842,6 +80106,211 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "100cm",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "Weather",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Temperature",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "ForestHillReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Weather.MaxT",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Max",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "ForestHillReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Weather.MeanT",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Mean",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -11094807,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "ForestHillReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Weather.MinT",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Min",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": 0.0,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "VPD",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "ForestHillReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Weather.VPD",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
