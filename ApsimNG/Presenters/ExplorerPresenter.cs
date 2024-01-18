@@ -312,8 +312,6 @@ namespace UserInterface.Presenters
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
-            // Need to hide the right hand panel because some views may not have saved
-            // their contents until they get a 'Detach' call.
             try
             {
                 HideRightHandPanel();
@@ -329,7 +327,7 @@ namespace UserInterface.Presenters
             }
             finally
             {
-                ShowRightHandPanel();
+                ShowRightHandPanel();       
             }
 
             return false;
