@@ -2231,42 +2231,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "Delta",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "Use different thermal time for phyllochron? --> mainstem node accumulation\n\n\"Vegetative thermal time\" see Mungbeanand Peanut model",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTime",
-                                  "Name": "ThermalTime",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Phyllochron",
-                                  "Name": "Phyllochron",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
                               "Name": "FruitLoad",
                               "ResourceName": null,
@@ -2373,6 +2337,79 @@
                                   "Name": "XValue",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LessThanFunction, Models",
+                              "Name": "PotentialRate",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Vegetative.ProgressThroughPhase",
+                                  "Name": "TTsinceEmergence",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Expression": "[Leaf].Phyllochron",
+                                  "Name": "Target",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Zero",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "Delta",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "Use different thermal time for phyllochron? --> mainstem node accumulation\n\n\"Vegetative thermal time\" see Mungbeanand Peanut model",
+                                      "Name": "Memo",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "ThermalTime",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].Phyllochron",
+                                      "Name": "Phyllochron",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -2841,6 +2878,114 @@
                               "Name": "PlantNumber",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "TotalNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].NodeNumber",
+                      "Name": "MainStemNodes",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "Emergence",
+                      "EndStageName": "Cutout",
+                      "ResetStageName": null,
+                      "FractionRemovedOnCut": 1.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 1.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "LeavesOnBranches",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "11/12/2023:\n\nAdd site reduction factors here:\n\n* Density\n* Water stress\n* (Variety)\n\nIn OZCOT, site number is reduced by **PLANT POPULATION** and **NITROGEN STRESS**\n\n\n==============================================================================================\n\n11/12/2023: add node number here as well\n\nDifferent phyllochron for leaf appearance of Fruiting Branches compared with mainstem:\n\n* *Reddy, K.R., Hodges, H.F. and McKinion, J.M., 1997. Modeling temperature effects on cotton internode and leaf growth. Crop Sci., 37(2): 503-509.*\n\n",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Emergence",
+                          "End": "Maturity",
+                          "Name": "LeafProduction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Delta",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].BranchNumber",
+                                  "Name": "Branches",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "LAR",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "TT",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].Phyllochron",
+                                      "Name": "Phyllochron",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].DMDemands.Structural.DeltaLAIPotential.LeafGrowthStage.Delta.EmergingLeaves.MultiplyFunction.R",
+                                  "Name": "R",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -8358,6 +8503,86 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Observed.Cotton.Leaf.Height",
                   "YFieldName": "Predicted.Cotton.Leaf.Height",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LAI",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "FolderName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Cotton.Leaf.LAI",
+                  "YFieldName": "Predicted.Cotton.Leaf.LAI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -77674,6 +77899,8 @@
                             "[Cotton].Leaf.WaterDemand",
                             "[Cotton].Leaf.CoverGreen",
                             "[Cotton].Leaf.Wt",
+                            "[Cotton].Leaf.Sites",
+                            "[Cotton].Leaf.TotalNumber",
                             "",
                             "[Cotton].Stem.Wt",
                             "",
@@ -78385,7 +78612,7 @@
                           "LineThickness": 0,
                           "TableName": "ForestHillReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Cotton.Leaf.CoverGreen",
+                          "YFieldName": "Cotton.Leaf.TotalNumber",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -78425,7 +78652,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Cotton.Leaf.CoverGreen",
+                          "YFieldName": "Cotton.Leaf.TotalNumber",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
