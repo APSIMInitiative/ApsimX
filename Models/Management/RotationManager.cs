@@ -22,14 +22,6 @@ namespace Models.Management
     /// Instead, it relies on other components (usually manager scripts)
     /// for their specific knowledge. An example crop rotation is provided
     /// in the RotationManager.apsimx example file.
-    /// 
-    /// todo:
-    ///
-    /// - Implement node/arc ID separate from name?
-    /// - dynamic / auto layout of new nodes/arcs
-    /// - ?intellisense isn't picking up member functions? events are OK.
-    /// - Syntax checking of rules / actions.
-    /// - "fixme" where noted in code
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.BubbleChartView")]
@@ -96,11 +88,6 @@ namespace Models.Management
         /// <summary>
         /// All dynamic events published by the rotation manager.
         /// </summary>
-        /// <remarks>
-        /// fixme:
-        /// If any nodes are disconnected from the rest of the graph,
-        /// their names will still be included in this list.
-        /// </remarks>
         public IEnumerable<string> Events
         {
             get

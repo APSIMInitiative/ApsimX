@@ -10,7 +10,8 @@ using UserInterface.Interfaces;
 using APSIM.Shared.Graphing;
 using Models.Core;
 using ApsimNG.EventArguments.DirectedGraph;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Shared.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -40,6 +41,7 @@ namespace UserInterface.Presenters
         /// Will be Conditions or Actions
         /// </summary>
         private string currentEditor;
+        ManagerCursorLocation editorCursor;
         private EditorView conditionsEditor;
         private EditorView actionsEditor;
 
@@ -333,8 +335,11 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                string currentLine = StringUtilities.GetLine(e.Code, e.LineNo - 1);
                 currentEditor = (sender as EditorView).MainWidget.TooltipText;
+
+                editorCursor = (sender as EditorView).Location;
+                editorCursor.Column += 1; //so that it is placed after the .
 
                 if (!e.ControlShiftSpace)
                 {
@@ -353,47 +358,32 @@ namespace UserInterface.Presenters
                 presenter.MainPresenter.ShowError(err);
             }
         }
-        /// <summary>
-        /// Gets a specific line of text, preserving empty lines.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <param name="lineNo">0-indexed line number.</param>
-        /// <returns>String containing a specific line of text.</returns>
-        private string GetLine(string text, int lineNo)
-        {
-            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
-            // to use unix-style line endings, so every second element from the returned array is an empty string.
-            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
-
-            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
-            string currentLine;
-            using (System.IO.StringReader reader = new System.IO.StringReader(text))
-            {
-                int i = 0;
-                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
-                {
-                    i++;
-                }
-            }
-            return currentLine;
-        }
 
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             try
             {
                 EditorView view = null;
-                if (currentEditor.CompareTo("Conditions") == 0)
+                if (currentEditor.CompareTo(conditionsEditor.MainWidget.TooltipText) == 0)
                     view = conditionsEditor;
-                else if (currentEditor.CompareTo("Actions") == 0)
+                else if (currentEditor.CompareTo(actionsEditor.MainWidget.TooltipText) == 0)
                     view = actionsEditor;
 
                 if (string.IsNullOrEmpty(args.ItemSelected))
+                {
                     return;
+                }
                 else if (string.IsNullOrEmpty(args.TriggerWord))
+                {
+                    view.Location = editorCursor;
                     view.InsertAtCaret(args.ItemSelected);
+                }
                 else
+                {
+                    view.Location = editorCursor;
                     view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                }
+                    
             }
             catch (Exception err)
             {

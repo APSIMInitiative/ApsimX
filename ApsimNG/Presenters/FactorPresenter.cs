@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
     using EventArguments;
     using Models.Factorial;
     using System;
@@ -78,7 +79,7 @@
 
             try
             {
-                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                string currentLine = StringUtilities.GetLine(e.Code, e.LineNo - 1);
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, false, e.ControlSpace))
@@ -88,32 +89,6 @@
             {
                 presenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Gets a specific line of text, preserving empty lines.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <param name="lineNo">0-indexed line number.</param>
-        /// <returns>String containing a specific line of text.</returns>
-        /// <remarks>This method is a duplicate of ReportPresenter.GetLine().</remarks>
-        private string GetLine(string text, int lineNo)
-        {
-            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
-            // to use unix-style line endings, so every second element from the returned array is an empty string.
-            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
-
-            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
-            string currentLine;
-            using (System.IO.StringReader reader = new System.IO.StringReader(text))
-            {
-                int i = 0;
-                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
-                {
-                    i++;
-                }
-            }
-            return currentLine;
         }
 
         /// <summary>

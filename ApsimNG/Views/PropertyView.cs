@@ -289,7 +289,7 @@ namespace UserInterface.Views
                     Frame codeOutline = new Frame();
                     codeEditor.MainWidget.Name = property.ID.ToString();
                     codeEditor.MainWidget.TooltipText = property.Name;
-                    codeEditor.DisposeEditor += OnEntryFocusOut;
+                    codeEditor.DisposeEditor += OnEditorChange;
                     codeOutline.Add(codeEditor.MainWidget);
                     codeOutline.HeightRequest = 100;
                     component = codeOutline;
@@ -494,7 +494,7 @@ namespace UserInterface.Views
         {
             try
             {
-                Guid id = new Guid((sender as EditorView).MainWidget.Name.Split(':')[0]);
+                Guid id = new Guid((sender as EditorView).MainWidget.Name);
                 string text = (sender as EditorView).Text;
 
                 if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
