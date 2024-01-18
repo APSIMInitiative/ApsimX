@@ -144,10 +144,10 @@ namespace UserInterface.Presenters
             {
                 if (args.Objects.Count == 1)
                 {
-                    string objectName = args.Objects[0].Name;
+                    int objectID = args.Objects[0].ID;
                     for (int i = 0; i < model.Nodes.Count; i++)
                     {
-                        if (model.Nodes[i].Name == objectName)
+                        if (model.Nodes[i].ID == objectID)
                         {
                             currentObject = new NodePropertyWrapper();
                             (currentObject as NodePropertyWrapper).node = model.Nodes[i];
@@ -155,7 +155,7 @@ namespace UserInterface.Presenters
                     }
                     for (int i = 0; i < model.Arcs.Count; i++)
                     {
-                        if (model.Arcs[i].Name == objectName)
+                        if (model.Arcs[i].ID == objectID)
                         {
                             currentObject = new ArcPropertyWrapper();
                             (currentObject as ArcPropertyWrapper).arc = model.Arcs[i];

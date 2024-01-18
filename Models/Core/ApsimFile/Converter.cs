@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 171; } }
+        public static int LatestVersion { get { return 172; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5346,11 +5346,27 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Add minimum germination temperature to GerminatingPhase under Phenology.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion171(JObject root, string fileName)
+        {
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "GerminatingPhase"))
+            {
+                Constant value = new Constant();
+                value.Name = "MinSoilTemperature";
+                value.FixedValue = 0.0;
+                JsonUtilities.AddModel(NNP, value);
+            }
+        }
+
+        /// <summary>
         /// Change name based system to id based system in directed graphs
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion171(JObject root, string _)
+        private static void UpgradeToVersion172(JObject root, string _)
         {
             foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
             {
@@ -5364,7 +5380,6 @@ namespace Models.Core.ApsimFile
                 }
 
                 //give each arc an id
-                id = 0;
                 foreach (var arc in rotationManager["Arcs"])
                 {
                     id += 1;

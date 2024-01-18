@@ -63,7 +63,9 @@ namespace APSIM.Shared.Graphing
             Location = x.Location;
             Colour = x.Colour;
             SourceID = x.SourceID;
+            Source = x.Source;
             DestinationID = x.DestinationID;
+            Destination = x.Destination;
             Conditions = new List<string>(x.Conditions);
             Actions = new List<string>(x.Actions);
             BezierPoints = new List<Point>(x.BezierPoints);

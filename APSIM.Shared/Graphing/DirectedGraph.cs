@@ -113,10 +113,11 @@ namespace APSIM.Shared.Graphing
         }
 
         /// <summary>
-        /// 
+        /// Gets the next available ID for a Node or Arc.
+        /// A restricted list can be provided for cases where multiple ID must be requested in a row.
         /// </summary>
         /// <returns></returns>
-        public int NextArcID()
+        public int NextID(List<int> restricted = null)
         {
             int id = 0;
             bool found = true;
@@ -134,31 +135,13 @@ namespace APSIM.Shared.Graphing
                     if (id == Arcs[i].ID)
                         found = true;
                 }
-            }
-            return id;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public int NextNodeID()
-        {
-            int id = 0;
-            bool found = true;
-            while (found)
-            {
-                id += 1;
-                found = false;
-                for (int i = 0; i < Nodes.Count && !found; i++)
+                if (restricted != null)
                 {
-                    if (id == Nodes[i].ID)
-                        found = true;
-                }
-                for (int i = 0; i < Arcs.Count && !found; i++)
-                {
-                    if (id == Arcs[i].ID)
-                        found = true;
+                    for (int i = 0; i < restricted.Count && !found; i++)
+                    {
+                        if (id == restricted[i])
+                            found = true;
+                    }
                 }
             }
             return id;

@@ -41,6 +41,10 @@ namespace Models.Management
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
 
+        /// <summary>detailed logging component</summary>
+        [Link(Type = LinkType.Child, IsOptional = true)]
+        public RotationRugplot detailedLogger = null;
+
         /// <summary>
         /// Events service. Used to publish events when transitioning
         /// between stages/nodes.
@@ -119,6 +123,22 @@ namespace Models.Management
             return Nodes.Select(n => n.Name).ToArray();
         }
 
+        private string getCurrentStateName()
+        {
+            foreach (Node state in Nodes)
+                if (state.ID == CurrentState)
+                    return state.Name;
+            return "No State";
+        }
+
+        private string getStateNameByID(int id)
+        {
+            foreach (Node state in Nodes)
+                if (state.ID == id)
+                    return state.Name;
+            return "No State";
+        }
+
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
         /// </summary>
@@ -133,7 +153,19 @@ namespace Models.Management
                     CurrentState = Nodes[i].ID;
 
             if (Verbose)
-                summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
+                summary.WriteMessage(this, $"Initialised, state={getCurrentStateName()} (of {Nodes.Count} total)", MessageType.Diagnostic);
+        }
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
         }
 
         /// <summary>
@@ -167,9 +199,11 @@ namespace Models.Management
                         }
                         catch (Exception ex) 
                         {
-                            throw new AggregateException($"Error while evaluating transition from {arc.ID} to {arc.ID} - rule '{testCondition}': " + ex.Message );
+                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message );
                         }
-                        score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
+                        score *= result;
                     }
 
                     if (Verbose)
@@ -196,6 +230,7 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
+                    detailedLogger?.DoTransition(getStateNameByID(bestArc.DestinationID));
                     TransitionTo(bestArc);
                     more = true;
                     MadeAChange = true;
@@ -216,7 +251,13 @@ namespace Models.Management
             TopLevel = oldState;
             return(MadeAChange);
         }
-
+        /// <summary>
+        /// Log the state of the system (usually beginning/end of simulation)
+        /// </summary>
+        public void DoLogState() 
+        {
+            detailedLogger?.DoTransition(getCurrentStateName());
+        }
         /// <summary>
         /// Transition along an arc to another stage/node.
         /// </summary>
@@ -228,7 +269,7 @@ namespace Models.Management
                 if (Verbose)
                     summary.WriteMessage(this, $"Transitioning from {transition.ID} to {transition.ID}", MessageType.Diagnostic);
                 // Publish pre-transition events.
-                eventService.Publish($"TransitionFrom{CurrentState}", null);
+                eventService.Publish($"TransitionFrom{getCurrentStateName()}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
 
                 CurrentState = transition.ID;
@@ -252,13 +293,13 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish($"TransitionTo{CurrentState}", null);
+                eventService.Publish($"TransitionTo{getCurrentStateName()}", null);
                 if (Verbose)
-                    summary.WriteMessage(this, $"Current state is now {CurrentState}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Current state is now {getCurrentStateName()}", MessageType.Diagnostic);
             }
             catch (Exception err)
             {
-                throw new Exception($"Unable to transition to state {CurrentState}", err);
+                throw new Exception($"Unable to transition to state {getCurrentStateName()}", err);
             }
         }
 

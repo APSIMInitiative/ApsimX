@@ -1607,6 +1607,7 @@
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
+              "fRadnAllZones": 0.0,
               "LightProfile": null,
               "KDead": 0.1,
               "LAIDead": 0.0,
@@ -1781,7 +1782,7 @@
                             1.0
                           ],
                           "Y": [
-                            1.0,
+                            0.0,
                             1.0
                           ],
                           "XVariableName": null,
@@ -2045,8 +2046,342 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.AddFunction, Models",
                   "Name": "Cover",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "Seed",
+                      "EndStageName": "Maturity",
+                      "ResetStageName": null,
+                      "FractionRemovedOnCut": 0.0,
+                      "FractionRemovedOnHarvest": 0.0,
+                      "FractionRemovedOnGraze": 0.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "Growth",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Expansion",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DeltaFunction, Models",
+                              "StartStageName": "Seed",
+                              "Name": "Delta",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SigmoidFunction, Models",
+                                  "Name": "Integral",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.97,
+                                      "Units": null,
+                                      "Name": "Ymax",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Memo, Models",
+                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                                          "Name": "Param value set at establishment",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 403.8,
+                                      "Units": null,
+                                      "Name": "Xo",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Memo, Models",
+                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                                          "Name": "Param value set at establishment",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 80.75,
+                                      "Units": null,
+                                      "Name": "b",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Memo, Models",
+                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                                          "Name": "Param value set at establishment",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "WaterStressFactor",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.5,
+                                    1.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    1.0
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Stover].Fw",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "MidReproductive",
+                          "End": "Maturity",
+                          "Name": "Senescence",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DeltaFunction, Models",
+                              "StartStageName": "Seed",
+                              "Name": "Delta",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "Integral",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.HoldFunction, Models",
+                                      "WhenToHold": "MidReproductive",
+                                      "Name": "MaxCover",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Stover].CoverGreen",
+                                          "Name": "ValueToHold",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "ProportionLost",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "One",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "ProportionRemaining",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "TTSenesce",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                                  "Name": "AccumulatedThermalTime",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.AddFunction, Models",
+                                                  "Name": "ThermalTimeAtStartSenescence",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Phenology].Seedling.Target",
+                                                      "Name": "Seedling",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Phenology].Vegetative.Target",
+                                                      "Name": "Vegetative",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Phenology].EarlyReproductive.Target",
+                                                      "Name": "EarlyReproductive",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Phenology].MidReproductive.Target",
+                                                      "Name": "MidReproductive",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SenescentPhaseDuration",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Phenology].LateReproductive.Target",
+                                                  "Name": "LateReproductive",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Phenology].Maturity.Target",
+                                                  "Name": "Maturity",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m2",
+                      "Name": "InitialCover",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "CoverOld",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -3767,16 +4102,33 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "FixationRate",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.03,
+                      "Units": "g N / g Photosynthesis",
+                      "Name": "MaximumFixation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].Photosynthesis",
+                      "Name": "DailyPhotosynthesis",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SCRUM].LegumePropn",
+                      "Name": "LegumePropn",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4024,6 +4376,16 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "MortalityRate",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "LegumePropn",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -5258,11 +5620,11 @@
             {
               "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
               "HarvestIndex": 0.45,
-              "MoisturePc": 14.0,
+              "DryMatterContent": 0.14,
               "Proot": 0.1,
               "MaxRD": 1500.0,
               "MaxHeight": 1000.0,
-              "Acover": 0.98,
+              "MaxCover": 0.97,
               "ExtinctCoeff": 0.7,
               "RootNConc": 0.01,
               "StoverNConc": 0.01,
@@ -5271,7 +5633,9 @@
               "BaseT": 0.0,
               "OptT": 30.0,
               "MaxT": 40.0,
-              "Legume": false,
+              "GSMax": 0.008,
+              "R50": 120.0,
+              "LegumePropn": 0.0,
               "WaterStress": true,
               "EstablishDate": "1998-10-14T00:00:00",
               "EstablishStage": "Seed",

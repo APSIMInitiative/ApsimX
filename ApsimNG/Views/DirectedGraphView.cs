@@ -314,7 +314,7 @@ namespace UserInterface.Views
                 {
                     if (isDragging)
                     {
-                        if (SelectedObjects.Count > 0) // If an object is under the mouse and the mouse is down, then move it
+                        if (SelectedObjects != null && SelectedObjects.Count > 0) // If an object is under the mouse and the mouse is down, then move it
                         {
                             for (int i = 0; i < SelectedObjects.Count; i++)
                             {

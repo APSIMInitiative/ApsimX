@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UserInterface.Interfaces;
-using APSIM.Interop.Visualisation;
 using Gtk;
-using Models.Management;
 using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
@@ -239,7 +236,7 @@ namespace UserInterface.Views
             ContextMenu.Foreach(mi => ContextMenu.Remove(mi));
             MenuItem item;
             EventHandler handler;
-            if (graphView.SelectedObjects.Count == 0)
+            if (graphView.SelectedObjects == null || graphView.SelectedObjects.Count == 0)
             {
                 // User has right-clicked in empty space.
                 item = new MenuItem("Add Node");
@@ -253,13 +250,13 @@ namespace UserInterface.Views
                 if (selectedObj is Node)
                 {
                     // User has right-clicked on a node.
-                    item = new MenuItem($"Duplicate {selectedObj.Name}");
-                    handler = OnDuplicateNode;
+                    item = new MenuItem($"Add Arc");
+                    handler = OnAddArcStart;
                     item.Activated += handler;
                     ContextMenu.Append(item);
 
-                    item = new MenuItem($"Add Arc");
-                    handler = OnAddArcStart;
+                    item = new MenuItem($"Duplicate {selectedObj.Name}");
+                    handler = OnDuplicateNode;
                     item.Activated += handler;
                     ContextMenu.Append(item);
 
@@ -270,14 +267,6 @@ namespace UserInterface.Views
                 }
                 else if (selectedObj is Arc arc)
                 {
-
-
-                    // User has right-clicked on an arc.
-                    item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Destination.Name}");
-                    handler = OnDuplicateArc;
-                    item.Activated += handler;
-                    ContextMenu.Append(item);
-
                     item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Destination.Name}");
                     handler = OnDeleteArc;
                     item.Activated += handler;
@@ -429,14 +418,15 @@ namespace UserInterface.Views
         {
             try
             {
-                Node node = new Node();
-                node.Name = null;
-                Node newNode = new Node(node);
+                Node newNode = new Node();
                 //randomize colour of node
                 System.Drawing.Color[] colours = ColourUtilities.Colours;
                 Random rand = new Random();
                 int randomIndex = rand.Next(colours.Length-1) + 1; //remove black as an option
                 newNode.Colour = colours[randomIndex];
+
+                newNode.ID = graphView.DirectedGraph.NextID();
+                newNode.Name = $"Node {newNode.ID}";
 
                 newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
@@ -483,6 +473,7 @@ namespace UserInterface.Views
                 cursorNode.Name = "_cursor_";
                 cursorNode.Location = graphView.lastPos;
 
+                //We make a dummy node here so that it doesn't actually link to a real node until it's created
                 Node startNode = new Node();
                 startNode.ID = graphView.SelectedObjects[0].ID;
                 startNode.Name = graphView.SelectedObjects[0].Name;
@@ -490,12 +481,15 @@ namespace UserInterface.Views
 
                 Arc arc = new Arc();
                 arc.ID = 0;
-                arc.Name = "";
+                arc.Name = "Arc";
                 arc.SourceID = graphView.SelectedObjects[0].ID;
                 arc.DestinationID = 0;
                 arc.Location = startNode.Location;
                 arc.Source = startNode;
                 arc.Destination = cursorNode;
+                arc.Conditions = new List<string>();
+                arc.Actions = new List<string>();
+                arc.BezierPoints = new List<System.Drawing.Point>();
 
                 graphView.tempArc = new Arc(arc);
             }
@@ -511,11 +505,16 @@ namespace UserInterface.Views
             if (graphView.SelectedObjects.Count == 1)
             {
                 Arc newArc = new Arc();
-                newArc.ID = graphView.DirectedGraph.NextArcID();
-                newArc.Name = null;
+                newArc.ID = graphView.DirectedGraph.NextID();
+                newArc.Name = $"Arc {newArc.ID}";
                 newArc.SourceID = graphView.tempArc.SourceID;
                 newArc.DestinationID = graphView.SelectedObjects[0].ID;
                 newArc.Location = graphView.tempArc.Location;
+                newArc.Source = graphView.tempArc.Source;
+                newArc.Destination = graphView.tempArc.Destination;
+                newArc.Conditions = new List<string>();
+                newArc.Actions = new List<string>();
+                newArc.BezierPoints = new List<System.Drawing.Point>();
 
                 AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new Arc(newArc) });
             }
@@ -534,113 +533,59 @@ namespace UserInterface.Views
         /// <summary>
         /// Callback for the 'duplicate node' context menu option.
         /// </summary>
-        /// <remarks>
-        /// Does this belong in the presenter?
-        /// </remarks>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
         private void OnDuplicateNode(object sender, EventArgs args)
         {
-            /*
             try
             {
-                if (graphView.SelectedObject is DGNode node)
+                Node node = graphView.SelectedObjects[0] as Node;
+                List<int> restrictedIDs = new List<int>();
+
+                Node newNode = new Node(node);
+                //randomize colour of node
+                System.Drawing.Color[] colours = ColourUtilities.Colours;
+                Random rand = new Random();
+                int randomIndex = rand.Next(colours.Length - 1) + 1; //remove black as an option
+                newNode.Colour = colours[randomIndex];
+
+                newNode.ID = graphView.DirectedGraph.NextID();
+                restrictedIDs.Add(newNode.ID);
+                newNode.Name += " 2";
+
+                newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
+                AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
+
+                List<Arc> newArcs = new List<Arc>();
+                foreach (Arc a in Arcs)
                 {
-                    List<StateNode> nodes = Nodes;
-                    List<RuleAction> arcs = Arcs;
-
-                    // Create a copy of the existing node.
-                    StateNode newNode = new StateNode(node.ToNode());
-                    newNode.Location = new System.Drawing.Point(newNode.Location.X + node.Width / 2, newNode.Location.Y);
-                    newNode.ID = graphView.DirectedGraph.NextNodeID();
-                    newNode.Name = graphView.DirectedGraph.NextNodeName(newNode.ID);
-                    if (nodeDescriptions.ContainsKey(node.ID))
-                        newNode.Description = nodeDescriptions[node.ID];
-
-                    nodes.Add(newNode);
-
-                    // Copy all arcs moving to/from the existing node.
-                    DirectedGraph graph = graphView.DirectedGraph;
-                    foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.SourceID == node.ID))
+                    if (a.SourceID == node.ID || a.DestinationID == node.ID)
                     {
-                        RuleAction newArc = new RuleAction(arc);
-                        newArc.ID = graph.NextArcID();
-                        newArc.Name = graph.NextArcName(newArc.ID);
-                        newArc.SourceID = newNode.ID;
-                        if (rules.ContainsKey(arc.ID))
-                            newArc.Conditions = rules[arc.ID];
-                        if (actions.ContainsKey(arc.ID))
-                            newArc.Actions = actions[arc.ID];
-                        arcs.Add(newArc);
-                        
-                        // Add the arc to the local copy of the directed graph.
-                        // Need to do this to ensure that NextArcID() doesn't
-                        // generate the same name when we call it multiple times.
-                        graph.AddArc(newArc);
+                        Arc newArc = new Arc(a);
+                        newArc.ID = graphView.DirectedGraph.NextID(restrictedIDs);
+                        newArc.BezierPoints = new List<System.Drawing.Point>();
+                        restrictedIDs.Add(newArc.ID);
+
+                        if (a.SourceID == node.ID)
+                            newArc.SourceID = newNode.ID;
+                        if (a.DestinationID == node.ID)
+                            newArc.DestinationID = newNode.ID;
+
+                        //give the new arcs default names if the original arc had a default name
+                        if (a.Name.CompareTo($"Arc {a.ID}") == 0)
+                            newArc.Name = $"Arc {newArc.ID}";
+
+                        newArcs.Add(newArc);
                     }
-                    foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.DestinationID == graphView.SelectedObject.ID))
-                    {
-                        RuleAction newArc = new RuleAction(arc);
-                        newArc.ID = graph.NextArcID();
-                        newArc.Name = graph.NextArcName(newArc.ID);
-                        newArc.DestinationID = newNode.ID;
-                        if (rules.ContainsKey(arc.ID))
-                            newArc.Conditions = rules[arc.ID];
-                        if (actions.ContainsKey(arc.ID))
-                            newArc.Actions = actions[arc.ID];
-                        arcs.Add(newArc);
-
-                        // Add the arc to the local copy of the directed graph.
-                        // Need to do this to ensure that NextArcID() doesn't
-                        // generate the same name when we call it multiple times.
-                        graph.AddArc(newArc);
-                    }
-
-                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, nodes));
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }*/
-        }
 
-        /// <summary>
-        /// Callback for the 'duplicate arc' context menu option.
-        /// </summary>
-        /// <remarks>
-        /// Does this belong in the presenter?
-        /// </remarks>
-        /// <param name="sender">Sending object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnDuplicateArc(object sender, EventArgs args)
-        {
-            /*
-            try
-            {
-                if (graphView.SelectedObject is DGArc arc)
-                {
-                    RuleAction newArc = new RuleAction(arc.ToArc());
-                    newArc.ID = graphView.DirectedGraph.NextArcID();
-                    newArc.Name = graphView.DirectedGraph.NextArcName(newArc.ID);
-                    newArc.Location = new System.Drawing.Point(newArc.Location.X + 10, newArc.Location.Y);
-
-                    // Copy across rules and actions from selected arc.
-                    if (rules.ContainsKey(arc.ID))
-                        rules[newArc.ID] = rules[arc.ID];
-                    if (actions.ContainsKey(arc.ID))
-                        actions[newArc.ID] = actions[arc.ID];
-                    
-                    List<RuleAction> arcs = Arcs;
-                    arcs.Add(newArc);
-                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, Nodes));
-                }
+                foreach (Arc a in newArcs)
+                    AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = a });
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
-            */
         }
     }
 }
