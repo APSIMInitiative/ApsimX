@@ -126,6 +126,14 @@ namespace Models.Management
             return "No State";
         }
 
+        private int getStateIDByName(string name)
+        {
+            foreach (Node state in Nodes)
+                if (state.Name == name)
+                    return state.ID;
+            return 0;
+        }
+
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
         /// </summary>
@@ -238,6 +246,7 @@ namespace Models.Management
             TopLevel = oldState;
             return(MadeAChange);
         }
+
         /// <summary>
         /// Log the state of the system (usually beginning/end of simulation)
         /// </summary>
@@ -245,6 +254,24 @@ namespace Models.Management
         {
             detailedLogger?.DoTransition(getCurrentStateName());
         }
+
+        /// <summary>
+        /// Set the current state to the first node with the given name
+        /// </summary>
+        public void SetCurrentStateByName(string name)
+        {
+            CurrentState = getStateIDByName(name);
+            return;
+        }
+
+        /// <summary>
+        /// Set the current state to the first node with the given name
+        /// </summary>
+        public string GetCurrentStateName()
+        {
+            return getStateNameByID(CurrentState);
+        }
+
         /// <summary>
         /// Transition along an arc to another stage/node.
         /// </summary>

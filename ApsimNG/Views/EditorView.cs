@@ -435,7 +435,10 @@ namespace UserInterface.Views
         {
             try
             {
-                DisposeEditor.Invoke(this, new PropertyChangedEventArgs(Guid.Parse(this.mainWidget.Name), this.Text));
+                //name will be an ID if editor is a propertyview
+                bool isID = Guid.TryParse(this.mainWidget.Name, out Guid result);
+                if (isID)
+                    DisposeEditor.Invoke(this, new PropertyChangedEventArgs(result, this.Text));
 
                 foreach (ICompletionProvider completion in textEditor.Completion.Providers)
                     textEditor.Completion.RemoveProvider(completion);
