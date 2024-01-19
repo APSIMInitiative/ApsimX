@@ -8,6 +8,7 @@ using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Factorial;
+using Models.PostSimulationTools;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
@@ -683,6 +684,29 @@ save {apsimxFileName}
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
             Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
             Assert.Contains(modifiedFactor.Specification, new List<string>() { "[Fertilise at sowing].Script.Amount = 0 to 200 step 20" });
+
+        public void TestListReferencedFileNamesUnmodified()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            // Add an excel file so that a file path is given when calling command.
+            Simulation sim = file.FindAllChildren<Simulation>().First();
+
+            string[] fileNames = { "example.xlsx" };
+
+            ExcelInput excelInputNode = new ExcelInput()
+            {
+                FileNames = fileNames
+            };
+
+            sim.Children.Add(excelInputNode);
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string outputText = Utilities.RunModels(file, "--list-referenced-filenames-unmodified");
+
+            Assert.True(outputText.Contains("example.xlsx"));
+
         }
     }
 }
