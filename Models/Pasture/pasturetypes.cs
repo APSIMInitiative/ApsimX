@@ -175,10 +175,12 @@ namespace Models.GrazPlan
         /// Feasible values are “seedling”, “established” or “senescing”.
         /// </summary>
         public string status;
+
         /// <summary>
         /// Specifies initial state of above-ground herbage pools
         /// </summary>
         public Herbage[] herbage;
+
         /// <summary>
         /// Mass of roots. The first index denotes a root age class (0=effective roots, 1=old roots);
         /// if only one sub-array is given, it is taken to be total root mass.
@@ -186,18 +188,22 @@ namespace Models.GrazPlan
         /// If only a single value is given in a sub-array, mass will be distributed over all soil layers to the current rooting depth, using a near-exponential distribution.
         /// </summary>
         public double[][] root_wt;  // kg/ha, indexed [0][0]
+
         /// <summary>
         /// Current rooting depth of the cohort
         /// </summary>
         public double rt_dep;       // mm
+
         /// <summary>
         /// Establishment index. 0,1.0-KZ1. Only meaningful if status = “seedling”.
         /// </summary>
         public double estab_index = 1.0;
+
         /// <summary>
         /// Stress index. 0-1. Only meaningful if status = “seedling”.
         /// </summary>
         public double stress_index = 0.0;
+
         /// <summary>
         /// Maximum amount of stem tissue to be relocated to seed.
         /// Only meaningful if
@@ -207,6 +213,7 @@ namespace Models.GrazPlan
         /// Default depends on the above conditions.
         /// </summary>
         public double stem_reloc = -999.0;   // kg/ha
+
         /// <summary>
         /// Number of frosts experienced by this herbage cohort during its lifetime
         /// </summary>
@@ -223,6 +230,7 @@ namespace Models.GrazPlan
         /// Feasible values are “dead” or “litter”.
         /// </summary>
         public string status;
+
         /// <summary>
         /// Definition is the same as GreenInit.herbage
         /// </summary>
@@ -239,14 +247,17 @@ namespace Models.GrazPlan
         /// Mass of soft, unripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         public double[] soft_unripe;    // kg/ha
+
         /// <summary>
         /// Mass of soft, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         public double[] soft_ripe;      // kg/ha
+
         /// <summary>
         /// Mass of hard, unripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         public double[] hard_unripe;    // kg/ha
+
         /// <summary>
         /// Mass of hard, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>

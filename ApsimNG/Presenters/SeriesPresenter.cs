@@ -47,6 +47,8 @@
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
+
             this.series = model as Series;
             this.seriesView = view as SeriesView;
             this.explorerPresenter = explorerPresenter;
@@ -553,7 +555,6 @@
             // Populate filter textbox.
             this.seriesView.Filter.Text = series.Filter;
 
-            explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
         }

@@ -1,6 +1,6 @@
-﻿using Gtk;
-using System;
+﻿using System;
 using System.Linq;
+using Gtk;
 using Utility;
 using MessageType = Models.Core.MessageType;
 
@@ -23,29 +23,7 @@ namespace UserInterface.Views
 
         private Button btnJumpToSimLog;
 
-        /// <summary>
-        /// An expander widget which holds all of the widgets
-        /// controlling summary message filtering.
-        /// </summary>
-        private Widget messageFilters;
-
-        // /// <summary>
-        // /// An expander widget which holds all of the widgets controlling
-        // /// summary message sorting.
-        // /// </summary>
-        // private Widget messageSorting;
-
         public EnumDropDownView<Models.Core.MessageType> VerbosityDropDown { get; private set; }
-
-        /// <summary>
-        /// Allows the user to select which message types to view.
-        /// </summary>
-        public EnumDropDownView<Models.Core.MessageType> MessagesFilter { get; private set; }
-
-        /// <summary>
-        /// Allows the user to select whether initial conditions should be shown.
-        /// </summary>
-        public CheckBoxView ShowInitialConditions { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -54,16 +32,11 @@ namespace UserInterface.Views
             simulationFilter = CreateSimulationFilter();
 
             Widget jumpToLogContainer = CreateJumpToLogContainer();
-            messageFilters = CreateFilteringWidgets();
-            // messageSorting = CreateSortingWidgets();
-
 
             mainControl = new VBox();
-            settingsControl = new HBox();   
+            settingsControl = new HBox();
             mainWidget = mainControl;
             settingsControl.PackStart(captureRules, false, false, 0);
-            settingsControl.PackStart(messageFilters, false, false, 0);
-            // mainControl.PackStart(messageSorting, false, false, 0);
             settingsControl.PackStart(simulationFilter, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
             ScrolledWindow scroller = new ScrolledWindow();
@@ -71,7 +44,7 @@ namespace UserInterface.Views
             mainControl.PackStart(settingsControl, false, false, 0);
             mainControl.PackStart(jumpToLogContainer, false, false, 0);
             mainControl.PackEnd(scroller, true, true, 0);
-
+            VerbosityDropDown.Changed += OnVerbosityDropDownChange;
             mainWidget.Destroyed += MainWidgetDestroyed;
             mainWidget.ShowAll();
         }
@@ -115,51 +88,6 @@ namespace UserInterface.Views
             return frame;
         }
 
-        private Widget CreateSortingWidgets()
-        {
-            Expander container = new Expander("Sorting");
-            
-            container.Margin = 5;
-            return container;
-        }
-
-        private Widget CreateFilteringWidgets()
-        {
-            ShowInitialConditions = new CheckBoxView(this);
-            ShowInitialConditions.TextOfLabel = "Show Initial Conditions";
-            ShowInitialConditions.Changed += OnShowInitialConditionsChanged;
-
-            MessagesFilter = new EnumDropDownView<MessageType>(this);
-            Label label = new Label("Filter messages by severity: ");
-
-            Box box = new VBox();
-            box.PackStart(label, false, false, 5);
-            box.PackStart(MessagesFilter.MainWidget, false, false, 0);
-
-            Box filtersBox = new HBox();
-            filtersBox.PackStart(ShowInitialConditions.MainWidget, false, false, 0);
-            filtersBox.PackStart(box, false, false, 0);
-            filtersBox.Homogeneous = true;
-            box.Margin = 5;
-
-            Frame frame = new Frame("Message Filters");
-            frame.Add(filtersBox);
-            frame.Margin = 5;
-            return frame;
-        }
-
-        private void OnShowInitialConditionsChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                btnJumpToSimLog.Visible = ShowInitialConditions.Checked;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
         private void OnJumpToSimulationLog(object sender, EventArgs e)
         {
             try
@@ -177,6 +105,20 @@ namespace UserInterface.Views
             }
         }
 
+        private void OnVerbosityDropDownChange(object sender, EventArgs args)
+        {
+            try
+            {
+                if (VerbosityDropDown.SelectedEnumValue >= MessageType.Information)
+                    btnJumpToSimLog.Visible = true;
+                else btnJumpToSimLog.Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>Main widget destroyed handler</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -187,7 +129,6 @@ namespace UserInterface.Views
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
                 captureRules.Dispose();
                 VerbosityDropDown.Dispose();
-                MessagesFilter.Dispose();
                 simulationFilter.Dispose();
                 SimulationDropDown.Dispose();
                 mainControl.Dispose();

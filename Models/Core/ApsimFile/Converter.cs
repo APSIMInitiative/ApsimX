@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.CLEM.Resources;
 using Models.Climate;
+using Models.Core.ApsimFile;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
@@ -26,7 +27,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 169; } }
+        public static int LatestVersion { get { return 171; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5307,85 +5308,122 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Set TopLevel flag in any Rotation managers
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion169(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                rotationManager["TopLevel"] = true;
+            }
+        }
+
+        /// <summary>
+        /// Change the namespace for scrum to SimplePlantModels
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion170(JObject root, string fileName)
+        {
+            foreach (var scrum in JsonUtilities.ChildrenOfType(root, "ScrumCrop"))
+            {
+                scrum["$type"] = "Models.PMF.SimplePlantModels.ScrumCrop, Models";
+            }
+            foreach (var strum in JsonUtilities.ChildrenOfType(root, "StrumTree"))
+            {
+                strum["$type"] = "Models.PMF.SimplePlantModels.StrumTree, Models";
+            }
+            foreach (var scrumMGMT in JsonUtilities.ChildrenOfType(root, "ScrumManagement"))
+            {
+                scrumMGMT["$type"] = "Models.PMF.SimplePlantModels.ScrumManagement, Models";
+            }
+
+            // scrum name space refs in managers.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Replace("Models.PMF.Scrum", "Models.PMF.SimplePlantModels");
+                manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Add minimum germination temperature to GerminatingPhase under Phenology.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion171(JObject root, string fileName)
+        {
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "GerminatingPhase"))
+            {
+                Constant value = new Constant();
+                value.Name = "MinSoilTemperature";
+                value.FixedValue = 0.0;
+                JsonUtilities.AddModel(NNP, value);
+            }
+        }
 
         /// <summary>
         /// Change CLEM to work with Ruminant AgeInDays rather than months
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion169(JObject root, string _)
+        private static void UpgradeToVersion999(JObject root, string _)
         {
             var propertyDeletes = new Tuple<string, string>[]
             {
-                new Tuple<string, string>("GrazeFoodStoreType", "DryMatterDigestibility"),
-                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                new Tuple<string, string>("AnimalFoodStoreType", "DryMatterDigestibility"),
-                new Tuple<string, string>("AnimalFoodStoreType", "NitrogenContent"),
+                        new Tuple<string, string>("GrazeFoodStoreType", "DryMatterDigestibility"),
+                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                        new Tuple<string, string>("AnimalFoodStoreType", "DryMatterDigestibility"),
+                        new Tuple<string, string>("AnimalFoodStoreType", "NitrogenContent"),
 
-                new Tuple<string, string>("RuminantType", "GestationLength"),
-                new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
-                new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
-                new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
-                new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
-                new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
-                new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
+                        new Tuple<string, string>("RuminantType", "GestationLength"),
+                        new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
+                        new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
+                        new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
+                        new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
+                        new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
             };
 
 
             var propertyUpdates = new Tuple<string, string>[]
             {
-                new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
-                new Tuple<string, string>("RuminantType", "GestationLength"),
-                new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
-                new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
-                new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
-                new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
-                new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
-                new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
-                new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
+                        new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
+                        new Tuple<string, string>("RuminantType", "GestationLength"),
+                        new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
+                        new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
+                        new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
+                        new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
+                        new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
+                        new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
             };
 
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
-                    //AgeSpecifier ageSpecifier = new();
-                    //var value = node.Value<float>(item.Item2);
-                    //if (value == Math.Floor(value))
-                    //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), 0 };
-                    //else
-                    //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
                     node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2))); //value * 30.4
 
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
-                //AgeSpecifier ageSpecifier = new();
-                //var value = node.Value<float>("Age");
-                //if (value == Math.Floor(value))
-                //    ageSpecifier.Parts = new int[] { 0, Convert.ToInt32(value) };
-                //else
-                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
                 node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
-            
+
             foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
-            { 
+            {
                 node["PropertyOfIndividual"] = "AgeObject";
-                //AgeSpecifier ageSpecifier = new();
-                //var value = node.Value<float>("Value");
-                //if (value == Math.Floor(value))
-                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), 0 };
-                //else
-                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
                 node["Value"] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Value")));
             }
+
         }
-
     }
-
 }
 

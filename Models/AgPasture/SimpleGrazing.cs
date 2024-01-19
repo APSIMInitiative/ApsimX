@@ -442,9 +442,6 @@ namespace Models.AgPasture
             PreGrazeDM = zones.Sum(z => z.TotalDM);
             PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
 
-            foreach (var zone in zones)
-                zone.DoManagement();
-
             // Determine if we can graze today.
             GrazedToday = false;
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -588,11 +585,9 @@ namespace Models.AgPasture
             private Solute urea;
             private IPhysical physical;
             private List<ModelWithDigestibleBiomass> forages;
-            private double areaOfAllZones;
             private double grazedDM;
             private double grazedN;
             private double grazedME;
-            private double preGrazeDM;
             private double amountDungNReturned;
             private double amountDungWtReturned;
             private double amountUrineNReturned;
@@ -608,7 +603,6 @@ namespace Models.AgPasture
             {
                 this.Zone = zone;
                 this.forages = forages;
-                this.areaOfAllZones = areaOfAllZones;
                 surfaceOrganicMatter = zone.FindInScope<SurfaceOrganicMatter>();
                 urea = zone.FindInScope<Solute>("Urea");
                 physical = zone.FindInScope<IPhysical>();
@@ -662,15 +656,6 @@ namespace Models.AgPasture
             }
 
             /// <summary>
-            /// Called at DoManagement event.
-            /// </summary>
-            public void DoManagement()
-            {
-                // Calculate pre-grazed dry matter.
-                preGrazeDM = TotalDM;
-            }
-
-            /// <summary>
             /// Reduce the forage population,
             /// </summary>
             /// <param name="fractionPopulationDecline">The fraction to reduce to population to.</param>
@@ -693,9 +678,11 @@ namespace Models.AgPasture
                 // This is a simple implementation. It proportionally removes biomass from organs.
                 // What about non harvestable biomass?
                 // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
-                double removeAmount = Math.Max(0, preGrazeDM - residual);
+                double preGrazeDM = forages.Sum(f => f.Material.Sum(m => m.Total.Wt * 10));
+                double removeAmount = Math.Max(0, preGrazeDM - residual) / 10; // to g/m2
+
                 dmRemovedToday = removeAmount;
-                if (MathUtilities.IsGreaterThan(removeAmount * 0.1, 0.0))
+                if (MathUtilities.IsGreaterThan(removeAmount, 0.0))
                 {
                     // Remove a proportion of required DM from each species
                     double totalHarvestableWt = 0.0;
@@ -707,14 +694,19 @@ namespace Models.AgPasture
                         totalWeightedHarvestableWt += speciesCutProportions[i] * harvestableWt;
                     }
 
+                    // If a fraction consumable was specified in the forages component by the user then the above calculated
+                    // removeAmount might be > consumable amount. Constrain the removeAmount to the consumable 
+                    // amount so that we don't get an exception thrown in ModelWithDigestibleBiomass.RemoveBiomass method
+                    removeAmount = Math.Min(removeAmount, totalHarvestableWt);
+
                     for (int i = 0; i < forages.Count; i++)
                     {
                         var harvestableWt = forages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                         var proportion = harvestableWt * speciesCutProportions[i] / totalWeightedHarvestableWt;
                         var amountToRemove = removeAmount * proportion;
-                        if (MathUtilities.IsGreaterThan(amountToRemove * 0.1, 0.0))
+                        if (MathUtilities.IsGreaterThan(amountToRemove, 0.0))
                         {
-                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove * 0.1);
+                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove);
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
@@ -725,10 +717,6 @@ namespace Models.AgPasture
                             grazedForages.Add(grazed);
                         }
                     }
-
-                    // Check the amount grazed is the same as requested amount to graze.  THIS IS NOT AN ERROR!!!
-                    //if (!MathUtilities.FloatsAreEqual(grazedDM, removeAmount, 0.0001))
-                    //    throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
                 }
             }
 

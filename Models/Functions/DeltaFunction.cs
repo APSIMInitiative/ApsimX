@@ -38,8 +38,8 @@ namespace Models.Functions
             YesterdaysValue = 0;
         }
 
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        [EventSubscribe("DoCatchYesterday")]
+        private void OnDoCatchYesterday(object sender, EventArgs e)
         {
              YesterdaysValue = Integral.Value();
         }
