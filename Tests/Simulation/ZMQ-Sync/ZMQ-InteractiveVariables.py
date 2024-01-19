@@ -6,7 +6,7 @@ import msgpack
 import matplotlib.pyplot as plt
 
 
-RAIN_DAY = 10
+RAIN_DAY = 90
 
 def open_zmq2(port=27746):
     context = zmq.Context.instance()
@@ -94,7 +94,7 @@ def poll_zmq(socket : zmq.Socket) -> tuple:
             ts = msgpack.unpackb(socket.recv())
             ts_arr.append(ts.to_unix())
             
-            sendCommand(socket, "get", ["sum([Soil].SoilWater.ESW)"])
+            sendCommand(socket, "get", ["sum([Soil].Water.Volumetric)"])
             esw = msgpack.unpackb(socket.recv())
             esw_arr.append(esw)
              
@@ -104,7 +104,7 @@ def poll_zmq(socket : zmq.Socket) -> tuple:
            
             if counter == RAIN_DAY:
                 print("Applying irrigation")
-                sendCommand(socket, "do", ["applyIrrigation", "amount", 12345913.0])
+                sendCommand(socket, "do", ["applyIrrigation", "amount", 204200.0])
                 socket.recv()
                 global rain_day_ts
                 rain_day_ts = ts.to_unix()
@@ -138,10 +138,15 @@ if __name__ == '__main__':
     #print(reply)
 
     plt.figure()
-    plt.plot(ts_arr, esw_arr, label="ESW")
-    plt.plot(ts_arr, rain_arr, label="Rain")
+    
+    plt.plot(ts_arr, esw_arr)
+    plt.xlabel("Time (Unix epochs)")
+    plt.ylabel("Volumetric Water Content")
     plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
-    plt.xlabel("Time")
+    
+    plt.twinx()
+    plt.plot(ts_arr, rain_arr, color="orange")
+    plt.ylabel("Rain")
     
     plt.legend()
     plt.grid(True)
