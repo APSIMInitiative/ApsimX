@@ -1133,10 +1133,24 @@
                     oxyAxis.StartPosition = 0;
                     oxyAxis.EndPosition = 1;
                 }
+
+                double min = minimum;
                 if (!double.IsNaN(minimum))
                     oxyAxis.Minimum = minimum;
+                else
+                    min = AxisMinimum(axisType);
+
+                double max = maximum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
+                else
+                    max = AxisMaximum(axisType);
+
+                if (max <= min)
+                    max = min + 1;
+
+                oxyAxis.AbsoluteMinimum = min;
+                oxyAxis.AbsoluteMaximum = max;
 
                 if (oxyAxis is DateTimeAxis)
                 {
