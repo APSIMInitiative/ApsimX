@@ -1088,7 +1088,7 @@ namespace UserInterface.Presenters
         }
 
         [ContextMenu(MenuName = "Compile Script",
-                     ShortcutKey = "",
+                     ShortcutKey = "Ctrl+T",
                      FollowsSeparator = true,
                      AppliesTo = new[] { typeof(Manager) })]
         public void OnCompileScript(object sender, EventArgs e)
