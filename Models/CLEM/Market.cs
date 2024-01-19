@@ -92,7 +92,9 @@ namespace Models.CLEM
         {
             // validation is performed here
             // see ZoneCLEM OnCLEMValidate for more details
-            if (!ZoneCLEM.Validate(this, "", this, summary))
+            CLEMEvents events = FindInScope<CLEMEvents>();
+
+            if (!ZoneCLEM.Validate(this, "", this, summary, events))
                 ZoneCLEM.ReportInvalidParameters(this);
         }
 

@@ -92,7 +92,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy used for maintenance
         /// </summary>
-        public double ForGain { get; set; }
+        public double NetForGain { get; set; }
 
         /// <summary>
         /// Energy available for growth
@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
             ForHPViscera = 0;
             ForFetus = 0;
             ForLactation = 0;
-            ForGain = 0;
+            NetForGain = 0;
             ForWool = 0;
             ToMove = 0;
             ToGraze = 0;

@@ -307,20 +307,20 @@ namespace Models.CLEM.Resources
         public double LactationResponseCurvature_CI9 { get; set; }
 
         /// <summary>
-        ///  (SCA CI10)
+        /// Effect of levels of milk prodiction on intake -  Dairy cows  (SCA CI10)
         /// </summary>
-        [Description(" [CI10]")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.375)]
-        public double _CI10 { get; set; }
+        [Description("Effect of levels of milk prodiction on intake [CI10]")]
+        [Required, GreaterThanValue(0.6)]
+        [System.ComponentModel.DefaultValue(0.0)]
+        public double EffectLevelsMilkProdOnIntake_CI10 { get; set; }
 
         /// <summary>
-        ///  (SCA CI11)
+        /// Basal milk relative to SRW - Dairy cows  (SCA CI11)
         /// </summary>
-        [Description(" [CI11]")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.375)]
-        public double _CI11 { get; set; }
+        [Description("Basal milk relative to SRW [CI11]")]
+        [Required, GreaterThanValue(0.05)]
+        [System.ComponentModel.DefaultValue(0.0)]
+        public double BasalMilkRelSRW_CI11 { get; set; }
 
         /// <summary>
         /// Lactation Condition Loss Adjustment (SCA CI12)

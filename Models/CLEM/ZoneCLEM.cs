@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -207,7 +208,7 @@ namespace Models.CLEM
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
 
             // not all errors will be reported in validation so perform in two steps
-            Validate(this, "", this, summary);
+            Validate(this, "", this, summary, FindInScope<CLEMEvents>());
             ReportInvalidParameters(this);
         }
 
@@ -256,8 +257,9 @@ namespace Models.CLEM
         /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
         /// <param name="parentZone">The name of the containing ZoneCLEM or Market for reporting</param>
         /// <param name="summary">Link to summary for reporting</param>
+        /// <param name="events">Reference to the CLEM events clock</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary)
+        public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary, CLEMEvents events)
         {
             string starter = "[=";
             if (typeof(IResourceType).IsAssignableFrom(model.GetType()))
@@ -281,8 +283,8 @@ namespace Models.CLEM
             if (model.GetType().Name.Contains("Filter"))
                 starter = "[f=";
 
-            if (model is CLEMModel)
-                (model as CLEMModel).CLEMParentName = parentZone.Name;
+            //if (model is CLEMModel clemModel)
+            //    clemModel.CLEMParentName = parentZone.Name;
             modelPath += starter + model.Name + "]";
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
@@ -291,7 +293,18 @@ namespace Models.CLEM
             if (model.Name.EndsWith(" "))
                 validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
 
-            if (validationResults.Count > 0)
+            if (model is CLEMModel clemModel)
+            {
+                clemModel.CLEMParentName = parentZone.Name;
+
+                // check that simulation time step is supported by this component
+                if(!clemModel.TimeStepOK(events))
+                {
+                    validationResults.Add(new ValidationResult($"The [{events.TimeStep}] time-step of [CLEMEvents] is not supported by this activity.", new string[] { "Simulation time-step" }));
+                }
+            }
+
+            if (validationResults.Any())
             {
                 valid = false;
                 // report all errors
@@ -319,7 +332,7 @@ namespace Models.CLEM
             }
             foreach (var child in model.Children)
             {
-                bool result = Validate(child, modelPath, parentZone, summary);
+                bool result = Validate(child, modelPath, parentZone, summary, events);
                 if (valid && !result)
                     valid = false;
             }

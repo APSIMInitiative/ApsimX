@@ -33,6 +33,7 @@ namespace Models.CLEM.Activities
     [Description("Performs growth and aging of all ruminants based on Australian Feeding Standard. Only one instance of this activity is permitted")]
     [Version(2, 0, 1, "Updated to full SCA compliance")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityGrowSCA : CLEMRuminantActivityBase
     {
         [Link]
@@ -128,6 +129,12 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Individual for which potential intake is determined.</param>
         private void CalculatePotentialIntake(Ruminant ind)
         {
+            // ToDo: Questions for JD.
+            // Is there a different SRW for mature males (bulls)? CLEM uses a 1.2x multiplier to get intact Male SRW from Female SRW.
+            // How is extra bull weight/size handled in SCA?
+            // SRWBirthScalar needs to be applied to the female SRW, not the bigger male SRW.
+            // Does RelativeCondition (weight over srw) exclude conceptus weight? (as discussed 17/1/24)
+
             // CF - Condition factor SCA Eq.3
             double cf = 1.0;
             double bc = ind.BodyCondition;
@@ -176,12 +183,7 @@ namespace Models.CLEM.Activities
                     {
                         // non suckling - e.g. dairy.
                         // lf * lb * lc (Eq.13)
-
-                        //
-                        // CI10 and CI11 do not exist in the table
-                        //
-
-                        lf *= lb * (1 + ind.Parameters.GrowSCA.CI10 * ((WMPeak - ind.Parameters.GrowSCA.CI11 * ind.StandardReferenceWeight) / (ind.Parameters.GrowSCA.CI11 * ind.StandardReferenceWeight)));
+                        lf *= lb * (1 + ind.Parameters.GrowSCA.EffectLevelsMilkProdOnIntake_CI10 * ((ind.Parameters.General.MilkPeakYield - ind.Parameters.GrowSCA.BasalMilkRelSRW_CI11 * ind.StandardReferenceWeight) / (ind.Parameters.GrowSCA.BasalMilkRelSRW_CI11 * ind.StandardReferenceWeight)));
                     }
 
                     // calculate estimated milk production for time step here
@@ -415,8 +417,6 @@ namespace Models.CLEM.Activities
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
 
             //TODO: add draft individual energy requirement: does this also apply to unweaned individuals? If so move outside loop
-            //TODO: add mustering and movement to feed energy
-            //TODO: allow zero feed or reduction on days when herd is moved.
 
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
@@ -429,41 +429,26 @@ namespace Models.CLEM.Activities
             double kDPLS = (ind.Weaned)? 0.7: 0.7 / (1 + ((0.7 / 0.8)-1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
-            double emptyBodyGain = 0;
-
-            // loop to perform 2nd time if lactation reduced due to protein.
-            double proteinContentOfGain = 0;
-            double netEnergyAvailableForGain = 0;
-            double proteinGain1 = 0;
-
             // ToDo: Do these use SRW of Female or does it include the 1.2x factor for males?
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - ind.BirthScalar) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.HighWeight / ind.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.GrowSCA.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.ConditionNoEffect_CG6) / (ind.Parameters.GrowSCA.ConditionMaxEffect_CG7 - ind.Parameters.GrowSCA.ConditionNoEffect_CG6)), 1));
 
-            proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
+            double proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
             // mj/kg gain
             double energyEmptyBodyGain = ind.Parameters.GrowSCA.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.GrowSCA.GrowthEnergyIntercept2_CG9 - (ind.Parameters.GrowSCA.GrowthEnergySlope1_CG10 * (feedingLevel - 1))) + sizeFactor2ForGain * (ind.Parameters.GrowSCA.GrowthEnergySlope2_CG11 * (ind.RelativeCondition - 1));
             // units = kg protein/kg gain
-            proteinContentOfGain = ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.GrowSCA.ProteinGainIntercept2_CG13 - ind.Parameters.GrowSCA.ProteinGainSlope1_CG14 * (feedingLevel - 1)) + sizeFactor2ForGain * ind.Parameters.GrowSCA.ProteinGainSlope2_CG15 * (ind.RelativeCondition - 1);
+            double proteinContentOfGain = ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.GrowSCA.ProteinGainIntercept2_CG13 - ind.Parameters.GrowSCA.ProteinGainSlope1_CG14 * (feedingLevel - 1)) + sizeFactor2ForGain * ind.Parameters.GrowSCA.ProteinGainSlope2_CG15 * (ind.RelativeCondition - 1);
             // units MJ tissue gain/kg ebg
-            double proteinGainMJ = 23.8 * proteinContentOfGain;
+            double proteinGainMJ = 23.6 * proteinContentOfGain;
             double fatGainMJ = energyEmptyBodyGain - proteinGainMJ;
 
-            // NEG1
-            // should this be a weighted average based on the iindividual kg and E for each food type as was performed for unweaned between milk (0.7) and solids (kg)
-            //
-            //
-            //
-            // kg feed
-            //
-            //
-            //
-            //
+            double netEnergyForGain = kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
+            double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.NetForGain / energyEmptyBodyGain));
 
-            ind.Energy.ForGain = kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
-            double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.ForGain / energyEmptyBodyGain));
+            double emptyBodyGainkg = 0;
+            double netEnergyAvailableForGain = 0;
 
             if (milkProtein > 0 && ProteinNet1 < milkProtein)
             {
@@ -482,36 +467,35 @@ namespace Models.CLEM.Activities
                 ind.Energy.ForLactation = MP / 0.94 * kl;
 
                 // adjusted NEG1/ 
-                double NEG2 = ind.Energy.ForGain + ind.Parameters.GrowSCA.MetabolisabilityOfMilk_CL5 * (MP2 - MP);
+                double NEG2 = ind.Energy.NetForGain + ind.Parameters.GrowSCA.MetabolisabilityOfMilk_CL5 * (MP2 - MP);
                 double PG2 = proteinGain1 + (MP2 - MP) * (ind.Parameters.GrowSCA.MetabolisabilityOfMilk_CL5 / ind.Parameters.GrowSCA.EnergyContentMilk_CL6);
                 double ProteinNet2 = PG2 - proteinContentOfGain * (NEG2 / energyEmptyBodyGain);
-                netEnergyAvailableForGain = NEG2 + ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
-                emptyBodyGain = ind.Energy.ForGain / energyEmptyBodyGain;
+                ind.Energy.NetForGain = NEG2 + ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
             }
             else
             {
-                netEnergyAvailableForGain = ind.Energy.ForGain + ind.BreedParams.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
-                emptyBodyGain = netEnergyAvailableForGain / energyEmptyBodyGain;
+                ind.Energy.NetForGain = ind.Energy.NetForGain + ind.BreedParams.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
             }
+            emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
 
-            double energyPredictedBodyMassChange = ind.Parameters.GrowSCA.EBW2LW * emptyBodyGain;
+            double energyPredictedBodyMassChange = ind.Parameters.GrowSCA.EBW2LW * emptyBodyGainkg;
             
             // update weight based on the time-step
-            ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange * events.Interval);
+            ind.Weight += energyPredictedBodyMassChange * events.Interval;
 
-            double kgProteinChange = Math.Min(proteinGain1, proteinContentOfGain * emptyBodyGain);
-            double MJProteinChange = 23.8 * kgProteinChange;
+            double kgProteinChange = Math.Min(proteinGain1, proteinContentOfGain * emptyBodyGainkg);
+            double MJProteinChange = 23.6 * kgProteinChange;
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
             ind.AdjustProteinMass(MJProteinChange * events.Interval);
 
             double MJFatChange = netEnergyAvailableForGain - MJProteinChange;
-            double kgFatChange = MJFatChange / 39.6;
+            double kgFatChange = MJFatChange / 39.3;
             ind.AdjustFatMass(kgFatChange * events.Interval);
 
             // N balance = 
             // ToDo: not currently used
-            double Nbal =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.Parameters.GrowSCA.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.Parameters.GrowSCA.Prt2NTissue);
+            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.Parameters.GrowSCA.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.Parameters.GrowSCA.Prt2NTissue);
 
             // Total fecal protein
             double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.GrowSCA.MicrobialProteinDigestibility_CA7 * ind.Parameters.GrowSCA.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowSCA.MilkProteinDigestability_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
@@ -519,7 +503,7 @@ namespace Models.CLEM.Activities
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + kgProteinChange) - TFP - DermalProtein;
             // ToDo: not currently used
-            double NExcreted = TFP + TUP;
+            ind.Output.NitrogenExcreted = TFP + TUP;
 
             ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
             ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;

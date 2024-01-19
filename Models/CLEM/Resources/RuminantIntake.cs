@@ -233,6 +233,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Calculate Nitrogen content of solid (non-milk) intake.
+        /// </summary>
+        public double NitrogenContent
+        {
+            get
+            {
+                var total = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.Amount);
+                var totalN = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.NitrogenContent * a.Value.Details.Amount);
+                if(total > 0)
+                    return totalN / total;
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Adjust intake by a reduction factor.
         /// </summary>
         /// <param name="reductionFactor">factor (0-1) to adjust by.</param>

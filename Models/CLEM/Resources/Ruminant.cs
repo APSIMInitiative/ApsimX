@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -22,6 +23,9 @@ namespace Models.CLEM.Resources
         private double adultEquivalent;
         private double proteinMass = 0;
         private double fatMass = 0;
+        private double previousProteinMass = 0;
+        private double previousFatMass = 0;
+
 
         #region All new Grow SCA properties
 
@@ -59,11 +63,17 @@ namespace Models.CLEM.Resources
         public double ProteinMass { get { return proteinMass; } }
 
         /// <summary>
+        /// The change in protein mass of the individual
+        /// </summary>
+        public double ProteinMassChange { get { return proteinMass-previousProteinMass; } }
+
+        /// <summary>
         /// Adjust the protein mass of the individual.
         /// </summary>
         /// <param name="amount">Amount to change by with sign.</param>
         public void AdjustProteinMass(double amount)
         {
+            previousProteinMass = proteinMass;
             proteinMass += amount;
             proteinMass = Math.Max(0, proteinMass);
         }
@@ -74,15 +84,20 @@ namespace Models.CLEM.Resources
         public double FatMass { get { return fatMass; } }
 
         /// <summary>
+        /// The change in fat mass of the individual
+        /// </summary>
+        public double FatMassChange { get { return fatMass - previousFatMass; } }
+
+        /// <summary>
         /// Add fat mass to individual.
         /// </summary>
         /// <param name="amount">Amount to change by with sign.</param>
         public void AdjustFatMass(double amount)
         {
+            previousFatMass = fatMass;
             fatMass += amount;
             fatMass = Math.Max(0, fatMass);
         }
-
 
         ///// <summary>
         ///// Energy used for wool production
@@ -487,6 +502,9 @@ namespace Models.CLEM.Resources
             }
             set
             {
+                if (value < 0)
+                    throw new Exception($"Weight of individual {ID} set to less than 0.");
+
                 PreviousWeight = weight;
                 weight = value;
 
@@ -647,7 +665,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return weight - (this as RuminantFemale)?.ConceptusWeight ?? 0 - WoolWeight;
+                if(this is RuminantFemale female)
+                    return weight - female.ConceptusWeight - WoolWeight;
+                return weight - WoolWeight;
             }
         }
 

@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
         public string Units { get; private set; } = "kg";
 
         /// <inheritdoc/>
-        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
+        public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
 
         /// <inheritdoc/>
         [System.ComponentModel.DefaultValueAttribute(18.4)]

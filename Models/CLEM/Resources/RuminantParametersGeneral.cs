@@ -41,6 +41,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region breeding
+
         /// <summary>
         /// Days between conception and parturition
         /// </summary>
@@ -49,6 +51,24 @@ namespace Models.CLEM.Resources
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier GestationLength { get; set; }
+
+        /// <summary>
+        /// Number of days for milking
+        /// </summary>
+        [Category("Basic", "Lactation")]
+        [Description("Number of days for milking")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MilkingDays { get; set; }
+
+        /// <summary>
+        /// Peak milk yield(kg/day)
+        /// </summary>
+        [Category("Basic", "Lactation")]
+        [Description("Peak milk yield (kg/day)")]
+        [Required, GreaterThanValue(0)]
+        public double MilkPeakYield { get; set; }
+
+        #endregion
 
         #region Size
 

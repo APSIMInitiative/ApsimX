@@ -1016,23 +1016,23 @@ namespace Models.CLEM
         /// <summary>
         /// Every month
         /// </summary>
-        Monthly,
+        Monthly = 30,
         /// <summary>
         /// Every fortnight
         /// </summary>
-        Fortnightly,
+        Fortnightly = 14,
         /// <summary>
         /// Every week
         /// </summary>
-        Weekly,
+        Weekly = 7,
         /// <summary>
         /// Everty day
         /// </summary>
-        Daily,
+        Daily = 1,
         /// <summary>
         /// Manually specify time-step in days
         /// </summary>
-        Custom
+        Custom = 0
     }
 
     /// <summary>

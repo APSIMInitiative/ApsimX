@@ -46,20 +46,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkCurveNonSuckling { get; set; }
         /// <summary>
-        /// Number of days for milking
-        /// </summary>
-        [Category("Basic", "Lactation")]
-        [Description("Number of days for milking")]
-        [Required, GreaterThanEqualValue(0)]
-        public double MilkingDays { get; set; }
-        /// <summary>
-        /// Peak milk yield(kg/day)
-        /// </summary>
-        [Category("Basic", "Lactation")]
-        [Description("Peak milk yield (kg/day)")]
-        [Required, GreaterThanValue(0)]
-        public double MilkPeakYield { get; set; }
-        /// <summary>
         /// Milk offset day
         /// </summary>
         [Category("Advanced", "Lactation")]

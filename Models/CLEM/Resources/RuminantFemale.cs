@@ -284,6 +284,7 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
+            ConceptusWeight = 0;
             BodyConditionParturition = BodyCondition;
             DateOfLastBirth = date;
             ProportionMilkProductionAchieved = 1;
@@ -385,7 +386,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= this.BreedParams.MilkingDays);
+                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= Parameters.General.MilkingDays);
             }
         }
 
@@ -414,7 +415,7 @@ namespace Models.CLEM.Resources
             if(SucklingOffspringList.Any() || MilkingPerformed)
             {
                 double milkdays = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays + halfIntervalOffset;
-                if (milkdays <= Parameters.Breeding.MilkingDays)
+                if (milkdays <= Parameters.General.MilkingDays)
                 {
                     return milkdays;
                 }

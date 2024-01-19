@@ -319,16 +319,7 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource initialisation so that resources are available to check in the validation.
-            // Commencing event is too early as Summary has not been created for reporting.
-            // Some values assigned in commencing will not be checked before processing, but will be caught here
-            // Each ZoneCLEM and Market will call this validation for all children
-            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-
-            // not all errors will be reported in validation so perform in two steps
-            //Validate(this, "", this, summary);
-            //ZoneCLEM.ReportInvalidParameters(this);
-
+            // this is done by this component as it is outside of the CLEM/Market branch and needs to be handled itself.
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
                 if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)

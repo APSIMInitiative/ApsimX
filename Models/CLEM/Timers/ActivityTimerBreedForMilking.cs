@@ -89,7 +89,7 @@ namespace Models.CLEM.Timers
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
             breedParams = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
+            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.Parameters.General.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
 
             pregnancyDuration = Convert.ToInt32(breedParams.Parameters.General.GestationLength, CultureInfo.InvariantCulture);

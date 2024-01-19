@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
                 milkCurve = ind.Parameters.Grow.MilkCurveNonSuckling;
             else // no milking
                 milkCurve = ind.Parameters.Grow.MilkCurveSuckling;
-            ind.MilkProductionPotential = ind.Parameters.Grow.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay));
+            ind.MilkProductionPotential = ind.Parameters.General.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay));
             ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.MilkProductionPotential * 3.2 / kl;

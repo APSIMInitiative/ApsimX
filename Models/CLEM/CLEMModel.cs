@@ -77,6 +77,10 @@ namespace Models.CLEM
         [JsonIgnore]
         public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public TimeStepTypes MinimumTimeStepInterval { get; set; } = TimeStepTypes.Monthly;
+
         /// <summary>
         /// Method to set defaults from Attribute for this model
         /// </summary>
@@ -237,6 +241,20 @@ namespace Models.CLEM
         {
             var psm = ParentSuppliedMeasures();
             return (psm != null && psm.Any());
+        }
+
+        /// <summary>
+        /// Determines if this model supports a specified time-step interval
+        /// </summary>
+        /// <param name="events">Time step to check</param>
+        public bool TimeStepOK(CLEMEvents events)
+        {
+            // monthly time-step is assumed if no MinimumTimeStepPermittedAttribute has been provided.
+            var timestepAtt = ReflectionUtilities.GetAttributes(this.GetType(), typeof(MinimumTimeStepPermittedAttribute), false).Cast<MinimumTimeStepPermittedAttribute>().FirstOrDefault();
+            if(events.TimeStep == TimeStepTypes.Custom)
+                return (int)(timestepAtt?.TimeStep??TimeStepTypes.Monthly) > events.Interval;
+            else
+                return (int)(timestepAtt?.TimeStep ?? TimeStepTypes.Monthly) > (int)events.TimeStep;
         }
 
         #region descriptive summary

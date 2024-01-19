@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStorePool : IFeed, IResourceType
     {
         /// <inheritdoc/>
-        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
+        public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
 
         /// <inheritdoc/>
         public double GrossEnergyContent { get; set; }
