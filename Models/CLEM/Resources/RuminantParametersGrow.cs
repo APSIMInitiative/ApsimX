@@ -124,14 +124,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double EMaintCoefficient { get; set; }
         /// <summary>
-        /// Maximum age for energy maintenance calculation (yrs)
+        /// Maximum age for energy maintenance calculation
         /// </summary>
-        //[System.ComponentModel.DefaultValueAttribute(6)]
         [Category("Advanced", "Growth")]
         [Description("Maximum age for energy maintenance calculation")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; }
+        public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; } = new int[] { 6, 0, 0 };
+
         /// <summary>
         /// Breed factor for maintenence energy
         /// </summary>

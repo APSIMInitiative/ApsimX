@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         [Description("Age")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier AgeDetails { get; set; }
+        public AgeSpecifier AgeDetails { get; set; } = new int[] { 12, 0 };
 
         /// <summary>
         /// Current age

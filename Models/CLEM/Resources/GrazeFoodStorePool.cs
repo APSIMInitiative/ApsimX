@@ -39,9 +39,6 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
 
-        /// <inheritdoc/>
-        public double NitrogenToCrudeProteinFactor { get; set; } = 6.25;
-
         /// <summary>
         /// Amount (kg)
         /// </summary>

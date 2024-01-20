@@ -26,14 +26,18 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Diet")]
         [Description("Maximum green in diet")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.98)]
         public double GreenDietMax { get; set; }
+
         /// <summary>
         /// Shape of curve for diet vs pasture
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Shape of curve for diet vs pasture")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.15)]
         public double GreenDietCoefficient { get; set; }
+
         /// <summary>
         /// Proportion green in pasture at zero in diet
         /// was %
@@ -41,6 +45,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Diet")]
         [Description("Proportion green in pasture at zero in diet")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.04)]
         public double GreenDietZero { get; set; }
 
         /// <summary>
@@ -49,18 +54,18 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Diet")]
         [Description("Coefficient to adjust intake for herbage biomass")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.01)]
+
         public double IntakeCoefficientBiomass { get; set; }
+
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
         [Category("Basic", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
+        [System.ComponentModel.DefaultValue(true)]
         public bool StrictFeedingLimits { get; set; }
-
-
-
-
 
         /// <summary>
         /// Constructor

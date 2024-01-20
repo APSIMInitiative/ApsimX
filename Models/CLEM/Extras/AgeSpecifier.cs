@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+//using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Models.CLEM
         private const decimal daysPerMonth = 30.4M;
 
         int age = -1;
-        int[] parts = null;
+        int[] parts = new int[] { 0 };
 
         /// <summary>
         /// The number of days per year
@@ -41,12 +42,52 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Convert from string "y,m,d"
+        /// </summary>
+        /// <param name="age">Age string representing integers y,m,d</param>
+        public static implicit operator AgeSpecifier(String age)
+        {
+            var parts = Array.ConvertAll(age.Split(','), int.Parse);
+            AgeSpecifier temp = new() { Parts = parts };
+            return temp;
+        }
+
+        /// <summary>
+        /// Convert from decimal (months)
+        /// </summary>
+        /// <param name="age">Decimal age in months</param>
+        public static implicit operator AgeSpecifier(decimal age)
+        {
+            AgeSpecifier temp = new(age);
+            return temp;
+        }
+
+        /// <summary>
+        /// Convert from integer array {y,m,d}
+        /// </summary>
+        /// <param name="age">An integer array of y,m,d</param>
+        public static implicit operator AgeSpecifier(int[] age)
+        {
+            AgeSpecifier temp = new() { Parts = age};
+            return temp;
+        }
+
+        /// <summary>
         /// Create instance based on age
         /// </summary>
         /// <param name="months">Age in months</param>
         public AgeSpecifier(decimal months)
         {
             Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
+        }
+
+        /// <summary>
+        /// Set by array of integers (y,m,d)
+        /// </summary>
+        /// <param name="inVal"></param>
+        public void SetAgeSpecifier(int[] inVal)
+        {
+            Parts = inVal;
         }
 
         /// <summary>

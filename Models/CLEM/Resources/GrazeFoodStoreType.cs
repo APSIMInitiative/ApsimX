@@ -63,10 +63,6 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double NitrogenToCrudeProteinFactor { get; set; }
-
-        /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>

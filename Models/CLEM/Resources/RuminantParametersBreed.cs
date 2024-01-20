@@ -34,42 +34,52 @@ namespace Models.CLEM.Resources
         [Description("Proportion of offspring male")]
         [Required, Proportion]
         public double ProportionOffspringMale { get; set; }
+        
         /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Description("Inter-parturition interval intercept of PW (months)")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(10.847)]
         public double InterParturitionIntervalIntercept { get; set; }
+        
         /// <summary>
         /// Inter-parturition interval coefficient of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Description("Inter-parturition interval coefficient of PW (months)")]
         [Required]
+        [System.ComponentModel.DefaultValue(-0.7994)]
         public double InterParturitionIntervalCoefficient { get; set; }
+        
         /// <summary>
-        /// Minimum age for 1st mating (months)
+        /// Minimum age for 1st mating
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum age for 1st mating")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier MinimumAge1stMating { get; set; }
+        public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
+
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum size for 1st mating, proportion of SRW")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.6)]
         public double MinimumSize1stMating { get; set; }
+        
         /// <summary>
         /// Minimum number of days between last birth and conception
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum number of days between last birth and conception")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(40)]
         public double MinimumDaysBirthToConception { get; set; }
+        
         /// <summary>
         /// Rate at which multiple births are concieved (twins, triplets, ...)
         /// </summary>
@@ -77,6 +87,7 @@ namespace Models.CLEM.Resources
         [Description("Rate at which multiple births occur (twins,triplets,...")]
         [Proportion]
         public double[] MultipleBirthRate { get; set; }
+        
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
@@ -91,13 +102,16 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Breeding")]
         [Description("Maximum number of matings per male per day")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(30)]
         public double MaximumMaleMatingsPerDay { get; set; }
+        
         /// <summary>
         /// Prenatal mortality rate
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.079)]
         public double PrenatalMortality { get; set; }
 
         /// <summary>
@@ -107,9 +121,7 @@ namespace Models.CLEM.Resources
         [Description("Proportion suitable fmeales accpeting orphan")]
         [System.ComponentModel.DefaultValueAttribute(0)]
         [Required, Proportion]
-        public double ProportionAcceptingSurrogate { get; set; } = 0;
-
-
+        public double ProportionAcceptingSurrogate { get; set; }
 
         /// <summary>
         /// Constructor
@@ -141,7 +153,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-
     }
 }

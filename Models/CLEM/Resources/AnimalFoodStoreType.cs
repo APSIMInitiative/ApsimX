@@ -71,11 +71,6 @@ namespace Models.CLEM.Resources
         [Required, Percentage, GreaterThanEqualValue(0)]
         public double AcidDetergentInsoluableProtein { get; set; }
 
-        /// <inheritdoc/>
-        [Description("Nitrogen to Crude protein factor")]
-        [Required, Percentage, GreaterThanEqualValue(0)]
-        public double NitrogenToCrudeProteinFactor { get; set; }
-
         /// <summary>
         /// Starting Amount (kg)
         /// </summary>

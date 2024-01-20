@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         [Description("Maximum age manure lasts")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier MaximumAge { get; set; }
+        public AgeSpecifier MaximumAge { get; set; } = new int[] { 12, 0 };
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

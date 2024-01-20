@@ -54,11 +54,5 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         [Description("Acid detergent insoluable protein")]
         public double AcidDetergentInsoluableProtein { get; set; }
-
-        /// <summary>
-        /// Factor used to convert the Nitrogen percentage and DM to crude protein
-        /// </summary>
-        [Description("Nitrogen to Crude protein factor")]
-        public double NitrogenToCrudeProteinFactor { get; set; }
     }
 }

@@ -33,8 +33,18 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
 
-        /// <inheritdoc/>
-        public double NitrogenToCrudeProteinFactor { get; set; } = 6.25;
+        /// <summary>
+        /// Factor used to convert the Nitrogen percentage and DM to crude protein
+        /// </summary>
+        public double NitrogenToCrudeProteinFactor 
+        {
+            get
+            {
+                if (TypeOfFeed == FeedType.Milk)
+                    return 6.38;
+                return 6.25;
+            }
+        }
 
         ///<summary>
         /// Amount of food supplied
@@ -163,7 +173,6 @@ namespace Models.CLEM.Resources
                 NitrogenContent = NitrogenContent,
                 RumenDegradableProteinContent = RumenDegradableProteinContent,
                 AcidDetergentInsoluableProtein = AcidDetergentInsoluableProtein,
-                NitrogenToCrudeProteinFactor = NitrogenToCrudeProteinFactor
             };
         }
 

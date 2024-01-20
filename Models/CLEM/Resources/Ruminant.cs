@@ -529,8 +529,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
-                    return Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier;
+                if (this is RuminantMale male)
+                    if(male.IsCastrated)
+                        return Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier;
+                    else
+                        return Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier;
                 else
                     return Parameters.General.SRWFemale;
             }

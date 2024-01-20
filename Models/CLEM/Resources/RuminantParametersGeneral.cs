@@ -20,12 +20,12 @@ namespace Models.CLEM.Resources
     public class RuminantParametersGeneral: CLEMModel
     {
         /// <summary>
-        /// Name of breed
-        /// Name of herd defined by the name of the RuminantType
+        /// Name of breed where name of herd defined by the name of the RuminantType
         /// </summary>
         [Category("Basic", "General")]
         [Description("Breed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
+        [System.ComponentModel.DefaultValue("Bos taurus")]
         public string Breed { get; set; }
 
         #region Age
@@ -34,10 +34,10 @@ namespace Models.CLEM.Resources
         /// Natural weaning age
         /// </summary>
         [Category("Basic", "Growth")]
-        [Description("Natural weaning age (0 to use gestation length)")]
+        [Description("Natural weaning age (0, use gestation length)")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier NaturalWeaningAge { get; set; }
+        public AgeSpecifier NaturalWeaningAge { get; set; } = new int[] { 0 };
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Models.CLEM.Resources
         [Description("Days from conception to parturition")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier GestationLength { get; set; }
+        public AgeSpecifier GestationLength { get; set; } = new int[] { 0, 9, 0 };
 
         /// <summary>
         /// Number of days for milking
@@ -58,6 +58,7 @@ namespace Models.CLEM.Resources
         [Category("Basic", "Lactation")]
         [Description("Number of days for milking")]
         [Required, GreaterThanEqualValue(0)]
+        [System.ComponentModel.DefaultValue(300)]
         public double MilkingDays { get; set; }
 
         /// <summary>
@@ -66,6 +67,7 @@ namespace Models.CLEM.Resources
         [Category("Basic", "Lactation")]
         [Description("Peak milk yield (kg/day)")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(4.0)]
         public double MilkPeakYield { get; set; }
 
         #endregion
@@ -77,16 +79,29 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "General")]
         [Units("kg")]
-        [Description("Standard Ref. Weight (kg) for a female")]
+        [Description("Standard Ref. Weight for a female")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(450)]
         public double SRWFemale { get; set; }
+        
+        /// <summary>
+        /// Standard Reference Weight for castrated male from female multiplier
+        /// </summary>
+        [Category("Advanced", "General")]
+        [Description("Castrated male SRW multiplier from female")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1.2)]
+        public double SRWCastrateMaleMultiplier { get; set; }
+        
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
         [Category("Advanced", "General")]
-        [Description("Male Standard Ref. Weight multiplier from female")]
+        [Description("Male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1.4)]
         public double SRWMaleMultiplier { get; set; }
+        
         /// <summary>
         /// Standard Reference Weight at birth
         /// </summary>
@@ -94,6 +109,7 @@ namespace Models.CLEM.Resources
         [Units("Proportion of female SRW")]
         [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
+        [System.ComponentModel.DefaultValue(new [] { 0.07, 0.055 })]
         public double[] BirthScalar { get; set; }
 
         /// <summary>
@@ -102,6 +118,7 @@ namespace Models.CLEM.Resources
         [Category("Basic", "General")]
         [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(450)]
         public double BaseAnimalEquivalent { get; set; }
 
         #endregion
@@ -114,14 +131,17 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Growth")]
         [Description("Rel. Body Cond. to Score rate")]
         [Required, GreaterThanValue(0)]
-        public double RelBCToScoreRate { get; set; } = 0.15;
+        [System.ComponentModel.DefaultValue(0.15)]
+        public double RelBCToScoreRate { get; set; }
+        
         /// <summary>
         /// Body condition score range
         /// </summary>
         [Category("Advanced", "Growth")]
         [Description("Body Condition Score range (min, mid, max)")]
         [Required, ArrayItemCount(3)]
-        public double[] BCScoreRange { get; set; } = { 0, 3, 5 };
+        [System.ComponentModel.DefaultValue(new[] { 0.0, 3.0, 5.0 })]
+        public double[] BCScoreRange { get; set; }
 
         #endregion
 
@@ -135,6 +155,7 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
         [Required]
         public ConditionBasedCalculationStyle ConditionBasedMortalityStyle { get; set; }
+        
         /// <summary>
         /// Cut-off for condition-based mortality
         /// </summary>
@@ -158,12 +179,12 @@ namespace Models.CLEM.Resources
         [Category("Basic", "Survival")]
         [Description("Mortality rate base")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.03)]
         public double MortalityBase { get; set; }
 
         #endregion
 
-
-        #region XXX CN
+        #region Normalised Weight CN
 
         /// <summary>
         /// Age growth rate coefficient (CN1 in SCA)
@@ -199,12 +220,10 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Products")]
         [Description("Methane production from intake coefficient")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(20.7)]
         public double MethaneProductionCoefficient { get; set; }
 
         #endregion
-
-
-
 
         /// <summary>
         /// Constructor to set defaults when needed

@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
         [Description("Age when adult")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier AgeWhenAdult { get; set; }
+        public AgeSpecifier AgeWhenAdult { get; set; } = new int[] { 12, 0 };
 
         /// <summary>
         /// Age when individuals die
@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
         [Description("Maximum age before death")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier MaxAge { get; set; }
+        public AgeSpecifier MaxAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
         /// Current cohorts of this Other Animal Type.

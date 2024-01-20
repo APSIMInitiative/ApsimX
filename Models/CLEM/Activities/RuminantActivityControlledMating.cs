@@ -37,13 +37,13 @@ namespace Models.CLEM.Activities
         private int amountToDo;
 
         /// <summary>
-        /// Maximum age for mating (months)
+        /// Maximum age for mating
         /// </summary>
         [Description("Maximum female age for mating")]
         [Category("General", "All")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier MaximumAgeMating { get; set; }
+        public AgeSpecifier MaximumAgeMating { get; set; } = new int[] { 20, 0, 0 };
 
         /// <summary>
         /// Number joinings per male before male genetics replaced

@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
         [Description("Initial Age")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier InitialAge { get; set; }
+        public AgeSpecifier InitialAge { get; set; } = new int[] { 18, 0 };
 
         /// <summary>
         /// Male or Female

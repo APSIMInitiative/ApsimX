@@ -43,7 +43,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Age")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
-        public AgeSpecifier AgeDetails { get; set; } = new AgeSpecifier();
+        public AgeSpecifier AgeDetails { get; set; } = new int[] { 0, 12, 0 };
 
         /// <summary>
         /// Age in days

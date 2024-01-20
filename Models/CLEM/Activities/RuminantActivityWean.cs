@@ -45,13 +45,12 @@ namespace Models.CLEM.Activities
         public WeaningStyle Style { get; set; }
 
         /// <summary>
-        /// Weaning age (months)
+        /// Weaning age
         /// </summary>
         [Description("Weaning age")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-
-        public AgeSpecifier WeaningAge { get; set; }
+        public AgeSpecifier WeaningAge { get; set; } = new int[] { 6, 0 };
 
         /// <summary>
         /// Weaning weight (kg)

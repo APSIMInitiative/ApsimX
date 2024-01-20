@@ -145,15 +145,13 @@ namespace Models.CLEM.Activities
         public bool MarkOldBreedersForSale { get; set; }
 
         /// <summary>
-        /// Maximum breeder age (months) for removal
+        /// Maximum breeder age for removal
         /// </summary>
         [Category("Destock", "Breeding females")]
         [Description("Maximum female breeder age (months) before removal")]
-        //[System.ComponentModel.DefaultValueAttribute(120)]
-        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-
-        public AgeSpecifier MaximumBreederAge { get; set; }
+        public AgeSpecifier MaximumBreederAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
         /// Proportion of min breeders in single purchase
@@ -216,14 +214,13 @@ namespace Models.CLEM.Activities
         public bool MarkOldSiresForSale { get; set; }
 
         /// <summary>
-        /// Maximum sire age (months) for removal
+        /// Maximum sire age for removal
         /// </summary>
         [Category("Destock", "Breeding males")]
         [Description("Maximum sire age (months) before removal")]
-        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-
-        public AgeSpecifier MaximumSireAge { get; set; }
+        public AgeSpecifier MaximumSireAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
         /// Allow natural herd replacement of sires
@@ -301,11 +298,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Males")]
         [Description("Grow out male selling age (months)")]
-        //[System.ComponentModel.DefaultValueAttribute(24)]
-        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-
-        public AgeSpecifier MaleSellingAge { get; set; }
+        public AgeSpecifier MaleSellingAge { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
         /// Male selling weight (kg)
@@ -329,11 +324,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling age (months)")]
-        //[System.ComponentModel.DefaultValueAttribute(24)]
-        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-
-        public AgeSpecifier FemaleSellingAge { get; set; }
+        public AgeSpecifier FemaleSellingAge { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
         /// Female selling weight (kg)
@@ -341,7 +334,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
-        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties")]
+        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
         public double FemaleSellingWeight { get; set; }
 
         /// <summary>

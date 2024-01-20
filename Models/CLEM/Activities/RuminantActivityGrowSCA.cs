@@ -61,7 +61,6 @@ namespace Models.CLEM.Activities
                 TypeOfFeed = FeedType.Milk,
                 RumenDegradableProteinContent = 0,
                 FatContent = 0, // breed based parameter
-                NitrogenToCrudeProteinFactor = 6.38,
                 NitrogenContent = 0, // breed based parameter.
                 // Energy content will be set in code based on breed parameter
                 MetabolisableEnergyContent = 0,
