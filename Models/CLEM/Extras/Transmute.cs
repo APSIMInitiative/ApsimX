@@ -24,6 +24,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [Version(2, 0, 0, "Refactor from TransmutationCost with generic functionality and include TransmutationCostUsePrice")]
     [HelpUri(@"Content/Features/Transmutation/Transmute.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
         [Link]

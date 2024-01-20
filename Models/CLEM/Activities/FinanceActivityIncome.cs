@@ -19,6 +19,7 @@ namespace Models.CLEM.Activities
     [Description("Define an income source")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/Income.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FinanceActivityIncome : CLEMActivityBase
     {
         private FinanceType bankAccount;

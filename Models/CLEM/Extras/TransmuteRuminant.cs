@@ -21,6 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("Identifies how rumiants (as resource B) are transmuted into a shortfall resource (A, e.g.food)")]
     [HelpUri(@"Content/Features/Transmutation/TransmuteRuminant.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
         [Link]

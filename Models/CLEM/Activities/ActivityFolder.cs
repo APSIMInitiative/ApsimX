@@ -15,6 +15,7 @@ namespace Models.CLEM.Activities
     [Description("This activity folder helps arrange activities and apply timers to the group")]
     [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>

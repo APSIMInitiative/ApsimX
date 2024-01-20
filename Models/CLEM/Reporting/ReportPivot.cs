@@ -21,6 +21,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool
     {
         [Link]

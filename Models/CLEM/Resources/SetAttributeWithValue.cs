@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [Description("Specify an attribute for the individual with associated value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute
     {
         /// <summary>

@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [Description("Set feeding value for specified individual ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroup.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantFeedGroup : RuminantGroup
     {
         [Link]

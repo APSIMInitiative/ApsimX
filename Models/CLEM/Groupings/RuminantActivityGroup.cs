@@ -21,6 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("Specify individuals applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantActivityGroup.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityGroup : FilterGroup<Ruminant>
     {
         #region descriptive summary

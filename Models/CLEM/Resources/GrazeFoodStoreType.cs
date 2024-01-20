@@ -54,11 +54,11 @@ namespace Models.CLEM.Resources
         public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Required, Proportion, GreaterThanEqualValue(0)]
         public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Required, Proportion, GreaterThanEqualValue(0)]
         public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>

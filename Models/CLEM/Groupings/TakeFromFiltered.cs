@@ -18,6 +18,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/TakeFromFiltered.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class TakeFromFiltered : CLEMModel, IValidatableObject
     {
         /// <summary>

@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGeneral: CLEMModel
     {
         /// <summary>
@@ -111,6 +112,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
         [System.ComponentModel.DefaultValue(new [] { 0.07, 0.055 })]
         public double[] BirthScalar { get; set; }
+
+        /// <summary>
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
+        /// </summary>
+        [Category("Basic", "Breeding")]
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; } = new double[] { 0.25 };
 
         /// <summary>
         /// Weight(kg) of 1 animal equivalent (steer)
@@ -232,5 +241,26 @@ namespace Models.CLEM.Resources
         {
             base.SetDefaults();
         }
+
+        #region validation
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (BirthScalar.Length != MultipleBirthRate.Length - 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.BirthScalar" };
+                results.Add(new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
     }
 }

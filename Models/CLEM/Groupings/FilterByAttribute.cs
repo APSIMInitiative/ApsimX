@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/FilterByAttribute.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FilterByAttribute : Filter, IValidatableObject
     {
         /// <summary>

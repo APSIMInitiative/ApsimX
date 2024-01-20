@@ -18,6 +18,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines a sort order using the Attribute details of the individual")]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/SortByAttribute.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SortByAttribute : CLEMModel, ISort
     {
         /// <summary>

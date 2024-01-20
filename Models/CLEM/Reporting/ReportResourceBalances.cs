@@ -26,6 +26,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Includes value as reportable columns")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportResourceBalances : Models.Report, ICLEMUI
     {
         [Link]

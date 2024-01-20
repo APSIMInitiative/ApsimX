@@ -19,6 +19,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Clock))]
     [Description("Provides required Clock events for CLEM")]
     [HelpUri(@"Content/Features/ClockCLEM.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class CLEMEvents : CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -90,7 +91,6 @@ namespace Models.CLEM
         /// CLEM time-step
         /// </summary>
         [Description("Time-step")]
-        [System.ComponentModel.DefaultValue("Monthly")]
         public TimeStepTypes TimeStep { get; set; } = TimeStepTypes.Monthly;
 
         /// <summary>

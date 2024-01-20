@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [Description("This holds all activities used in the CLEM simulation")]
     [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
         private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };

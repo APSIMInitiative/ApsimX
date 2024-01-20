@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/ActivityFee.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityFee : CLEMActivityBase, IActivityCompanionModel
     {
         [Link]

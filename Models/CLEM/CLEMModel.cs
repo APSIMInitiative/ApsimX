@@ -254,7 +254,7 @@ namespace Models.CLEM
             if(events.TimeStep == TimeStepTypes.Custom)
                 return (int)(timestepAtt?.TimeStep??TimeStepTypes.Monthly) > events.Interval;
             else
-                return (int)(timestepAtt?.TimeStep ?? TimeStepTypes.Monthly) > (int)events.TimeStep;
+                return (int)(timestepAtt?.TimeStep ?? TimeStepTypes.Monthly) <= (int)events.TimeStep;
         }
 
         #region descriptive summary

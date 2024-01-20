@@ -300,7 +300,7 @@ namespace Models.CLEM
                 // check that simulation time step is supported by this component
                 if(!clemModel.TimeStepOK(events))
                 {
-                    validationResults.Add(new ValidationResult($"The [{events.TimeStep}] time-step of [CLEMEvents] is not supported by this activity.", new string[] { "Simulation time-step" }));
+                    validationResults.Add(new ValidationResult($"The [{events.TimeStep}] time-step of [CLEMEvents] is not supported by [{clemModel.GetType().Name}] component.", new string[] { "Invalid time-step" }));
                 }
             }
 

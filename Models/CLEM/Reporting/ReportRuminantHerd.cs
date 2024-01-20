@@ -21,6 +21,7 @@ namespace Models.CLEM.Reporting
     [Description("Provides individual ruminant details for reporting. This uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdReport.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
         [Link]

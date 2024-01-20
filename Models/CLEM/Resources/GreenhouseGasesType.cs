@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a greenhouse gas (e.g. CO2)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }

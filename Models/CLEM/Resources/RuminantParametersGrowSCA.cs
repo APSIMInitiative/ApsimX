@@ -16,6 +16,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowSCA : CLEMModel
     {
         /// <summary>
@@ -119,7 +120,7 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Gain curvature [CG4]")]
         [System.ComponentModel.DefaultValue(6.0)]
-        [Required, Proportion]
+        [Required]
         public double GainCurvature_CG4 { get; set; }
 
         /// <summary>
@@ -162,7 +163,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Advanced", "Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
-        [Required, GreaterThanValue(20.3)] // B.indicus 16.5
+        [System.ComponentModel.DefaultValue(20.3)] // B.indicus 16.5
+        [Required, GreaterThanValue(0)] 
         public double GrowthEnergyIntercept2_CG9 { get; set; }
 
         /// <summary>
@@ -180,21 +182,24 @@ namespace Models.CLEM.Resources
         /// <values>Default is for cattle (20.3), Bos indicus breed value used</values>
         [Category("Advanced", "Growth")]
         [Description("Energy per kg growth #2 [CG11]")]
-        [Required, GreaterThanValue(13.8)]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(13.8)]
         public double GrowthEnergySlope2_CG11 { get; set; }
 
         /// <summary>
         /// First intercept of equation to determine energy protein mass (kg kg-1, SCA CG12)
         /// </summary>
         [Description("Protein gain intercept #1 [CG12]")]
-        [Required, GreaterThanValue(0.072)] // B.indicus 0.092
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.072)] // B.indicus 0.092
         public double ProteinGainIntercept1_CG12 { get; set; }
 
         /// <summary>
         /// Second intercept of equation to determine energy protein mass (kg kg-1, SCA CG13)
         /// </summary>
         [Description("Protein gain intercept #2 [CG13]")]
-        [Required, GreaterThanValue(0.140)] // B.indicus 0.120
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.140)] // B.indicus 0.120
         public double ProteinGainIntercept2_CG13 { get; set; }
 
         /// <summary>
@@ -202,7 +207,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <values>Default is for cattle</values>
         [Description("Protein gain slope #1 [CG14]")]
-        [Required, GreaterThanValue(0.008)]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.008)]
         public double ProteinGainSlope1_CG14 { get; set; }
 
         /// <summary>
@@ -210,7 +216,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <values>Default is for cattle</values>
         [Description("Protein gain slope #2 [CG15]")]
-        [Required, GreaterThanValue(0.115)]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.115)]
         public double ProteinGainSlope2_CG15 { get; set; }
 
         // CG18 Base weight empty bod weight 1.09 
@@ -419,6 +426,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Growth")]
         [Description("Energy lactation efficiency intercept [CK5]")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.4)]
         public double ELactationEfficiencyIntercept_CK5 { get; set; }
         /// <summary>
         /// Energy lactation efficiency coefficient (SCA CK6)
@@ -426,6 +434,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Growth")]
         [Description("Energy lactation efficiency coefficient [CK6]")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.02)]
         public double ELactationEfficiencyCoefficient_CK6 { get; set; }
 
         #endregion
@@ -437,8 +446,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Peak lactation yield scalar (CL0)")]
         [Required, MinLength(1)]
-        [System.ComponentModel.DefaultValue(new[] { 0.375 })]
-        public double[] PeakYieldScalar_CL0 { get; set; }
+        public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375 };
 
         /// <summary>
         /// Milk offset day (SCA CL1)
@@ -792,41 +800,52 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Survival")]
         [Description("Mortality rate coefficient")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(2.5)]
         public double MortalityCoefficient { get; set; }
+        
         /// <summary>
         /// Mortality rate intercept
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Mortality rate intercept")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(0.05)]
         public double MortalityIntercept { get; set; }
+        
         /// <summary>
         /// Mortality rate exponent
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Mortality rate exponent")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(3.0)]
         public double MortalityExponent { get; set; }
+        
         /// <summary>
         /// Juvenile mortality rate coefficient
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Juvenile mortality rate coefficient")]
         [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(3.0)]
         public double JuvenileMortalityCoefficient { get; set; }
+        
         /// <summary>
         /// Juvenile mortality rate maximum
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Juvenile mortality rate maximum")]
         [Required, Proportion]
+        [System.ComponentModel.DefaultValue(0.2)]
         public double JuvenileMortalityMaximum { get; set; }
+        
         /// <summary>
         /// Juvenile mortality rate exponent
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Juvenile mortality rate exponent")]
         [Required]
+        [System.ComponentModel.DefaultValue(1.8)]
         public double JuvenileMortalityExponent { get; set; }
 
         /// <summary>

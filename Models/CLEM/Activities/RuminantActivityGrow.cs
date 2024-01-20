@@ -557,10 +557,13 @@ namespace Models.CLEM.Activities
             //double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
             //double maxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
             //newWt = Math.Min(newWt, maxwt);
-            ind.Weight = Math.Min(
-                Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange),
-                ind.StandardReferenceWeight * ind.Parameters.Grow.MaximumSizeOfIndividual
-                );
+            
+            //ind.Weight = Math.Min(
+            //    Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange),
+            //    ind.StandardReferenceWeight * ind.Parameters.Grow.MaximumSizeOfIndividual
+            //    );
+
+            ind.AdjustWeight(energyPredictedBodyMassChange);
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet

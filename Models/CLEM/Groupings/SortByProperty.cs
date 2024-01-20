@@ -21,6 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines a sort order using the value of a property or method of the individual")]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/SortByProperty.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SortByProperty : CLEMModel, ISort
     {
         private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);

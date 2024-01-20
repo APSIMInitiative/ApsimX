@@ -24,6 +24,7 @@ namespace Models.CLEM
     [Version(2, 0, 1, "Full reworking of transmute resource (B) to shortfall resource (A)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Transmutation/Transmutation.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Transmutation: CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -72,7 +73,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any()) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
+            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
                 string[] memberNames = new string[] { "Transmutes" };
                 results.Add(new ValidationResult("No transmute components provided under this transmutation", memberNames));

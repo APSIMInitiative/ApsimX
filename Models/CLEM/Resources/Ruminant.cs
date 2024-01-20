@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     {
         private RuminantFemale mother;
         private double weight;
+        private double baseweight;
         private int age;
         private double normalisedWeight;
         private double adultEquivalent;
@@ -494,31 +495,44 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg</units>
         [FilterByProperty]
-        public double Weight
+        public void AdjustWeight(double amount)
         {
-            get
+            if (-amount > baseweight)
+                baseweight = 0;
+            else
+                baseweight += amount;
+
+            PreviousWeight = weight;
+            if (this is RuminantFemale female)
             {
-                return weight;
+                weight = baseweight + WoolWeight + ((this as RuminantFemale)?.ConceptusWeight ?? 0);
+                female.UpdateHighWeightWhenNotPregnant(weight);
             }
-            set
+            else
             {
-                if (value < 0)
-                    throw new Exception($"Weight of individual {ID} set to less than 0.");
+                weight = baseweight + WoolWeight;
+            }
 
-                PreviousWeight = weight;
-                weight = value;
+            adultEquivalent = Math.Pow(weight, 0.75) / Math.Pow(this.Parameters.General.BaseAnimalEquivalent, 0.75);
 
-                adultEquivalent = Math.Pow(this.Weight, 0.75) / Math.Pow(this.Parameters.General.BaseAnimalEquivalent, 0.75);
-
-                // if highweight has not been defined set to initial weight
-                if (HighWeight == 0)
-                    HighWeight = weight;
+            // if highweight has not been defined set to initial weight
+            if (HighWeight == 0)
+                HighWeight = weight;
+            else
                 HighWeight = Math.Max(HighWeight, weight);
-
-                if(this is RuminantFemale female)
-                    female.UpdateHighWeightWhenNotPregnant(weight);
-            }
         }
+
+        /// <summary>
+        /// Base weight (no conceptus or wool weight)
+        /// </summary>
+        [FilterByProperty]
+        public double Weight { get { return weight; } }
+
+        /// <summary>
+        /// Base weight (no conceptus or wool weight)
+        /// </summary>
+        [FilterByProperty]
+        public double BaseWeight { get { return baseweight; } }
 
         /// <summary>
         /// Standard Reference Weight determined from coefficients and gender
@@ -656,21 +670,7 @@ namespace Models.CLEM.Resources
             {
                 //TODO check that conceptus weight does not need to be removed for pregnant females.
 
-                return Weight / NormalisedAnimalWeight;
-            }
-        }
-
-        /// <summary>
-        /// Base weight
-        /// </summary>
-        [FilterByProperty]
-        public double BaseWeight
-        {
-            get
-            {
-                if(this is RuminantFemale female)
-                    return weight - female.ConceptusWeight - WoolWeight;
-                return weight - WoolWeight;
+                return baseweight / NormalisedAnimalWeight;
             }
         }
 
@@ -682,7 +682,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return BaseWeight / NormalisedAnimalWeight;
+                return baseweight / NormalisedAnimalWeight;
             }
         }
 
@@ -939,7 +939,10 @@ namespace Models.CLEM.Resources
             DateEnteredSimulation = date;
             BirthScalar = birthScalar;
 
-            Weight = (setWeight <= 0) ? NormalisedAnimalWeight : setWeight;
+            // ToDo: set wool weight
+
+            // can adjust directly to set amount
+            AdjustWeight((setWeight <= 0) ? NormalisedAnimalWeight : setWeight);
             PreviousWeight = Weight; 
 
             //ToDo: setup protein mass and fat mass for new individual

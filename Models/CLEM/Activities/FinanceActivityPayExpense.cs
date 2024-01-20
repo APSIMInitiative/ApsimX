@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [Description("Perform payment of a specified expense")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/PayExpenses.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FinanceActivityPayExpense : CLEMActivityBase
     {
         private FinanceType bankAccount;

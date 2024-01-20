@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]

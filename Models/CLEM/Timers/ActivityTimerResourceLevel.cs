@@ -25,6 +25,7 @@ namespace Models.CLEM.Timers
     [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerResourceLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]

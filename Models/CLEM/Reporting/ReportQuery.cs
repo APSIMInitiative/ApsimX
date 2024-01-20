@@ -18,6 +18,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportQuery : Model, ICLEMUI, IPostSimulationTool
     {
         [Link]

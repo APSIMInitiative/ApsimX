@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantInitialCohorts : CLEMModel
     {
         /// <summary>

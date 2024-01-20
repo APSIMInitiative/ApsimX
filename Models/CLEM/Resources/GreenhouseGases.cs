@@ -14,6 +14,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all greehouse gas types in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGases.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGases : ResourceBaseWithTransactions
     {
 

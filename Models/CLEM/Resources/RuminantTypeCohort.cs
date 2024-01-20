@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -10,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace Models.CLEM.Resources
 {
@@ -27,6 +29,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Includes attribute specification")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantTypeCohort : CLEMModel
     {
         private SetPreviousConception setPreviousConception = null;
@@ -65,7 +68,7 @@ namespace Models.CLEM.Resources
         [Description("Number of individuals")]
         [Required, GreaterThanEqualValue(0)]
         [Core.Display(VisibleCallback = "DisplayNumber")]
-        public double Number { get; set; }
+        public double Number { get; set; } = 1;
 
         /// <summary>
         /// Starting Weight
@@ -154,10 +157,11 @@ namespace Models.CLEM.Resources
             if (number > 0)
             {
                 RuminantType parent = ruminantType;
-                parent ??= FindAncestor<RuminantType>();
+                if(parent is null)
+                    parent = FindAncestor<RuminantType>();
 
                 // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
+                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; 
 
                 for (int i = 1; i <= number; i++)
                 {
@@ -174,8 +178,8 @@ namespace Models.CLEM.Resources
                     }
 
                     // estimate birth scalar based on probability of multiple births.
-                    double birthScalar = double.NaN;
-
+                    double birthScalar = parent.Parameters.General.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual(parent.Parameters.General.MultipleBirthRate)-1];
+                           
                     Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, birthScalar, weight);
 
                     if (getUniqueID)
@@ -263,42 +267,55 @@ namespace Models.CLEM.Resources
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (!specifyRuminantParent & Number <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
+                    htmlWriter.Write($"<span class=\"errorlink\">{Number}</span> x ");
                 else if (!specifyRuminantParent & Number > 1)
-                    htmlWriter.Write("<span class=\"setvalue\">" + Number.ToString() + "</span> x ");
+                    htmlWriter.Write($"<span class=\"setvalue\">{Number}</span> x ");
                 else
                     htmlWriter.Write("A ");
 
-                htmlWriter.Write($"<span class=\"setvalue\">{Age}</span> month old ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Sex.ToString() + "</span></div>");
+                if(AgeDetails.InDays > 0)
+                    htmlWriter.Write($"<span class=\"setvalue\">{AgeDetails.ToDescriptionString()}</span> old ");
+                else
+                    htmlWriter.Write($"<span class=\"errorlink\">0</span> days old ");
+
+                htmlWriter.Write($"<span class=\"setvalue\">{Sex}</span></div>");
                 if (Suckling)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{((Number > 1) ? "These individuals are suckling" : "This individual is a suckling")}</div>");
 
                 if (Sire)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire")}</div>");
 
                 Ruminant newInd = null;
                 string normWtString = "Unavailable";
 
                 if (rumType != null)
                 {
-                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
-                    normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                    if (rumType.Parameters.General is not null)
+                    {
+                        newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
+                        normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                    }
                 }
 
                 if (WeightSD > 0)
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals will be randomly assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
-                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                        htmlWriter.Write("<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Individuals will be randomly assigned a weight based on a mean ");
+                    if (Weight == 0)
+                        htmlWriter.Write($"(using the normalised weight) of {((newInd is null) ? "<span class=\"errorlink\">" : "<span class=\"setvalue\">")}{normWtString}</span> kg");
+                    else
+                        htmlWriter.Write($"of {DisplaySummaryValueSnippet(Weight)} kg");
+                    htmlWriter.Write($" with a standard deviation of {DisplaySummaryValueSnippet(WeightSD)}</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
-                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                        htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{((Number > 1) ? "These individuals " : "This individual ")}weigh{((Number > 1) ? "" : "s")}");
+                    if (Weight == 0)
+                        htmlWriter.Write($" the normalised weight of {((newInd is null) ? "<span class=\"errorlink\">" : "<span class=\"setvalue\">")}{normWtString}</span> kg");
+                    else
+                        htmlWriter.Write($" {DisplaySummaryValueSnippet(Weight)} kg");
                 }
+                if (Weight>0 && (newInd is null || (Weight>0 && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)))
+                    htmlWriter.Write($"<div class=\"warningbanner\">Individuals should weigh close to the normalised weight of <span class=\"errorlink\">{normWtString}</span> kg for their age.</div>");
             }
             else
             {
@@ -326,7 +343,7 @@ namespace Models.CLEM.Resources
                     if (Age > 0)
                     {
                         htmlWriter.Write("<span class=\"setvalue\">");
-                        htmlWriter.Write(Age.ToString());
+                        htmlWriter.Write(AgeDetails.ToString());
                     }
                     else
                     {
@@ -379,10 +396,12 @@ namespace Models.CLEM.Resources
                     RuminantType rumtype = FindAncestor<RuminantType>();
                     if (rumtype != null)
                     {
-                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
+                        Ruminant newInd = null;
+                        if (rumtype.Parameters.General is not null)
+                            newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
 
-                        string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                        if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                        string normWtString = newInd?.NormalisedAnimalWeight.ToString("#,##0")??"Unavailable";
+                        if (newInd is null || (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2))
                         {
                             normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
                             (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
@@ -448,30 +467,6 @@ namespace Models.CLEM.Resources
 
         #endregion
     }
-
-    ///// <summary>
-    ///// Age details for user interface
-    ///// </summary>
-    //public class AgeClass
-    //{
-    //    /// <summary>
-    //    /// Years
-    //    /// </summary>
-    //    public int Years { get; set; }
-    //    /// <summary>
-    //    /// Months
-    //    /// </summary>
-    //    public int Months { get; set; }
-    //    /// <summary>
-    //    /// Days
-    //    /// </summary>
-    //    public int Days { get; set; }
-
-    //    /// <summary>
-    //    /// Age in days
-    //    /// </summary>
-    //    public int AgeInDays => Convert.ToInt32(Math.Floor((Years * 365) + (Months * 30.4) + Days));
-    //}
 }
 
 

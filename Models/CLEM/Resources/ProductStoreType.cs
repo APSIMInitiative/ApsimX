@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a product store (e.g. cotton)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>

@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/FilterByProperty.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]

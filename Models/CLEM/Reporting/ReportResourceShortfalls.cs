@@ -18,6 +18,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a ledger of all shortfalls in resource requests")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportResourceShortfalls : Models.Report
     {
         /// <summary>

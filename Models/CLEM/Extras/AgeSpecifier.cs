@@ -154,9 +154,9 @@ namespace Models.CLEM
                     sw.Write(component.ToString());
                     sw.Write((Parts.Length - index) switch
                     {
-                        0 => $" days",
-                        1 => $" months, ",
-                        2 => $" years, ",
+                        0 => $" day{((component==1)?"":"s")}",
+                        1 => $" month{((component == 1) ? "" : "s")}, ",
+                        2 => $" year{((component == 1) ? "" : "s")}, ",
                         _ => $"Invalid age component [{index}], "
                     });
                 }

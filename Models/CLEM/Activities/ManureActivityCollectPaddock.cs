@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Undertake the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ManureActivityCollectPaddock: CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]

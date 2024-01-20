@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Drawing;
+using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -7,7 +9,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Resources
 {
@@ -25,6 +29,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         private RuminantHerd parentHerd = null;
@@ -62,8 +67,30 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            bool error = false;
             Parameters.Initialise(this);
             parentHerd = this.Parent as RuminantHerd;
+
+            // check parameters are available for all ruminants.
+            if(Parameters.GrowSCA is null)
+            {
+                Summary.WriteMessage(this, $"Missing [RuminantParametersGeneral] parameters for [{NameWithParent}]", MessageType.Error);
+                error = true;
+                //string[] memberNames = new string[] { "RuminantParametersGeneral" };
+                //throw new ApsimXException(this, $"Missing [RuminantParametersGeneral] parameters for [{NameWithParent}]");
+            }
+
+            // check parameters are available for all ruminants.
+            if (Parameters.Feeding is null && FindAllInScope<RuminantActivityFeed>().Any())
+            {
+                Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
+                error = true;
+                //string[] memberNames = new string[] { "RuminantParametersFeed" };
+                //results.Add(new ValidationResult($"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", memberNames));
+            }
+
+            if (error)
+                return;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (FindAllChildren<AnimalPricing>().Any())
@@ -75,6 +102,131 @@ namespace Models.CLEM.Resources
 
             // get conception parameters and rate calculation method
             ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+
+            CLEMEvents events = FindInScope<CLEMEvents>();
+
+            foreach (RuminantInitialCohorts ruminantCohorts in FindAllChildren<RuminantInitialCohorts>())
+                foreach (var ind in ruminantCohorts.CreateIndividuals(events?.Clock.Start ?? default))
+                {
+                    ind.SaleFlag = HerdChangeReason.InitialHerd;
+                    parentHerd.AddRuminant(ind, this);
+                }
+
+            // get list of all sucking individuals
+            var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.Weaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
+
+            if(sucklingGroups.Any())
+            {
+                // check parameters are available for all ruminants.
+                if (Parameters.Breeding is null)
+                {
+                    Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
+                    return;
+                    //string[] memberNames = new string[] { "RuminantParametersBreeding" };
+                    //throw new ApsimXException(this, $"Missing [RuminantParametersBreeding] parameters for [{NameWithParent}]");
+                }
+            }
+
+            foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
+            {
+                // get list of females of breeding age and condition
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.HighWeight >= (a.Parameters.Breeding.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.Parameters.Breeding.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+
+                // assign calves to cows
+                int sucklingCount = 0;
+                int numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                int previousRuminantID = -1;
+                foreach (var suckling in sucklingList)
+                {
+                    sucklingCount++;
+                    if (breedFemales.Count > 0)
+                    {
+                        // if next new female set up some details
+                        if (breedFemales[0].ID != previousRuminantID)
+                        {
+                            //ToDo: Is this really needed, or will it be calculated in Grow when needed.
+                            // It is difficult to access Grow parameters here as we don't know which activity is being used.
+
+                            ////Initialise female milk production in at birth so ready for sucklings to consume
+                            ////ToDo: CLOCK age plus half interval for sucklings
+                            //double milkTime = (suckling.AgeInDays) + events.Interval/2.0; // +15 equivalent to mid month production
+
+                            //// need to calculate normalised animal weight here for milk production
+                            //double milkProduction = breedFemales[0].Parameters.Breeding.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
+                            //breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
+                            //breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
+
+                            // generalised curve
+                            // previously * 30.64
+                            double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight / breedFemales[0].StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
+                            // restrict minimum period between births
+                            currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
+
+                            breedFemales[0].DateOfLastBirth = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start;
+                            breedFemales[0].DateLastConceived = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start;
+                            breedFemales[0].DateEnteredSimulation = breedFemales[0].DateLastConceived;
+                        }
+
+                        // add this offspring to birth count
+                        if (suckling.AgeInDays == 0)
+                            breedFemales[0].NumberOfBirthsThisTimestep++;
+
+                        // suckling mother set
+                        suckling.Mother = breedFemales[0];
+                        // add suckling to suckling offspring of mother.
+                        breedFemales[0].SucklingOffspringList.Add(suckling);
+
+                        // add this suckling to mother's offspring count.
+                        breedFemales[0].NumberOfOffspring++;
+
+                        // check if a twin and if so apply next individual to same mother.
+                        // otherwise remove this mother from the list and change counters
+                        if (numberThisPregnancy == 1)
+                        {
+                            breedFemales[0].NumberOfBirths++;
+                            breedFemales[0].NumberOfConceptions = 1;
+                            breedFemales.RemoveAt(0);
+                        }
+                        else
+                            numberThisPregnancy--;
+                    }
+                    else
+                    {
+                        Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={NameWithParent}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
+                        break;
+                    }
+                }
+
+            }
+
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.HighWeight >= a.Parameters.Breeding.MinimumSize1stMating * a.StandardReferenceWeight));
+            if (remainingFemales.Any())
+            {
+                var firstFemale = remainingFemales.First();
+                // gestation interval at smallest size generalised curve
+                double minAnimalWeight = firstFemale.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.Breeding.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
+                double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
+                // restrict minimum period between births
+                minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
+
+                // assigning values for the remaining females who haven't just bred.
+                // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
+                double ageFirstBirth = firstFemale.Parameters.Breeding.MinimumAge1stMating.InDays + firstFemale.Parameters.General.GestationLength.InDays;
+                foreach (RuminantFemale female in remainingFemales)
+                {
+                    // generalised curve
+                    double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
+                    // restrict minimum period between births (previously +61)
+                    currentIPI = Math.Max(currentIPI, female.Parameters.General.GestationLength.InDays + 60);
+
+                    // calculate number of births assuming conception at min age first mating
+                    // therefore first birth min age + gestation length
+
+                    int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
+                    female.DateOfLastBirth = events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start;
+                    female.DateLastConceived = events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start;
+                }
+            }
         }
 
         /// <summary>
@@ -403,5 +555,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
     }
 }

@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a finance store (e.g. general bank account)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
@@ -225,9 +226,9 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
+            htmlWriter.Write($"Opening balance of <span class=\"setvalue\">{OpeningBalance:#,##0.00}</span>");
             if (this.EnforceWithdrawalLimit)
-                htmlWriter.Write(" that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>");
+                htmlWriter.Write($" that can be withdrawn to <span class=\"setvalue\">{WithdrawalLimit:#,##0.00}</span>");
             else
                 htmlWriter.Write(" with no withdrawal limit");
 
@@ -242,14 +243,14 @@ namespace Models.CLEM.Resources
                 if (this.InterestRateCharged > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(this.InterestRateCharged.ToString("0.##") + "</span>% charged ");
+                    htmlWriter.Write($"{InterestRateCharged:0.##}</span>% charged ");
                     if (this.InterestRatePaid > 0)
                         htmlWriter.Write("and ");
                 }
                 if (this.InterestRatePaid > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(this.InterestRatePaid.ToString("0.##") + "</span>% paid");
+                    htmlWriter.Write($"{InterestRatePaid:0.##}</span>% paid");
                 }
             }
             htmlWriter.Write("</div>");

@@ -25,6 +25,7 @@ namespace Models.CLEM
     [Description("This component will generate summarised details for a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SummariseRuminantHerd : CLEMModel
     {
         [Link]

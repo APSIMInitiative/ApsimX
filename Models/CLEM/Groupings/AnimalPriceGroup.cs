@@ -21,6 +21,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
     {
         /// <summary>

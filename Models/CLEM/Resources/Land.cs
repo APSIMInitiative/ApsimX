@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all land types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Land : ResourceBaseWithTransactions
     {
         private bool changeOccurred = false;

@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
     [Version(2, 0, 1, "Updated to full SCA compliance")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantActivityGrowSCA : CLEMRuminantActivityBase
+    public class RuminantActivityGrowSCA : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         private readonly CLEMEvents events = null;
@@ -480,7 +480,7 @@ namespace Models.CLEM.Activities
             double energyPredictedBodyMassChange = ind.Parameters.GrowSCA.EBW2LW * emptyBodyGainkg;
             
             // update weight based on the time-step
-            ind.Weight += energyPredictedBodyMassChange * events.Interval;
+            ind.AdjustWeight(energyPredictedBodyMassChange * events.Interval);
 
             double kgProteinChange = Math.Min(proteinGain1, proteinContentOfGain * emptyBodyGainkg);
             double MJProteinChange = 23.6 * kgProteinChange;
@@ -930,5 +930,28 @@ namespace Models.CLEM.Activities
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
             }
         }
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // check parameters are available for all ruminants.
+            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowSCA is null))
+            {
+                string[] memberNames = new string[] { "RuminantParametersGrowSCA" };
+                results.Add(new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
     }
 }

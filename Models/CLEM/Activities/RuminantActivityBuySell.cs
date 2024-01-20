@@ -30,6 +30,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         private FinanceType bankAccount = null;

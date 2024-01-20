@@ -38,6 +38,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantGroup : FilterGroup<Ruminant>
     {
         #region descriptive summary

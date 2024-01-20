@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
@@ -9,6 +10,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// This manages all ruminant parameters for a ruminant Type
     /// </summary>
+    [Serializable]
     public class RuminantParameters
     {
         private RuminantParametersBreed breeding;
@@ -16,6 +18,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Parameters for the Breed activity
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersBreed Breeding 
         { 
             get
@@ -30,26 +33,31 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Feed parameters defining the RuminantType
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersFeed Feeding { get; set; }
 
         /// <summary>
         /// General parameters defining the RuminantType
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersGeneral General { get; set; }
 
         /// <summary>
         /// Parameters for the Grazing activities
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersGrazing Grazing { get; set; }
 
         /// <summary>
         /// Parameters for the Grow activity
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersGrow Grow { get; set; }
 
         /// <summary>
         /// Parameters for the GrowSCA activity
         /// </summary>
+        [JsonIgnore]
         public RuminantParametersGrowSCA GrowSCA { get; set; }
 
         /// <summary>

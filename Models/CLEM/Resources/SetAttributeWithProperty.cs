@@ -26,6 +26,7 @@ namespace Models.CLEM.Resources
     [Description("Specify an attribute for the individual with associated ruminant property value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithProperty.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SetAttributeWithProperty : CLEMModel, IValidatableObject, ISetAttribute
     {
         [NonSerialized]

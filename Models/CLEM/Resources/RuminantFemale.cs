@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -211,11 +212,11 @@ namespace Models.CLEM.Resources
         public int CalulateNumberOfOffspringThisPregnancy()
         {
             int birthCount = 1;
-            if (Parameters.Breeding.MultipleBirthRate != null)
+            if (Parameters.General.MultipleBirthRate != null)
             {
                 double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
-                foreach (double i in Parameters.Breeding.MultipleBirthRate)
+                foreach (double i in Parameters.General.MultipleBirthRate)
                 {
                     birthCount++;
                     birthProb += i;
@@ -226,6 +227,25 @@ namespace Models.CLEM.Resources
             }
             NumberOfFetuses = birthCount;
             return birthCount;
+        }
+
+        /// <summary>
+        /// Predict how many individuals were in the birth for a random individual
+        /// </summary>
+        /// <returns>Number of individuals from birth</returns>
+        public static int PredictNumberOfSiblingsFromBirthOfIndividual(double[] mutibirthrates)
+        {
+            int[] number = new int[mutibirthrates.Length + 1];
+            number[0] = Convert.ToInt32((1- mutibirthrates.Sum())*1000);
+            for (int i = 0; i < mutibirthrates.Length; i++)
+                number[i+1] = number[i] + Convert.ToInt32(1000 * mutibirthrates[i]*(i+2));
+
+            int rnd = RandomNumberGenerator.Generator.Next(1, number.Last());
+
+            int j = 0;
+            while (j < number.Length && rnd > number[j])
+                j++;
+            return j + 1;
         }
 
         /// <summary>
@@ -503,6 +523,8 @@ namespace Models.CLEM.Resources
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();
+
+            //ToDo: Set conceptus weight if needed
         }
     }
 

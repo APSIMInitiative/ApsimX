@@ -24,6 +24,7 @@ namespace Models.CLEM.Timers
     [Description("This activity is is based on whether a pasture biomass (t/ha) is within a specified range.")]
     [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]

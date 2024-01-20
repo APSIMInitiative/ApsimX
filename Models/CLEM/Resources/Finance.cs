@@ -16,6 +16,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all finance types (bank accounts) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/Finance.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Finance : ResourceBaseWithTransactions
     {
         [Link]
@@ -36,7 +37,7 @@ namespace Models.CLEM.Resources
         public MonthsOfYear FirstMonthOfFinancialYear { get; set; }
 
         /// <summary>
-        /// Method to determine the financial year from a given date
+        /// Property to determine the financial year from current date
         /// </summary>
         /// <returns>The financial year</returns>
         public int FinancialYear
