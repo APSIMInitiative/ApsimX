@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using UserInterface.Views;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
 
 namespace UserInterface.Presenters
 {
@@ -265,6 +267,8 @@ namespace UserInterface.Presenters
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
+            
+
             if (llsoil != null && llsoilsName != null)
             {       //draw the area relative to the water LL instead.
                 graph.DrawRegion($"PAW relative to {llsoilsName}", llsoil, swCumulativeThickness,
@@ -314,8 +318,31 @@ namespace UserInterface.Presenters
                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
 
-            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false, false);
+            List<double> vols = new List<double>();
+            foreach (double val in airdry)
+                vols.Add(val);
+            foreach (double val in cll)
+                vols.Add(val);
+            foreach (double val in dul)
+                vols.Add(val);
+            foreach (double val in sat)
+                vols.Add(val);
+
+            if (llsoil != null)
+                foreach (double val in llsoil)
+                    vols.Add(val);
+
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = MathUtilities.Min(vols);
+            double xTopMax = MathUtilities.Max(vols);
+            xTopMin -= xTopMax * padding;
+            xTopMax += xTopMax * padding;
+
+            double height = MathUtilities.Max(cumulativeThickness);
+            height += height * padding;
+
+            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
             graph.Refresh();
         }
