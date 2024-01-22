@@ -163,8 +163,6 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<ResourceRequest> resourceRequests = new();
-
             feedEstimated = 0;
             feedToSatisfy = 0;
             feedToOverSatisfy = 0;

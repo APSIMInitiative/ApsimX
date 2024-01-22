@@ -49,7 +49,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add an attribute to this individual
+        /// Add an attribute to this individual's list
         /// </summary>
         /// <param name="tag">Attribute label</param>
         /// <param name="value">Value to set or change</param>

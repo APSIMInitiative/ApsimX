@@ -7,6 +7,7 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -19,6 +20,7 @@ namespace Models.CLEM.Resources
         private RuminantFemale mother;
         private double weight;
         private double baseweight;
+        private double emptyBodyChange;
         private int age;
         private double normalisedWeight;
         private double adultEquivalent;
@@ -26,7 +28,7 @@ namespace Models.CLEM.Resources
         private double fatMass = 0;
         private double previousProteinMass = 0;
         private double previousFatMass = 0;
-
+        private bool sterilised = false;
 
         #region All new Grow SCA properties
 
@@ -253,7 +255,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && age <= (DateTime.IsLeapYear(DateOfBirth.Year)?366:365));
+                return (Weaned && age < (DateTime.IsLeapYear(DateOfBirth.Year)?366:365));
             }
         }
 
@@ -272,7 +274,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
-        public double Number { get; set; }
+        public double Number { get; set; } = 1;
 
         /// <summary>
         /// Unique ID of the managed paddock the individual is located in.
@@ -312,7 +314,7 @@ namespace Models.CLEM.Resources
         /// Has the individual been sterilised (webbed, spayed or castrated)
         /// </summary>
         [FilterByProperty]
-        public abstract bool IsSterilised { get; }
+        public bool IsSterilised { get { return sterilised; } }
 
         /// <summary>
         /// Marked as a replacement breeder
@@ -423,7 +425,6 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                //AgeInDays = value * 30.4;
                 if (age <= 0) age = 1;                
                 normalisedWeight = CalculateNormalisedWeight(age);
             }
@@ -497,6 +498,8 @@ namespace Models.CLEM.Resources
         [FilterByProperty]
         public void AdjustWeight(double amount)
         {
+            emptyBodyChange = amount / Parameters.General.EBW2LW_CG18;
+
             if (-amount > baseweight)
                 baseweight = 0;
             else
@@ -535,6 +538,11 @@ namespace Models.CLEM.Resources
         public double BaseWeight { get { return baseweight; } }
 
         /// <summary>
+        /// Current empty body mass change
+        /// </summary>
+        public double EmptyBodyMassChange { get { return emptyBodyChange; } }
+
+        /// <summary>
         /// Standard Reference Weight determined from coefficients and gender
         /// </summary>
         /// <units>kg</units>
@@ -569,7 +577,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The birth scalar for this individual. Value from breed params birth scalars based on whether from a multiple birth
         /// </summary>
-        public double BirthScalar { get; set; }
+        public double BirthScalar { get; private set; }
 
         /// <summary>
         /// Calculate normalised weight from age of individual (in days)
@@ -732,10 +740,10 @@ namespace Models.CLEM.Resources
                     return "Suckling";
                 else if (IsWeaner)
                     return "Weaner";
-                else
-                {
-                    return BreederClass;
-                }
+
+                if (Sex == Sex.Female)
+                    return (this as RuminantFemale).BreederClass;
+                return (this as RuminantMale).BreederClass;
             }
         }
 
@@ -947,7 +955,7 @@ namespace Models.CLEM.Resources
 
             //ToDo: setup protein mass and fat mass for new individual
 
-            Number = 1;
+            // ToDo: set wool weight
             WoolWeight = 0;
             CashmereWeight = 0;
 
@@ -1006,6 +1014,9 @@ namespace Models.CLEM.Resources
         /// <param name="attribute">base attribute from mother</param>
         public void AddNewAttribute(ISetAttribute attribute)
         {
+            if (attribute is SetAttributeWithValue att && att.Category == RuminantAttributeCategoryTypes.Sterilisation)
+                sterilised = true;
+
             // get inherited value
             IIndividualAttribute indAttribute = attribute.GetAttribute(true);
 
@@ -1018,6 +1029,20 @@ namespace Models.CLEM.Resources
             // save breed params to individual
 
             Attributes.Add(attribute.AttributeName, indAttribute); //.Value.GetInheritedAttribute() as IIndividualAttribute);
+        }
+
+        /// <summary>
+        /// Add an attribute to this individual's list
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <param name="category">Special category for the label</param>
+        /// <param name="value">Value to set or change</param>
+        public void AddNewAttribute(string tag, RuminantAttributeCategoryTypes category, IIndividualAttribute value = null)
+        {
+            if (category == RuminantAttributeCategoryTypes.Sterilisation)
+                sterilised = true;
+
+            Attributes.Add(tag, value);
         }
     }
 

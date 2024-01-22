@@ -20,6 +20,5 @@
         /// Mandatory attribute
         /// </summary>
         bool Mandatory { get; set; }
-
     }
 }

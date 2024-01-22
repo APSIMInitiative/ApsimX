@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         public List<Ruminant> CreateIndividuals(DateTime date)
         {
             List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
-            List<Ruminant> individuals = new List<Ruminant>();
+            List<Ruminant> individuals = new ();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
                 individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList(), date));
 

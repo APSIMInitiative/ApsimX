@@ -76,8 +76,6 @@ namespace Models.CLEM.Resources
             {
                 Summary.WriteMessage(this, $"Missing [RuminantParametersGeneral] parameters for [{NameWithParent}]", MessageType.Error);
                 error = true;
-                //string[] memberNames = new string[] { "RuminantParametersGeneral" };
-                //throw new ApsimXException(this, $"Missing [RuminantParametersGeneral] parameters for [{NameWithParent}]");
             }
 
             // check parameters are available for all ruminants.
@@ -85,8 +83,6 @@ namespace Models.CLEM.Resources
             {
                 Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
                 error = true;
-                //string[] memberNames = new string[] { "RuminantParametersFeed" };
-                //results.Add(new ValidationResult($"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", memberNames));
             }
 
             if (error)
@@ -130,7 +126,7 @@ namespace Models.CLEM.Resources
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.HighWeight >= (a.Parameters.Breeding.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.Parameters.Breeding.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.HighWeight >= (a.Parameters.General.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.Parameters.Breeding.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
 
                 // assign calves to cows
                 int sucklingCount = 0;
@@ -199,19 +195,19 @@ namespace Models.CLEM.Resources
 
             }
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.HighWeight >= a.Parameters.Breeding.MinimumSize1stMating * a.StandardReferenceWeight));
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.HighWeight >= a.Parameters.General.MinimumSize1stMating * a.StandardReferenceWeight));
             if (remainingFemales.Any())
             {
                 var firstFemale = remainingFemales.First();
                 // gestation interval at smallest size generalised curve
-                double minAnimalWeight = firstFemale.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.Breeding.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
+                double minAnimalWeight = firstFemale.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
                 double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
                 // restrict minimum period between births
                 minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
 
                 // assigning values for the remaining females who haven't just bred.
                 // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
-                double ageFirstBirth = firstFemale.Parameters.Breeding.MinimumAge1stMating.InDays + firstFemale.Parameters.General.GestationLength.InDays;
+                double ageFirstBirth = firstFemale.Parameters.General.MinimumAge1stMating.InDays + firstFemale.Parameters.General.GestationLength.InDays;
                 foreach (RuminantFemale female in remainingFemales)
                 {
                     // generalised curve

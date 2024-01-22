@@ -21,35 +21,29 @@ namespace Models.CLEM.Resources
             // is only used by class property
             get
             {
-                if (IsPreBreeder)
-                    return "PreBreeder";
-                else
+                if (!IsSterilised)
                 {
-                    if (IsSpayed)
-                        return "Spayed";
-                    else if (IsWebbed)
-                        return "Webbed";
-                    else
-                        return "Breeder";
+                    if (IsPreBreeder)
+                        return "PreBreeder";
+                    return "Breeder";
                 }
+                if (IsSpayed)
+                    return "Spayed";
+                return "Webbed";
             }
         }
-
-        /// <inheritdoc/>
-        [FilterByProperty]
-        public override bool IsSterilised { get { return (IsWebbed || IsSpayed); } }
 
         /// <summary>
         /// Is the female webbed
         /// </summary>
         [FilterByProperty]
-        public bool IsWebbed { get { return Attributes.Exists("Webbed"); } }
+        public bool IsWebbed { get { return IsSterilised && Attributes.Exists("Webbed"); } }
 
         /// <summary>
         /// Is the female spayed
         /// </summary>
         [FilterByProperty]
-        public bool IsSpayed { get { return Attributes.Exists("Spayed"); } }
+        public bool IsSpayed { get { return IsSterilised && Attributes.Exists("Spayed"); } }
 
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight and not sterilised 
@@ -59,7 +53,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weaned && !IsPreBreeder && !IsSterilised;
+                return Weaned && !IsSterilised && !IsPreBreeder;
             }
         }
 
@@ -102,7 +96,7 @@ namespace Models.CLEM.Resources
                 // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
                 //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
-                return (Weaned && ((HighWeight >= Parameters.Breeding.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)) == false);
+                return (Weaned && ((HighWeight >= Parameters.General.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
             }
         }
 
@@ -507,7 +501,7 @@ namespace Models.CLEM.Resources
                     MilkMilkedThisTimeStep += amount;
                     break;
                 default:
-                    throw new ApplicationException("Unknown MilkUseReason [" + reason + "] in TakeMilk method of [r=RuminantFemale]");
+                    throw new ApplicationException($"Unknown MilkUseReason [{reason}] in TakeMilk method of [r=RuminantFemale]");
             }
         }
 

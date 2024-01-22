@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         public void SetConceptionDetails(RuminantFemale female)
         {
             // if female can breed
-            if (NumberDaysPregnant < female.Parameters.General.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.Parameters.Breeding.MinimumAge1stMating.InDays)
+            if (NumberDaysPregnant < female.Parameters.General.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
                 if (offspring > 0)
@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                             results.Add(new ValidationResult($"The number of months pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames));
                         }
                         // get the individual to check female and suitable age for conception supplied.
-                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.Breeding.MinimumAge1stMating.InDays)
+                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.General.MinimumAge1stMating.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
                             results.Add(new ValidationResult($"The individual specified must be at least [{ruminantType.Parameters.General}] month old at the time of conception [r=SetPreviousConception]", memberNames));

@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         /// Proportion offspring born male
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.5)]
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Proportion of offspring male")]
         [Required, Proportion]
         public double ProportionOffspringMale { get; set; }
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Inter-parturition interval intercept of PW (months)")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(10.847)]
@@ -48,29 +48,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Inter-parturition interval coefficient of PW (months)
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Inter-parturition interval coefficient of PW (months)")]
         [Required]
         [System.ComponentModel.DefaultValue(-0.7994)]
         public double InterParturitionIntervalCoefficient { get; set; }
-        
-        /// <summary>
-        /// Minimum age for 1st mating
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Minimum age for 1st mating")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
-
-        /// <summary>
-        /// Minimum size for 1st mating, proportion of SRW
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.6)]
-        public double MinimumSize1stMating { get; set; }
         
         /// <summary>
         /// Minimum number of days between last birth and conception
@@ -84,7 +66,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Farm", "Breeding")]
         [Description("Proportion of SRW required before conception possible (min size for mating)")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
@@ -92,7 +74,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Maximum number of matings per male per day
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Maximum number of matings per male per day")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(30)]
@@ -101,20 +83,20 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Prenatal mortality rate
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         [System.ComponentModel.DefaultValue(0.079)]
         public double PrenatalMortality { get; set; }
 
-        /// <summary>
-        /// Proportion of wet mother's with no offspring accepting orphan
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Proportion suitable fmeales accpeting orphan")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
-        [Required, Proportion]
-        public double ProportionAcceptingSurrogate { get; set; }
+        ///// <summary>
+        ///// Proportion of wet mother's with no offspring accepting orphan
+        ///// </summary>
+        //[Category("Farm", "Breeding")]
+        //[Description("Proportion suitable females accepting orphan")]
+        //[System.ComponentModel.DefaultValueAttribute(0)]
+        //[Required, Proportion]
+        //public double ProportionAcceptingSurrogate { get; set; }
 
         /// <summary>
         /// Constructor

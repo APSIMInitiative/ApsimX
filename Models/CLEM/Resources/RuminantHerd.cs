@@ -234,7 +234,7 @@ namespace Models.CLEM.Resources
                 Category = "breeding stats"
             };
 
-            foreach (RuminantFemale female in Herd.OfType<RuminantFemale>().Where(a => a.AgeInDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays))
+            foreach (RuminantFemale female in Herd.OfType<RuminantFemale>().Where(a => a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays))
             {
                 args.RumObj = female;
                 OnFinalFemaleOccurred(args);
@@ -324,7 +324,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(null);
 
             // report female breeding stats if needed
-            if (ind.Sex == Sex.Female && ind.AgeInDays >= ind.Parameters.Breeding.MinimumAge1stMating.InDays)
+            if (ind.Sex == Sex.Female && ind.AgeInDays >= ind.Parameters.General.MinimumAge1stMating.InDays)
             {
                 RuminantReportItemEventArgs args = new()
                 {

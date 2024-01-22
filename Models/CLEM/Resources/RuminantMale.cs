@@ -16,20 +16,19 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if ((this as RuminantMale).IsSire)
-                    return "Sire";
-                else if ((this as RuminantMale).IsCastrated)
+                if (IsSterilised)
                     return "Castrate";
                 else
                 {
-                    if ((this as RuminantMale).IsWildBreeder)
-                    {
-                        return "Breeder";
-                    }
-                    else
+                    if (IsPreBreeder)
                     {
                         return "PreBreeder";
                     }
+                    else if(IsWildBreeder)
+                    {
+                        return "WildBreeder";
+                    }
+                    return "Sire";
                 }
             }
         }
@@ -43,8 +42,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)
+                if (!IsSterilised && Attributes.Exists("Sire"))
+                    if (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)
                     {
                         ReplacementBreeder = false;
                         return true;
@@ -54,35 +53,41 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Indicates if this male is a weaned but less than age at first mating 
+        /// </summary>
+        [FilterByProperty]
+        public bool IsPreBreeder
+        {
+            get
+            {
+                return (Weaned && (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays) == false);
+            }
+        }
+
+
+        /// <summary>
         /// Indicates if individual is breeding sire
-        /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
+        /// Represents any uncastrated male of breeding age that is not assigned sire
         /// </summary>
         [FilterByProperty]
         public bool IsWildBreeder
         {
             get
             {
-                if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)
-                        return true;
-                return false;
+                return (!IsSterilised && !IsPreBreeder && !Attributes.Exists("Sire"));
             }
         }
-
-        /// <inheritdoc/>
-        [FilterByProperty]
-        public override bool IsSterilised { get { return IsCastrated; } }
 
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
         [FilterByProperty]
-        public bool IsCastrated { get { return Attributes.Exists("Castrated"); }}
+        public bool IsCastrated { get { return IsSterilised; }}
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public override bool IsAbleToBreed {  get { return this.IsSire | this.IsWildBreeder; } }
+        public override bool IsAbleToBreed {  get { return !IsSterilised; } }
 
         /// <summary>
         /// Constructor

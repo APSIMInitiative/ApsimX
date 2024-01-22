@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Name of breed where name of herd defined by the name of the RuminantType
         /// </summary>
-        [Category("Basic", "General")]
+        [Category("Breed", "General")]
         [Description("Breed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
         [System.ComponentModel.DefaultValue("Bos taurus")]
@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Natural weaning age
         /// </summary>
-        [Category("Basic", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Natural weaning age (0, use gestation length)")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
@@ -45,9 +45,27 @@ namespace Models.CLEM.Resources
         #region breeding
 
         /// <summary>
+        /// Minimum age for 1st mating
+        /// </summary>
+        [Category("Farm", "Breeding")]
+        [Description("Minimum age for 1st mating")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
+        [Units("years, months, days")]
+        public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
+
+        /// <summary>
+        /// Minimum size for 1st mating, proportion of SRW
+        /// </summary>
+        [Category("Farm", "Breeding")]
+        [Description("Minimum size for 1st mating, proportion of SRW")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        [System.ComponentModel.DefaultValue(0.6)]
+        public double MinimumSize1stMating { get; set; }
+
+        /// <summary>
         /// Days between conception and parturition
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Days from conception to parturition")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
@@ -56,7 +74,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number of days for milking
         /// </summary>
-        [Category("Basic", "Lactation")]
+        [Category("Farm", "Lactation")]
         [Description("Number of days for milking")]
         [Required, GreaterThanEqualValue(0)]
         [System.ComponentModel.DefaultValue(300)]
@@ -65,7 +83,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Peak milk yield(kg/day)
         /// </summary>
-        [Category("Basic", "Lactation")]
+        [Category("Farm", "Lactation")]
         [Description("Peak milk yield (kg/day)")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(4.0)]
@@ -78,7 +96,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight of female
         /// </summary>
-        [Category("Basic", "General")]
+        [Category("Farm", "General")]
         [Units("kg")]
         [Description("Standard Ref. Weight for a female")]
         [Required, GreaterThanValue(0)]
@@ -88,7 +106,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for castrated male from female multiplier
         /// </summary>
-        [Category("Advanced", "General")]
+        [Category("Farm", "General")]
         [Description("Castrated male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1.2)]
@@ -97,7 +115,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
-        [Category("Advanced", "General")]
+        [Category("Farm", "General")]
         [Description("Male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1.4)]
@@ -106,7 +124,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight at birth
         /// </summary>
-        [Category("Advanced", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Units("Proportion of female SRW")]
         [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
@@ -116,15 +134,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Rate at which multiple births are concieved (twins, triplets, ...)
         /// </summary>
-        [Category("Basic", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Rate at which multiple births occur (twins,triplets,...")]
         [Proportion]
         public double[] MultipleBirthRate { get; set; } = new double[] { 0.25 };
 
         /// <summary>
-        /// Weight(kg) of 1 animal equivalent (steer)
+        /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
         /// </summary>
-        [Category("Basic", "General")]
+        [Category("Farm", "General")]
         [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(450)]
@@ -137,7 +155,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative body condition to score rate
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Farm", "Growth")]
         [Description("Rel. Body Cond. to Score rate")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.15)]
@@ -146,7 +164,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Body condition score range
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Farm", "Growth")]
         [Description("Body Condition Score range (min, mid, max)")]
         [Required, ArrayItemCount(3)]
         [System.ComponentModel.DefaultValue(new[] { 0.0, 3.0, 5.0 })]
@@ -154,46 +172,16 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region Mortality
-
-        /// <summary>
-        /// Style of calculating condition-based mortality
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Style of calculating additional condition-based mortality")]
-        [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
-        [Required]
-        public ConditionBasedCalculationStyle ConditionBasedMortalityStyle { get; set; }
-        
-        /// <summary>
-        /// Cut-off for condition-based mortality
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Cut-off for condition-based mortality")]
-        [Required]
-        public double ConditionBasedMortalityCutOff { get; set; }
-
-        /// <summary>
-        /// Probability of dying if less than condition-based mortality cut-off
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Probability of death below condition-based cut-off")]
-        [System.ComponentModel.DefaultValue(1)]
-        [Required, GreaterThanValue(0), Proportion]
-        public double ConditionBasedMortalityProbability { get; set; }
-
-        /// <summary>
-        /// Mortality rate base
-        /// </summary>
-        [Category("Basic", "Survival")]
-        [Description("Mortality rate base")]
-        [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.03)]
-        public double MortalityBase { get; set; }
-
-        #endregion
-
         #region Normalised Weight CN
+
+        /// <summary>
+        /// Conversion from empty body weigh to live weight
+        /// </summary>
+        [Description("Conversion from empty body weigh to live weight")]
+        [Category("Farm", "Growth")]
+        [Required, GreaterThanValue(1.0)]
+        [System.ComponentModel.DefaultValue(1.09)]
+        public double EBW2LW_CG18 { get; set; }
 
         /// <summary>
         /// Age growth rate coefficient (CN1 in SCA)
@@ -201,6 +189,8 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
         [System.ComponentModel.DefaultValue(0.0115)]
+        [Category("Farm", "Survival")]
+        [Required, GreaterThanValue(0)]
         public double AgeGrowthRateCoefficient_CN1 { get; set; }
 
         /// <summary>
@@ -209,6 +199,8 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Standard Reference Weight growth scalar [CN2]")]
         [System.ComponentModel.DefaultValue(0.27)]
+        [Category("Breed", "Survival")]
+        [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar_CN2 { get; set; }
 
         /// <summary>
@@ -217,6 +209,8 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Slow growth factor [CN3]")]
         [System.ComponentModel.DefaultValue(0.4)]
+        [Category("Farm", "Survival")]
+        [Required, GreaterThanValue(0)]
         public double SlowGrowthFactor_CN3 { get; set; }
 
         #endregion
@@ -226,7 +220,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Methane production from intake coefficient
         /// </summary>
-        [Category("Advanced", "Products")]
+        [Category("Farm", "Products")]
         [Description("Methane production from intake coefficient")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(20.7)]

@@ -63,8 +63,6 @@ namespace Models.CLEM.Activities
             // per day at this point.
             //ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily * events.Interval;
 
-
-
             var herd = CurrentHerd(true);
             foreach (var ruminant in herd)
             {

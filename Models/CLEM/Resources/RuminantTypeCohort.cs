@@ -130,7 +130,7 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null)
         {
-            List<ISetAttribute> localAttributes = new List<ISetAttribute>();
+            List<ISetAttribute> localAttributes = new ();
             // add any whole herd attributes
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
@@ -151,7 +151,7 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
-            List<Ruminant> individuals = new List<Ruminant>();
+            List<Ruminant> individuals = new ();
             initialAttributes ??= new List<ISetAttribute>();
 
             if (number > 0)

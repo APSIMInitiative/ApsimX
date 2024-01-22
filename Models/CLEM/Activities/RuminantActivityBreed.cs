@@ -142,9 +142,9 @@ namespace Models.CLEM.Activities
                     foreach (RuminantFemale female in location.OfType<RuminantFemale>())
                     {
                         // find any suitable times and randomly pick one
-                        var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.Breeding.MinimumAge1stMating.InDays).ToList();
+                        var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays).ToList();
                         DateTime conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays).ToList();
+                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MinimumAge1stMating.InDays).ToList();
 
                         // pick a male to mate
                         if (useControlledMating)
@@ -739,7 +739,7 @@ namespace Models.CLEM.Activities
             if (!female.IsPregnant)
             {
                 status = ConceptionStatus.NotReady;
-                if (female.AgeInDays >= female.Parameters.Breeding.MinimumAge1stMating.InDays && female.NumberOfBirths == 0)
+                if (female.AgeInDays >= female.Parameters.General.MinimumAge1stMating.InDays && female.NumberOfBirths == 0)
                     isConceptionReady = true;
                 else
                 {
