@@ -86,6 +86,15 @@ namespace Models.Management
         public int CurrentState { get; set; }
 
         /// <summary>
+        /// Name of the Current State
+        /// </summary>
+        [JsonIgnore]
+        public string CurrentStateName
+        {
+            get { return getStateNameByID(CurrentState); }
+        }
+
+        /// <summary>
         /// All dynamic events published by the rotation manager.
         /// </summary>
         public IEnumerable<string> Events
@@ -108,14 +117,6 @@ namespace Models.Management
         private string[] States()
         {
             return Nodes.Select(n => n.Name).ToArray();
-        }
-
-        private string getCurrentStateName()
-        {
-            foreach (Node state in Nodes)
-                if (state.ID == CurrentState)
-                    return state.Name;
-            return "No State";
         }
 
         private string getStateNameByID(int id)
@@ -148,7 +149,7 @@ namespace Models.Management
                     CurrentState = Nodes[i].ID;
 
             if (Verbose)
-                summary.WriteMessage(this, $"Initialised, state={getCurrentStateName()} (of {Nodes.Count} total)", MessageType.Diagnostic);
+                summary.WriteMessage(this, $"Initialised, state={CurrentStateName} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
         [EventSubscribe("StartOfSimulation")]
@@ -180,7 +181,7 @@ namespace Models.Management
                 more = false;
                 double bestScore = -1.0;
                 Arc bestArc = null;
-                foreach (var arc in Arcs.FindAll(arc => arc.ID == CurrentState))
+                foreach (var arc in Arcs.FindAll(arc => arc.SourceID == CurrentState))
                 {
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
@@ -203,7 +204,7 @@ namespace Models.Management
 
                     if (Verbose)
                     {
-                        string arcName = $"Transition from {arc.ID} to {arc.ID}";
+                        string arcName = $"Transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} by {arc.Name}";
                         string message;
                         if (score > 0)
                         {
@@ -252,7 +253,7 @@ namespace Models.Management
         /// </summary>
         public void DoLogState() 
         {
-            detailedLogger?.DoTransition(getCurrentStateName());
+            detailedLogger?.DoTransition(CurrentStateName);
         }
 
         /// <summary>
@@ -281,12 +282,12 @@ namespace Models.Management
             try
             {
                 if (Verbose)
-                    summary.WriteMessage(this, $"Transitioning from {transition.ID} to {transition.ID}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
-                eventService.Publish($"TransitionFrom{getCurrentStateName()}", null);
+                eventService.Publish($"TransitionFrom{CurrentStateName}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
 
-                CurrentState = transition.ID;
+                CurrentState = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
                 {
@@ -307,13 +308,13 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish($"TransitionTo{getCurrentStateName()}", null);
+                eventService.Publish($"TransitionTo{CurrentStateName}", null);
                 if (Verbose)
-                    summary.WriteMessage(this, $"Current state is now {getCurrentStateName()}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Current state is now {CurrentStateName}", MessageType.Diagnostic);
             }
             catch (Exception err)
             {
-                throw new Exception($"Unable to transition to state {getCurrentStateName()}", err);
+                throw new Exception($"Unable to transition to state {CurrentStateName}", err);
             }
         }
 
