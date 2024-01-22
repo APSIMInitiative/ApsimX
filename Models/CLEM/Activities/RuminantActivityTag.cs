@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -46,12 +47,28 @@ namespace Models.CLEM.Activities
         public TagApplicationStyle ApplicationStyle { get; set; }
 
         /// <summary>
+        /// Tag category
+        /// </summary>
+        [Description("Category of tag")]
+        [Core.Display(EnabledCallback = "IsAddAttribute")]
+        public RuminantAttributeCategoryTypes TagCategory { get; set; } = RuminantAttributeCategoryTypes.None;
+
+        /// <summary>
         /// constructor
         /// </summary>
         public RuminantActivityTag()
         {
             // activity is performed in ManageAnimals
             AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <summary>
+        /// Determines if an add tag for display of other properties.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAddAttribute()
+        {
+            return ApplicationStyle == TagApplicationStyle.Add;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -154,16 +171,17 @@ namespace Models.CLEM.Activities
         {
             if(numberToDo - numberToSkip > 0)
             {
+
                 int tagged = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
                     switch (ApplicationStyle)
                     {
                         case TagApplicationStyle.Add:
-                            ruminant.Attributes.Add(TagLabel);
+                            ruminant.AddNewAttribute(TagLabel, TagCategory);
                             break;
                         case TagApplicationStyle.Remove:
-                            ruminant.Attributes.Add(TagLabel);
+                            ruminant.Attributes.Remove(TagLabel);
                             break;
                     }
                     tagged++;

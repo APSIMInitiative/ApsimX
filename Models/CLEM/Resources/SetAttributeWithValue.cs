@@ -102,6 +102,14 @@ namespace Models.CLEM.Resources
         [Required]
         public bool Mandatory { get; set; }
 
+        /// <summary>
+        /// Special category for attribute to allow other functionality
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(RuminantAttributeCategoryTypes.None)]
+        [Description("Category")]
+        [Required]
+        public RuminantAttributeCategoryTypes Category { get; set; } = RuminantAttributeCategoryTypes.None;
+
         /// <inheritdoc/>
         public IndividualAttribute GetAttribute(bool createNewInstance = true)
         {

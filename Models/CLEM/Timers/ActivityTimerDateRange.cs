@@ -29,6 +29,7 @@ namespace Models.CLEM.Timers
     [Description("This timer defines a date range in which to perform activities")]
     [HelpUri(@"Content/Features/Timers/DateRange.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
@@ -111,7 +112,7 @@ namespace Models.CLEM.Timers
                 if (inrange)
                 {
                     // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    ActivityPerformedEventArgs activitye = new()
                     {
                         Name = Name,
                         Status = ActivityStatus.Timer,
@@ -131,14 +132,7 @@ namespace Models.CLEM.Timers
 
         private bool IsInRange(DateTime date)
         {
-            //DateTime endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            //DateTime startDate = new(StartDate.Year, StartDate.Month, 1);
-
-            //bool inrange = ((date >= startDate) && (date <= endDate));
-
             bool inrange = ((events.TimeStepStart >= startDate) && (events.TimeStepStart <= endDate));
-            //if (Invert)
-            //    inrange = !inrange;
             return (Invert)?!inrange:inrange;
         }
 

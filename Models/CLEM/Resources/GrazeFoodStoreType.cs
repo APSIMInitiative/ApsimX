@@ -452,7 +452,7 @@ namespace Models.CLEM.Resources
         {
             CurrentEcologicalIndicators = new EcologicalIndicators
             {
-                ResourceType = this.Name
+                ResourceType = Name
             };
             grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault();
         }
@@ -464,7 +464,7 @@ namespace Models.CLEM.Resources
         private void OnFinalInitialise(object sender, EventArgs e)
         {
             if (Manager == null)
-                Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
+                Summary.WriteMessage(this, $"There is no activity managing [r={Name}]. This resource cannot be used and will have no growth.{Environment.NewLine}To manage [r={Name}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", MessageType.Warning);
         }
 
         /// <summary>

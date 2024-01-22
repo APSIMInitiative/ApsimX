@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Potential intake modifier for maximum intake possible when overfeeding
         /// </summary>
-        [Category("Advanced", "Diet")]
+        [Category("Farm", "Diet")]
         [Description("Potential intake modifer for max overfeeding intake")]
         [Required, GreaterThanEqualValue(1)]
         [System.ComponentModel.DefaultValue(1)]
