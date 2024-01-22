@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {
@@ -9,6 +10,16 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class FoodResourcePacket: IFeed
     {
+        /// <summary>
+        /// Protein to nitrogen in milk conversion factor
+        /// </summary>
+        public static double MilkProteinToNitrogenFactor = 6.38;
+
+        /// <summary>
+        /// Protein to nitrogen in milk conversion factor
+        /// </summary>
+        public static double FeedProteinToNitrogenFactor = 6.25;
+
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; }
 
@@ -41,8 +52,8 @@ namespace Models.CLEM.Resources
             get
             {
                 if (TypeOfFeed == FeedType.Milk)
-                    return 6.38;
-                return 6.25;
+                    return MilkProteinToNitrogenFactor;
+                return FeedProteinToNitrogenFactor;
             }
         }
 

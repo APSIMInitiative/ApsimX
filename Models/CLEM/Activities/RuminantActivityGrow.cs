@@ -37,6 +37,7 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
         private RuminantHerd ruminantHerd;
+        private ConceptionStatusChangedEventArgs conceptionArgs = new ();
 
         /// <summary>
         /// Gross energy content of forage (MJ/kg DM)
@@ -89,8 +90,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // grow all individuals
+            foreach (Ruminant ind in ruminantHerd.Herd)
+                ind.SetCurrentDate(events.Clock.Today);
+
             List<Ruminant> herd = ruminantHerd.Herd;
-            ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
 
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in herd.Where(a => a.Weaned == false))
@@ -583,9 +587,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            // grow all individuals
-            foreach (Ruminant ind in ruminantHerd.Herd)
-                ind.SetCurrentDate(events.Clock.Today);
         }
 
         /// <summary>Function to determine which animlas have died and remove from the population</summary>
@@ -1345,29 +1346,29 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating(events.Interval/2.0)).ToList();
-            int wetMothersAssigned = 0;
-            if (wetMothersAvailable.Any())
-            {
-                if (mothersWithSuckling.Any())
-                {
-                    foreach (var deadMother in mothersWithSuckling)
-                    {
-                        foreach (var suckling in deadMother.SucklingOffspringList)
-                        {
-                            if(wetMothersAssigned < wetMothersAvailable.Count && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), suckling.Parameters.Breeding.ProportionAcceptingSurrogate))
-                            {
-                                suckling.Mother = wetMothersAvailable[wetMothersAssigned];
-                                wetMothersAssigned++;
-                            }
-                            else
-                                break;
-                        }
+            //IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
+            //List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating(events.Interval/2.0)).ToList();
+            //int wetMothersAssigned = 0;
+            //if (wetMothersAvailable.Any())
+            //{
+            //    if (mothersWithSuckling.Any())
+            //    {
+            //        foreach (var deadMother in mothersWithSuckling)
+            //        {
+            //            foreach (var suckling in deadMother.SucklingOffspringList)
+            //            {
+            //                if(wetMothersAssigned < wetMothersAvailable.Count && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), suckling.Parameters.Breeding.ProportionAcceptingSurrogate))
+            //                {
+            //                    suckling.Mother = wetMothersAvailable[wetMothersAssigned];
+            //                    wetMothersAssigned++;
+            //                }
+            //                else
+            //                    break;
+            //            }
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
             ruminantHerd.RemoveRuminant(died, this);
         }

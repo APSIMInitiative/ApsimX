@@ -1109,6 +1109,22 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Categories available for RuminantAttributes
+    /// </summary>
+    public enum RuminantAttributeCategoryTypes
+    {
+        /// <summary>
+        /// No category
+        /// </summary>
+        None,
+        /// <summary>
+        /// Sterilisation
+        /// </summary>
+        Sterilisation
+    }
+
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]
