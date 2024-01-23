@@ -57,8 +57,8 @@ namespace Models.Functions
             double d = MetData.CalculateDayLength(-6);
             double Tmin = MetData.MinT;
             double Tmax = MetData.MaxT;
-            double TmaxB = MetData.YesterdaysMetData.MaxT;
-            double TminA = MetData.TomorrowsMetData.MinT;
+            double TmaxB = (MetData.YesterdaysMetData == null) ? MetData.MaxT : MetData.YesterdaysMetData.MaxT;
+            double TminA = (MetData.TomorrowsMetData == null) ? MetData.MinT : MetData.TomorrowsMetData.MinT;
             double Hsrise = MetData.CalculateSunRise();
             double Hsset = MetData.CalculateSunSet();
 
