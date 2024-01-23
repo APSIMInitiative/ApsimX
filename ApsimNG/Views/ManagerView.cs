@@ -79,9 +79,12 @@ namespace UserInterface.Views
                 notebook.Drawn -= OnDrawn;
                 scriptEditor.Location = cursor;
                 scriptEditor.Refresh();
-            } else if (this.TabIndex == TAB_PROPERTY)
+            } 
+            else if (this.TabIndex == TAB_PROPERTY)
             { //on the other tab, disable the event
                 notebook.Drawn -= OnDrawn;
+                TabIndex = 1; //REMOVE THIS WHEN BUG IS FOUND - AP
+                TabIndex = 0;
             }
         }
 
