@@ -46,6 +46,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
+        [Display(Type = DisplayType.CropPhaseName)]
         public string PhaseNameToGoto { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
