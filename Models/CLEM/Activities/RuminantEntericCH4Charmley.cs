@@ -5,6 +5,7 @@ using System.Linq;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Models.CLEM.Activities
 {
@@ -19,6 +20,9 @@ namespace Models.CLEM.Activities
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantEntericCH4Charmley: CLEMRuminantActivityBase
     {
+        [Link]
+        private CLEMEvents events = null;
+
         private GreenhouseGasesType methaneEmissions;
 
         /// <summary>
@@ -67,7 +71,7 @@ namespace Models.CLEM.Activities
             foreach (var ruminant in herd)
             {
                 // Charmley et al 2016 can be substituted by MethaneProductionIntercept = 0 and MethaneProductionCoefficient = 20.7
-                ruminant.Output.Methane = ruminant.Parameters.General.MethaneProductionCoefficient * ruminant.Intake.Solids.Actual;
+                ruminant.Output.Methane = ruminant.Parameters.General.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
             }
 
             // determine grouping style to report emissions

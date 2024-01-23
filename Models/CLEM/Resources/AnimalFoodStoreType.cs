@@ -123,19 +123,19 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // initialise the current state and details of this store
-            CurrentStoreDetails = new FoodResourcePacket()
+            CurrentStoreDetails = new FoodResourcePacket(this)
             {
-                MetabolisableEnergyContent = MetabolisableEnergyContent,
-                DryMatterDigestibility = DryMatterDigestibility,
-                FatContent= FatContent,
-                NitrogenContent = NitrogenContent
+                //MetabolisableEnergyContent = MetabolisableEnergyContent,
+                //DryMatterDigestibility = DryMatterDigestibility,
+                //FatContent= FatContent,
+                //NitrogenContent = NitrogenContent
             };
-            StoreDetails = new FoodResourcePacket()
+            StoreDetails = new FoodResourcePacket(this)
             {
-                MetabolisableEnergyContent = MetabolisableEnergyContent,
-                DryMatterDigestibility = DryMatterDigestibility,
-                FatContent = FatContent,
-                NitrogenContent = NitrogenContent
+                //MetabolisableEnergyContent = MetabolisableEnergyContent,
+                //DryMatterDigestibility = DryMatterDigestibility,
+                //FatContent = FatContent,
+                //NitrogenContent = NitrogenContent
             };
 
             this.amount = 0;

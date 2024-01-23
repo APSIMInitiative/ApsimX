@@ -138,11 +138,11 @@ namespace Models.CLEM.Groupings
             currentFeedRequest = null;
 
             // create food resource packet with details
-            FoodResourcePacket foodPacket = new()
-            {
-                DryMatterDigestibility = feedActivityParent.FeedDetails.DryMatterDigestibility,
-                NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
-            };
+            FoodResourcePacket foodPacket = new(feedActivityParent.FeedDetails);
+            //{
+            //    DryMatterDigestibility = feedActivityParent.FeedDetails.DryMatterDigestibility,
+            //    NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
+            //};
 
             currentFeedRequest = new ResourceRequest()
             {
@@ -182,8 +182,8 @@ namespace Models.CLEM.Groupings
             {
                 Count = countNeeded ? a.Count() : 0,
                 Weight = weightNeeded ? a.Sum(b => b.Weight) : 0,
-                Intake = a.Sum(b => b.Intake.Solids.Actual),
-                PotentialIntake = a.Sum(b => b.Intake.Solids.Expected),
+                Intake = a.Sum(b => b.Intake.SolidsDaily.ActualForTimeStep(events.Interval)),
+                PotentialIntake = a.Sum(b => b.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval)),
                 IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().Parameters.Feeding.OverfeedPotentialIntakeModifier : 1
             }).FirstOrDefault();
 

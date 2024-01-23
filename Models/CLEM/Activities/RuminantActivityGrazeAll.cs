@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using Models.Core.ApsimFile;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Models.CLEM.Activities
 {
@@ -28,7 +29,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -68,7 +69,7 @@ namespace Models.CLEM.Activities
                         HoursGrazed = HoursGrazed,
                         TransactionCategory = transCat,
                         GrazeFoodStoreModel = pastureType,
-                        Clock = clock,
+                        events = events,
                         Parent = this,
                         Name = "Graze_" + (pastureType).Name,
                         OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
@@ -100,8 +101,8 @@ namespace Models.CLEM.Activities
                         grazePastureHerd.UniqueID = currentHerdUid;
                         grazePastureHerd.SetLinkedModels(Resources);
 
-                        if (grazePastureHerd.Clock == null)
-                            grazePastureHerd.Clock = clock;
+                        if (grazePastureHerd.events.Clock == null)
+                            grazePastureHerd.events.Clock = events.Clock;
 
                         grazePastureHerd.InitialiseHerd(true, true);
                         grazePasture.Children.Add(grazePastureHerd);

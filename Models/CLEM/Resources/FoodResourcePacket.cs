@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Docker.DotNet.Models;
+using Models.CLEM.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,15 +11,18 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class FoodResourcePacket: IFeed
     {
-        /// <summary>
-        /// Protein to nitrogen in milk conversion factor
-        /// </summary>
-        public static double MilkProteinToNitrogenFactor = 6.38;
+        private const double feedCP2N = 6.25;
+        private const double milkCP2N = 6.38;
 
         /// <summary>
         /// Protein to nitrogen in milk conversion factor
         /// </summary>
-        public static double FeedProteinToNitrogenFactor = 6.25;
+        public static double MilkProteinToNitrogenFactor = milkCP2N;
+
+        /// <summary>
+        /// Protein to nitrogen in milk conversion factor
+        /// </summary>
+        public static double FeedProteinToNitrogenFactor = feedCP2N;
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; }
@@ -174,17 +178,34 @@ namespace Models.CLEM.Resources
         /// <returns>A copy of this packet</returns>
         public FoodResourcePacket Clone(double amount)
         {
-            return new FoodResourcePacket()
+            return new FoodResourcePacket(this)
             {
-                TypeOfFeed = TypeOfFeed,
-                MetabolisableEnergyContent = MetabolisableEnergyContent,
                 Amount = amount,
-                DryMatterDigestibility = DryMatterDigestibility,
-                FatContent = FatContent,
-                NitrogenContent = NitrogenContent,
-                RumenDegradableProteinContent = RumenDegradableProteinContent,
-                AcidDetergentInsoluableProtein = AcidDetergentInsoluableProtein,
             };
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FoodResourcePacket()
+        {
+                
+        }
+
+        /// <summary>
+        /// Constructor based on an IFeed clone
+        /// </summary>
+        /// <param name="packet"></param>
+        public FoodResourcePacket(IFeed packet)
+        {
+            TypeOfFeed = packet.TypeOfFeed;
+            MetabolisableEnergyContent = packet.MetabolisableEnergyContent;
+            DryMatterDigestibility = packet.DryMatterDigestibility;
+            FatContent = packet.FatContent;
+            NitrogenContent = packet.NitrogenContent;
+            RumenDegradableProteinContent = packet.RumenDegradableProteinContent;
+            AcidDetergentInsoluableProtein = packet.AcidDetergentInsoluableProtein;
+            GrossEnergyContent = packet.GrossEnergyContent;
         }
 
     }

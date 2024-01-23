@@ -163,13 +163,13 @@ namespace Models.CLEM.Activities
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.Intake.Solids.Expected;
+                        amountToDo += Supply * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval);
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * (ind.Intake.Solids.Required);
+                        amountToDo += Supply * ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
                     }
                     break;
                 default:

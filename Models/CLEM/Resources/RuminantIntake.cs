@@ -19,13 +19,13 @@ namespace Models.CLEM.Resources
         /// The potential and actual milk intake of the individual.
         /// </summary>
         [JsonIgnore]
-        public ExpectedActualContainer Milk { get; set; } = new ExpectedActualContainer();
+        public ExpectedActualContainer MilkDaily { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// The potential and actual solids intake of the individual.
         /// </summary>
         [JsonIgnore]
-        public ExpectedActualContainer Solids { get; set; } = new ExpectedActualContainer();
+        public ExpectedActualContainer SolidsDaily { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
@@ -43,9 +43,9 @@ namespace Models.CLEM.Resources
                 frs.Add(packet);
 
                 if (packet.TypeOfFeed == FeedType.Milk)
-                    Milk.Actual += packet.Amount;
+                    MilkDaily.Actual += packet.Amount;
                 else
-                    Solids.Actual += packet.Amount;
+                    SolidsDaily.Actual += packet.Amount;
             }
         }
 
@@ -67,9 +67,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Milk.Actual + Solids.Actual <= 0)
+                if (MilkDaily.Actual + SolidsDaily.Actual <= 0)
                     return 0;
-                return Milk.Actual / (Milk.Actual + Solids.Actual);
+                return MilkDaily.Actual / (MilkDaily.Actual + SolidsDaily.Actual);
             }
         }
 
@@ -80,9 +80,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Solids.Expected + Milk.Expected <= 0)
+                if (SolidsDaily.Expected + MilkDaily.Expected <= 0)
                     return 0;
-                return (Solids.Actual + Milk.Actual) / (Solids.Expected + Milk.Expected);
+                return (SolidsDaily.Actual + MilkDaily.Actual) / (SolidsDaily.Expected + MilkDaily.Expected);
             }
         }
 
@@ -256,13 +256,13 @@ namespace Models.CLEM.Resources
         {
             if (reductionFactor >= 1) return false;
 
-            Solids.Actual = 0;
+            SolidsDaily.Actual = 0;
 
             // reduce all solid intake amounts
             foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk))
             {
                 item.Value.Details.Amount *= reductionFactor;
-                Solids.Actual += item.Value.Details.Amount;
+                SolidsDaily.Actual += item.Value.Details.Amount;
             }
             return true;
         }
@@ -350,18 +350,18 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Adjust all amounts to change rate
-        /// </summary>
-        /// <param name="factor"></param>
-        public void AdjustAmounts(double factor)
-        {
-            foreach (var item in feedTypeStoreDict)
-            {
-                item.Value.Details.Amount *= factor;
-            }
-            Solids.AdjustAmounts(factor);
-            Milk.AdjustAmounts(factor);
-        }
+        ///// <summary>
+        ///// Adjust all amounts to change rate
+        ///// </summary>
+        ///// <param name="factor"></param>
+        //public void AdjustAmounts(double factor)
+        //{
+        //    foreach (var item in feedTypeStoreDict)
+        //    {
+        //        item.Value.Details.Amount *= factor;
+        //    }
+        //    SolidsDaily.AdjustAmounts(factor);
+        //    MilkDaily.AdjustAmounts(factor);
+        //}
     }
 }

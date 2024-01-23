@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
-        public IClock Clock = null;
+        public CLEMEvents events = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
                     RuminantTypeModel = herdType,
                     HoursGrazed = HoursGrazed,
                     Parent = this,
-                    Clock = this.Clock,
+                    events = events,
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
                     OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
                     TransactionCategory = transCat

@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Models.CLEM.Activities
 {
@@ -32,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
-        public IClock Clock = null;
+        public CLEMEvents events = null;
 
         private DateTime lastResourceRequest = new();
         private double totalPastureRequired = 0;
@@ -218,7 +219,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // if this is the first time of this request not being partially managed by a RuminantActivityGradePaddock work independently
-            if (lastResourceRequest != Clock.Today)
+            if (lastResourceRequest != events.Clock.Today)
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 pastureRequest = null;
@@ -248,16 +249,16 @@ namespace Models.CLEM.Activities
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
                             // min of grazed and potential remaining
-                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.Solids.Required), ind.Intake.Solids.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
                             // potential graing minus low biomass limiter
-                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.Solids.Required), ind.Intake.Solids.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
+                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
                         }
                         else
                         {
                             // treat sucklings separate
                             // potentialIntake defined based on proportion of body weight and MilkLWTFodderSubstitutionProportion when milk intake is low or missing (lost mother) (see RuminantActivityGrow.CalculatePotentialIntake)
                             // they can eat defined potential intake minus what's already been fed. Milk intake assumed elsewhere.
-                            double amountToEat = Math.Max(0, ind.Intake.Solids.Required);
+                            double amountToEat = Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval));
                             totalPastureRequired += amountToEat;
                             // desired same as required
                             // TODO: check with researchers, but this should also include the PastureQuality, PastureBiomass and GrazingTime limiters
@@ -281,7 +282,7 @@ namespace Models.CLEM.Activities
                         ResourceRequestList.Add(pastureRequest);
                     }
                 }
-                lastResourceRequest = Clock.Today;
+                lastResourceRequest = events.Clock.Today;
                 return ResourceRequestList;
             }
             return null;
@@ -325,11 +326,13 @@ namespace Models.CLEM.Activities
                 {
                     double eaten;
                     if (ind.Weaned)
-                        eaten = Math.Min(Math.Max(0,ind.Intake.Solids.Required), ind.Intake.Solids.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                        eaten = Math.Min(Math.Max(0,ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
-                        eaten = Math.Max(0, ind.Intake.Solids.Required); ;
+                        eaten = Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)); ;
 
                     foodDetails.Amount = eaten * shortfall;
+                    foodDetails.Amount /= (double)events.Interval;
+
                     ind.Intake.AddFeed(foodDetails);
                 }
                 Status = ActivityStatus.Success;
@@ -365,7 +368,7 @@ namespace Models.CLEM.Activities
 
                     // only allow the stop error if this is a shortfall in required not desired.
                     if (MathUtilities.IsLessThan(Math.Round(shortfall, 4), 1) && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-                        throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {Clock.Today:dd\\yyyy}");
+                        throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {events.Clock.Today:dd\\yyyy}");
                 }
             }
         }
@@ -390,7 +393,7 @@ namespace Models.CLEM.Activities
                 PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
 
             // if Jan-March then use first three months otherwise use 2
-            int greenage = (Clock.Today.Month <= 3) ? 2 : 1;
+            int greenage = (events.Clock.Today.Month <= 3) ? 2 : 1;
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;

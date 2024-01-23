@@ -370,7 +370,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.Intake.Solids.Expected * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Solids.Actual);
+                                details.Amount = ((ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval));
                                 details.Amount *= feedLimit;
                                 details.Amount *= ind.Weight/totalWeight;
                                 break;
@@ -383,11 +383,11 @@ namespace Models.CLEM.Activities
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = iChild.CurrentValue * ind.Intake.Solids.Expected;
+                                details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval);
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = iChild.CurrentValue * (ind.Intake.Solids.Required);
+                                details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
                                 details.Amount *= feedLimit;
                                 break;
                             default:
@@ -395,8 +395,10 @@ namespace Models.CLEM.Activities
                         }
                         // check amount meets intake limits
                         if (usingPotentialIntakeMultiplier)
-                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Solids.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Solids.Expected)) - ind.Intake.Solids.Actual))
-                                details.Amount = (ind.Intake.Solids.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Solids.Expected)) - ind.Intake.Solids.Actual;
+                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval)))
+                                details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.Actual;
+
+                        details.Amount /= (double)events.Interval;
                         ind.Intake.AddFeed(details);
                     }
                 }

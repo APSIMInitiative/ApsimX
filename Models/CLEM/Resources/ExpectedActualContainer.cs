@@ -32,22 +32,36 @@ namespace Models.CLEM.Resources
         public double Required { get { return Math.Max(0, Expected - Actual); } }
 
         /// <summary>
+        /// Expected or potential value required over specified time period
+        /// </summary>
+        public double ExpectedForTimeStep(int days = 1)
+        {
+            return Expected * days;
+        }
+
+        /// <summary>
+        /// Actual value required over specified time period
+        /// </summary>
+        public double ActualForTimeStep(int days = 1)
+        {
+            return Actual * days;
+        }
+
+        /// <summary>
+        /// Daily amount still required over specified time period
+        /// </summary>
+        public double RequiredForTimeStep(int days = 1)
+        {
+            return Math.Max(0, Expected - Actual) * days;
+        }
+
+        /// <summary>
         /// Clear values
         /// </summary>
         public void Reset()
         {
             Expected = 0;
             Actual = 0;
-        }
-
-        /// <summary>
-        /// Adjust all amounts to change rate
-        /// </summary>
-        /// <param name="factor"></param>
-        public void AdjustAmounts(double factor)
-        {
-            Expected *= factor;
-            Actual *= factor;
         }
     }
 }
