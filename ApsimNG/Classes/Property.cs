@@ -310,6 +310,12 @@ namespace UserInterface.Classes
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
                     break;
+                case DisplayType.CropPhaseName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Plant plantyy = model.FindInScope<Plant>();
+                    if (plantyy != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
+                    break;
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
