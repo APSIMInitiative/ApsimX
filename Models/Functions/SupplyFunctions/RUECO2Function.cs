@@ -58,14 +58,9 @@ namespace Models.Functions.SupplyFunctions
                 if (temp >= 50.0)
                     throw new Exception("Average daily temperature too high for RUE CO2 Function");
 
-                double CO2ref = 350.0; // ppm reference CO2 
-
                 if (MetData.CO2 < 300)
-                   // throw new Exception("CO2 concentration too low for RUE CO2 Function");
-                    return 1.0; // FIXME: need to clearly define what happens < 350 ppm for C3
-
-               // else if (MetData.CO2 == 350)
-                else if (MetData.CO2 == CO2ref)
+                    throw new Exception("CO2 concentration too low for RUE CO2 Function");
+                else if (MetData.CO2 == 350)
                     return 1.0;
                 else
                 {
@@ -75,10 +70,8 @@ namespace Models.Functions.SupplyFunctions
 
                     CP = (163.0 - temp) / (5.0 - 0.1 * temp);
 
-                    //first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
-                   // second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
-                    first = (MetData.CO2 - CP) * (CO2ref + 2.0 * CP);
-                    second = (MetData.CO2 + 2.0 * CP) * (CO2ref - CP);
+                    first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
+                    second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
                     return first / second;
                 }
             }
