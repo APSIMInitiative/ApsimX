@@ -82,7 +82,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if ((met.DaysSinceWinterSolstice == DAWStoProgress) ||
+            if ((met.DaysSinceWinterSolstice >= DAWStoProgress) ||
                 ((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
             {
                 proceedToNextPhase = true;
