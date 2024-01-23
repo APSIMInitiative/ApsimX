@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 170,
+  "Version": 171,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -335,7 +335,9 @@
             "//[Cotton].Leaf.SLA_Reddy1989.RADint",
             "",
             "[Cotton].Leaf.Plastochron",
-            "([Cotton].Leaf.FinalLeafNumber*[Cotton].SowingData.Population) as LeafNumber"
+            "([Cotton].Leaf.FinalLeafNumber*[Cotton].SowingData.Population) as LeafNumber",
+            "",
+            "[Cotton].Leaf.FirstFruitingBranch"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -812,7 +814,18 @@
                   "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MinSoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4251,6 +4264,55 @@
                               "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "StartSquaring",
+                  "ReSetEvent": "0",
+                  "Name": "FirstFruitingBranch",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "PostEventValue",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Expression": "floor([Leaf].NodeNumber+0.5)",
+                          "Name": "NodeNumberROUND",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "Two",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
