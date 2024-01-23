@@ -278,13 +278,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Adds options to the right-click context menu, valid options are:
-        /// Cut - Any Editable Cell
-        /// Copy - Any Cell
-        /// Paste - Any Editable Cell
-        /// Delete - Any Editable Cell
-        /// Select All - Any Cell
-        /// Units - Change Units on Solute grids, only on row == 1
+        /// Adds intellisense to the grid. 
         /// </summary>
         public void AddIntellisense(Model model)
         {
@@ -588,6 +582,8 @@ namespace UserInterface.Presenters
                 string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
                 grid.Sheet.DataProvider.SetCellContents(columnIndex, rowIndex, text + args.ItemSelected);
                 grid.Sheet.CalculateBounds(columnIndex, rowIndex);
+
+                grid.Sheet.CellEditor.Edit(); //keep editting window open
             }
             catch (Exception err)
             {

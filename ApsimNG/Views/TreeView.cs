@@ -1,11 +1,11 @@
-using APSIM.Shared.Utilities;
-using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
+using APSIM.Shared.Utilities;
+using Gtk;
 using UserInterface.Interfaces;
 using Utility;
 using TreeModel = Gtk.ITreeModel;
@@ -387,11 +387,7 @@ namespace UserInterface.Views
                 expandedRows.Add(path.ToString());
             }));
 
-            treeview1.CursorChanged -= OnAfterSelect;
-
             treemodel.Clear();
-
-            treeview1.CursorChanged += OnAfterSelect;
 
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions, false);
@@ -402,8 +398,9 @@ namespace UserInterface.Views
             {
                 expandedRows.ForEach(row => treeview1.ExpandRow(new TreePath(row), false));
             }
-            catch
+            catch (Exception err)
             {
+                ShowError(err);
             }
 
             if (ContextMenu != null)
@@ -643,7 +640,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (SelectedNodeChanged != null)
+                if (SelectedNodeChanged != null && treeview1 != null)
                 {
                     treeview1.CursorChanged -= OnAfterSelect;
                     NodeSelectedArgs selectionChangedData = new NodeSelectedArgs();
@@ -784,16 +781,6 @@ namespace UserInterface.Views
             {
                 TreePath path = e.Path.Copy();
                 path.Down();
-                bool stop = false;
-                while (!stop)
-                {
-                    path.Next();
-                    treeview1.Model.GetIter(out TreeIter iter, path);
-                    var value = treeview1.Model.GetValue(iter, 0);
-                    if (value == null)
-                        stop = true;
-                }
-                path.Prev();
                 treeview1.ScrollToCell(path, null, false, 0, 0);
             }
             catch (Exception err)
@@ -827,8 +814,6 @@ namespace UserInterface.Views
         {
             try
             {
-                if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
-                    textRender.StopEditing(true);
                 DragStartArgs args = new DragStartArgs();
                 args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
                 if (DragStarted != null)
@@ -856,6 +841,7 @@ namespace UserInterface.Views
         {
             try
             {
+                EndRenaming();
                 if (dragSourceHandle.IsAllocated)
                 {
                     dragSourceHandle.Free();
@@ -1017,12 +1003,8 @@ namespace UserInterface.Views
         {
             try
             {
-                if (isEdittingNodeLabel == false)
-                {
-                    isEdittingNodeLabel = true;
-                    treeview1.CursorChanged -= OnAfterSelect;
-                    nodePathBeforeRename = SelectedNode;
-                }
+                isEdittingNodeLabel = true;
+                nodePathBeforeRename = SelectedNode;
             }
             catch (Exception err)
             {
@@ -1039,7 +1021,6 @@ namespace UserInterface.Views
             {
                 if (isEdittingNodeLabel == true)
                 {
-                    isEdittingNodeLabel = false;
                     textRender.Editable = false;
                     // TreeView.ContextMenuStrip = this.PopupMenu;
                     if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
@@ -1053,13 +1034,14 @@ namespace UserInterface.Views
                         if (!args.CancelEdit)
                             previouslySelectedNodePath = args.NodePath;
                     }
-                    treeview1.CursorChanged += OnAfterSelect;
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
+
+            isEdittingNodeLabel = false;
         }
 
         /// <summary>
@@ -1102,6 +1084,16 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        private void EndRenaming()
+        {
+            if (isEdittingNodeLabel)
+            {
+                textRender.StopEditing(true);
+                isEdittingNodeLabel = false;
+                nodePathBeforeRename = "";
             }
         }
 

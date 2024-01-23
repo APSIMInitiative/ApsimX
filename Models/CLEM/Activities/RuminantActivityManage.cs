@@ -1321,7 +1321,7 @@ namespace Models.CLEM.Activities
                                 foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age >= a.BreedParams.MinimumAge1stMating) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired).ToList())
                                 {
                                     female.Attributes.Remove("GrowOut");
-                                    if (!female.IsBreeder && !female.Sterilised)
+                                    if (!female.IsBreeder && !female.IsSterilised)
                                         female.ReplacementBreeder = true;
                                     female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
