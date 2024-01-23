@@ -23,7 +23,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\WaggaWagga.met",
+          "FileName": "%root%/Examples/WeatherFiles/WaggaWagga.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,

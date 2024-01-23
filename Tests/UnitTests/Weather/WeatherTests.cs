@@ -191,7 +191,7 @@ namespace UnitTests.Weather
         /// Ensures all example .met files contain %root%
         /// </summary>
         [Test]
-        public void TestAllExampleFilesWeatherModelsHaveRootReferenceInFileName()
+        public void TestAllExampleFilesWeatherModelsHaveCorrectRootReferenceInFileName()
         {
             bool allFilesHaveRootReference = true;
             string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -200,16 +200,19 @@ namespace UnitTests.Weather
             foreach (string exampleFile in exampleFileNames)
             {
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
-                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllChildren<Models.Climate.Weather>();
+                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
-                    if (weatherModel.FileName.Contains("%root%"))
+                    if (!weatherModel.FileName.Contains("%root%/Examples/WeatherFiles/") && weatherModel.FileName.Contains('\\'))
+                    {
                         allFilesHaveRootReference = false;
+                        Console.WriteLine($"{sim.FileName} has simulation {weatherModel.Parent.Name} with weather model {weatherModel.Name} that does not contain correct root reference.");
+                    }
                 }
             }
-
             Assert.True(allFilesHaveRootReference);
         }
+
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
