@@ -29,8 +29,8 @@ namespace Models.PMF.SimplePlantModels
         public double HarvestIndex { get; set; }
 
         /// <summary>Moisture percentage of product</summary>
-        [Description("Product DM conc (g/g)")]
-        public double DryMatterContent { get; set; }
+        [Description("Product moisture conc (g/g)")]
+        public double MoistureContent { get; set; }
 
         /// <summary>Root biomass proportion</summary>
         [Description("Root Biomass proportion (0-1)")]
@@ -286,7 +286,7 @@ namespace Models.PMF.SimplePlantModels
             Established = true;
             summary.WriteMessage(this, "Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
-                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.DryMatterContent +
+                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoistureContent +
                 " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") +
                 ", " + this.ttEmergeToHarv.ToString() + " oCd from now.", MessageType.Information);
         }
@@ -312,7 +312,9 @@ namespace Models.PMF.SimplePlantModels
             }
 
             cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
-            double dmc = (100 - this.DryMatterContent) / 100;
+            if (this.MoistureContent > 1.0)
+                throw new Exception("Moisture content of " + this.Name + " ScrumCropInstance has a moisture content > 1.0 g/g.  Value must be less than 1.0");
+            double dmc = 1 - this.MoistureContent;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
             cropParams["ExpectedYield"] += ey.ToString();
