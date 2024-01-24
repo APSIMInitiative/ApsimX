@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using CommandLine;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -112,14 +113,14 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        private DataTable tableData = null;
+        //private DataTable tableData = null;
 
         /// <summary>
         /// Reads in the csv data and sends it as a datatable to the grid
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
-            tableData = new DataTable();
+            DataTable tableData = new DataTable();
             try
             {
                 tableData = readCSVandUpdateProperties();
@@ -199,9 +200,9 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            tableData = readCSVandUpdateProperties();
+            DataTable tabDat = readCSVandUpdateProperties();
             rotPos = 1;
-            CurrentCropParams = getCurrentParams(tableData, rotPos);
+            CurrentCropParams = getCurrentParams(tabDat, rotPos);
         }
 
         [EventSubscribe("DoManagement")]
@@ -209,8 +210,11 @@ namespace Models.PMF.SimplePlantModels
         {
             if (clock.Today == CurrentCropParams.EstablishDate)
             {
-                currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
-                currentCrop.Establish(CurrentCropParams);
+                if ((CurrentCropParams.EstablishDate < clock.EndDate) && (CurrentCropParams.HarvestDate <= clock.EndDate))
+                {
+                    currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
+                    currentCrop.Establish(CurrentCropParams);
+                }
             }
         }
 
@@ -219,12 +223,13 @@ namespace Models.PMF.SimplePlantModels
         {
             if (clock.Today == CurrentCropParams.HarvestDate)
             {
+                DataTable tabDat = readCSVandUpdateProperties();
                 rotPos +=1;
-                if (rotPos>tableData.Columns.Count-1)
+                if (rotPos>tabDat.Columns.Count-1)
                 {
                     rotPos = 1;
                 }
-                CurrentCropParams = getCurrentParams(tableData, rotPos);
+                CurrentCropParams = getCurrentParams(tabDat, rotPos);
             }
         }
 
