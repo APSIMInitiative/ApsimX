@@ -2236,7 +2236,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "11/12/2023\n\nLeaf.FW waterfactor?\n\n\n**30/11/2023**\n\nWATERFACTOR:\n\nXYPairs:\n\nX | Y\n--|--\n1.0 | 0\n1.5 | 1\n\nXValue:\n\n[Arbitrator].SDRatioBound\n\n=====================================================\n\n3/11/2023\n\nChanged:\n\nX | Y\n--|--\n0.5 | 0\n1.5 | 1\n\nTo: \n\nX | Y\n--|--\n1 | 0\n1.5 | 1\n\n=====================================================\n\nThis should be calculated for the rooting depth only!!!!!",
+                              "Text": "23/01/2024\n\nWATERFACTOR:\n\nXYPairs:\n\nX | Y\n--|--\n1.0 | 0\n1.2 | 1 --> removed and set to zero to test ndoe production\n\nXValue:\n\n[Arbitrator].SDRatioBound\n\n=====================================================\n\n11/12/2023\n\nLeaf.FW waterfactor?\n\n\n**30/11/2023**\n\nWATERFACTOR:\n\nXYPairs:\n\nX | Y\n--|--\n1.0 | 0\n1.5 | 1\n\nXValue:\n\n[Arbitrator].SDRatioBound\n\n=====================================================\n\n3/11/2023\n\nChanged:\n\nX | Y\n--|--\n0.5 | 0\n1.5 | 1\n\nTo: \n\nX | Y\n--|--\n1 | 0\n1.5 | 1\n\n=====================================================\n\nThis should be calculated for the rooting depth only!!!!!",
                               "Name": "WaterFactor",
                               "ResourceName": null,
                               "Children": [],
@@ -2334,7 +2334,7 @@
                                     1.2
                                   ],
                                   "Y": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                   ],
                                   "XVariableName": null,
@@ -2443,226 +2443,126 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "StartSquaring",
+                  "ReSetEvent": "0",
+                  "Name": "FirstFruitingBranch",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "PostEventValue",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Expression": "floor([Leaf].NodeNumber+0.5)",
+                          "Name": "NodeNumberROUND",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "Two",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.AddFunction, Models",
                   "Name": "BranchNumber",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "Cutout",
-                      "ResetStageName": null,
-                      "FractionRemovedOnCut": 1.0,
-                      "FractionRemovedOnHarvest": 1.0,
-                      "FractionRemovedOnGraze": 1.0,
-                      "FractionRemovedOnPrune": 0.0,
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "StartSquaring",
+                      "End": "Cutout",
                       "Name": "FruitingBranches",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "FB",
+                          "$type": "Models.Memo, Models",
+                          "Text": "**23/01/2024**\n\n**Need this to start accumulating from when FirstFruitingBranch is initiated**\n\n===================================================================================================================\n\n8/1/12/2023\n\nDifferentiate in fruiting and vegetative branch appearance.\n\nNode of first fruiting branch / the appearance of the first fruiting branch is sensitive to a number of environmental factors (Hesketh and Low, 1966; Moraghan et al., 1968)\n\nFROM: The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and TestingB. S. Jackson, G. F. Arkin and A. B. HearnAmerican Society of Agricultural Engineers 1988 Vol. 31 Issue 3 Pages 846–854\n\nEach branch originates at a node on the main stem. The ﬁrst branches to form are vegetative, and after the ﬁrst fruiting branch arises generally no new vegetative branches are produced, FROM:\n\nA qualitative simulation model for cotton growth and developmentR. E. Plant, T. A. Kerby, L. J. Zelinski and D. S. MunkComputers and Electronics in Agriculture 1998 Vol. 20 Pages 165-183\n\nPLANT DENSITY effect on VB initiation\n\n===================================================================================================================\n\nSEE BRANCHING IN CANOLA MODEL\n\n===================================================================================================================\n\nFor TEMP effects on branching see:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA.\n\nDistinguish between Vegetative and Fruiting branching? Seems to be a different relationship with temperature: FIG. 6A page 5",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "AddFunction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Memo, Models",
-                              "Text": "8/1/12/2023\n\nDifferentiate in fruiting and vegetative branch appearance.\n\nNode of first fruiting branch / the appearance of the first fruiting branch is sensitive to a number of environmental factors (Hesketh and Low, 1966; Moraghan et al., 1968)\n\nFROM: The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and TestingB. S. Jackson, G. F. Arkin and A. B. HearnAmerican Society of Agricultural Engineers 1988 Vol. 31 Issue 3 Pages 846–854\n\nEach branch originates at a node on the main stem. The ﬁrst branches to form are vegetative, and after the ﬁrst fruiting branch arises generally no new vegetative branches are produced, FROM:\n\nA qualitative simulation model for cotton growth and developmentR. E. Plant, T. A. Kerby, L. J. Zelinski and D. S. MunkComputers and Electronics in Agriculture 1998 Vol. 20 Pages 165-183\n\nPLANT DENSITY effect on VB initiation\n\n=================================================\n\nSEE BRANCHING IN CANOLA MODEL\n\n=================================================\n\nFor TEMP effects on branching see:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA.\n\nDistinguish between Vegetative and Fruiting branching? Seems to be a different relationship with temperature: FIG. 6A page 5",
-                              "Name": "Memo",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 2.0,
+                              "Units": null,
+                              "Name": "Constant",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
-                              "Name": "DeltaNode",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "BranchingRate",
+                              "$type": "Models.Functions.AccumulateFunction, Models",
+                              "StartStageName": "StartSquaring",
+                              "EndStageName": "Cutout",
+                              "ResetStageName": null,
+                              "FractionRemovedOnCut": 0.0,
+                              "FractionRemovedOnHarvest": 0.0,
+                              "FractionRemovedOnGraze": 0.0,
+                              "FractionRemovedOnPrune": 0.0,
+                              "Name": "FB",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "Changed from:\n\nX | Y\n--|--\n1|0\n4|0\n4.1|1\n30|1",
-                                  "Name": "Memo",
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "FB",
                                   "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    1.0,
-                                    6.9,
-                                    7.0,
-                                    30.0
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "8/1/12/2023\n\nDifferentiate in fruiting and vegetative branch appearance.\n\nNode of first fruiting branch / the appearance of the first fruiting branch is sensitive to a number of environmental factors (Hesketh and Low, 1966; Moraghan et al., 1968)\n\nFROM: The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and TestingB. S. Jackson, G. F. Arkin and A. B. HearnAmerican Society of Agricultural Engineers 1988 Vol. 31 Issue 3 Pages 846–854\n\nEach branch originates at a node on the main stem. The ﬁrst branches to form are vegetative, and after the ﬁrst fruiting branch arises generally no new vegetative branches are produced, FROM:\n\nA qualitative simulation model for cotton growth and developmentR. E. Plant, T. A. Kerby, L. J. Zelinski and D. S. MunkComputers and Electronics in Agriculture 1998 Vol. 20 Pages 165-183\n\nPLANT DENSITY effect on VB initiation\n\n=================================================\n\nSEE BRANCHING IN CANOLA MODEL\n\n=================================================\n\nFor TEMP effects on branching see:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA.\n\nDistinguish between Vegetative and Fruiting branching? Seems to be a different relationship with temperature: FIG. 6A page 5",
+                                      "Name": "Memo",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
+                                      "Name": "DeltaNode",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
                                   ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "CoverFactor",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "08/05/2023\n\nSee 'CrowdingFunction' .Simulations.RussetBurbank.Field.Potato.Structure.BranchingRate.CrowdingFunction",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.33,
-                                    0.9,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    0.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].CoverTotal",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "WaterFactor",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.8,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Fw",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "TemperatureFactor",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    20.0,
-                                    28.0,
-                                    32.0,
-                                    40.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Weather].MeanT",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -2679,115 +2579,126 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "Cutout",
-                      "ResetStageName": null,
-                      "FractionRemovedOnCut": 0.0,
-                      "FractionRemovedOnHarvest": 0.0,
-                      "FractionRemovedOnGraze": 0.0,
-                      "FractionRemovedOnPrune": 0.0,
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "StartSquaring",
+                      "End": "Cutout",
                       "Name": "VegetativeBranches",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Do we need to separate out the max leaf area on the VB compared with the fruiting branches?\n\nDM Supply/demand ratio on VB appearance?\n\nOr change to shading effect?\n\n==================================================\n\nFROM:\n\nHigh plant density inhibits vegetative branching in cotton by altering hormone contents and photosynthetic productionT. Li, Y. Zhang, J. Dai, H. Dong and X. KongField Crops Research 2019 Vol. 230 Pages 121-131DOI: 10.1016/j.fcr.2018.10.016\n\n5. Conclusion\nHigh plant density significantly inhibited VB growth and develop-\nment through a set of physiological changes and associated gene ex-\npression. **The decreased photosynthesis** resulting from reduced RuBP\ncarboxylase activity and chlorophyll content in VB leaves was one of\nthe main reasons for the poor VB growth. High plant density promoted\nthe apical dominance which increased the expression of GhYUC5 gene\nand IAA content in the main-stem tips and induced the expression of\nGhPIN1 to promote IAA transport from the apical part to the root. The\nincreased IAA content and expression of GhPIN1 increased the SLs\ncontent by increasing the expression of GhD14 and reducing the content\nof CKs by decreasing the expression of GhIPT3 in the VB tips. Moreover,\nhigh plant density led to shade avoidance syndrome, which decreased\nthe IAA content and auxin polar transport by down-regulating GhYUC5,\nGhPIN1 and GhPIN5 genes. It also decreased the CKs content by down-\nregulating the GhIPT3 gene, and the GA and BR contents in the VB tips,\nbut increased the content of SLs in the VB tips by up-regulating GhD14.\nThe decreased IAA, CKs, GA and BR contents along with the increased\nSLs content in the VB tips was another important reason for the in-\nhibited growth and development of VB",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.AccumulateFunction, Models",
+                          "StartStageName": "StartSquaring",
+                          "EndStageName": "Cutout",
+                          "ResetStageName": null,
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
                           "Name": "VB",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
-                              "Name": "DeltaNode",
+                              "$type": "Models.Memo, Models",
+                              "Text": "Do we need to separate out the max leaf area on the VB compared with the fruiting branches?\n\nDM Supply/demand ratio on VB appearance?\n\nOr change to shading effect?\n\n==================================================\n\nFROM:\n\nHigh plant density inhibits vegetative branching in cotton by altering hormone contents and photosynthetic productionT. Li, Y. Zhang, J. Dai, H. Dong and X. KongField Crops Research 2019 Vol. 230 Pages 121-131DOI: 10.1016/j.fcr.2018.10.016\n\n5. Conclusion\nHigh plant density significantly inhibited VB growth and develop-\nment through a set of physiological changes and associated gene ex-\npression. **The decreased photosynthesis** resulting from reduced RuBP\ncarboxylase activity and chlorophyll content in VB leaves was one of\nthe main reasons for the poor VB growth. High plant density promoted\nthe apical dominance which increased the expression of GhYUC5 gene\nand IAA content in the main-stem tips and induced the expression of\nGhPIN1 to promote IAA transport from the apical part to the root. The\nincreased IAA content and expression of GhPIN1 increased the SLs\ncontent by increasing the expression of GhD14 and reducing the content\nof CKs by decreasing the expression of GhIPT3 in the VB tips. Moreover,\nhigh plant density led to shade avoidance syndrome, which decreased\nthe IAA content and auxin polar transport by down-regulating GhYUC5,\nGhPIN1 and GhPIN5 genes. It also decreased the CKs content by down-\nregulating the GhIPT3 gene, and the GA and BR contents in the VB tips,\nbut increased the content of SLs in the VB tips by up-regulating GhD14.\nThe decreased IAA, CKs, GA and BR contents along with the increased\nSLs content in the VB tips was another important reason for the in-\nhibited growth and development of VB",
+                              "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "BranchingRate",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "VB",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    1.0,
-                                    3.9,
-                                    4.0,
-                                    6.9,
-                                    7.0,
-                                    30.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0,
-                                    1.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
+                                  "Name": "DeltaNode",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "BranchingRate",
                                   "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "DensityFactor",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    7.0,
-                                    8.6,
-                                    10.4,
-                                    11.0
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        1.0,
+                                        3.9,
+                                        4.0,
+                                        6.9,
+                                        7.0,
+                                        30.0
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "XVariableName": null,
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NodeNumber",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
                                   ],
-                                  "Y": [
-                                    1.0,
-                                    0.44,
-                                    0.27,
-                                    0.15
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cotton].SowingData.Population",
-                                  "Name": "XValue",
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "DensityFactor",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        7.0,
+                                        8.6,
+                                        10.4,
+                                        11.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        0.44,
+                                        0.27,
+                                        0.15
+                                      ],
+                                      "XVariableName": null,
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Cotton].SowingData.Population",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -2878,7 +2789,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].DMDemands.Structural.DeltaLAIPotential.LeafGrowthStage.Delta.EmergingLeaves.MultiplyFunction.R",
+                              "VariableName": "[Leaf].DMDemands.Structural.DeltaLAIPotential.ReproductiveStage.Delta.SympodialLeaves.EmergingLeaves.MultiplyFunction.R",
                               "Name": "R",
                               "ResourceName": null,
                               "Children": [],
@@ -2991,7 +2902,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].DMDemands.Structural.DeltaLAIPotential.LeafGrowthStage.Delta.EmergingLeaves.MultiplyFunction.R",
+                                  "VariableName": "[Leaf].DMDemands.Structural.DeltaLAIPotential.ReproductiveStage.Delta.SympodialLeaves.EmergingLeaves.MultiplyFunction.R",
                                   "Name": "R",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3388,8 +3299,8 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "Emergence",
-                              "End": "Maturity",
-                              "Name": "LeafGrowthStage",
+                              "End": "StartSquaring",
+                              "Name": "VegetativeStage",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -3399,41 +3310,22 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].AreaLargestLeaf",
-                                      "Name": "AreaLargestLeaf",
+                                      "VariableName": "[Cotton].SowingData.Population",
+                                      "Name": "PlantNumber",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "RelativeArea",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "LAR",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "Crop Phases:\n\nPhase number | Phase \n-------------|------\n1 | Sowing\n2 | Germination\n3 | Emergence\n4 | StartSquaring\n5 | StartFlowering \n6 | Cutout\n7 | StartBollFilling\n8 | StartOpenBolls\n9 | Maturity\n10 | HarvestRipe\n\nPhase number | Rel.LAI\n-----------|---------\n4 | 0.2\n5 | 0.7\n6 | 1",
-                                          "Name": "Memo",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            5.0,
-                                            6.0,
-                                            8.0
-                                          ],
-                                          "Y": [
-                                            0.1,
-                                            1.0,
-                                            1.0
-                                          ],
-                                          "XVariableName": null,
-                                          "Name": "XYPairs",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].ThermalTime",
+                                          "Name": "TT",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -3441,8 +3333,8 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Stage",
-                                          "Name": "XValue",
+                                          "VariableName": "[Leaf].Phyllochron.Potential",
+                                          "Name": "Phyllochron",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -3453,29 +3345,137 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.AddFunction, Models",
-                                      "Name": "EmergingLeaves",
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "Area",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 1.0,
-                                          "Units": null,
-                                          "Name": "Constant",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].AreaLargestMainstemLeaf",
+                                          "Name": "AreaLargestMainstemLeaf",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.MultiplyFunction, Models",
-                                          "Name": "MultiplyFunction",
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "RelativeArea",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Memo, Models",
+                                              "Text": "Crop Phases:\n\nPhase number | Phase \n-------------|------\n1 | Sowing\n2 | Germination\n3 | Emergence\n4 | StartSquaring\n5 | StartFlowering \n6 | Cutout\n7 | StartBollFilling\n8 | StartOpenBolls\n9 | Maturity\n10 | HarvestRipe\n\nPhase number | Rel.LAI\n-----------|---------\n3 | 0.05\n4 | 1.0",
+                                              "Name": "Memo",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                1.0,
+                                                4.0
+                                              ],
+                                              "Y": [
+                                                0.0,
+                                                1.0
+                                              ],
+                                              "XVariableName": null,
+                                              "Name": "XYPairs",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].Stage",
+                                              "Name": "XValue",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "StartSquaring",
+                              "End": "Maturity",
+                              "Name": "ReproductiveStage",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "Delta",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "MainstemLeaves",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Cotton].SowingData.Population",
+                                          "Name": "PlantNumber",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "LAR",
                                           "ResourceName": null,
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].BranchNumber",
-                                              "Name": "Branches",
+                                              "VariableName": "[Phenology].ThermalTime",
+                                              "Name": "TT",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Leaf].Phyllochron.Potential",
+                                              "Name": "Phyllochron",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Area",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Leaf].AreaLargestMainstemLeaf",
+                                              "Name": "AreaLargestMainstemLeaf",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
@@ -3483,12 +3483,12 @@
                                             },
                                             {
                                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                              "Name": "R",
+                                              "Name": "RelativeArea",
                                               "ResourceName": null,
                                               "Children": [
                                                 {
                                                   "$type": "Models.Memo, Models",
-                                                  "Text": "22/12/2023:\n\nR is temperature dependent:\n\nReddy, K. R., Hodges, H. F., & McKinion, J. M. (1997). Modeling temperature effects on cotton internode and leaf growth. Crop Science, 37(2), 503-509. https://doi.org/DOI 10.2135/cropsci1997.0011183X003700020032x\n\nSee notes \"Plastochron\"\n\n====================================================================================\n\n12/12/2023:\n\nXYPairs, XValue node number instead? --> then can include Veg branches R = e.g. 5, and for fruiting branches R = 2?\n\n====================================================================================\n\n11/12/2023:\n\nR = is potential, and depends on density. Higher density, higher R. R is then reduced by stresses, such as water.\n\nSo don't use DDRF site to determine potential R with different density, since this is rainfed, so water stresses may occur.\n\n**Does R depend on population/m2, water stress, or both??**\n\n====================================================================================\n\n**REDUCE TO 0.2? SEE CALCULATIONS FOR DDRFRS1000 IN COTTONOBSERVED DATASHEET**\n\n**0.3 for RS trial?!**\n\nFROM: \n\n* *Hearn, A.B. and Da Roza, G.D., 1985. A simple model for crop management applications for cotton (Gossypium hirsutum L.). Field Crops Res., 12: 49–69.*\n\n\n*R* is the ratio of the rate of mainstem node production to the rate of fruiting branch node production.\n\n\"For any variety, there is a constant ratio between the rate at which nodes (and thus new fruiting branches) appear on the main stem and the rate at which new fruiting sites appear along a fruiting branch (Hearn, 1969; Mutsaers, 1983).\"\n\nCheck also the following references:\n\n1. *Jackson, B.S., Arkin, G.F. and Hearn, A.B., 1988. The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and Testing. American Society of Agricultural Engineers, 31(3): 846–854.*\n2. *Hearn, A.B., 1969. Growth and performance of cotton in a desert environment: I. Morphological development of the crop. The Journal of Agricultural Science, 73(1): 65-74.*\n3. *Mutsaers, H.J.W., 1983. Leaf Growth in Cotton (Gossyp/um hirsutum L.) 1. Growth in Area of Main-stem and Sympodial Leaves. Ann. Bot., 51: 503-520.*\n4. *Hearn, A. B., & Da Roza, G. D. (1985). A simple model for crop management applications for cotton (Gossypium hirsutum L.). Field Crops Research, 12, 49–69.*",
+                                                  "Text": "Crop Phases:\n\nPhase number | Phase \n-------------|------\n1 | Sowing\n2 | Germination\n3 | Emergence\n4 | StartSquaring\n5 | StartFlowering \n6 | Cutout\n7 | StartBollFilling\n8 | StartOpenBolls\n9 | Maturity\n10 | HarvestRipe\n\nPhase number | Rel.LAI\n-----------|---------\n3 | 0.05\n4 | 1.0",
                                                   "Name": "Memo",
                                                   "ResourceName": null,
                                                   "Children": [],
@@ -3499,13 +3499,11 @@
                                                   "$type": "Models.Functions.XYPairs, Models",
                                                   "X": [
                                                     4.0,
-                                                    5.0,
                                                     6.0
                                                   ],
                                                   "Y": [
-                                                    0.5,
-                                                    0.5,
-                                                    0.0
+                                                    1.0,
+                                                    0.4
                                                   ],
                                                   "XVariableName": null,
                                                   "Name": "XYPairs",
@@ -3536,104 +3534,183 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Cotton].SowingData.Population",
-                                      "Name": "PlantNumber",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.DivideFunction, Models",
-                                      "Name": "LAR",
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "SympodialLeaves",
                                       "ResourceName": null,
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].ThermalTime",
-                                          "Name": "TT",
+                                          "VariableName": "[Leaf].AreaLargestSympodialLeaf",
+                                          "Name": "AreaLargestSympodialLeaf",
                                           "ResourceName": null,
                                           "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "RelativeArea",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Memo, Models",
+                                              "Text": "Crop Phases:\n\nPhase number | Phase \n-------------|------\n1 | Sowing\n2 | Germination\n3 | Emergence\n4 | StartSquaring\n5 | StartFlowering \n6 | Cutout\n7 | StartBollFilling\n8 | StartOpenBolls\n9 | Maturity\n10 | HarvestRipe\n\nPhase number | Rel.LAI\n-----------|---------\n4 | 0.2\n5 | 0.7\n6 | 1",
+                                              "Name": "Memo",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                4.0,
+                                                6.0
+                                              ],
+                                              "Y": [
+                                                0.0,
+                                                0.6
+                                              ],
+                                              "XVariableName": null,
+                                              "Name": "XYPairs",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].Stage",
+                                              "Name": "XValue",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.AddFunction, Models",
+                                          "Name": "EmergingLeaves",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "Constant",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.MultiplyFunction, Models",
+                                              "Name": "MultiplyFunction",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Leaf].BranchNumber",
+                                                  "Name": "Branches",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                                  "Name": "R",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Memo, Models",
+                                                      "Text": "22/12/2023:\n\nR is temperature dependent:\n\nReddy, K. R., Hodges, H. F., & McKinion, J. M. (1997). Modeling temperature effects on cotton internode and leaf growth. Crop Science, 37(2), 503-509. https://doi.org/DOI 10.2135/cropsci1997.0011183X003700020032x\n\nSee notes \"Plastochron\"\n\n====================================================================================\n\n12/12/2023:\n\nXYPairs, XValue node number instead? --> then can include Veg branches R = e.g. 5, and for fruiting branches R = 2?\n\n====================================================================================\n\n11/12/2023:\n\nR = is potential, and depends on density. Higher density, higher R. R is then reduced by stresses, such as water.\n\nSo don't use DDRF site to determine potential R with different density, since this is rainfed, so water stresses may occur.\n\n**Does R depend on population/m2, water stress, or both??**\n\n====================================================================================\n\n**REDUCE TO 0.2? SEE CALCULATIONS FOR DDRFRS1000 IN COTTONOBSERVED DATASHEET**\n\n**0.3 for RS trial?!**\n\nFROM: \n\n* *Hearn, A.B. and Da Roza, G.D., 1985. A simple model for crop management applications for cotton (Gossypium hirsutum L.). Field Crops Res., 12: 49–69.*\n\n\n*R* is the ratio of the rate of mainstem node production to the rate of fruiting branch node production.\n\n\"For any variety, there is a constant ratio between the rate at which nodes (and thus new fruiting branches) appear on the main stem and the rate at which new fruiting sites appear along a fruiting branch (Hearn, 1969; Mutsaers, 1983).\"\n\nCheck also the following references:\n\n1. *Jackson, B.S., Arkin, G.F. and Hearn, A.B., 1988. The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and Testing. American Society of Agricultural Engineers, 31(3): 846–854.*\n2. *Hearn, A.B., 1969. Growth and performance of cotton in a desert environment: I. Morphological development of the crop. The Journal of Agricultural Science, 73(1): 65-74.*\n3. *Mutsaers, H.J.W., 1983. Leaf Growth in Cotton (Gossyp/um hirsutum L.) 1. Growth in Area of Main-stem and Sympodial Leaves. Ann. Bot., 51: 503-520.*\n4. *Hearn, A. B., & Da Roza, G. D. (1985). A simple model for crop management applications for cotton (Gossypium hirsutum L.). Field Crops Research, 12, 49–69.*",
+                                                      "Name": "Memo",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.XYPairs, Models",
+                                                      "X": [
+                                                        4.0,
+                                                        5.0,
+                                                        6.0
+                                                      ],
+                                                      "Y": [
+                                                        0.5,
+                                                        0.5,
+                                                        0.5
+                                                      ],
+                                                      "XVariableName": null,
+                                                      "Name": "XYPairs",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Phenology].Stage",
+                                                      "Name": "XValue",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].Phyllochron",
-                                          "Name": "Phyllochron",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "LeafSizeTemperatureFactor --> peanut",
-                                      "Name": "LeafSizeTemperatureFactor",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "CoverResponse",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "\nMove this to SenescenceRate function?",
-                                          "Name": "Memo",
+                                          "VariableName": "[Cotton].SowingData.Population",
+                                          "Name": "PlantNumber",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            0.4,
-                                            0.7,
-                                            1.0
-                                          ],
-                                          "Y": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            0.05
-                                          ],
-                                          "XVariableName": null,
-                                          "Name": "XYPairs",
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "LAR",
                                           "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[leaf].CoverGreen",
-                                          "Name": "XValue",
-                                          "ResourceName": null,
-                                          "Children": [],
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].ThermalTime",
+                                              "Name": "TT",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Leaf].Phyllochron",
+                                              "Name": "Phyllochron",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].FNmetabolic",
-                                      "Name": "NitrogenFactor",
-                                      "ResourceName": null,
-                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -3948,9 +4025,29 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.018,
+                  "FixedValue": 0.025,
                   "Units": "m^2",
-                  "Name": "AreaLargestLeaf",
+                  "Name": "AreaLargestMainstemLeaf",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "8/12/2023: orginially set at 0.018\n\nTemp effect on final leaf size? Reddy 1997\n\nCan change to 0.025 --> max leaf size also at DDRF\n\nFrom report \"OZCOT enhancement meeting Aug 2019\":\n\n**--> Comparison of leaf area parameters derived in temperate climates with tropics.**\n\nParameter|Tropics|Temperate|% difference\n-|-|-|-\nMaximum LA/site (cm2)\t\t|164\t|80\t|\t105\n\t\t(m2)\t\t|0.0164\t|0.008\t|\nArea largest main stem leaf\t|297\t|140\t|\t112\n\t\t(m2)\t\t|0.0297\t|0.014\t|\nRLAI – highest\t\t\t|0.063\t|0.01\t|\t530\nRLAI – median\t\t\t|0.032\t|0.01\t|\t220\nDldsmax\t\t\t\t|0.439\t|0.12\t|\t266\nChange in LA/site\t\t|0.17\t|0.12\t|\t42\nSpecific leaf weight g/m2\t|41\t|58\t|\t-29\nSLA\t\t\t\t|0.024\t|0.017  |\n\n\n",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.016,
+                  "Units": "m^2",
+                  "Name": "AreaLargestSympodialLeaf",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -4264,55 +4361,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartSquaring",
-                  "ReSetEvent": "0",
-                  "Name": "FirstFruitingBranch",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "PostEventValue",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "floor([Leaf].NodeNumber+0.5)",
-                          "Name": "NodeNumberROUND",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.0,
-                          "Units": null,
-                          "Name": "Two",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -7841,7 +7889,9 @@
                     "//[Phenology].Squaring.Target.FloweringTT.FixedValue = 520",
                     "//[Phenology].EarlyFlowering.Target.elseDefaultValue.FixedValue = 380",
                     "//[Phenology].BollFilling.Target.FixedValue = 260",
-                    "//[Phenology].Maturing.Target.FixedValue = 200"
+                    "//[Phenology].Maturing.Target.FixedValue = 200",
+                    "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.005",
+                    "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.008"
                   ],
                   "Name": "Sicot_71B",
                   "ResourceName": null,
@@ -7881,8 +7931,7 @@
                     "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
                     "",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
-                    "//[Leaf].SpecificArea.FixedValue = 0.024",
-                    "[Leaf].AreaLargestLeaf.FixedValue = 0.1 // (this is LAI/site) 0.02 is the largest leaf (m2) from DDRF data!!!!!"
+                    "[Leaf].SpecificArea.FixedValue = 0.024"
                   ],
                   "Name": "Sicot_748B3F",
                   "ResourceName": null,
@@ -7903,13 +7952,34 @@
                     "//[Phenology].Maturing.Target.FixedValue = 200",
                     "",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue = 0.1 // (this is LAI/site) 0.02 is the largest leaf (m2) from DDRF data!!!!!",
                     "",
                     "//[Leaf].Gsmax = 0.011",
                     "//[Root].KNH4 - 0.02",
                     "[Root].MaxDailyNUptake.XYPairs.Y = 10, 10"
                   ],
                   "Name": "748V2C",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].Vegetative.Target.SquaringTT.FixedValue = 230",
+                    "//[Phenology].Squaring.Target.FloweringTT.FixedValue = 400",
+                    "",
+                    "//[Phenology].BollFilling.Target.FixedValue = 290",
+                    "//[Phenology].Maturing.Target.FixedValue = 205",
+                    "",
+                    "//BLUE_Sicot_71B [Leaf].Photosynthesis.RUE.FixedValue = 1.2",
+                    "//BLUE_Sicot_71B [Leaf].SpecificArea.FixedValue = 0.014",
+                    "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
+                    "[Leaf].SpecificArea.FixedValue = 0.024"
+                  ],
+                  "Name": "Sicot_748B3F_KRS",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -51800,7 +51870,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Irrigation added to rainfall in weather file\n\nPlanting density (plants/m2):\n\n707 - 10.6;\n\n714 - 10.4;\n\n746 - 10.2;\n\n748 - 10.4\n\nAverage: 10.4\n\nCultivars:\n\n707 - Bowyer;\n\n714 - Buchanan;\n\n746 - Cowrie;\n\n748 - Davis\n\n\n",
+                  "Text": "**24/01/2024: Irrigation added to rainfall in weather file --> changed MET file**\n\n======================================\n\nPlanting density (plants/m2):\n\n707 - 10.6;\n\n714 - 10.4;\n\n746 - 10.2;\n\n748 - 10.4\n\nAverage: 10.4\n\n",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -51809,7 +51879,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Stage|Date|DAS\n-|-|-\nSowing|15 Feb 2019|0\nEmergence||\nSquaring|14 Mar 2019|27\nFlowering|31 Mar 2019|44\nCutout||\nOpenBolls||\nMaturity|25 Jun 2019|130\nDefoliation||\nHarvestRipe|14 Aug 2019|180\n",
+                  "Text": "23/01/2024: Updated phenology:\n\nStage|Date|DAS|Comments\n-|-|-|-\nSowing|15 Feb 2019|0\nEmergence|19 Feb 2019|4\nSquaring|14 Mar 2019|27\nFlowering|7 Apr 2019|51\nCutout||\nOpenBolls||\nMaturity|25 Jun 2019|130|60% open boll\nDefoliation 1|15 Jul 2019||Ethepone - defoliant\nDefoliation 2|26 Jul 2019||Ethepone - defoliant\nHarvestRipe|14 Aug 2019|180|Hand harvest (100% open?)",
                   "Name": "Phenology stages Observed",
                   "ResourceName": null,
                   "Children": [],
@@ -51838,7 +51908,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Weatherfiles\\KRSRF1819.met",
+                  "FileName": "Weatherfiles\\KRS19IR3.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -51940,7 +52010,7 @@
                         },
                         {
                           "Key": "CultivarName",
-                          "Value": "Sicot_748B3F"
+                          "Value": "Sicot_748B3F_KRS"
                         },
                         {
                           "Key": "SowingDepth",
@@ -51975,30 +52045,37 @@
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
-                          "Date": "2019-01-21",
-                          "Action": "[Fertiliser].Apply(44, Fertiliser.Types.NH4NO3N,10);",
-                          "Line": "2019-01-21 [Fertiliser].Apply(44, Fertiliser.Types.NH4NO3N,10);"
+                          "Date": "2019-02-15",
+                          "Action": "[Fertiliser].Apply(32, Fertiliser.Types.UreaN,10);",
+                          "Line": "2019-02-15 [Fertiliser].Apply(32, Fertiliser.Types.UreaN,10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
-                          "Date": "2019-02-09",
-                          "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NH4NO3N,10);",
-                          "Line": "2019-02-09 [Fertiliser].Apply(10, Fertiliser.Types.NH4NO3N,10);"
+                          "Date": "2019-02-15",
+                          "Action": "[Fertiliser].Apply(12, Fertiliser.Types.UreaN,10);",
+                          "Line": "2019-02-15 [Fertiliser].Apply(12, Fertiliser.Types.UreaN,10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
-                          "Date": "2019-02-09",
+                          "Date": "2019-03-08",
+                          "Action": "[Fertiliser].Apply(10, Fertiliser.Types.UreaN,10);",
+                          "Line": "2019-03-08 [Fertiliser].Apply(10, Fertiliser.Types.UreaN,10);"
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Enabled": true,
+                          "Date": "2019-03-08",
                           "Action": "[Fertiliser].Apply(75.9, Fertiliser.Types.UreaN,10);",
-                          "Line": "2019-02-09 [Fertiliser].Apply(75.9, Fertiliser.Types.UreaN,10);"
+                          "Line": "2019-03-08 [Fertiliser].Apply(75.9, Fertiliser.Types.UreaN,10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
-                          "Date": "2019-02-14",
+                          "Date": "2019-03-14",
                           "Action": "[Fertiliser].Apply(43.7, Fertiliser.Types.UreaN,10);",
-                          "Line": "2019-02-14 [Fertiliser].Apply(43.7, Fertiliser.Types.UreaN,10);"
+                          "Line": "2019-03-14 [Fertiliser].Apply(43.7, Fertiliser.Types.UreaN,10);"
                         }
                       ],
                       "Name": "FertiliserEvents",
@@ -52010,261 +52087,6 @@
                     {
                       "$type": "Models.Irrigation, Models",
                       "Name": "Irrigation",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-15",
-                          "Action": "[Irrigation].Apply(9.1);",
-                          "Line": "2019-02-15 [Irrigation].Apply(9.1);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-17",
-                          "Action": "[Irrigation].Apply(13.9);",
-                          "Line": "2019-02-17 [Irrigation].Apply(13.9);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-19",
-                          "Action": "[Irrigation].Apply(7.3);",
-                          "Line": "2019-02-19 [Irrigation].Apply(7.3);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-23",
-                          "Action": "[Irrigation].Apply(10.3);",
-                          "Line": "2019-02-23 [Irrigation].Apply(10.3);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-24",
-                          "Action": "[Irrigation].Apply(16.4);",
-                          "Line": "2019-02-24 [Irrigation].Apply(16.4);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-02-27",
-                          "Action": "[Irrigation].Apply(24.5);",
-                          "Line": "2019-02-27 [Irrigation].Apply(24.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-02",
-                          "Action": "[Irrigation].Apply(25.5);",
-                          "Line": "2019-03-02 [Irrigation].Apply(25.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-05",
-                          "Action": "[Irrigation].Apply(30.0);",
-                          "Line": "2019-03-05 [Irrigation].Apply(30.0);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-08",
-                          "Action": "[Irrigation].Apply(10.0);",
-                          "Line": "2019-03-08 [Irrigation].Apply(10.0);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-12",
-                          "Action": "[Irrigation].Apply(26.4);",
-                          "Line": "2019-03-12 [Irrigation].Apply(26.4);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-16",
-                          "Action": "[Irrigation].Apply(9.4);",
-                          "Line": "2019-03-16 [Irrigation].Apply(9.4);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-21",
-                          "Action": "[Irrigation].Apply(16.4);",
-                          "Line": "2019-03-21 [Irrigation].Apply(16.4);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-28",
-                          "Action": "[Irrigation].Apply(26.4);",
-                          "Line": "2019-03-28 [Irrigation].Apply(26.4);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-03-30",
-                          "Action": "[Irrigation].Apply(34.5);",
-                          "Line": "2019-03-30 [Irrigation].Apply(34.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-01",
-                          "Action": "[Irrigation].Apply(28.2);",
-                          "Line": "2019-04-01 [Irrigation].Apply(28.2);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-06",
-                          "Action": "[Irrigation].Apply(20.9);",
-                          "Line": "2019-04-06 [Irrigation].Apply(20.9);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-12",
-                          "Action": "[Irrigation].Apply(17.3);",
-                          "Line": "2019-04-12 [Irrigation].Apply(17.3);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-13",
-                          "Action": "[Irrigation].Apply(20.0);",
-                          "Line": "2019-04-13 [Irrigation].Apply(20.0);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-16",
-                          "Action": "[Irrigation].Apply(27.3);",
-                          "Line": "2019-04-16 [Irrigation].Apply(27.3);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-17",
-                          "Action": "[Irrigation].Apply(21.8);",
-                          "Line": "2019-04-17 [Irrigation].Apply(21.8);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-19",
-                          "Action": "[Irrigation].Apply(21.5);",
-                          "Line": "2019-04-19 [Irrigation].Apply(21.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-22",
-                          "Action": "[Irrigation].Apply(21.8);",
-                          "Line": "2019-04-22 [Irrigation].Apply(21.8);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-24",
-                          "Action": "[Irrigation].Apply(25.5);",
-                          "Line": "2019-04-24 [Irrigation].Apply(25.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-04-27",
-                          "Action": "[Irrigation].Apply(20.0);",
-                          "Line": "2019-04-27 [Irrigation].Apply(20.0);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-01",
-                          "Action": "[Irrigation].Apply(21.8);",
-                          "Line": "2019-05-01 [Irrigation].Apply(21.8);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-05",
-                          "Action": "[Irrigation].Apply(17.7);",
-                          "Line": "2019-05-05 [Irrigation].Apply(17.7);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-08",
-                          "Action": "[Irrigation].Apply(25.5);",
-                          "Line": "2019-05-08 [Irrigation].Apply(25.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-10",
-                          "Action": "[Irrigation].Apply(21.8);",
-                          "Line": "2019-05-10 [Irrigation].Apply(21.8);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-15",
-                          "Action": "[Irrigation].Apply(25.5);",
-                          "Line": "2019-05-15 [Irrigation].Apply(25.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-20",
-                          "Action": "[Irrigation].Apply(25.5);",
-                          "Line": "2019-05-20 [Irrigation].Apply(25.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-05-25",
-                          "Action": "[Irrigation].Apply(27.3);",
-                          "Line": "2019-05-25 [Irrigation].Apply(27.3);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-06-01",
-                          "Action": "[Irrigation].Apply(27.7);",
-                          "Line": "2019-06-01 [Irrigation].Apply(27.7);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-06-07",
-                          "Action": "[Irrigation].Apply(35.5);",
-                          "Line": "2019-06-07 [Irrigation].Apply(35.5);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-06-14",
-                          "Action": "[Irrigation].Apply(19.1);",
-                          "Line": "2019-06-14 [Irrigation].Apply(19.1);"
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Enabled": true,
-                          "Date": "2019-06-18",
-                          "Action": "[Irrigation].Apply(23.2);",
-                          "Line": "2019-06-18 [Irrigation].Apply(23.2);"
-                        }
-                      ],
-                      "Name": "IrrigationEvents",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -52643,16 +52465,16 @@
                             300.0
                           ],
                           "InitialValues": [
-                            0.186,
-                            0.196,
-                            0.215,
-                            0.231,
-                            0.237,
-                            0.282,
-                            0.301,
-                            0.306
+                            0.26,
+                            0.28,
+                            0.3,
+                            0.3,
+                            0.31,
+                            0.31,
+                            0.31,
+                            0.32
                           ],
-                          "InitialPAWmm": 0.0,
+                          "InitialPAWmm": 82.75000000000003,
                           "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
