@@ -274,12 +274,12 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
+        /// Perform initialisation so that instance is valid.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
         {
             fomCNRFactor = new double[soilPhysical.Thickness.Length];
             cnrf = new double[soilPhysical.Thickness.Length];
@@ -312,6 +312,17 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
+        /// Give all variables an initial value.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        { 
+            CalculateVariables();
+        }
+
+        /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -334,7 +345,12 @@ namespace Models.Soils.Nutrients
             foreach (var flow in nutrientFlows)
                 flow.DoFlow();
 
-            // Calculate variables.
+            CalculateVariables();
+        }
+
+        /// <summary>Calculate all variables.</summary>
+        private void CalculateVariables()
+        {
             Array.Clear(totalOrganicN);
             Array.Clear(catm);
             Array.Clear(totalC);
