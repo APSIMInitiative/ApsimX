@@ -347,10 +347,6 @@ namespace Models.PMF.SimplePlantModels
                 }
             }
 
-            //double emergeTt = 0.0;
-            //if (management.EstablishStage == "Seed")
-            //    emergeTt = management.PlantingDepth * 5.0; //This is Phenology.Emerging.Target.ShootRate value 
-
             // Derive Crop Parameters
             double emergeTt = 0.0;
             ttEmergeToHarv = 0.0;

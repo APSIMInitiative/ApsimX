@@ -200,7 +200,7 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            DataTable tabDat = readCSVandUpdateProperties();
+            tabDat = readCSVandUpdateProperties();
             rotPos = 1;
             CurrentCropParams = getCurrentParams(tabDat, rotPos);
         }
@@ -218,12 +218,13 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
+        private DataTable tabDat = null;
+
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
             if (clock.Today == CurrentCropParams.HarvestDate)
             {
-                DataTable tabDat = readCSVandUpdateProperties();
                 rotPos +=1;
                 if (rotPos>tabDat.Columns.Count-1)
                 {

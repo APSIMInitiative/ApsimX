@@ -19018,7 +19018,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Root.Live.Wt",
+              "YFieldName": "SCRUM.Product.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": false,
