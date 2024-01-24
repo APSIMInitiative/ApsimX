@@ -56,7 +56,8 @@ namespace UnitTests.Weather
 
             baseSim.Prepare();
             baseSim.Run();
-            Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
+            var summary = baseSim.FindDescendant<MockSummary>();
+            Assert.AreEqual(summary.messages[0], "Simulation terminated normally");
         }
 
         [Test]
