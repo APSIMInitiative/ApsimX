@@ -436,7 +436,7 @@ namespace Models.Soils.NutrientPatching
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("Commencing")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // Make sure the NutrientPatchManager is after the solutes so that scoping works.

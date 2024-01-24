@@ -358,8 +358,12 @@ namespace Models.Soils.Nutrients
             Array.Clear(n2oatm);
             Array.Clear(mineralisedN);
 
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                catm[i] = surfaceResidue.Catm[i];
+            // In some simulations (e.g. when NutrientPatchManager adds instances of Nutrient at 'OnCommencing') surfaceResidue
+            // may not have initialised itself yet, hence the if statement below. This is a design fault in APSIM that
+            // needs to be fixed at some point.
+            if (surfaceResidue.Catm != null)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                    catm[i] = surfaceResidue.Catm[i];
 
             foreach (OrganicPool pool in nutrientPools)
             {
