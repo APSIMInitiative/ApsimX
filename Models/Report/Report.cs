@@ -46,6 +46,10 @@ namespace Models
         [Link]
         private IClock clock = null;
 
+        /// <summary>Link to a clock model.</summary>
+        [Link]
+        private ISummary summary = null;
+
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
@@ -102,7 +106,7 @@ namespace Models
         /// <param name="sender">Sender object..</param>
         /// <param name="args">Event data.</param>
         [EventSubscribe("SubscribeToEvents")]
-        private void OnConnectToEvents(object sender, EventArgs args)
+        private void OnSubscribeToEvents(object sender, EventArgs args)
         {
             SubscribeToEvents();
         }
@@ -114,6 +118,9 @@ namespace Models
         {
             // Cleanup event names.
             EventNames = TidyUpEventNames();
+
+            if (EventNames.FirstOrDefault(e => e.Contains("StartOfSimulation")) != null)
+                summary.WriteMessage(this, "Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised.", MessageType.Warning);
 
             // Tidy up variable/event names.
             VariableNames = TidyUpVariableNames();
