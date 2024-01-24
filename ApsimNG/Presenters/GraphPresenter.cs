@@ -139,10 +139,6 @@
                 // Update axis maxima and minima
                 graphView.UpdateView();
 
-                // Format the axes.
-                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
-                    FormatAxis(axis);
-
                 //check if the axes are too small, update if so
                 const double tolerance = 0.00001;
                 foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
@@ -153,15 +149,18 @@
                     {
                         axis.Minimum -= tolerance / 2;
                         axis.Maximum += tolerance / 2;
-                        FormatAxis(axis);
                     }
+                    FormatAxis(axis);
                 }
 
                 int pointsOutsideAxis = 0;
                 int pointsInsideAxis = 0;
                 foreach (SeriesDefinition definition in definitions)
                 {
-                    string seriesName = graph.Name + " (" + definition.Series.Name + ")";
+                    string seriesName = graph.Name;
+                    if (definition.Series != null)
+                        seriesName = graph.Name + " (" + definition.Series.Name + ")";
+
                     double xMin = graphView.AxisMinimum(definition.XAxis);
                     double xMax = graphView.AxisMaximum(definition.XAxis);
                     int xNaNCount = 0;

@@ -40,7 +40,7 @@
         },
         {
           "$type": "Models.Weather, Models",
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "Children": [],
@@ -930,7 +930,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -1839,7 +1839,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -2677,7 +2677,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
