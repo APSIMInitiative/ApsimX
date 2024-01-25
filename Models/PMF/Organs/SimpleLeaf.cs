@@ -629,9 +629,10 @@ namespace Models.PMF.Organs
         {
             get
             {
+                double factor = 0.0;
                 if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
-                return 0;
+                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                return Math.Min(1.0,factor);
             }
         }
 
