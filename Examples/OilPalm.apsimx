@@ -11,7 +11,7 @@
       "Children": [
         {
           "$type": "Models.Weather, Models",
-          "FileName": "%root%\\Examples\\WeatherFiles\\Popondetta.met",
+          "FileName": "%root%/Examples/WeatherFiles/Popondetta.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "Children": [],
