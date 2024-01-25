@@ -113,12 +113,12 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return NitrogenContent * NitrogenToCrudeProteinFactor * Amount;
+                return (NitrogenContent/100.0) * NitrogenToCrudeProteinFactor * Amount;
             }
         }
 
         /// <summary>
-        /// Calculate Crude Protein percentage from nitrogen content
+        /// Calculate Crude Protein percentage from nitrogen content (%)
         /// </summary>
         public double CrudeProteinContent
         {
@@ -151,7 +151,7 @@ namespace Models.CLEM.Resources
                     FeedType.HaySilage or
                     FeedType.PastureTemperate or
                     FeedType.PastureTropical => CrudeProtein * Math.Min(0.84 * DryMatterDigestibility + 0.33, 1),
-                    FeedType.Concentrate => RumenDegradableProteinContent * Amount,
+                    FeedType.Concentrate => RumenDegradableProteinContent * CrudeProtein,
                     FeedType.Milk => 0,
                     _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),
                 };

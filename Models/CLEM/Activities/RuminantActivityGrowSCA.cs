@@ -195,9 +195,6 @@ namespace Models.CLEM.Activities
                     female.Milk.Reset();
             }
 
-            // ToDo: does SRW have a male multiplier?
-            // ToDo: does relative size include the larges size achieved?
-
             // Intake max SCA Eq.2
             ind.Intake.SolidsDaily.Expected = ind.Parameters.GrowSCA.RelativeSizeScalar_CI1 * ind.StandardReferenceWeight * ind.RelativeSize * (ind.Parameters.GrowSCA.RelativeSizeQuadratic_CI2 - ind.RelativeSize) * cf * yf * tf * lf;
 
@@ -363,7 +360,7 @@ namespace Models.CLEM.Activities
                 {
                     if (ind.Energy.AfterLactation >= 0)
                     {
-                        kg = 0.42 * ind.Intake.MDSolid + 0.006;
+                        kg = 0.042 * ind.Intake.MDSolid + 0.006;
                     }
                     else
                     {
@@ -415,7 +412,7 @@ namespace Models.CLEM.Activities
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
             double EndogenousUrinaryProtein = ind.Parameters.GrowSCA.BreedEUPFactor1_CM12 * Math.Log(ind.Weight) - ind.Parameters.GrowSCA.BreedEUPFactor2_CM13;
-            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26 * (10 ^ -4)) * milkStore?.ME??0;
+            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + ((5.26 * (10 ^ -4)) * milkStore?.ME??0);
             double DermalProtein = ind.Parameters.GrowSCA.DermalLoss_CM14 * Math.Pow(ind.Weight,0.75);
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;
@@ -424,7 +421,7 @@ namespace Models.CLEM.Activities
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
             // ToDo: Do these use SRW of Female or does it include the 1.2x factor for males?
-            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - ind.BirthScalar) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.HighWeight / ind.StandardReferenceWeight));
+            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.BirthWeight/ind.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.HighWeight / ind.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.GrowSCA.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.ConditionNoEffect_CG6) / (ind.Parameters.GrowSCA.ConditionMaxEffect_CG7 - ind.Parameters.GrowSCA.ConditionNoEffect_CG6)), 1));
 
@@ -445,7 +442,6 @@ namespace Models.CLEM.Activities
             double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.NetForGain / energyEmptyBodyGain));
 
             double emptyBodyGainkg = 0;
-            double netEnergyAvailableForGain = 0;
 
             if (milkProtein > 0 && ProteinNet1 < milkProtein)
             {
@@ -484,11 +480,11 @@ namespace Models.CLEM.Activities
             double MJProteinChange = 23.6 * kgProteinChange;
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
-            ind.AdjustProteinMass(MJProteinChange * events.Interval); // for time step
+            ind.AdjustProteinMass(kgProteinChange * events.Interval, MJProteinChange * events.Interval); // for time step
 
-            double MJFatChange = netEnergyAvailableForGain - MJProteinChange;
+            double MJFatChange = ind.Energy.NetForGain - MJProteinChange;
             double kgFatChange = MJFatChange / 39.3;
-            ind.AdjustFatMass(kgFatChange * events.Interval); // for time step
+            ind.AdjustFatMass(kgFatChange * events.Interval, MJFatChange * events.Interval); // for time step
 
             // N balance = 
             // ToDo: not currently used
@@ -500,7 +496,7 @@ namespace Models.CLEM.Activities
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + kgProteinChange) - TFP - DermalProtein;
             // ToDo: not currently used
-            ind.Output.NitrogenExcreted = TFP + TUP;
+            ind.Output.NitrogenExcreted = (TFP + TUP) * events.Interval;
 
             ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
             ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;
@@ -793,51 +789,51 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalDeath")]
         private void OnCLEMAnimalDeath(object sender, EventArgs e)
         {
-            foreach (Ruminant ind in CurrentHerd())
-            {
-                double mr = ind.Parameters.GrowSCA.BasalMortalityRate_CD1;
-                // work out weaner proportion age.. x weaned to y 12 months.
-                if (ind.IsWeaner)
-                    mr += (ind.Parameters.GrowSCA.UpperLimitForMortalityInWeaners_CD13 - ind.Parameters.GrowSCA.BasalMortalityRate_CD1) * (ind.DaysSinceWeaned / (365 - (ind.AgeInDays - ind.DaysSinceWeaned)));
-                
-                // ToDo: Check that the normalised weight difference is in fact the normalised weight calulated at the end of the time step - current normalised weight (last calculated start of time step)
-                if (0.1 * ind.EmptyBodyMassChange < 0.2 * (ind.CalculateNormalisedWeight(ind.AgeInDays + events.Interval) - ind.NormalisedAnimalWeight) / events.Interval)
-                    mr += ind.Parameters.GrowSCA.EffectBCOnMortality1_CD2 * Math.Max(0, (ind.Parameters.GrowSCA.EffectBCOnMortality2_CD3 * ind.BodyCondition));
-
-                ind.Died = (RandomNumberGenerator.Generator.NextDouble() <= mr*events.Interval);
-            }
-
-            List<Ruminant> died = HerdResource.Herd.Where(a => a.Died).ToList();
-            foreach (Ruminant ind in died)
-                ind.SaleFlag = HerdChangeReason.DiedUnderweight;
-
-            // TODO: separate foster from real mother for genetics
-            // to be placed before individuals are removed and will need a rethink of whole section.
-            //// check for death of mother with sucklings and try foster sucklings
-            //IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            //List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
-            //int wetMothersAssigned = 0;
-            //if (wetMothersAvailable.Any())
+            //foreach (Ruminant ind in CurrentHerd())
             //{
-            //    if(mothersWithSuckling.Any())
-            //    {
-            //        foreach (var deadMother in mothersWithSuckling)
-            //        {
-            //            foreach (var suckling in deadMother.SucklingOffspringList)
-            //            {
-            //                if(wetMothersAssigned < wetMothersAvailable.Count)
-            //                {
-            //                    suckling.Mother = wetMothersAvailable[wetMothersAssigned];
-            //                    wetMothersAssigned++;
-            //                }
-            //                else
-            //                    break;
-            //            }
-            //        }
-            //    }
+            //    double mr = ind.Parameters.GrowSCA.BasalMortalityRate_CD1;
+            //    // work out weaner proportion age.. x weaned to y 12 months.
+            //    if (ind.IsWeaner)
+            //        mr += (ind.Parameters.GrowSCA.UpperLimitForMortalityInWeaners_CD13 - ind.Parameters.GrowSCA.BasalMortalityRate_CD1) * (ind.DaysSinceWeaned / (365 - (ind.AgeInDays - ind.DaysSinceWeaned)));
+                
+            //    // ToDo: Check that the normalised weight difference is in fact the normalised weight calulated at the end of the time step - current normalised weight (last calculated start of time step)
+            //    if (0.1 * ind.EmptyBodyMassChange < 0.2 * (ind.CalculateNormalisedWeight(ind.AgeInDays + events.Interval) - ind.NormalisedAnimalWeight) / events.Interval)
+            //        mr += ind.Parameters.GrowSCA.EffectBCOnMortality1_CD2 * Math.Max(0, (ind.Parameters.GrowSCA.EffectBCOnMortality2_CD3 * ind.BodyCondition));
+
+            //    ind.Died = (RandomNumberGenerator.Generator.NextDouble() <= mr*events.Interval);
             //}
 
-            HerdResource.RemoveRuminant(died, this);
+            //List<Ruminant> died = HerdResource.Herd.Where(a => a.Died).ToList();
+            //foreach (Ruminant ind in died)
+            //    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+
+            //// TODO: separate foster from real mother for genetics
+            //// to be placed before individuals are removed and will need a rethink of whole section.
+            ////// check for death of mother with sucklings and try foster sucklings
+            ////IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
+            ////List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            ////int wetMothersAssigned = 0;
+            ////if (wetMothersAvailable.Any())
+            ////{
+            ////    if(mothersWithSuckling.Any())
+            ////    {
+            ////        foreach (var deadMother in mothersWithSuckling)
+            ////        {
+            ////            foreach (var suckling in deadMother.SucklingOffspringList)
+            ////            {
+            ////                if(wetMothersAssigned < wetMothersAvailable.Count)
+            ////                {
+            ////                    suckling.Mother = wetMothersAvailable[wetMothersAssigned];
+            ////                    wetMothersAssigned++;
+            ////                }
+            ////                else
+            ////                    break;
+            ////            }
+            ////        }
+            ////    }
+            ////}
+
+            //HerdResource.RemoveRuminant(died, this);
         }
 
         private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)

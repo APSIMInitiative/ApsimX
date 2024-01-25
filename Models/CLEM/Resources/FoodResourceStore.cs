@@ -48,7 +48,7 @@ namespace Models.CLEM.Resources
 
             Details.Amount += packet.Amount;
 
-            CrudeProtein = Details.CrudeProtein;
+            CrudeProtein += Details.CrudeProtein;
             DegradableCrudeProtein += packet.DegradableProtein;
         }
 

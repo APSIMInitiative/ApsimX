@@ -19,13 +19,17 @@ namespace Models.CLEM.Resources
     {
         private RuminantFemale mother;
         private double weight;
+        private double birthweight;
         private double baseweight;
         private double emptyBodyChange;
         private int age;
         private double normalisedWeight;
+        //private double previousNormalisedWeight;
         private double adultEquivalent;
         private double proteinMass = 0;
+        private double proteinMJ = 0;
         private double fatMass = 0;
+        private double fatMJ = 0;
         private double previousProteinMass = 0;
         private double previousFatMass = 0;
         private bool sterilised = false;
@@ -66,6 +70,11 @@ namespace Models.CLEM.Resources
         public double ProteinMass { get { return proteinMass; } }
 
         /// <summary>
+        /// The protein mass of the individual
+        /// </summary>
+        public double ProteinMJ { get { return proteinMJ; } }
+
+        /// <summary>
         /// The change in protein mass of the individual
         /// </summary>
         public double ProteinMassChange { get { return proteinMass-previousProteinMass; } }
@@ -74,10 +83,12 @@ namespace Models.CLEM.Resources
         /// Adjust the protein mass of the individual.
         /// </summary>
         /// <param name="amount">Amount to change by with sign.</param>
-        public void AdjustProteinMass(double amount)
+        /// <param name="mj"></param>
+        public void AdjustProteinMass(double amount, double mj)
         {
             previousProteinMass = proteinMass;
             proteinMass += amount;
+            proteinMJ += mj;
             proteinMass = Math.Max(0, proteinMass);
         }
 
@@ -85,6 +96,11 @@ namespace Models.CLEM.Resources
         /// The fat mass of individual
         /// </summary>
         public double FatMass { get { return fatMass; } }
+
+        /// <summary>
+        /// The fat mass of individual
+        /// </summary>
+        public double FatMJ { get { return fatMJ; } }
 
         /// <summary>
         /// The change in fat mass of the individual
@@ -95,9 +111,11 @@ namespace Models.CLEM.Resources
         /// Add fat mass to individual.
         /// </summary>
         /// <param name="amount">Amount to change by with sign.</param>
-        public void AdjustFatMass(double amount)
+        /// <param name="mj"></param>
+        public void AdjustFatMass(double amount, double mj)
         {
             previousFatMass = fatMass;
+            fatMJ += mj;
             fatMass += amount;
             fatMass = Math.Max(0, fatMass);
         }
@@ -575,9 +593,9 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The birth scalar for this individual. Value from breed params birth scalars based on whether from a multiple birth
+        /// The birth weight for this individual
         /// </summary>
-        public double BirthScalar { get; private set; }
+        public double BirthWeight { get { return birthweight; } }
 
         /// <summary>
         /// Calculate normalised weight from age of individual (in days)
@@ -592,7 +610,7 @@ namespace Models.CLEM.Resources
             // return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
 
             // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
-            double normMax = StandardReferenceWeight - ((1 - BirthScalar) * Parameters.General.SRWFemale) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
+            double normMax = StandardReferenceWeight - (StandardReferenceWeight - BirthWeight) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
             // CP15Y is determined at birth based on the number of siblings from the values provided in the params 
             // Table6 of SCA
@@ -934,7 +952,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="setParams">The breed parameters for the individual</param>
         /// <param name="setAge">The age (days) of the individual</param>
-        /// <param name="birthScalar">The brith scalar for individual taking into account multiple births</param>
+        /// <param name="birthScalar">The birth scalar for individual taking into account multiple births</param>
         /// <param name="setWeight">The weight of the individual at creation</param>
         /// <param name="date">The date of creation</param>
         public Ruminant(RuminantType setParams, int setAge, double birthScalar, double setWeight, DateTime date)
@@ -945,7 +963,7 @@ namespace Models.CLEM.Resources
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1*setAge);
             DateEnteredSimulation = date;
-            BirthScalar = birthScalar;
+            birthweight = birthScalar * Parameters.General.SRWFemale;
 
             // ToDo: set wool weight
 

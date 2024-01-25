@@ -48,28 +48,33 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Fat content (%)")]
+        [Description("Fat content")]
         [Required, Percentage, GreaterThanEqualValue(0)]
+        [Units("%")]
         public double FatContent { get; set; }
 
         /// <inheritdoc/>
-        [Description("Dry Matter Digestibility (%)")]
+        [Description("Dry Matter Digestibility")]
         [Required, Percentage, GreaterThanValue(0)]
+        [Units("%")]
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        [Description("Nitrogen content (%)")]
+        [Description("Nitrogen content")]
         [Required, Percentage, GreaterThanEqualValue(0)]
+        [Units("%")]
         public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
-        [Description("Degradable protein content (g/g DM)")]
-        [Required, GreaterThanEqualValue(0)]
+        [Description("Degradable protein content")]
+        [Required, GreaterThanEqualValue(0), Proportion]
+        [Units("g/g CP")]
         public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
         [Description("Acid detergent insoluable protein")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanEqualValue(0), Proportion]
+        [Units("g/g Protein")]
         public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <summary>
@@ -77,6 +82,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Starting Amount (kg)")]
         [Required, GreaterThanEqualValue(0)]
+        [Units("kg")]
         public double StartingAmount { get; set; }
 
         /// <summary>

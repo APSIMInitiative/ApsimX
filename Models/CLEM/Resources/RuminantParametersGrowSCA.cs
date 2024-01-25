@@ -728,7 +728,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Maintenance exponent for age [CM3]")]
-        [System.ComponentModel.DefaultValue(8e10-5)]
+        [System.ComponentModel.DefaultValue(8e-5)]
         public double MainExponentForAge_CM3 { get; set; }
 
         /// <summary>
