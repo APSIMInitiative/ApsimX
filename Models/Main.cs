@@ -425,6 +425,8 @@ namespace Models
                 throw new ArgumentException("The playlist switch cannot be run with more than one file.");
             Simulations file = FileFormat.ReadFromFile<Simulations>(files.First(), e => throw e, false).NewModel as Simulations;
             Playlist playlistModel = file.FindChild<Playlist>();
+            if (playlistModel.Enabled == false)
+                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
             IEnumerable<Playlist> playlists = new List<Playlist> { file.FindChild<Playlist>(options.Playlist) };
             if (playlists.Any() && playlists.First() == null)
                 throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {file.FileName}.");
