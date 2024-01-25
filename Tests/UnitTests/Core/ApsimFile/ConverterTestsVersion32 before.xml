@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="31">
+  <Name>Simulations</Name>
+
+  <Experiment>
+    <Name>Sward</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Allow</Name>
+        <Specifications>
+          <string>[AutomaticIrrigation].Script.allowIrrigation=false,true</string>
+        </Specifications>
+      </Factor>
+    </Factors>
+    <Graph>
+      <Name>SwardPlantWt</Name>
+      <Series>
+        <Name>TotalPlantWt</Name>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      </Series>
+    </Graph>
+    <Simulation>
+      <Name>Base sim</Name>
+      <Zone>
+        <Name>zone1</Name>
+      </Zone>
+      <Zone>
+        <Name>zone2</Name>
+      </Zone>
+    </Simulation>
+  </Experiment>
+  
+  <Experiment>
+    <Name>Tests</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Climate</Name>
+        <Factor>
+          <Name>P087073</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P087073.met</string>
+            <string>[Clock].StartDate = 1980-03-01</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>P108081</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P108081.met</string>
+            <string>[Clock].StartDate = 1980-03-01</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>P128077</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Weather].FileName = %root%\Tests\Validation\Slurp\Weather\P128077.met</string>
+            <string>[Clock].StartDate = 1980-03-01</string>
+          </Specifications>
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
+      </Factor>
+      <Factor>
+        <Name>Soil</Name>
+        <Soil>
+          <Name>XL </Name>
+          <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
+        </Soil>
+        <Soil>
+          <Name>L </Name>
+          <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
+        </Soil>
+        <Soil>
+          <Name>M </Name>
+          <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
+        </Soil>
+        <Specifications>
+          <string>[Soil]</string>
+        </Specifications>
+      </Factor>
+    </Factors>
+    <Graph>
+      <Name>SwardPlantWt</Name>
+      <Series>
+        <Name>TotalPlantWt</Name>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>2</FactorIndexToVaryLines>
+      </Series>
+    </Graph>
+
+    <Simulation>
+      <Name>Base sim</Name>
+      <Zone>
+        <Name>zone1</Name>
+      </Zone>
+      <Zone>
+        <Name>zone2</Name>
+      </Zone>
+    </Simulation>
+
+  </Experiment>
+
+  <Experiment>
+    <Name>ABlock</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Cultivar</Name>
+        <Factor>
+          <Name>Burbank</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[PlantandHarvest].Script.CultivarName=RussetBurbank</string>
+            <string>[PlantandHarvest].Script.StemNumberPerSeedTuber=2.2</string>
+            <string>[PlantandHarvest].Script.PlantingDepth=120</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Horizon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[PlantandHarvest].Script.CultivarName=Horizon</string>
+            <string>[PlantandHarvest].Script.StemNumberPerSeedTuber=3.2</string>
+            <string>[PlantandHarvest].Script.PlantingDepth=135</string>
+          </Specifications>
+        </Factor>
+      </Factor>
+    </Factors>
+    
+    <Simulation>
+      <Name>Base sim</Name>
+      <Zone>
+        <Name>zone1</Name>
+      </Zone>
+      <Zone>
+        <Name>zone2</Name>
+      </Zone>
+    </Simulation>
+
+    <Graph>
+      <Name>SwardPlantWt</Name>
+      <Series>
+        <Name>TotalPlantWt</Name>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      </Series>
+    </Graph>
+
+  </Experiment>
+
+</Simulations>

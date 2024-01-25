@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+
+  <TreeProxy>
+    <Name>TreeProxy</Name>
+    <Table>
+      <ArrayOfString>
+        <string>Parameter</string>
+        <string>0</string>
+        <string>0.5h</string>
+        <string>1h</string>
+      </ArrayOfString>
+      <ArrayOfString>
+        <string>Shade (%)</string>
+        <string>Root Length Density (cm/cm3)</string>
+        <string>15-30</string>
+      </ArrayOfString>
+    </Table>
+
+    <dates>
+      <dateTime>1900-01-01T00:00:00</dateTime>
+      <dateTime>1900-03-01T00:00:00</dateTime>
+      <dateTime>1900-06-01T00:00:00</dateTime>
+      <dateTime>1900-09-01T00:00:00</dateTime>
+      <dateTime>1900-12-31T00:00:00</dateTime>
+    </dates>
+    
+  </TreeProxy>
+  
+</Simulations>

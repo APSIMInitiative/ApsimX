@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+
+  <Cultivar>
+    <Name>Alberic</Name>
+    <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+    <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+    <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+    <Alias>
+      <Name>Gregory</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Alias>
+    <Alias>
+      <Name>Lancer</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Alias>    
+  </Cultivar>
+
+  <Cultivar>
+    <Name>B</Name>
+    <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+  </Cultivar>
+</Simulations>

@@ -1,83 +1,70 @@
-﻿using UserInterface.Interfaces;
-using Models.Core;
-
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    /// <summary>
-    /// This command moves a model from one Parent Node to another.
-    /// </summary>
+    using System;
+    using Interfaces;
+    using Models.Core;
+    using Models.Core.ApsimFile;
+
+    /// <summary>This command moves a model from one Parent Node to another.</summary>
     class MoveModelCommand : ICommand
     {
-        Model FromModel;
-        Model ToParent;
-        Model FromParent;
-        private bool ModelMoved;
-        private string OriginalName;
-
-        /// <summary>The node description</summary>
-        NodeDescriptionArgs nodeDescription;
-
-        /// <summary>The explorer view</summary>
-        IExplorerView explorerView;
+        private IModel fromModel;
+        private IModel toParent;
+        private Func<IModel, TreeViewNode> describeModel;
+        private IModel fromParent;
+        private string originalName;
+        private int originalPosition;
 
         /// <summary>
-        /// Constructor.
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
         /// </summary>
-        public MoveModelCommand(Model FromModel, Model ToParent, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
+        public IModel AffectedModel => fromModel;
+
+        /// <summary>Constructor.</summary>
+        public MoveModelCommand(IModel model, IModel newParent, Func<IModel, TreeViewNode> describeModel)
         {
-            this.FromModel = FromModel;
-            this.ToParent = ToParent;
-            this.nodeDescription = nodeDescription;
-            this.explorerView = explorerView;
+            if (model.ReadOnly)
+                throw new ApsimXException(model, string.Format("Unable to move {0} to {1} - {0} is read-only.", model.Name, newParent.Name));
+            if (newParent.ReadOnly)
+                throw new ApsimXException(newParent, string.Format("Unable to move {0} to {1} - {1} is read-only.", model.Name, newParent.Name));
+            if (describeModel == null)
+                throw new ArgumentNullException(nameof(describeModel));
+            fromModel = model;
+            toParent = newParent;
+            this.describeModel = describeModel;
         }
 
-        /// <summary>
-        /// Perform the command
-        /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        /// <summary>Perform the command.</summary>
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
-            FromParent = FromModel.Parent as Model;
-            
-            // Remove old model.
-            ModelMoved = FromParent.Children.Remove(FromModel);
+            fromParent = fromModel.Parent;
 
-            // Add model to new parent.
-            if (ModelMoved)
-            {
-                this.explorerView.Delete(Apsim.FullPath(this.FromModel));
-                // The AddModel method may rename the FromModel. Go get the original name in case of
-                // Undo later.
-                OriginalName = FromModel.Name;
+            // The Move method may rename the FromModel. Go get the original name in case of
+            // Undo later.
+            originalName = fromModel.Name;
+            originalPosition = tree.GetNodePosition(fromModel.FullPath);
+            string originalPath = this.fromModel.FullPath;
 
-                ToParent.Children.Add(FromModel);
-                FromModel.Parent = ToParent;
-                Apsim.EnsureNameIsUnique(FromModel);
-                nodeDescription.Name = FromModel.Name;
-                this.explorerView.AddChild(Apsim.FullPath(ToParent), nodeDescription);
-                CommandHistory.InvokeModelStructureChanged(FromParent);
-                CommandHistory.InvokeModelStructureChanged(ToParent);
-            }
+            // Move model.
+            Structure.Move(fromModel, toParent);
+            tree.Delete(originalPath);
+            tree.AddChild(toParent.FullPath, describeModel(fromModel));
+            tree.SelectedNode = fromModel.FullPath;
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        /// <summary>Undo the command.</summary>
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
-            if (ModelMoved)
-            {
-                ToParent.Children.Remove(FromModel);
-                this.explorerView.Delete(Apsim.FullPath(this.FromModel));
-                FromModel.Name = OriginalName;
-                nodeDescription.Name = OriginalName;
-                FromParent.Children.Add(FromModel);
-                FromModel.Parent = FromParent;
-                this.explorerView.AddChild(Apsim.FullPath(FromParent), nodeDescription);
-
-                CommandHistory.InvokeModelStructureChanged(FromParent);
-                CommandHistory.InvokeModelStructureChanged(ToParent);
-            }
+            tree.Delete(fromModel.FullPath);
+            Structure.Move(fromModel, fromParent);
+            fromModel.Name = originalName;
+            tree.AddChild(fromParent.FullPath, describeModel(fromModel), originalPosition);
+            tree.SelectedNode = fromModel.FullPath;
         }
-
     }
 }

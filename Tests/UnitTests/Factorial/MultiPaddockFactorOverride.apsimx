@@ -1,0 +1,258 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 296,
+  "Version": 101,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Factorial.Experiment, Models",
+      "DisabledSimNames": null,
+      "Name": "Experiment",
+      "Children": [
+        {
+          "$type": "Models.Factorial.Factors, Models",
+          "Name": "Factors",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Manager].Script.IsWorking = true",
+                  "Name": "IsWorking",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Constant]",
+                  "Name": "Constant",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
+          "Name": "Simulation",
+          "Children": [
+            {
+              "$type": "Models.Clock, Models",
+              "Start": "1900-01-01T00:00:00",
+              "End": "1901-01-01T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "Summary",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Zone, Models",
+              "Area": 1.0,
+              "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
+              "Name": "Field",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Core;\r\nusing Models.Functions;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    \t// An exception will be thrown if this is false.\r\n    \t// It is set to true by the factorial\r\n    \tpublic bool IsWorking { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            // Need to remember that the script is a child of the manager\r\n            // which is a child of the paddock.\r\n            IModel paddock = Parent.Parent;\r\n            if (!IsWorking)\r\n            \tthrow new Exception(\"Failed to override property value via factor in field \" + paddock.Name);\r\n\r\n            IFunction constant = paddock.Children[1] as IFunction;\r\n            if (constant.Value() != 1)\r\n            \tthrow new Exception(\"Failed to override model value via factor in field \" + paddock.Name);\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "IsWorking",
+                      "Value": "False"
+                    }
+                  ],
+                  "Name": "Manager",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Zone, Models",
+              "Area": 2.0,
+              "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
+              "Name": "Field2",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Core;\r\nusing Models.Functions;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    \t// An exception will be thrown if this is false.\r\n    \t// It is set to true by the factorial\r\n    \tpublic bool IsWorking { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (!IsWorking)\r\n            \tthrow new Exception(\"Failed to override property value via factor\");\r\n\r\n            // Need to remember that the script is a child of the manager\r\n            // which is a child of the paddock.\r\n            IModel paddock = Parent.Parent;\r\n            IFunction constant = paddock.Children[1] as IFunction;\r\n            if (constant.Value() != 1)\r\n            \tthrow new Exception(\"Failed to override model value via factor in field \" + paddock.Name);\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "IsWorking",
+                      "Value": "False"
+                    }
+                  ],
+                  "Name": "Manager",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "Field3",
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Core;\r\nusing Models.Functions;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    \t// An exception will be thrown if this is false.\r\n    \t// It is set to true by the factorial\r\n    \tpublic bool IsWorking { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (!IsWorking)\r\n            \tthrow new Exception(\"Failed to override property value via factor\");\r\n\r\n            // Need to remember that the script is a child of the manager\r\n            // which is a child of the paddock.\r\n            IModel paddock = Parent.Parent;\r\n            IFunction constant = paddock.Children[1] as IFunction;\r\n            if (constant.Value() != 1)\r\n            \tthrow new Exception(\"Failed to override model value via factor in field \" + paddock.Name);\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "IsWorking",
+                          "Value": "False"
+                        }
+                      ],
+                      "Name": "Manager",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "Field4",
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Core;\r\nusing Models.Functions;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    \t// An exception will be thrown if this is false.\r\n    \t// It is set to true by the factorial\r\n    \tpublic bool IsWorking { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (!IsWorking)\r\n            \tthrow new Exception(\"Failed to override property value via factor\");\r\n\r\n            // Need to remember that the script is a child of the manager\r\n            // which is a child of the paddock.\r\n            IModel paddock = Parent.Parent;\r\n            IFunction constant = paddock.Children[1] as IFunction;\r\n            if (constant.Value() != 1)\r\n            \tthrow new Exception(\"Failed to override model value via factor in field \" + paddock.Name);\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "IsWorking",
+                          "Value": "False"
+                        }
+                      ],
+                      "Name": "Manager",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

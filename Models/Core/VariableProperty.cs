@@ -1,18 +1,15 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Models.Soils;
+
 namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -47,33 +44,20 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
-            if (model == null || property == null)
+            if (property == null)
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-            
             this.Object = model;
             this.property = property;
-            if (arraySpecifier != null)
-            {
-                // Can be either a number or a range e.g. 1:3
-                int posColon = arraySpecifier.IndexOf(':');
-                if (posColon == -1)
-                {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
-                    this.upperArraySpecifier = this.lowerArraySpecifier;
-                }
-                else
-                {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
-                }
-            }
-            else
-            {
-                this.lowerArraySpecifier = 0;
-                this.upperArraySpecifier = 0;
-            }
+            this.lowerArraySpecifier = 0;
+            this.upperArraySpecifier = 0;
+
+            ProcessArraySpecifier(arraySpecifier);
+
+            // If the array specifier was specified and it was a zero then issue error
+            if (arraySpecifier != null && lowerArraySpecifier == 0)
+                throw new Exception("Array indexing in APSIM (report) is one based. Cannot have an index of zero. Variable called " + property.Name);
         }
 
         /// <summary>
@@ -81,10 +65,12 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
         /// <param name="elementPropertyName">The name of the property to call on each array element.</param>
-        public VariableProperty(object model, string elementPropertyName)
+        /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
+        public VariableProperty(object model, string elementPropertyName, string arraySpecifier = null)
         {
             this.Object = model;
             this.elementPropertyName = elementPropertyName;
+            ProcessArraySpecifier(arraySpecifier);
         }
 
         /// <summary>
@@ -95,12 +81,12 @@ namespace Models.Core
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
-                return this.property.Name; 
-            } 
+                return this.property.Name;
+            }
         }
 
         /// <summary>
@@ -116,15 +102,30 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    string cropName = (this.Object as ISoilCrop).Name;
+                    string cropName = (this.Object as SoilCrop).Name;
                     if (cropName.EndsWith("Soil"))
                         cropName = cropName.Replace("Soil", "");
                     return cropName + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets a tooltip for the property.
+        /// </summary>
+        public string Tooltip
+        {
+            get
+            {
+                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
+                if (attribute == null)
+                    return null;
+
+                return attribute.Tooltip;
             }
         }
 
@@ -158,7 +159,7 @@ namespace Models.Core
             {
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                PropertyInfo unitsInfo = this.Object?.GetType().GetProperty(this.property.Name + "Units");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
@@ -192,26 +193,28 @@ namespace Models.Core
         {
             get
             {
-                // Get units from property
-                string unitString = null;
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsAttribute != null)
+                if (property != null)
                 {
-                    unitString = unitsAttribute.ToString();
+                    // Get units from property
+                    string unitString = null;
+                    UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                    PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                    if (unitsAttribute != null)
+                    {
+                        unitString = unitsAttribute.ToString();
+                    }
+                    else if (unitsInfo != null)
+                    {
+                        object val = unitsInfo.GetValue(this.Object, null);
+                        if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
+                            unitString = GetEnumDescription(val as Enum);
+                        else
+                            unitString = val.ToString();
+                    }
+                    if (unitString != null)
+                        return "(" + unitString + ")";
                 }
-                else if (unitsInfo != null)
-                {
-                    object val = unitsInfo.GetValue(this.Object, null);
-                    if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
-                        unitString = GetEnumDescription(val as Enum);
-                    else
-                        unitString = val.ToString();
-                }
-                if (unitString != null)
-                    return "(" + unitString + ")";
-                else
-                    return null;
+                return null;
             }
         }
 
@@ -226,14 +229,14 @@ namespace Models.Core
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
             DescriptionAttribute[] attributes =
-                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].ToString();
             else
                 return value.ToString();
         }
-        
+
         /// <summary>
         /// Simple structure to hold both a name and an associated label
         /// </summary>
@@ -337,6 +340,14 @@ namespace Models.Core
         {
             get
             {
+                if (lowerArraySpecifier != 0 && lowerArraySpecifier == upperArraySpecifier)
+                {
+                    if (property.PropertyType.HasElementType)
+                        return property.PropertyType.GetElementType();
+                    if (property.PropertyType.IsGenericType)
+                        return property.PropertyType.GenericTypeArguments.First();
+                    // return typeof(object); // this corresponds to the non-generic type IEnumetable.
+                }
                 return this.property.PropertyType;
             }
         }
@@ -348,69 +359,115 @@ namespace Models.Core
         {
             get
             {
-                if (elementPropertyName != null)
-                    return ProcessPropertyOfArrayElement();
-
                 object obj = null;
-                try
-                {
+                if (elementPropertyName != null)
+                    obj = ProcessPropertyOfArrayElement();
+                else
                     obj = this.property.GetValue(this.Object, null);
-                }
-                catch (Exception err)
+                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
                 {
-                    throw err.InnerException;
-                }
-                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
-                {
-                    IList array = obj as IList;
-                    if (array.Count == 0)
-                        return null;
-
-                    // Get the type of the items in the array.
-                    Type elementType;
-                    if (array.GetType().HasElementType)
-                        elementType = array.GetType().GetElementType();
-                    else
+                    if (obj is IList array)
                     {
-                        Type[] genericArguments = array.GetType().GetGenericArguments();
-                        if (genericArguments.Length > 0)
-                            elementType = genericArguments[0];
+                        if (array.Count == 0)
+                            return null;
+
+                        // Get the type of the items in the array.
+                        Type elementType;
+                        if (array.GetType().HasElementType)
+                            elementType = array.GetType().GetElementType();
                         else
-                            throw new Exception("Unknown type of array");
-                    }
-
-                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
-                    Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
-                    {
-                        int index = i - this.lowerArraySpecifier;
-                        if (i < 1 || i > array.Count)
                         {
-                            throw new Exception("Array index out of bounds while getting variable: " + this.Name);
+                            Type[] genericArguments = array.GetType().GetGenericArguments();
+                            if (genericArguments.Length > 0)
+                                elementType = genericArguments[0];
+                            else
+                                throw new Exception("Unknown type of array");
                         }
 
-                        values.SetValue(array[i - 1], index);
-                    }
-                    if (values.Length == 1)
-                    {
-                        return values.GetValue(0);
-                    }
+                        int startIndex = lowerArraySpecifier;
+                        if (startIndex == -1)
+                            startIndex = 1;
 
-                    return values;
+                        int endIndex = upperArraySpecifier;
+                        if (endIndex == -1)
+                            endIndex = array.Count;
+
+                        int numElements = endIndex - startIndex + 1;
+                        Array values = Array.CreateInstance(elementType, numElements);
+                        for (int i = startIndex; i <= endIndex; i++)
+                        {
+                            int index = i - startIndex;
+                            if (i < 1 || i > array.Count)
+                                throw new Exception("Array index out of bounds while getting variable: " + this.Name);
+
+                            values.SetValue(array[i - 1], index);
+                        }
+                        if (values.Length == 1)
+                        {
+                            return values.GetValue(0);
+                        }
+
+                        return values;
+                    }
+                    else
+                    {
+                        int index = lowerArraySpecifier != 0 ? lowerArraySpecifier : upperArraySpecifier;
+                        throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
+                    }
                 }
+
 
                 return obj;
             }
 
             set
             {
-                if (value is string)
+                Type targetType = DataType;
+                if (this.lowerArraySpecifier != 0)
+                {
+                    object obj = property.GetValue(this.Object, null);
+                    for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
+                    {
+                        if (obj is IList array)
+                        {
+                            if (targetType.IsGenericType)
+                                targetType = targetType.GenericTypeArguments.First();
+                            object newValue = value;
+                            if (value is IList list)
+                            {
+                                if ((i - 1) < list.Count)
+                                    newValue = list[i - 1];
+                                else if (list.Count == 1)
+                                    newValue = list[0];
+                                else
+                                    throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
+                            }
+                            if (newValue is string str && targetType != typeof(string))
+                                newValue = ReflectionUtilities.StringToObject(targetType, str);
+                            else if (!(newValue is string) && targetType == typeof(string))
+                                newValue = ReflectionUtilities.ObjectToString(newValue);
+                            array[i - 1] = newValue; // this will modify obj as well
+                        }
+                    }
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, obj, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
+                }
+                else if (value is string)
                 {
                     this.SetFromString(value as string);
                 }
                 else
                 {
-                    this.property.SetValue(this.Object, value, null);
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, value, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
                 }
             }
         }
@@ -476,6 +533,10 @@ namespace Models.Core
             Type type = value.GetType();
             if (type == typeof(double))
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else if (value is Enum)
+                return GetEnumDescription(value as Enum);
+            else if (value is DateTime)
+                return ((DateTime)value).ToShortDateString();
             else
                 return value.ToString();
         }
@@ -506,7 +567,7 @@ namespace Models.Core
                     {
                         if (j > 0)
                         {
-                            stringValue += ",";
+                            stringValue += ", ";
                         }
 
                         Array arr2d = arr.GetValue(j) as Array;
@@ -536,7 +597,7 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return property.CanRead && property.CanWrite; } }
-    
+
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
@@ -561,9 +622,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    SoilCrop soilCrop = this.Object as SoilCrop;
                     if (soilCrop.Name.EndsWith("Soil"))
                         return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
                     return soilCrop.Name;
@@ -581,36 +642,26 @@ namespace Models.Core
         {
             get
             {
-                try
+                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
+                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
-                    DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                    bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                    if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
+                    double sum = 0.0;
+                    foreach (double doubleValue in this.Value as IEnumerable<double>)
                     {
-                        double sum = 0.0;
-                        foreach (double doubleValue in this.Value as IEnumerable<double>)
+                        if (doubleValue != MathUtilities.MissingValue)
                         {
-                            if (doubleValue != MathUtilities.MissingValue)
-                            {
-                                sum += doubleValue;
-                            }
+                            sum += doubleValue;
                         }
-
-                        return sum;
                     }
-                }
-                catch (Exception)
-                {
-                    return Double.NaN;
-                }
 
+                    return sum;
+                }
                 return double.NaN;
             }
         }
 
-        /// <summary>
         /// Gets the associated display type for the related property.
-        /// </summary>
         public override DisplayAttribute Display
         {
             get
@@ -632,9 +683,13 @@ namespace Models.Core
                 {
                     this.Value = MathUtilities.StringsToDoubles(stringValues);
                 }
+                else if (this.DataType == typeof(float[]))
+                {
+                    this.Value = MathUtilities.StringsToDoubles(stringValues).Cast<float>().ToArray();
+                }
                 else if (this.DataType == typeof(int[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToIntegers(stringValues);
                 }
                 else if (this.DataType == typeof(string[]))
                 {
@@ -651,6 +706,10 @@ namespace Models.Core
                 {
                     this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 }
+                else if (this.DataType == typeof(float)) // yuck!
+                {
+                    this.Value = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                }
                 else if (this.DataType == typeof(int))
                 {
                     this.Value = Convert.ToInt32(value, CultureInfo.InvariantCulture);
@@ -661,7 +720,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {
@@ -676,6 +735,101 @@ namespace Models.Core
                     this.Value = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
+        }
+
+        /// <summary>
+        /// Convert the specified enum to a list of strings.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string[] EnumToStrings(object obj)
+        {
+            List<string> items = new List<string>();
+            foreach (object e in obj.GetType().GetEnumValues())
+            {
+                Enum value = e as Enum;
+                if (value != null)
+                    items.Add(GetEnumDescription(value));
+                else
+                    items.Add(e.ToString());
+            }
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Parse the specified object to an enum. 
+        /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
+        /// </summary>
+        /// <param name="obj">Object to parse. Should probably be a string.</param>
+        /// <param name="t">Enum in which we will try to find a matching member.</param>
+        /// <returns>Enum member.</returns>
+        public static Enum ParseEnum(Type t, object obj)
+        {
+            FieldInfo[] fields = t.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                DescriptionAttribute description = field.GetCustomAttribute(typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null && description.ToString() == obj.ToString())
+                    return field.GetValue(null) as Enum;
+            }
+            return Enum.Parse(t, obj.ToString()) as Enum;
+        }
+
+        /// <summary>
+        /// Convert a string array specifier into integer lower and upper bounds.
+        /// </summary>
+        /// <param name="arraySpecifier">The array specifier.</param>
+        private void ProcessArraySpecifier(string arraySpecifier)
+        {
+            if (arraySpecifier != null)
+            {
+                // Can be either a number or a range e.g. 1:3
+                int posColon = arraySpecifier.IndexOf(':');
+                if (posColon == -1)
+                {
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
+                    this.upperArraySpecifier = this.lowerArraySpecifier;
+                }
+                else
+                {
+                    string start = arraySpecifier.Substring(0, posColon);
+                    if (!string.IsNullOrEmpty(start))
+                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
+                    else
+                        lowerArraySpecifier = -1;
+
+                    string end = arraySpecifier.Substring(posColon + 1);
+                    if (!string.IsNullOrEmpty(end))
+                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
+                    else
+                        upperArraySpecifier = -1;
+                }
+            }
+        }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return AutoDocumentation.GetSummary(property); } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
+
+        /// <summary>Get the full name of the property.</summary>
+        public string GetFullName()
+        {
+            if (lowerArraySpecifier != 0 && upperArraySpecifier != 0)
+                return $"{Name}[{lowerArraySpecifier}:{upperArraySpecifier}]";
+            else
+                return Name;
         }
     }
 }

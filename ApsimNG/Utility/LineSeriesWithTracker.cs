@@ -1,11 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LineSeriesWithTracker.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Utility
+﻿namespace Utility
 {
     using System;
+    using APSIM.Shared.Utilities;
     using OxyPlot;
     using OxyPlot.Series;
     using UserInterface.EventArguments;
@@ -16,9 +12,29 @@ namespace Utility
     public class LineSeriesWithTracker : LineSeries
     {
         /// <summary>
-        /// Invoked when the user hovers over a series point.
+        /// Name of the tooltip
         /// </summary>
-        public event EventHandler<HoverPointArgs> OnHoverOverPoint;
+        public string TooltipTitle { get; set; }
+
+        /// <summary>
+        /// Name of the variable behind the X data.
+        /// </summary>
+        public string XFieldName { get; set; }
+
+        /// <summary>
+        /// Name of the variable behind the Y data.
+        /// </summary>
+        public string YFieldName { get; set; }
+
+        /// <summary>
+        /// Type of the x variable
+        /// </summary>
+        public Type XType { get; set; }
+
+        /// <summary>
+        /// Type of the y variable
+        /// </summary>
+        public Type YType { get; set; }
 
         /// <summary>
         /// Tracker is calling to determine the nearest point.
@@ -30,21 +46,34 @@ namespace Utility
         {
             TrackerHitResult hitResult = base.GetNearestPoint(point, interpolate);
 
-            if (hitResult != null && OnHoverOverPoint != null)
+            if (hitResult != null)
             {
-                HoverPointArgs e = new HoverPointArgs();
-                if (Title == null)
-                    e.SeriesName = ToolTip;
-                else
-                    e.SeriesName = Title;
-                
-                e.X = hitResult.DataPoint.X;
-                e.Y = hitResult.DataPoint.Y;
-                OnHoverOverPoint.Invoke(this, e);
-                if (e.HoverText != null)
+                string xInput = "{2}";
+                string yInput = "{4}";
+
+                if (XType == typeof(double))
+                    xInput = MathUtilities.RoundSignificant(hitResult.DataPoint.X, 2).ToString();
+                else if (XType == typeof(DateTime))
                 {
-                    hitResult.Series.TrackerFormatString = e.HoverText + "\n{1}: {2}\n{3}: {4}";
+                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
+                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                        xInput = d.ToString("dd/MM/yyyy");
+                    else
+                        xInput = d.ToString();
                 }
+
+                if (YType == typeof(double))
+                    yInput = MathUtilities.RoundSignificant(hitResult.DataPoint.Y, 2).ToString();
+                else if (YType == typeof(DateTime))
+                {
+                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.Y);
+                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                        yInput = d.ToString("dd/MM/yyyy");
+                    else
+                        yInput = d.ToString();
+                }
+
+                hitResult.Series.TrackerFormatString = TooltipTitle + "\n" + XFieldName + ": " + xInput + "\n" + YFieldName + ": " + yInput;
             }
 
             return hitResult;

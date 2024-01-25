@@ -1,11 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ScopedModelAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// When applied to a class, denotes an instance of the class and all

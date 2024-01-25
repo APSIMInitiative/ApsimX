@@ -1,15 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InputPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using Utility;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    using System;
-    using Models;
-    using Models.Core;
-    using Views;
+    
 
     /// <summary>
     /// Attaches an Input model to an Input View.
@@ -24,7 +20,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The input view
         /// </summary>
-        private IInputView view;
+        private InputView view;
+
+        /// <summary>
+        /// The Explorer
+        /// </summary>
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// The Explorer
@@ -40,7 +41,12 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.input = model as Models.PostSimulationTools.Input;
-            this.view = view as IInputView;
+            this.view = view as InputView;
+
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+
             this.explorerPresenter = explorerPresenter;
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
@@ -63,15 +69,23 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">The params</param>
-        private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
+        private void OnBrowseButtonClicked(object sender, EventArgs e)
         {
             try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.input, "FullFileName", e.FileName));
+                IFileDialog dialog = new FileDialog()
+                {
+                    Prompt = "Choose files",
+                    Action = FileDialog.FileActionType.Open,
+                    FileType = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                };
+                string[] files = dialog.GetFiles();
+                if (files != null && files.Length > 0)
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(input, "FullFileNames", files));
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowError(err);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -81,16 +95,8 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model object</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.FileName = this.input.FullFileName;
-            this.view.GridView.DataSource = this.input.GetTable();
-            if (this.view.GridView.DataSource == null)
-            {
-                this.view.WarningText = this.input.ErrorMessage;
-            }
-            else
-            {
-                this.view.WarningText = string.Empty;
-            }
+            if (input.FullFileNames != null)
+                view.FileName = string.Join(", ", input.FullFileNames);
         }
     }
 }

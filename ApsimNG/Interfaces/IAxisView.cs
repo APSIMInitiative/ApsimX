@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IAxisView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using System;
 
@@ -37,6 +31,16 @@ namespace UserInterface.Interfaces
         /// Invoked when the user has changed the interval field
         /// </summary>
         event EventHandler IntervalChanged;
+        
+        /// <summary>
+        /// Invoked when the user has changed the crosses at zero field
+        /// </summary>
+        event EventHandler CrossesAtZeroChanged;
+
+        /// <summary>
+        /// Invoked when the user has changed the single line label field
+        /// </summary>
+        public event EventHandler LabelOnOneLineChanged;
 
         /// <summary>
         /// Gets or sets the title.
@@ -51,16 +55,47 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
-        double Minimum { get; set; }
+        double Minimum { get; }
 
         /// <summary>
         /// Gets or sets the maximum axis scale. double.Nan for auto scale
         /// </summary>
-        double Maximum { get; set; }
+        double Maximum { get; }
 
         /// <summary>
         /// Gets or sets the axis scale interval. double.Nan for auto scale
         /// </summary>
-        double Interval { get; set; }
+        double Interval { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        bool CrossesAtZero { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        bool LabelOnOneLine { get; set; }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        void SetMinimum(double value, bool isDate);
+
+        /// <summary>
+        /// Sets the text in the minimum textbox based on a DateTime stored as a double.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        void SetMaximum(double value, bool isDate);
+
+        /// <summary>
+        /// Sets the text in the interval textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime interval.</param>
+        void SetInterval(double value, bool isDate);
     }
 }

@@ -1,31 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StdUnits
 {
-    /// <summary>
-    /// Split the long integer into three       
-    /// parts: day and month get a byte each,  
-    /// year gets two. Note that this arrangement allows relational                   
-    /// operators to be used on date values
-    /// </summary>
-    public struct DMY
-    {
-        //TODO: may need to change this if overloaded operators are required
-        /// <summary>
-        /// Day
-        /// </summary>
-        public int D;
-        /// <summary>
-        /// Month
-        /// </summary>
-        public int M;
-        /// <summary>
-        /// Year
-        /// </summary>
-        public int Y;
-    }
 
     /// <summary>
     /// GrazPlan date utilities
@@ -41,336 +17,385 @@ namespace StdUnits
         /// Last day of each month   [1..12]
         /// </summary>
         public static int[] LastDay = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
         /// <summary>
         /// Short text name of the month
         /// </summary>
-        public static string[] MonthText = { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };    //[1..12]
+        public static string[] MonthText = { string.Empty, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };    // [1..12]
 
         /// <summary>
         /// Get the date value for specified dmy
         /// </summary>
-        /// <param name="Day">Day number</param>
-        /// <param name="Month">Month number</param>
-        /// <param name="Year">Year number</param>
+        /// <param name="day">Day number</param>
+        /// <param name="month">Month number</param>
+        /// <param name="year">Year number</param>
         /// <returns>The date value integer</returns>
-        public static int DateVal(int Day, int Month, int Year)
+        public static int DateVal(int day, int month, int year)
         {
-            return Day + Month * 0x100 + Year * 0x10000;
+            return day + month * 0x100 + year * 0x10000;
         }
 
         /// <summary>
         /// Get the day of month from the date value
         /// </summary>
-        /// <param name="Dt">Date value</param>
+        /// <param name="dateVal">Date value</param>
         /// <returns>Day of month</returns>
-        public static int DayOf(int Dt)
+        public static int DayOf(int dateVal)
         {
-            return (Dt & 0xFF);
+            return (dateVal & 0xFF);
         }
+
         /// <summary>
         /// Get the month of the year from the date value
         /// </summary>
-        /// <param name="Dt">Date value</param>
+        /// <param name="dateVal">Date value</param>
         /// <returns>Month of year</returns>
-        public static int MonthOf(int Dt)
+        public static int MonthOf(int dateVal)
         {
-            return ((Dt >> 8) & 0xFF);
+            return ((dateVal >> 8) & 0xFF);
         }
+
         /// <summary>
         /// Get the year number from the date value
         /// </summary>
-        /// <param name="Dt">The date value</param>
+        /// <param name="dateVal">The date value</param>
         /// <returns>Year number</returns>
-        public static int YearOf(int Dt)
+        public static int YearOf(int dateVal)
         {
-            return ((Dt >> 16) & 0xFFFF);
+            return ((dateVal >> 16) & 0xFFFF);
         }
+
         /// <summary>
         /// Test that this is a real date
         /// </summary>
-        /// <param name="Dt">Date value</param>
+        /// <param name="dateVal">Date value</param>
         /// <returns>True if this is a valid date</returns>
-        public static bool DateValid(int Dt)
+        public static bool DateValid(int dateVal)
         {
-            DMY aDate;
+            DMY dateInYear;
 
-            aDate.D = DayOf(Dt);
-            aDate.M = MonthOf(Dt);
-            aDate.Y = YearOf(Dt);
-            if (aDate.M == 0)                                                         // 0-0-Y date                               
-                return ((aDate.D == 0) && (aDate.Y != 0));
-            else if (aDate.D == 0)                                                     // 0-M-Y or 0-M-0 date                      
-                return ((aDate.M >= 1) && (aDate.M <= 12));
+            dateInYear.D = DayOf(dateVal);
+            dateInYear.M = MonthOf(dateVal);
+            dateInYear.Y = YearOf(dateVal);
+            if (dateInYear.M == 0)                                                         // 0-0-Y date                               
+                return ((dateInYear.D == 0) && (dateInYear.Y != 0));
+            else if (dateInYear.D == 0)                                                     // 0-M-Y or 0-M-0 date                      
+                return ((dateInYear.M >= 1) && (dateInYear.M <= 12));
             else                                                                    // D-M-Y or D-M-0 date                      
-                return (((aDate.M >= 1) && (aDate.M <= 12))
-                          && ((aDate.D <= LastDay[aDate.M])
-                                || ((aDate.D == 29) && (aDate.M == 2) && LeapYear(aDate.Y))));       // N.B. LeapYear(0)=TRUE
-
+                return (((dateInYear.M >= 1) && (dateInYear.M <= 12))
+                          && ((dateInYear.D <= LastDay[dateInYear.M])
+                                || ((dateInYear.D == 29) && (dateInYear.M == 2) && LeapYear(dateInYear.Y))));       // N.B. LeapYear(0)=TRUE
         }
 
         /// <summary>
         /// Is a year a leap year?  N.B. returns TRUE for Y=0                         }
         /// </summary>
-        /// <param name="Y"></param>
-        /// <returns></returns>
-        public static bool LeapYear(int Y)
+        /// <param name="yr">Year number</param>
+        /// <returns>True if leap year</returns>
+        public static bool LeapYear(int yr)
         {
-            return (((Y % 4 == 0) && (Y % 100 != 0)) || (Y % 400 == 0));
+            return (((yr % 4 == 0) && (yr % 100 != 0)) || (yr % 400 == 0));
         }
 
         /// <summary>
         /// Format a number with or without zeros
         /// </summary>
-        /// <param name="N"></param>
-        /// <param name="Len"></param>
-        /// <param name="ZeroFill"></param>
+        /// <param name="number">The input number</param>
+        /// <param name="len">Picture length</param>
+        /// <param name="zeroFill">Fill with zeros?</param>
         /// <returns>Formatted number</returns>
-        public static string Num2Str(int N, int Len, bool ZeroFill)
+        public static string Num2Str(int number, int len, bool zeroFill)
         {
-            if (ZeroFill)
-                return String.Format("{0, 0" + Len.ToString() + ":d" + Len.ToString() + "}", N);
+            if (zeroFill)
+                return string.Format("{0, 0" + len.ToString() + ":d" + len.ToString() + "}", number);
             else
-                return String.Format("{0, " + Len.ToString() + "}", N);
+                return string.Format("{0, " + len.ToString() + "}", number);
         }
 
         /// <summary>
         /// Format a date value
         /// </summary>
-        /// <param name="Dt">Date value</param>
-        /// <param name="Fmt">Format string YYYY, yy, YY, mmm, MM, mm, M, DD, dd, D</param>
+        /// <param name="dateVal">Date value</param>
+        /// <param name="format">Format string YYYY, yy, YY, mmm, MM, mm, M, DD, dd, D</param>
         /// <returns>Formatted date string</returns>
-        public static string DateStrFmt(int Dt, string Fmt)
+        public static string DateStrFmt(int dateVal, string format)
         {
             // Longer pictures must precede shorter     
-            string[] Pictures = { "YYYY", "yy", "YY", "mmm", "MM", "mm", "M", "DD", "dd", "D" };
+            string[] pictures = { "YYYY", "yy", "YY", "mmm", "MM", "mm", "M", "DD", "dd", "D" };
             const int NOPICTURE = 10;
 
-            string St;
-            int Pic;
-            DMY aDate;
+            string dateStr;
+            int picIdx;
+            DMY dateInYear;
 
-            aDate.D = DayOf(Dt);
-            aDate.M = MonthOf(Dt);
-            aDate.Y = YearOf(Dt);
+            dateInYear.D = DayOf(dateVal);
+            dateInYear.M = MonthOf(dateVal);
+            dateInYear.Y = YearOf(dateVal);
 
-            St = "";
-            while (Fmt != "")                                                       // Work through the formatting string       
+            dateStr = string.Empty;
+
+            // Work through the formatting string
+            while (format != string.Empty)
             {
-                Pic = 0;                                                               // Search for a string picture              
-                while ((Pic < NOPICTURE) && (Fmt.IndexOf(Pictures[Pic]) != 0))
-                    Pic++;
+                picIdx = 0;                                                             // Search for a string picture              
+                while ((picIdx < NOPICTURE) && (format.IndexOf(pictures[picIdx]) != 0))
+                    picIdx++;
 
-                switch (Pic)
+                switch (picIdx)
                 {
-                    case 0: St = St + Num2Str(aDate.Y, 4, false);                      // YYYY                                     
+                    case 0:
+                        dateStr = dateStr + Num2Str(dateInYear.Y, 4, false);        // YYYY                                     
                         break;
-                    case 1: if ((aDate.Y >= 1900) && (aDate.Y <= 1999))                // yy                                      
-                            St = St + Num2Str(aDate.Y % 100, 2, true);
+                    case 1:
+                        if ((dateInYear.Y >= 1900) && (dateInYear.Y <= 1999))       // yy                                      
+                            dateStr = dateStr + Num2Str(dateInYear.Y % 100, 2, true);
                         else
-                            St = St + Num2Str(aDate.Y, 4, true);
+                            dateStr = dateStr + Num2Str(dateInYear.Y, 4, true);
                         break;
-                    case 2: if (aDate.Y % 100 == 0)                                  // YY                                       
-                            St = St + "00";
+                    case 2:
+                        if (dateInYear.Y % 100 == 0)                                // YY                                       
+                            dateStr = dateStr + "00";
                         else
-                            St = St + Num2Str(aDate.Y % 100, 2, true);
+                            dateStr = dateStr + Num2Str(dateInYear.Y % 100, 2, true);
                         break;
-                    case 3: if ((aDate.M >= 1) && (aDate.M <= 12))                    // mmm                                      
-                            St = St + MonthText[aDate.M];
+                    case 3:
+                        if ((dateInYear.M >= 1) && (dateInYear.M <= 12))            // mmm                                      
+                            dateStr = dateStr + MonthText[dateInYear.M];
                         break;
-                    case 4: St = St + Num2Str(aDate.M, 2, true);                      // MM                                       
+                    case 4:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 2, true);         // MM                                       
                         break;
-                    case 5: St = St + Num2Str(aDate.M, 2, false);                      // mm                                       
+                    case 5:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 2, false);        // mm                                       
                         break;
-                    case 6: St = St + Num2Str(aDate.M, 0, false);                      // M                                        
+                    case 6:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 0, false);        // M                                        
                         break;
-                    case 7: St = St + Num2Str(aDate.D, 2, true);                      // DD                                       
+                    case 7:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 2, true);         // DD                                       
                         break;
-                    case 8: St = St + Num2Str(aDate.D, 2, false);                      // dd                                       
+                    case 8:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 2, false);        // dd                                       
                         break;
-                    case 9: St = St + Num2Str(aDate.D, 0, false);                      // D                                        
+                    case 9:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 0, false);        // D                                        
                         break;
-                    case NOPICTURE: St = St + Fmt[0];                                      // Literal text                             
+                    case NOPICTURE:
+                        dateStr = dateStr + format[0];                      // Literal text                             
                         break;
                 }
 
-                if (Pic == NOPICTURE)                                                // Delete the part of Fmt we have just used 
-                    Fmt = Fmt.Remove(0, 1); //Delete( Fmt, 1, 1 )
+                if (picIdx == NOPICTURE)                                                // Delete the part of Fmt we have just used 
+                    format = format.Remove(0, 1);                                       // Delete( Fmt, 1, 1 )
                 else
-                    Fmt = Fmt.Remove(0, Pictures[Pic].Length); //Delete( Fmt, 1, Length(Pictures[Pic]) ); //TODO: check this
+                    format = format.Remove(0, pictures[picIdx].Length);                 // Delete( Fmt, 1, Length(Pictures[Pic]) ); //TODO: check this
             }
-            return St;
+            return dateStr;
         }
 
         /// <summary>
         /// Get the length of the month in days
         /// </summary>
-        /// <param name="M">Month number</param>
-        /// <param name="Y">Year number</param>
+        /// <param name="month">Month number</param>
+        /// <param name="yr">Year number</param>
         /// <returns>Days in the month</returns>
-        static private int MonthLength(int M, int Y)
+        private static int MonthLength(int month, int yr)
         {
-            if (M == 0)
+            if (month == 0)
                 return 31;
-            else if ((M == 2) && LeapYear(Y))
+            else if ((month == 2) && LeapYear(yr))
                 return 29;
             else
-                return LastDay[M];
+                return LastDay[month];
         }
 
         /// <summary>
         ///  Shift a date by a given number of months                              
         /// </summary>
-        /// <param name="aDate">Original date value</param>
-        /// <param name="Months">Months to increment by</param>
-        static private void MonthShift(ref DMY aDate, int Months)
+        /// <param name="dateInYear">Original date value</param>
+        /// <param name="months">Months to increment by</param>
+        private static void MonthShift(ref DMY dateInYear, int months)
         {
-            int TotalMonths;
+            int totalMonths;
 
-            if ((aDate.Y != 0) && (aDate.M != 0))
+            if ((dateInYear.Y != 0) && (dateInYear.M != 0))
             {
-                TotalMonths = 12 * aDate.Y + aDate.M + Months - 13;                // Months from 1 Jan 0001 
-                aDate.Y = 1 + TotalMonths / 12;
-                aDate.M = 1 + TotalMonths % 12;
+                totalMonths = 12 * dateInYear.Y + dateInYear.M + months - 13;                // Months from 1 Jan 0001 
+                dateInYear.Y = 1 + totalMonths / 12;
+                dateInYear.M = 1 + totalMonths % 12;
             }
-            else if (aDate.Y != 0)
-                aDate.Y += Months / 12;
-            else if (aDate.M != 0)
-                aDate.M = 1 + (aDate.M + Months - 12 * (Months / 12) + 11) % 12;
+            else if (dateInYear.Y != 0)
+                dateInYear.Y += months / 12;
+            else if (dateInYear.M != 0)
+                dateInYear.M = 1 + (dateInYear.M + months - 12 * (months / 12) + 11) % 12;
         }
 
         /// <summary>
         /// Change a date by a given number of days, months and/or years, forward or back.                                                                     
         /// </summary>
-        /// <param name="Dt">Starting date value</param>
-        /// <param name="Sh_D">Number of days</param>
-        /// <param name="Sh_M"></param>
-        /// <param name="Sh_Y"></param>
+        /// <param name="dateVal">Starting date value</param>
+        /// <param name="shiftDays">Number of days</param>
+        /// <param name="shiftMonths">Number of months</param>
+        /// <param name="shiftYears">Number of years</param>
         /// <returns>Date moved</returns>
-        static public int DateShift(int Dt, int Sh_D, int Sh_M, int Sh_Y)
+        public static int DateShift(int dateVal, int shiftDays, int shiftMonths, int shiftYears)
         {
-            int TempDay;
-            DMY aDate;
+            int tempDay;
+            DMY dateInYear;
 
-            aDate.D = DayOf(Dt);
-            aDate.M = MonthOf(Dt);
-            aDate.Y = YearOf(Dt);
+            dateInYear.D = DayOf(dateVal);
+            dateInYear.M = MonthOf(dateVal);
+            dateInYear.Y = YearOf(dateVal);
 
-            if (aDate.Y != 0)                                                     // Increment the number of years if Dt is a 
-                aDate.Y += Sh_Y;                                                  //   historical date (Y <> 0)               
+            // Increment the number of years if dateInYear is a historical date (Y <> 0)               
+            if (dateInYear.Y != 0)
+                dateInYear.Y += shiftYears;
 
-            if (aDate.M != 0)                                                     // Shift the months                         
+            if (dateInYear.M != 0)
             {
-                MonthShift(ref aDate, Sh_M);
-                aDate.D = Math.Min(aDate.D, MonthLength(aDate.M, aDate.Y));        // If we move from, say 31 Aug to 31 Sep,   
-            }                                                                      //   go back to the end of the month       
+                // Shift the months
+                MonthShift(ref dateInYear, shiftMonths);
+                dateInYear.D = Math.Min(dateInYear.D, MonthLength(dateInYear.M, dateInYear.Y));     // If we move from, say 31 Aug to 31 Sep,   
+            }                                                                           // go back to the end of the month       
 
-            if (aDate.D != 0)
+            if (dateInYear.D != 0)
             {
-                TempDay = aDate.D + Sh_D;                                              // Use temporary storage for the day so     
-                //   as to avoid overflows                 
-                while (TempDay > MonthLength(aDate.M, aDate.Y))
+                tempDay = dateInYear.D + shiftDays;                                     // Use temporary storage for the day so     
+                                                                                        // as to avoid overflows                 
+                while (tempDay > MonthLength(dateInYear.M, dateInYear.Y))
                 {
-                    TempDay -= MonthLength(aDate.M, aDate.Y);
-                    MonthShift(ref aDate, 1);
+                    tempDay -= MonthLength(dateInYear.M, dateInYear.Y);
+                    MonthShift(ref dateInYear, 1);
                 }
-                while (TempDay < 1)
+                while (tempDay < 1)
                 {
-                    TempDay += MonthLength(aDate.M - 1, aDate.Y);
-                    MonthShift(ref aDate, -1);
+                    tempDay += MonthLength(dateInYear.M - 1, dateInYear.Y);
+                    MonthShift(ref dateInYear, -1);
                 }
 
-                aDate.D = TempDay;                                                     // Return the day value to DMY(Dt)          
+                dateInYear.D = tempDay;                                                 // Return the day value to DMY(Dt)          
             } // _ IF (D <> 0) _
 
-            return DateVal(aDate.D, aDate.M, aDate.Y);
+            return DateVal(dateInYear.D, dateInYear.M, dateInYear.Y);
         }
 
-        //TODO: test this function
+        // TODO: test this function
+
         /// <summary>
         ///  Interval between two dates.  Note that Interval(D,D) = 0.                 
         /// </summary>
-        /// <param name="D1"></param>
-        /// <param name="D2"></param>
-        /// <returns></returns>
-        static public int Interval(int D1, int D2)
+        /// <param name="date1">First date</param>
+        /// <param name="date2">End date</param>
+        /// <returns>The interval in days</returns>
+        public static int Interval(int date1, int date2)
         {
-            int Sum;
-            int I;
-            DMY aDate, bDate;
+            int sum;
+            int i;
+            DMY dateInYear1, dateInYear2;
 
-            aDate.D = DayOf(D1);
-            aDate.M = MonthOf(D1);
-            aDate.Y = YearOf(D1);
-            bDate.D = DayOf(D2);
-            bDate.M = MonthOf(D2);
-            bDate.Y = YearOf(D2);
+            dateInYear1.D = DayOf(date1);
+            dateInYear1.M = MonthOf(date1);
+            dateInYear1.Y = YearOf(date1);
+            dateInYear2.D = DayOf(date2);
+            dateInYear2.M = MonthOf(date2);
+            dateInYear2.Y = YearOf(date2);
             int result;
 
-            if (D1 > D2)                                                        // If the first date is after the second, 
-                result = -Interval(D2, D1);                                     // return a negative value                
-            else if ((D1 == 0) || (D2 == 0))                                    //if any of the dates are zero
-                result = 0;                                                     //interval is always zero
+            // If the first date is after the second
+            if (date1 > date2)
+                result = -Interval(date2, date1);                                   // return a negative value                
+            else if ((date1 == 0) || (date2 == 0))
+                result = 0;                                                         // if any of the dates are zero, interval is always zero
             else
             {
-                if (aDate.M == 0)                                               //if the month is zero 
+                if (dateInYear1.M == 0)
                 {
-                    aDate.D = 1;                                                //make the date 1 Jan
-                    aDate.M = 1;
+                    // if the month is zero make the date 1 Jan
+                    dateInYear1.D = 1;
+                    dateInYear1.M = 1;
                 }
-                if (bDate.M == 0)                                               //if the month is zero 
+                if (dateInYear2.M == 0)
                 {
-                    bDate.D = 1;                                                //make the date 1 Jan
-                    bDate.M = 1;
+                    // if the month is zero make the date 1 Jan
+                    dateInYear2.D = 1;
+                    dateInYear2.M = 1;
                 }
 
-                Sum = 365 - CumulDays[aDate.M] - aDate.D;                       // Days to the end of the year of D1 
+                sum = 365 - CumulDays[dateInYear1.M] - dateInYear1.D;               // Days to the end of the year of D1 
 
-                if ((LeapYear(aDate.Y)) &&                                      // Add one if Feb 29 falls in the period 
-                   ((aDate.M == 1) ||                                           // from D1 to the end of the year        
-                    ((aDate.M == 2) && (aDate.D <= 29))))
-                    Sum++;
+                // Add one if Feb 29 falls in the period from D1 to the end of the year
+                if ((LeapYear(dateInYear1.Y)) &&
+                   ((dateInYear1.M == 1) ||
+                    ((dateInYear1.M == 2) && (dateInYear1.D <= 29))))
+                    sum++;
 
-                if (aDate.Y == bDate.Y)                                         // Now move to the end of the year       
-                {                                                               // before that containing D2.            
-                    Sum = Sum - 365;                                            // Same year; subtract the number of     
-                    if (LeapYear(bDate.Y)) Sum--;                               // days in the year                      
+                // Now move to the end of the year before that containing D2.
+                if (dateInYear1.Y == dateInYear2.Y)
+                {
+                    sum = sum - 365;                                                // Same year; subtract the number of     
+                    if (LeapYear(dateInYear2.Y)) sum--;                             // days in the year                      
                 }
                 else
-                    for (I = aDate.Y + 1; I <= bDate.Y - 1; I++)                // Otherwise work through the            
-                        if (LeapYear(I))                                        // intervening years, adding the number  
-                            Sum += 366;                                         // of days in each                       
+                    //// Otherwise work through the intervening years, adding the number of days in each
+                    for (i = dateInYear1.Y + 1; i <= dateInYear2.Y - 1; i++)
+                        if (LeapYear(i))
+                            sum += 366;
                         else
-                            Sum += 365;
+                            sum += 365;
 
-                Sum = Sum + CumulDays[bDate.M] + bDate.D;                       // add number of days from the start     
-                // of the year of D2                     }
-                if (LeapYear(bDate.Y) && (bDate.M >= 3))
-                    Sum++;
-                result = Sum;
+                sum = sum + CumulDays[dateInYear2.M] + dateInYear2.D;               // add number of days from the start     
+                                                                                    // of the year of D2                     
+                if (LeapYear(dateInYear2.Y) && (dateInYear2.M >= 3))
+                    sum++;
+                result = sum;
             }
             return result;
         }
 
         /// <summary>
         /// Day of year function.                                                     
-        ///   Dt     Date to convert to day-of-year                                   
-        ///   UseYr  If TRUE, Feb 29 is counted if YearOf(D) is zero or a leap year.  
-        ///          If FALSE, Feb 29 is counted regardless of the year.              
         /// </summary>
-        /// <param name="Dt"></param>
-        /// <param name="UseYr"></param>
-        /// <returns></returns>
-        static public int DOY(int Dt, bool UseYr)
+        /// <param name="dateVal">Date to convert to day-of-year</param>
+        /// <param name="useYr">If TRUE, Feb 29 is counted if YearOf(D) is zero or a leap year.  
+        ///          If FALSE, Feb 29 is counted regardless of the year.</param>
+        /// <returns>Day of year</returns>
+        public static int DOY(int dateVal, bool useYr)
         {
-            DMY aDate;
+            DMY dateInYear;
 
-            aDate.D = DayOf(Dt);
-            aDate.M = MonthOf(Dt);
-            aDate.Y = YearOf(Dt);
-            if ((aDate.M <= 2) || (UseYr && !LeapYear(aDate.Y)))
-                return CumulDays[aDate.M] + aDate.D;
+            dateInYear.D = DayOf(dateVal);
+            dateInYear.M = MonthOf(dateVal);
+            dateInYear.Y = YearOf(dateVal);
+            if ((dateInYear.M <= 2) || (useYr && !LeapYear(dateInYear.Y)))
+                return CumulDays[dateInYear.M] + dateInYear.D;
             else
-                return CumulDays[aDate.M] + 1 + aDate.D;
+                return CumulDays[dateInYear.M] + 1 + dateInYear.D;
         }
+    }
+
+    /// <summary>
+    /// Split the long integer into three       
+    /// parts: day and month get a byte each,  
+    /// year gets two. Note that this arrangement allows relational                   
+    /// operators to be used on date values
+    /// </summary>
+    public struct DMY
+    {
+        // TODO: may need to change this if overloaded operators are required
+
+        /// <summary>
+        /// Day value
+        /// </summary>
+        public int D;
+
+        /// <summary>
+        /// Month value
+        /// </summary>
+        public int M;
+
+        /// <summary>
+        /// Year value
+        /// </summary>
+        public int Y;
     }
 }

@@ -4,46 +4,24 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    interface IInputView
+
+    public class InputView : ViewBase
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
         /// </summary>
-        event EventHandler<OpenDialogArgs> BrowseButtonClicked;
-
-        /// <summary>
-        /// Property to provide access to the filename label.
-        /// </summary>
-        string FileName { get; set; }
-
-        /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        string WarningText { get; set; }
-        
-        /// <summary>
-        /// Property to provide access to the grid.
-        /// </summary>
-        IGridView GridView { get; }
-    }
-
-    public class InputView : ViewBase, Views.IInputView
-    {
-        /// <summary>
-        /// Invoked when a browse button is clicked.
-        /// </summary>
-        public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
+        public event EventHandler BrowseButtonClicked;
 
         private VBox vbox1 = null;
         private Button button1 = null;
         private Label label1 = null;
-        private Label label2 = null;
-        private GridView Grid;
+
+        private ContainerView grid;
 
         /// <summary>
         /// Property to provide access to the grid.
         /// </summary>
-        public IGridView GridView { get { return Grid; } }
+        public ContainerView Grid { get { return grid; } }
 
         /// <summary>
         /// Constructor
@@ -54,23 +32,28 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
-            label2 = (Label)builder.GetObject("label2");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
-            Grid = new GridView(this);
-            vbox1.PackStart(Grid.MainWidget, true, true, 0);
+            grid = new ContainerView(owner);
+            vbox1.PackStart(grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
-            label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            button1.Clicked -= OnBrowseButtonClick;
-            Grid.MainWidget.Destroy();
-            Grid = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                button1.Clicked -= OnBrowseButtonClick;
+                grid.Dispose();
+                grid = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -90,44 +73,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        public string WarningText
-        {
-            get
-            {
-                return label2.Text;
-            }
-            set
-            {
-                label2.Text = value;
-                label2.Visible = !string.IsNullOrWhiteSpace(value);
-            }
-        }
-
-        /// <summary>
         /// Browse button was clicked - send event to presenter.
         /// </summary>
         private void OnBrowseButtonClick(object sender, EventArgs e)
         {
-            if (BrowseButtonClicked != null)
+            try
             {
-                string fileName = AskUserForFileName("Select a file to open", "", FileChooserAction.Open, FileName);
-                if (!String.IsNullOrEmpty(fileName))
+                if (BrowseButtonClicked != null)
                 {
-                    OpenDialogArgs args = new OpenDialogArgs();
-                    args.FileName = fileName;
-                    BrowseButtonClicked.Invoke(this, args);
+                    BrowseButtonClicked.Invoke(this, EventArgs.Empty);
                 }
             }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-    }
-
-    /// <summary>
-    /// A class for holding info about a begin drag event.
-    /// </summary>
-    public class OpenDialogArgs : EventArgs
-    {
-        public string FileName;
     }
 }

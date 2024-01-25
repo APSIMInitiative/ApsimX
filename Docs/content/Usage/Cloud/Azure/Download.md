@@ -33,11 +33,7 @@ The raw result files will be saved to the output directory if and only if this i
 
 The result files will be combined into a single CSV file if and only if this is checked.
 
-4. Download Results Asynchronously
-
-If this is checked, the download will occur in a separate thread. If it is not checked, the results will be downloaded in the main UI thread, and as a result the UI will be frozen for the duration of the download.
-
-5. Output directory
+4. Output directory
 
 This option allows the user to select a directory to download the results to. A subdirectory will be created here called %JobName%_Results, and the results will be saved to this subdirectory.
 

@@ -1,11 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DescriptionAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies that the related field/property/link should not be documented.
@@ -13,5 +9,5 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class DoNotDocumentAttribute : System.Attribute
     {
-    } 
+    }
 }

@@ -1,0 +1,2373 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 171,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Sugarcane, Models",
+      "maxt_lb": 0.0,
+      "LAI": 0.0,
+      "WaterDemand": 0.0,
+      "crop_type": "Sugarcane",
+      "tt_emerg_to_begcane_ub": 2000.0,
+      "tt_begcane_to_flowering_ub": 10000.0,
+      "tt_flowering_to_crop_end_ub": 5000.0,
+      "n_uptake_option": 1,
+      "NO3_diffn_const": 2.0,
+      "n_supply_preference": "active",
+      "kno3": 0.05,
+      "no3ppm_min": 0.0,
+      "knh4": 0.05,
+      "nh4ppm_min": 0.0,
+      "total_n_uptake_max": 0.6,
+      "ll_ub": 1000.0,
+      "kl_ub": 1.0,
+      "minsw": 1E-05,
+      "latitude_ub": 90.0,
+      "latitude_lb": -90.0,
+      "maxt_ub": 55.0,
+      "mint_ub": 40.0,
+      "mint_lb": -10.0,
+      "radn_ub": 50.0,
+      "radn_lb": 1.0,
+      "dlayer_ub": 1000.0,
+      "dlayer_lb": 0.0,
+      "dul_dep_ub": 1000.0,
+      "dul_dep_lb": 0.0,
+      "sw_dep_ub": 1000.0,
+      "sw_dep_lb": 0.0,
+      "NO3_ub": 10000.0,
+      "NO3_lb": 0.0,
+      "NO3_min_ub": 10000.0,
+      "NO3_min_lb": 0.0,
+      "NH4_ub": 10000.0,
+      "NH4_lb": 0.0,
+      "NH4_min_ub": 10000.0,
+      "NH4_min_lb": 0.0,
+      "plant": {
+        "$type": "CropConstants, Models",
+        "stage_names": [
+          "sowing",
+          "sprouting",
+          "emergence",
+          "begin_cane",
+          "flowering",
+          "end_crop"
+        ],
+        "stage_code_list": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "rue": [
+          0.0,
+          0.0,
+          1.8,
+          1.8,
+          1.8,
+          0.0
+        ],
+        "root_depth_rate": [
+          0.0,
+          0.0,
+          10.0,
+          15.0,
+          15.0,
+          15.0
+        ],
+        "ratio_root_shoot": [
+          0.0,
+          0.0,
+          0.2,
+          0.15,
+          0.1,
+          0.0
+        ],
+        "transp_eff_cf": [
+          0.008,
+          0.008,
+          0.008,
+          0.008,
+          0.008,
+          0.008
+        ],
+        "n_fix_rate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "extinction_coef": 0.38,
+        "extinction_coef_dead": 0.01,
+        "leaf_no_crit": 99.0,
+        "tt_emerg_limit": 800.0,
+        "days_germ_limit": 40.0,
+        "swdf_pheno_limit": 500.0,
+        "swdf_photo_limit": 500.0,
+        "swdf_photo_rate": 0.0,
+        "initial_root_depth": 150.0,
+        "specific_root_length": 18000.0,
+        "x_plant_rld": [
+          0.0,
+          0.1
+        ],
+        "y_rel_root_rate": [
+          1.0,
+          1.0
+        ],
+        "root_die_back_fr": 0.17,
+        "initial_tpla": 1000.0,
+        "sla_lfno": [
+          6.0,
+          25.0
+        ],
+        "sla_max": [
+          11500.0,
+          11500.0
+        ],
+        "sla_min": [
+          9000.0,
+          8500.0
+        ],
+        "x_stem_wt": [
+          0.0,
+          200.0
+        ],
+        "y_height": [
+          0.0,
+          6000.0
+        ],
+        "svp_fract": 0.75,
+        "eo_crop_factor_default": 100.0,
+        "pesw_germ": 0.05,
+        "fasw_emerg": [
+          0.0,
+          0.7
+        ],
+        "rel_emerg_rate": [
+          0.3,
+          1.0
+        ],
+        "leaf_no_at_emerg": 1.0,
+        "shoot_lag": 250.0,
+        "shoot_rate": 0.8,
+        "x_node_no_app": [
+          1.0,
+          20.0,
+          30.0,
+          40.0
+        ],
+        "y_node_app_rate": [
+          80.0,
+          105.0,
+          125.0,
+          150.0
+        ],
+        "x_node_no_leaf": [
+          1.0,
+          20.0,
+          30.0,
+          40.0
+        ],
+        "y_leaves_per_node": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "dm_root_init": 0.2,
+        "dm_sstem_init": 0.01,
+        "dm_leaf_init": 0.2,
+        "dm_cabbage_init": 0.143,
+        "dm_sucrose_init": 0.0,
+        "leaf_cabbage_ratio": 1.7,
+        "cabbage_sheath_fr": 0.2,
+        "dm_root_sen_frac": 0.002,
+        "dead_detach_frac": [
+          0.1,
+          0.1,
+          0.05,
+          0.1,
+          0.0
+        ],
+        "sen_detach_frac": [
+          1.0,
+          0.01,
+          0.0,
+          0.01,
+          0.0
+        ],
+        "leaf_no_correction": 1.6,
+        "lai_sen_light": 4.99,
+        "sen_light_slope": 0.001,
+        "frost_temp": [
+          -5.0,
+          0.0,
+          2.0
+        ],
+        "frost_fraction": [
+          1.0,
+          0.1,
+          0.0
+        ],
+        "sen_rate_water": 0.01,
+        "twilight": -6.0,
+        "x_stage_code": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0
+        ],
+        "y_n_conc_crit_leaf": [
+          0.025,
+          0.025,
+          0.015,
+          0.015,
+          0.005
+        ],
+        "y_n_conc_min_leaf": [
+          0.015,
+          0.015,
+          0.005,
+          0.005,
+          0.004
+        ],
+        "y_n_conc_crit_cane": [
+          0.009,
+          0.009,
+          0.009,
+          0.006,
+          0.0035
+        ],
+        "y_n_conc_min_cane": [
+          0.002,
+          0.002,
+          0.0005,
+          0.0005,
+          0.0005
+        ],
+        "y_n_conc_crit_cabbage": [
+          0.019,
+          0.019,
+          0.006,
+          0.006,
+          0.001
+        ],
+        "y_n_conc_min_cabbage": [
+          0.01,
+          0.01,
+          0.003,
+          0.003,
+          0.0008
+        ],
+        "n_conc_crit_root": 0.01,
+        "n_conc_min_root": 0.005,
+        "n_root_init_conc": 0.01,
+        "n_sstem_init_conc": 0.007,
+        "n_leaf_init_conc": 0.03,
+        "n_cabbage_init_conc": 0.02,
+        "n_root_sen_conc": 0.005,
+        "n_leaf_sen_conc": 0.004,
+        "n_cabbage_sen_conc": 0.0008,
+        "x_ave_temp": [
+          0.0,
+          5.0,
+          15.0,
+          35.0,
+          50.0
+        ],
+        "y_stress_photo": [
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        "x_ave_temp_stalk": [
+          0.0,
+          50.0
+        ],
+        "y_stress_stalk": [
+          1.0,
+          1.0
+        ],
+        "x_temp": [
+          9.0,
+          32.0,
+          45.0
+        ],
+        "y_tt": [
+          0.0,
+          23.0,
+          0.0
+        ],
+        "x_sw_demand_ratio": [
+          0.1,
+          0.6
+        ],
+        "y_swdef_leaf": [
+          0.0,
+          1.0
+        ],
+        "x_demand_ratio_stalk": [
+          0.3,
+          1.5
+        ],
+        "y_swdef_stalk": [
+          0.0,
+          1.0
+        ],
+        "x_sw_avail_ratio": [
+          0.0,
+          0.16
+        ],
+        "y_swdef_pheno": [
+          1.0,
+          1.0
+        ],
+        "x_sw_ratio": [
+          0.0,
+          0.25
+        ],
+        "y_sw_fac_root": [
+          0.0,
+          1.0
+        ],
+        "k_nfact_photo": 1.5,
+        "k_nfact_expansion": 1.25,
+        "k_nfact_stalk": 1.0,
+        "k_nfact_pheno": 100.0,
+        "oxdef_photo_rtfr": [
+          0.5,
+          0.8
+        ],
+        "oxdef_photo": [
+          1.0,
+          1.0
+        ],
+        "x_afps": [
+          0.03,
+          0.05
+        ],
+        "y_afps_fac": [
+          1.0,
+          1.0
+        ],
+        "cane_dmf_max": [
+          0.11,
+          0.17,
+          0.23
+        ],
+        "cane_dmf_min": [
+          0.09,
+          0.13,
+          0.2
+        ],
+        "cane_dmf_tt": [
+          0.0,
+          500.0,
+          4500.0
+        ],
+        "cane_dmf_rate": 0.0,
+        "stress_lodge": [
+          0.0,
+          1.0
+        ],
+        "death_fr_lodge": [
+          0.002,
+          0.001
+        ],
+        "lodge_redn_photo": 0.92,
+        "lodge_redn_sucrose": 0.77,
+        "lodge_redn_green_leaf": 0.85
+      },
+      "ratoon": {
+        "$type": "CropConstants, Models",
+        "stage_names": [
+          "sowing",
+          "sprouting",
+          "emergence",
+          "begin_cane",
+          "flowering",
+          "end_crop"
+        ],
+        "stage_code_list": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0
+        ],
+        "rue": [
+          0.0,
+          0.0,
+          1.65,
+          1.65,
+          1.65,
+          0.0
+        ],
+        "root_depth_rate": [
+          0.0,
+          0.0,
+          10.0,
+          15.0,
+          15.0,
+          15.0
+        ],
+        "ratio_root_shoot": [
+          0.0,
+          0.0,
+          0.2,
+          0.15,
+          0.1,
+          0.0
+        ],
+        "transp_eff_cf": [
+          0.008,
+          0.008,
+          0.008,
+          0.008,
+          0.008,
+          0.008
+        ],
+        "n_fix_rate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "extinction_coef": 0.38,
+        "extinction_coef_dead": 0.01,
+        "leaf_no_crit": 99.0,
+        "tt_emerg_limit": 800.0,
+        "days_germ_limit": 40.0,
+        "swdf_pheno_limit": 500.0,
+        "swdf_photo_limit": 500.0,
+        "swdf_photo_rate": 0.0,
+        "initial_root_depth": 150.0,
+        "specific_root_length": 18000.0,
+        "x_plant_rld": [
+          0.0,
+          0.1
+        ],
+        "y_rel_root_rate": [
+          1.0,
+          1.0
+        ],
+        "root_die_back_fr": 0.17,
+        "initial_tpla": 1000.0,
+        "sla_lfno": [
+          6.0,
+          25.0
+        ],
+        "sla_max": [
+          11500.0,
+          11500.0
+        ],
+        "sla_min": [
+          9000.0,
+          8500.0
+        ],
+        "x_stem_wt": [
+          0.0,
+          200.0
+        ],
+        "y_height": [
+          0.0,
+          6000.0
+        ],
+        "svp_fract": 0.75,
+        "eo_crop_factor_default": 100.0,
+        "pesw_germ": 0.03,
+        "fasw_emerg": [
+          0.0,
+          0.7
+        ],
+        "rel_emerg_rate": [
+          0.3,
+          1.0
+        ],
+        "leaf_no_at_emerg": 1.0,
+        "shoot_lag": 100.0,
+        "shoot_rate": 0.8,
+        "x_node_no_app": [
+          1.0,
+          20.0,
+          30.0,
+          40.0
+        ],
+        "y_node_app_rate": [
+          80.0,
+          105.0,
+          125.0,
+          150.0
+        ],
+        "x_node_no_leaf": [
+          1.0,
+          20.0,
+          30.0,
+          40.0
+        ],
+        "y_leaves_per_node": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "dm_root_init": 0.2,
+        "dm_sstem_init": 0.01,
+        "dm_leaf_init": 0.2,
+        "dm_cabbage_init": 0.143,
+        "dm_sucrose_init": 0.0,
+        "leaf_cabbage_ratio": 1.7,
+        "cabbage_sheath_fr": 0.2,
+        "dm_root_sen_frac": 0.002,
+        "dead_detach_frac": [
+          0.1,
+          0.1,
+          0.05,
+          0.1,
+          0.0
+        ],
+        "sen_detach_frac": [
+          1.0,
+          0.01,
+          0.0,
+          0.01,
+          0.0
+        ],
+        "leaf_no_correction": 1.6,
+        "lai_sen_light": 4.99,
+        "sen_light_slope": 0.001,
+        "frost_temp": [
+          -5.0,
+          0.0,
+          2.0
+        ],
+        "frost_fraction": [
+          1.0,
+          0.1,
+          0.0
+        ],
+        "sen_rate_water": 0.01,
+        "twilight": -6.0,
+        "x_stage_code": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0
+        ],
+        "y_n_conc_crit_leaf": [
+          0.025,
+          0.025,
+          0.015,
+          0.015,
+          0.005
+        ],
+        "y_n_conc_min_leaf": [
+          0.015,
+          0.015,
+          0.005,
+          0.005,
+          0.004
+        ],
+        "y_n_conc_crit_cane": [
+          0.009,
+          0.009,
+          0.009,
+          0.006,
+          0.0035
+        ],
+        "y_n_conc_min_cane": [
+          0.002,
+          0.002,
+          0.0005,
+          0.0005,
+          0.0005
+        ],
+        "y_n_conc_crit_cabbage": [
+          0.019,
+          0.019,
+          0.006,
+          0.006,
+          0.001
+        ],
+        "y_n_conc_min_cabbage": [
+          0.01,
+          0.01,
+          0.003,
+          0.003,
+          0.0008
+        ],
+        "n_conc_crit_root": 0.01,
+        "n_conc_min_root": 0.005,
+        "n_root_init_conc": 0.01,
+        "n_sstem_init_conc": 0.007,
+        "n_leaf_init_conc": 0.03,
+        "n_cabbage_init_conc": 0.02,
+        "n_root_sen_conc": 0.005,
+        "n_leaf_sen_conc": 0.004,
+        "n_cabbage_sen_conc": 0.0008,
+        "x_ave_temp": [
+          0.0,
+          5.0,
+          15.0,
+          35.0,
+          50.0
+        ],
+        "y_stress_photo": [
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        "x_ave_temp_stalk": [
+          0.0,
+          50.0
+        ],
+        "y_stress_stalk": [
+          1.0,
+          1.0
+        ],
+        "x_temp": [
+          9.0,
+          32.0,
+          45.0
+        ],
+        "y_tt": [
+          0.0,
+          23.0,
+          0.0
+        ],
+        "x_sw_demand_ratio": [
+          0.1,
+          0.6
+        ],
+        "y_swdef_leaf": [
+          0.0,
+          1.0
+        ],
+        "x_demand_ratio_stalk": [
+          0.3,
+          1.5
+        ],
+        "y_swdef_stalk": [
+          0.0,
+          1.0
+        ],
+        "x_sw_avail_ratio": [
+          0.0,
+          0.16
+        ],
+        "y_swdef_pheno": [
+          1.0,
+          1.0
+        ],
+        "x_sw_ratio": [
+          0.0,
+          0.25
+        ],
+        "y_sw_fac_root": [
+          0.0,
+          1.0
+        ],
+        "k_nfact_photo": 1.5,
+        "k_nfact_expansion": 1.25,
+        "k_nfact_stalk": 1.0,
+        "k_nfact_pheno": 100.0,
+        "oxdef_photo_rtfr": [
+          0.5,
+          0.8
+        ],
+        "oxdef_photo": [
+          1.0,
+          1.0
+        ],
+        "x_afps": [
+          0.03,
+          0.05
+        ],
+        "y_afps_fac": [
+          1.0,
+          1.0
+        ],
+        "cane_dmf_max": [
+          0.11,
+          0.17,
+          0.23
+        ],
+        "cane_dmf_min": [
+          0.09,
+          0.13,
+          0.2
+        ],
+        "cane_dmf_tt": [
+          0.0,
+          500.0,
+          4500.0
+        ],
+        "cane_dmf_rate": 0.0,
+        "stress_lodge": [
+          0.0,
+          1.0
+        ],
+        "death_fr_lodge": [
+          0.002,
+          0.001
+        ],
+        "lodge_redn_photo": 0.92,
+        "lodge_redn_sucrose": 0.77,
+        "lodge_redn_green_leaf": 0.85
+      },
+      "cultivars": [
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q117",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            6.0,
+            10.0,
+            12.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q117_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            12.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q117_fum",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            3.0,
+            2.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            12.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q117_fum_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            2.0,
+            3.0,
+            2.0,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            12.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q96",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 900.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q96_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 900.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q96_fum",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 900.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q96_fum_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 900.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q138",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.61
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 600.0,
+          "min_sstem_sucrose": 1500.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q138_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.61
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 1500.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q138_fum",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.61
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 600.0,
+          "min_sstem_sucrose": 1500.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q138_fum_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.61
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 1500.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "ts65-28",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "ts65-28_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "ts65-28_fum",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "ts65-28_fum_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "h73",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "h73_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.5
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q141",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.64
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 1200.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q141_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.64
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 1200.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "nco376",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            12000.0,
+            28000.0,
+            28000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.65,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1800.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 10.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "nco376_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            12000.0,
+            28000.0,
+            28000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.65,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1800.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 10.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "n12",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            12000.0,
+            30000.0,
+            30000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "n12_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            12000.0,
+            30000.0,
+            30000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "n14",
+          "leaf_size": [
+            3000.0,
+            8000.0,
+            13000.0,
+            45000.0,
+            45000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "n14_ratoon",
+          "leaf_size": [
+            3000.0,
+            8000.0,
+            13000.0,
+            45000.0,
+            45000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "CP51",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            15000.0,
+            35000.0,
+            35000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            7.0,
+            15.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1350.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "CP51_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            15000.0,
+            35000.0,
+            35000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            7.0,
+            15.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 450.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1350.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "R570",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            45000.0,
+            60000.0,
+            60000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.68,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.58
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 693.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1500.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            6.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "R570_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            45000.0,
+            60000.0,
+            60000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.68,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.58
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 693.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1500.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            10.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "M1356",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            25000.0,
+            40000.0,
+            40000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.78,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.57
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 521.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1200.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            6.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "M1356_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            25000.0,
+            40000.0,
+            40000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.78,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.57
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 521.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1200.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            10.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "M55560",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            35000.0,
+            50000.0,
+            50000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.62
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 775.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1300.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            6.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "M55560_ratoon",
+          "leaf_size": [
+            3000.0,
+            7000.0,
+            10000.0,
+            35000.0,
+            50000.0,
+            50000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            4.0,
+            6.0,
+            10.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.62
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 775.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1300.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            10.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            12.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q124",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.0,
+            1.0,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        },
+        {
+          "$type": "CultivarConstants, Models",
+          "cultivar_name": "q124_ratoon",
+          "leaf_size": [
+            1500.0,
+            55000.0,
+            55000.0
+          ],
+          "leaf_size_no": [
+            1.0,
+            14.0,
+            20.0
+          ],
+          "cane_fraction": 0.7,
+          "sucrose_fraction_stalk": [
+            1.0,
+            0.55
+          ],
+          "stress_factor_stalk": [
+            0.2,
+            1.0
+          ],
+          "sucrose_delay": 0.0,
+          "min_sstem_sucrose": 800.0,
+          "min_sstem_sucrose_redn": 10.0,
+          "tt_emerg_to_begcane": 1900.0,
+          "tt_begcane_to_flowering": 6000.0,
+          "tt_flowering_to_crop_end": 2000.0,
+          "green_leaf_no": 13.0,
+          "tillerf_leaf_size": [
+            1.5,
+            1.5,
+            1.5,
+            1.0,
+            1.0
+          ],
+          "tillerf_leaf_size_no": [
+            1.0,
+            4.0,
+            10.0,
+            16.0,
+            26.0
+          ]
+        }
+      ],
+      "eo_crop_factor": 100.0,
+      "uptake_source": "calc",
+      "rlv_init": [
+        0.04,
+        0.02,
+        0.01,
+        0.005,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Name": "Sugarcane",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

@@ -1,0 +1,24 @@
+.wrapper_label_type {
+    font-size: 22;
+    font-weight:bold;
+}
+
+.wrapper_label_type_resource {
+    color: #996633;
+}
+
+.wrapper_label_type_activity {
+    color: #009999;
+}
+.wrapper_label_type_labourrequirement {
+    color: #cc33cc;
+}
+.wrapper_label_type_grouping {
+    color: #cc33cc;
+}
+.wrapper_label_type_file {
+    color: #008000;
+}
+.wrapper_label_type_market {
+    color: #1785FF;
+}

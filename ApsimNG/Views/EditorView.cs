@@ -1,115 +1,48 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EditorView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using Shared.Utilities;
+using Gtk;
+using GtkSource;
+using UserInterface.EventArguments;
+using UserInterface.Intellisense;
+using UserInterface.Interfaces;
+using Utility;
+using FontDescription = Pango.FontDescription;
 
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using EventArguments;
-    using Gtk;
-    using Mono.TextEditor;
-    using Utility;
-    using Presenters;
-    using Cairo;
-
-    /// <summary>
-    /// This is IEditorView interface
-    /// </summary>
-    public interface IEditorView
-    {
-        /// <summary>
-        /// Invoked when the editor needs context items (after user presses '.')
-        /// </summary>
-        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
-
-        /// <summary>
-        /// Invoked when the user changes the text in the editor.
-        /// </summary>
-        event EventHandler TextHasChangedByUser;
-
-        /// <summary>
-        /// Invoked when the user leaves the text editor.
-        /// </summary>
-        event EventHandler LeaveEditor;
-
-        /// <summary>
-        /// Gets or sets the text property to get and set the content of the editor.
-        /// </summary>
-        string Text { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lines property to get and set the lines in the editor.
-        /// </summary>
-        string[] Lines { get; set; }
-
-        /// <summary>
-        /// Gets or sets the characters that bring up the intellisense context menu.
-        /// </summary>
-        string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Gets the current line number
-        /// </summary>
-        int CurrentLineNumber { get; }
-
-        /// <summary>
-        /// Gets or sets the current location of the caret (column and line)
-        /// </summary>
-        System.Drawing.Rectangle Location { get; set; }
-        
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        bool ScriptMode { get; set; }
-
-        /// <summary>
-        /// Add a separator line to the context menu
-        /// </summary>
-        MenuItem AddContextSeparator();
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        /// <param name="shortcut">Describes the key to use as the accelerator</param>
-        MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
-
-        /// <summary>
-        /// Offset of the caret from the beginning of the text editor.
-        /// </summary>
-        int Offset { get; }
-
-        /// <summary>
-        /// Inserts text at a given offset in the editor.
-        /// </summary>
-        /// <param name="text">Text to be inserted.</param>
-        void InsertAtCaret(string text);
-
-        /// <summary>
-        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
-        /// </summary>
-        /// <param name="triggerWord">
-        /// Word to be overwritten. May be empty.
-        /// This function will overwrite the last occurrence of this word before the caret.
-        /// </param>
-        /// <param name="completionOption">Completion option to be inserted.</param>
-        void InsertCompletionOption(string completionOption, string triggerWord);
-    }
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
+    /// <remarks>
+    /// This is the .net core/gtk3 version, which uses SourceView.
+    /// This class could probably be trimmed down significantly, there's
+    /// probably a lot of stuff that's specific to gtk2.
+    /// </remarks>
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
+        /// Default style for dark mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultDarkStyle = "oblivion";
+
+        /// <summary>
+        /// Default style for light mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultLightStyle = "Classic";
+
+        /// <summary>
         /// The find-and-replace form
         /// </summary>
-        private FindAndReplaceForm _findForm = new FindAndReplaceForm();
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
 
         /// <summary>
         /// Scrolled window
@@ -119,27 +52,22 @@ namespace UserInterface.Views
         /// <summary>
         /// The main text editor
         /// </summary>
-        private TextEditor textEditor;
+        private SourceView textEditor;
 
         /// <summary>
-        /// The popup menu options on the editor
+        /// Settings for search and replace
         /// </summary>
-        private Menu popupMenu = new Menu();
+        private SearchSettings searchSettings;
+
+        /// <summary>
+        /// Context for search and replace
+        /// </summary>
+        private SearchContext searchContext;
 
         /// <summary>
         /// Menu accelerator group
         /// </summary>
         private AccelGroup accel = new AccelGroup();
-
-        /// <summary>
-        /// Horizontal scroll position
-        /// </summary>
-        private int horizScrollPos = -1;
-
-        /// <summary>
-        /// Vertical scroll position
-        /// </summary>
-        private int vertScrollPos = -1;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
@@ -157,33 +85,59 @@ namespace UserInterface.Views
         public event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        public event EventHandler StyleChanged;
+
+        /// <summary>
+        /// Invoked when the user drops a variable on the EditorView.
+        /// </summary>
+        public event EventHandler VariableDragDataReceived;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public string Text
         {
             get
             {
-                return textEditor.Text;
+                return textEditor.Buffer.Text;
             }
 
             set
             {
-                textEditor.Text = value;
-                if (ScriptMode)
+                if (value != null)
                 {
-                    textEditor.Document.MimeType = "text/x-csharp";
-                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
-                    StyleSeparator.Visible = true;
-                    StyleMenu.Visible = true;
+                    textEditor.Buffer.BeginNotUndoableAction();
+                    textEditor.Buffer.Text = value;
+                    textEditor.Buffer.EndNotUndoableAction();
                 }
-                else
-                {
-                    textEditor.Options.ColorScheme = "Default";
-                    StyleSeparator.Visible = false;
-                    StyleMenu.Visible = false;
-                }
+                //if (Mode == EditorType.ManagerScript)
+                //{
+                //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
+                //}
+                //else if (Mode == EditorType.Report)
+                //{
+                //    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
+                //        LoadReportSyntaxMode();
+                //    textEditor.Document.MimeType = "text/x-apsimreport";
+                //}
             }
+        }
+
+        /// <summary>
+        /// Performs a one-time registration of the report syntax highlighting rules.
+        /// This will only run once, the first time the user clicks on a report node.
+        /// </summary>
+        private void LoadReportSyntaxMode()
+        {
+            // tbi: syntax highlighting in report
+            //string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
+            //using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
+            //{
+            //    ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
+            //    SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
+            //}
         }
 
         /// <summary>
@@ -193,23 +147,32 @@ namespace UserInterface.Views
         {
             get
             {
-                string text = textEditor.Text.TrimEnd("\r\n".ToCharArray());
-                return text.Split(new string[] { textEditor.EolMarker, "\r\n", "\n" }, StringSplitOptions.None);
+                string text = Text.TrimEnd("\r\n".ToCharArray());
+                return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             }
-
             set
             {
-                string st = string.Empty;
                 if (value != null)
-                {
-                    foreach (string avalue in value)
-                    {
-                        if (st != string.Empty)
-                            st += textEditor.EolMarker;
-                        st += avalue;
-                    }
-                }
-                Text = st;
+                    Text = string.Join(Environment.NewLine, value);
+            }
+        }
+
+        private EditorType editorMode;
+
+        private Menu popupMenu = new Menu();
+
+        /// <summary>
+        /// Controls the syntax highlighting scheme.
+        /// </summary>
+        public EditorType Mode
+        {
+            get => editorMode;
+            set
+            {
+                editorMode = value;
+                // Initialise completion provider based on editor type.
+                if (value == EditorType.ManagerScript)
+                    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
             }
         }
 
@@ -219,57 +182,132 @@ namespace UserInterface.Views
         public string IntelliSenseChars { get; set; }
 
         /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        public bool ScriptMode { get; set; }
-
-        /// <summary>
         /// Gets the current line number
         /// </summary>
         public int CurrentLineNumber
         {
             get
             {
-                return textEditor.Caret.Line;
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line + 1;
             }
         }
 
-        private MenuItem StyleMenu;
-        private MenuItem StyleSeparator;
-
         /// <summary>
-        /// Gets or sets the current location of the caret (column and line) and the current scrolling position
-        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
-        /// way to store these values.
+        /// Get the current column number.
         /// </summary>
-        public System.Drawing.Rectangle Location
+        public int CurrentColumnNumber
         {
             get
             {
-                DocumentLocation loc = textEditor.Caret.Location;
-                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value), Convert.ToInt32(scroller.Vadjustment.Value));
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).LineOffset;
+            }
+        }
+
+        /// <summary>
+        /// Controls visibility of the widget.
+        /// </summary>
+        public bool Visible
+        {
+            get
+            {
+                return MainWidget.Visible;
+            }
+            set
+            {
+                if (value)
+                    MainWidget.ShowAll();
+                else
+                    MainWidget.Hide();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current location of the caret (column and line) and the current scrolling position
+        /// </summary>
+        public ManagerCursorLocation Location
+        {
+            get
+            {
+                ManagerCursorLocation location = new ManagerCursorLocation();
+                location.TabIndex = 0;
+                location.Column = CurrentColumnNumber;
+                location.Line = CurrentLineNumber - 1;
+                location.ScrollH = new ScrollerAdjustmentValues(scroller.Hadjustment.Value,
+                                                                scroller.Hadjustment.Lower,
+                                                                scroller.Hadjustment.Upper,
+                                                                scroller.Hadjustment.StepIncrement,
+                                                                scroller.Hadjustment.PageIncrement,
+                                                                scroller.Hadjustment.PageSize);
+                location.ScrollV = new ScrollerAdjustmentValues(scroller.Vadjustment.Value,
+                                                                scroller.Vadjustment.Lower, 
+                                                                scroller.Vadjustment.Upper,
+                                                                scroller.Vadjustment.StepIncrement,
+                                                                scroller.Vadjustment.PageIncrement,
+                                                                scroller.Vadjustment.PageSize);
+                return location;
             }
 
             set
             {
-                textEditor.Caret.Location = new DocumentLocation(value.Y, value.X);
-                horizScrollPos = value.Width;
-                vertScrollPos = value.Height;
+                textEditor.GrabFocus();
 
-                // Unfortunately, we often can't set the scroller adjustments immediately, as they may not have been set up yet
-                // We make these calls to set the position if we can, but otherwise we'll just hold on to the values until the scrollers are ready
-                Hadjustment_Changed(this, null);
-                Vadjustment_Changed(this, null);
+                scroller.Hadjustment.Configure(value.ScrollV.Value, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
+                scroller.Vadjustment.Configure(value.ScrollV.Value, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
+
+                // x is column, y is line number.
+                TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Line, value.Column);
+                textEditor.Buffer.PlaceCursor(iter);
             }
         }
 
+        /// <summary>
+        /// Offset of the caret from the beginning of the text editor.
+        /// </summary>
         public int Offset
         {
             get
             {
-                return textEditor.Caret.Offset;
+                return textEditor.Buffer.CursorPosition;
             }
         }
+
+        /// <summary>
+        /// Returns true iff this text editor has the focus
+        /// (ie it can receive keyboard input).
+        /// </summary>
+        public bool HasFocus
+        {
+            get
+            {
+                return textEditor.HasFocus;
+            }
+        }
+
+        public bool ShowLineNumbers
+        {
+            get
+            {
+                return textEditor.ShowLineNumbers;
+            }
+            set
+            {
+                textEditor.ShowLineNumbers = value;
+            }
+        }
+
+        public string Language
+        {
+            get
+            {
+                return textEditor.Buffer.Language.Name;
+            }
+            set
+            {
+                textEditor.Buffer.Language = LanguageManager.Default.GetLanguage(value);
+            }
+        }
+
+        public EditorView() { }
 
         /// <summary>
         /// Default constructor that configures the Completion form.
@@ -278,56 +316,109 @@ namespace UserInterface.Views
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
-            textEditor = new TextEditor();
-            scroller.Add(textEditor);
-            _mainWidget = scroller;
-            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
-            Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
-            options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-            options.Zoom = Utility.Configuration.Settings.EditorZoom;
-            options.HighlightCaretLine = true;
-            options.EnableSyntaxHighlighting = true;
-            options.HighlightMatchingBracket = true;
-            textEditor.Options = options;
-            textEditor.Options.Changed += EditorOptionsChanged;
-            textEditor.TextArea.DoPopupMenu = DoPopup;
-            textEditor.Document.LineChanged += OnTextHasChanged;
-            textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
-            textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
-            textEditor.TextArea.KeyPressEvent += OnKeyPress;
-            scroller.Hadjustment.Changed += Hadjustment_Changed;
-            scroller.Vadjustment.Changed += Vadjustment_Changed;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            
+            textEditor = new SourceView();
+            textEditor.DragDataReceived += TextEditorDragDataReceived;
+            searchSettings = new SearchSettings();
+            searchContext = new SearchContext(textEditor.Buffer, searchSettings);
 
-            AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
-            AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
-            AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
-            AddContextActionWithAccel("Delete", OnDelete, "Delete");
-            AddContextSeparator();
-            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
-            AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
+            //To make the scrollbars work correctly, the text editor should sit within a box and a viewport
+            VBox vBox = new VBox();
+            vBox.Add(textEditor);
+            Viewport view = new Viewport();
+            view.Add(vBox);
+
+            scroller.Add(view);
+
+            InitialiseWidget();
+        }
+
+        /// <summary>
+        /// Handler for when a 'drop' is done over an EditorView.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void TextEditorDragDataReceived(object o, DragDataReceivedArgs args)
+        {
+            VariableDragDataReceived.Invoke(o, args);
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            base.Initialise(ownerView, gtkControl);
+            Container parent = (Container)gtkControl;
+            mainWidget = parent;
+            scroller = new ScrolledWindow();
+            textEditor = new SourceView();
+            scroller.Add(textEditor);
+            parent.Add(scroller);
+            InitialiseWidget();
+        }
+
+        private void InitialiseWidget()
+        {
+            textEditor.Monospace = true;
+            textEditor.HighlightCurrentLine = true;
+            textEditor.AutoIndent = true;
+            textEditor.TabWidth = 4; // Should probably be in css?
+            textEditor.ShowLineNumbers = true;
+
+            // Move to the first/last non-whitespace char on the first
+            // press of home/end keys, and to the beginning/end of the
+            // line on the second press.
+            textEditor.SmartHomeEnd = SmartHomeEndType.Before;
+
+            mainWidget = scroller;
+            textEditor.Buffer.Changed += OnTextHasChanged;
+            textEditor.FocusInEvent += OnTextBoxEnter;
+            textEditor.FocusOutEvent += OnTextBoxLeave;
+            textEditor.KeyPressEvent += OnKeyPress;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
+
+            // Attempt to load a style scheme from the user settings.
+            StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
+            if (style == null)
+            {
+                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                style = StyleSchemeManager.Default.GetScheme(defaultStyle);
+            }
+            if (style != null)
+                textEditor.Buffer.StyleScheme = style;
+
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            StyleSeparator = AddContextSeparator();
-            StyleMenu = AddMenuItem("Use style", null);
-            Menu styles = new Menu();
+            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
+            AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
+            AddMenuItem("Change Style", OnChangeStyle);
 
-            // find all the editor styles and add sub menu items to the popup
-            string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
-            Array.Sort(styleNames, StringComparer.InvariantCulture);
-            foreach (string name in styleNames)
-            {
-                CheckMenuItem subItem = new CheckMenuItem(name);
-                if (string.Compare(name, options.ColorScheme, true) == 0)
-                    subItem.Toggle();
-                subItem.Activated += OnChangeEditorStyle;
-                subItem.Visible = true;
-                styles.Append(subItem);
-            }
-            StyleMenu.Submenu = styles;
-
+            textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
+            ModifyFont(Utility.Configuration.Settings.EditorFontName);
+        }
+
+        /// <summary>
+        /// Context menu items aren't actually added to the context menu until the
+        /// user requests the context menu (ie via right clicking). Keyboard shortcuts
+        /// (accelerators) won't work until this occurs. Therefore, we now manually
+        /// fire off a populate-popup signal to cause the context menu to be populated.
+        /// (This doesn't actually cause the context menu to be displayed.)
+        ///
+        /// We wait until the widget is realized so that the owner of the view has a
+        /// chance to add context menu items.
+        /// </summary>
+        /// <param name="sender">Sender object (the SourceView widget).</param>
+        /// <param name="args">Event data.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            try
+            {
+                textEditor.Realized -= OnRealized;
+                GLib.Signal.Emit(textEditor, "populate-popup", popupMenu);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -337,172 +428,244 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textEditor.Document.LineChanged -= OnTextHasChanged;
-            textEditor.TextArea.FocusInEvent -= OnTextBoxEnter;
-            textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
-            textEditor.TextArea.KeyPressEvent -= OnKeyPress;
-            scroller.Hadjustment.Changed -= Hadjustment_Changed;
-            scroller.Vadjustment.Changed -= Vadjustment_Changed;
-            textEditor.Options.Changed -= EditorOptionsChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-
-            // It's good practice to disconnect all event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popupMenu)
+            try
             {
-                if (w is MenuItem)
+                foreach (ICompletionProvider completion in textEditor.Completion.Providers)
+                    textEditor.Completion.RemoveProvider(completion);
+
+                textEditor.Buffer.Changed -= OnTextHasChanged;
+                textEditor.FocusInEvent -= OnTextBoxEnter;
+                textEditor.FocusOutEvent -= OnTextBoxLeave;
+                textEditor.KeyPressEvent -= OnKeyPress;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+
+                // It's good practice to disconnect all event handlers, as it makes memory leaks
+                // less likely. However, we may not "own" the event handlers, so how do we 
+                // know what to disconnect?
+                // We can do this via reflection. Here's how it currently can be done in Gtk#.
+                // Windows.Forms would do it differently.
+                // This may break if Gtk# changes the way they implement event handlers.
+                textEditor.DetachAllHandlers();
+                popupMenu.Clear();
+                popupMenu.Dispose();
+                findForm.Destroy();
+                accel.Dispose();
+                textEditor.Dispose();
+                textEditor = null;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user wants to change the editor style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnChangeStyle(object sender, EventArgs e)
+        {
+            try
+            {
+                using (Dialog popup = new Dialog("Choose a Style", mainWidget.Toplevel as Window, DialogFlags.Modal, new object[] { "Cancel", ResponseType.Cancel, "OK", ResponseType.Ok }))
                 {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
+                    StyleSchemeChooserWidget styleChooser = new StyleSchemeChooserWidget();
+                    popup.ContentArea.PackStart(styleChooser, true, true, 0);
+                    popup.ShowAll();
+                    int response = popup.Run();
+                    if (response == (int)ResponseType.Ok)
                     {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
+                        textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
+                        Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                        Configuration.Settings.Save();
                     }
                 }
             }
-
-            popupMenu.Destroy();
-            accel.Dispose();
-            textEditor.Destroy();
-            textEditor = null;
-            _findForm.Destroy();
-            _owner = null;
-        }
-
-        /// <summary>
-        /// The vertical position has changed
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Vadjustment_Changed(object sender, EventArgs e)
-        {
-            if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
+            catch (Exception err)
             {
-                scroller.Vadjustment.Value = vertScrollPos;
-                scroller.Vadjustment.ChangeValue();
-                vertScrollPos = -1;
+                ShowError(err);
             }
         }
 
         /// <summary>
-        /// The horizontal position has changed
+        /// Preprocesses key strokes so and emits the show-completion signal on
+        /// the gtksourceview widget when the user presses the '.' key.
         /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Hadjustment_Changed(object sender, EventArgs e)
-        {
-            if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
-            {
-                scroller.Hadjustment.Value = horizScrollPos;
-                scroller.Hadjustment.ChangeValue();
-                horizScrollPos = -1;
-            }
-        }
-
-        /// <summary>
-        /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
-        /// </summary>
+        /// <remarks>
+        /// Our custom GtkSourceCompletionProvider uses the user-requested activation
+        /// mode, which means that by default it only activates when the user presses
+        /// control + space. In order to trigger a completion request at other times
+        /// (such as when the user presses '.' in this case), we need to emit the
+        /// show-completion signal on the GtkSourceView widget.
+        /// </remarks>
         /// <param name="sender">Sending object</param>
-        /// <param name="e">Key arguments</param>
+        /// <param name="args">Event data.</param>
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
-        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
-            bool controlSpace = IsControlSpace(e.Event);
-            if (e.Event.Key == Gdk.Key.F3)
+            try
             {
-                if (string.IsNullOrEmpty(_findForm.LookFor))
-                    _findForm.ShowFor(textEditor, false);
-                else
-                    _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
-                e.RetVal = true;
-            }
-            else if (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace)
-            {
-                // If user one of the IntelliSenseChars, then display contextlist.
-                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset) + keyChar;
-
-                // If the user entered a period, we need to take that into account when generating intellisense options.
-                // To do this, we insert a period manually and stop the Gtk signal from propagating further.
-                e.RetVal = true;
-                if (keyChar == '.')
+                if (args.Event.Key == Gdk.Key.F3)
                 {
-                    textEditor.InsertAtCaret(keyChar.ToString());
-
-                    // Process all events in the main loop, so that the period is inserted into the text editor.
-                    while (GLib.MainContext.Iteration()) ;
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, searchContext, false);
+                    else
+                        findForm.FindNext(true, (args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    args.RetVal = true;
+                    return;
                 }
-                NeedContextItemsArgs args = new NeedContextItemsArgs
+
+                // If the user typed a period, we will need to ask the owner for
+                // completion items. However, if the user typed a period in the
+                // middle of a number (ie as a decimal separator), we don't want
+                // to trigger a completion request. Moreover, we need to check the
+                // entire previous word (not just the previous character). E.g.
+                // If the user types "123.", then we don't want to trigger a completion
+                // request. If the user types "Swim3.", then we *do* want to trigger
+                // a completion requests.
+                string previousWord = "";
+                if (textEditor.Buffer.CursorPosition > 0)
                 {
-                    Coordinates = GetPositionOfCursor(),
-                    Code = textEditor.Text,
-                    Offset = this.Offset,
-                    ControlSpace = controlSpace,
-                    LineNo = textEditor.Caret.Line,
-                    ColNo = textEditor.Caret.Column - 1
-                };
-
-                ContextItemsNeeded?.Invoke(this, args);
+                    TextIter prevIter = textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition - 1);
+                    previousWord = GetPreviousWord(prevIter);
+                }
+                char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
+                if (keyChar == '.' && !IsNumber(previousWord))
+                {
+                    if (ContextItemsNeeded != null)
+                    {
+                        ContextItemsNeeded.Invoke(this, new NeedContextItemsArgs()
+                        {
+                            Coordinates = GetPositionOfCursor(),
+                            Code = Text,
+                            Offset = this.Offset,
+                            ControlSpace = false,
+                            ControlShiftSpace = false,
+                            LineNo = CurrentLineNumber,
+                            ColNo = CurrentColumnNumber
+                        });
+                    }
+                    else
+                        GLib.Signal.Emit(textEditor, "show-completion");
+                }
             }
-            else if (e.Event.Key == Gdk.Key.Key_0 && (e.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask)
+            catch (Exception err)
             {
-                textEditor.Options.ZoomReset();
-                e.RetVal = true;
-            }
-            else
-            {
-                e.RetVal = false;
+                ShowError(err);
             }
         }
 
         /// <summary>
-        /// Checks whether a keypress is a control+space event.
+        /// Check if a string is a number.
         /// </summary>
-        /// <param name="e">Event arguments.</param>
-        /// <returns>True iff the event represents a control+space click.</returns>
-        private bool IsControlSpace(Gdk.EventKey e)
+        /// <param name="word">Any text.</param>
+        private bool IsNumber(string word)
         {
-            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
+            return double.TryParse(word, NumberStyles.Any, CultureInfo.CurrentCulture, out _);
         }
 
         /// <summary>
-        /// Retrieve the word before the specified character position. 
+        /// Get the word which occurs immediately before the given location.
         /// </summary>
-        /// <param name="pos">Position in the editor</param>
-        /// <returns>The position of the word</returns>
-        private string GetWordBeforePosition(int pos)
+        /// <param name="iter">The location.</param>
+        private string GetPreviousWord(TextIter iter)
         {
-            if (pos == 0)
-                return string.Empty;
-            else
+            StringBuilder builder = new StringBuilder();
+            do
             {
-                int PosDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-                return textEditor.Text.Substring(PosDelimiter + 1, pos - PosDelimiter - 1).TrimEnd(".".ToCharArray());
+                char previousChar = iter.Char.ToCharArray().FirstOrDefault();
+                if (char.IsWhiteSpace(previousChar) || previousChar == '.')
+                    break;
+                builder.Append(previousChar);
             }
+            while (iter.BackwardChar());
+
+            return builder.ToString();
         }
 
         /// <summary>
         /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
-        private Tuple<int, int> GetPositionOfCursor()
+        public System.Drawing.Point GetPositionOfCursor()
         {
-            Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
-            p.Y += (int)textEditor.LineHeight;
-            // Need to convert to screen coordinates....
-            int x, y, frameX, frameY;
-            mainWindow.GetOrigin(out frameX, out frameY);
-            textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            TextIter iter = textEditor.Buffer.GetIterAtOffset(Offset);
+            if (iter.Equals(TextIter.Zero))
+                return new System.Drawing.Point(0, 0);
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = textEditor.GetIterLocation(iter);
 
-            return new Tuple<int, int>(x + frameX, y + frameY);
+            // Convert the buffer coordinates (line/col numbers) to actual cartesian
+            // coordinates (note that these are relative to the origin of the GtkSourceView
+            // widget's GdkWindow, not the GtkWindow itself).
+            textEditor.BufferToWindowCoords(TextWindowType.Text, location.X, location.Y, out int x, out int y);
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            textEditor.TranslateCoordinates(mainWidget.Toplevel, x, y, out int windowX, out int windowY);
+
+            // Don't forget to account for the offset of the window within the screen.
+            // (Remember that the screen is made up of multiple monitors, so this is
+            // what accounts for which particular monitor the on which the window is
+            // physically displayed.)
+            MasterView.MainWindow.GetOrigin(out int frameX, out int frameY);
+
+            // Also add on the line height of the current line. Arguably, this doesn't
+            // belong here - the method is called GetPositionOfCursor(), which doesn't
+            // really imply anything about accounting for the line height. However,
+            // all of the surrounding infrastructure really assumes that it *does* in
+            // fact account for line height, as the intellisense popup (the only thing
+            // which really uses these coods) will be displayed at this locataion.
+            textEditor.GetLineYrange(iter, out int _, out int lineHeight);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY + lineHeight);
+        }
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        public void Refresh()
+        {
+            //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.QueueDraw();
+        }
+
+        /// <summary>
+        /// Alters the editor's font.
+        /// </summary>
+        /// <param name="font">The font name and point size.</param>
+        public void ModifyFont(string font)
+        {
+            using var fd = FontDescription.FromString(font);
+            var sizePt = fd.SizeIsAbsolute ? fd.Size : Convert.ToInt32(fd.Size / Pango.Scale.PangoScale);
+            var css = @$"* {{
+                font-family: {fd.Family};
+                font-size: {sizePt}pt;
+                font-style: {fd.Style};
+                font-variant: {fd.Variant};
+                font-weight: {fd.Weight};
+                font-stretch: {fd.Stretch};
+            }}";
+            using var provider = new CssProvider();
+            if (!provider.LoadFromData(css))
+                throw new Exception($"Unable to load font {font}");
+            textEditor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+        }
+
+        /// <summary>
+        /// Display a list of completion options to the user.
+        /// </summary>
+        public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
+        {
+
+        }
+
+        // Get reference to EditorView's GTK SourceView widget.
+        public SourceView GetSourceView()
+        {
+            return textEditor;
         }
 
         /// <summary>
@@ -512,8 +675,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void HideCompletionWindow(object sender, EventArgs e)
         {
-            textEditor.Document.ReadOnly = false;
-            textEditor.GrabFocus();
+            try
+            {
+                //textEditor.Document.ReadOnly = false;
+                textEditor.GrabFocus();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -526,32 +696,60 @@ namespace UserInterface.Views
         /// <param name="completionOption">Completion option to be inserted.</param>
         public void InsertCompletionOption(string completionOption, string triggerWord)
         {
+            // todo - this shouldn't be necessary. need to overhaul the whole completion
+            // mechanism with the new method built into the sourceview.
             if (string.IsNullOrEmpty(completionOption))
                 return;
+
+            // If no trigger word provided, insert at caret.
             if (string.IsNullOrEmpty(triggerWord))
-                textEditor.InsertAtCaret(completionOption);
-            else
-                textEditor.Replace(Text.Substring(0, Offset).LastIndexOf(triggerWord), triggerWord.Length, completionOption);
+            {
+                int offset = Offset + completionOption.Length;
+                textEditor.Buffer.InsertAtCursor(completionOption);
+                // fixme
+                //textEditor.Buffer.CursorPosition = offset;
+                return;
+            }
+
+            // If trigger word is entire text, replace the entire text.
+            if (Text == triggerWord)
+            {
+                Text = completionOption;
+                //Offset = completionOption.Length;
+                return;
+            }
+
+            // Overwrite the last occurrence of this word before the caret.
+            int index = Text.Substring(0, Offset).LastIndexOf(triggerWord);
+            if (index < 0)
+                // If text does not contain trigger word, isnert at caret.
+                InsertAtCaret(completionOption);
+
+            string textBeforeTriggerWord = Text.Substring(0, index);
+
+            string textAfterTriggerWord = "";
+            if (Text.Length > index + triggerWord.Length)
+                textAfterTriggerWord = Text.Substring(index + triggerWord.Length);
+
+            // Changing the text property of the text editor will reset the scroll
+            // position. To work around this, we record the scroll position before
+            // we change the text then reset it manually afterwards.
+            double verticalPosition = scroller.Vadjustment.Value;
+            double horizontalPosition = scroller.Hadjustment.Value;
+
+            Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
+
+            scroller.Vadjustment.Value = verticalPosition;
+            scroller.Hadjustment.Value = horizontalPosition;
         }
-        
+
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
+        /// <param name="text">The text to be inserted.</param>
         public void InsertAtCaret(string text)
         {
-            textEditor.Document.ReadOnly = false;
-            string textToCaret = textEditor.Text.Substring(0, Offset);
-            if (textToCaret.LastIndexOf('.') != Offset - 1)
-            {
-                string textBeforeCaret = textEditor.Text.Substring(0, Offset);
-                // TODO : insert text at the correct location
-                // Currently, if we half-type a word, then hit control-space, the word will be inserted at the caret.
-                textEditor.Text = textEditor.Text.Substring(0, textEditor.Text.LastIndexOf('.')) + textEditor.Text.Substring(Offset);
-            }
-            textEditor.InsertAtCaret(text);
-            textEditor.GrabFocus();
+            textEditor.Buffer.InsertAtCursor(text);
         }
 
         /// <summary>
@@ -561,8 +759,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextHasChanged(object sender, EventArgs e)
         {
-            if (TextHasChangedByUser != null)
-                TextHasChangedByUser(sender, e);
+            try
+            {
+                TextHasChangedByUser?.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -572,7 +776,14 @@ namespace UserInterface.Views
         /// <param name="args">The arguments</param>
         private void OnTextBoxEnter(object o, FocusInEventArgs args)
         {
-            ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
+            try
+            {
+                ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -582,21 +793,19 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextBoxLeave(object o, EventArgs e)
         {
-            ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
-            if (LeaveEditor != null)
-                LeaveEditor.Invoke(this, e);
+            try
+            {
+                ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+                if (LeaveEditor != null)
+                    LeaveEditor.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         #region Code related to Edit menu
-
-        /// <summary>
-        /// Show the popup menu
-        /// </summary>
-        /// <param name="b">The button</param>
-        private void DoPopup(Gdk.EventButton b)
-        {
-            popupMenu.Popup();
-        }
 
         /// <summary>
         /// Add a menu item to the menu
@@ -604,15 +813,19 @@ namespace UserInterface.Views
         /// <param name="menuItemText">Menu item caption</param>
         /// <param name="onClick">Event handler</param>
         /// <returns>The menu item that was created</returns>
-        public MenuItem AddMenuItem(string menuItemText, System.EventHandler onClick)
+        public void AddMenuItem(string menuItemText, System.EventHandler onClick)
         {
-            MenuItem item = new MenuItem(menuItemText);
-            if (onClick != null)
-                item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-
-            return item;
+            textEditor.PopulatePopup += (sender, args) =>
+            {
+                if (args.Popup is Menu menu)
+                {
+                    MenuItem item = new MenuItem(menuItemText);
+                    if (onClick != null)
+                        item.Activated += onClick;
+                    item.ShowAll();
+                    menu.Append(item);
+                }
+            };
         }
 
         /// <summary>
@@ -620,9 +833,16 @@ namespace UserInterface.Views
         /// </summary>
         public MenuItem AddContextSeparator()
         {
-            MenuItem result = new SeparatorMenuItem();
-            popupMenu.Append(result);
-            return result;
+            textEditor.PopulatePopup += (sender, args) =>
+            {
+                if (args.Popup is Menu menu)
+                {
+                    MenuItem item = new SeparatorMenuItem();
+                    item.ShowAll();
+                    menu.Append(item);
+                }
+            };
+            return null;
         }
 
         /// <summary>
@@ -633,39 +853,45 @@ namespace UserInterface.Views
         /// <param name="shortcut">The shortcut string</param>
         public MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
         {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
-            if (!string.IsNullOrEmpty(shortcut))
+            textEditor.PopulatePopup += (sender, args) =>
             {
-                string keyName = string.Empty;
-                Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                string[] keyNames = shortcut.Split(new char[] { '+' });
-                foreach (string name in keyNames)
+                if (args.Popup is Menu menu)
                 {
-                    if (name == "Ctrl")
-                        modifier |= Gdk.ModifierType.ControlMask;
-                    else if (name == "Shift")
-                        modifier |= Gdk.ModifierType.ShiftMask;
-                    else if (name == "Alt")
-                        modifier |= Gdk.ModifierType.Mod1Mask;
-                    else if (name == "Del")
-                        keyName = "Delete";
-                    else
-                        keyName = name;
+                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    if (!string.IsNullOrEmpty(shortcut))
+                    {
+                        string keyName = string.Empty;
+                        Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                        string[] keyNames = shortcut.Split(new char[] { '+' });
+                        foreach (string name in keyNames)
+                        {
+                            if (name == "Ctrl")
+                                modifier |= Gdk.ModifierType.ControlMask;
+                            else if (name == "Shift")
+                                modifier |= Gdk.ModifierType.ShiftMask;
+                            else if (name == "Alt")
+                                modifier |= Gdk.ModifierType.Mod1Mask;
+                            else if (name == "Del")
+                                keyName = "Delete";
+                            else
+                                keyName = name;
+                        }
+                        try
+                        {
+                            Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                            item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (onClick != null)
+                        item.Activated += onClick;
+                    item.ShowAll();
+                    menu.Append(item);
                 }
-                try
-                {
-                    Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
-                    item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
-                }
-                catch
-                {
-                }
-            }
-            if (onClick != null)
-                item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-            return item;
+            };
+            return null;
         }
 
         /// <summary>
@@ -675,7 +901,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCut(object sender, EventArgs e)
         {
-            ClipboardActions.Cut(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                // todo: test this
+                textEditor.Buffer.CutClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)), true);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -685,7 +919,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopy(object sender, EventArgs e)
         {
-            ClipboardActions.Copy(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                // todo: test this
+                textEditor.Buffer.CopyClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -695,37 +937,53 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnPaste(object sender, EventArgs e)
         {
-            ClipboardActions.Paste(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                // todo: test this
+                textEditor.Buffer.PasteClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
-        /// The Delete menu handler
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void OnDelete(object sender, EventArgs e)
-        {
-            DeleteActions.Delete(textEditor.TextArea.GetTextEditorData());
-        }
-
-        /// <summary>
-        /// The Undo menu item handler
+        /// The Undo menu item handler. This overrides the global undo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
         private void OnUndo(object sender, EventArgs e)
         {
-            MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                GLib.Signal.Emit(textEditor, "undo");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
-        /// The Redo menu item handler
+        /// The Redo menu item handler. This overrides the global redo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
         private void OnRedo(object sender, EventArgs e)
         {
-            MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                GLib.Signal.Emit(textEditor, "redo");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -735,7 +993,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnFind(object sender, EventArgs e)
         {
-            _findForm.ShowFor(textEditor, false);
+            try
+            {
+                findForm.ShowFor(textEditor, searchContext, false);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -745,7 +1010,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnReplace(object sender, EventArgs e)
         {
-            _findForm.ShowFor(textEditor, true);
+            try
+            {
+                findForm.ShowFor(textEditor, searchContext, true);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -755,19 +1027,29 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChangeEditorStyle(object sender, EventArgs e)
         {
-            MenuItem subItem = (MenuItem)sender;
-            string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
-
-            foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+            try
             {
-                item.Activated -= OnChangeEditorStyle;  // stop recursion
-                item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
-                item.Activated += OnChangeEditorStyle;
-            }
+                MenuItem subItem = (MenuItem)sender;
+                string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
 
-            Utility.Configuration.Settings.EditorStyleName = caption;
-            textEditor.Options.ColorScheme = caption;
-            textEditor.QueueDraw();
+                foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+                {
+                    item.Activated -= OnChangeEditorStyle;  // stop recursion
+                    item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
+                    item.Activated += OnChangeEditorStyle;
+                }
+
+                Utility.Configuration.Settings.EditorStyleName = caption;
+                Configuration.Settings.Save();
+                //textEditor.Options.ColorScheme = caption;
+                textEditor.QueueDraw();
+
+                StyleChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -778,33 +1060,15 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void EditorOptionsChanged(object sender, EventArgs e)
         {
-            Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
+            try
+            {
+                //Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-
-        // The following block comes from the example code provided at 
-        // http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
-        // I leave it here because it provides the handlers needed for a popup menu
-        // Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
-        /*
-        private void menuToggleBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
-            TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
-        }
-
-        private void menuGoToNextBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
-                (bookmark => true));
-        }
-
-        private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
-                (bookmark => true));
-        }
-        */
-
         #endregion
     }
 }

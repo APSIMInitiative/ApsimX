@@ -1,16 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AxisView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Globalization;
+using Gtk;
+using OxyPlot.Axes;
+using UserInterface.Interfaces;
+
 namespace UserInterface.Views
 {
-    using System;
-    using Gtk;
-    using Interfaces;
-
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// An implementation of an AxisView
     /// </summary>
     public class AxisView : ViewBase, IAxisView
     {
@@ -43,7 +40,17 @@ namespace UserInterface.Views
         /// Check button object
         /// </summary>
         private CheckButton checkbutton1 = null;
-        
+
+        /// <summary>
+        /// Crosses at checkbox.
+        /// </summary>
+        private CheckButton checkbutton2 = null;
+
+        /// <summary>
+        /// Single line label
+        /// </summary>
+        private CheckButton checkbutton3 = null;
+
         /// <summary>
         /// The constructor
         /// </summary>
@@ -57,13 +64,26 @@ namespace UserInterface.Views
             entryInterval = (Entry)builder.GetObject("entryInterval");
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
-            _mainWidget = table1;
-            entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
+            checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
+            checkbutton3 = (CheckButton)builder.GetObject("checkbutton3");
+            mainWidget = table1;
+            entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
+            entryTitle.TextInserted += TitleTextBox_TextChanged;
+            entryMin.FocusOutEvent += OnMinimumChanged;
+            entryMax.FocusOutEvent += OnMaximumChanged;
+            entryInterval.FocusOutEvent += OnIntervalChanged;
+            entryTitle.Activated += TitleTextBox_TextChanged;
+            entryMin.Activated += OnMinimumChanged;
+            entryMin.TextInserted += OnMinimumChanged;
+            entryMax.Activated += OnMaximumChanged;
+            entryMax.TextInserted += OnMaximumChanged;
+            entryInterval.Activated += OnIntervalChanged;
+            entryInterval.TextInserted += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            checkbutton2.Toggled += OnCrossesAtZeroChanged;
+            checkbutton3.Toggled += OnLabelOnOneLineChanged;
+
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -90,6 +110,16 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
+
+        /// <summary>
+        /// Invoked when the user has changed the crosses at zero field
+        /// </summary>
+        public event EventHandler CrossesAtZeroChanged;
+
+        /// <summary>
+        /// Invoked when the user has changed the single line label field
+        /// </summary>
+        public event EventHandler LabelOnOneLineChanged;
 
         /// <summary>
         /// Gets or sets the title.
@@ -123,27 +153,56 @@ namespace UserInterface.Views
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        public bool CrossesAtZero
+        {
+            get
+            {
+                return checkbutton2.Active;
+            }
+
+            set
+            {
+                checkbutton2.Active = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating if the axis label should be shown on one line.
+        /// </summary>
+        public bool LabelOnOneLine
+        {
+            get
+            {
+                return checkbutton3.Active;
+            }
+
+            set
+            {
+                checkbutton3.Active = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
-        { 
+        {
             get
             {
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
+                else if (DateTime.TryParseExact(entryMin.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
+                    return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMin.Text, 
-                                            System.Globalization.CultureInfo.InvariantCulture);
-            }
-            
-            set
-            {
-                if (double.IsNaN(value))
-                    entryMin.Text = string.Empty;
-                else
-                    entryMin.Text = value.ToString();
+                    return Convert.ToDouble(entryMin.Text, CultureInfo.InvariantCulture);
             }
         }
 
@@ -156,12 +215,16 @@ namespace UserInterface.Views
             {
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
+                else if (DateTime.TryParseExact(entryMax.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
+                    return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMax.Text, 
-                                            System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToDouble(entryMax.Text, CultureInfo.InvariantCulture);
             }
-            
+
             set
             {
                 if (double.IsNaN(value))
@@ -178,20 +241,63 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTimeIntervalType intervalType;
                 if (string.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
+                else if (Enum.TryParse(entryInterval.Text, out intervalType))
+                    return (double)intervalType;
                 else
                     return Convert.ToDouble(
-                                            entryInterval.Text, 
+                                            entryInterval.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
+        }
 
-            set
+        /// <summary>
+        /// Sets the text in the minimum textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMinimum(double value, bool isDate)
+        {
+            if (!entryMin.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMin.Text = string.Empty;
+                else
+                    entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox based on a DateTime stored as a double.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMaximum(double value, bool isDate)
+        {
+            if (!entryMax.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMax.Text = string.Empty;
+                else
+                    entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the interval textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime interval.</param>
+        public void SetInterval(double value, bool isDate)
+        {
+            if (!entryInterval.HasFocus)
             {
                 if (double.IsNaN(value))
                     entryInterval.Text = string.Empty;
                 else
-                    entryInterval.Text = value.ToString();
+                    entryInterval.Text = isDate ? ((DateTimeIntervalType)((int)value)).ToString() : value.ToString();
             }
         }
 
@@ -202,13 +308,25 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.Changed -= OnMinimumChanged;
-            entryMax.Changed -= OnMaximumChanged;
-            entryInterval.Changed -= OnIntervalChanged;
-            checkbutton1.Toggled -= OnCheckedChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                entryTitle.FocusOutEvent -= TitleTextBox_TextChanged;
+                entryMin.FocusOutEvent -= OnMinimumChanged;
+                entryMax.FocusOutEvent -= OnMaximumChanged;
+                entryInterval.FocusOutEvent -= OnIntervalChanged;
+                entryTitle.Activated -= TitleTextBox_TextChanged;
+                entryMin.Activated -= OnMinimumChanged;
+                entryMax.Activated -= OnMaximumChanged;
+                entryInterval.Activated -= OnIntervalChanged;
+                checkbutton1.Toggled -= OnCheckedChanged;
+                checkbutton2.Toggled -= OnCheckedChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -218,8 +336,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void TitleTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (TitleChanged != null)
-                TitleChanged.Invoke(this, e);
+            try
+            {
+                if (TitleChanged != null)
+                    TitleChanged.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -229,8 +354,51 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCheckedChanged(object sender, EventArgs e)
         {
-            if (InvertedChanged != null)
-                InvertedChanged(this, e);
+            try
+            {
+                if (InvertedChanged != null)
+                    InvertedChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the crosses at zero check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnCrossesAtZeroChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (CrossesAtZeroChanged != null)
+                    CrossesAtZeroChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the single line label check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnLabelOnOneLineChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (LabelOnOneLineChanged != null)
+                    LabelOnOneLineChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -240,8 +408,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnMinimumChanged(object sender, EventArgs e)
         {
-            if (MinimumChanged != null)
-                MinimumChanged(this, e);
+            try
+            {
+                if (MinimumChanged != null)
+                    MinimumChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -251,8 +426,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnMaximumChanged(object sender, EventArgs e)
         {
-            if (MaximumChanged != null)
-                MaximumChanged(this, e);
+            try
+            {
+                if (MaximumChanged != null)
+                    MaximumChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -262,8 +444,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnIntervalChanged(object sender, EventArgs e)
         {
-            if (IntervalChanged != null)
-                IntervalChanged(this, e);
+            try
+            {
+                if (IntervalChanged != null)
+                    IntervalChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

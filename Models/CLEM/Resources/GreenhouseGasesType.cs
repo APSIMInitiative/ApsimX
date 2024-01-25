@@ -1,11 +1,9 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -13,12 +11,24 @@ namespace Models.CLEM.Resources
     /// Store for emission type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GreenhouseGases))]
-    [Description("This resource represents a greenhouse gas (e.g. CO2).")]
-    public class GreenhouseGasesType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a greenhouse gas (e.g. CO2)")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
+    public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [JsonIgnore]
+        [Description("Units (nominal)")]
+        public string Units { get { return "kg"; } }
+
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -26,26 +36,21 @@ namespace Models.CLEM.Resources
         [Required]
         public double StartingAmount { get; set; }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
 
         /// <summary>
-        /// Global warming potential
+        /// Total value of resource
         /// </summary>
-        [Description("Global warming potential")]
-        [Required, GreaterThanEqualValue(0)]
-        public double GlobalWarmingPotential { get; set; }
-
-        /// <summary>
-        /// CO2 equivalents
-        /// </summary>
-        [Description("CO2 equivalents")]
-        [Required, GreaterThanEqualValue(0)]
-        public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
-
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -53,115 +58,87 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
-        }
-
-        /// <summary>
-        /// Initialise resource type
-        /// </summary>
-        public void Initialise()
-        {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
-                Add(StartingAmount, this.Name, "Starting value");
-            }
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         #region transactions
 
         /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [XmlIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
-        /// <summary>
         /// Add money to account
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
-            {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
-            }
-            double addAmount = (double)ResourceAmount;
-            if (addAmount > 0)
-            {
-                amount += addAmount;
+            if (resourceAmount.GetType().ToString() != "System.Double")
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.CreditStandardised = addAmount * GlobalWarmingPotential;
-                details.Activity = ActivityName;
-                details.Reason = Reason;
-                details.ResourceType = this.Name;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-            }
-        }
+            double amountAdded = (double)resourceAmount;
+            if (amountAdded > 0)
+            {
+                amount += amountAdded;
 
-        /// <summary>
-        /// Remove money (object) from account
-        /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
-        {
-            throw new NotImplementedException();
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
+            }
         }
 
         /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
+            if (request.Required == 0)
+                return;
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+                FindEquivalentMarketStore();
+
             // avoid taking too much
-            double amountRemoved = Request.Required;
+            double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
 
-            Request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.DebitStandardised = amountRemoved * -1 * GlobalWarmingPotential;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                (EquivalentMarketStore as GreenhouseGasesType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+
+            request.Provided = amountRemoved;
+
+            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
-            amount = NewAmount;
+            amount = newAmount;
         }
 
         #endregion
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            string html = "";
+            if (StartingAmount > 0)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
+                html += "</div>";
+            }
+            return html;
+        }
+        #endregion
+
     }
 }

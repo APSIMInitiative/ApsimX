@@ -1,10 +1,9 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Reflection;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
+﻿using System;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 
+namespace Models.Core
+{
 
     /// <summary>
     /// This class encapsulates a single property of a model. Has properties for getting the value
@@ -56,7 +55,7 @@
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return Value?.GetType(); } }
 
         /// <summary>
         /// Returns a description of the property or null if not found.
@@ -133,6 +132,19 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 
     /// <summary>
@@ -164,27 +176,27 @@
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
                 if (FieldInfo.Name.Contains("BackingField"))
                 {
                     string st = FieldInfo.Name;
                     return "[" + StringUtilities.SplitOffBracketedValue(ref st, '<', '>') + "]";
                 }
-                return FieldInfo.Name; 
-            } 
+                return FieldInfo.Name;
+            }
         }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public override object Value 
-        { 
-            get 
-            { 
-                return FieldInfo.GetValue(Object); 
+        public override object Value
+        {
+            get
+            {
+                return FieldInfo.GetValue(Object);
             }
             set
             {
@@ -335,5 +347,21 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(FieldInfo, attributeType, false);
+        }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

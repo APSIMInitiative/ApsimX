@@ -1,11 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ViewNameAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view
@@ -36,5 +32,5 @@ namespace Models.Core
         {
             return this.name;
         }
-    } 
+    }
 }

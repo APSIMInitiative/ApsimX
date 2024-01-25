@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -7,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("APSIM (next generation)")]
 [assembly: AssemblyCompany("APSIM Initiative")]
 [assembly: AssemblyProduct("APSIM")]
-[assembly: AssemblyCopyright("Copyright © APSIM Initiative 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyConfiguration("")]
+[assembly: AssemblyTitle("APSIM")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -19,3 +20,5 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7925afff-b8a2-4209-a14f-5a20a94297f7")]
+
+[assembly: InternalsVisibleTo("UnitTests")]

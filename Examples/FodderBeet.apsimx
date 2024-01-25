@@ -1,0 +1,972 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 131,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# APSIM Fodder Beet Model \r\n\r\nKhaembah E.N., Brown H.E., Zyskowski R., Chakwizira E., de Ruiter J.M., Teixeira E.I.\r\n\r\nThe New Zealand Institute for Plant & Food Research Limited\r\nPrivate Bag 4704, Christchurch, New Zealand\r\n\r\n\r\nThe APSIM Fodder Beet Model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, barley, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* A phenology model to simulate development between growth phases  \r\n* A structure model to simulate plant morphology  \r\n* A collection of organs to simulate the various plant parts  \r\n* An arbitrator to allocate resources (N, biomass) to various plant organs.  \r\n\r\n\r\n\r\n\r\n",
+      "Name": "Title page",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "This represebts a Grazing trial at Ashley Dean, Canterbury, New Zealand\n\nManagement and Data from\nEdwards, G.R., J.M., d.R., Dalley, D.E., Pinxterhuis, J.B., Cameron, K.C., Bryant, R.H., Di, H.J., Malcolm, B.J.and Chapman, D.F. 2014. Dry matter intake and body condition score change of dairy cows grazing fodder beet, kale and kale-oat forage systems in winter. Proceedings of the New Zealand Grassland Association 76: 81-88.",
+          "Name": "Trial details",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2012-10-20T00:00:00",
+          "End": "2013-08-01T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "Soil Arbitrator",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "paddock",
+          "Children": [
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "NZ_sedementary",
+              "LocalName": null,
+              "Site": "-",
+              "NearestTown": "-",
+              "Region": "Plains",
+              "State": "Canterbury",
+              "Country": "New Zealand",
+              "NaturalVegetation": null,
+              "ApsoilNumber": null,
+              "Latitude": 0.0,
+              "Longitude": 0.0,
+              "LocationAccuracy": null,
+              "YearOfSampling": null,
+              "DataSource": "Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results",
+              "Comments": "Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.",
+              "Name": "Lismore",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
+                  "Thickness": [
+                    200.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    12.522935779816512,
+                    20.917431192660544,
+                    0.57142857142857184,
+                    6.7399267399267382,
+                    12.266666666666667,
+                    1.3333333333333333
+                  ],
+                  "NH4N": [
+                    1.9724770642201832,
+                    6.9724770642201808,
+                    1.9523809523809526,
+                    1.9780219780219781,
+                    3.2,
+                    0.13333333333333333
+                  ],
+                  "PH": [
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
+                  "Thickness": [
+                    200.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.09,
+                    1.09,
+                    0.7,
+                    0.455,
+                    0.25,
+                    0.25
+                  ],
+                  "AirDry": [
+                    0.1,
+                    0.136,
+                    0.03,
+                    0.014,
+                    0.01,
+                    0.01
+                  ],
+                  "LL15": [
+                    0.144,
+                    0.136,
+                    0.03,
+                    0.014,
+                    0.01,
+                    0.01
+                  ],
+                  "DUL": [
+                    0.37,
+                    0.37,
+                    0.15,
+                    0.15,
+                    0.04,
+                    0.04
+                  ],
+                  "SAT": [
+                    0.53,
+                    0.53,
+                    0.24,
+                    0.24,
+                    0.16,
+                    0.16
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.144,
+                        0.136,
+                        0.03,
+                        0.014,
+                        0.01,
+                        0.01
+                      ],
+                      "KL": [
+                        0.286156713962555,
+                        0.25218790769577,
+                        0.21514652967453,
+                        0.273158758878708,
+                        0.21173994243145,
+                        0.0303872358053923
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "FodderBeetSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Oct",
+                  "SummerU": 9.0,
+                  "SummerCona": 4.4,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 6.0,
+                  "WinterCona": 3.0,
+                  "DiffusConst": 88.0,
+                  "DiffusSlope": 35.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "Thickness": [
+                    200.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "SWCON": [
+                    0.457632449279133,
+                    0.52000321289643,
+                    0.650583088307059,
+                    0.650597666182654,
+                    0.650599955554641,
+                    0.650599955554641
+                  ],
+                  "KLAT": null,
+                  "ResourceName": "WaterBalance",
+                  "Name": "SoilWater",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    200.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    2.88976641944061,
+                    1.05590533160772,
+                    0.807727671418374,
+                    0.800052068640443,
+                    0.800000473578713,
+                    0.800000000582934
+                  ],
+                  "SoilCNRatio": [
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0
+                  ],
+                  "FBiom": [
+                    0.0333099300949596,
+                    0.0186614266926403,
+                    0.0130309601609138,
+                    0.0106762986261082,
+                    0.0101651137669702,
+                    0.0100221233748059
+                  ],
+                  "FInert": [
+                    0.478186472632165,
+                    0.681917654682901,
+                    0.811836682317293,
+                    0.911117942273907,
+                    0.956082613180008,
+                    0.983924276179929
+                  ],
+                  "FOM": [
+                    367.07141222735169,
+                    300.53265376629787,
+                    164.93581741316149,
+                    90.518695805022816,
+                    49.677713541852036,
+                    27.263707246314198
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 0,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "InitialWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "Temperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "ResourceName": "FodderBeet",
+              "Name": "FodderBeet",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.23,
+              "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
+              "Name": "fertiliser",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "InitialResidueName": "wheat",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 0.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 80.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "surface organic matter",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Management",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                    "Code": "using Models.Surface;\nusing Models.PMF.Interfaces;\nusing System.Data;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link(ByName = true)] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Simulation Simulation;\n        [Link] SurfaceOrganicMatter SurfOM;\n        \n                \n        [Description(\"Initial Root Depth\")]\n        public double InitialRootDepth { get; set; }\n        [Description(\"Sown Crop\")]\n        [Display(Type=DisplayType.CultivarName, PlantName = \"FodderBeet\")]\n        public string CropToSow { get; set; }\n        [Description(\"Sowing Date\")]\n        public DateTime SowingDate { get; set; }\n        \n        \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today.Date == SowingDate)\n            {\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\n                \n            }\n                        \n            \n        }\n    }\n}\n                \n",
+                    "Parameters": [
+                      {
+                        "Key": "InitialRootDepth",
+                        "Value": "2"
+                      },
+                      {
+                        "Key": "CropToSow",
+                        "Value": "Rivage"
+                      },
+                      {
+                        "Key": "SowingDate",
+                        "Value": "10/29/2012 00:00:00"
+                      }
+                    ],
+                    "Name": "SowDateCv",
+                    "IncludeInDocumentation": true,
+                    "Enabled": true,
+                    "ReadOnly": false
+                  },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-12-23",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-01-06",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-01-13",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-01-20",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-01-27",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-02-06",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-02-13",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-02-20",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-02-27",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-03-04",
+                      "Action": "[Irrigation].Apply(15);",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "IrrigationEvents",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-11-25",
+                      "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN,10); ",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2013-01-25",
+                      "Action": "[Fertiliser].Apply(69, Fertiliser.Types.UreaN,10); ",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "NFertEvents",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                  {
+                    "$type": "Models.Manager, Models",
+                    "Code": "\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Summary Summary;\n\n\n        [Description(\" Date of Infection\")]\n        public DateTime InfectionDate { get; set; }\n        [Description(\"Is Infected\")]\n        public bool IsInfected  {get; set;}    \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            \n\n            if (IsInfected == true) // an infected crop\n              if (InfectionDate == Clock.Today)\n               {\n                zone.Set(\"FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue\", 600);\n                Summary.WriteMessage(this,\"Fodder beet infected with fugal disease\");\n                }\n            \n        }\n        \n    }\n}\n                \n",
+                    "Parameters": [
+                      {
+                        "Key": "InfectionDate",
+                        "Value": "01/03/2015 00:00:00"
+                      },
+                      {
+                        "Key": "IsInfected",
+                        "Value": "False"
+                      }
+                    ],
+                    "Name": "FungalInfection",
+                    "IncludeInDocumentation": true,
+                    "Enabled": true,
+                    "ReadOnly": false
+                  }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[FodderBeet].Leaf.Fw",
+                "[FodderBeet].Leaf.Fn",
+                "[FodderBeet].Phenology.CurrentPhase.Name",
+                "[FodderBeet].Phenology.Stage",
+                "[FodderBeet].Phenology.ThermalTime",
+                "[FodderBeet].Phenology.AccumulatedThermalTime",
+                "[FodderBeet].Leaf.Live.Wt",
+                "[FodderBeet].Petiole.Live.Wt",
+                "[FodderBeet].StorageRoot.Live.Wt",
+                "[FodderBeet].Leaf.LAI",
+                "[FodderBeet].Structure.LeafTipsAppeared",
+                "[FodderBeet].Leaf.PlantAppearedLeafNo",
+                "[FodderBeet].Leaf.PlantAppearedGreenLeafNo",
+                "[FodderBeet].Leaf.PlantsenescedLeafNo",
+                "[FodderBeet].Leaf.CoverGreen",
+                "[FodderBeet].Leaf.CohortParameters.MaxArea",
+                "[FodderBeet].AboveGround.Wt",
+                "[FodderBeet].Leaf.Photosynthesis.RadnInt",
+                "[FodderBeet].Leaf.Photosynthesis.RUEact",
+                "[FodderBeet].Leaf.Live.N",
+                "[FodderBeet].Root.Live.N",
+                "[FodderBeet].StorageRoot.Live.N",
+                "[FodderBeet].Petiole.Live.N",
+                "[FodderBeet].Leaf.Live.NConc",
+                "[FodderBeet].Root.Live.NConc",
+                "[FodderBeet].SCS"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models;\nusing Models.Core;\nusing Models.Utilities;\nusing Models.GrazPlan;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Linq;\nusing Models.AgPasture;\nusing System.Diagnostics;\n\nnamespace Models\n{\n\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] Stock stock;\n        [Link] List<Zone> paddocks;\n        [Link] ISummary summary;\n        [Link] Simulation farm;\n\n        private int CurrentGroupNum = 1;    // animal group number\n        private int CurrentLocationNum { get; set; }\n        public string CurrentLocation { get; set; }\n\n        public enum Genotypes\n        {\n            SmallMerino,\n            Angus,\n            Friesian\n        }\n\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\n\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \n        public Genotypes Genotype { get; set; }\n\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \n        public ReproductiveType Sex { get; set; }\n\n        [Description(\"Stock: age (months):\")] \n        public double Age { get; set; }\n\n        [Description(\"Stock: weight (kg liveweight /head):\")] \n        public double Weight { get; set; }\n\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \n        public int Pregnant { get; set; }\n\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\n        public int Lactating { get; set; }\n\n        [Description(\"Stock: number of unweaned young:\")]\n        public int YoungNumber { get; set; }\n\n        [Description(\"Stock: weight of unweaned young:\")] \n        public double YoungWt { get; set; }\n\n        [Separator(\"Grazing type info\")]\n\n        [Description(\"Paddock stocking rate (head/ha): \")] \n        public double StockingRate { get; set; }\n\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \n        public string InitialLocation { get; set; }\n\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \n        public double PreGrazingDM { get; set; }\n\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \n        public double PostGrazingDM { get; set; }\n\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \n        public bool DoNoGrazingWindow { get; set; }\n\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \n        public string NoGrazeStart { get; set; }\n\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \n        public string NoGrazeEnd { get; set; }\n\n\n        public int NumStock { get; set; }\n        // number of cows on the whole farm\n        public bool GrazingSeasonIsOpen { get; set; }\n\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n\n            //Debugger.Break();\n\n            summary.WriteMessage(this, \"Initialising the paddock information\");\n\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\n            CurrentLocation = InitialLocation;\n            if (CurrentLocation.ToLower() != \"away\")\n            {\n                BuyStock();\n                stock.Move(CurrentLocation);\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\n            }\n\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\n\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            GrazingSeasonIsOpen = true;\n            if (DoNoGrazingWindow)\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\n\n            bool sellSomeStock = false;\n            if (!GrazingSeasonIsOpen)\n                sellSomeStock = true;\n\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\n            if (harvestableBiomass <= PostGrazingDM)\n                sellSomeStock = true;\n\n            if (CurrentLocation == \"Away\")\n                sellSomeStock = false;\n\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\n            {\n                CurrentLocation = paddocks[0].Name;\n                CurrentLocationNum = paddocks[0].Index;\n                BuyStock();\n                stock.Move(CurrentLocation);\n                summary.WriteMessage(this, \"     Buying stock \");\n            }\n\n            if (sellSomeStock)\n            {\n                CurrentLocation = \"Away\";\n                CurrentLocationNum = -1;\n                SellStock();\n                summary.WriteMessage(this, \"     Selling stock \");\n            }\n\n        }\n\n\n        public void BuyStock()\n        {\n            CurrentGroupNum = stock.NoGroups + 1;\n            StockBuy purchase = new StockBuy();\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\n            purchase.Number = NumStock;\n            purchase.Sex = Sex;\n            purchase.Age = Age;       // age in months\n            purchase.Weight = Weight;  // live weight in kg\n            purchase.UseTag = CurrentGroupNum + 1;\n            purchase.MatedTo = purchase.Genotype;\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\n            purchase.NumYoung = YoungNumber;\n            purchase.YoungWt = YoungWt;\n\n            stock.Buy(purchase);\n        }\n\n        public void SellStock()\n        {\n            int NumGroups = stock.NoGroups;\n\n            NumGroups = stock.NoGroups;\n            foreach (var animalGroup in stock.AnimalGroups)\n            {\n                stock.Sell(animalGroup.NoAnimals, animalGroup);\n            }\n        }\n    }\n}\n",
+          "Parameters": [
+            {
+              "Key": "Genotype",
+              "Value": "Friesian"
+            },
+            {
+              "Key": "Sex",
+              "Value": "Female"
+            },
+            {
+              "Key": "Age",
+              "Value": "36"
+            },
+            {
+              "Key": "Weight",
+              "Value": "520"
+            },
+            {
+              "Key": "Pregnant",
+              "Value": "0"
+            },
+            {
+              "Key": "Lactating",
+              "Value": "0"
+            },
+            {
+              "Key": "YoungNumber",
+              "Value": "0"
+            },
+            {
+              "Key": "YoungWt",
+              "Value": "0"
+            },
+            {
+              "Key": "StockingRate",
+              "Value": "50"
+            },
+            {
+              "Key": "InitialLocation",
+              "Value": "Away"
+            },
+            {
+              "Key": "PreGrazingDM",
+              "Value": "2800"
+            },
+            {
+              "Key": "PostGrazingDM",
+              "Value": "5"
+            },
+            {
+              "Key": "DoNoGrazingWindow",
+              "Value": "True"
+            },
+            {
+              "Key": "NoGrazeStart",
+              "Value": "1-Nov"
+            },
+            {
+              "Key": "NoGrazeEnd",
+              "Value": "30-may"
+            }
+          ],
+          "Name": "GrazeForageCrop",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.GrazPlan.Stock, Models",
+          "randFactory": {
+            "$type": "StdUnits.MyRandom, Models"
+          },
+          "RandSeed": 9999,
+          "StockModel": null,
+          "Name": "Stock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "BiomassGraphs",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "Crop Biomass (g/m2)",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": 4000.0,
+                  "Interval": 500.0,
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "TotalWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FodderBeet.AboveGround.Wt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Simulated",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "Crop Biomass (g/m2)",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": 2500.0,
+                  "Interval": 500.0,
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "StorageRootWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FodderBeet.StorageRoot.Live.Wt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Simulated",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": 1.0,
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "SCS",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FodderBeet.SCS",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Simulated",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

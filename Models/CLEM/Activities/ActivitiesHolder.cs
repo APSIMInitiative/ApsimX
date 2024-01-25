@@ -3,77 +3,33 @@ using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// Manger for all activities available to the model
+    /// Manager for all activities available to the model
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [Description("This holds all activities used in the CLEM simulation")]
-    public class ActivitiesHolder: CLEMModel
+    [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
+    [Version(1, 0, 1, "")]
+    public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep" };
-
-        /// <summary>
-        /// List of the all the Activities.
-        /// </summary>
-        [XmlIgnore]
-        private List<IModel> activities;
-
-        private void BindEvents(List<IModel> root)
-        {
-            foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                if (item.GetType() != typeof(ActivityFolder))
-                {
-                    (item as CLEMActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
-                    (item as CLEMActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
-                }
-                BindEvents(item.Children.Cast<IModel>().ToList());
-            }
-            // add link to all timers as children so they can fire activity performed
-            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
-            {
-                (timer as IActivityPerformedNotifier).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
-            }
-        }
-
-        private void UnBindEvents(List<IModel> root)
-        {
-            foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                if (item.GetType() != typeof(ActivityFolder))
-                {
-                    (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
-                    (item as CLEMActivityBase).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
-                }
-                UnBindEvents(item.Children.Cast<IModel>().ToList());
-            }
-            // add link to all timers as children so they can fire activity performed
-            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
-            {
-                (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
-            }
-        }
+        private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
+        private int nextUniqueID = 1;
 
         /// <summary>
         /// Last resource request that was in defecit
         /// </summary>
+        [JsonIgnore]
         public ResourceRequest LastShortfallResourceRequest { get; set; }
-
-        private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
-        {
-            // save resource request
-            LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;
-            // call resourceShortfallEventhandler
-            OnShortfallOccurred(e);
-        }
 
         /// <summary>
         /// Resource shortfall occured event handler
@@ -81,156 +37,175 @@ namespace Models.CLEM.Activities
         public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnShortfallOccurred(EventArgs e)
-        {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
-
-        /// <summary>
-        /// Details of the last activity performed
-        /// </summary>
-        public CLEMActivityBase LastActivityPerformed { get; set; }
-        
-        private void ActivitiesHolder_ActivityPerformed(object sender, EventArgs e)
-        {
-            // save 
-            LastActivityPerformed = (e as ActivityPerformedEventArgs).Activity;
-            // call ActivityPerformedEventhandler
-            OnActivityPerformed(e);
-        }
-
-        /// <summary>
         /// Resource shortfall occured event handler
         /// </summary>
         public event EventHandler ActivityPerformed;
 
         /// <summary>
-        /// Shortfall occurred 
+        /// Method to raise the Shortfall occurred event handler.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Event arguments.</param>
+        protected virtual void OnShortfallOccurred(EventArgs e)
+        {
+            ResourceShortfallOccurred?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Holds the event arguments for the activity performed event
+        /// </summary>
+        [JsonIgnore]
+        public ActivityPerformedEventArgs LastActivityPerformed { get; set; }
+
+        /// <summary>
+        /// Shortfall occurred Event Handler
+        /// </summary>
+        /// <param name="e">Default event args object for this event.</param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Function to return an activity from the list of available activities.
+        /// Create a GuID object based on next unique ID available.
         /// </summary>
-        /// <param name="activity"></param>
-        /// <param name="Name"></param>
-        /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string Name)
+        /// <returns>CLEM formated GuID object.</returns>
+        public Guid NextGuID
         {
-            IModel found = activity.Children.Find(x => x.Name == Name);
-            if (found != null) return found;
-
-            foreach (var child in activity.Children)
+            get 
             {
-                found = SearchForNameInActivity(child, Name);
-                if (found != null) return found;
+                int current = nextUniqueID;
+                nextUniqueID++;
+                return Guid.Parse($"{current.ToString().PadLeft(8, '0')}-0000-0000-0000-000000000000");
             }
-            return null;
         }
 
         /// <summary>
-        /// Function to return an activity from the list of available activities.
+        /// Provide the next GUID based on level specified when using GUID for identifying nested activities.
         /// </summary>
-        /// <param name="Name"></param>
-        /// <returns></returns>
-        public IModel SearchForNameInActivities(string Name)
+        /// <param name="guid">GuID object which needs one level incremented by 1.</param>
+        /// <param name="level">Zero bound level index to be incremented (permits 1 to 3).</param>
+        /// <returns>New GuID object with updated level.</returns>
+        public static Guid AddToGuID(Guid guid, int level)
         {
-            IModel found = Children.Find(x => x.Name == Name);
-            if (found != null) return found;
-
-            foreach (var child in Children)
+            if (level > 0 & level <= 3)
             {
-                found = SearchForNameInActivity(child, Name);
-                if (found != null) return found;
+                string[] parts = guid.ToString().Split('-');
+                int number = Convert.ToInt32(parts[level]) + 1;
+                parts[level] = number.ToString().PadLeft(4, '0');
+                return Guid.Parse(string.Join('-', parts));
             }
-            return null;
+            else
+                throw new ArgumentException("Add to GuID only supports levels 1 to 3");
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+
+        /// <summary>An method to perform core actions when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            activities = Apsim.Children(this, typeof(IModel));
-            BindEvents(activities);
+            foreach (var activity in FindAllDescendants<CLEMModel>())
+                activity.UniqueID = NextGuID;
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            UnBindEvents(activities);
-        }
-
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        private void OnGetResourcesRequired(object sender, EventArgs e)
-        {
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                child.GetResourcesForAllActivities();
-            }
-        }
-
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                child.GetResourcesForAllActivityInitialisation();
-            }
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>A method to allow all activities to perform actions at the end of the time step.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
-        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
+        private void ReportActivityStatusAtEndOfTimestep(object sender, EventArgs e)
+        {
+            ReportAllActivityStatus();
+        }
+
+        /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
+        {
+            ReportAllActivityStatus(true);
+        }
+
+        private void ReportAllActivityStatus(bool fromSetup = false)
         {
             // fire all activity performed triggers at end of time step
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                child.ReportAllAllActivitiesPerformed();
-            }
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.ReportActivityStatus(0, fromSetup);
 
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {
-                Activity = TimeStep
+                Name = timeStep.Name,
+                Status = timeStep.Status,
+                Id = timeStep.UniqueID.ToString(),
+                ModelType = (int)ActivityPerformedType.Timer,
             };
-            LastActivityPerformed = TimeStep;
+            LastActivityPerformed = ea;
             OnActivityPerformed(ea);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        /// <summary>
+        /// Report activity performed event
+        /// </summary>
+        /// <param name="e"></param>
+        public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
-            // fire all activity performed triggers at end of time step
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                child.ClearAllAllActivitiesPerformedStatus();
-            }
+            LastActivityPerformed = e;
+            OnActivityPerformed(e);
         }
 
+        /// <summary>
+        /// Report activity shortfall event
+        /// </summary>
+        /// <param name="e"></param>
+        public void ReportActivityShortfall(ResourceRequestEventArgs e)
+        {
+            LastShortfallResourceRequest = e.Request;
+            OnShortfallOccurred(e);
+        }
+
+        #region validation
+
+        /// <summary>
+        /// Determines whether the specified object is valid.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A collection that holds failed-validation information.</returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure all folders are not APSIM folders
+            if (FindAllDescendants<Folder>().Any())
+            {
+                string[] memberNames = new string[] { "ActivityHolder" };
+                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            return "\r\n<h1>Activities summary</h1>";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
+        {
+            return $"\r\n<div class=\"activity\"style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
+        {
+            return "\r\n</div>";
+        } 
+        #endregion
     }
 }

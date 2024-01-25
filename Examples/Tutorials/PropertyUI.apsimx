@@ -1,0 +1,253 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 122,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "PropertyDemo manager script contains examples of most options for controlling property UI. See tooltips and code comments for details.",
+      "Name": "readme",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Folder",
+      "Children": [
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Core;\nusing System;\r\nusing System.Linq;\nusing System.Collections.Generic;\nusing System.Drawing;\nusing Models.PMF;\n\nnamespace Models\n{\n\t[Serializable]\n\tpublic class Script : Model\n\t{\n\t\t// -------------------------------------------------\n\t\t// Text inputs\n\t\t// -------------------------------------------------\n\t\t[Separator(\"Text inputs\")]\n\t\t[Description(\"Single line text input\")]\n\t\t[Tooltip(\"Enter some text\")]\n\t\tpublic string Text { get; set; }\n\n\t\t[Description(\"Multi line text input\")]\n\t\t[Tooltip(\"Enter a long message\")]\n\t\t[Display(Type = DisplayType.MultiLineText)]\n\t\tpublic string Message { get; set; }\n\n\t\t[Description(\"Enter messages (one per line)\")]\n\t\t[Tooltip(\"Each line will be treated as a separate element in the array\")]\n\t\t[Display(Type = DisplayType.MultiLineText)]\n\t\tpublic string[] Texts { get; set; }\n\n\t\t[Description(\"Single file input\")]\n\t\t[Tooltip(\"Select a single file\")]\n\t\t[Display(Type = DisplayType.FileName)]\n\t\tpublic string File { get; set; }\n\n\t\t[Description(\"Multi-file input\")]\n\t\t[Tooltip(\"If typing file names manually, separate them with commas\")]\n\t\t[Display(Type = DisplayType.FileNames)]\n\t\tpublic string[] Files { get; set; }\n\n\t\t[Description(\"Directory input\")]\n\t\t[Tooltip(\"Select directories\")]\n\t\t[Display(Type = DisplayType.DirectoryName)]\n\t\tpublic string Directory { get; set; }\n\n\t\t// -------------------------------------------------\n\t\t// Dropdowns\n\t\t// -------------------------------------------------\n\t\t[Separator(\"Dropdowns\")]\n\t\t[Description(\"Dropdown with custom values (static version)\")]\n\t\t[Tooltip(\"Select a day of the week\")]\n\t\tpublic DayOfWeek Day { get; set; }\n\n\t\t// This gives the ultimate flexibility for dropdowns. See comment\n\t\t// on GetCustomValues() function for more details.\n\t\t[Description(\"Dropdown with custom values (dynamic version)\")]\n\t\t[Tooltip(\"The selected plant name will appear in this list. See code comment for details.\")]\n\t\t[Display(Type = DisplayType.DropDown, Values = \"GetCustomValues\")]\n\t\tpublic string CustomValue { get; set; }\n\n\t\t// The type of this property (Plant in this case) determines\n\t\t// which models appear in the dropdown list.\n\t\t// Behaviour is undefined if there are multiple models with the\n\t\t// same name in scope. E.g. if there are 2 wheat models in the same zone.\n\t\t[Description(\"Dropdown with all plants in scope\")]\n\t\t[Tooltip(\"Select a plant\")]\n\t\tpublic Plant Crop { get; set; }\n\n\t\t// This shows a dropdown of all cultivar names. It gets complicated\n\t\t// when there are multiple plants in scope. If used as-is with no\n\t\t// extra options, it will just show the cultivars of the first crop\n\t\t// it finds. For more complicated scenarios, there are currently 2 options:\n\t\t//\n\t\t// 1. Specify a plant name manually. This will need to be manually changed\n\t\t//    after changing the selected plant in the plant drop-down. e.g.\n\t\t//    [Display(Type = DisplayType.CultivarName, PlantName = \"Wheat\")]\n\t\t//\n\t\t// 2. DisplayType.DropDown with a custom function\n\t\t//    (see 'Dropdown with custom values (dynamic version)' example).\n\t\t//\n\t\t// This needs to be fixed at some point...\n\t\t[Description(\"Dropdown of cultivar names (simple version)\")]\n\t\t[Tooltip(\"See source code comment for details. This one is pretty flexible.\")]\n\t\t[Display(Type = DisplayType.CultivarName)]\n\t\tpublic string Cultivar { get; set; }\n\n\t\t[Description(\"Dropdown of table names\")]\n\t\t[Tooltip(\"If the simulation has never been run, this dropdown will be empty\")]\n\t\t[Display(Type = DisplayType.TableName)]\n\t\tpublic string Table { get; set; }\n\n\t\t[Description(\"Dropdown of column names\")]\n\t\t[Tooltip(\"The available columns are determined by the table name property. If there are multiple table name properties, the first will be used. If the simulation has never been run, this dropdown will be empty.\")]\n\t\t[Display(Type = DisplayType.FieldName)]\n\t\tpublic string Column { get; set; }\n\n\t\t[Description(\"Dropdown with colours\")]\n\t\t[Tooltip(\"Select a colour\")]\n\t\tpublic Color Colour { get; set; }\n\n\t\t// -------------------------------------------------\n\t\t// Other\n\t\t// -------------------------------------------------\n\t\t[Separator(\"Other\")]\n\t\t[Description(\"Checkbox\")]\n\t\t[Tooltip(\"Checked = true, Unchecked = false\")]\n\t\tpublic bool Flag { get; set; }\n\n\t\t// This function is called when using DisplayType.DropDown.\n\t\t// This function returns the values used to populate the dropdown.\n\t\t// The Values property in the [Display] attribute must be specified as\n\t\t// the name of this function without parentheses, like so:\n\t\t// [Display(Type = DisplayType.DropDown, Values = \"GetCustomValues\")]\n\t\t//\n\t\t// The function must accept no arguments and must return any\n\t\t// IEnumerable<string> - e.g. List<string>, string[], etc.\n\t\tpublic List<string> GetCustomValues()\n\t\t{\n\t\t\tList<string> result = new List<string>()\n\t\t\t{\n\t\t\t\t\"foo\",\n\t\t\t\t\"bar\"\n\t\t\t};\n\n\t\t\t// Add crop name to the dropdown, if a crop has been selected\n\t\t\tif (Crop != null)\n\t\t\t\tresult.Add(Crop.Name);\n\n\t\t\tif (Day == DayOfWeek.Thursday)\n\t\t\t\tresult.Add(\"Thursday has been selected\");\n\n\t\t\treturn result;\n\t\t}\n\t}\n\n\tpublic enum DayOfWeek\n\t{\n\t\tSunday,\n\t\tMonday,\n\t\tTuesday,\n\t\tWednesday,\n\t\tThursday,\n\t\tFriday,\n\t\tSaturday\n\t}\n}",
+          "Parameters": [
+            {
+              "Key": "Text",
+              "Value": ""
+            },
+            {
+              "Key": "Texts",
+              "Value": ""
+            },
+            {
+              "Key": "Message",
+              "Value": ""
+            },
+            {
+              "Key": "File",
+              "Value": ""
+            },
+            {
+              "Key": "Files",
+              "Value": ""
+            },
+            {
+              "Key": "Directory",
+              "Value": ""
+            },
+            {
+              "Key": "Day",
+              "Value": "Sunday"
+            },
+            {
+              "Key": "CustomValue",
+              "Value": "Wheat"
+            },
+            {
+              "Key": "Crop",
+              "Value": "[Wheat]"
+            },
+            {
+              "Key": "Cultivar",
+              "Value": "Adv08_0008"
+            },
+            {
+              "Key": "Table",
+              "Value": "StartOfWeekReport"
+            },
+            {
+              "Key": "Column",
+              "Value": "y"
+            },
+            {
+              "Key": "Colour",
+              "Value": "-11094807"
+            },
+            {
+              "Key": "Flag",
+              "Value": "True"
+            }
+          ],
+          "Name": "PropertyDemo",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+          "Name": "ChildPropertyDemo",
+          "Children": [
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 1.0,
+              "FractionDeadToResidue": 1.0,
+              "Name": "Harvest",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 1.0,
+              "FractionDeadToResidue": 1.0,
+              "Name": "Cut",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 0.0,
+              "FractionDeadToResidue": 0.0,
+              "Name": "Prune",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 0.0,
+              "FractionDeadToResidue": 0.0,
+              "Name": "Graze",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Plant, Models",
+          "ResourceName": "Wheat",
+          "Name": "Wheat",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Plant, Models",
+          "ResourceName": "Barley",
+          "Name": "Barley",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "Only reason for the simulation is so that the table name dropdown can have some values in it",
+          "Name": "note",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2020-01-01T00:00:00",
+          "End": "2020-01-10T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].Today.DayOfYear as x"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "GroupByVariableName": null,
+          "Name": "DailyReport",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].Today.DayOfYear as y"
+          ],
+          "EventNames": [
+            "[Clock].StartOfWeek"
+          ],
+          "GroupByVariableName": null,
+          "Name": "StartOfWeekReport",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

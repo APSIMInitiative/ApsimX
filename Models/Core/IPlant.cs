@@ -1,8 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ICrop.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using Models.PMF;
+using System.Collections.Generic;
+
 namespace Models.Core
 {
     /// <summary>
@@ -10,19 +8,26 @@ namespace Models.Core
     /// crops must have. In effect this interface describes the interactions
     /// between a crop and the other models in APSIM.
     /// </summary>
-    public interface IPlant
+    public interface IPlant : IModel
     {
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        double Legumosity { get; }
-
-        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        bool IsC4 { get; }
+        /// <summary>The plant type.</summary>
+        /// <remarks>A substitute for the old Leguminosity.</remarks>
+        string PlantType{ get; }
 
         /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }
 
         /// <summary>Gets a list of cultivar names</summary>
         string[] CultivarNames { get; }
+
+        /// <summary>Get above ground biomass</summary>
+        IBiomass AboveGround { get; }
+
+        /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
+        IReadOnlyList<double> WaterUptake { get; }
+
+        /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
+        IReadOnlyList<double> NitrogenUptake { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
@@ -31,21 +36,19 @@ namespace Models.Core
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1);
+        /// <param name="rowConfig">The bud number.</param>
+        /// <param name="seeds">The number of seeds sown (/m2).</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
+        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0);
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         bool IsReadyForHarvesting { get; }
 
         /// <summary>Harvest the crop</summary>
-        void Harvest();
+        void Harvest(bool removeBiomassFromOrgans = true);
 
         /// <summary>End the crop</summary>
         void EndCrop();
-
-        /// <summary>
-        /// Biomass has been removed from the plant.
-        /// </summary>
-        /// <param name="fractionRemoved">The fraction of biomass removed</param>
-        void BiomassRemovalComplete(double fractionRemoved);
     }
 }
