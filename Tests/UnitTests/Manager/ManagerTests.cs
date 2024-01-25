@@ -3,13 +3,18 @@ using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
+using APSIM.Shared.Documentation;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UnitTests.Storage;
+using Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
+
 namespace UnitTests.ManagerTests
 {
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System.Collections.Generic;
-    using System.IO;
-    using UnitTests.Storage;
 
     /// <summary>
     /// Unit Tests for manager scripts.
@@ -177,6 +182,314 @@ namespace UnitTests.ManagerTests
             double[] actual = storage.Get<double>("[Script2].B");
             double[] expected = new double[] { 2 };
             Assert.AreNotEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// This test makes runs one or more tests on each function in the model class.
+        /// It tracks if there are any methods or properties that don't have a test in this test.
+        /// </summary>
+        [Test]
+        public void ManagerMethodTests()
+        {
+            List<string> methodsTested = new List<string>();
+            List<string> propertiesTested = new List<string>();
+
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod;
+
+            List<MethodInfo> methods = ReflectionUtilities.GetAllMethodsWithoutProperties(typeof(Manager));
+            List<PropertyInfo> properties = ReflectionUtilities.GetAllProperties(typeof(Manager), flags, false);
+
+            string basicCode = "";
+            basicCode += "using System.Linq;\n";
+            basicCode += "using System;\n";
+            basicCode += "using Models.Core;\n";
+            basicCode += "namespace Models {\n";
+            basicCode += "\t[Serializable]\n";
+            basicCode += "\tpublic class Script : Model {\n";
+            basicCode += "\t\t[Description(\"AProperty\")]\n";
+            basicCode += "\t\tpublic string AProperty { get; set; } = \"Hello World\";\n";
+            basicCode += "\t\t\tpublic void Document() { return; }\n";
+            basicCode += "\t}\n";
+            basicCode += "}\n";
+
+            string basicCodeBroken = basicCode.Replace("{", "");
+
+            Simulations sims = new Simulations();
+            ScriptCompiler compiler = new ScriptCompiler();
+            Manager testManager = new Manager();
+
+            // ---------------
+            // Private Methods
+            // ----------------
+
+            //---------------------------------------------
+            //These two functions work together
+            methodsTested.Add("SetCompiler");
+            methodsTested.Add("Compiler");
+            typeof(Manager).InvokeMember("SetCompiler", flags, null, testManager, new object[] { compiler });
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("Compiler", flags, null, testManager, null));
+
+            //---------------------------------------------
+            methodsTested.Add("TryGetCompiler");
+            //Should be false if running without a compiler
+            testManager = new Manager();
+            Assert.False((bool)typeof(Manager).InvokeMember("TryGetCompiler", flags, null, testManager, null));
+            //should be found in sims
+            testManager.Parent = sims;
+            Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", flags, null, testManager, null));
+            //check if works assigning directly.
+            testManager = new Manager();
+            typeof(Manager).InvokeMember("SetCompiler", flags, null, testManager, new object[] { compiler });
+            Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", flags, null, testManager, null));
+
+            //---------------------------------------------
+            methodsTested.Add("OnStartOfSimulation");
+            //should not throw, but not do anything
+            testManager = new Manager();
+            testManager.Parent = sims;
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", flags, null, testManager, new object[] { new object(), new EventArgs() }));
+            Assert.IsNull(testManager.Parameters);
+
+            //should work
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", flags, null, testManager, new object[] { new object(), new EventArgs() }));
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            //Should fail, as broken code was last to compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            try { testManager.Code = basicCodeBroken; } catch { }
+            try
+            {
+                typeof(Manager).InvokeMember("OnStartOfSimulation", flags, null, testManager, new object[] { new object(), new EventArgs() });
+                Assert.Fail();
+            }
+            catch { }
+
+            //---------------------------------------------
+            methodsTested.Add("SetParametersInScriptModel");
+            //Should not throw, but not make parameters
+            testManager = new Manager();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", flags, null, testManager, new object[] { }));
+            Assert.IsNull(testManager.Parameters);
+
+            //Should make parameters
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", flags, null, testManager, new object[] { }));
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            //Should make parameters
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Enabled = false;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", flags, null, testManager, new object[] { }));
+            Assert.IsNull(testManager.Parameters);
+
+            //---------------------------------------------
+            methodsTested.Add("GetParametersFromScriptModel");
+            //Should not throw, but not make parameters
+            testManager = new Manager();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("GetParametersFromScriptModel", flags, null, testManager, new object[] { }));
+            Assert.IsNull(testManager.Parameters);
+
+            //Should make parameters
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("GetParametersFromScriptModel", flags, null, testManager, new object[] { }));
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            // ---------------
+            // Public Methods
+            // ----------------
+
+            //---------------------------------------------
+            methodsTested.Add("OnCreated");
+            //shouldn't throw, but shouldn't load any script
+            testManager = new Manager();
+            Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.IsNull(testManager.Parameters);
+
+            //shouldn't throw, but shouldn't load any script
+            testManager = new Manager();
+            testManager.Parent = sims;
+            Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.AreEqual(0, testManager.Parameters.Count);
+
+            //should compile the script
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            //---------------------------------------------
+            methodsTested.Add("RebuildScriptModel");
+            //should not throw, but should not compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
+            Assert.IsNull(testManager.Parameters);
+
+            //should compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            //should not compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.Enabled = false;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
+            Assert.IsNull(testManager.Parameters);
+
+            //should not compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
+            Assert.AreEqual(0, testManager.Parameters.Count);
+
+            //should not compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = "";
+            testManager.OnCreated();
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
+            Assert.IsNull(testManager.Parameters);
+
+            //should throw
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCodeBroken;
+            try { testManager.OnCreated(); } catch { }
+            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
+            Assert.IsNull(testManager.Parameters);
+
+            //---------------------------------------------
+            methodsTested.Add("Document");
+            //should work
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            List<ITag> tags = new List<ITag>();
+            foreach (ITag tag in testManager.Document())
+                tags.Add(tag);
+            Assert.AreEqual(1, tags.Count);
+
+            //should not work
+            testManager = new Manager();
+            testManager.Code = basicCode;
+            testManager.OnCreated();
+            tags = new List<ITag>();
+            foreach (ITag tag in testManager.Document())
+                tags.Add(tag);
+            Assert.AreEqual(0, tags.Count);
+
+            // ---------------
+            // Properties
+            // ----------------
+
+            //---------------------------------------------
+            propertiesTested.Add("CodeArray");
+            testManager = new Manager();
+            testManager.Code = basicCode;
+            string[] array = testManager.CodeArray;
+            testManager.CodeArray = array;
+            string[] array2 = testManager.CodeArray;
+            Assert.AreEqual(array, array2);
+
+            //---------------------------------------------
+            propertiesTested.Add("Code");
+            //empty
+            testManager = new Manager();
+            testManager.Code = "";
+            Assert.AreEqual("", testManager.Code);
+            //one space
+            testManager = new Manager();
+            testManager.Code = " ";
+            Assert.AreEqual(" ", testManager.Code);
+            //two lines
+            testManager = new Manager();
+            testManager.Code = " \n ";
+            Assert.AreEqual(" \n ", testManager.Code);
+            //null
+            testManager = new Manager();
+            try
+            {
+                testManager.Code = null;
+                Assert.Fail();
+            } catch { }
+            //code in and out
+            testManager = new Manager();
+            testManager.Code = basicCode;
+            string code = testManager.Code;
+            Assert.AreEqual(basicCode, code);
+            //should remove \r characters
+            code = code.Replace("\n", "\r\n");
+            testManager.Code = basicCode;
+            Assert.AreNotEqual(code, testManager.Code);
+            //should compile
+            testManager = new Manager();
+            testManager.Parent = sims;
+            testManager.OnCreated();
+            testManager.Code = basicCode;
+            Assert.AreEqual(1, testManager.Parameters.Count);
+
+            //---------------------------------------------
+            propertiesTested.Add("Parameters");
+            List<KeyValuePair<string, string>> paras = new List<KeyValuePair<string, string>>();
+            paras.Add(new KeyValuePair<string, string>("AProperty", "Hello World"));
+            
+            testManager = new Manager();
+            testManager.Parameters = paras;
+            Assert.AreEqual(paras, testManager.Parameters);
+
+            testManager = new Manager();
+            testManager.Parameters = null;
+            Assert.IsNull(testManager.Parameters);
+
+            //---------------------------------------------
+            propertiesTested.Add("Cursor");
+            testManager = new Manager();
+            ManagerCursorLocation loc = new ManagerCursorLocation();
+            loc.TabIndex = 1;
+            testManager.Cursor = loc;
+            Assert.AreEqual(loc, testManager.Cursor);
+
+            testManager = new Manager();
+            testManager.Cursor = null;
+            Assert.IsNull(testManager.Cursor);
+
+            //---------------------------------------------
+            propertiesTested.Add("SuccessfullyCompiledLast");
+            //Private property, cannot be tested.
+
+            foreach (MethodInfo method in methods)
+                if (methodsTested.Contains(method.Name) == false)
+                    Assert.Fail($"{method.Name} is not tested by an individual unit test.");
+
+            foreach (PropertyInfo prop in properties)
+                if (propertiesTested.Contains(prop.Name) == false)
+                    Assert.Fail($"{prop.Name} is not tested by an individual unit test.");
         }
     }
 }

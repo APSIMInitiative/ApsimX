@@ -97,7 +97,7 @@ namespace UserInterface.Presenters
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.CursorLocation = manager.cursor;
+            managerView.CursorLocation = manager.Cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
         }
@@ -107,8 +107,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            manager.cursor.TabIndex = managerView.TabIndex;
-            manager.cursor = managerView.CursorLocation;
+            manager.Cursor.TabIndex = managerView.TabIndex;
+            manager.Cursor = managerView.CursorLocation;
 
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
