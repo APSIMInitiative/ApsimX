@@ -580,18 +580,18 @@ namespace Models.CLEM.Activities
                             FMEIrf = 1; // set as 1 and there is no reduction for concentrates.
                             break;
                         case FeedType.HaySilage:
-                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * 0.01 * feedingLevel; // DMD in proportion
+                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
                             FMEIrf = 1; // add later depending on feed type, need to add new types PastureTrop, PastureTemp, HaySilage (non-grazed forage). ?? Lucena
                             break;
                         case FeedType.Milk:
                             FMEIrf = 0; // ignore milk. solids only
                             break;
                         case FeedType.PastureTemperate:
-                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * 0.01 * feedingLevel; // DMD in proportion
+                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
                             FMEIrf = 1;
                             break;
                         case FeedType.PastureTropical:
-                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * 0.01 * feedingLevel; // DMD in proportion
+                            DPrf = 1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
                             FMEIrf = 1;
                             break;
                         default:
