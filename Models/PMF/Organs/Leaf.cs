@@ -1396,6 +1396,7 @@ namespace Models.PMF.Organs
                 {
                     L.DoActualGrowth(thermalTime, CohortParameters);
                     needToRecalculateLiveDead = true;
+                    Detached.Add(L.Detached);
                 }
 
                 Structure.UpdateHeight();
