@@ -400,7 +400,7 @@ namespace Models.CLEM.Activities
                 if(paddockName.Contains("."))
                     paddockName = paddockName.Substring(paddockName.IndexOf(".")+1);
 
-                return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.AdultEquivalent) / areaSqKm;
+                return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.Weight.AdultEquivalent) / areaSqKm;
             }
             else
                 return 0;

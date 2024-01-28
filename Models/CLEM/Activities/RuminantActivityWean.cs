@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
-            numberToDo = uniqueIndividuals.Where(a => (a.AgeInDays >= WeaningAge.InDays && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
+            numberToDo = uniqueIndividuals.Where(a => (a.AgeInDays >= WeaningAge.InDays && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight.Live >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -214,15 +214,15 @@ namespace Models.CLEM.Activities
                     switch (Style)
                     {
                         case WeaningStyle.AgeOrWeight:
-                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays || ind.Weight >= WeaningWeight);
-                            reason = (ind.AgeInDays >= WeaningAge.InDays) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
+                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays || ind.Weight.Live >= WeaningWeight);
+                            reason = (ind.AgeInDays >= WeaningAge.InDays) ? ((ind.Weight.Live >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
                             break;
                         case WeaningStyle.AgeOnly:
                             readyToWean = (ind.AgeInDays >= WeaningAge.InDays);
                             reason = "Age";
                             break;
                         case WeaningStyle.WeightOnly:
-                            readyToWean = (ind.Weight >= WeaningWeight);
+                            readyToWean = (ind.Weight.Live >= WeaningWeight);
                             reason = "Weight";
                             break;
                     }

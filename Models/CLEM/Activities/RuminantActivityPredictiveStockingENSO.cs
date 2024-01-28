@@ -260,10 +260,10 @@ namespace Models.CLEM.Activities
                 double aELocationNeeded = 0;
 
                 // total adult equivalents of all breeds on pasture for utilisation
-                double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
+                double totalAE = paddockIndividuals.Sum(a => a.Weight.AdultEquivalent);
                 // determine AE marked for sale and purchase of managed herd
-                double markedForSaleAE = paddockIndividuals.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-                double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == pasture.Name).Sum(a => a.AdultEquivalent);
+                double markedForSaleAE = paddockIndividuals.Where(a => a.ReadyForSale).Sum(a => a.Weight.AdultEquivalent);
+                double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == pasture.Name).Sum(a => a.Weight.AdultEquivalent);
 
                 double herdChange = 1.0;
                 bool relationshipFound = false;
@@ -407,7 +407,7 @@ namespace Models.CLEM.Activities
 
                         if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                         {
-                            destockDone += ruminant.AdultEquivalent;
+                            destockDone += ruminant.Weight.AdultEquivalent;
                             ruminant.SaleFlag = HerdChangeReason.DestockSale;
                         }
                     }
@@ -451,13 +451,13 @@ namespace Models.CLEM.Activities
 
                                 newIndividual.SaleFlag = HerdChangeReason.RestockPurchase;
 
-                                if (MathUtilities.FloatsAreEqual(newIndividual.Weight, 0))
+                                if (MathUtilities.FloatsAreEqual(newIndividual.Weight.Live, 0))
                                 {
                                     throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{Name}]");
                                 }
 
                                 HerdResource.PurchaseIndividuals.Add(newIndividual);
-                                double indAE = newIndividual.AdultEquivalent;
+                                double indAE = newIndividual.Weight.AdultEquivalent;
                                 aEToBuy -= indAE;
                                 sumAE += indAE;
                                 restockDone += indAE;

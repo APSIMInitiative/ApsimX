@@ -126,7 +126,7 @@ namespace Models.CLEM.Resources
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.HighWeight >= (a.Parameters.General.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.Parameters.Breeding.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.HighestAttained >= (a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight) && a.Weight.Live >= (a.Parameters.Breeding.CriticalCowWeight * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
 
                 // assign calves to cows
                 int sucklingCount = 0;
@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
 
                             // generalised curve
                             // previously * 30.64
-                            double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight / breedFemales[0].StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
+                            double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight.Live / breedFemales[0].Weight.StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
                             // restrict minimum period between births
                             currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
 
@@ -195,13 +195,13 @@ namespace Models.CLEM.Resources
 
             }
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.HighWeight >= a.Parameters.General.MinimumSize1stMating * a.StandardReferenceWeight));
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight));
             if (remainingFemales.Any())
             {
                 var firstFemale = remainingFemales.First();
                 // gestation interval at smallest size generalised curve
-                double minAnimalWeight = firstFemale.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
-                double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
+                double minAnimalWeight = firstFemale.Weight.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.Weight.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.Weight.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
+                double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.Weight.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
                 // restrict minimum period between births
                 minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
 
@@ -211,7 +211,7 @@ namespace Models.CLEM.Resources
                 foreach (RuminantFemale female in remainingFemales)
                 {
                     // generalised curve
-                    double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
+                    double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight.Live / female.Weight.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
                     // restrict minimum period between births (previously +61)
                     currentIPI = Math.Max(currentIPI, female.Parameters.General.GestationLength.InDays + 60);
 
@@ -387,7 +387,7 @@ namespace Models.CLEM.Resources
                             {
                                 // add using the best pricing available for [][] purchases of xx per head
                                 warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] [" + matchIndividual.PricingStyle.ToString() + "] will be used.";
-                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight.Live : 1.0);
                             }
                             else
                                 warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
@@ -477,7 +477,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                    return parentHerd.Herd.Where(a => a.HerdName == Name).Sum(a => a.AdultEquivalent);
+                    return parentHerd.Herd.Where(a => a.HerdName == Name).Sum(a => a.Weight.AdultEquivalent);
                 return 0;
             }
         }

@@ -89,6 +89,15 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValue(0.079)]
         public double PrenatalMortality { get; set; }
 
+        /// <summary>
+        /// Allow determination of freemartins for this breed
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Allow freemartins")]
+        [Required]
+        [System.ComponentModel.DefaultValue(false)]
+        public bool AllowFreemartins { get; set; } = false;
+
         ///// <summary>
         ///// Proportion of wet mother's with no offspring accepting orphan
         ///// </summary>

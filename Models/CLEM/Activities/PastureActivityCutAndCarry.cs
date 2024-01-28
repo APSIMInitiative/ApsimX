@@ -157,7 +157,7 @@ namespace Models.CLEM.Activities
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.Weight * events.Interval;
+                        amountToDo += Supply * ind.Weight.Live * events.Interval;
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:

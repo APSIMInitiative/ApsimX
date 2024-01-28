@@ -54,8 +54,8 @@ namespace Models.CLEM.Resources
         public double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-            if (female.StandardReferenceWeight > 0)
-                rate = ConceptionRateAsymptote / (1 + Math.Exp(ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept));
+            if (female.Weight.StandardReferenceWeight > 0)
+                rate = ConceptionRateAsymptote / (1 + Math.Exp(ConceptionRateCoefficent * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept));
 
             rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;

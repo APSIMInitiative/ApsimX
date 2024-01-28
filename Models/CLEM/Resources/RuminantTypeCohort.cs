@@ -220,7 +220,7 @@ namespace Models.CLEM.Resources
                     if (this.Sex == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminant as RuminantFemale;
-                        ruminantFemale.WeightAtConception = ruminant.Weight;
+                        ruminantFemale.WeightAtConception = ruminant.Weight.Live;
                         ruminantFemale.NumberOfBirths = 0;
 
                         setPreviousConception?.SetConceptionDetails(ruminantFemale);
@@ -293,7 +293,7 @@ namespace Models.CLEM.Resources
                     if (rumType.Parameters.General is not null)
                     {
                         newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
-                        normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                        normWtString = newInd.Weight.NormalisedForAge.ToString("#,##0");
                     }
                 }
 
@@ -314,7 +314,7 @@ namespace Models.CLEM.Resources
                     else
                         htmlWriter.Write($" {DisplaySummaryValueSnippet(Weight)} kg");
                 }
-                if (Weight>0 && (newInd is null || (Weight>0 && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)))
+                if (Weight>0 && (newInd is null || (Weight>0 && Math.Abs(Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2)))
                     htmlWriter.Write($"<div class=\"warningbanner\">Individuals should weigh close to the normalised weight of <span class=\"errorlink\">{normWtString}</span> kg for their age.</div>");
             }
             else
@@ -400,8 +400,8 @@ namespace Models.CLEM.Resources
                         if (rumtype.Parameters.General is not null)
                             newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
 
-                        string normWtString = newInd?.NormalisedAnimalWeight.ToString("#,##0")??"Unavailable";
-                        if (newInd is null || (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2))
+                        string normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0")??"Unavailable";
+                        if (newInd is null || (this.Weight != 0 && Math.Abs(this.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2))
                         {
                             normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
                             (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;

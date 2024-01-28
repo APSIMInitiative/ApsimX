@@ -181,7 +181,7 @@ namespace Models.CLEM.Groupings
             var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
             {
                 Count = countNeeded ? a.Count() : 0,
-                Weight = weightNeeded ? a.Sum(b => b.Weight) : 0,
+                Weight = weightNeeded ? a.Sum(b => b.Weight.Live) : 0,
                 Intake = a.Sum(b => b.Intake.SolidsDaily.ActualForTimeStep(events.Interval)),
                 PotentialIntake = a.Sum(b => b.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval)),
                 IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().Parameters.Feeding.OverfeedPotentialIntakeModifier : 1

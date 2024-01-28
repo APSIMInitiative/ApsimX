@@ -114,7 +114,7 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
-            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.WoolWeight + a.CashmereWeight > 0);
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weight.Wool.Amount > 0); //+ a.CashmereWeight
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
@@ -144,7 +144,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per kg fleece":
-                                amountToDo = uniqueIndividuals.Sum(a => a.WoolWeight + a.CashmereWeight);
+                                amountToDo = uniqueIndividuals.Sum(a => a.Weight.Wool.Amount + a.Weight.Cashmere.Amount);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -194,12 +194,12 @@ namespace Models.CLEM.Activities
                 int shorn = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    kgWoolShorn += ruminant.WoolWeight;
-                    amountToDo -= ruminant.WoolWeight;
-                    kgCashmereShorn += ruminant.CashmereWeight;
-                    amountToDo -= ruminant.CashmereWeight;
-                    ruminant.WoolWeight = 0;
-                    ruminant.CashmereWeight = 0;
+                    kgWoolShorn += ruminant.Weight.Wool.Amount;
+                    amountToDo -= ruminant.Weight.Wool.Amount;
+                    kgCashmereShorn += ruminant.Weight.Cashmere.Amount;
+                    amountToDo -= ruminant.Weight.Cashmere.Amount;
+                    ruminant.Weight.Wool.Reset();
+                    ruminant.Weight.Cashmere.Reset();
                     shorn++;
                     if (amountToDo <= 0)
                         break;

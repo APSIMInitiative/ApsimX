@@ -105,10 +105,10 @@ namespace Models.CLEM
                                     available += 1;
                                     break;
                                 case PricingStyleType.perKg:
-                                    available += ind.Weight;
+                                    available += ind.Weight.Live;
                                     break;
                                 case PricingStyleType.perAE:
-                                    available += ind.AdultEquivalent;
+                                    available += ind.Weight.AdultEquivalent;
                                     break;
                                 default:
                                     break;

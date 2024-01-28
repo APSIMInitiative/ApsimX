@@ -60,10 +60,10 @@ namespace Models.CLEM.Groupings
                     case PricingStyleType.perHead:
                         break;
                     case PricingStyleType.perKg:
-                        multiplier = (ind as Ruminant).Weight;
+                        multiplier = (ind as Ruminant).Weight.Live;
                         break;
                     case PricingStyleType.perAE:
-                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        multiplier = (ind as Ruminant).Weight.AdultEquivalent;
                         break;
                     default:
                         break;

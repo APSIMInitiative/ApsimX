@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
         {
             double rate = 0;
 
-            if (female.StandardReferenceWeight > 0)
+            if (female.Weight.StandardReferenceWeight > 0)
             {
                 // generalised curve
                 switch (female.NumberOfBirths)
@@ -65,29 +65,29 @@ namespace Models.CLEM.Resources
                         //if (female.BreedParams.MinimumAge1stMating >= 24)
                         if (female.AgeInDays / 30.4 >= 24)
                             // 1st mated at 24 months or older
-                            rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
+                            rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[1]));
                         //else if (female.BreedParams.MinimumAge1stMating >= 12)
                         else if (female.AgeInDays / 30.4 >= 12)
                         {
                             // 1st mated between 12 and 24 months
-                            double rate24 = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
-                            double rate12 = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[0]));
+                            double rate24 = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[1]));
+                            double rate12 = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[0]));
                             // interpolate, not just average
                             double propOfYear = female.AgeInYears - 1; //(female.Age - 12) / 12;
                             rate = rate12 + ((rate24 - rate12) * propOfYear);
                         }
                         else
                             // first mating < 12 months old
-                            rate = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[0]));
+                            rate = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[0]));
                         break;
                     case 1:
                         // second offspring mother
-                        rate = ConceptionRateAsymptote[2] / (1 + Math.Exp(ConceptionRateCoefficent[2] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[2]));
+                        rate = ConceptionRateAsymptote[2] / (1 + Math.Exp(ConceptionRateCoefficent[2] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[2]));
                         break;
                     default:
                         // females who have had more than two births (twins should count as one birth)
-                        if (female.WeightAtConception > female.Parameters.Breeding.CriticalCowWeight * female.StandardReferenceWeight)
-                            rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[3]));
+                        if (female.WeightAtConception > female.Parameters.Breeding.CriticalCowWeight * female.Weight.StandardReferenceWeight)
+                            rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[3]));
                         break;
                 }
             }

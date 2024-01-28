@@ -168,7 +168,7 @@ namespace Models.CLEM.Activities
                 if (paddockIndividuals.Any())
                 {
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
-                    double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
+                    double totalAE = paddockIndividuals.Sum(a => a.Weight.AdultEquivalent);
 
                     double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
@@ -299,7 +299,7 @@ namespace Models.CLEM.Activities
                         }
                         if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                         {
-                            amountDone -= ruminant.AdultEquivalent;
+                            amountDone -= ruminant.Weight.AdultEquivalent;
                             ruminant.SaleFlag = HerdChangeReason.DestockSale;
                             number++;
                         }

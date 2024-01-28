@@ -95,6 +95,7 @@ namespace Models.CLEM.Resources
         public RuminantMale(RuminantType setParams, DateTime date, int setAge, double birthScalar, double setWeight)
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
+            base.Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale* setParams.Parameters.General.SRWMaleMultiplier);
         }
 
     }

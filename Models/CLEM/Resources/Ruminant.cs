@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
@@ -18,20 +19,20 @@ namespace Models.CLEM.Resources
     public abstract class Ruminant : IFilterable, IAttributable
     {
         private RuminantFemale mother;
-        private double weight;
-        private double birthweight;
-        private double baseweight;
-        private double emptyBodyChange;
+//        private double weight;
+        //private double birthweight;
+        //private double baseweight;
+        //private double emptyBodyChange;
         private int age;
-        private double normalisedWeight;
+        //private double normalisedWeight;
         //private double previousNormalisedWeight;
-        private double adultEquivalent;
-        private double proteinMass = 0;
-        private double proteinMJ = 0;
-        private double fatMass = 0;
-        private double fatMJ = 0;
-        private double previousProteinMass = 0;
-        private double previousFatMass = 0;
+        //private double adultEquivalent;
+        //private double proteinMass = 0;
+        //private double proteinMJ = 0;
+        //private double fatMass = 0;
+        //private double fatMJ = 0;
+        //private double previousProteinMass = 0;
+        //private double previousFatMass = 0;
         private bool sterilised = false;
 
         #region All new Grow SCA properties
@@ -55,70 +56,76 @@ namespace Models.CLEM.Resources
         public RuminantOutputInfo Output { get; set; } = new RuminantOutputInfo();
 
         /// <summary>
-        /// Relative size based on highest weight achieved (High weight / standard reference weight)
+        /// Store for tracking all weights
         /// </summary>
-        [FilterByProperty]
-        public double RelativeSizeByHighWeight
-        {
-            // TODO: check this is right
-            get { return HighWeight / StandardReferenceWeight; }
-        }
+        [JsonIgnore]
+        public RuminantWeightInfo Weight { get; set; }
 
-        /// <summary>
-        /// The protein mass of the individual
-        /// </summary>
-        public double ProteinMass { get { return proteinMass; } }
+        ///// <summary>
+        ///// Relative size based on highest weight achieved (High weight / standard reference weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double RelativeSizeByHighWeight
+        //{
+        //    // TODO: check this is right
+        //    get { return HighWeight / StandardReferenceWeight; }
+        //}
 
-        /// <summary>
-        /// The protein mass of the individual
-        /// </summary>
-        public double ProteinMJ { get { return proteinMJ; } }
+        ///// <summary>
+        ///// The protein mass of the individual
+        ///// </summary>
+        //public double ProteinMass { get { return proteinMass; } }
 
-        /// <summary>
-        /// The change in protein mass of the individual
-        /// </summary>
-        public double ProteinMassChange { get { return proteinMass-previousProteinMass; } }
+        ///// <summary>
+        ///// The protein mass of the individual
+        ///// </summary>
+        //public double ProteinMJ { get { return proteinMJ; } }
 
-        /// <summary>
-        /// Adjust the protein mass of the individual.
-        /// </summary>
-        /// <param name="amount">Amount to change by with sign.</param>
-        /// <param name="mj"></param>
-        public void AdjustProteinMass(double amount, double mj)
-        {
-            previousProteinMass = proteinMass;
-            proteinMass += amount;
-            proteinMJ += mj;
-            proteinMass = Math.Max(0, proteinMass);
-        }
+        ///// <summary>
+        ///// The change in protein mass of the individual
+        ///// </summary>
+        //public double ProteinMassChange { get { return proteinMass-previousProteinMass; } }
 
-        /// <summary>
-        /// The fat mass of individual
-        /// </summary>
-        public double FatMass { get { return fatMass; } }
+        ///// <summary>
+        ///// Adjust the protein mass of the individual.
+        ///// </summary>
+        ///// <param name="amount">Amount to change by with sign.</param>
+        ///// <param name="mj"></param>
+        //public void AdjustProteinMass(double amount, double mj)
+        //{
+        //    previousProteinMass = proteinMass;
+        //    proteinMass += amount;
+        //    proteinMJ += mj;
+        //    proteinMass = Math.Max(0, proteinMass);
+        //}
 
-        /// <summary>
-        /// The fat mass of individual
-        /// </summary>
-        public double FatMJ { get { return fatMJ; } }
+        ///// <summary>
+        ///// The fat mass of individual
+        ///// </summary>
+        //public double FatMass { get { return fatMass; } }
 
-        /// <summary>
-        /// The change in fat mass of the individual
-        /// </summary>
-        public double FatMassChange { get { return fatMass - previousFatMass; } }
+        ///// <summary>
+        ///// The fat mass of individual
+        ///// </summary>
+        //public double FatMJ { get { return fatMJ; } }
 
-        /// <summary>
-        /// Add fat mass to individual.
-        /// </summary>
-        /// <param name="amount">Amount to change by with sign.</param>
-        /// <param name="mj"></param>
-        public void AdjustFatMass(double amount, double mj)
-        {
-            previousFatMass = fatMass;
-            fatMJ += mj;
-            fatMass += amount;
-            fatMass = Math.Max(0, fatMass);
-        }
+        ///// <summary>
+        ///// The change in fat mass of the individual
+        ///// </summary>
+        //public double FatMassChange { get { return fatMass - previousFatMass; } }
+
+        ///// <summary>
+        ///// Add fat mass to individual.
+        ///// </summary>
+        ///// <param name="amount">Amount to change by with sign.</param>
+        ///// <param name="mj"></param>
+        //public void AdjustFatMass(double amount, double mj)
+        //{
+        //    previousFatMass = fatMass;
+        //    fatMJ += mj;
+        //    fatMass += amount;
+        //    fatMass = Math.Max(0, fatMass);
+        //}
 
         ///// <summary>
         ///// Energy used for wool production
@@ -300,17 +307,17 @@ namespace Models.CLEM.Resources
         [FilterByProperty]
         public string Location { get; set; }
 
-        /// <summary>
-        /// Amount of wool on individual
-        /// </summary>
-        [FilterByProperty]
-        public double WoolWeight { get; set; }
+        ///// <summary>
+        ///// Amount of wool on individual
+        ///// </summary>
+        //[FilterByProperty]
+        //public double WoolWeight { get; set; }
 
-        /// <summary>
-        /// Amount of cashmere on individual
-        /// </summary>
-        [FilterByProperty]
-        public double CashmereWeight { get; set; }
+        ///// <summary>
+        ///// Amount of cashmere on individual
+        ///// </summary>
+        //[FilterByProperty]
+        //public double CashmereWeight { get; set; }
 
         /// <summary>
         /// Indicates if this individual has died before removal from herd
@@ -327,6 +334,16 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public abstract Sex Sex { get; }
+
+        /// <summary>
+        /// Sterilise individual
+        /// </summary>
+        public void Sterilise(bool castration = false)
+        {
+            sterilised = true;
+            if (Sex == Sex.Male && castration)
+                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier);
+        }
 
         /// <summary>
         /// Has the individual been sterilised (webbed, spayed or castrated)
@@ -443,8 +460,8 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                if (age <= 0) age = 1;                
-                normalisedWeight = CalculateNormalisedWeight(age);
+                if (age <= 0) age = 1; 
+                Weight.SetNormalWeightForAge(age);
             }
         }
 
@@ -509,100 +526,102 @@ namespace Models.CLEM.Resources
 
         #region Weight properties
 
-        /// <summary>
-        /// Weight (kg)
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public void AdjustWeight(double amount)
-        {
-            emptyBodyChange = amount / Parameters.General.EBW2LW_CG18;
+        ///// <summary>
+        ///// Weight (kg)
+        ///// </summary>
+        ///// <units>kg</units>
+        //[FilterByProperty]
+        //public void AdjustWeight(double amount)
+        //{
+        //    emptyBodyChange = amount / Parameters.General.EBW2LW_CG18;
 
-            if (-amount > baseweight)
-                baseweight = 0;
-            else
-                baseweight += amount;
+        //    if (-amount > baseweight)
+        //        baseweight = 0;
+        //    else
+        //        baseweight += amount;
 
-            PreviousWeight = weight;
-            if (this is RuminantFemale female)
-            {
-                weight = baseweight + WoolWeight + ((this as RuminantFemale)?.ConceptusWeight ?? 0);
-                female.UpdateHighWeightWhenNotPregnant(weight);
-            }
-            else
-            {
-                weight = baseweight + WoolWeight;
-            }
+        //    PreviousWeight = weight;
+        //    if (this is RuminantFemale female)
+        //    {
+        //        weight = baseweight + WoolWeight + ((this as RuminantFemale)?.ConceptusWeight ?? 0);
+        //        female.UpdateHighWeightWhenNotPregnant(weight);
+        //    }
+        //    else
+        //    {
+        //        weight = baseweight + WoolWeight;
+        //    }
 
-            adultEquivalent = Math.Pow(weight, 0.75) / Math.Pow(this.Parameters.General.BaseAnimalEquivalent, 0.75);
+        //    adultEquivalent = Math.Pow(weight, 0.75) / Math.Pow(this.Parameters.General.BaseAnimalEquivalent, 0.75);
 
-            // if highweight has not been defined set to initial weight
-            if (HighWeight == 0)
-                HighWeight = weight;
-            else
-                HighWeight = Math.Max(HighWeight, weight);
-        }
+        //    // if highweight has not been defined set to initial weight
+        //    if (HighWeight == 0)
+        //        HighWeight = weight;
+        //    else
+        //        HighWeight = Math.Max(HighWeight, weight);
+        //}
 
-        /// <summary>
-        /// Base weight (no conceptus or wool weight)
-        /// </summary>
-        [FilterByProperty]
-        public double Weight { get { return weight; } }
+        ///// <summary>
+        ///// Base weight (no conceptus or wool weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double Weight { get { return weight; } }
 
-        /// <summary>
-        /// Base weight (no conceptus or wool weight)
-        /// </summary>
-        [FilterByProperty]
-        public double BaseWeight { get { return baseweight; } }
+        ///// <summary>
+        ///// Base weight (no conceptus or wool weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double BaseWeight { get { return baseweight; } }
 
-        /// <summary>
-        /// Current empty body mass change
-        /// </summary>
-        public double EmptyBodyMassChange { get { return emptyBodyChange; } }
+        ///// <summary>
+        ///// Current empty body mass change
+        ///// </summary>
+        //public double EmptyBodyMassChange { get { return emptyBodyChange; } }
 
-        /// <summary>
-        /// Standard Reference Weight determined from coefficients and gender
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double StandardReferenceWeight
-        {
-            get
-            {
-                if (this is RuminantMale male)
-                    if(male.IsCastrated)
-                        return Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier;
-                    else
-                        return Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier;
-                else
-                    return Parameters.General.SRWFemale;
-            }
-        }
+        ///// <summary>
+        ///// Standard Reference Weight determined from coefficients and gender
+        ///// </summary>
+        ///// <units>kg</units>
+        //[FilterByProperty]
+        //public double StandardReferenceWeight
+        //{
+        //    get
+        //    {
+        //        if (this is RuminantMale male)
+        //            if(male.IsCastrated)
+        //                return Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier;
+        //            else
+        //                return Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier;
+        //        else
+        //            return Parameters.General.SRWFemale;
+        //    }
+        //}
 
-        /// <summary>
-        /// Normalised animal weight
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double NormalisedAnimalWeight
-        {
-            get
-            {
-                return normalisedWeight;
-            }
-        }
+        ///// <summary>
+        ///// Normalised animal weight
+        ///// </summary>
+        ///// <units>kg</units>
+        //[FilterByProperty]
+        //public double NormalisedAnimalWeight
+        //{
+        //    get
+        //    {
+        //        return normalisedWeight;
+        //    }
+        //}
 
-        /// <summary>
-        /// The birth weight for this individual
-        /// </summary>
-        public double BirthWeight { get { return birthweight; } }
+        ///// <summary>
+        ///// The birth weight for this individual
+        ///// </summary>
+        //public double BirthWeight { get { return birthweight; } }
 
         /// <summary>
         /// Calculate normalised weight from age of individual (in days)
         /// </summary>
         /// <param name="age">Age in days</param>
+        /// <param name="forceNormMax">Use the max Norm</param>
+        /// <param name="setForIndividual">Set individuals Normal weight after calculation</param>
         /// <returns>Normalised weight (kg)</returns>
-        public double CalculateNormalisedWeight(int age)
+        public double CalculateNormalisedWeight(int age, bool forceNormMax = false, bool setForIndividual = false)
         {
             // Original CLEM assumes 
             // * single births
@@ -610,107 +629,109 @@ namespace Models.CLEM.Resources
             // return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
 
             // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
-            double normMax = StandardReferenceWeight - (StandardReferenceWeight - BirthWeight) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
+            double normMax = Weight.StandardReferenceWeight - (Weight.StandardReferenceWeight - Weight.AtBirth) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(Weight.StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
             // CP15Y is determined at birth based on the number of siblings from the values provided in the params 
             // Table6 of SCA
 
             // ToDo: ensure this is appropriate for intervals greater than 1 day as cummulative effect should be considered.
             // ToDo: check that this needs to use Previous weight and not weight before modified
-            if (PreviousWeight < normMax)
-                return Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * PreviousWeight;
-            else
-                return normMax;
+            double normWeight = normMax;
+            if (!forceNormMax && Weight.Previous < normMax)
+                normWeight = Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * Weight.Previous;
+            if (setForIndividual)
+                Weight.SetNormalWeightForAge(normWeight);
+            return normWeight;
         }
 
-        /// <summary>
-        /// Previous weight
-        /// </summary>
-        /// <units>kg</units>
-        public double PreviousWeight { get; private set; }
+        ///// <summary>
+        ///// Previous weight
+        ///// </summary>
+        ///// <units>kg</units>
+        //public double PreviousWeight { get; private set; }
 
-        /// <summary>
-        /// Weight gain
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double WeightGain { get { return Weight - PreviousWeight; } }
+        ///// <summary>
+        ///// Weight gain
+        ///// </summary>
+        ///// <units>kg</units>
+        //[FilterByProperty]
+        //public double WeightGain { get { return Weight - PreviousWeight; } }
 
-        /// <summary>
-        /// The adult equivalent of this individual
-        /// </summary>
-        [FilterByProperty]
-        public double AdultEquivalent { get { return adultEquivalent; } }
-        // TODO: Needs to include ind.Number*weight if ever added to this model
+        ///// <summary>
+        ///// The adult equivalent of this individual
+        ///// </summary>
+        //[FilterByProperty]
+        //public double AdultEquivalent { get { return adultEquivalent; } }
+        //// TODO: Needs to include ind.Number*weight if ever added to this model
 
-        /// <summary>
-        /// Highest previous weight
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double HighWeight { get; private set; }
+        ///// <summary>
+        ///// Highest previous weight
+        ///// </summary>
+        ///// <units>kg</units>
+        //[FilterByProperty]
+        //public double HighWeight { get; private set; }
 
-        /// <summary>
-        /// The current weight as a proportion of High weight achieved
-        /// </summary>
-        [FilterByProperty]
-        public double ProportionOfHighWeight
-        {
-            get
-            {
-                return HighWeight == 0 ? 1 : Weight / HighWeight;
-            }
-        }
+        ///// <summary>
+        ///// The current weight as a proportion of High weight achieved
+        ///// </summary>
+        //[FilterByProperty]
+        //public double ProportionOfHighWeight
+        //{
+        //    get
+        //    {
+        //        return HighWeight == 0 ? 1 : Weight / HighWeight;
+        //    }
+        //}
 
-        /// <summary>
-        /// The current weight as a proportion of High weight achieved
-        /// </summary>
-        [FilterByProperty]
-        public double ProportionOfNormalisedWeight
-        {
-            get
-            {
-                return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
-            }
-        }
+        ///// <summary>
+        ///// The current weight as a proportion of High weight achieved
+        ///// </summary>
+        //[FilterByProperty]
+        //public double ProportionOfNormalisedWeight
+        //{
+        //    get
+        //    {
+        //        return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+        //    }
+        //}
 
-        /// <summary>
-        /// Relative size (normalised weight / standard reference weight)
-        /// </summary>
-        [FilterByProperty]
-        public double RelativeSize
-        {
-            get
-            {
-                return NormalisedAnimalWeight / StandardReferenceWeight;
-            }
-        }
+        ///// <summary>
+        ///// Relative size (normalised weight / standard reference weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double RelativeSize
+        //{
+        //    get
+        //    {
+        //        return NormalisedAnimalWeight / StandardReferenceWeight;
+        //    }
+        //}
 
-        /// <summary>
-        /// Relative condition (base weight / normalised weight)
-        /// </summary>
-        [FilterByProperty]
-        public double RelativeCondition
-        {
-            get
-            {
-                //TODO check that conceptus weight does not need to be removed for pregnant females.
+        ///// <summary>
+        ///// Relative condition (base weight / normalised weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double RelativeCondition
+        //{
+        //    get
+        //    {
+        //        //TODO check that conceptus weight does not need to be removed for pregnant females.
 
-                return baseweight / NormalisedAnimalWeight;
-            }
-        }
+        //        return baseweight / NormalisedAnimalWeight;
+        //    }
+        //}
 
-        /// <summary>
-        /// Body condition
-        /// </summary>
-        [FilterByProperty]
-        public double BodyCondition
-        {
-            get
-            {
-                return baseweight / NormalisedAnimalWeight;
-            }
-        }
+        ///// <summary>
+        ///// Body condition
+        ///// </summary>
+        //[FilterByProperty]
+        //public double BodyCondition
+        //{
+        //    get
+        //    {
+        //        return baseweight / NormalisedAnimalWeight;
+        //    }
+        //}
 
         /// <summary>
         /// Body condition score
@@ -720,7 +741,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double bcscore = Parameters.General.BCScoreRange[1] + (RelativeCondition - 1) / Parameters.General.RelBCToScoreRate;
+                double bcscore = Parameters.General.BCScoreRange[1] + (Weight.RelativeCondition - 1) / Parameters.General.RelBCToScoreRate;
                 return Math.Max(Parameters.General.BCScoreRange[0], Math.Min(bcscore, Parameters.General.BCScoreRange[2]));
             }
         }
@@ -960,22 +981,28 @@ namespace Models.CLEM.Resources
             BreedParams = setParams;
             Parameters = setParams.Parameters;
 
+            Weight = new(birthScalar * Parameters.General.SRWFemale);
+
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1*setAge);
             DateEnteredSimulation = date;
-            birthweight = birthScalar * Parameters.General.SRWFemale;
 
-            // ToDo: set wool weight
+            CalculateNormalisedWeight(AgeInDays, setWeight <= 0, true);
 
             // can adjust directly to set amount
-            AdjustWeight((setWeight <= 0) ? NormalisedAnimalWeight : setWeight);
-            PreviousWeight = Weight; 
+            if (setWeight <= 0)
+                Weight.Adjust(Weight.NormalisedForAge, this);
+            else
+                Weight.Adjust(setWeight, this);
+
+            //AdjustWeight((setWeight <= 0) ? NormalisedAnimalWeight : setWeight);
+            //PreviousWeight = Weight; 
 
             //ToDo: setup protein mass and fat mass for new individual
 
             // ToDo: set wool weight
-            WoolWeight = 0;
-            CashmereWeight = 0;
+            //WoolWeight = 0;
+            //CashmereWeight = 0;
 
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
@@ -983,7 +1010,7 @@ namespace Models.CLEM.Resources
             
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();
-            Energy = new RuminantEnergyInfo(this);
+            Energy = new RuminantEnergyInfo(Intake);
         }
 
         /// <summary>
@@ -1032,8 +1059,8 @@ namespace Models.CLEM.Resources
         /// <param name="attribute">base attribute from mother</param>
         public void AddNewAttribute(ISetAttribute attribute)
         {
-            if (attribute is SetAttributeWithValue att && att.Category == RuminantAttributeCategoryTypes.Sterilisation)
-                sterilised = true;
+            if (attribute is SetAttributeWithValue att)
+                Sterilise(att.Category);
 
             // get inherited value
             IIndividualAttribute indAttribute = attribute.GetAttribute(true);
@@ -1057,10 +1084,33 @@ namespace Models.CLEM.Resources
         /// <param name="value">Value to set or change</param>
         public void AddNewAttribute(string tag, RuminantAttributeCategoryTypes category, IIndividualAttribute value = null)
         {
-            if (category == RuminantAttributeCategoryTypes.Sterilisation)
-                sterilised = true;
-
+            Sterilise(category);
             Attributes.Add(tag, value);
+        }
+
+        /// <summary>
+        /// Sterilise based on sex and category
+        /// </summary>
+        /// <param name="category"></param>
+        private void Sterilise(RuminantAttributeCategoryTypes category)
+        {
+            switch (category)
+            {
+                case RuminantAttributeCategoryTypes.None:
+                    break;
+                case RuminantAttributeCategoryTypes.Sterilise_Castrate:
+                    if (Sex == Sex.Male)
+                        Sterilise(true);
+                    break;
+                case RuminantAttributeCategoryTypes.Sterilise_Freemartin:
+                case RuminantAttributeCategoryTypes.Sterilise_Spay:
+                case RuminantAttributeCategoryTypes.Sterilise_Webb:
+                    if (Sex == Sex.Female)
+                        Sterilise(false);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

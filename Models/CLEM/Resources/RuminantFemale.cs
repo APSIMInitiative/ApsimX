@@ -96,7 +96,7 @@ namespace Models.CLEM.Resources
                 // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
                 //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
-                return (Weaned && ((HighWeight >= Parameters.General.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
+                return (Weaned && ((Weight.HighestAttained >= Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
             }
         }
 
@@ -149,11 +149,6 @@ namespace Models.CLEM.Resources
         public double WeightAtConception { get; set; }
 
         /// <summary>
-        /// Weight at time of conception
-        /// </summary>
-        public double ConceptusWeight { get; set; } = 0;
-
-        /// <summary>
         /// Body condition at parturition
         /// </summary>
         public double BodyConditionParturition { get; set; }
@@ -183,7 +178,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if(NumberOfFetuses > 0)
-                    return (1 - 0.33 + 0.33 * RelativeSize) * CurrentBirthScalar * StandardReferenceWeight;
+                    return (1 - 0.33 + 0.33 * Weight.RelativeSize) * CurrentBirthScalar * Weight.StandardReferenceWeight;
                 return 0;
             }
         }
@@ -292,20 +287,20 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateBirthDetails(DateTime date)
         {
-            if (CarryingCount > 0)
+            if (Fetuses.Any())
             {
                 NumberOfBirths++;
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
-            ConceptusWeight = 0;
-            BodyConditionParturition = BodyCondition;
+            base.Weight.Conceptus.Reset();
+            BodyConditionParturition = Weight.BodyCondition;
             DateOfLastBirth = date;
             ProportionMilkProductionAchieved = 1;
             MilkLag = 1;
-            CarryingCount = 0;
+            Fetuses.Clear();
             MilkingPerformed = false;
-            RelativeConditionAtParturition = RelativeCondition;
+            RelativeConditionAtParturition = Weight.RelativeCondition;
         }
 
         /// <summary>
@@ -321,7 +316,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (CarryingCount > 0);
+                return Fetuses.Any();
             }
         }
 
@@ -340,17 +335,22 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if individual is carrying multiple fetuses
+        /// The sex of each fetus
         /// </summary>
-        public int CarryingCount { get; set; }
+        public List<Sex> Fetuses = new();
+
+        /// <summary>
+        /// The number of fetuses being carryied
+        /// </summary>
+        public int CarryingCount { get { return Fetuses.Count; } }
 
         /// <summary>
         /// Method to remove one offspring that dies between conception and death
         /// </summary>
         public void OneOffspringDies(DateTime date)
         {
-            CarryingCount--;
-            if (CarryingCount <= 0)
+            Fetuses.RemoveAt(0);
+            if (!Fetuses.Any())
                 DateOfLastBirth = date;
         }
 
@@ -371,18 +371,29 @@ namespace Models.CLEM.Resources
         public void UpdateConceptionDetails(int number, double rate, int ageOffset, DateTime date)
         {
             // if she was dry breeder remove flag as she has become pregnant.
-
             if (SaleFlag == HerdChangeReason.DryBreederSale)
                 SaleFlag = HerdChangeReason.None;
 
             PreviousConceptionRate = rate;
-            CarryingCount = number;
 
-            //ToDo: Chech this is correct
+            for (int i = 0; i < number; i++)
+            {
+                bool isMale = RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale;
+                Fetuses.Add(isMale ? Sex.Male : Sex.Female);
+            }
+
+            // check for Freemartins
+            // multiple birth with male and female in womb with Freemartinism turned on (cattle)
+            if(Parameters.Breeding.AllowFreemartins && Fetuses.Distinct().Count() > 1)
+            {
+                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
+            }
+
+            //ToDo: Check this is correct
             DateLastConceived = date.AddDays(ageOffset);
             //AgeAtLastConception = this.Age + ageOffset;
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays)) : this.Weight;
+            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true) : this.Weight.Live;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -517,6 +528,7 @@ namespace Models.CLEM.Resources
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();
+            base.Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale);
 
             //ToDo: Set conceptus weight if needed
         }

@@ -359,7 +359,7 @@ namespace Models.CLEM.Activities
                     double totalWeight = 0;
                     if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
                     {  
-                        totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight);
+                        totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight.Live);
                     }
 
                     FoodResourcePacket details = iChild.CurrentResourceRequest.AdditionalDetails as FoodResourcePacket;
@@ -372,14 +372,14 @@ namespace Models.CLEM.Activities
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                                 details.Amount = ((ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval));
                                 details.Amount *= feedLimit;
-                                details.Amount *= ind.Weight/totalWeight;
+                                details.Amount *= ind.Weight.Live /totalWeight;
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                                 details.Amount = iChild.CurrentValue * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
-                                details.Amount = iChild.CurrentValue * ind.Weight * events.Interval;
+                                details.Amount = iChild.CurrentValue * ind.Weight.Live * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:

@@ -884,7 +884,7 @@ namespace Models.CLEM.Activities
                         if (GrowOutYoungMales && PerformMaleDestocking & MarkAgeWeightMalesForSale)
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectMalesForGrowOut");
-                            var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters, GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= MaleSellingAge.InDays) || a.Weight >= MaleSellingWeight)));
+                            var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters, GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= MaleSellingAge.InDays) || a.Weight.Live >= MaleSellingWeight)));
                             number = uniqueIndividuals.Count();
                         }
                         break;
@@ -892,7 +892,7 @@ namespace Models.CLEM.Activities
                         if (GrowOutYoungFemales && PerformFemaleDestocking)
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
-                            var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters, GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= FemaleSellingAge.InDays) || a.Weight >= FemaleSellingWeight)));
+                            var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters, GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= FemaleSellingAge.InDays) || a.Weight.Live >= FemaleSellingWeight)));
                             number = uniqueIndividuals.Count();
                         }
                         break;
@@ -1020,7 +1020,7 @@ namespace Models.CLEM.Activities
                 if (PerformMaleDestocking)
                 {
                     // identify those ready for sale
-                    foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight >= MaleSellingWeight)))
+                    foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight.Live >= MaleSellingWeight)))
                     {
                         Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
@@ -1029,7 +1029,7 @@ namespace Models.CLEM.Activities
                 if (PerformFemaleDestocking)
                 {
                     // identify those ready for sale
-                    foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight >= FemaleSellingWeight)))
+                    foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight.Live >= FemaleSellingWeight)))
                     {
                         Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
@@ -1524,8 +1524,7 @@ namespace Models.CLEM.Activities
             // get grow-out males that are not castrated and not marked as replacement breeder
             if (CastrateMales)
                 foreach (RuminantMale male in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => !a.ReplacementBreeder && !a.IsCastrated && a.Attributes.Exists("GrowOut")).ToList())
-                    male.Attributes.Add("Castrated");
-            
+                    male.AddNewAttribute(new SetAttributeWithValue() { AttributeName="Castrated", Category= RuminantAttributeCategoryTypes.Sterilise_Castrate });
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
@@ -1545,7 +1544,7 @@ namespace Models.CLEM.Activities
                     if (PerformMaleDestocking & GrowOutYoungMales)
                     {
                         // identify those ready for sale
-                        foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight >= MaleSellingWeight)))
+                        foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight.Live >= MaleSellingWeight)))
                         {
                             Status = ActivityStatus.Success;
                             ind.SaleFlag = HerdChangeReason.AgeWeightSale;
@@ -1554,7 +1553,7 @@ namespace Models.CLEM.Activities
                     if (PerformFemaleDestocking & GrowOutYoungFemales)
                     {
                         // identify those ready for sale
-                        foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight >= FemaleSellingWeight)))
+                        foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight.Live >= FemaleSellingWeight)))
                         {
                             Status = ActivityStatus.Success;
                             ind.SaleFlag = HerdChangeReason.AgeWeightSale;
@@ -1562,7 +1561,7 @@ namespace Models.CLEM.Activities
                     }
 
                     // identify those ready for sale
-                    foreach (var ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && ((a is RuminantMale) ? MarkAgeWeightMalesForSale : MarkAgeWeightFemalesForSale) && (a.AgeInDays >= ((a is RuminantMale) ? MaleSellingAge.InDays : FemaleSellingAge.InDays) || a.Weight >= ((a is RuminantMale) ? MaleSellingWeight : FemaleSellingWeight))))
+                    foreach (var ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && ((a is RuminantMale) ? MarkAgeWeightMalesForSale : MarkAgeWeightFemalesForSale) && (a.AgeInDays >= ((a is RuminantMale) ? MaleSellingAge.InDays : FemaleSellingAge.InDays) || a.Weight.Live >= ((a is RuminantMale) ? MaleSellingWeight : FemaleSellingWeight))))
                     {
                         Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;

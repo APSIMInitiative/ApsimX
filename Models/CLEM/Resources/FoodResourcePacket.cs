@@ -113,20 +113,21 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (NitrogenContent/100.0) * NitrogenToCrudeProteinFactor * Amount;
+                return (CrudeProteinContent/100.0) * Amount;
+                //return (NitrogenContent/100.0) * NitrogenToCrudeProteinFactor * Amount;
             }
         }
 
         /// <summary>
         /// Calculate Crude Protein percentage from nitrogen content (%)
         /// </summary>
-        public double CrudeProteinContent
-        {
-            get
-            {
-                return NitrogenContent * NitrogenToCrudeProteinFactor;
-            }
-        }
+        public double CrudeProteinContent { get; set; }
+        //{
+        //    get
+        //    {
+        //        return NitrogenContent * NitrogenToCrudeProteinFactor;
+        //    }
+        //}
 
         /// <summary>
         /// Calculate Undegradable Crude Protein content
@@ -166,6 +167,7 @@ namespace Models.CLEM.Resources
             DryMatterDigestibility = 0;
             FatContent = 0;
             NitrogenContent = 0;
+            CrudeProteinContent = 0;
             Amount = 0;
             MetabolisableEnergyContent = 0;
             RumenDegradableProteinContent = 0;
@@ -203,6 +205,7 @@ namespace Models.CLEM.Resources
             DryMatterDigestibility = packet.DryMatterDigestibility;
             FatContent = packet.FatContent;
             NitrogenContent = packet.NitrogenContent;
+            CrudeProteinContent = packet.CrudeProteinContent;
             RumenDegradableProteinContent = packet.RumenDegradableProteinContent;
             AcidDetergentInsoluableProtein = packet.AcidDetergentInsoluableProtein;
             GrossEnergyContent = packet.GrossEnergyContent;

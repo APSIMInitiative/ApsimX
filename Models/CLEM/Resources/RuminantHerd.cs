@@ -473,8 +473,8 @@ namespace Models.CLEM.Resources
                                                      {
                                                          GroupName = catind.Key,
                                                          Count = catind.Count(),
-                                                         TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
-                                                         TotalWeight = catind.Sum(a => a.Weight),
+                                                         TotalAdultEquivalent = catind.Sum(a => a.Weight.AdultEquivalent),
+                                                         TotalWeight = catind.Sum(a => a.Weight.Live),
                                                          TotalPrice = catind.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
                                                      }
                              };

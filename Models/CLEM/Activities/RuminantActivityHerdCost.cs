@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = number;
                         break;
                     case "per AE":
-                        amountToDo = uniqueIndividuals.Sum(a => a.AdultEquivalent);
+                        amountToDo = uniqueIndividuals.Sum(a => a.Weight.AdultEquivalent);
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:

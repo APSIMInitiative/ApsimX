@@ -340,7 +340,7 @@ namespace Models.CLEM.Activities
 
             double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
             if (weightToNumberPerLoadUnit != null)
-                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight));
+                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight.Live));
 
             if (MathUtilities.IsGreaterThanOrEqual(loadsRemaining, MinimumLoadUnitsBeforeTransporting))
             {
@@ -405,12 +405,12 @@ namespace Models.CLEM.Activities
                             else
                             {
                                 if (weightToNumberPerLoadUnit != null)
-                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight);
+                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight.Live);
                                 if (MathUtilities.IsLessThanOrEqual(unitLoad + individualContribution, 1.0))
                                 {
                                     unitLoad += individualContribution;
                                     totalUnits += individualContribution;
-                                    payload += individualsToBeTrucked[indCnt].Weight;
+                                    payload += individualsToBeTrucked[indCnt].Weight.Live;
 
                                     indCnt++;
                                 }
