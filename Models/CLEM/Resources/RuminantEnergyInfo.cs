@@ -13,21 +13,21 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantEnergyInfo
     {
-        private readonly Ruminant ruminant;
+        private readonly RuminantIntake ruminantIntake;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="individual">The ruminant this energy relates to</param>
-        public RuminantEnergyInfo(Ruminant individual)
+        /// <param name="intake">The intake component of the parent ruminant</param>
+        public RuminantEnergyInfo(RuminantIntake intake)
         {
-            ruminant = individual;            
+            ruminantIntake = intake;
         }
 
         /// <summary>
         /// Energy obtained from intake
         /// </summary>
-        public double FromIntake { get { return ruminant.Intake.ME; } }
+        public double FromIntake { get { return ruminantIntake.ME; } }
 
         /// <summary>
         /// Energy used for maintenance
@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         public double AfterWool { get { return ForLactation - ForWool; } }
 
         /// <summary>
-        /// Energy used for maintenance
+        /// Energy available for growth
         /// </summary>
         public double NetForGain { get; set; }
 
@@ -98,6 +98,16 @@ namespace Models.CLEM.Resources
         /// Energy available for growth
         /// </summary>
         public double AvailableForGain { get; set; }
+
+        /// <summary>
+        /// Energy used for protein
+        /// </summary>
+        public RuminantTrackingItem Protein { get; set; } = new();
+
+        /// <summary>
+        /// Energy used for fat
+        /// </summary>
+        public RuminantTrackingItem Fat { get; set; } = new();
 
         /// <summary>
         /// Reset all running stores

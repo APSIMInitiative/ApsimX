@@ -42,13 +42,14 @@ namespace Models.CLEM.Resources
             Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.FatContent = ((Details.FatContent * Details.Amount) + (packet.FatContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.NitrogenContent = ((Details.NitrogenContent * Details.Amount) + (packet.NitrogenContent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.CrudeProteinContent = ((Details.CrudeProteinContent * Details.Amount) + (packet.CrudeProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.AcidDetergentInsoluableProtein = ((Details.AcidDetergentInsoluableProtein * Details.Amount) + (packet.AcidDetergentInsoluableProtein * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
 
             Details.Amount += packet.Amount;
 
-            CrudeProtein += Details.CrudeProtein;
+            CrudeProtein += packet.CrudeProtein;
             DegradableCrudeProtein += packet.DegradableProtein;
         }
 
@@ -59,7 +60,7 @@ namespace Models.CLEM.Resources
         public void ReduceDegradableProtein(double factor)
         {
             DegradableCrudeProtein *= factor;
-            CrudeProtein = Details.CrudeProtein;
+            CrudeProtein *= factor;
         }
 
         /// <summary>

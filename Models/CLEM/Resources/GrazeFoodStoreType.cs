@@ -70,6 +70,9 @@ namespace Models.CLEM.Resources
         public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
+        public double CrudeProteinContent { get; set; }
+
+        /// <inheritdoc/>
         public double FatContent { get; set; } = 0;
 
         /// <inheritdoc/>

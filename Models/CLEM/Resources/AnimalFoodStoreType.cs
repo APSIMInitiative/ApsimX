@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -59,10 +60,37 @@ namespace Models.CLEM.Resources
         [Units("%")]
         public double DryMatterDigestibility { get; set; }
 
+        /// <summary>
+        /// Style of providing the crude protein content
+        /// </summary>
+        [Description("Style of providing crude protein")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public CrudeProteinContentStyle CPContentStyle { get; set; } = CrudeProteinContentStyle.SpecifyCrudeProteinContent;
+
         /// <inheritdoc/>
-        [Description("Nitrogen content")]
+        [Description("Nitrogen content"),]
+        [Core.Display(VisibleCallback = "NitrogenPropertiesVisible")]
         [Required, Percentage, GreaterThanEqualValue(0)]
         [Units("%")]
+        public double UserNitrogenContent { get; set; }
+
+        /// <summary>
+        /// Crude protein content (%)
+        /// </summary>
+        [Description("Crude protein content")]
+        [Core.Display(VisibleCallback = "CrudeProteinPropertiesVisible")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Units("%")]
+        public double UserCrudeProteinContent { get; set; }
+
+        /// <summary>
+        /// Crude protein content
+        /// </summary>
+        public double CrudeProteinContent { get; set; }
+
+        /// <summary>
+        /// Nitrogen content
+        /// </summary>
         public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
@@ -122,27 +150,44 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Determine whether N% or CP% are displayed to user based on CP style.
+        /// </summary>
+        /// <returns>Bool indicating that CP content is needed</returns>
+        public bool CrudeProteinPropertiesVisible()
+        {
+            return CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent;
+        }
+
+        /// <summary>
+        /// Determine whether N% or CP% are displayed to user based on CP style.
+        /// </summary>
+        /// <returns>Bool indicating that CP content is needed</returns>
+        public bool NitrogenPropertiesVisible()
+        {
+            return (CrudeProteinPropertiesVisible() == false);
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
+            {
+                NitrogenContent = UserNitrogenContent;
+                CrudeProteinContent = UserNitrogenContent * FoodResourcePacket.FeedProteinToNitrogenFactor;
+            }
+            else
+            {
+                NitrogenContent = UserCrudeProteinContent / FoodResourcePacket.FeedProteinToNitrogenFactor;
+                CrudeProteinContent = UserCrudeProteinContent;
+            }
+
             // initialise the current state and details of this store
-            CurrentStoreDetails = new FoodResourcePacket(this)
-            {
-                //MetabolisableEnergyContent = MetabolisableEnergyContent,
-                //DryMatterDigestibility = DryMatterDigestibility,
-                //FatContent= FatContent,
-                //NitrogenContent = NitrogenContent
-            };
-            StoreDetails = new FoodResourcePacket(this)
-            {
-                //MetabolisableEnergyContent = MetabolisableEnergyContent,
-                //DryMatterDigestibility = DryMatterDigestibility,
-                //FatContent = FatContent,
-                //NitrogenContent = NitrogenContent
-            };
+            CurrentStoreDetails = new FoodResourcePacket(this);
+            StoreDetails = new FoodResourcePacket(this);
 
             this.amount = 0;
             if (StartingAmount > 0)

@@ -44,6 +44,12 @@ namespace Models.CLEM.Interfaces
         double NitrogenContent { get; set; }
 
         /// <summary>
+        /// Crude protein content (%)
+        /// </summary>
+        [Description("Crude protein content (%)")]
+        double CrudeProteinContent { get; set; }
+
+        /// <summary>
         /// Rumen Degradable Protein (g/g DM) (1-Rumen Undegradable Protein)
         /// </summary>
         [Description("Degradable protein content (g/g DM)")]
