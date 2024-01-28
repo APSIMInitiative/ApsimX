@@ -200,7 +200,7 @@ namespace Models.PMF.SimplePlantModels
         private IHasDamageableBiomass stover = null;
 
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
-        private Cultivar crop = null;
+        private Cultivar currentCropObj = null;
 
         private double ttEmergeToHarv { get; set; }
 
@@ -263,10 +263,7 @@ namespace Models.PMF.SimplePlantModels
 
         private List<DateTime> ApplicationDates { get; set; }
 
-        /// <summary>
-        /// Method that sets scurm running
-        /// </summary>
-        public void Establish(ScrumManagementInstance management = null)
+        private ScrumManagementInstance setManagemetInstance(ScrumManagementInstance management = null)
         {
             if (management != null)
             {
@@ -286,22 +283,33 @@ namespace Models.PMF.SimplePlantModels
                                                  this._harvestDate, this._ttEstabToHarv, this._fieldLoss, this._residueRemoval);
             }
 
+            return management;
+        }
+
+        /// <summary>
+        /// Method that sets scurm running
+        /// </summary>
+        public void Establish(ScrumManagementInstance management)
+        {
+            management = setManagemetInstance(management);
+            currentCropObj = CoeffCalc(management);
+
             if (this._expectedYield == 0.0)
                 throw new Exception(this.Name + "must have a yield > 0 set for the scrum crop to grow");
             if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
                 throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
-            ScrumFertDemandData fdd = new ScrumFertDemandData(calcTotalNDemand(management.ExpectedYield),
-                                                                management.EstablishDate,                                          
+            ScrumFertDemandData fdd = new ScrumFertDemandData(calcTotalNDemand(ExpectedYield),
+                                                                (DateTime)EstablishDate,
                                                                 (DateTime)management.FirstFertDate,
-                                                                (DateTime)management.HarvestDate);
+                                                                (DateTime)HarvestDate);
 
             // Invoke SCRUMTotalNDemand event.
             if (SCRUMTotalNDemand != null)
                 SCRUMTotalNDemand.Invoke(this, fdd);
 
-            crop = CoeffCalc(management);
-            scrum.Children.Add(crop);
+            //currentCropObj = CoeffCalc(management);
+            scrum.Children.Add(currentCropObj);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -358,8 +366,6 @@ namespace Models.PMF.SimplePlantModels
             cropParams["LegumePropn"] += LegumePropn.ToString();
             cropParams["GSMax"] += GSMax.ToString();
             cropParams["R50"] += R50.ToString();
-
-
 
             // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
             Dictionary<string, double> PropnTt = new Dictionary<string, double>();
@@ -453,7 +459,12 @@ namespace Models.PMF.SimplePlantModels
             {
                 if ((clock.Today == _establishDate) && (Established == false))
                 {
-                    Establish();
+                    ScrumManagementInstance management = setManagemetInstance();
+                    currentCropObj = CoeffCalc(management);
+                    if (this.HarvestDate > clock.EndDate)
+                        throw new Exception("Harvest date is beyond the end of the current met file");
+                    else
+                        Establish(management);
                 }
 
                 if (clock.Today == HarvestDate)
@@ -461,8 +472,8 @@ namespace Models.PMF.SimplePlantModels
                     product.RemoveBiomass(liveToRemove: 1 - FieldLoss, deadToRemove: 1 - FieldLoss, liveToResidue: FieldLoss, deadToResidue: FieldLoss);
                     stover.RemoveBiomass(liveToRemove: ResidueRemoval, deadToRemove: ResidueRemoval, liveToResidue: 1 - ResidueRemoval, deadToResidue: 1 - ResidueRemoval);
                     scrum.EndCrop();
-                    scrum.Children.Remove(crop);
-                    Established = true;
+                    scrum.Children.Remove(currentCropObj);
+                    Established = false;
                 }
             }
         }

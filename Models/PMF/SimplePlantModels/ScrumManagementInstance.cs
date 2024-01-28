@@ -59,7 +59,8 @@ namespace Models.PMF.SimplePlantModels
         /// Management class constructor
         /// </summary>
         public ScrumManagementInstance(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
-             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, double fieldLoss = 0, double residueRemoval = 0)
+             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, double fieldLoss = 0, double residueRemoval = 0, 
+             bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
             CropName = cropName;
             EstablishDate = establishmentDate;
@@ -70,7 +71,9 @@ namespace Models.PMF.SimplePlantModels
             HarvestDate = harvestDate;
             TtEstabToHarv = harvestTt;
             FieldLoss = fieldLoss;
-            ResidueRemoval = residueRemoval;    
+            ResidueRemoval = residueRemoval;
+            IsFertilised=isFertilised;
+            FirstFertDate = (FirstFertDate == null) ? establishmentDate : firstFertDate;
         }
 
         /// <summary>
@@ -112,8 +115,14 @@ namespace Models.PMF.SimplePlantModels
             }
             FieldLoss = Double.Parse(cropParams["FieldLoss"]);
             ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
-            IsFertilised = bool.Parse(cropParams["IsFertilised"]);
-            FirstFertDate = DateTime.Parse(cropParams["FirstFertDate"] + "-" + today.Year);
+            try
+            { IsFertilised = bool.Parse(cropParams["IsFertilised"]); }
+            catch 
+            { IsFertilised = true; }
+            try
+            { FirstFertDate = DateTime.Parse(cropParams["FirstFertDate"] + "-" + today.Year); }
+            catch
+            { FirstFertDate = EstablishDate; }
         }
     }
 }
