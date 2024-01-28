@@ -184,19 +184,33 @@ namespace Models.CLEM.Activities
                                 DateTime checkMortality = conceiveDate;
                                 while (checkMortality < events.Clock.Today)
                                 {
-                                    for (int k = 0; k < female.CarryingCount; k++)
+                                    for (int i = 0; i < female.CarryingCount; i++)
                                     {
-                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))
+                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
                                         {
-                                            female.OneOffspringDies(checkMortality);
-                                            if (female.NumberOfOffspring == 0)
+                                            female.OneOffspringDies(events.Clock.Today);
+                                            if (!female.Fetuses.Any())
                                             {
                                                 // report conception status changed when last multiple birth dies.
-                                                conceptionArgs.Update(ConceptionStatus.Failed, female, checkMortality, null, false);
+                                                conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
                                                 female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                                             }
                                         }
                                     }
+
+                                    //for (int k = 0; k < female.CarryingCount; k++)
+                                    //{
+                                    //    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))
+                                    //    {
+                                    //        female.OneOffspringDies(checkMortality);
+                                    //        if (female.NumberOfOffspring == 0)
+                                    //        {
+                                    //            // report conception status changed when last multiple birth dies.
+                                    //            conceptionArgs.Update(ConceptionStatus.Failed, female, checkMortality, null, false);
+                                    //            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                    //        }
+                                    //    }
+                                    //}
                                     if (events.TimeStep == TimeStepTypes.Monthly)
                                     {
                                         checkMortality.AddMonths(1);
@@ -422,7 +436,6 @@ namespace Models.CLEM.Activities
             bool birthoccurred = false;
             foreach (RuminantFemale female in pregnantherd)
             {
-
                 // calculate fetus and newborn mortality
                 // total mortality / (gestation months + 1) to get monthly mortality
                 // done here before births to account for post birth motality as well..
@@ -431,35 +444,44 @@ namespace Models.CLEM.Activities
 
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
-                    preglost=true;
-                    var rnd = RandomNumberGenerator.Generator.NextDouble();
-                    if (MathUtilities.IsLessThan(rnd, female.Parameters.Breeding.PrenatalMortality / (female.Parameters.General.GestationLength.InDays + 1)))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+                    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
                     {
                         female.OneOffspringDies(events.Clock.Today);
-                        if (female.NumberOfOffspring == 0)
+                        if (!female.Fetuses.Any())
                         {
                             // report conception status changed when last multiple birth dies.
                             conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
                             female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                            preglost = true;
                         }
                     }
                 }
 
+                //for (int i = 0; i < female.CarryingCount; i++)
+                //{
+                //    preglost=true;
+                //    var rnd = RandomNumberGenerator.Generator.NextDouble();
+                //    if (MathUtilities.IsLessThan(rnd, female.Parameters.Breeding.PrenatalMortality / (female.Parameters.General.GestationLength.InDays + 1)))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+                //    {
+                //        female.OneOffspringDies(events.Clock.Today);
+                //        if (female.NumberOfOffspring == 0)
+                //        {
+                //            // report conception status changed when last multiple birth dies.
+                //            conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
+                //            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                //        }
+                //    }
+                //}
+
                 if (female.BirthDue)
                 {
                     birthoccurred=true;
-                    int numberOfNewborn = female.CarryingCount;
-                    for (int i = 0; i < numberOfNewborn; i++)
+                    for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.Parameters.Breeding.ProportionOffspringMale;
-                        Sex sex = isMale ? Sex.Male : Sex.Female;
-
-                        // Set individual birth scalar and us that in next calculations.
-
                         //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
-                        double weight = female.Parameters.General.BirthScalar[female.NumberOfFetuses] * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+                        double weight = female.Parameters.General.BirthScalar[female.NumberOfFetuses] * female.Weight.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight.Live / female.Weight.StandardReferenceWeight));
 
-                        Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, events.TimeStepStart, 0, female.CurrentBirthScalar, weight);
+                        Ruminant newSucklingRuminant = Ruminant.Create(female.Fetuses[i], female.BreedParams, events.TimeStepStart, 0, female.CurrentBirthScalar, weight);
                         newSucklingRuminant.HerdName = female.HerdName;
                         newSucklingRuminant.Breed = female.Parameters.General.Breed;
                         newSucklingRuminant.ID = HerdResource.NextUniqueID;
@@ -467,12 +489,11 @@ namespace Models.CLEM.Activities
                         newSucklingRuminant.Mother = female;
                         newSucklingRuminant.Number = 1;
                         // suckling/calf weight from Freer
-                        //newSucklingRuminant.PreviousWeight = newSucklingRuminant.Weight;
                         newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
 
                         // add attributes inherited from mother
                         foreach (var attribute in female.Attributes.Items.Where(a => a.Value is not null))
-                            newSucklingRuminant.AddInheritedAttribute(attribute); // .Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                            newSucklingRuminant.AddInheritedAttribute(attribute);
 
                         HerdResource.AddRuminant(newSucklingRuminant, this);
 
@@ -482,7 +503,6 @@ namespace Models.CLEM.Activities
 
                         conceptionArgs.Update(ConceptionStatus.Birth, female, events.Clock.Today);
                         female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                        //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, clock.Today));
                     }
                     female.UpdateBirthDetails(events.Clock.Today);
                 }

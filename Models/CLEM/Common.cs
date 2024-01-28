@@ -1118,11 +1118,37 @@ namespace Models.CLEM
         /// </summary>
         None,
         /// <summary>
-        /// Sterilisation
+        /// Castration
         /// </summary>
-        Sterilisation
+        Sterilise_Castrate,
+        /// <summary>
+        /// Female freemartin
+        /// </summary>
+        Sterilise_Freemartin,
+        /// <summary>
+        /// Spay female
+        /// </summary>
+        Sterilise_Spay,
+        /// <summary>
+        /// Webb female
+        /// </summary>
+        Sterilise_Webb,
     }
 
+    /// <summary>
+    /// Style of providing the crude protein content of food packet
+    /// </summary>
+    public enum CrudeProteinContentStyle
+    {
+        /// <summary>
+        /// User specified value of content
+        /// </summary>
+        SpecifyCrudeProteinContent,
+        /// <summary>
+        /// Estimate from nitrogen content supplied 
+        /// </summary>
+        EstimateFromNitrogenContent
+    }
 
     /// <summary>
     /// A list of labels used for communication between an activity and companion models

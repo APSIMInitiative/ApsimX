@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Tag category
         /// </summary>
-        [Description("Category of tag")]
+        [Description("Special category of tag")]
         [Core.Display(EnabledCallback = "IsAddAttribute")]
         public RuminantAttributeCategoryTypes TagCategory { get; set; } = RuminantAttributeCategoryTypes.None;
 
