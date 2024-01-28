@@ -42,6 +42,14 @@ namespace Models.PMF.SimplePlantModels
         /// by bailing or some other means)</summary>
         public double ResidueRemoval { get; set; }
 
+        /// <summary>Can fertiliser be applied to this crop.  
+        /// Note, this is a flag for managers to use, Scrum does not calculate its own fertliser applications</summary>
+        public bool IsFertilised { get; set; }
+
+        /// <summary>First Date for Fert application to this crop.  
+        /// Note, this is a flag for managers to use, Scrum does not calculate its own fertliser applications</summary>
+        public Nullable<DateTime> FirstFertDate { get; set; }
+
         /// <summary>
         /// Parameterless constructor
         /// </summary>
@@ -73,7 +81,15 @@ namespace Models.PMF.SimplePlantModels
         public ScrumManagementInstance(Dictionary<string, string> cropParams, DateTime today)
         {
             CropName = cropParams["CropName"];
-            EstablishDate = DateTime.Parse(cropParams["EstablishDate"]+"-"+today.Year) ;
+            DateTime testEstablishDate = DateTime.Parse(cropParams["EstablishDate"]+"-"+today.Year) ;
+            if (testEstablishDate > today)
+            {
+                EstablishDate = testEstablishDate;
+            }
+            else
+            {
+                EstablishDate = DateTime.Parse(cropParams["EstablishDate"] + "-" + (today.Year + 1));
+            }
             EstablishStage = cropParams["EstablishStage"];
             PlantingDepth = Double.Parse(cropParams["PlantingDepth"]);
             HarvestStage = cropParams["HarvestStage"];
@@ -96,6 +112,8 @@ namespace Models.PMF.SimplePlantModels
             }
             FieldLoss = Double.Parse(cropParams["FieldLoss"]);
             ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
+            IsFertilised = bool.Parse(cropParams["IsFertilised"]);
+            FirstFertDate = DateTime.Parse(cropParams["FirstFertDate"] + "-" + today.Year);
         }
     }
 }

@@ -67,8 +67,11 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
 
-        ///<summary></summary> 
+        ///<summary>parameters for the current crop</summary> 
         [JsonIgnore] public ScrumManagementInstance CurrentCropParams { get; set; }
+
+        ///<summary>Flag to specify if the current crop can be fertilised</summary> 
+        [JsonIgnore] public bool CanFertiliseCurrent { get; set; }
 
         /// <summary>clock</summary>
         [Link]
@@ -203,6 +206,7 @@ namespace Models.PMF.SimplePlantModels
             tabDat = readCSVandUpdateProperties();
             rotPos = 1;
             CurrentCropParams = getCurrentParams(tabDat, rotPos);
+            CanFertiliseCurrent = false;
         }
 
         [EventSubscribe("DoManagement")]
@@ -213,8 +217,15 @@ namespace Models.PMF.SimplePlantModels
                 if ((CurrentCropParams.EstablishDate < clock.EndDate) && (CurrentCropParams.HarvestDate <= clock.EndDate))
                 {
                     currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
+                    if (currentCrop == null) { throw new Exception("Can not find a ScrumCropInstance named " + CurrentCropParams.CropName + " in the simulation"); }
                     currentCrop.Establish(CurrentCropParams);
                 }
+            }
+
+            if ((CanFertiliseCurrent==false) && (CurrentCropParams.IsFertilised) 
+                && (clock.Today>=CurrentCropParams.FirstFertDate))
+            {
+                CanFertiliseCurrent = true; 
             }
         }
 
@@ -231,6 +242,7 @@ namespace Models.PMF.SimplePlantModels
                     rotPos = 1;
                 }
                 CurrentCropParams = getCurrentParams(tabDat, rotPos);
+                CanFertiliseCurrent = false;
             }
         }
 
@@ -243,7 +255,7 @@ namespace Models.PMF.SimplePlantModels
         private ScrumManagementInstance getCurrentParams(DataTable tab, int rotPos)
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            ret.Add("CropName", tab.Columns[rotPos].ToString());
+            //ret.Add("CropName", tab.Columns[rotPos].ToString());
             for (int i = 0; i < tab.Rows.Count; i++)
             {
                 ret.Add(tab.Rows[i]["Inputfield"].ToString(), tab.Rows[i][rotPos].ToString());
@@ -251,6 +263,6 @@ namespace Models.PMF.SimplePlantModels
             ScrumManagementInstance retSMI = new ScrumManagementInstance(ret, clock.Today);
             return retSMI;
         }
-
+        
     }
 }
