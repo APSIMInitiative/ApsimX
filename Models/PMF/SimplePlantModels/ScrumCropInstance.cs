@@ -1,4 +1,5 @@
-﻿using Models.Climate;
+﻿using DocumentFormat.OpenXml.Office2010.CustomUI;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -20,7 +21,7 @@ namespace Models.PMF.SimplePlantModels
     public class ScrumCropInstance : Model
     {
         /// <summary>Establishemnt Date</summary>
-        public string CropName { get {return this.Name; } }
+        public string CropName { get { return this.Name; } }
 
         /// <summary>Harvest Index</summary>
         [Separator("Parameters for this crop instance are specified in the section below")]
@@ -36,8 +37,8 @@ namespace Models.PMF.SimplePlantModels
         [Description("Root Biomass proportion (0-1)")]
         public double Proot { get; set; }
 
-        /// <summary>Root depth at harvest (mm)</summary>
-        [Description("Root depth at harvest (mm)")]
+        /// <summary>Root depth at maturity (mm)</summary>
+        [Description("Root depth at maturity (mm)")]
         public double MaxRD { get; set; }
 
         /// <summary>Crop height at maturity (mm)</summary>
@@ -118,7 +119,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
         [Description("Harvest Date")]
         //public Nullable<DateTime> harvestDate { get; set; }
-        public Nullable<DateTime> HarvestDate { get { return _harvestDate; } set { _harvestDate = value;} }
+        public Nullable<DateTime> HarvestDate { get { return _harvestDate; } set { _harvestDate = value; } }
         private Nullable<DateTime> _harvestDate { get; set; }
         private DateTime nonNullHarvestDate { get; set; }
 
@@ -153,9 +154,24 @@ namespace Models.PMF.SimplePlantModels
         public double ResidueRemoval { get { return _residueRemoval; } set { _residueRemoval = value; } }
         private double _residueRemoval { get; set; }
 
+        /// <summary>Occurs when a plant is sown.</summary>
+        public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
 
-        
-
+        /// <summary>Calculate the Amount of N required to grow ey (the expected yield)</summary>
+        private double calcTotalNDemand(double ey)
+        {
+            double dmc = 1 - this.MoistureContent;
+            ey = ey * 100;
+            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot));
+            double productDM = fDM * (1 - this.Proot) * this.HarvestIndex;
+            double stoverDM = fDM * (1 - this.Proot) * (1 - this.HarvestIndex);
+            double rootDM = fDM * this.Proot;
+            double productN = productDM * this.ProductNConc;
+            double stoverN = stoverDM * this.StoverNConc;
+            double rootN = rootDM * this.RootNConc;
+            double DemandKgPerHa = (productN + stoverN + rootN) * 10;
+            return DemandKgPerHa;
+        }
 
         [Link(Type = LinkType.Scoped)]
         private Clock clock = null;
@@ -244,13 +260,15 @@ namespace Models.PMF.SimplePlantModels
         };
 
         private bool Established = false;
-        
+
+        private List<DateTime> ApplicationDates { get; set; }
+
         /// <summary>
         /// Method that sets scurm running
         /// </summary>
-        public void Establish(ScrumManagementInstance management=null)
+        public void Establish(ScrumManagementInstance management = null)
         {
-            if (management != null) 
+            if (management != null)
             {
                 this._establishDate = management.EstablishDate;
                 this._establishStage = management.EstablishStage;
@@ -273,12 +291,21 @@ namespace Models.PMF.SimplePlantModels
             if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
                 throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
+            ScrumFertDemandData fdd = new ScrumFertDemandData(calcTotalNDemand(management.ExpectedYield),
+                                                                management.EstablishDate,                                          
+                                                                (DateTime)management.FirstFertDate,
+                                                                (DateTime)management.HarvestDate);
+
+            // Invoke SCRUMTotalNDemand event.
+            if (SCRUMTotalNDemand != null)
+                SCRUMTotalNDemand.Invoke(this, fdd);
+
             crop = CoeffCalc(management);
             scrum.Children.Add(crop);
             double population = 1.0;
             double rowWidth = 0.0;
 
-            scrum.Sow(CropName, population,this._plantingDepth, rowWidth, maxCover: this.MaxCover);
+            scrum.Sow(CropName, population, this._plantingDepth, rowWidth, maxCover: this.MaxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
@@ -406,7 +433,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot)).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
             double tTpreEstab = Tt_mat * PropnTt[management.EstablishStage];
-            cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) /b_cov))).ToString();
+            cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) / b_cov))).ToString();
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
@@ -418,13 +445,13 @@ namespace Models.PMF.SimplePlantModels
             Cultivar CropValues = new Cultivar(this.Name, commands);
             return CropValues;
         }
-        
+
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
             if ((zone != null) && (clock != null))
             {
-                if ((clock.Today == _establishDate)&&(Established==false))
+                if ((clock.Today == _establishDate) && (Established == false))
                 {
                     Establish();
                 }
@@ -491,6 +518,32 @@ namespace Models.PMF.SimplePlantModels
         }
     }
 
+    /// <summary>
+    /// Data structure that contains information for calculating N demans for specific planting of scrum
+    /// </summary>
+    [Serializable]
+    public class ScrumFertDemandData : EventArgs
+    {
+        /// <summary>The Amount of N required to grow to expected yeild</summary>
+        public double TotalNDemand { get; set; }
 
+        /// <summary>The duration of the No Fertiliser application Window</summary>
+        public int NonFertDuration { get; set; }
 
+        /// <summary>The duration of the Fertiliser application Window</summary>
+        public int FertDuration { get; set; }
+
+        /// <summary>The date the crop is harvested</summary>
+        public DateTime HarvestDate { get; set; }
+
+        /// <summary>The constructor</summary>
+        public ScrumFertDemandData(double totalNDemand, DateTime establishDate, DateTime firstFertdate, DateTime harvestDate)
+        {
+            TotalNDemand = totalNDemand;
+            NonFertDuration = (firstFertdate - establishDate).Days;
+            FertDuration = (harvestDate - firstFertdate).Days;
+            HarvestDate = harvestDate;
+        }
+    }
 }
+
