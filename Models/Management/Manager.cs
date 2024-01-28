@@ -176,6 +176,10 @@ namespace Models
         {
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
+                // If the script child model exists. Then get its parameter values.
+                if (Children.Count != 0)
+                    GetParametersFromScriptModel();
+
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
@@ -194,10 +198,6 @@ namespace Models
                     SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
                 }
-
-                // If the script child model exists. Then get its parameter values.
-                if (Children.Count != 0)
-                    GetParametersFromScriptModel();
 
                 SetParametersInScriptModel();
             }
