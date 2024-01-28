@@ -1,4 +1,5 @@
 Inputfield,Potato,Wheat,OatForage,Carrot,TurnipForage
+CropName,Potato,Wheat,OatForage,Carrot,TurnipForage
 EstablishDate,15-Oct,15-Apr,1-Mar,1-Sep,1-Mar
 EstablishStage,Seed,Seed,Seed,Seed,Seed
 PlantingDepth,20,20,20,10,10
