@@ -27108,7 +27108,7 @@
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27117,7 +27117,7 @@
           "Name": "SummaryFile",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27128,7 +27128,7 @@
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27144,7 +27144,7 @@
           "Name": "MicroClimate",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27152,7 +27152,7 @@
           "Name": "Soil Arbitrator",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27329,7 +27329,7 @@
           "Name": "AutoIrrigationDeficitBased",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27479,7 +27479,7 @@
           "Name": "AutomaticFertiliser",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -27504,7 +27504,7 @@
               "Name": "RowZoneReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -27519,7 +27519,7 @@
               "Name": "ReportBoth",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -27562,7 +27562,7 @@
                   "Name": "LayerStructure",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27594,7 +27594,7 @@
                   "Name": "Chemical",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27623,7 +27623,7 @@
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27676,7 +27676,7 @@
                   "Name": "SoilWater",
                   "ResourceName": "WaterBalance",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27736,7 +27736,7 @@
                   "Name": "Organic",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27744,7 +27744,7 @@
                   "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27760,7 +27760,7 @@
                   "Name": "OutputLayers",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27793,7 +27793,7 @@
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27826,7 +27826,7 @@
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27859,7 +27859,7 @@
                   "Name": "Urea",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27981,11 +27981,11 @@
                       "Name": "DEROPAPYSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -27993,11 +27993,11 @@
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -28013,7 +28013,7 @@
               "Name": "SurfaceOrganicMatter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -28022,7 +28022,7 @@
               "Name": "DEROPAPY",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -28030,7 +28030,7 @@
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -28059,7 +28059,7 @@
               "Name": "AgrgateZoneVariables",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -28067,7 +28067,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -35580,11 +35580,11 @@
               "Name": "ThisDero",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -35609,7 +35609,7 @@
               "Name": "AlleyZoneReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -35624,7 +35624,7 @@
               "Name": "ReportBoth",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -35667,7 +35667,7 @@
                   "Name": "LayerStructure",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35699,7 +35699,7 @@
                   "Name": "Chemical",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35728,7 +35728,7 @@
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35781,7 +35781,7 @@
                   "Name": "SoilWater",
                   "ResourceName": "WaterBalance",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35841,7 +35841,7 @@
                   "Name": "Organic",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35849,7 +35849,7 @@
                   "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35865,7 +35865,7 @@
                   "Name": "OutputLayers",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35898,7 +35898,7 @@
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35931,7 +35931,7 @@
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35964,7 +35964,7 @@
                   "Name": "Urea",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -36086,11 +36086,11 @@
                       "Name": "DEROPAPYSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -36098,11 +36098,11 @@
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36118,7 +36118,7 @@
               "Name": "SurfaceOrganicMatter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36126,7 +36126,7 @@
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36155,7 +36155,7 @@
               "Name": "AgrgateZoneVariables",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36163,7 +36163,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36172,7 +36172,7 @@
               "Name": "DEROPAPY",
               "ResourceName": "DEROPAPY",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -41821,11 +41821,11 @@
               "Name": "ThisDero",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -41889,15 +41889,15 @@
               "Name": "Series",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         }
       ],
-      "Enabled": true,
+      "Enabled": false,
       "ReadOnly": false
     },
     {
