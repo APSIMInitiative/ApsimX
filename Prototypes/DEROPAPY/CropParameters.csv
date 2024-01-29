@@ -2,7 +2,7 @@ ParamName,ParamUnit,Description,Maize,Wheat,Hemp,OSR,Grapevine,Macadamia,Lemons,
 CropType,string,type of crop used for organic matter residues types,Maize,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine,Grapevine,pasture,whiteclover
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18  26  34  44),(0  26  37),(1.9 26  40),2  30  35,(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10  18  26   0),(0  26  0),(0 24.1 0),0  28  0,(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-D_StartGrowth_00,DAWS,Earliest"""" day after winter solstice when sowing/end-dorm is resumed every year,72,74,74,74,102,102,102,102,102,0,0
+D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,60,116,258,106,100,100,100,102,0,0
 T_StartGrowth_00,oC,14 day running average temperature required to start growth,13,14,14,14,10,10,10,10,10,0,0
 Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,750,600,600,600,450,450,450,450,450,300,300
 DefoliateOrDevelop,string,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Graze,Graze
