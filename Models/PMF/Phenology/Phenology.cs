@@ -521,17 +521,17 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
+                    stagesPassedToday.Add(CurrentPhase.End);
+                    currentPhaseIndex = currentPhaseIndex + 1;
+
+                    if (currentPhaseIndex >= phases.Count)
+                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+
                     if (!Emerged && (CurrentPhase.IsEmerged || CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                         Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());
                     }
-
-                    stagesPassedToday.Add(CurrentPhase.End);
-                    if (currentPhaseIndex + 1 >= phases.Count)
-                        throw new Exception("Cannot transition to the next phase. No more phases exist");
-
-                    currentPhaseIndex = currentPhaseIndex + 1;
 
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = CurrentPhase.Start;
