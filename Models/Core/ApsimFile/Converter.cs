@@ -133,8 +133,6 @@ namespace Models.Core.ApsimFile
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
                     var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
-                    var physical = JsonUtilities.ChildWithName(root, "Physical");
-                    int nLayers = physical["Thickness"].Count();
 
                     bool res = false;
                     if (initWater == null)
@@ -149,7 +147,17 @@ namespace Models.Core.ApsimFile
                         res = true;
                     }
 
-                    if (initWater["Thickness"] == null)
+                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    bool hasPhysical = false;
+                    int nLayers = 1;
+
+                    if (physical != null)
+                    {
+                        nLayers = physical["Thickness"].Count();
+                        hasPhysical = true;
+                    }
+
+                    if (initWater["Thickness"] == null && hasPhysical)
                     {
                         initWater["Thickness"] = physical["Thickness"];
                         initWater["InitialValues"] = physical["DUL"];
@@ -161,23 +169,23 @@ namespace Models.Core.ApsimFile
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NO3",
-                            ["Thickness"] = physical["Thickness"],
-                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.5, nLayers).ToArray())
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NH4",
-                            ["Thickness"] = physical["Thickness"],
-                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.1, nLayers).ToArray())
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "Urea",
-                            ["Thickness"] = physical["Thickness"],
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
                             ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
                         res = true;
@@ -195,8 +203,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
                                 ["Name"] = "NO3",
-                                ["Thickness"] = physical["Thickness"],
-                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.5, nLayers).ToArray())
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -205,8 +213,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
                                 ["Name"] = "NH4",
-                                ["Thickness"] = physical["Thickness"],
-                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.1, nLayers).ToArray())
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -215,7 +223,7 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
                                 ["Name"] = "Urea",
-                                ["Thickness"] = physical["Thickness"],
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
                                 ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
