@@ -443,7 +443,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 //Need to adjust relative development for the period when the crop is not emerged
                 double SeedTtAdjust = logistic(ttEstabToHarv, Xo_Biomass, b_Biomass) / logistic(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass);
-                irm *= SeedTtAdjust * 2;
+                irm *= SeedTtAdjust;
             }
             cropParams["InvertedRelativeMaturity"] += irm.ToString();
             cropParams["TtSeed"] += (tT_SowToEmerg).ToString();
