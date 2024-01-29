@@ -410,7 +410,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Seed",
                   "End": "Emergence",
-                  "IsEmerged": true,
+                  "IsEmerged": false,
                   "Name": "Seed",
                   "ResourceName": null,
                   "Children": [
@@ -1942,11 +1942,56 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Scrum].TotalDMAtHarvest",
+                              "$type": "Models.Functions.SubtractFunction, Models",
                               "Name": "Ymax",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Scrum].TotalDMAtHarvest",
+                                  "Name": "FinalBiomass",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "InitialBiomass",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Scrum].Stover.InitialWt",
+                                      "Name": "InitialStover",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Scrum].Product.InitialWt.Structural",
+                                      "Name": "InitialProduct",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Scrum].Root.InitialWt.Structural",
+                                      "Name": "InitialRoot",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -20936,7 +20981,7 @@
               "CrossesAtZero": false,
               "LabelOnOneLine": false,
               "Minimum": -16.987664320987403,
-              "Maximum": 1715.753096419753,
+              "Maximum": "NaN",
               "Interval": null
             },
             {
@@ -20954,7 +20999,38 @@
           "LegendPosition": 5,
           "LegendOrientation": 0,
           "AnnotationLocation": 0,
-          "DisabledSeries": [],
+          "DisabledSeries": [
+            "StageTestEstabAtSeedHarvAtEarlyReproductive: DM",
+            "StageTestEstabAtEmergenceHarvAtEarlyReproductive: DM",
+            "StageTestEstabAtSeedlingHarvAtEarlyReproductive: DM",
+            "StageTestEstabAtSeedHarvAtMidReproductive: DM",
+            "StageTestEstabAtEmergenceHarvAtMidReproductive: DM",
+            "StageTestEstabAtSeedlingHarvAtMidReproductive: DM",
+            "StageTestEstabAtSeedHarvAtLateReproductive: DM",
+            "StageTestEstabAtEmergenceHarvAtLateReproductive: DM",
+            "StageTestEstabAtSeedlingHarvAtLateReproductive: DM",
+            "StageTestEstabAtSeedHarvAtMaturity: DM",
+            "StageTestEstabAtEmergenceHarvAtMaturity: DM",
+            "StageTestEstabAtSeedlingHarvAtMaturity: DM",
+            "StageTestEstabAtSeedHarvAtRipe: DM",
+            "StageTestEstabAtEmergenceHarvAtRipe: DM",
+            "StageTestEstabAtSeedlingHarvAtRipe: DM",
+            "StageTestEstabAtSeedHarvAtEarlyReproductive",
+            "StageTestEstabAtEmergenceHarvAtEarlyReproductive",
+            "StageTestEstabAtSeedlingHarvAtEarlyReproductive",
+            "StageTestEstabAtSeedHarvAtMidReproductive",
+            "StageTestEstabAtEmergenceHarvAtMidReproductive",
+            "StageTestEstabAtSeedlingHarvAtMidReproductive",
+            "StageTestEstabAtSeedHarvAtLateReproductive",
+            "StageTestEstabAtEmergenceHarvAtLateReproductive",
+            "StageTestEstabAtSeedlingHarvAtLateReproductive",
+            "StageTestEstabAtSeedHarvAtMaturity",
+            "StageTestEstabAtEmergenceHarvAtMaturity",
+            "StageTestEstabAtSeedlingHarvAtMaturity",
+            "StageTestEstabAtSeedHarvAtRipe",
+            "StageTestEstabAtEmergenceHarvAtRipe",
+            "StageTestEstabAtSeedlingHarvAtRipe"
+          ],
           "LegendOutsideGraph": false,
           "Name": "Biomass",
           "ResourceName": null,
@@ -21006,7 +21082,7 @@
               "YFieldName": "SCRUM.TotalDMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
-              "ShowInLegend": false,
+              "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
