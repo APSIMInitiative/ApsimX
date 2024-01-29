@@ -5718,7 +5718,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[ThisDero].CurrentCropName = Maize, Apple, RyeGrass",
+                  "Specification": "[ThisDero].CurrentCropName = Maize, Apple, RyeGrass, Grapevine",
                   "Name": "Crop",
                   "ResourceName": null,
                   "Children": [],
@@ -6317,7 +6317,8 @@
                     "[Deropapy].Product.Wt",
                     "[Deropapy].Total.Wt",
                     "[Deropapy].Leaf.Photosynthesis",
-                    "[Deropapy].Root.Network.Depth"
+                    "[Deropapy].Root.Network.Depth",
+                    "[Deropapy].Phenology.ThermalTime"
                   ],
                   "EventNames": [
                     "[Clock].EndOfYear"
@@ -6382,7 +6383,8 @@
                     "[Deropapy].Arbitrator.Nitrogen.TotalUptakeSupply",
                     "sum([Water].PAWmm)",
                     "sum([Water].PAW)",
-                    "sum([NO3].kgha + [NH4].kgha + [Urea].kgha)"
+                    "sum([NO3].kgha + [NH4].kgha + [Urea].kgha)",
+                    "[Deropapy].Phenology.ThermalTime"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -21790,7 +21792,7 @@
                                       1000.0
                                     ],
                                     "Y": [
-                                      0.0,
+                                      10.0,
                                       100.0
                                     ],
                                     "XVariableName": null,
@@ -21912,7 +21914,7 @@
                             "Children": [
                               {
                                 "$type": "Models.Functions.Constant, Models",
-                                "FixedValue": 0.2,
+                                "FixedValue": "NaN",
                                 "Units": null,
                                 "Name": "PartitionFraction",
                                 "ResourceName": null,
@@ -27084,6 +27086,74 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "ThermalTime",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": "Crop",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Location",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Deropapy.Phenology.ThermalTime",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Stage",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
