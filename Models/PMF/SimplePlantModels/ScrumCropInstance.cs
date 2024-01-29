@@ -1,10 +1,10 @@
-﻿using DocumentFormat.OpenXml.Office2010.CustomUI;
-using Models.Climate;
+﻿using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -202,7 +202,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar currentCropObj = null;
 
-        private double ttEmergeToHarv { get; set; }
+        private double ttEstabToHarv { get; set; }
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
@@ -211,9 +211,37 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.02 },{ "Seedling", 0.05 },
             { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
 
+        /// <summary> the proportion of Tt that has accumulated at each stage drrived from the proporiton of DM at each stage and the logistic funciton rearanged</summary>
+        [JsonIgnore]
+        Dictionary<string, double> PropnTt
+        {
+            get
+            {
+                Dictionary<string, double> ret = new Dictionary<string, double>();
+                foreach (KeyValuePair<string, double> entry in PropnMaxDM)
+                {
+                    if ((entry.Key == "Seed")|| (entry.Key == "Seed"))
+                    {
+                        ret.Add(entry.Key, 0.0);
+                    }
+                    else
+                    {
+                        double propTt = (Math.Log((1 / entry.Value) - 1) * -11.25 + 45) / 100;
+                        ret.Add(entry.Key, propTt);
+                    }
+                }
+                return ret;
+            }
+        }
+
+        private double logistic(double Tt, double Xo, double b)
+        {
+            return 1 / (1 + Math.Exp(-(Tt - Xo) / b));
+        }
+        
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -291,6 +319,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public void Establish(ScrumManagementInstance management)
         {
+            
             management = setManagemetInstance(management);
             currentCropObj = CoeffCalc(management);
 
@@ -323,7 +352,7 @@ namespace Models.PMF.SimplePlantModels
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
                 management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoistureContent +
                 " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") +
-                ", " + this.ttEmergeToHarv.ToString() + " oCd from now.", MessageType.Information);
+                ", " + this.ttEstabToHarv.ToString() + " oCd from now.", MessageType.Information);
         }
 
         /// <summary>
@@ -346,7 +375,6 @@ namespace Models.PMF.SimplePlantModels
                 cropParams["WaterStressNUptake"] += "1.0";
             }
 
-            cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
             if (this.MoistureContent > 1.0)
                 throw new Exception("Moisture content of " + this.Name + " ScrumCropInstance has a moisture content > 1.0 g/g.  Value must be less than 1.0");
             double dmc = 1 - this.MoistureContent;
@@ -367,41 +395,21 @@ namespace Models.PMF.SimplePlantModels
             cropParams["GSMax"] += GSMax.ToString();
             cropParams["R50"] += R50.ToString();
 
-            // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
-            Dictionary<string, double> PropnTt = new Dictionary<string, double>();
-            foreach (KeyValuePair<string, double> entry in PropnMaxDM)
-            {
-                if (entry.Key == "Seed")
-                {
-                    PropnTt.Add(entry.Key, 0.0);
-                }
-                else
-                {
-                    double propTt = (Math.Log((1 / entry.Value) - 1) * -11.25 + 45) / 100;
-                    PropnTt.Add(entry.Key, propTt);
-                }
-            }
-
             // Derive Crop Parameters
-            double emergeTt = 0.0;
-            ttEmergeToHarv = 0.0;
+            ttEstabToHarv = 0.0;
+           
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
             {
-                ttEmergeToHarv = GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
-                if (management.EstablishStage == "Seed")
-                {
-                    emergeTt = ttEmergeToHarv * PropnTt["Emergence"] * PropnTt[management.HarvestStage];
-                }
-                ttEmergeToHarv -= emergeTt; //Subtract out emergence tt
+                ttEstabToHarv = GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
             }
             else
             {
-                ttEmergeToHarv = management.TtEstabToHarv - emergeTt;
+                ttEstabToHarv = management.TtEstabToHarv;
             }
 
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
-                this._harvestDate = GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
+                this._harvestDate = GetHarvestDate(management.EstablishDate, ttEstabToHarv, this.BaseT, this.OptT, this.MaxT);
                 this.nonNullHarvestDate = (DateTime)this._harvestDate;
             }
             else
@@ -409,10 +417,15 @@ namespace Models.PMF.SimplePlantModels
                 this._harvestDate = (DateTime)management.HarvestDate;
             }
 
+            double tT_SowToEmerg = 100;
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
-            double Tt_mat = ttEmergeToHarv * 1 / PropnTt_EstToHarv;
-            double Xo_Biomass = Tt_mat * .45;
-            double b_Biomass = Xo_Biomass * .25;
+            double Tt_EmergtoMat = ttEstabToHarv * 1 / PropnTt_EstToHarv;
+            if (EstablishStage == "Seed")
+            {
+                Tt_EmergtoMat -= tT_SowToEmerg;
+            }
+            double Xo_Biomass = Tt_EmergtoMat * .45;
+            double b_Biomass = Xo_Biomass * .23;
             double Xo_cov = Xo_Biomass * 0.4;
             double b_cov = Xo_cov * 0.2;
             double Xo_hig = Xo_Biomass * 0.7;
@@ -425,20 +438,28 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            cropParams["TtSeed"] += (Tt_mat * PropnTt["Emergence"]).ToString();
-            cropParams["TtSeedling"] += (Tt_mat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
-            cropParams["TtVegetative"] += (Tt_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
-            cropParams["TtEarlyReproductive"] += (Tt_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
-            cropParams["TtMidReproductive"] += (Tt_mat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
-            cropParams["TtLateReproductive"] += (Tt_mat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
-            cropParams["TtMaturity"] += (Tt_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
-            cropParams["TtRipe"] += (Tt_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
+            double irm = 1 / (PropnMaxDM[management.HarvestStage] - PropnMaxDM[management.EstablishStage]);
+            if (EstablishStage == "Seed")
+            {
+                //Need to adjust relative development for the period when the crop is not emerged
+                double SeedTtAdjust = logistic(ttEstabToHarv, Xo_Biomass, b_Biomass) / logistic(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass);
+                irm *= SeedTtAdjust * 2;
+            }
+            cropParams["InvertedRelativeMaturity"] += irm.ToString();
+            cropParams["TtSeed"] += (tT_SowToEmerg).ToString();
+            cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
+            cropParams["TtVegetative"] += (Tt_EmergtoMat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
+            cropParams["TtEarlyReproductive"] += (Tt_EmergtoMat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
+            cropParams["TtMidReproductive"] += (Tt_EmergtoMat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
+            cropParams["TtLateReproductive"] += (Tt_EmergtoMat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
+            cropParams["TtMaturity"] += (Tt_EmergtoMat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
+            cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
             double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot));
             double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
             cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot)).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
-            double tTpreEstab = Tt_mat * PropnTt[management.EstablishStage];
+            double tTpreEstab = Tt_EmergtoMat * PropnTt[management.EstablishStage];
             cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) / b_cov))).ToString();
 
             cropParams["BaseT"] += this.BaseT.ToString();
@@ -498,7 +519,6 @@ namespace Models.PMF.SimplePlantModels
                 DailyMetDataFromFile TodaysMetData = weather.GetMetData(d); // Read another line ahead to get tomorrows data
                 TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
             }
-
             return TtSum;
         }
 
@@ -524,7 +544,6 @@ namespace Models.PMF.SimplePlantModels
                 TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
                 d = d.AddDays(1);
             }
-
             return d;
         }
     }

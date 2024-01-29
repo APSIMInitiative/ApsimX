@@ -111,7 +111,9 @@ namespace Models.PMF.Phen
 
         /// <summary>The Thermal time accumulated tt following emergence</summary>
         [JsonIgnore]
-        public double AccumulatedEmergedTT { get; set; }
+        public double AccumulatedEmergedTT 
+        { get; 
+            set; }
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
@@ -287,7 +289,8 @@ namespace Models.PMF.Phen
                     {
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase)
+                            || (phase.IsEmerged==false))
                         {
                             Emerged = true;
                             PlantEmerged?.Invoke(this, new EventArgs());
