@@ -199,27 +199,25 @@ namespace Models.PMF.SimplePlantModels
         ////// This secton contains the components that take the management parameters from the table and sends them to SCRUM on sow date !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         private int rotPos = 0;
         private ScrumCropInstance currentCrop = null;
+        private bool currentCropEstablished;
 
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             tabDat = readCSVandUpdateProperties();
             rotPos = 1;
-            CurrentCropParams = getCurrentParams(tabDat, rotPos);
-            CanFertiliseCurrent = false;
+            setCurrentCrop(rotPos);
+            currentCropEstablished = false;
         }
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (clock.Today == CurrentCropParams.EstablishDate)
+            if ((clock.Today == CurrentCropParams.EstablishDate)&& (CurrentCropParams.HarvestDate <= clock.EndDate))
             {
-                if ((CurrentCropParams.EstablishDate < clock.EndDate) && (CurrentCropParams.HarvestDate <= clock.EndDate))
-                {
-                    currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
-                    if (currentCrop == null) { throw new Exception("Can not find a ScrumCropInstance named " + CurrentCropParams.CropName + " in the simulation"); }
-                    currentCrop.Establish(CurrentCropParams);
-                }
+                currentCrop.Establish(CurrentCropParams);
+                currentCropEstablished = true;
+
             }
 
             if ((CanFertiliseCurrent==false) && (CurrentCropParams.IsFertilised) 
@@ -234,16 +232,24 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if (clock.Today == CurrentCropParams.HarvestDate)
+            if ((clock.Today == CurrentCropParams.HarvestDate)&&(currentCropEstablished))
             {
+                currentCropEstablished = false;
                 rotPos +=1;
                 if (rotPos>tabDat.Columns.Count-1)
                 {
                     rotPos = 1;
                 }
-                CurrentCropParams = getCurrentParams(tabDat, rotPos);
-                CanFertiliseCurrent = false;
+                setCurrentCrop(rotPos);
             }
+        }
+
+        private void setCurrentCrop(int rotPos)
+        {
+            CurrentCropParams = getCurrentParams(tabDat, rotPos);
+            currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
+            if (currentCrop == null) { throw new Exception("Can not find a ScrumCropInstance named " + CurrentCropParams.CropName + " in the simulation"); }
+            CanFertiliseCurrent = false;
         }
 
         /// <summary>
