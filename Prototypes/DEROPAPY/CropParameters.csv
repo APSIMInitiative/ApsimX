@@ -34,13 +34,13 @@ LeafPartitionFrac,0-1,Proportion of total biomass partitioned to Leaf (Note leaf
 ProductPartitionFrac,0-1,Proportion of total biomass partitioned to product,0.4,0.4,0.02,0.3,0.25,0.06,0.1,0.04,0.4,0.7,0.7
 RootPartitionFrac,0-1,Proportion of total biomass partitioned to root,0.2,0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.2
 TrunkPartitionFrac,0-1,Proportion of total biomass partitioned to Trunk (note this is permenant biomass that is not removed),0,0,0,0,0.47,0.6,0.3,0.6,0.1,0,0
-LeafMaxNConc,gN/gDM,Highest N conc of organ,0.04,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02
-LeafMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01
-ProductMaxNConc,gN/gDM,Highest N conc of organ,0.015,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02
-ProductMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01
-RootMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.015,0.015,0.015,0.015,0.015,0.015,0.015,0.015,0.015,0.015
-RootMinNConc,gN/gDM,Lowest N conc of organ,0.016,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01
-TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0.002,0.002,0.002,0,0,0,0,0,0,0
-TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0.001,0.001,0.001,0,0,0,0,0,0,0
-MaxRootDepth,mm,Depth that roots achieve when plant is mature,1500,1500,1500,1500,3000,3000,3000,3000,3000,600,600
+LeafMaxNConc,gN/gDM,Highest N conc of organ,0.04,0.05,0.06,0.06,0.03,0.014,0.024,0.021,0.02,0.02,0.02
+LeafMinNConc,gN/gDM,Lowest N conc of organ,0.015,0.01,0.015,0.02,0.002,0.012,0.013,0.015,0.01,0.01,0.01
+ProductMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.03,0.05,0.058,0.025,0.012,0.01,0.02,0.02,0.02,0.02
+ProductMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.012,0.035,0.01,0.002,0.001,0.005,0.018,0.01,0.01,0.01
+RootMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.013,0.013,0.01,0.015,0.004,0.01,0.01,0.015,0.015,0.015
+RootMinNConc,gN/gDM,Lowest N conc of organ,0.016,0.01,0.005,0.005,0.0005,0.001,0.008,0.008,0.01,0.01,0.01
+TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+MaxRootDepth,mm,Depth that roots achieve when plant is mature,1600,1100,2000,2300,3000,1600,1500,1400,3000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
