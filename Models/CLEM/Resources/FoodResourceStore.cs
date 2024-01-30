@@ -98,6 +98,7 @@ namespace Models.CLEM.Resources
         {
             CrudeProtein = 0;
             DegradableCrudeProtein = 0;
+            Details.Reset();
         }
     }
 }
