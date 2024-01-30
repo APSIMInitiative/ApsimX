@@ -15,10 +15,10 @@ Chill_Temp_X,oC,Chill thresholds,(0 0 0 0),(-2 -1 16 17),(0 0 0 0),(0 2 8 15),(-
 Chill_Acc_Y,oCd,Chill rate,(0 0 0 0),(0 1 1 0),(0 0 0 0),(0 1 0.5 0),(0 1 1 0),(0 0 0 0),(0 0 0 0),(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
 AC_Dormant_05,oCd,chill stuff,(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0.0 30),(0.0 30)
 Tt_Dormant_05,oCd,more chill stuff,(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0)
-MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,700,700,700,700,700,0,0
-MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,2500,2500,2500,2500,2500,100,100
-MaxCanopyHeight,mm,Height of the top of the canopy of a matur plant before harvest or pruning,2500,1800,1800,1800,3500,3500,3500,3500,3500,300,300
-MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,0,0,0,0,1200,1200,1200,1200,1200,300,300
+MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,1100,1100,1000,1370,700,0,0
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,3000,3000,3500,4500,2500,100,100
+MaxCanopyHeight,mm,Height of the top of the canopy of a matur plant before harvest or pruning,2500,1800,1800,1800,4500,5700,4500,3500,3500,300,300
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,0,0,0,0,1200,1200,1200,10000,1200,300,300
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,800,800,800,800,1500,1500,1500,1500,1500,300,300
 AgeToMaxDimension,Y,Years until plant reaches mature size,1,1,1,1,6,6,6,6,6,1,1
 AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,0,0,0,0,4,4,4,4,4,0.3,1
