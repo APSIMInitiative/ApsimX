@@ -8,7 +8,7 @@ Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,75
 DefoliateOrDevelop,string,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd,Photoperiod during the reproductive period,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(700 700),(250 250),(55 300),(500 500),(0 0),(0 0),(0 0),(1167 1167),(200 1000),(1300 1300),(1300 1300)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,300,300,300,200,200,200,200,200,0,0
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,500,250,300,0,0,0,1200,200,0,0
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,0,50,50,50,50,50,50,50,50,0,0
 EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune
 Chill_Temp_X,oC,Chill thresholds,(0 0 0 0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
