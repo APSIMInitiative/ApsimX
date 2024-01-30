@@ -10274,35 +10274,73 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.DivideFunction, Models",
+                                "$type": "Models.Functions.MultiplyFunction, Models",
                                 "Name": "RootFrontVelocity",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Root].Network.MaximumRootDepth",
-                                    "Name": "MaxRootDepth",
+                                    "$type": "Models.Functions.DivideFunction, Models",
+                                    "Name": "mmPeroCd",
                                     "ResourceName": null,
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Models.Functions.VariableReference, Models",
+                                        "VariableName": "[Root].Network.MaximumRootDepth",
+                                        "Name": "MaxRootDepth",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ExpressionFunction, Models",
+                                        "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                                        "Name": "RootTtDuration",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      }
+                                    ],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   },
                                   {
-                                    "$type": "Models.Functions.MultiplyFunction, Models",
-                                    "Name": "RootGrowthDuration",
+                                    "$type": "Models.Functions.MinimumFunction, Models",
+                                    "Name": "YearsToMaxDepthFactor",
                                     "ResourceName": null,
                                     "Children": [
                                       {
                                         "$type": "Models.Functions.Constant, Models",
                                         "FixedValue": 1.0,
-                                        "Units": "years",
-                                        "Name": "YearsToMaxDepth",
+                                        "Units": "g/plant",
+                                        "Name": "One",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                        "NumeratorErrVal": 1.0,
+                                        "DenominatorErrVal": 1.0,
+                                        "Name": "ProportionOfTotalRootGrowthAnnually",
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Memo, Models",
-                                            "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                            "Name": "Param value set at establishment",
+                                            "$type": "Models.Functions.Constant, Models",
+                                            "FixedValue": 1.0,
+                                            "Units": "g/plant",
+                                            "Name": "One",
+                                            "ResourceName": null,
+                                            "Children": [],
+                                            "Enabled": true,
+                                            "ReadOnly": false
+                                          },
+                                          {
+                                            "$type": "Models.Functions.VariableReference, Models",
+                                            "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                            "Name": "YearsToMaxDimension",
                                             "ResourceName": null,
                                             "Children": [],
                                             "Enabled": true,
@@ -10311,18 +10349,17 @@
                                         ],
                                         "Enabled": true,
                                         "ReadOnly": false
-                                      },
-                                      {
-                                        "$type": "Models.Functions.Constant, Models",
-                                        "FixedValue": 365.0,
-                                        "Units": null,
-                                        "Name": "DaysInAYear",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
                                       }
                                     ],
+                                    "Enabled": true,
+                                    "ReadOnly": false
+                                  },
+                                  {
+                                    "$type": "Models.Functions.VariableReference, Models",
+                                    "VariableName": "[Phenology].ThermalTime",
+                                    "Name": "ThermalTime",
+                                    "ResourceName": null,
+                                    "Children": [],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   }
@@ -10409,7 +10446,7 @@
                                       1000.0
                                     ],
                                     "Y": [
-                                      0.0,
+                                      10.0,
                                       100.0
                                     ],
                                     "XVariableName": null,
@@ -10531,7 +10568,7 @@
                             "Children": [
                               {
                                 "$type": "Models.Functions.Constant, Models",
-                                "FixedValue": 0.2,
+                                "FixedValue": "NaN",
                                 "Units": null,
                                 "Name": "PartitionFraction",
                                 "ResourceName": null,
@@ -15947,35 +15984,73 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.DivideFunction, Models",
+                                "$type": "Models.Functions.MultiplyFunction, Models",
                                 "Name": "RootFrontVelocity",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Root].Network.MaximumRootDepth",
-                                    "Name": "MaxRootDepth",
+                                    "$type": "Models.Functions.DivideFunction, Models",
+                                    "Name": "mmPeroCd",
                                     "ResourceName": null,
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Models.Functions.VariableReference, Models",
+                                        "VariableName": "[Root].Network.MaximumRootDepth",
+                                        "Name": "MaxRootDepth",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ExpressionFunction, Models",
+                                        "Expression": "[DEROPAPY].Phenology.Vegetative.Target + [DEROPAPY].Phenology.Reproductive.Target",
+                                        "Name": "RootTtDuration",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      }
+                                    ],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   },
                                   {
-                                    "$type": "Models.Functions.MultiplyFunction, Models",
-                                    "Name": "RootGrowthDuration",
+                                    "$type": "Models.Functions.MinimumFunction, Models",
+                                    "Name": "YearsToMaxDepthFactor",
                                     "ResourceName": null,
                                     "Children": [
                                       {
                                         "$type": "Models.Functions.Constant, Models",
                                         "FixedValue": 1.0,
-                                        "Units": "years",
-                                        "Name": "YearsToMaxDepth",
+                                        "Units": "g/plant",
+                                        "Name": "One",
+                                        "ResourceName": null,
+                                        "Children": [],
+                                        "Enabled": true,
+                                        "ReadOnly": false
+                                      },
+                                      {
+                                        "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                        "NumeratorErrVal": 1.0,
+                                        "DenominatorErrVal": 1.0,
+                                        "Name": "ProportionOfTotalRootGrowthAnnually",
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Memo, Models",
-                                            "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
-                                            "Name": "Param value set at establishment",
+                                            "$type": "Models.Functions.Constant, Models",
+                                            "FixedValue": 1.0,
+                                            "Units": "g/plant",
+                                            "Name": "One",
+                                            "ResourceName": null,
+                                            "Children": [],
+                                            "Enabled": true,
+                                            "ReadOnly": false
+                                          },
+                                          {
+                                            "$type": "Models.Functions.VariableReference, Models",
+                                            "VariableName": "[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2]",
+                                            "Name": "YearsToMaxDimension",
                                             "ResourceName": null,
                                             "Children": [],
                                             "Enabled": true,
@@ -15984,18 +16059,17 @@
                                         ],
                                         "Enabled": true,
                                         "ReadOnly": false
-                                      },
-                                      {
-                                        "$type": "Models.Functions.Constant, Models",
-                                        "FixedValue": 365.0,
-                                        "Units": null,
-                                        "Name": "DaysInAYear",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
                                       }
                                     ],
+                                    "Enabled": true,
+                                    "ReadOnly": false
+                                  },
+                                  {
+                                    "$type": "Models.Functions.VariableReference, Models",
+                                    "VariableName": "[Phenology].ThermalTime",
+                                    "Name": "ThermalTime",
+                                    "ResourceName": null,
+                                    "Children": [],
                                     "Enabled": true,
                                     "ReadOnly": false
                                   }
@@ -16082,7 +16156,7 @@
                                       1000.0
                                     ],
                                     "Y": [
-                                      0.0,
+                                      10.0,
                                       100.0
                                     ],
                                     "XVariableName": null,
@@ -16204,7 +16278,7 @@
                             "Children": [
                               {
                                 "$type": "Models.Functions.Constant, Models",
-                                "FixedValue": 0.2,
+                                "FixedValue": "NaN",
                                 "Units": null,
                                 "Name": "PartitionFraction",
                                 "ResourceName": null,
