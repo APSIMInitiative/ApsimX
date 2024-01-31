@@ -14,7 +14,7 @@ using System.Linq;
 namespace UnitTests.Core
 {
     [TestFixture]
-    public class PlantTests
+    public class TreeProxyTests
     {
         /// <summary>
         /// Ensure that the TreeProxy model calculates its NUptake in SetActualNitrogenUptakes method
