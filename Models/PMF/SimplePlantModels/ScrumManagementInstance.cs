@@ -107,6 +107,8 @@ namespace Models.PMF.SimplePlantModels
                 else
                 {
                     HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 1));
+                    if (HarvestDate <= EstablishDate)
+                        HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 2));
                 }
             }
             if (cropParams["TtEstabToHarv"] != "")
