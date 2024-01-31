@@ -245,7 +245,7 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
-            {"InvertedRelativeMaturity","[SCRUM].TotalDMAtHarvest.InvertedRelativeMaturityAtHarvest.FixedValue = " },
+            {"InvertedRelativeMaturity","[SCRUM].TotalDMAtMaturity.InvertedRelativeMaturityAtHarvest.FixedValue = " },
             {"ExpectedYield","[Product].ExpectedYield.FixedValue = "},
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
