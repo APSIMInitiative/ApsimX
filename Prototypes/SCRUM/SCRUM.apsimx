@@ -1121,45 +1121,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "DilutionCurve",
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
+                          "Name": "StageDilution",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                3.0,
-                                4.0,
-                                5.0,
-                                6.0,
-                                7.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.1,
-                                0.02,
-                                0.0,
-                                0.0
-                              ],
-                              "XVariableName": null,
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Stage",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2826,47 +2792,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "DilutionCurve",
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
+                          "Name": "StageDilution",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                3.0,
-                                4.0,
-                                5.0,
-                                6.0,
-                                7.0,
-                                8.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.1,
-                                0.02,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
-                              "XVariableName": null,
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Stage",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -4540,6 +4470,16 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 2.0,
+              "Units": null,
+              "Name": "NDilutionConstant",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -5563,6 +5503,7 @@
                 "[AutomaticIrrigation].Script.Top_Refull",
                 "[AutomaticIrrigation].Script.Top_SW",
                 "[AutomaticIrrigation].Script.Top_Trigger",
+                "[Fertiliser].NitrogenApplied",
                 "[Irrigation].IrrigationApplied",
                 "[SCRUM].Arbitrator.DM.NutrientLimitation",
                 "[SCRUM].Arbitrator.DM.SinkLimitation",
@@ -5610,7 +5551,7 @@
                 "[SCRUM].Total.N",
                 "[SCRUM].Total.Wt",
                 "[SCRUM].TotalDMAtMaturity",
-                "[Soil].NO3.kgha",
+                "sum([Soil].NO3.kgha)",
                 "[Soil].SoilWater.Drainage",
                 "[Soil].SoilWater.Eo",
                 "[Soil].SoilWater.Es",
@@ -7796,6 +7737,103 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Nitrogen (g/m2)",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "SoilN",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "sum(Soil.NO3.kgha)",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "N demand",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Fertiliser.NitrogenApplied",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "N supply",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
