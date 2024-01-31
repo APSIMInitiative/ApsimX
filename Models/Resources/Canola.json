@@ -4339,7 +4339,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.05,
+              "FixedValue": 0.02,
               "Units": null,
               "Name": "MinimumNConc",
               "ResourceName": null,
