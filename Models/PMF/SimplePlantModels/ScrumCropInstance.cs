@@ -53,22 +53,27 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Root Nitrogen Concentration</summary>
-        [Description("Root Nitrogen concentration (g/g)")]
-        public double RootNConc { get; set; }
-
-        /// <summary>Stover Nitrogen Concentration at maturity</summary>
-        [Description("Stover Nitrogen concentration at maturity (g/g)")]
-        public double StoverNConc { get; set; }
-
-        /// <summary>Product Nitrogen Concentration at maturity</summary>
-        [Description("Product Nitrogen concentration at maturity (g/g)")]
-        public double ProductNConc { get; set; }
-
-        /// <summary>Product Nitrogen Concentration at maturity</summary>
+        /// <summary>Plant Nitrogen concentration at Seedling stage</summary>
         [Description("Plant Nitrogen concentration at Seedling (g/g)")]
         public double SeedlingNConc { get; set; }
 
+        /// <summary>Planting Stage</summary>
+        [Description("typical Harvest Stage")]
+        [Display(Type = DisplayType.ScrumHarvestStages)]
+        public string TypicalHarvestStage { get { return _typicalharvestStage; } set { _typicalharvestStage = value; } }
+        private string _typicalharvestStage { get; set; }
+
+        /// <summary>Product Nitrogen Concentration at maturity</summary>
+        [Description("Product Nitrogen concentration at harvest (g/g)")]
+        public double ProductHarvestNConc { get; set; }
+
+        /// <summary>Stover Nitrogen Concentration at maturity</summary>
+        [Description("Stover Nitrogen concentration at harvest (g/g)")]
+        public double StoverHarvestNConc { get; set; }
+
+        /// <summary>Root Nitrogen Concentration</summary>
+        [Description("Root Nitrogen concentration (g/g)")]
+        public double RootNConc { get; set; }
 
         /// <summary>Base temperature for crop</summary>
         [Description("Base temperature for crop (oC)")]
@@ -166,8 +171,8 @@ namespace Models.PMF.SimplePlantModels
             double productDM = fDM * (1 - this.Proot) * this.HarvestIndex;
             double stoverDM = fDM * (1 - this.Proot) * (1 - this.HarvestIndex);
             double rootDM = fDM * this.Proot;
-            double productN = productDM * this.ProductNConc;
-            double stoverN = stoverDM * this.StoverNConc;
+            double productN = productDM * this.ProductHarvestNConc;
+            double stoverN = stoverDM * this.StoverHarvestNConc;
             double rootN = rootDM * this.RootNConc;
             double DemandKgPerHa = (productN + stoverN + rootN) * 10;
             return DemandKgPerHa;
@@ -251,7 +256,7 @@ namespace Models.PMF.SimplePlantModels
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
             {"RootProportion","[Root].RootProportion.FixedValue = "},
             {"ProductNConc","[Product].MaxNConcAtMaturity.FixedValue = "},
-            {"ResidueNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
+            {"StoverNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"SeedlingNConc","[SCRUM].MaxNConcAtSeedling.FixedValue = " },
             {"LegumePropn","[SCRUM].LegumePropn.FixedValue = "},
@@ -274,6 +279,7 @@ namespace Models.PMF.SimplePlantModels
             {"TtMaturity","[Phenology].Maturity.Target.FixedValue ="},
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
             {"InitialStoverWt","[Stover].InitialWt.FixedValue = "},
+            {"InitialProductWt","[Product].InitialWt.Structural.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
             {"InitialCover","[SCRUM].Stover.Cover.InitialCover.FixedValue = " },
             {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
@@ -382,8 +388,6 @@ namespace Models.PMF.SimplePlantModels
             double ey = management.ExpectedYield * 100;
             cropParams["ExpectedYield"] += ey.ToString();
             cropParams["HarvestIndex"] += this.HarvestIndex.ToString();
-            cropParams["ProductNConc"] += this.ProductNConc.ToString();
-            cropParams["ResidueNConc"] += this.StoverNConc.ToString();
             cropParams["RootNConc"] += this.RootNConc.ToString();
             cropParams["SeedlingNConc"] += this.SeedlingNConc.ToString();
             cropParams["MaxRootDepth"] += this.MaxRD.ToString();
@@ -396,6 +400,12 @@ namespace Models.PMF.SimplePlantModels
             cropParams["R50"] += R50.ToString();
 
             // Derive Crop Parameters
+            double typicalHarvestStageCode = StageNumbers[this.TypicalHarvestStage];
+            double exponent = Math.Exp(-2 * (typicalHarvestStageCode - 3));
+            cropParams["ProductNConc"] += ((this.ProductHarvestNConc - this.SeedlingNConc * exponent) / (1 - exponent)).ToString();
+            cropParams["StoverNConc"] += ((this.StoverHarvestNConc - this.SeedlingNConc * exponent) / (1 - exponent)).ToString();
+
+
             ttEstabToHarv = 0.0;
            
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
@@ -455,9 +465,10 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtMaturity"] += (Tt_EmergtoMat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
-            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot));
+            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot)) * irm;
             double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
-            cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot)).ToString();
+            cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot) * (1 - this.HarvestIndex)).ToString();
+            cropParams["InitialProductWt"] += (iDM * (1 - this.Proot) * this.HarvestIndex).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
             double tTpreEstab = Tt_EmergtoMat * PropnTt[management.EstablishStage];
             cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) / b_cov))).ToString();
