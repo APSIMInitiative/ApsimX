@@ -61,7 +61,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
         [Separator("Plant Dimnesions")]
-        public bool RootThyNeighbour { get; set; }
+        public bool GRINZ { get; set; }
 
         /// <summary>Root depth (mm)</summary>
         [Description("Root depth (mm)")]
@@ -220,7 +220,7 @@ namespace Models.PMF.SimplePlantModels
             }
 
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
-            if (RootThyNeighbour)
+            if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
                 List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
@@ -254,7 +254,7 @@ namespace Models.PMF.SimplePlantModels
             double population = 1.0;
             double rowWidth = 0.0;
 
-            pasture = coeffCalc();
+            pasture = CoeffCalc();
             sprum.Children.Add(pasture);
             sprum.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
@@ -266,7 +266,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Data structure that holds STRUM parameter names and the cultivar overwrite they map to
         /// </summary>
-        public Cultivar coeffCalc()
+        public Cultivar CoeffCalc()
         {
             Dictionary<string, string> pastureParams = new Dictionary<string, string>(blankParams);
 
