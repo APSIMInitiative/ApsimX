@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
         public double GrossEnergyContent { get; set; }
 
         /// <inheritdoc/>
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         [Description("Metabolisable energy content")]
         [Units("MJ/kg DM")]
         public double MetabolisableEnergyContent { get; set; }
@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         [Description("Degradable protein content")]
         [Required, GreaterThanEqualValue(0), Proportion]
         [Units("g/g CP")]
-        public double RumenDegradableProteinContent { get; set; }
+        public double RumenDegradableProteinContent { get; set; } = 0.7;
 
         /// <inheritdoc/>
         [Description("Acid detergent insoluable protein")]

@@ -108,8 +108,8 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural", events.Clock.Today);
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
-                    ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedDetails, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
+                    ind.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
         }
@@ -468,7 +468,7 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.Parameters.Grow.EMaintCoefficient * Math.Pow(ind.Weight.Live, 0.75) / kml) * Math.Exp(-ind.Parameters.Grow.EMaintExponent * (((ind.AgeInDays == 0) ? 0.03 : ind.AgeInDays / 30.4)));
                 double EnergyBalance = energyMilkConsumed + energyMetabolicFromIntake - energyMaintenance;
-                ind.EnergyFromIntake = energyMilkConsumed + energyMetabolicFromIntake;
+                //ind.Energy.FromIntake = energyMilkConsumed + energyMetabolicFromIntake;
                 ind.Energy.ForFetus = 0;
                 ind.Energy.ForMaintenance = energyMaintenance;
                 ind.Energy.ForLactation = 0;
@@ -532,7 +532,7 @@ namespace Models.CLEM.Activities
                 //TODO: add draft individual energy requirement
 
                 double feedingValue;
-                ind.EnergyFromIntake = energyMetabolicFromIntake;
+                //ind.EnergyFromIntake = energyMetabolicFromIntake;
                 ind.Energy.ForFetus = energyFetus;
                 ind.Energy.ForMaintenance = energyMaintenance;
                 ind.Energy.ForLactation = energyMilk;

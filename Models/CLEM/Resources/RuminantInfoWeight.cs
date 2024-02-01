@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Ruminant weight tracking
     /// </summary>
-    public class RuminantWeightInfo
+    public class RuminantInfoWeight
     {
         private double live = 0;
 
@@ -182,7 +182,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantWeightInfo(double weightAtBirth)
+        public RuminantInfoWeight(double weightAtBirth)
         {
             AtBirth = weightAtBirth;
         }

@@ -114,7 +114,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return (CrudeProteinContent/100.0) * Amount;
-                //return (NitrogenContent/100.0) * NitrogenToCrudeProteinFactor * Amount;
             }
         }
 
@@ -122,12 +121,6 @@ namespace Models.CLEM.Resources
         /// Calculate Crude Protein percentage from nitrogen content (%)
         /// </summary>
         public double CrudeProteinContent { get; set; }
-        //{
-        //    get
-        //    {
-        //        return NitrogenContent * NitrogenToCrudeProteinFactor;
-        //    }
-        //}
 
         /// <summary>
         /// Calculate Undegradable Crude Protein content

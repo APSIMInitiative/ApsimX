@@ -419,7 +419,7 @@ namespace Models.CLEM.Resources
         /// Lactation information
         /// </summary>
         [JsonIgnore]
-        public RuminantLactationInfo Milk { get; set; } = new RuminantLactationInfo();
+        public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
 
         /// <summary>
         /// The proportion of the potential milk production achieved in timestep

@@ -288,9 +288,17 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="rdpRequired">The Rumen Digestible Protein (RDP) requirement</param>
         /// <param name="milkProteinDigestibility">The milk protein digestibility of the breed</param>
+        /// <param name="simplified">Use simplified approach of 0.6xmin(RDPI, RDPR)</param>
         /// <returns></returns>
-        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired, double milkProteinDigestibility)
+        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired, double milkProteinDigestibility, bool simplified = true)
         {
+            if(simplified)
+            {
+                // DPLS is simply 0.6 of the minimum of DPP from intake and RDP required from rumen.
+                RDPRequired = Math.Min(RDP, rdpRequired); 
+                dpls = (0.6 * RDPRequired);
+            }
+
             RDPRequired = rdpRequired;
             dpls = 0;
             foreach (var item in feedTypeStoreDict)

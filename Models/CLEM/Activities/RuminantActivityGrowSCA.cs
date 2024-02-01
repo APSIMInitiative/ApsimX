@@ -8,6 +8,8 @@ using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
+using Models.Aqua;
+using Models.PMF.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -56,12 +58,6 @@ namespace Models.CLEM.Activities
             {
                 TypeOfFeed = FeedType.Milk,
                 RumenDegradableProteinContent = 0,
-                FatContent = 0, // breed based parameter
-                NitrogenContent = 0, // breed based parameter.
-                // Energy content will be set in code based on breed parameter
-                MetabolisableEnergyContent = 0,
-                // Amount will be set in code
-                Amount = 0
             };
         }
 
@@ -92,7 +88,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
+                ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedDetails, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
             }
         }
 
@@ -129,9 +125,6 @@ namespace Models.CLEM.Activities
         private void CalculatePotentialIntake(Ruminant ind)
         {
             // ToDo: Questions for JD.
-            // Is there a different SRW for mature males (bulls)? CLEM uses a 1.2x multiplier to get intact Male SRW from Female SRW.
-            // How is extra bull weight/size handled in SCA?
-            // SRWBirthScalar needs to be applied to the female SRW, not the bigger male SRW.
             // Does RelativeCondition (weight over srw) exclude conceptus weight? (as discussed 17/1/24)
 
             // CF - Condition factor SCA Eq.3
@@ -277,7 +270,7 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NotNeeded;
 
-            foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedParams.Name))
+            foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
             {
                 int unfed = 0;
                 int unfedcalves = 0;
@@ -312,7 +305,7 @@ namespace Models.CLEM.Activities
             MP2 = 0;
 
             // The feed quality measures are now provided in IFeedType and FoodResourcePackets
-            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or sillage, temperate pasture, tropical pasture, or milk) in Intake
+            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or sillage, temperate pasture, tropical pasture, or milk) in RuminantIntake
             // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
 
             // Sme 1 for females and castrates
@@ -327,7 +320,7 @@ namespace Models.CLEM.Activities
 
             // calculate here as is also needed in not weaned.. in case consumed feed and milk.
             double km = 0.02 * ind.Intake.MDSolid + 0.5;
-            double kg = double.NaN;
+            double kg;
 
             if (ind.Weaned)
             {
@@ -396,7 +389,7 @@ namespace Models.CLEM.Activities
                 }
 
                 milkPacket.MetabolisableEnergyContent = ind.Parameters.GrowSCA.EnergyContentMilk_CL6;
-                //milkPacket.NitrogenContent = ind.Parameters.Breeding.XXXXXX Need to set this still.
+                milkPacket.CrudeProteinContent = ind.Parameters.GrowSCA.ProteinContentMilk_CL15;
                 milkPacket.Amount = ind.Intake.MilkDaily.Actual;
                 ind.Intake.AddFeed(milkPacket);
 
@@ -467,7 +460,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                ind.Energy.NetForGain = netEnergyForGain + ind.BreedParams.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
+                ind.Energy.NetForGain = netEnergyForGain + ind.BreedDetails.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
             }
             emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
 
@@ -518,9 +511,10 @@ namespace Models.CLEM.Activities
         /// Calculate maintenance energy and reduce intake based on any rumen protein deficiency
         /// </summary>
         /// <param name="ind">The individual ruminant.</param>
-        /// <param name="km"></param>
-        /// <param name="sexEffect"></param>
-        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect)
+        /// <param name="km">The maintenance efficiency to use</param>
+        /// <param name="sexEffect">The sex effect to apply</param>
+        /// <param name="reduceIntakeByRDPShortfall">Switch to allow intake to be reduced due to RDP shortfall</param>
+        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect, bool reduceIntakeByRDPShortfall = false)
         {
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
@@ -546,6 +540,10 @@ namespace Models.CLEM.Activities
                     adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
                 }
                 cp_out = CalculateCrudeProtein(ind, adjustedFeedingLevel);
+
+                if (!reduceIntakeByRDPShortfall)
+                    cp_out.reduction = 1;
+
                 if (cp_out.reduction < 1 & recalculate == 0)
                     ind.Intake.AdjustIntakeByRumenProteinRequired(cp_out.reduction);
                 else

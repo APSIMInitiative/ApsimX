@@ -157,9 +157,9 @@ namespace Models.CLEM.Activities
             // calculate conception rate for all individuals
             foreach (RuminantFemale female in uniqueIndividuals)
             {
-                if (female.BreedParams.ConceptionModel is null)
-                    throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
-                female.ActivityDeterminedConceptionRate = female.BreedParams.ConceptionModel.ConceptionRate(female);
+                if (female.BreedDetails.ConceptionModel is null)
+                    throw new ApsimXException(this, $"No conception details were found for [r={female.BreedDetails.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
+                female.ActivityDeterminedConceptionRate = female.BreedDetails.ConceptionModel.ConceptionRate(female);
                 // identify successful matings by a positive value of rate
                 female.ActivityDeterminedConceptionRate *= (RandomNumberGenerator.Generator.NextDouble() <= female.ActivityDeterminedConceptionRate) ? 1 : -1;
             }

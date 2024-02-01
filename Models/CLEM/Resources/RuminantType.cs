@@ -135,7 +135,7 @@ namespace Models.CLEM.Resources
                 foreach (var suckling in sucklingList)
                 {
                     sucklingCount++;
-                    if (breedFemales.Count > 0)
+                    if (breedFemales.Any())
                     {
                         // if next new female set up some details
                         if (breedFemales[0].ID != previousRuminantID)

@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
     /// Store of Ruminant energy for the time-step
     /// </summary>
     [Serializable]
-    public class RuminantEnergyInfo
+    public class RuminantInfoEnergy
     {
         private readonly RuminantIntake ruminantIntake;
 
@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
         /// Constructor
         /// </summary>
         /// <param name="intake">The intake component of the parent ruminant</param>
-        public RuminantEnergyInfo(RuminantIntake intake)
+        public RuminantInfoEnergy(RuminantIntake intake)
         {
             ruminantIntake = intake;
         }

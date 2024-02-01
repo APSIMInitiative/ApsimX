@@ -10,7 +10,7 @@ namespace Models.CLEM.Resources
     /// Stores all ruminant outputs for the time step
     /// </summary>
     [Serializable]
-    public class RuminantOutputInfo
+    public class RuminantInfoOutput
     {
         /// <summary>
         /// Enteric methane emitted

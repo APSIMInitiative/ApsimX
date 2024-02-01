@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
     /// Store of female ruminant lactation for the time-step
     /// </summary>
     [Serializable]
-    public class RuminantLactationInfo
+    public class RuminantInfoLactation
     {
         /// <summary>
         /// Production rate

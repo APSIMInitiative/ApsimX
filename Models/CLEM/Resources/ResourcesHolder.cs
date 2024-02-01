@@ -142,7 +142,7 @@ namespace Models.CLEM.Resources
             string errorMsg;
             if (resGroup == null)
             {
-                errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] with value [{resourceName}] for [a={requestingModel.Name}]";
 
                 switch (missingResourceAction)
                 {

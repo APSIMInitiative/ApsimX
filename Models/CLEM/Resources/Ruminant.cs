@@ -19,23 +19,8 @@ namespace Models.CLEM.Resources
     public abstract class Ruminant : IFilterable, IAttributable
     {
         private RuminantFemale mother;
-//        private double weight;
-        //private double birthweight;
-        //private double baseweight;
-        //private double emptyBodyChange;
         private int age;
-        //private double normalisedWeight;
-        //private double previousNormalisedWeight;
-        //private double adultEquivalent;
-        //private double proteinMass = 0;
-        //private double proteinMJ = 0;
-        //private double fatMass = 0;
-        //private double fatMJ = 0;
-        //private double previousProteinMass = 0;
-        //private double previousFatMass = 0;
         private bool sterilised = false;
-
-        #region All new Grow SCA properties
 
         /// <summary>
         /// Ruminant intake manager
@@ -47,142 +32,19 @@ namespace Models.CLEM.Resources
         /// Store for tracking energy use
         /// </summary>
         [JsonIgnore]
-        public RuminantEnergyInfo Energy { get; set; }
+        public RuminantInfoEnergy Energy { get; set; }
 
         /// <summary>
         /// Store for tracking ruminant outputs
         /// </summary>
         [JsonIgnore]
-        public RuminantOutputInfo Output { get; set; } = new RuminantOutputInfo();
+        public RuminantInfoOutput Output { get; set; } = new RuminantInfoOutput();
 
         /// <summary>
         /// Store for tracking all weights
         /// </summary>
         [JsonIgnore]
-        public RuminantWeightInfo Weight { get; set; }
-
-        ///// <summary>
-        ///// Relative size based on highest weight achieved (High weight / standard reference weight)
-        ///// </summary>
-        //[FilterByProperty]
-        //public double RelativeSizeByHighWeight
-        //{
-        //    // TODO: check this is right
-        //    get { return HighWeight / StandardReferenceWeight; }
-        //}
-
-        ///// <summary>
-        ///// The protein mass of the individual
-        ///// </summary>
-        //public double ProteinMass { get { return proteinMass; } }
-
-        ///// <summary>
-        ///// The protein mass of the individual
-        ///// </summary>
-        //public double ProteinMJ { get { return proteinMJ; } }
-
-        ///// <summary>
-        ///// The change in protein mass of the individual
-        ///// </summary>
-        //public double ProteinMassChange { get { return proteinMass-previousProteinMass; } }
-
-        ///// <summary>
-        ///// Adjust the protein mass of the individual.
-        ///// </summary>
-        ///// <param name="amount">Amount to change by with sign.</param>
-        ///// <param name="mj"></param>
-        //public void AdjustProteinMass(double amount, double mj)
-        //{
-        //    previousProteinMass = proteinMass;
-        //    proteinMass += amount;
-        //    proteinMJ += mj;
-        //    proteinMass = Math.Max(0, proteinMass);
-        //}
-
-        ///// <summary>
-        ///// The fat mass of individual
-        ///// </summary>
-        //public double FatMass { get { return fatMass; } }
-
-        ///// <summary>
-        ///// The fat mass of individual
-        ///// </summary>
-        //public double FatMJ { get { return fatMJ; } }
-
-        ///// <summary>
-        ///// The change in fat mass of the individual
-        ///// </summary>
-        //public double FatMassChange { get { return fatMass - previousFatMass; } }
-
-        ///// <summary>
-        ///// Add fat mass to individual.
-        ///// </summary>
-        ///// <param name="amount">Amount to change by with sign.</param>
-        ///// <param name="mj"></param>
-        //public void AdjustFatMass(double amount, double mj)
-        //{
-        //    previousFatMass = fatMass;
-        //    fatMJ += mj;
-        //    fatMass += amount;
-        //    fatMass = Math.Max(0, fatMass);
-        //}
-
-        ///// <summary>
-        ///// Energy used for wool production
-        ///// </summary>
-        //public double EnergyForWool { get; set; }
-
-        ///// <summary>
-        ///// Energy available after wool growth
-        ///// </summary>
-        //public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
-
-        ///// <summary>
-        ///// Energy used for maintenance
-        ///// </summary>
-        //public double EnergyForMaintenance { get; set; }
-
-        ///// <summary>
-        ///// Energy used for fetal development
-        ///// </summary>
-        //public double EnergyForFetus { get; set; }
-
-        ///// <summary>
-        ///// Energy available after accounting for pregnancy
-        ///// </summary>
-        //public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
-
-        ///// <summary>
-        ///// Energy used for milk production
-        ///// </summary>
-        //public double EnergyForLactation { get; set; }
-
-        ///// <summary>
-        ///// Energy available after lactation demands
-        ///// </summary>
-        //public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
-
-        ///// <summary>
-        ///// Energy used for maintenance
-        ///// </summary>
-        //public double EnergyForGain { get; set; }
-
-        ///// <summary>
-        ///// Energy available for growth
-        ///// </summary>
-        //public double EnergyAvailableForGain { get; set; }
-
-        /// <summary>
-        /// Energy from intake (used in RuminantActivityGrow V1)
-        /// </summary>
-        public double EnergyFromIntake { get; set; }
-
-        /// <summary>
-        /// Digestible protein leaving the stomach
-        /// </summary>
-        public double DPLS { get; set; }
-
-        #endregion
+        public RuminantInfoWeight Weight { get; set; }
 
         /// <summary>
         /// Current animal price group for this individual 
@@ -197,7 +59,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Reference to the RuminantType.
         /// </summary>
-        public RuminantType BreedParams;
+        public RuminantType BreedDetails;
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -812,7 +674,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.Combined:
                     return "All";
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
+                    return BreedDetails.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
@@ -931,7 +793,7 @@ namespace Models.CLEM.Resources
                     RumObj = this,
                     Category = reason
                 };
-                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+                (this.BreedDetails.Parent as RuminantHerd).OnWeanOccurred(args);
             }
         }
 
@@ -978,7 +840,7 @@ namespace Models.CLEM.Resources
         /// <param name="date">The date of creation</param>
         public Ruminant(RuminantType setParams, int setAge, double birthScalar, double setWeight, DateTime date)
         {
-            BreedParams = setParams;
+            BreedDetails = setParams;
             Parameters = setParams.Parameters;
 
             Weight = new(birthScalar * Parameters.General.SRWFemale);
@@ -1010,7 +872,7 @@ namespace Models.CLEM.Resources
             
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();
-            Energy = new RuminantEnergyInfo(Intake);
+            Energy = new RuminantInfoEnergy(Intake);
         }
 
         /// <summary>
@@ -1040,7 +902,7 @@ namespace Models.CLEM.Resources
                 if (indAttribute.StoredValue != (attribute.Value.SetAttributeSettings as SetAttributeWithProperty).RuminantPropertyInfo.GetValue(this))
                 {
                     // is this still the shared breed params with the mother
-                    if(BreedParams != Mother.BreedParams)
+                    if(BreedDetails != Mother.BreedDetails)
                     {
                         // create deep copy of BreedParams
 

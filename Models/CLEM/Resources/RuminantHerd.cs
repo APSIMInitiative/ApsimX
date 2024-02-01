@@ -255,14 +255,14 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             // check mandatory attributes
-            ind.BreedParams.CheckMandatoryAttributes(ind, model);
+            ind.BreedDetails.CheckMandatoryAttributes(ind, model);
 
             LastTransaction.TransactionType = TransactionType.Gain;
             LastTransaction.Amount = 1;
             LastTransaction.Activity = model as CLEMModel;
             LastTransaction.RelatesToResource = null;
             LastTransaction.Category = ind.SaleFlag.ToString();
-            LastTransaction.ResourceType = ind.BreedParams;
+            LastTransaction.ResourceType = ind.BreedDetails;
             LastTransaction.ExtraInformation = ind;
 
             OnTransactionOccurred(null);
@@ -318,7 +318,7 @@ namespace Models.CLEM.Resources
             LastTransaction.Activity = model as CLEMModel;
             LastTransaction.RelatesToResource = null;
             LastTransaction.Category = ind.SaleFlag.ToString();
-            LastTransaction.ResourceType = ind.BreedParams;
+            LastTransaction.ResourceType = ind.BreedDetails;
             LastTransaction.ExtraInformation = ind;
 
             OnTransactionOccurred(null);
@@ -460,9 +460,9 @@ namespace Models.CLEM.Resources
         /// <returns>A grouped summary of individuals</returns>
         public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {
-            bool multi = individuals.Select(a => a.BreedParams.Name).Distinct().Count() > 1;
+            bool multi = individuals.Select(a => a.BreedDetails.Name).Distinct().Count() > 1;
             var groupedInd = from ind in individuals
-                             group ind by ind.BreedParams.Name into breedGroup
+                             group ind by ind.BreedDetails.Name into breedGroup
                              select new RuminantReportTypeDetails()
                              {
                                  RuminantTypeName = breedGroup.Key,
@@ -475,7 +475,7 @@ namespace Models.CLEM.Resources
                                                          Count = catind.Count(),
                                                          TotalAdultEquivalent = catind.Sum(a => a.Weight.AdultEquivalent),
                                                          TotalWeight = catind.Sum(a => a.Weight.Live),
-                                                         TotalPrice = catind.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
+                                                         TotalPrice = catind.Sum(a => a.BreedDetails.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
                                                      }
                              };
             return groupedInd;
