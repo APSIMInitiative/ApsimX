@@ -2,7 +2,9 @@
 
 import zmq
 import msgpack
+import pdb
 
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -85,11 +87,11 @@ def poll_zmq(sockets):
     """
 
     ts_arrs = []
-    esw_arrs = []
+    sw_arrs = []
     rain_arrs = []
 
     counter = [0]*len(sockets)
-
+    pdb.set_trace()
     while (True):
         ts_arr = []
         sw_arr = []
@@ -100,6 +102,7 @@ def poll_zmq(sockets):
             print(f"recv msg: {msg}")
             if msg == "connect":
                 sendCommand(socket, "ok")
+                continue
             elif msg == "paused":
                 sendCommand(socket, "get", ["[Clock].Today"])
                 ts = msgpack.unpackb(socket.recv())
@@ -111,7 +114,7 @@ def poll_zmq(sockets):
 
                 if counter[RAIN_LOC] == RAIN_DAY and i == RAIN_LOC:
                     print("Our rainy day.")
-                    sendCommand(socket, "do", ["applyIrrigation", "amount", 204200.0])
+                    sendCommand(socket, "do", ["applyIrrigation", "amount", 80.27])
                     socket.recv()
                     global rain_day_ts
                     rain_day_ts = ts.to_unix()
@@ -120,28 +123,30 @@ def poll_zmq(sockets):
                 rain = msgpack.unpackb(socket.recv())
                 rain_arr.append(rain)
 
-                sendCommand(socket, "get", "[Soil].Water.Runoff")
+                sendCommand(socket, "get", ["[Soil].SoilWater.Runoff"])
                 runoff = msgpack.unpackb(socket.recv())  # unknown units on runoff
                 if runoff > 0:
-                    RUNOFF_FLAG[i] = True
+                    RUNOFF_FLAGS[i] = True
 
-                if RUNOFF_FLAG[(i-1)**2]:
+                if RUNOFF_FLAGS[(i-1)**2]:
+                    # print(f'tile {i}', end=' ')
                     sendCommand(socket, "do", ["applyIrrigation", "amount", runoff])
                     socket.recv()
-                    RUNOFF_FLAG[(i-1)**2] = False
+                    RUNOFF_FLAGS[(i-1)**2] = False
 
                 # resume simulation until next ReportEvent
                 sendCommand(socket, "resume")
             elif msg == "finished":
                 sendCommand(socket, "ok")
-                break
+                return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs))
 
             counter[i] += 1
-        ts_arrs.append(ts_arr)
-        sw_arrs.append(sw_arr)
-        rain_arrs.append(rain_arr)
+        if msg != "connect":
+            ts_arrs.append(ts_arr)
+            sw_arrs.append(sw_arr)
+            rain_arrs.append(rain_arr)
 
-    return (ts_arrs, esw_arrs, rain_arrs)
+    # return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs))
 
 
 if __name__ == '__main__':
@@ -149,7 +154,8 @@ if __name__ == '__main__':
     ports = [27746, 27747]
     ret = open_zmq2(ports=ports)
 
-    ts_arr, esw_arr, rain_arr = poll_zmq(ret)
+    ts_arr, sw_arr, rain_arr = poll_zmq(ret)
+    print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
@@ -161,11 +167,10 @@ if __name__ == '__main__':
     #print('Do we get a reply?')
     #reply = socket.recv_multipart()
     #print(reply)
-
     plt.figure()
 
-    plt.plot(ts_arr, esw_arr)
-    plt.xlabel("Time (Days)")
+    plt.plot(ts_arr, sw_arr)
+    plt.xlabel("Time (Unix Epochs)")
     plt.ylabel("Volumetric Water Content")
     plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
 

@@ -98,8 +98,8 @@ def poll_zmq(socket : zmq.Socket) -> tuple:
             ts_arr.append(ts.to_unix())
 
             sendCommand(socket, "get", ["sum([Soil].Water.Volumetric)"])
-            esw = msgpack.unpackb(socket.recv())
-            esw_arr.append(esw)
+            sw = msgpack.unpackb(socket.recv())
+            sw_arr.append(sw)
 
             sendCommand(socket, "get", ["[Weather].Rain"])
             rain = msgpack.unpackb(socket.recv())
