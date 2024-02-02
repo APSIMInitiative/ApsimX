@@ -61,5 +61,6 @@ CurrentDescriptiveSummary.html
 /.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
+/testEnvironments.json
 /Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.out
 /Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.sim

@@ -312,8 +312,6 @@ namespace UserInterface.Presenters
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
-            // Need to hide the right hand panel because some views may not have saved
-            // their contents until they get a 'Detach' call.
             try
             {
                 HideRightHandPanel();
@@ -329,7 +327,7 @@ namespace UserInterface.Presenters
             }
             finally
             {
-                ShowRightHandPanel();
+                ShowRightHandPanel();       
             }
 
             return false;
@@ -1044,11 +1042,9 @@ namespace UserInterface.Presenters
                         Model model = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
-                            this.HideRightHandPanel();
                             this.ApsimXFile.Locator.ClearEntry(model.FullPath);
                             RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
-                            this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
                         }
                     }

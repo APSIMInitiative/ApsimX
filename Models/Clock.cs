@@ -102,6 +102,8 @@ namespace Models
         // Public events that we're going to publish.
         /// <summary>Occurs once at the start of the simulation.</summary>
         public event EventHandler StartOfSimulation;
+        /// <summary>Occurs once at the start of the first day of the simulation.</summary>
+        public event EventHandler StartOfFirstDay;
         /// <summary>Occurs at start of each day.</summary>
         public event EventHandler StartOfDay;
         /// <summary>Occurs at start of each month.</summary>
@@ -327,9 +329,11 @@ namespace Models
             if (FinalInitialise != null)
                 FinalInitialise.Invoke(this, args);
 
+            if (StartOfFirstDay != null)
+                StartOfFirstDay.Invoke(this, args);
+
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
-
                 if (DoCatchYesterday != null)
                     DoCatchYesterday.Invoke(this, args);
 

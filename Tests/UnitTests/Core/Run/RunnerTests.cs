@@ -403,7 +403,8 @@
                 Assert.AreEqual(0, errors.Count);
 
                 // Make sure an exception is returned.
-                Assert.IsNotNull(MockSummary.messages.Find(m => m.Contains("Passed Test")));
+                var summary = simulations.FindDescendant<MockSummary>();
+                Assert.IsNotNull(summary.messages.Find(m => m.Contains("Passed Test")));
 
                 database.CloseDatabase();
             }
@@ -681,7 +682,8 @@
 
                 // Simulation shouldn't have run. Check the summary messages to make
                 // sure there is NOT a 'Simulation completed' message.
-                Assert.AreEqual(0, MockSummary.messages.Count);
+                var summary = simulation.FindDescendant<MockSummary>();
+                Assert.AreEqual(0, summary.messages.Count);
 
                 Assert.AreEqual(1, runner.Progress);
 

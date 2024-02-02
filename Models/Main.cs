@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,8 @@ namespace Models
         public static int Main(string[] args)
         {
             bool isApplyOptionPresent = false;
+            // Resets exitCode to help with unit testing.
+            exitCode = 0;
             // Required to allow the --apply switch functionality of not including
             // an apsimx file path on the command line.
             if (args.Length > 0 && args[0].Equals("--apply"))
@@ -77,6 +80,13 @@ namespace Models
         /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
+            // To help with Jenkins only errors.
+            foreach (var error in errors)
+            {
+                Console.WriteLine("Console error output: " + error.ToString());
+                Trace.WriteLine("Trace error output: " + error.ToString());
+            }
+
             if (!(errors.IsHelp() || errors.IsVersion()))
                 exitCode = 1;
         }
@@ -118,6 +128,11 @@ namespace Models
                 {
                     foreach (string file in files)
                         ListReferencedFileNames(file);
+                }
+                else if (options.ListReferencedFileNamesUnmodified)
+                {
+                    foreach (string file in files)
+                        ListReferencedFileNames(file, false);
                 }
                 else if (options.MergeDBFiles)
                 {
@@ -435,11 +450,11 @@ namespace Models
 
         }
 
-        private static void ListReferencedFileNames(string fileName)
+        private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            foreach (var referencedFileName in file.FindAllReferencedFiles())
+            foreach (var referencedFileName in file.FindAllReferencedFiles(isAbsolute))
                 Console.WriteLine(referencedFileName);
         }
 
