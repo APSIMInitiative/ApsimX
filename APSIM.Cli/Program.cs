@@ -131,7 +131,7 @@ namespace APSIM.Cli
             foreach (string file in files)
             {
                 var importer = new Importer();
-                importer.ProcessFile(file);
+                importer.ProcessFile(file, e=> { Console.WriteLine(e.ToString()); });
             }
         }
     }

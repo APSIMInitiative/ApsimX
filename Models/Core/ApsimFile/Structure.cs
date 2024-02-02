@@ -35,7 +35,7 @@ namespace Models.Core.ApsimFile
             modelToAdd.OnCreated();
             foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
-
+            
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
@@ -44,6 +44,9 @@ namespace Models.Core.ApsimFile
                 links.Resolve(modelToAdd, true, throwOnFail: true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
+
+                // Publish Commencing event
+                events.PublishToModelAndChildren("Commencing", new object[] { parent, new EventArgs() });
 
                 // Call StartOfSimulation events
                 events.PublishToModelAndChildren("StartOfSimulation", new object[] { parent, new EventArgs() });

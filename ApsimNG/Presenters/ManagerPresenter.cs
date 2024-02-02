@@ -1,18 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using Models;
+using Models.Core;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using Shared.Utilities;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Models;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Utility;
-
-
-
     /// <summary>
     /// Presenter for the Manager component
     /// </summary>
@@ -58,6 +55,7 @@
         {
             manager = model as Manager;
             managerView = view as IManagerView;
+
             explorerPresenter = presenter;
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -88,9 +86,12 @@
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.Editor.Location = manager.Location;
-            managerView.TabIndex = manager.ActiveTabIndex;
+            managerView.CursorLocation = manager.cursor;
+
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+
+            //Try building the script to show errors
+            BuildScript();
         }
 
         /// <summary>
@@ -98,6 +99,9 @@
         /// </summary>
         public void Detach()
         {
+            manager.cursor.TabIndex = managerView.TabIndex;
+            manager.cursor = managerView.CursorLocation;
+
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
 
@@ -165,9 +169,6 @@
 
             try
             {
-                manager.Location = managerView.Editor.Location;
-                manager.ActiveTabIndex = managerView.TabIndex;
-
                 string code = managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via
@@ -229,9 +230,7 @@
         {
             try
             {
-
                 throw new NotImplementedException();
-
             }
             catch (Exception err)
             {
@@ -257,6 +256,15 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// A rectangle defining the position of the cursor within the editor text
+        /// </summary>
+        public ManagerCursorLocation CursorLocation
+        {
+            get { return managerView.CursorLocation; }
+            set { managerView.CursorLocation = value; }
         }
     }
 }

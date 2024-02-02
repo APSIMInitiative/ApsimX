@@ -8,6 +8,7 @@ using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Factorial;
+using Models.PostSimulationTools;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
@@ -628,6 +629,31 @@ save {apsimxFileName}";
 
             Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
             //Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
+        }
+
+        [Test]
+        public void TestListReferencedFileNamesUnmodified()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            // Add an excel file so that a file path is given when calling command.
+            Simulation sim = file.FindAllChildren<Simulation>().First();
+
+            string[] fileNames = { "example.xlsx" };
+
+            ExcelInput excelInputNode = new ExcelInput()
+            {
+                FileNames = fileNames
+            };
+
+            sim.Children.Add(excelInputNode);
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string outputText = Utilities.RunModels(file, "--list-referenced-filenames-unmodified");
+
+            Assert.True(outputText.Contains("example.xlsx"));
+
         }
     }
 }
