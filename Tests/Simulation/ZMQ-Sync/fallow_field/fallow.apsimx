@@ -32,7 +32,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "/home/jtmadden/repos/jlab/oasis_sim/Examples/WeatherFiles/Goond.met",
+          "FileName": "../../../../Examples/WeatherFiles/Goond.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -1819,7 +1819,7 @@
                 "        private void OnDoManagement(object sender, EventArgs e)",
                 "        {",
                 "        \tif (apply_irrigation) {",
-                "        \t\tIrrigation.Apply(irrigation_amount);",
+                "        \t\tIrrigation.Apply(irrigation_amount, willRunoff: true);",
                 "        \t\tConsole.WriteLine(\"Irrigated {0} \", irrigation_amount, \"mm\");",
                 "        \t\tapply_irrigation = false;",
                 "        \t}",
