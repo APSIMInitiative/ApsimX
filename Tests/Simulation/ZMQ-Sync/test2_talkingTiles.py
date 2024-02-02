@@ -155,7 +155,7 @@ if __name__ == '__main__':
     ret = open_zmq2(ports=ports)
 
     ts_arr, sw_arr, rain_arr = poll_zmq(ret)
-    print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
+    # print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
@@ -169,14 +169,16 @@ if __name__ == '__main__':
     #print(reply)
     plt.figure()
 
-    plt.plot(ts_arr, sw_arr)
+    plt.plot(ts_arr[:,0], sw_arr[:,0])
+    plt.plot(ts_arr[:,1], sw_arr[:,1], ':', linewidth=3.0)
+    plt.plot(ts_arr[:,0], sw_arr[:,0]-sw_arr[:,1])
     plt.xlabel("Time (Unix Epochs)")
     plt.ylabel("Volumetric Water Content")
     plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
 
-    plt.twinx()
-    plt.plot(ts_arr, rain_arr, color="orange")
-    plt.ylabel("Rain")
+    # plt.twinx()
+    # plt.plot(ts_arr, rain_arr, color="orange")
+    # plt.ylabel("Rain")
 
     plt.legend()
     plt.grid(True)
