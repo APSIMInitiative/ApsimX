@@ -395,7 +395,7 @@ namespace Models.CLEM.Activities
 
                 CalculateMaintenanceEnergy(ind, kml, sexEffectME);
             }
-            double feedingLevel = ind.Energy.FromIntake / ind.Energy.ForMaintenance;
+            double adjustedFeedingLevel = ind.Energy.FromIntake / ind.Energy.ForMaintenance -1;
 
             // Wool production
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
@@ -421,12 +421,12 @@ namespace Models.CLEM.Activities
             double proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
             // mj/kg gain
-            double energyEmptyBodyGain = ind.Parameters.GrowSCA.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.GrowSCA.GrowthEnergyIntercept2_CG9 - (ind.Parameters.GrowSCA.GrowthEnergySlope1_CG10 * (feedingLevel - 1))) + sizeFactor2ForGain * (ind.Parameters.GrowSCA.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
+            double energyEmptyBodyGain = ind.Parameters.GrowSCA.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.GrowSCA.GrowthEnergyIntercept2_CG9 - (ind.Parameters.GrowSCA.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.GrowSCA.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
             // units = kg protein/kg gain
-            double proteinContentOfGain = ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.GrowSCA.ProteinGainIntercept2_CG13 - ind.Parameters.GrowSCA.ProteinGainSlope1_CG14 * (feedingLevel - 1)) + sizeFactor2ForGain * ind.Parameters.GrowSCA.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
+            double proteinContentOfGain = ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.GrowSCA.ProteinGainIntercept2_CG13 - ind.Parameters.GrowSCA.ProteinGainSlope1_CG14 * adjustedFeedingLevel) + sizeFactor2ForGain * ind.Parameters.GrowSCA.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
             // units MJ tissue gain/kg ebg
-            double proteinGainMJ = 23.6 * proteinContentOfGain;
-            double fatGainMJ = energyEmptyBodyGain - proteinGainMJ;
+            //double proteinGainMJ = 23.6 * proteinContentOfGain;
+            //double fatGainMJ = energyEmptyBodyGain - proteinGainMJ;
 
             double netEnergyForGain = kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
             if (netEnergyForGain > 0)
@@ -434,7 +434,7 @@ namespace Models.CLEM.Activities
 
             double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.NetForGain / energyEmptyBodyGain));
 
-            double emptyBodyGainkg = 0;
+            //double emptyBodyGainkg = 0;
 
             if (milkProtein > 0 && ProteinNet1 < milkProtein)
             {
@@ -462,7 +462,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Energy.NetForGain = netEnergyForGain + ind.BreedDetails.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
             }
-            emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
+            double emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
 
             //double predictedLiveWeightChange = ind.Parameters.GrowSCA.EBW2LW_CG18 * emptyBodyGainkg;
             
@@ -513,50 +513,33 @@ namespace Models.CLEM.Activities
         /// <param name="ind">The individual ruminant.</param>
         /// <param name="km">The maintenance efficiency to use</param>
         /// <param name="sexEffect">The sex effect to apply</param>
-        /// <param name="reduceIntakeByRDPShortfall">Switch to allow intake to be reduced due to RDP shortfall</param>
-        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect, bool reduceIntakeByRDPShortfall = false)
+        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect)
         {
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
-            int recalculate = 0;
-
             km *= ind.Parameters.GrowSCA.BreedMainenanceEfficiencyScalar;
 
             // Note: Energy.ToMove and Energy.ToGraze are calulated in Grazing Activity.
             ind.Energy.ToMove /= km;
             ind.Energy.ToGraze /= km;
 
-            (double reduction, double RDPReq) cp_out;
-            do
+            double rdpReq;
+            // todo: check ind.BreedParams.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
+            ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowSCA.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowSCA.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowSCA.AgeEffectMin_CM4) * (1 + ind.Parameters.GrowSCA.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
+            ind.Energy.ForHPViscera = ind.Parameters.GrowSCA.HPVisceraFL_CM1 * ind.Energy.FromIntake;
+            ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
+
+            double adjustedFeedingLevel = -1;
+            if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))
             {
-                // todo: check ind.BreedParams.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
-                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowSCA.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowSCA.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowSCA.AgeEffectMin_CM4) * (1 + ind.Parameters.GrowSCA.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
-                ind.Energy.ForHPViscera = ind.Parameters.GrowSCA.HPVisceraFL_CM1 * ind.Energy.FromIntake;
-                ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
-
-                double adjustedFeedingLevel = -1;
-                if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))
-                {
-                    adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
-                }
-                cp_out = CalculateCrudeProtein(ind, adjustedFeedingLevel);
-
-                if (!reduceIntakeByRDPShortfall)
-                    cp_out.reduction = 1;
-
-                if (cp_out.reduction < 1 & recalculate == 0)
-                    ind.Intake.AdjustIntakeByRumenProteinRequired(cp_out.reduction);
-                else
-                    break;
-
-                recalculate++;
+                adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
             }
-            while (recalculate < 2);
+            rdpReq = CalculateCrudeProtein(ind, adjustedFeedingLevel);
 
-            ind.Intake.CalculateDigestibleProteinLeavingStomach(cp_out.RDPReq, ind.Parameters.GrowSCA.MilkProteinDigestability_CA5);
+            ind.Intake.CalculateDigestibleProteinLeavingStomach(rdpReq, ind.Parameters.GrowSCA.MilkProteinDigestability_CA5);
         }
 
-        private static (double reduction, double RDPReq) CalculateCrudeProtein(Ruminant ind, double feedingLevel)
+        private static double CalculateCrudeProtein(Ruminant ind, double feedingLevel)
         {
             // 1. calc RDP intake. Rumen Degradable Protein
 
@@ -565,6 +548,7 @@ namespace Models.CLEM.Activities
 
             if (feedingLevel > 0)
             {
+                FMEIterm = 0;
                 double FMEIrf = 0;
                 double DPrf = 0;
                 foreach (var store in ind.Intake.GetAllStores)
@@ -599,8 +583,6 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // Crude protein has been adjusted in previous loop if feeding level > 0
-
             // 2. calc UDP intake by difference(CPI-RDPI)
             // now a property of intake
 
@@ -610,14 +592,8 @@ namespace Models.CLEM.Activities
             // ignored GrassGro latitude factor for now.
             // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
 
-            double RDPReq = (ind.Parameters.GrowSCA.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.GrowSCA.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.GrowSCA.RumenDegradableProteinExponent_CRD6 *
+            return (ind.Parameters.GrowSCA.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.GrowSCA.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.GrowSCA.RumenDegradableProteinExponent_CRD6 *
                 (feedingLevel + 1)))) * FMEIterm;
-
-            if(RDPReq > ind.Intake.RDP)
-            {
-                return ((ind.Intake.RDP / RDPReq) + (ind.Parameters.GrowSCA.ProteinShortfallAlleviationScalar * (1- (ind.Intake.RDP / RDPReq))), RDPReq);
-            }
-            return (1, RDPReq);
         }
 
         /// <summary>
@@ -770,17 +746,6 @@ namespace Models.CLEM.Activities
                     manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
                 }
             }
-        }
-
-        /// <summary>
-        /// Function to age individuals and remove those that died in time step.
-        /// This needs to be undertaken prior to herd management.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void OnCLEMAgeResources(object sender, EventArgs e)
-        {
         }
 
         /// <summary>Function to determine which animals have died and remove from the population.</summary>

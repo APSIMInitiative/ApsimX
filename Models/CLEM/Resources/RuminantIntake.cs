@@ -248,26 +248,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Adjust intake by a reduction factor.
-        /// </summary>
-        /// <param name="reductionFactor">factor (0-1) to adjust by.</param>
-        /// <returns>Boolen indicating whether any adjustment was made.</returns>
-        public bool AdjustIntakeByRumenProteinRequired(double reductionFactor)
-        {
-            if (reductionFactor >= 1) return false;
-
-            SolidsDaily.Actual = 0;
-
-            // reduce all solid intake amounts
-            foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk))
-            {
-                item.Value.Details.Amount *= reductionFactor;
-                SolidsDaily.Actual += item.Value.Details.Amount;
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Rumen Degradable Protein.
         /// </summary>
         public double RDP
@@ -288,19 +268,13 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="rdpRequired">The Rumen Digestible Protein (RDP) requirement</param>
         /// <param name="milkProteinDigestibility">The milk protein digestibility of the breed</param>
-        /// <param name="simplified">Use simplified approach of 0.6xmin(RDPI, RDPR)</param>
         /// <returns></returns>
-        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired, double milkProteinDigestibility, bool simplified = true)
+        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired, double milkProteinDigestibility)
         {
-            if(simplified)
-            {
-                // DPLS is simply 0.6 of the minimum of DPP from intake and RDP required from rumen.
-                RDPRequired = Math.Min(RDP, rdpRequired); 
-                dpls = (0.6 * RDPRequired);
-            }
-
-            RDPRequired = rdpRequired;
+            // DPLS is simply 0.6 of the minimum of DPP from intake and RDP required from rumen.
             dpls = 0;
+            RDPRequired = Math.Min(RDP, rdpRequired); 
+            dpls = (0.6 * RDPRequired); // microbe component.
             foreach (var item in feedTypeStoreDict)
             {
                 if(item.Key == FeedType.Milk)
@@ -312,8 +286,6 @@ namespace Models.CLEM.Resources
                     dpls += item.Value.DUDP * item.Value.UndegradableCrudeProtein;
                 }
             }
-            // add mircobial crude protein from RDP (CA7 0.6)
-            dpls += (0.6 * RDPRequired); 
         }
 
         /// <summary>
@@ -357,19 +329,5 @@ namespace Models.CLEM.Resources
                 return sumAmount;
             }
         }
-
-        ///// <summary>
-        ///// Adjust all amounts to change rate
-        ///// </summary>
-        ///// <param name="factor"></param>
-        //public void AdjustAmounts(double factor)
-        //{
-        //    foreach (var item in feedTypeStoreDict)
-        //    {
-        //        item.Value.Details.Amount *= factor;
-        //    }
-        //    SolidsDaily.AdjustAmounts(factor);
-        //    MilkDaily.AdjustAmounts(factor);
-        //}
     }
 }

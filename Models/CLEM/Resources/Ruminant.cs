@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
         /// Ruminant intake manager
         /// </summary>
         [JsonIgnore]
-        public RuminantIntake Intake = new();
+        public RuminantIntake Intake { get; set; } = new();
 
         /// <summary>
         /// Store for tracking energy use

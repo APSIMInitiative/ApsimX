@@ -2,6 +2,7 @@
 using Models.CLEM.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Models.CLEM.Resources
 {
@@ -95,14 +96,15 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return TypeOfFeed switch
-                {
-                    FeedType.HaySilage or
-                    FeedType.PastureTemperate or
-                    FeedType.PastureTropical => MEContent,
-                    FeedType.Concentrate => MEContent - (36 * FatContent / 100) - (14* UndegradableCrudeProteinContent/100),
-                    _ => throw new NotImplementedException($"Cannot provide FMEContent for the TypeOfFeed: {TypeOfFeed}."),
-                };
+                return 0.7 * MEContent;
+                //return TypeOfFeed switch
+                //{
+                //    FeedType.HaySilage or
+                //    FeedType.PastureTemperate or
+                //    FeedType.PastureTropical => MEContent,
+                //    FeedType.Concentrate => MEContent - (36 * FatContent / 100) - (14* UndegradableCrudeProteinContent/100),
+                //    _ => throw new NotImplementedException($"Cannot provide FMEContent for the TypeOfFeed: {TypeOfFeed}."),
+                //};
             }
         }
 
@@ -140,11 +142,15 @@ namespace Models.CLEM.Resources
         {
             get
             {
+                // Return from non-concetrate is taken from APSIM
+                // It assumes we don't know RDPCOntent for non-concentrates and will estimate based on DMD
+                // New approach assumes RDPContent is 0.7 (used in concentrate and may be user altered)
+
                 return TypeOfFeed switch
                 {
                     FeedType.HaySilage or
                     FeedType.PastureTemperate or
-                    FeedType.PastureTropical => CrudeProtein * Math.Min(0.84 * DryMatterDigestibility + 0.33, 1),
+                    FeedType.PastureTropical or //=> CrudeProtein * Math.Min(0.84 * (DryMatterDigestibility/100.0) + 0.33, 1),
                     FeedType.Concentrate => RumenDegradableProteinContent * CrudeProtein,
                     FeedType.Milk => 0,
                     _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),

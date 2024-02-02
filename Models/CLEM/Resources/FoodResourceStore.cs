@@ -89,7 +89,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Fermentable metabolisable energy.
         /// </summary>
-        public double FME { get { return 0.7 * Details.Amount; } } // 0.7 replaced Details.FMEContent
+        public double FME { get { return 0.7 * ME; } } 
 
         /// <summary>
         /// Reset running stores.
