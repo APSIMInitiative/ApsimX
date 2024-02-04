@@ -1,4 +1,5 @@
-﻿using Models.Climate;
+﻿using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -8,6 +9,7 @@ using Models.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -162,6 +164,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
 
+        /// <summary>The thermal time from emergence to maturity</summary>
+        [XmlIgnore]
+        public double Tt_EmergtoMat { get; set; }
+
         /// <summary>Calculate the Amount of N required to grow ey (the expected yield)</summary>
         private double calcTotalNDemand(double ey)
         {
@@ -191,6 +197,8 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
 
+        [Link] private SigmoidFunction sigmoid = null;
+
         [Link]
         Weather weather = null;
 
@@ -216,36 +224,14 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.02 },{ "Seedling", 0.05 },
-            { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.05 },
+            { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",1.0},{"Ripe",1.0 } };
 
         /// <summary> the proportion of Tt that has accumulated at each stage drrived from the proporiton of DM at each stage and the logistic funciton rearanged</summary>
         [JsonIgnore]
-        Dictionary<string, double> PropnTt
-        {
-            get
-            {
-                Dictionary<string, double> ret = new Dictionary<string, double>();
-                foreach (KeyValuePair<string, double> entry in PropnMaxDM)
-                {
-                    if ((entry.Key == "Seed")|| (entry.Key == "Seed"))
-                    {
-                        ret.Add(entry.Key, 0.0);
-                    }
-                    else
-                    {
-                        double propTt = (Math.Log((1 / entry.Value) - 1) * -11.25 + 45) / 100;
-                        ret.Add(entry.Key, propTt);
-                    }
-                }
-                return ret;
-            }
-        }
+        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.11875061484377547 },
+            { "Vegetative", 0.45},{ "EarlyReproductive",0.5453210092935604},{ "MidReproductive",0.654220121246803},{  "LateReproductive",0.7812493851562246},{"Maturity",1.0},{"Ripe",1.3 } };
 
-        private double logistic(double Tt, double Xo, double b)
-        {
-            return 1 / (1 + Math.Exp(-(Tt - Xo) / b));
-        }
         
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
@@ -337,7 +323,8 @@ namespace Models.PMF.SimplePlantModels
             ScrumFertDemandData fdd = new ScrumFertDemandData(calcTotalNDemand(ExpectedYield),
                                                                 (DateTime)EstablishDate,
                                                                 (DateTime)management.FirstFertDate,
-                                                                (DateTime)HarvestDate);
+                                                                (DateTime)HarvestDate,
+                                                                Tt_EmergtoMat);
 
             // Invoke SCRUMTotalNDemand event.
             if (SCRUMTotalNDemand != null)
@@ -405,7 +392,6 @@ namespace Models.PMF.SimplePlantModels
             cropParams["ProductNConc"] += ((this.ProductHarvestNConc - this.SeedlingNConc * exponent) / (1 - exponent)).ToString();
             cropParams["StoverNConc"] += ((this.StoverHarvestNConc - this.SeedlingNConc * exponent) / (1 - exponent)).ToString();
 
-
             ttEstabToHarv = 0.0;
            
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
@@ -429,7 +415,7 @@ namespace Models.PMF.SimplePlantModels
 
             double tT_SowToEmerg = 100;
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
-            double Tt_EmergtoMat = ttEstabToHarv * 1 / PropnTt_EstToHarv;
+            Tt_EmergtoMat = ttEstabToHarv * 1 / PropnTt_EstToHarv;
             if (EstablishStage == "Seed")
             {
                 Tt_EmergtoMat -= tT_SowToEmerg;
@@ -448,11 +434,18 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            double irm = 1 / (PropnMaxDM[management.HarvestStage] - PropnMaxDM[management.EstablishStage]);
+            //double irm = 1 / (PropnMaxDM[management.HarvestStage] - PropnMaxDM[management.EstablishStage]);
+            double transplantTt = 0;
+            if (EstablishStage == "Seedling")
+            {
+                transplantTt = Tt_EmergtoMat* PropnTt["Seedling"];
+            }
+            double irm = 1 / sigmoid.Function(ttEstabToHarv + transplantTt, Xo_Biomass, b_Biomass);
             if (EstablishStage == "Seed")
             {
                 //Need to adjust relative development for the period when the crop is not emerged
-                double SeedTtAdjust = logistic(ttEstabToHarv, Xo_Biomass, b_Biomass) / logistic(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass);
+                double SeedTtAdjust = MathUtilities.Divide(sigmoid.Function(ttEstabToHarv, Xo_Biomass, b_Biomass),
+                                                           sigmoid.Function(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass),1);
                 irm *= SeedTtAdjust;
             }
             cropParams["InvertedRelativeMaturity"] += irm.ToString();
@@ -465,8 +458,9 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtMaturity"] += (Tt_EmergtoMat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
-            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot)) * irm;
-            double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
+            double agDM = ey * dmc * (1 / this.HarvestIndex) * irm;
+            double tDM = agDM + (agDM *  this.Proot);
+            double iDM = tDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
             cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot) * (1 - this.HarvestIndex)).ToString();
             cropParams["InitialProductWt"] += (iDM * (1 - this.Proot) * this.HarvestIndex).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
@@ -577,13 +571,19 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The date the crop is harvested</summary>
         public DateTime HarvestDate { get; set; }
 
+        /// <summary>The thermal time from establishment to maturity for the crop just sown</summary>
+        public double Tt_EmergtoMat { get; set; }
+
+
         /// <summary>The constructor</summary>
-        public ScrumFertDemandData(double totalNDemand, DateTime establishDate, DateTime firstFertdate, DateTime harvestDate)
+        public ScrumFertDemandData(double totalNDemand, DateTime establishDate, DateTime firstFertdate, 
+            DateTime harvestDate, double tt_EmergtoMat)
         {
             TotalNDemand = totalNDemand;
             NonFertDuration = (firstFertdate - establishDate).Days;
             FertDuration = (harvestDate - firstFertdate).Days;
             HarvestDate = harvestDate;
+            Tt_EmergtoMat = tt_EmergtoMat;
         }
     }
 }
