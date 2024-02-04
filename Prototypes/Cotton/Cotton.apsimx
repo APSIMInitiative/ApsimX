@@ -76954,9 +76954,23 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "2023-10-25",
+                              "Action": "[Irrigation].Apply(50);",
+                              "Line": "2023-10-25 [Irrigation].Apply(50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2023-11-02",
                               "Action": "[Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);",
                               "Line": "2023-11-02 [Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2023-11-08",
+                              "Action": "[Irrigation].Apply(30);",
+                              "Line": "2023-11-08 [Irrigation].Apply(30);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -76968,13 +76982,6 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2023-11-10",
-                              "Action": "[Irrigation].Apply(40);",
-                              "Line": "2023-11-10 [Irrigation].Apply(40);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
                               "Date": "2023-11-15",
                               "Action": "[Irrigation].Apply(40);",
                               "Line": "2023-11-15 [Irrigation].Apply(40);"
@@ -76982,9 +76989,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2023-11-23",
+                              "Date": "2023-12-19",
                               "Action": "[Irrigation].Apply(40);",
-                              "Line": "2023-11-23 [Irrigation].Apply(40);"
+                              "Line": "2023-12-19 [Irrigation].Apply(40);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -76992,6 +76999,13 @@
                               "Date": "2024-01-19",
                               "Action": "[Irrigation].Apply(50);",
                               "Line": "2024-01-19 [Irrigation].Apply(50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2024-01-25",
+                              "Action": "[Irrigation].Apply(50);",
+                              "Line": "2024-01-25 [Irrigation].Apply(50);"
                             }
                           ],
                           "Name": "Operations",
@@ -77020,9 +77034,23 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "2023-10-25",
+                              "Action": "[Irrigation].Apply(50);",
+                              "Line": "2023-10-25 [Irrigation].Apply(50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2023-11-02",
                               "Action": "[Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);",
                               "Line": "2023-11-02 [Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2023-11-08",
+                              "Action": "[Irrigation].Apply(30);",
+                              "Line": "2023-11-08 [Irrigation].Apply(30);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -77034,13 +77062,6 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2023-11-10",
-                              "Action": "[Irrigation].Apply(40);",
-                              "Line": "2023-11-10 [Irrigation].Apply(40);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
                               "Date": "2023-11-15",
                               "Action": "[Irrigation].Apply(40);",
                               "Line": "2023-11-15 [Irrigation].Apply(40);"
@@ -77048,9 +77069,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2023-11-23",
+                              "Date": "2023-12-19",
                               "Action": "[Irrigation].Apply(40);",
-                              "Line": "2023-11-23 [Irrigation].Apply(40);"
+                              "Line": "2023-12-19 [Irrigation].Apply(40);"
                             }
                           ],
                           "Name": "Operations",
@@ -77076,7 +77097,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2023-11-01T00:00:00",
-                      "End": "2024-01-22T00:00:00",
+                      "End": "2024-02-01T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
                       "Children": [],
@@ -77291,7 +77312,7 @@
                               ],
                               "KS": [
                                 50.0,
-                                30.0,
+                                20.0,
                                 20.0,
                                 20.0,
                                 20.0,
@@ -79215,7 +79236,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16747854,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -79703,7 +79724,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": 0,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -79715,7 +79736,7 @@
                           "YFieldName": "TotalNO3",
                           "X2FieldName": null,
                           "Y2FieldName": null,
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -79771,7 +79792,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": 0,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
