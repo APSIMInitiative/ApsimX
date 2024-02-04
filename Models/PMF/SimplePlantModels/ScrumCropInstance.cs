@@ -5,6 +5,7 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.Surface;
 using Models.Utilities;
 using System;
 using System.Collections.Generic;
@@ -161,6 +162,18 @@ namespace Models.PMF.SimplePlantModels
         public double ResidueRemoval { get { return _residueRemoval; } set { _residueRemoval = value; } }
         private double _residueRemoval { get; set; }
 
+        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  
+        /// at or soon after harvest)</summary>
+        [Description("Residue incorporation (0-1)")]
+        public double ResidueIncorporation { get { return _residueIncorporation; } set { _residueIncorporation = value; } }
+        private double _residueIncorporation { get; set; }
+
+        /// <summary>Residue incorporation depth (i.e the depth residues are incorporated to by cultivation  
+        /// at or soon after harvest)</summary>
+        [Description("Residue incorporation depth (mm)")]
+        public double ResidueIncorporationDepth { get { return _residueIncorporationDepth; } set { _residueIncorporationDepth = value; } }
+        private double _residueIncorporationDepth { get; set; }
+
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
 
@@ -198,6 +211,9 @@ namespace Models.PMF.SimplePlantModels
         private Phenology phenology = null;
 
         [Link] private SigmoidFunction sigmoid = null;
+
+        [Link(Type = LinkType.Scoped)] 
+        private SurfaceOrganicMatter surfaceOM = null;
 
         [Link]
         Weather weather = null;
@@ -296,11 +312,13 @@ namespace Models.PMF.SimplePlantModels
                 this._ttEstabToHarv = management.TtEstabToHarv;
                 this._fieldLoss = management.FieldLoss;
                 this._residueRemoval = management.ResidueRemoval;
+                this._residueIncorporation = management.ResidueIncorporation;
+                this._residueIncorporationDepth = management.ResidueIncorporationDepth;
             }
             else
             {
                 management = new ScrumManagementInstance(this.CropName, (DateTime)this._establishDate, this._establishStage, this._plantingDepth, this._harvestStage, this._expectedYield,
-                                                 this._harvestDate, this._ttEstabToHarv, this._fieldLoss, this._residueRemoval);
+                                                 this._fieldLoss, this._residueRemoval, this._residueIncorporation, this._residueIncorporationDepth, this._harvestDate, this._ttEstabToHarv);
             }
 
             return management;
@@ -320,7 +338,8 @@ namespace Models.PMF.SimplePlantModels
             if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
                 throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
-            ScrumFertDemandData fdd = new ScrumFertDemandData(calcTotalNDemand(ExpectedYield),
+            ScrumFertDemandData fdd = new ScrumFertDemandData(this.CropName,
+                                                                management.IsFertilised? calcTotalNDemand(ExpectedYield): 0,
                                                                 (DateTime)EstablishDate,
                                                                 (DateTime)management.FirstFertDate,
                                                                 (DateTime)HarvestDate,
@@ -500,6 +519,8 @@ namespace Models.PMF.SimplePlantModels
                     scrum.EndCrop();
                     scrum.Children.Remove(currentCropObj);
                     Established = false;
+                    ScrumManagementInstance management = setManagemetInstance();
+                    surfaceOM.Incorporate(management.ResidueIncorporation, management.ResidueIncorporationDepth);
                 }
             }
         }
@@ -559,6 +580,9 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     public class ScrumFertDemandData : EventArgs
     {
+        /// <summary>The Name of the Crop</summary>
+        public string crop { get; set; }
+        
         /// <summary>The Amount of N required to grow to expected yeild</summary>
         public double TotalNDemand { get; set; }
 
@@ -576,9 +600,10 @@ namespace Models.PMF.SimplePlantModels
 
 
         /// <summary>The constructor</summary>
-        public ScrumFertDemandData(double totalNDemand, DateTime establishDate, DateTime firstFertdate, 
+        public ScrumFertDemandData(string name, double totalNDemand, DateTime establishDate, DateTime firstFertdate, 
             DateTime harvestDate, double tt_EmergtoMat)
         {
+            crop = name;
             TotalNDemand = totalNDemand;
             NonFertDuration = (firstFertdate - establishDate).Days;
             FertDuration = (harvestDate - firstFertdate).Days;
