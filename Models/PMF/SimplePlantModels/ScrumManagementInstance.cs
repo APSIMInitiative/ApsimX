@@ -42,6 +42,14 @@ namespace Models.PMF.SimplePlantModels
         /// by bailing or some other means)</summary>
         public double ResidueRemoval { get; set; }
 
+        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  
+        /// at or soon after harvest)</summary>
+        public double ResidueIncorporation { get; set; }
+
+        /// <summary>Residue incorporation depth (i.e the depth residues are incorporated to by cultivation  
+        /// at or soon after harvest)</summary>
+        public double ResidueIncorporationDepth { get; set; }
+
         /// <summary>Can fertiliser be applied to this crop.  
         /// Note, this is a flag for managers to use, Scrum does not calculate its own fertliser applications</summary>
         public bool IsFertilised { get; set; }
@@ -59,8 +67,8 @@ namespace Models.PMF.SimplePlantModels
         /// Management class constructor
         /// </summary>
         public ScrumManagementInstance(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
-             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, double fieldLoss = 0, double residueRemoval = 0, 
-             bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
+             double fieldLoss, double residueRemoval, double residueIncorporation, double residueIncorporatinDepth, Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, 
+              bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
             CropName = cropName;
             EstablishDate = establishmentDate;
@@ -68,11 +76,13 @@ namespace Models.PMF.SimplePlantModels
             PlantingDepth = plantingDepth;
             HarvestStage = harvestStage;
             ExpectedYield = expectedYield;
-            HarvestDate = harvestDate;
-            TtEstabToHarv = harvestTt;
             FieldLoss = fieldLoss;
             ResidueRemoval = residueRemoval;
-            IsFertilised=isFertilised;
+            ResidueIncorporation = residueIncorporation;
+            ResidueIncorporationDepth = residueIncorporatinDepth;
+            HarvestDate = harvestDate;
+            TtEstabToHarv = harvestTt;
+            IsFertilised = isFertilised;
             FirstFertDate = (FirstFertDate == null) ? establishmentDate : firstFertDate;
         }
 
@@ -117,6 +127,8 @@ namespace Models.PMF.SimplePlantModels
             }
             FieldLoss = Double.Parse(cropParams["FieldLoss"]);
             ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
+            ResidueIncorporation = Double.Parse(cropParams["ResidueIncorporation"]);
+            ResidueIncorporationDepth = Double.Parse(cropParams["ResidueIncorporationDepth"]);
             try
             { IsFertilised = bool.Parse(cropParams["IsFertilised"]); }
             catch 
