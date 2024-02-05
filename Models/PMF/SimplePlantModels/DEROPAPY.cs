@@ -506,6 +506,8 @@ namespace Models.PMF.SimplePlantModels
             {"TrunkMaxNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
             {"TrunkMinNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
             {"MaxRootDepth","[DEROPAPY].Root.Network.MaximumRootDepth.FixedValue = " },
+            {"Frost_Temp_X","[DEROPAPY].Leaf.FrostFraction.XYPairs.X = " },
+            {"Frost_Frac_Y","[DEROPAPY].Leaf.FrostFraction.XYPairs.Y = " },
         };
     }
 }
