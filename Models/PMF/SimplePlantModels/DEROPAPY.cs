@@ -443,6 +443,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressLAI_Frac_Y"] += clean(CurrentCropParams["WaterStressLAI_Frac_Y"]);
             thisDero["WaterStressExtCoeff_Fw_X"] += clean(CurrentCropParams["WaterStressExtCoeff_Fw_X"]);
             thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
+            thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
+            thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -514,6 +516,8 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressLAI_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y = " },
             {"WaterStressExtCoeff_Fw_X","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X = " },
             {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
+            {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
+            {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
         };
     }
 }
