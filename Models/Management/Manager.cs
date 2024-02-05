@@ -209,7 +209,7 @@ namespace Models
             if (Enabled && Children.Count > 0)
             {
                 var script = Children[0];
-                if (Parameters != null)
+                if (Parameters != null)  //GetParametersFromScriptModel must be run first before this can be run.
                 {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)

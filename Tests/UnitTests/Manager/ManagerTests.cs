@@ -283,10 +283,11 @@ namespace UnitTests.ManagerTests
             testManager.Parent = sims;
             testManager.Code = basicCode;
             testManager.OnCreated();
+            testManager.GetParametersFromScriptModel();
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", flags, null, testManager, new object[] { }));
             Assert.AreEqual(1, testManager.Parameters.Count);
 
-            //Should make parameters
+            //Should not make parameters
             testManager = new Manager();
             testManager.Parent = sims;
             testManager.Enabled = false;
@@ -325,6 +326,7 @@ namespace UnitTests.ManagerTests
             testManager = new Manager();
             testManager.Parent = sims;
             Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
             Assert.AreEqual(0, testManager.Parameters.Count);
 
             //should compile the script
@@ -332,6 +334,7 @@ namespace UnitTests.ManagerTests
             testManager.Parent = sims;
             testManager.Code = basicCode;
             Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
             Assert.AreEqual(1, testManager.Parameters.Count);
 
             //---------------------------------------------
@@ -450,8 +453,9 @@ namespace UnitTests.ManagerTests
             //should compile
             testManager = new Manager();
             testManager.Parent = sims;
-            testManager.OnCreated();
             testManager.Code = basicCode;
+            testManager.OnCreated();
+            testManager.GetParametersFromScriptModel();
             Assert.AreEqual(1, testManager.Parameters.Count);
 
             //---------------------------------------------
