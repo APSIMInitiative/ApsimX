@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using System;
+using System.Collections.Generic;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -62,6 +63,39 @@ namespace Models.PMF.SimplePlantModels
             TtEstabToHarv = harvestTt;
             FieldLoss = fieldLoss;
             ResidueRemoval = residueRemoval;    
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="cropParams"></param>
+        /// <param name="today"></param>
+        public ScrumManagementInstance(Dictionary<string, string> cropParams, DateTime today)
+        {
+            CropName = cropParams["CropName"];
+            EstablishDate = DateTime.Parse(cropParams["EstablishDate"]+"-"+today.Year) ;
+            EstablishStage = cropParams["EstablishStage"];
+            PlantingDepth = Double.Parse(cropParams["PlantingDepth"]);
+            HarvestStage = cropParams["HarvestStage"];
+            ExpectedYield = Double.Parse(cropParams["ExpectedYield"]);
+            if (cropParams["HarvestDate"] != "")
+            {
+                DateTime testHarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + today.Year);
+                if (testHarvestDate > EstablishDate)
+                {
+                    HarvestDate = testHarvestDate;
+                }
+                else
+                {
+                    HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 1));
+                }
+            }
+            if (cropParams["TtEstabToHarv"] != "")
+            {
+                TtEstabToHarv = Double.Parse(cropParams["TtEstabToHarv"]);
+            }
+            FieldLoss = Double.Parse(cropParams["FieldLoss"]);
+            ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
         }
     }
 }

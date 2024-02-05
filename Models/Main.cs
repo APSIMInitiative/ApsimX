@@ -154,18 +154,22 @@ namespace Models
                     Runner runner = null;
                     if (string.IsNullOrEmpty(options.EditFilePath))
                     {
-                        runner = new Runner(files,
+                        if (!string.IsNullOrWhiteSpace(options.Playlist))
+                        {
+                            runner = CreateRunnerForPlaylistOption(options, files);
+                        }
+                        else
+                        {
+                            runner = new Runner(files,
                                             options.RunTests,
-                                            options.RunType,
+                                            runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
-
+                        }
                         RunSimulations(runner, options);
-
                     }
                     else if (!string.IsNullOrEmpty(options.EditFilePath))
                     {
-
                         runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
@@ -410,6 +414,35 @@ namespace Models
             else
                 fileName = Path.GetFileName(loadPath);
             return configFileDirectory + Path.DirectorySeparatorChar + fileName;
+        }
+      
+        /// Creates a runner specifically for the playlist option/switch.
+        /// </summary>
+        /// <param name="options">Switches used on the command line</param>
+        /// <param name="files">The files included when models is called. Can be null.</param>
+        /// <returns>Runner that uses the Playlist model as the parameter 'relativeTo'.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        private static Runner CreateRunnerForPlaylistOption(Options options, string[] files)
+        {
+
+            Runner runner;
+            if (files.Length > 1)
+                throw new ArgumentException("The playlist switch cannot be run with more than one file.");
+            Simulations file = FileFormat.ReadFromFile<Simulations>(files.First(), e => throw e, false).NewModel as Simulations;
+            Playlist playlistModel = file.FindChild<Playlist>();
+            if (playlistModel.Enabled == false)
+                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
+            IEnumerable<Playlist> playlists = new List<Playlist> { file.FindChild<Playlist>(options.Playlist) };
+            if (playlists.Any() && playlists.First() == null)
+                throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {file.FileName}.");
+            runner = new Runner(playlists,
+                                runSimulations: true,
+                                runPostSimulationTools: true,
+                                options.RunTests,
+                                runType: options.RunType,
+                                numberOfProcessors: options.NumProcessors,
+                                simulationNamePatternMatch: options.SimulationNameRegex);
+            return runner;
         }
 
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)

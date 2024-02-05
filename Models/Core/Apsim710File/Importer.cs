@@ -445,7 +445,7 @@ namespace Models.Core.Apsim710File
             this.AddCompNode(destParent, "Nutrient", "Nutrient");
             XmlNode newNO3Node = this.AddCompNode(destParent, "Solute", "NO3");
             XmlNode newNH4Node = this.AddCompNode(destParent, "Solute", "NH4");
-            XmlNode newUREANode = this.AddCompNode(destParent, "Solute", "UREA");
+            XmlNode newUREANode = this.AddCompNode(destParent, "Solute", "Urea");
 
             XmlNode srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
             if (srcNode != null)
