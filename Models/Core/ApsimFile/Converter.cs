@@ -5151,7 +5151,7 @@ namespace Models.Core.ApsimFile
                 // check for an existing Nutrient node. If it exists, do not add another one.
                 JObject parentObject = parent.ToObject<JObject>();
                 var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
-                if (existingNutrient.Count == 0 || existingNutrient == null)
+                if (existingNutrient.Count == 0)
                 {
                     var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
                     nutrient["ResourceName"] = "Nutrient";
