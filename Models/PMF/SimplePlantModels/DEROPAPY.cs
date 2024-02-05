@@ -439,6 +439,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TrunkMaxNConc"] += clean(CurrentCropParams["TrunkMaxNConc"]);
             thisDero["TrunkMinNConc"] += clean(CurrentCropParams["TrunkMinNConc"]);
             thisDero["MaxRootDepth"] += clean(CurrentCropParams["MaxRootDepth"]);
+            thisDero["Frost_Temp_X"] += clean(CurrentCropParams["Frost_Temp_X"]);
+            thisDero["Frost_Frac_Y"] += clean(CurrentCropParams["Frost_Frac_Y"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -506,6 +508,8 @@ namespace Models.PMF.SimplePlantModels
             {"TrunkMaxNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
             {"TrunkMinNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
             {"MaxRootDepth","[DEROPAPY].Root.Network.MaximumRootDepth.FixedValue = " },
+            {"Frost_Temp_X","[DEROPAPY].Leaf.FrostFraction.XYPairs.X = " },
+            {"Frost_Frac_Y","[DEROPAPY].Leaf.FrostFraction.XYPairs.Y = " },
         };
     }
 }
