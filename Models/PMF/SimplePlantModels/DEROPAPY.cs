@@ -439,6 +439,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TrunkMaxNConc"] += clean(CurrentCropParams["TrunkMaxNConc"]);
             thisDero["TrunkMinNConc"] += clean(CurrentCropParams["TrunkMinNConc"]);
             thisDero["MaxRootDepth"] += clean(CurrentCropParams["MaxRootDepth"]);
+            thisDero["Frost_Temp_X"] += clean(CurrentCropParams["Frost_Temp_X"]);
+            thisDero["Frost_Frac_Y"] += clean(CurrentCropParams["Frost_Frac_Y"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);

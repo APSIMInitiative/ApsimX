@@ -4,7 +4,7 @@ TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18  26  34  4
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10  18  26   0),(0  26  0),(0 24.1 0),0  28  0,(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
 D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,60,116,-50,106,100,100,100,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,13,0,0,0,10,0,0,0,10,0,0
-Tt_Vegetative_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy ,750,1000,1500,750,1000,1000,1000,510,450,300,300
+Tt_Vegetative_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,750,1000,1500,750,1000,1000,1000,510,450,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (Reproductive or Graze),Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Reproductive_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(700 700),(250 250),(55 300),(500 500),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
@@ -31,7 +31,7 @@ RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (gl
 RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,(8 15 35 50),(0 15 25 35),(0 25 30 45),(0  10 22 30),(5 25 30 45),(10  24 26  35),(10 25 30 45),(10 25 33 45),(5 20 30 40),(3 18 25 35),(5 20 25 35)
 PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmospheric CO2,C4,C3,C4,C3,C3,C3,C3,C3,C3,C3,C3
 LeafPartitionFrac,fractional,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),0.4,0.4,0.78,0.5,0.08,0.14,0.2,0.06,0.3,0.1,0.1
-ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product ,0.4,0.4,0.02,0.3,0.25,0.06,0.1,0.04,0.4,0.7,0.7
+ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,0.4,0.4,0.02,0.3,0.25,0.06,0.1,0.04,0.4,0.7,0.7
 RootPartitionFrac,fractional,Proportion of total biomass partitioned to Root,0.2,0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.2
 TrunkPartitionFrac,fractional,Proportion of total biomass partitioned to Trunk (note this is permenant biomass that is not removed),0,0,0,0,0.47,0.6,0.3,0.6,0.1,0,0
 LeafMaxNConc,gN/gDM,Highest N conc of organ,0.04,0.05,0.06,0.06,0.03,0.014,0.024,0.021,0.02,0.02,0.02
@@ -44,5 +44,5 @@ TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
 TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
 MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,1600,1100,2000,2300,3000,1600,1500,1400,3000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-Frost_Temp_X,oC,Temperatures for frost damage,(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0)
+Frost_Temp_X,oC,Minimum temperatures for frost damage,(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0),(-5 0)
 Frost_Frac_Y,fractional,Frost damage at x-axes temperaure,(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
