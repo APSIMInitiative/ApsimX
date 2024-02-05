@@ -221,6 +221,18 @@ namespace Models.Management
             Remove();
         }
 
+        [EventSubscribe("PhenologyPrune")]
+        private void OnPhenologyPrune(object sender, EventArgs e)
+        {
+            Remove();
+        }
+
+        [EventSubscribe("PhenologyHarvest")]
+        private void OnPhenologyHarvest(object sender, EventArgs e)
+        {
+            Remove();
+        }
+
         private void LinkCrop()
         {
             if (this.Parent == null)
