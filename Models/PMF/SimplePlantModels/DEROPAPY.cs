@@ -421,8 +421,6 @@ namespace Models.PMF.SimplePlantModels
             thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
             thisDero["LAImax"] += clean(CurrentCropParams["LAImax"]);
             thisDero["ExtCoeff"] += clean(CurrentCropParams["ExtCoeff"]);
-            //thisDero["LAIWaterStressSens"] += clean(CurrentCropParams["LAIWaterStressSens"]);
-            //thisDero["ExtCoeffWaterStressSens"] += clean(CurrentCropParams["ExtCoeffWaterStressSens"]);
             thisDero["RUEtotal"] += clean(CurrentCropParams["RUEtotal"]);
             thisDero["RUETempThresholds"] += clean(CurrentCropParams["RUETempThresholds"]);
             thisDero["PhotosynthesisType"] += clean(CurrentCropParams["PhotosynthesisType"]);
@@ -494,8 +492,6 @@ namespace Models.PMF.SimplePlantModels
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
             {"LAImax","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.Delta.Integral.LAIMax.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
-            //{"LAIWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y[1] = " },
-            //{"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " },
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
