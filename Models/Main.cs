@@ -415,7 +415,8 @@ namespace Models
                 fileName = Path.GetFileName(loadPath);
             return configFileDirectory + Path.DirectorySeparatorChar + fileName;
         }
-      
+
+        /// <summary>
         /// Creates a runner specifically for the playlist option/switch.
         /// </summary>
         /// <param name="options">Switches used on the command line</param>
@@ -424,7 +425,6 @@ namespace Models
         /// <exception cref="ArgumentException"></exception>
         private static Runner CreateRunnerForPlaylistOption(Options options, string[] files)
         {
-
             Runner runner;
             if (files.Length > 1)
                 throw new ArgumentException("The playlist switch cannot be run with more than one file.");
