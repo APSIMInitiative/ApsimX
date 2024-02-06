@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using StdUnits;
 
 namespace Models.CLEM.Activities
 {
@@ -43,10 +44,7 @@ namespace Models.CLEM.Activities
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
         private double feedEstimated = 0;
-        private double feedToSatisfy = 0;
-        private double feedToOverSatisfy = 0;
-        private readonly bool usingPotentialIntakeMultiplier = false;
-        private double overfeedProportion = 1;
+        //private double overfeedProportion = 1;
 
         /// <summary>
         /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
@@ -162,10 +160,7 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
-
             feedEstimated = 0;
-            feedToSatisfy = 0;
-            feedToOverSatisfy = 0;
         }
 
         /// <inheritdoc/>
@@ -228,7 +223,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()
         {
-            overfeedProportion = 0;
+            //overfeedProportion = 0;
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
             {
@@ -246,66 +241,66 @@ namespace Models.CLEM.Activities
                 if (amountShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
 
-                if(numberToDo == numberToSkip)
+                if (numberToDo == numberToSkip)
                 {
                     amountToDo = 0;
                 }
                 Status = ActivityStatus.Partial;
+            }
+            
+            // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
+            int numberNotAllowed = numberToSkip;
 
-                // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
-                int numberNotAllowed = numberToSkip;
-
-                foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Reverse())
+            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Reverse())
+            {
+                int numberPresent = iChild.CurrentIndividualsToFeed.Count;
+                if (numberNotAllowed > 0)
                 {
-                    int numberPresent = iChild.CurrentIndividualsToFeed.Count;
-                    if (numberNotAllowed > 0)
-                    {
-                        // reduce individuals in group
-                        int numberToRemove = Math.Min(numberPresent, numberNotAllowed);
-                        numberPresent -= numberToRemove;    
-                        numberNotAllowed -= numberToRemove;
+                    // reduce individuals in group
+                    int numberToRemove = Math.Min(numberPresent, numberNotAllowed);
+                    numberPresent -= numberToRemove;    
+                    numberNotAllowed -= numberToRemove;
 
-                        // calculate feed not needed for removed individuals
-                        double previouslyRequired = iChild.CurrentResourceRequest.Required;
+                    // calculate feed not needed for removed individuals
+                    double previouslyRequired = iChild.CurrentResourceRequest.Required;
 
-                        iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
-                        iChild.UpdateCurrentFeedDemand(this);
+                    iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
+                    iChild.UpdateCurrentFeedDemand(this);
 
-                        // remove from amountToSkip 
-                        amountToSkip -= previouslyRequired;
-                        Status = ActivityStatus.Partial;
-                    }
-                    if(MathUtilities.IsPositive(amountToSkip))
-                    {
-                        // still need to reduce amount shortfalls from $ or labour
-                        double amountToRemove = Math.Min(amountToSkip, iChild.CurrentResourceRequest.Available);
-                        iChild.CurrentResourceRequest.Available -= amountToRemove;
-                        amountToSkip -= amountToRemove;
-                        Status = ActivityStatus.Partial;
-                    }
-
-                    if (MathUtilities.IsPositive(ProportionTramplingWastage))
-                    {
-                        double wastedByGroup = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) * ProportionTramplingWastage;
-                        wasted += wastedByGroup;
-                        iChild.CurrentResourceRequest.Available -= wastedByGroup;
-                        iChild.CurrentResourceRequest.Required -= wastedByGroup;
-                    }
-                    // calculate excess fed
-                    double excess = 0;
-                    if (MathUtilities.IsGreaterThanOrEqual(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToOverSatisfy))
-                    {
-                        excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToOverSatisfy;
-                        excessFed += excess;
-                        if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy))
-                            overfeedProportion = 1;
-
-                        iChild.CurrentResourceRequest.Available -= excess;
-                        iChild.CurrentResourceRequest.Required -= excess;
-                    }
-                    else if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy) && MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToSatisfy))
-                        overfeedProportion = (Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
+                    // remove from amountToSkip 
+                    amountToSkip -= previouslyRequired;
+                    Status = ActivityStatus.Partial;
                 }
+                if(MathUtilities.IsPositive(amountToSkip))
+                {
+                    // still need to reduce amount shortfalls from $ or labour
+                    double amountToRemove = Math.Min(amountToSkip, iChild.CurrentResourceRequest.Available);
+                    iChild.CurrentResourceRequest.Available -= amountToRemove;
+                    amountToSkip -= amountToRemove;
+                    Status = ActivityStatus.Partial;
+                }
+
+                if (MathUtilities.IsPositive(ProportionTramplingWastage))
+                {
+                    double wastedByGroup = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) * ProportionTramplingWastage;
+                    wasted += wastedByGroup;
+                    iChild.CurrentResourceRequest.Available -= wastedByGroup;
+                    iChild.CurrentResourceRequest.Required -= wastedByGroup;
+                }
+                // calculate excess fed
+                double excess = 0;
+                if (MathUtilities.IsGreaterThanOrEqual(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), iChild.FeedToOverSatisfy))
+                {
+                    excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToOverSatisfy;
+                    excessFed += excess;
+                    //if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy))
+                    //    overfeedProportion = 1;
+
+                    iChild.CurrentResourceRequest.Available -= excess;
+                    iChild.CurrentResourceRequest.Required -= excess;
+                }
+                //else if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy) && MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToSatisfy))
+                //    overfeedProportion = (Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
 
                 // adjust for, and report, wastage
                 if (MathUtilities.IsPositive(wasted))
@@ -370,9 +365,9 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval));
-                                details.Amount *= feedLimit;
-                                details.Amount *= ind.Weight.Live /totalWeight;
+                                details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * ind.Parameters.Feeding.OverfeedPotentialIntakeModifier) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval); // max that can be consumed
+                                details.Amount *= feedLimit; // shortfall in feed available.
+                                details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                                 details.Amount = iChild.CurrentValue * events.Interval;
@@ -393,11 +388,13 @@ namespace Models.CLEM.Activities
                             default:
                                 throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                         }
-                        // check amount meets intake limits
-                        if (usingPotentialIntakeMultiplier)
-                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval)))
-                                details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.Actual;
+                        // limit feeding to max possible... probably should be moved to Ruminant.Intake
+                        details.Amount = Math.Min(details.Amount, ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval));
 
+                        //if (MathUtilities. IsGreaterThan(details.Amount, (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval)))
+                        //    details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.Actual;
+
+                        // convert to daily intake for the ruminant intake store. 
                         details.Amount /= (double)events.Interval;
                         ind.Intake.AddFeed(details);
                     }

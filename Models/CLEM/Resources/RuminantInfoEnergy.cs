@@ -110,6 +110,21 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem Fat { get; set; } = new();
 
         /// <summary>
+        /// Efficiency growth
+        /// </summary>
+        public double Kg { get; set; }
+
+        /// <summary>
+        /// Efficiency maintenance
+        /// </summary>
+        public double Km { get; set; }
+
+        /// <summary>
+        /// Efficiency lactation
+        /// </summary>
+        public double Kl { get; set; }
+
+        /// <summary>
         /// Reset all running stores
         /// </summary>
         public void Reset()

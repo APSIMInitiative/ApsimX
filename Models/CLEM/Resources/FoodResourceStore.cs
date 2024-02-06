@@ -1,4 +1,5 @@
-﻿using Docker.DotNet.Models;
+﻿using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,7 @@ namespace Models.CLEM.Resources
                     FeedType.HaySilage or 
                     FeedType.PastureTemperate or
                     FeedType.PastureTropical => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
-                    FeedType.Concentrate => 0.9 * (1 - ((Details.AcidDetergentInsoluableProtein / Details.UndegradableCrudeProteinContent))),
+                    FeedType.Concentrate => 0.9 * (1 - (MathUtilities.IsGreaterThan(Details.UndegradableCrudeProteinContent, 0)?Details.AcidDetergentInsoluableProtein / Details.UndegradableCrudeProteinContent:0)),
                     _ => 0,
                 };
             }

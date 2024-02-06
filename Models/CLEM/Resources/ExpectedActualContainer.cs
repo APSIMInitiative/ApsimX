@@ -52,7 +52,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double RequiredForTimeStep(int days = 1)
         {
-            return Math.Max(0, Expected - Actual) * days;
+            return Required * days;
         }
 
         /// <summary>

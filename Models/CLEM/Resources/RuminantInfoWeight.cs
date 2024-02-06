@@ -163,12 +163,7 @@ namespace Models.CLEM.Resources
             }
 
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
-
-            // if HighestAttained has not been defined set to initial weight
-            if (HighestAttained == 0)
-                HighestAttained = Live;
-            else
-                HighestAttained = Math.Max(HighestAttained, Live);
+            HighestAttained = Math.Max(HighestAttained, Live);
         }
 
         /// <summary>

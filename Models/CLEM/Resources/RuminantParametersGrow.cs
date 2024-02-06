@@ -202,7 +202,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
 
-
         /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>
@@ -218,8 +217,7 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double ProteinDegradability { get; set; }
 
-
-        /// <summary>
+                /// <summary>
         /// Coefficient of juvenile milk intake
         /// </summary>
         [Category("Breed", "Diet")]
@@ -277,6 +275,7 @@ namespace Models.CLEM.Resources
         [Description("Wool coefficient")]
         [Required]
         public double WoolCoefficient { get; set; }
+
         /// <summary>
         /// Cashmere coefficient
         /// </summary>

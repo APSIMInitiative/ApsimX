@@ -30,7 +30,6 @@ namespace Models.CLEM.Groupings
 
         private RuminantActivityFeed feedActivityParent;
         private ResourceRequest currentFeedRequest;
-        private bool usingPotentialIntakeMultiplier = false;
         private List<Ruminant> individualsToBeFed;
         private bool countNeeded = false;
         private bool weightNeeded = false;
@@ -62,6 +61,16 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [JsonIgnore]
         public ResourceRequest CurrentResourceRequest { get { return currentFeedRequest; } }
+
+        /// <summary>
+        /// Amount of feed required to satisfy the animals
+        /// </summary>
+        public double FeedToSatisfy { get; set; }
+
+        /// <summary>
+        /// Amount of feed required to over satisfy the animals (if potental intake max modifier >1)
+        /// </summary>
+        public double FeedToOverSatisfy { get; set; }
 
         /// <summary>
         /// The current individuals being fed for this feed group
@@ -99,20 +108,26 @@ namespace Models.CLEM.Groupings
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             feedActivityParent = FindAncestor<RuminantActivityFeed>();
+            currentFeedRequest = new ResourceRequest()
+            {
+                AllowTransmutation = true,
+                Resource = feedActivityParent.FeedResource,
+                ResourceType = typeof(AnimalFoodStore),
+                ResourceTypeName = feedActivityParent.FeedTypeName,
+                ActivityModel = Parent as CLEMActivityBase,
+                Category = (Parent as CLEMActivityBase).TransactionCategory,
+                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay
+            };
 
-            RuminantActivityFeed feedParent = Parent as RuminantActivityFeed;
-            switch (feedParent.FeedStyle)
+            switch (feedActivityParent.FeedStyle)
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    usingPotentialIntakeMultiplier = true;
                     countNeeded = true;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    usingPotentialIntakeMultiplier = true;
                     countNeeded = true;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
-                    usingPotentialIntakeMultiplier = true;
                     weightNeeded = true;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -120,11 +135,10 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     break;
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                    usingPotentialIntakeMultiplier = true;
                     countNeeded = true;
                     break;
                 default:
-                    string error = $"FeedStyle [{feedParent.FeedStyle}] is not supported by [f=RuminantFeedGroup] in [a={NameWithParent}]";
+                    string error = $"FeedStyle [{feedActivityParent.FeedStyle}] is not supported by [f=RuminantFeedGroup] in [a={NameWithParent}]";
                     summary.WriteMessage(this, error, MessageType.Error);
                     break;
             }
@@ -135,26 +149,9 @@ namespace Models.CLEM.Groupings
         {
             // remember individuals and request details for later adjustment based on shortfalls
             individualsToBeFed = Filter(feedActivityParent.IndividualsToBeFed).ToList();
-            currentFeedRequest = null;
 
-            // create food resource packet with details
-            FoodResourcePacket foodPacket = new(feedActivityParent.FeedDetails);
-            //{
-            //    DryMatterDigestibility = feedActivityParent.FeedDetails.DryMatterDigestibility,
-            //    NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
-            //};
-
-            currentFeedRequest = new ResourceRequest()
-            {
-                AllowTransmutation = true,
-                Resource = feedActivityParent.FeedResource,
-                ResourceType = typeof(AnimalFoodStore),
-                ResourceTypeName = feedActivityParent.FeedTypeName,
-                ActivityModel = Parent as CLEMActivityBase,
-                Category = (Parent as CLEMActivityBase).TransactionCategory,
-                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay,
-                AdditionalDetails = foodPacket
-            };
+            // get copy of food store details in case they are dynamically changing.
+            currentFeedRequest.AdditionalDetails = new FoodResourcePacket(feedActivityParent.FeedDetails);
 
             UpdateCurrentFeedDemand(feedActivityParent);
 
@@ -174,8 +171,8 @@ namespace Models.CLEM.Groupings
         public void UpdateCurrentFeedDemand(RuminantActivityFeed feedActivityParent)
         {
             double value = CurrentValue;
-            double feedToSatisfy = 0;
-            double feedToOverSatisfy = 0;
+            FeedToSatisfy = 0;
+            FeedToOverSatisfy = 0;
             double feedNeeed = 0;
 
             var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
@@ -184,7 +181,7 @@ namespace Models.CLEM.Groupings
                 Weight = weightNeeded ? a.Sum(b => b.Weight.Live) : 0,
                 Intake = a.Sum(b => b.Intake.SolidsDaily.ActualForTimeStep(events.Interval)),
                 PotentialIntake = a.Sum(b => b.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval)),
-                IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().Parameters.Feeding.OverfeedPotentialIntakeModifier : 1
+                IntakeMultiplier = a.FirstOrDefault().Parameters.Feeding.OverfeedPotentialIntakeModifier
             }).FirstOrDefault();
 
             if (selectedIndividuals != null)
@@ -217,13 +214,14 @@ namespace Models.CLEM.Groupings
                 // individuals in multiple filters will be considered once
                 // accounts for some feeding style allowing overeating to the user declared value in ruminant 
 
-                feedToSatisfy = selectedIndividuals.PotentialIntake - selectedIndividuals.Intake;
-                feedToOverSatisfy = selectedIndividuals.PotentialIntake * selectedIndividuals.IntakeMultiplier - selectedIndividuals.Intake;
+                FeedToSatisfy = selectedIndividuals.PotentialIntake - selectedIndividuals.Intake;
+                FeedToOverSatisfy = selectedIndividuals.PotentialIntake * selectedIndividuals.IntakeMultiplier - selectedIndividuals.Intake;
 
                 if (feedActivityParent.StopFeedingWhenSatisfied)
+                {
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
-                    feedNeeed = Math.Min(feedNeeed, Math.Max(feedToOverSatisfy, feedToSatisfy));
-
+                    feedNeeed = Math.Min(feedNeeed, Math.Max(FeedToOverSatisfy, FeedToSatisfy));
+                }
                 (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeed;
                 currentFeedRequest.Required = feedNeeed;
             }

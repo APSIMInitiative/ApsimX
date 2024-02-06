@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APSIM.Shared.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,10 +34,10 @@ namespace Models.CLEM.Resources
         public void Adjust(double change)
         {
             Change = change;
-            if (Amount == 0)
-                Amount = change;
+            if (MathUtilities.IsGreaterThanOrEqual(change, 0) || MathUtilities.IsGreaterThan(Amount, Math.Abs(change)))
+                Amount += change;
             else
-                Amount += Math.Min(Amount, change);
+                Amount = 0;
         }
 
         /// <summary>
