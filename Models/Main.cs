@@ -296,11 +296,10 @@ namespace Models
                             sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
 
                         if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
-                            sim.Write(savePath);
+                            sim.Write(sim.FileName, savePath);
 
                         if (isSimToBeRun)
                         {
-                            // TODO: Needs to overwrite original and run it as this is expected behaviour.
                             RunModifiedApsimxFile(options, loadPath, tempSim, sim);
                             isSimToBeRun = false;
                         }
@@ -327,15 +326,23 @@ namespace Models
         /// <param name="sim"></param>
         private static void RunModifiedApsimxFile(Options options, string filePath, Simulations tempSim, Simulations sim)
         {
+            Runner runner = null;
             File.Copy(tempSim.FileName, filePath, true);
-            sim = FileFormat.ReadFromFile<Simulations>(filePath, e => throw e, false).NewModel as Simulations;
-            Runner runner = new Runner(sim,
+            sim = FileFormat.ReadFromFile<Simulations>(tempSim.FileName, e => throw e, false).NewModel as Simulations;
+            if (!string.IsNullOrEmpty(options.Playlist))
+            {
+                runner = CreateRunnerForPlaylistOption(options, new string[] { sim.FileName });
+            }
+            else
+            {
+                runner = new Runner(sim,
                                     true,
                                     true,
                                     options.RunTests,
                                     runType: options.RunType,
                                     numberOfProcessors: options.NumProcessors,
                                     simulationNamePatternMatch: options.SimulationNameRegex);
+            }
             RunSimulations(runner, options);
             //// An assumption is made here that once a simulation is run a temp file is no longer needed.
             //// Release database files and clean up. 
@@ -426,8 +433,11 @@ namespace Models
         private static Runner CreateRunnerForPlaylistOption(Options options, string[] files)
         {
             Runner runner;
-            if (files.Length > 1)
-                throw new ArgumentException("The playlist switch cannot be run with more than one file.");
+            if (files != null)
+            {
+                if (files.Length > 1)
+                    throw new ArgumentException("The playlist switch cannot be run with more than one file.");
+            }
             Simulations file = FileFormat.ReadFromFile<Simulations>(files.First(), e => throw e, false).NewModel as Simulations;
             Playlist playlistModel = file.FindChild<Playlist>();
             if (playlistModel.Enabled == false)
@@ -626,8 +636,6 @@ namespace Models
         }
 
 
-        // TODO: clean up function needs further work. Currently has trouble removing files due to other processes using the \
-        // files.
         private static void CleanUpTempFiles(string configFileDirectoryPath)
         {
             // IMPORTANT: The order of these is important. Do not modify.
