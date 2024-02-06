@@ -115,8 +115,8 @@ namespace Models
         /// </summary>
         /// <value></value>
         [Option("simulation-names", HelpText = "Only run simulations if their names match this regular expression.")]
-
         public string SimulationNameRegex { get; set; }
+
         /// <summary>
         /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
         /// </summary>
@@ -125,6 +125,15 @@ namespace Models
         /// </remarks>
         [Option("apply", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.")]
         public string Apply { get; set; }
+
+        /// <summary>
+        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// </summary>
+        /// <remarks>
+        /// Intended to provide a overall approach to simulation handling.
+        /// </remarks>
+        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        public string Playlist { get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.
