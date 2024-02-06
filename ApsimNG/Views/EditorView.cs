@@ -256,8 +256,10 @@ namespace UserInterface.Views
             {
                 textEditor.GrabFocus();
 
-                scroller.Hadjustment.Configure(value.ScrollV.Value, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
-                scroller.Vadjustment.Configure(value.ScrollV.Value, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
+                if (value.ScrollH.Valid)
+                    scroller.Hadjustment.Configure(value.ScrollH.Value, value.ScrollH.Lower, value.ScrollH.Upper, value.ScrollH.StepIncrement, value.ScrollH.PageIncrement, value.ScrollH.PageSize);
+                if (value.ScrollV.Valid)
+                    scroller.Vadjustment.Configure(value.ScrollV.Value, value.ScrollV.Lower, value.ScrollV.Upper, value.ScrollV.StepIncrement, value.ScrollV.PageIncrement, value.ScrollV.PageSize);
 
                 // x is column, y is line number.
                 TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Line, value.Column);
@@ -327,13 +329,7 @@ namespace UserInterface.Views
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
 
-            //To make the scrollbars work correctly, the text editor should sit within a box and a viewport
-            VBox vBox = new VBox();
-            vBox.Add(textEditor);
-            Viewport view = new Viewport();
-            view.Add(vBox);
-
-            scroller.Add(view);
+            scroller.Add(textEditor);
 
             InitialiseWidget();
         }

@@ -128,6 +128,7 @@ namespace Models.Core.ApsimFile
                     if (initWater == null)
                         initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
+
                     if (sample == null)
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
@@ -145,30 +146,47 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(initWater);
                         res = true;
                     }
-                    if (sample == null && soilNitrogenSample == null) //no solutes on Soil Nitrogen, don't add them
+
+                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    bool hasPhysical = false;
+                    int nLayers = 1;
+
+                    if (physical != null)
+                    {
+                        nLayers = physical["Thickness"].Count();
+                        hasPhysical = true;
+                    }
+
+                    if (initWater["Thickness"] == null && hasPhysical)
+                    {
+                        initWater["Thickness"] = physical["Thickness"];
+                        initWater["InitialValues"] = physical["DUL"];
+                    }
+
+                    if (sample == null && soilNitrogenSample == null)
                     {
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NO3",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 3 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NH4",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 1 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "Urea",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 0.0 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
                         res = true;
                     }
@@ -176,6 +194,7 @@ namespace Models.Core.ApsimFile
                     var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
                     var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
                     var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+
                     if (soilNitrogenSample != null)
                     {
                         if (soilNitrogenNO3Sample == null)
@@ -184,8 +203,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
                                 ["Name"] = "NO3",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 3 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -194,8 +213,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
                                 ["Name"] = "NH4",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 1 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -204,8 +223,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
                                 ["Name"] = "Urea",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 0.0 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                     }
