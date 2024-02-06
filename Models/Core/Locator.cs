@@ -60,7 +60,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
-            IVariable variable = GetInternal(namePath);
+            IVariable variable = GetInternal(namePath, flags);
             if (variable == null)
                 return variable;
             else
@@ -162,7 +162,7 @@ namespace Models.Core
 
             // check if path is in cache
             object value = null;
-            if (cache.ContainsKey(cacheKey))
+            if (cache.ContainsKey(cacheKey) && !onlyModelChildren)
                 value = cache[cacheKey];
             if (value != null)
                 return value as IVariable;
@@ -235,6 +235,12 @@ namespace Models.Core
             properties.Add(new VariableObject(relativeTo));
             for (int j = 0; j < namePathBits.Length; j++)
             {
+                // look for an array specifier e.g. sw[2]
+                //need to do this first as the [ ] will screw up matching to a property
+                string arraySpecifier = null;
+                if (namePathBits[j].Contains("["))
+                    arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
+
                 object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, compareType, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
 
                 //Depending on the type we found, handle it
@@ -243,10 +249,6 @@ namespace Models.Core
                 if ((objectInfo as PropertyInfo) != null)
                 {
                     PropertyInfo propertyInfo = (objectInfo as PropertyInfo);
-                    // look for an array specifier e.g. sw[2]
-                    string arraySpecifier = null;
-                    if (namePathBits[j].Contains("["))
-                        arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
                     VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                     properties.Add(property);
@@ -313,7 +315,8 @@ namespace Models.Core
             returnVariable = new VariableComposite(namePath, properties);
 
             // Add variable to cache.
-            cache.Add(cacheKey, returnVariable);
+            if (!onlyModelChildren) //don't add this to the cache if it's been found by skipping properties/methods
+                cache.Add(cacheKey, returnVariable);
             return returnVariable;
         }
 

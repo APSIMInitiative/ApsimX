@@ -2,6 +2,7 @@
 {
     using Models;
     using Models.Core;
+    using Models.Functions;
     using Models.Soils;
     using NUnit.Framework;
     using System;
@@ -241,6 +242,27 @@
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
             Assert.AreEqual(locatorForC.Get("[ModelE].E1[1].F"), 20);
             Assert.AreEqual(locatorForC.Get("[ModelE].E1[2].F"), 21);
+        }
+
+        [Test]
+        public void LocatorGetPropertyOfModelThatHasChildWithSameName()
+        {
+            Simulation sim = new Simulation();
+            sim.Children.Add(new ModelA());
+            Constant b = new Constant();
+            b.Name = "A1";
+            b.FixedValue = 10;
+            sim.Children[0].Children.Add(b);
+
+            Simulations sims = Simulations.Create(new Model[] { sim });
+
+            // Check that the A1 property is referenced and not the child constant
+            ILocator locatorForC = sims.GetLocatorService(sim);
+            Assert.AreEqual(locatorForC.Get("[ModelA].A1"), (sim.Children[0] as ModelA).A1);
+
+            Constant c = (locatorForC.Get("[ModelA].A1", LocatorFlags.ModelsOnly) as Constant);
+            Assert.AreEqual(c.FixedValue, b.FixedValue);
+
         }
     }
 }
