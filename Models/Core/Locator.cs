@@ -180,7 +180,7 @@ namespace Models.Core
             //If our name starts with [ or . we need to handle that formatting and figure out where that model is
             if (namePath.StartsWith("[") || namePath.StartsWith("."))
             {
-                relativeTo = GetInternalRelativeTo(relativeTo, namePath, compareType, throwOnError, includeReportVars, out string filteredNamePath);
+                relativeTo = GetInternalRelativeTo(relativeTo, namePath, compareType, throwOnError, out string filteredNamePath);
                 namePath = filteredNamePath;
             }
             //if it doesn't start with those characters, it might be a report variable, so we need to search for that in the report columns
@@ -241,7 +241,7 @@ namespace Models.Core
                 if (namePathBits[j].Contains("["))
                     arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
-                object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, compareType, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
+                object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, namePathBits.Length-j-1, compareType, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
 
                 //Depending on the type we found, handle it
                 bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
@@ -320,7 +320,7 @@ namespace Models.Core
             return returnVariable;
         }
 
-        private IModel GetInternalRelativeTo(IModel relativeTo, string namePath, StringComparison compareType, bool throwOnError, bool includeReportVars, out string namePathFiltered)
+        private IModel GetInternalRelativeTo(IModel relativeTo, string namePath, StringComparison compareType, bool throwOnError, out string namePathFiltered)
         {
             string path = namePath;
 
@@ -418,7 +418,7 @@ namespace Models.Core
             return namePathBits;
         }
 
-        private object GetInternalObjectInfo(object relativeToObject, string name, List<IVariable> properties, StringComparison compareType, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
+        private object GetInternalObjectInfo(object relativeToObject, string name, List<IVariable> properties, int remainingNames, StringComparison compareType, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
         {
 
             argumentsList = null;
@@ -437,8 +437,10 @@ namespace Models.Core
                 {
                     propertyInfo = relativeToObject.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 }
+
                 if (propertyInfo != null)
-                    return propertyInfo;
+                    if (!(propertyInfo.PropertyType.IsPrimitive && remainingNames > 0))
+                        return propertyInfo;
             }
 
             if (!onlyModelChildren)
