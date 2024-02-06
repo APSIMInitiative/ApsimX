@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -66,12 +67,15 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Management class constructor
         /// </summary>
-        public ScrumManagementInstance(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
-             double fieldLoss, double residueRemoval, double residueIncorporation, double residueIncorporatinDepth, Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, 
-              bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
+        public ScrumManagementInstance(string cropName, DateTime establishDate, string establishStage, string harvestStage, double expectedYield, 
+                                       Nullable<DateTime> harvestDate = null, double ttEstabToHarv = Double.NaN, double plantingDepth = 15, 
+                                       double fieldLoss = 0, double residueRemoval = 0, double residueIncorporation = 1, double residueIncorporationDepth = 150,
+                                       bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
+            if (((harvestDate == null)||(harvestDate < establishDate)) && (Double.IsNaN(ttEstabToHarv) || (ttEstabToHarv == 0)))
+                throw new Exception("A valid harvestDate OR a non-zero ttEstabToHarv must be provided when inititialising a ScrumManagementInstance");
             CropName = cropName;
-            EstablishDate = establishmentDate;
+            EstablishDate = establishDate;
             EstablishStage = establishStage;
             PlantingDepth = plantingDepth;
             HarvestStage = harvestStage;
@@ -79,11 +83,11 @@ namespace Models.PMF.SimplePlantModels
             FieldLoss = fieldLoss;
             ResidueRemoval = residueRemoval;
             ResidueIncorporation = residueIncorporation;
-            ResidueIncorporationDepth = residueIncorporatinDepth;
+            ResidueIncorporationDepth = residueIncorporationDepth;
             HarvestDate = harvestDate;
-            TtEstabToHarv = harvestTt;
+            TtEstabToHarv = ttEstabToHarv;
             IsFertilised = isFertilised;
-            FirstFertDate = (FirstFertDate == null) ? establishmentDate : firstFertDate;
+            FirstFertDate = (FirstFertDate == null) ? establishDate : firstFertDate;
         }
 
         /// <summary>
@@ -121,14 +125,28 @@ namespace Models.PMF.SimplePlantModels
                         HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 2));
                 }
             }
-            if (cropParams["TtEstabToHarv"] != "")
+            else if (cropParams["TtEstabToHarv"] != "")
             {
                 TtEstabToHarv = Double.Parse(cropParams["TtEstabToHarv"]);
             }
-            FieldLoss = Double.Parse(cropParams["FieldLoss"]);
-            ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
-            ResidueIncorporation = Double.Parse(cropParams["ResidueIncorporation"]);
-            ResidueIncorporationDepth = Double.Parse(cropParams["ResidueIncorporationDepth"]);
+            else 
+            { throw new Exception("A valid harvest date OR Tt from establish to harvest must be provided when inititialising a ScrumManagementInstance"); }
+            try
+            { FieldLoss = Double.Parse(cropParams["FieldLoss"]); }
+            catch 
+            { FieldLoss = 0; }
+            try
+            { ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]); }
+            catch 
+            { ResidueRemoval = 0; }
+            try
+            { ResidueIncorporation = Double.Parse(cropParams["ResidueIncorporation"]); }
+            catch
+            { ResidueIncorporation= 1; }
+            try
+            { ResidueIncorporationDepth = Double.Parse(cropParams["ResidueIncorporationDepth"]); }
+            catch
+            { ResidueIncorporationDepth = 150; }
             try
             { IsFertilised = bool.Parse(cropParams["IsFertilised"]); }
             catch 
