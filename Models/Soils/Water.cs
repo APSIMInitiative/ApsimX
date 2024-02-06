@@ -202,9 +202,19 @@ namespace Models.Soils
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
         public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
 
+        [JsonIgnore]
+        private bool filledFromTop;
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
-        public bool FilledFromTop { get; set; }
+        public bool FilledFromTop
+        {
+            get => filledFromTop;
+            set
+            {
+                filledFromTop = value;
+                UpdateInitialValuesFromFractionFull(FractionFull);
+            }
+        }
 
         /// <summary>Calculate the fraction of the profile that is full.</summary>
         [JsonIgnore]
@@ -212,12 +222,26 @@ namespace Models.Soils
         {
             get
             {
-                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
-                double[] dulMM = MathUtilities.Multiply(dul, Thickness);
-                return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                   MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                if (Physical != null)
+                {
+                    double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                    double[] dulMM = MathUtilities.Multiply(dul, Thickness);
+                    return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
+                                                       MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                }
+                else return 0;
             }
-            set
+            set => UpdateInitialValuesFromFractionFull(value);
+        }
+
+        /// <summary>
+        /// Updates InitialValues from FractionFull.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void UpdateInitialValuesFromFractionFull(double value)
+        {
+            if (Physical != null)
             {
                 if (value < 0 || value > 1)
                     throw new InvalidOperationException($"Invalid value for fraction full: {value}. Must be between [0, 1]");
