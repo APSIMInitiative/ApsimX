@@ -126,7 +126,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Harvest Date</summary>
         [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
         [Description("Harvest Date")]
-        //public Nullable<DateTime> harvestDate { get; set; }
         public Nullable<DateTime> HarvestDate { get { return _harvestDate; } set { _harvestDate = value; } }
         private Nullable<DateTime> _harvestDate { get; set; }
         private DateTime nonNullHarvestDate { get; set; }
@@ -317,8 +316,11 @@ namespace Models.PMF.SimplePlantModels
             }
             else
             {
-                management = new ScrumManagementInstance(this.CropName, (DateTime)this._establishDate, this._establishStage, this._plantingDepth, this._harvestStage, this._expectedYield,
-                                                 this._fieldLoss, this._residueRemoval, this._residueIncorporation, this._residueIncorporationDepth, this._harvestDate, this._ttEstabToHarv);
+                management = new ScrumManagementInstance(cropName:this.CropName, establishDate:(DateTime)this._establishDate, establishStage:this._establishStage, 
+                                                         harvestStage:this._harvestStage, expectedYield:this._expectedYield, harvestDate:this._harvestDate,
+                                                         ttEstabToHarv: this._ttEstabToHarv, plantingDepth:this._plantingDepth,
+                                                         fieldLoss:this._fieldLoss, residueRemoval:this._residueRemoval, residueIncorporation:this._residueIncorporation,
+                                                         residueIncorporationDepth:this._residueIncorporationDepth);
             }
 
             return management;
@@ -335,8 +337,6 @@ namespace Models.PMF.SimplePlantModels
 
             if (this._expectedYield == 0.0)
                 throw new Exception(this.Name + "must have a yield > 0 set for the scrum crop to grow");
-            if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
-                throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
             ScrumFertDemandData fdd = new ScrumFertDemandData(this.CropName,
                                                                 management.IsFertilised? calcTotalNDemand(ExpectedYield): 0,

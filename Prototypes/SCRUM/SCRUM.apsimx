@@ -8558,20 +8558,12 @@
                 "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                 "        public string EstablishStage {get; set;}",
                 "        ",
-                "        /// <summary>Planting depth (mm)</summary>",
-                "        [Description(\"Planting depth (mm)\")]",
-                "        public double PlantingDepth { get; set; }",
-                "",
-                "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
+                "        [Separator(\"Specify harvest parametes\")]",
                 "        ",
-                "        /// <summary>Harvest Date</summary>",
-                "        [Description(\"Harvest Date\")]",
-                "        public DateTime HarvestDate { get; set; }",
+                "        /// <summary>TtEstabToHarvest Tt </summary>",
+                "        [Description(\"Thermal time from Establishment to Harvest (oCd)\")]",
+                "        public double TtEstabToHarvest { get; set; }",
                 "",
-                "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
-                "        [Description(\"Harvest Tt (oCd)\")]",
-                "        public double HarvestTT { get; set; }",
-                "        ",
                 "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                 "        [Description(\"Harvest Stage\")]",
                 "        [Display(Type = DisplayType.ScrumHarvestStages)]",
@@ -8581,32 +8573,9 @@
                 "        ",
                 "        /// <summary>Expected Yield (g FW/m2)</summary>",
                 "        [Description(\"Potential Yield (t/Ha)\")]",
-                "        public double PotentialYield {get; set;}",
+                "        public double ExpectedYield {get; set;}",
                 "        ",
-                "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
-                "        ",
-                "        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field ",
-                "        /// because of diseaese, poor quality or lack of market)</summary>",
-                "        [Description(\"Field loss (%)\")]",
-                "        public double FieldLoss { get; set; }",
-                "",
-                "        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field ",
-                "        /// by bailing or some other means)</summary>",
-                "        [Description(\"Residue removal (%)\")]",
-                "        public double ResidueRemoval { get; set; }",
-                "        ",
-                "        [Separator(\"Specify proportion of residue incorporated and depth of incorporatin\")]",
-                "        ",
-                "        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  ",
-                "        /// at or soon after harvest)</summary>",
-                "        [Description(\"Residue incorporation (%)\")]",
-                "        public double ResidueIncorporation { get; set; }",
-                "        ",
-                "        /// <summary>Residue incorporation depth (i.e the depth residues that are incorporated to by cultivation  ",
-                "        /// at or soon after harvest)</summary>",
-                "        [Description(\"Residue incorporation depth (mm)\")]",
-                "        public double ResidueIncorporationDepth { get; set; }",
-                "        ",
+                "       ",
                 "        private ScrumManagementInstance management {get; set;}",
                 "        ",
                 "        [EventSubscribe(\"DoManagement\")]",
@@ -8614,8 +8583,12 @@
                 "        {",
                 "            if (clock.Today == EstablishDate)",
                 "            {",
-                "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                "                FieldLoss, ResidueRemoval,ResidueIncorporation,ResidueIncorporationDepth,HarvestDate, HarvestTT);",
+                "                management = new ScrumManagementInstance(cropName:CropName,",
+                "                                                         establishDate:EstablishDate,",
+                "                                                         establishStage:EstablishStage,",
+                "                                                         harvestStage:HarvestStage,",
+                "                                                         expectedYield:ExpectedYield,",
+                "                                                         ttEstabToHarv:TtEstabToHarvest);",
                 "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                 "                currentCrop.Establish(management);  ",
                 "            }",
@@ -8637,15 +8610,7 @@
                   "Value": "Seed"
                 },
                 {
-                  "Key": "PlantingDepth",
-                  "Value": "15"
-                },
-                {
-                  "Key": "HarvestDate",
-                  "Value": "01/01/0001 00:00:00"
-                },
-                {
-                  "Key": "HarvestTT",
+                  "Key": "TtEstabToHarvest",
                   "Value": "1000"
                 },
                 {
@@ -8653,24 +8618,8 @@
                   "Value": "Maturity"
                 },
                 {
-                  "Key": "PotentialYield",
+                  "Key": "ExpectedYield",
                   "Value": "8"
-                },
-                {
-                  "Key": "FieldLoss",
-                  "Value": "0"
-                },
-                {
-                  "Key": "ResidueRemoval",
-                  "Value": "0"
-                },
-                {
-                  "Key": "ResidueIncorporation",
-                  "Value": "7"
-                },
-                {
-                  "Key": "ResidueIncorporationDepth",
-                  "Value": "25"
                 }
               ],
               "Name": "Sow Cereal on a fixed date",
@@ -11840,7 +11789,9 @@
                 "        [Description(\"Crop to plant\")]",
                 "        [Display(Type = DisplayType.SCRUMcropName)]",
                 "        public string CropName { get; set; }",
-                "",
+                "        ",
+                "        [Separator(\"Specifiy dates and stages for establishment and harvest of this crop\")]",
+                "        ",
                 "        /// <summary>Establishemnt Date</summary>",
                 "        [Description(\"Establishment Date\")]",
                 "        public string EstablishDate { get; set; }",
@@ -11850,17 +11801,9 @@
                 "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                 "        public string EstablishStage {get; set;}",
                 "        ",
-                "        /// <summary>Planting depth (mm)</summary>",
-                "        [Description(\"Planting depth (mm)\")]",
-                "        public double PlantingDepth { get; set; }",
-                "",
-                "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                "        ",
-                "        public DateTime harvestDate {get;set;}",
-                "        ",
                 "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
                 "        [Description(\"Harvest Tt (oCd)\")]",
-                "        public double HarvestTT { get; set; }",
+                "        public double TtEstabToHarvest { get; set; }",
                 "        ",
                 "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                 "        [Description(\"Harvest Stage\")]",
@@ -11871,7 +11814,7 @@
                 "        ",
                 "        /// <summary>Expected Yield (g FW/m2)</summary>",
                 "        [Description(\"Potential Yield (t/Ha)\")]",
-                "        public double PotentialYield {get; set;}",
+                "        public double ExpectedYield {get; set;}",
                 "        ",
                 "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                 "        ",
@@ -11904,10 +11847,19 @@
                 "        {",
                 "            if (DateUtilities.WithinDates(EstablishDate, clock.Today, EstablishDate))",
                 "            {",
-                "                    DateTime establishDate = clock.Today;",
+                "                    DateTime todayDate = clock.Today;",
                 "\t\t            ",
-                "\t\t            management = new ScrumManagementInstance(CropName,establishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                "                    FieldLoss, ResidueRemoval,ResidueIncorporation,ResidueIncorporationDepth,harvestDate, HarvestTT);",
+                "\t\t            management = new ScrumManagementInstance(cropName:CropName,",
+                "                                                         establishDate:todayDate,",
+                "                                                         establishStage:EstablishStage,",
+                "                                                         harvestStage:HarvestStage,",
+                "                                                         expectedYield:ExpectedYield,",
+                "                                                         ttEstabToHarv:TtEstabToHarvest,",
+                "                                                         fieldLoss:FieldLoss,",
+                "                                                         residueRemoval:ResidueRemoval,",
+                "                                                         residueIncorporation:ResidueIncorporation,",
+                "                                                         residueIncorporationDepth:ResidueIncorporationDepth);",
+                "                ",
                 "\t\t            ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                 "\t\t            currentCrop.Establish(management);",
                 "            }",
@@ -11922,27 +11874,15 @@
                 },
                 {
                   "Key": "EstablishDate",
-                  "Value": "10-Oct"
+                  "Value": "1-sep"
                 },
                 {
                   "Key": "EstablishStage",
                   "Value": "Seed"
                 },
                 {
-                  "Key": "PlantingDepth",
-                  "Value": "15"
-                },
-                {
-                  "Key": "HarvestTT",
-                  "Value": "1000"
-                },
-                {
                   "Key": "HarvestStage",
                   "Value": "Maturity"
-                },
-                {
-                  "Key": "PotentialYield",
-                  "Value": "8"
                 },
                 {
                   "Key": "FieldLoss",
@@ -11954,11 +11894,19 @@
                 },
                 {
                   "Key": "ResidueIncorporation",
-                  "Value": "0"
+                  "Value": "1"
                 },
                 {
                   "Key": "ResidueIncorporationDepth",
-                  "Value": "0"
+                  "Value": "100"
+                },
+                {
+                  "Key": "TtEstabToHarvest",
+                  "Value": "1000"
+                },
+                {
+                  "Key": "ExpectedYield",
+                  "Value": "8"
                 }
               ],
               "Name": "Sow Cereal same date each year",
@@ -15137,6 +15085,7 @@
                 "        [Display(Type = DisplayType.SCRUMcropName)]",
                 "        public string CropName { get; set; }",
                 "",
+                "        [Separator(\"Specifiy dates and stages for establishment and harvest of this crop\")]",
                 "        /// <summary>Establishemnt Date</summary>",
                 "        [Description(\"Establishment Date\")]",
                 "        public DateTime EstablishDate { get; set; }",
@@ -15145,20 +15094,10 @@
                 "        [Description(\"Establishment Stage\")]",
                 "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                 "        public string EstablishStage {get; set;}",
-                "        ",
-                "        /// <summary>Planting depth (mm)</summary>",
-                "        [Description(\"Planting depth (mm)\")]",
-                "        public double PlantingDepth { get; set; }",
                 "",
-                "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                "        ",
                 "        /// <summary>Harvest Date</summary>",
                 "        [Description(\"Harvest Date\")]",
                 "        public DateTime HarvestDate { get; set; }",
-                "",
-                "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
-                "        [Description(\"Harvest Tt (oCd)\")]",
-                "        public double HarvestTT { get; set; }",
                 "        ",
                 "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                 "        [Description(\"Harvest Stage\")]",
@@ -15169,7 +15108,7 @@
                 "        ",
                 "        /// <summary>Expected Yield (g FW/m2)</summary>",
                 "        [Description(\"Potential Yield (t/Ha)\")]",
-                "        public double PotentialYield {get; set;}",
+                "        public double ExpectedYield {get; set;}",
                 "        ",
                 "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                 "        ",
@@ -15202,8 +15141,16 @@
                 "        {",
                 "            if (clock.Today == EstablishDate)",
                 "            {",
-                "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                "                ResidueIncorporation,ResidueIncorporationDepth, FieldLoss, ResidueRemoval,HarvestDate, HarvestTT);",
+                "                   management = new ScrumManagementInstance(cropName:CropName,",
+                "                                                         establishDate:EstablishDate,",
+                "                                                         establishStage:EstablishStage,",
+                "                                                         harvestStage:HarvestStage,",
+                "                                                         harvestDate:HarvestDate,",
+                "                                                         expectedYield:ExpectedYield,",
+                "                                                         fieldLoss:FieldLoss,",
+                "                                                         residueRemoval:ResidueRemoval,",
+                "                                                         residueIncorporation:ResidueIncorporation,",
+                "                                                         residueIncorporationDepth:ResidueIncorporationDepth);",
                 "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                 "                currentCrop.Establish(management);  ",
                 "            }",
@@ -15225,24 +15172,12 @@
                   "Value": "Seed"
                 },
                 {
-                  "Key": "PlantingDepth",
-                  "Value": "15"
-                },
-                {
                   "Key": "HarvestDate",
                   "Value": "04/14/1999 00:00:00"
                 },
                 {
-                  "Key": "HarvestTT",
-                  "Value": "NaN"
-                },
-                {
                   "Key": "HarvestStage",
                   "Value": "Maturity"
-                },
-                {
-                  "Key": "PotentialYield",
-                  "Value": "5.3"
                 },
                 {
                   "Key": "FieldLoss",
@@ -15254,11 +15189,15 @@
                 },
                 {
                   "Key": "ResidueIncorporation",
-                  "Value": "0"
+                  "Value": "1"
                 },
                 {
                   "Key": "ResidueIncorporationDepth",
-                  "Value": "0"
+                  "Value": "150"
+                },
+                {
+                  "Key": "ExpectedYield",
+                  "Value": "8"
                 }
               ],
               "Name": "Sow Cereal on 14 Oct 98 harvest apr 99",
@@ -15297,6 +15236,7 @@
                 "        [Display(Type = DisplayType.SCRUMcropName)]",
                 "        public string CropName { get; set; }",
                 "",
+                "        [Separator(\"Specifiy dates and stages for establishment and harvest of this crop\")]",
                 "        /// <summary>Establishemnt Date</summary>",
                 "        [Description(\"Establishment Date\")]",
                 "        public DateTime EstablishDate { get; set; }",
@@ -15306,19 +15246,9 @@
                 "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                 "        public string EstablishStage {get; set;}",
                 "        ",
-                "        /// <summary>Planting depth (mm)</summary>",
-                "        [Description(\"Planting depth (mm)\")]",
-                "        public double PlantingDepth { get; set; }",
-                "",
-                "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                "        ",
-                "        /// <summary>Harvest Date</summary>",
-                "        [Description(\"Harvest Date\")]",
-                "        public DateTime HarvestDate { get; set; }",
-                "",
                 "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
                 "        [Description(\"Harvest Tt (oCd)\")]",
-                "        public double HarvestTT { get; set; }",
+                "        public double TtEstabToHarv { get; set; }",
                 "        ",
                 "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                 "        [Description(\"Harvest Stage\")]",
@@ -15329,7 +15259,7 @@
                 "        ",
                 "        /// <summary>Expected Yield (g FW/m2)</summary>",
                 "        [Description(\"Potential Yield (t/Ha)\")]",
-                "        public double PotentialYield {get; set;}",
+                "        public double ExpectedYield {get; set;}",
                 "        ",
                 "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                 "        ",
@@ -15362,9 +15292,16 @@
                 "        {",
                 "            if (clock.Today == EstablishDate)",
                 "            {",
-                "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                "                ResidueIncorporation,ResidueIncorporationDepth, FieldLoss, ResidueRemoval, HarvestDate, HarvestTT);",
-                "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
+                "                               management = new ScrumManagementInstance(cropName:CropName,",
+                "                                                         establishDate:EstablishDate,",
+                "                                                         establishStage:EstablishStage,",
+                "                                                         harvestStage:HarvestStage,",
+                "                                                         ttEstabToHarv:TtEstabToHarv,",
+                "                                                         expectedYield:ExpectedYield,",
+                "                                                         fieldLoss:FieldLoss,",
+                "                                                         residueRemoval:ResidueRemoval,",
+                "                                                         residueIncorporation:ResidueIncorporation,",
+                "                                                         residueIncorporationDepth:ResidueIncorporationDepth);ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                 "                currentCrop.Establish(management);  ",
                 "            }",
                 "        }",
@@ -15385,24 +15322,8 @@
                   "Value": "Seed"
                 },
                 {
-                  "Key": "PlantingDepth",
-                  "Value": "15"
-                },
-                {
-                  "Key": "HarvestDate",
-                  "Value": "01/01/0001 00:00:00"
-                },
-                {
-                  "Key": "HarvestTT",
-                  "Value": "600"
-                },
-                {
                   "Key": "HarvestStage",
                   "Value": "LateReproductive"
-                },
-                {
-                  "Key": "PotentialYield",
-                  "Value": "3.1"
                 },
                 {
                   "Key": "FieldLoss",
@@ -15414,11 +15335,19 @@
                 },
                 {
                   "Key": "ResidueIncorporation",
-                  "Value": "0"
+                  "Value": "50"
                 },
                 {
                   "Key": "ResidueIncorporationDepth",
-                  "Value": "0"
+                  "Value": "50"
+                },
+                {
+                  "Key": "ExpectedYield",
+                  "Value": "3"
+                },
+                {
+                  "Key": "TtEstabToHarv",
+                  "Value": "600"
                 }
               ],
               "Name": "Sow legume 1 Jun 99 harvest after 600 oCd",
@@ -21343,9 +21272,9 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": -16744448,
-              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryColours": "HarvAt",
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
+              "FactorToVaryLines": "EstabAt",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
@@ -21411,9 +21340,9 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": -16744448,
-              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryColours": "HarvAt",
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
+              "FactorToVaryLines": "EstabAt",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
@@ -26127,7 +26056,7 @@
                         "[IntrumCrop].Script.EstablishStage = Seed",
                         "[IntrumCrop].Script.HarvestDate = 2006-02-3 ",
                         "[IntrumCrop].Script.HarvestStage = Maturity",
-                        "[IntrumCrop].Script.PotentialYield = 6",
+                        "[IntrumCrop].Script.ExpectedYield = 6",
                         "[TreatmentID].Script.Rotation = PP",
                         "[InF].Script.NFert = 0",
                         "[InF].Script.Irr1 = 55",
@@ -26151,7 +26080,7 @@
                         "[IntrumCrop].Script.EstablishStage = Seed",
                         "[IntrumCrop].Script.HarvestDate = 2006-02-24 ",
                         "[IntrumCrop].Script.HarvestStage = Maturity",
-                        "[IntrumCrop].Script.PotentialYield = 15",
+                        "[IntrumCrop].Script.ExpectedYield = 15",
                         "[TreatmentID].Script.Rotation = PW",
                         "[InF].Script.NFert = 100",
                         "[InF].Script.Irr1 = 94",
@@ -27804,7 +27733,7 @@
                         "        [Link(Type = LinkType.Scoped, ByName = true)]",
                         "        public Plant scrum = null;",
                         "        ",
-                        "        [Separator(\"Choose one of your specified scrum crops to plant\")]",
+                        "        [Separator(\"Select Crop to sow and specify establish and harvest dates and stages\")]",
                         "        ",
                         "        /// <summary>Establishemnt Date</summary>",
                         "        [Description(\"Crop to plant\")]",
@@ -27819,21 +27748,11 @@
                         "        [Description(\"Establishment Stage\")]",
                         "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                         "        public string EstablishStage {get; set;}",
-                        "        ",
-                        "        /// <summary>Planting depth (mm)</summary>",
-                        "        [Description(\"Planting depth (mm)\")]",
-                        "        public double PlantingDepth { get; set; }",
                         "",
-                        "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                        "        ",
                         "        /// <summary>Harvest Date</summary>",
                         "        [Description(\"Harvest Date\")]",
                         "        public DateTime HarvestDate { get; set; }",
                         "",
-                        "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
-                        "        [Description(\"Harvest Tt (oCd)\")]",
-                        "        public double HarvestTT { get; set; }",
-                        "        ",
                         "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                         "        [Description(\"Harvest Stage\")]",
                         "        [Display(Type = DisplayType.ScrumHarvestStages)]",
@@ -27843,7 +27762,7 @@
                         "        ",
                         "        /// <summary>Expected Yield (g FW/m2)</summary>",
                         "        [Description(\"Potential Yield (t/Ha)\")]",
-                        "        public double PotentialYield {get; set;}",
+                        "        public double ExpectedYield {get; set;}",
                         "        ",
                         "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                         "        ",
@@ -27857,7 +27776,17 @@
                         "        [Description(\"Residue removal (%)\")]",
                         "        public double ResidueRemoval { get; set; }",
                         "        ",
-                        "",
+                        "        [Separator(\"Specify proportion of residue incorporated and depth of incorporatin\")]",
+                        "        ",
+                        "        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation (%)\")]",
+                        "        public double ResidueIncorporation { get; set; }",
+                        "        ",
+                        "        /// <summary>Residue incorporation depth (i.e the depth residues that are incorporated to by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation depth (mm)\")]",
+                        "        public double ResidueIncorporationDepth { get; set; }",
                         "        ",
                         "        private ScrumManagementInstance management {get; set;}",
                         "        ",
@@ -27866,8 +27795,16 @@
                         "        {",
                         "            if (clock.Today == EstablishDate)",
                         "            {",
-                        "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                        "                0,0, FieldLoss, ResidueRemoval,HarvestDate, HarvestTT);",
+                        "                management = new ScrumManagementInstance(cropName:CropName,",
+                        "                                                 establishDate:EstablishDate,",
+                        "                                                 establishStage:EstablishStage,",
+                        "                                                 harvestDate:HarvestDate,",
+                        "                                                 harvestStage:HarvestStage,",
+                        "                                                 expectedYield:ExpectedYield,",
+                        "                                                 fieldLoss:FieldLoss,",
+                        "                                                 residueRemoval:ResidueRemoval,",
+                        "                                                 residueIncorporation:ResidueIncorporation,",
+                        "                                                 residueIncorporationDepth:ResidueIncorporationDepth);",
                         "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                         "                currentCrop.Establish(management);  ",
                         "            }",
@@ -27889,24 +27826,12 @@
                           "Value": "Seed"
                         },
                         {
-                          "Key": "PlantingDepth",
-                          "Value": "70"
-                        },
-                        {
                           "Key": "HarvestDate",
                           "Value": "03/12/2007 00:00:00"
                         },
                         {
-                          "Key": "HarvestTT",
-                          "Value": "NaN"
-                        },
-                        {
                           "Key": "HarvestStage",
                           "Value": "Maturity"
-                        },
-                        {
-                          "Key": "PotentialYield",
-                          "Value": "50"
                         },
                         {
                           "Key": "FieldLoss",
@@ -27914,6 +27839,18 @@
                         },
                         {
                           "Key": "ResidueRemoval",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ExpectedYield",
+                          "Value": "60"
+                        },
+                        {
+                          "Key": "ResidueIncorporation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ResidueIncorporationDepth",
                           "Value": "0"
                         }
                       ],
@@ -27946,7 +27883,7 @@
                         "        [Link(Type = LinkType.Scoped, ByName = true)]",
                         "        public Plant scrum = null;",
                         "        ",
-                        "        [Separator(\"Choose one of your specified scrum crops to plant\")]",
+                        "        [Separator(\"Select Crop to sow and specify establish and harvest dates and stages\")]",
                         "        ",
                         "        /// <summary>Establishemnt Date</summary>",
                         "        [Description(\"Crop to plant\")]",
@@ -27961,21 +27898,11 @@
                         "        [Description(\"Establishment Stage\")]",
                         "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                         "        public string EstablishStage {get; set;}",
-                        "        ",
-                        "        /// <summary>Planting depth (mm)</summary>",
-                        "        [Description(\"Planting depth (mm)\")]",
-                        "        public double PlantingDepth { get; set; }",
                         "",
-                        "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                        "        ",
                         "        /// <summary>Harvest Date</summary>",
                         "        [Description(\"Harvest Date\")]",
                         "        public DateTime HarvestDate { get; set; }",
                         "",
-                        "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
-                        "        [Description(\"Harvest Tt (oCd)\")]",
-                        "        public double HarvestTT { get; set; }",
-                        "        ",
                         "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                         "        [Description(\"Harvest Stage\")]",
                         "        [Display(Type = DisplayType.ScrumHarvestStages)]",
@@ -27985,7 +27912,7 @@
                         "        ",
                         "        /// <summary>Expected Yield (g FW/m2)</summary>",
                         "        [Description(\"Potential Yield (t/Ha)\")]",
-                        "        public double PotentialYield {get; set;}",
+                        "        public double ExpectedYield {get; set;}",
                         "        ",
                         "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                         "        ",
@@ -27999,7 +27926,17 @@
                         "        [Description(\"Residue removal (%)\")]",
                         "        public double ResidueRemoval { get; set; }",
                         "        ",
-                        "",
+                        "        [Separator(\"Specify proportion of residue incorporated and depth of incorporatin\")]",
+                        "        ",
+                        "        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation (%)\")]",
+                        "        public double ResidueIncorporation { get; set; }",
+                        "        ",
+                        "        /// <summary>Residue incorporation depth (i.e the depth residues that are incorporated to by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation depth (mm)\")]",
+                        "        public double ResidueIncorporationDepth { get; set; }",
                         "        ",
                         "        private ScrumManagementInstance management {get; set;}",
                         "        ",
@@ -28008,8 +27945,16 @@
                         "        {",
                         "            if (clock.Today == EstablishDate)",
                         "            {",
-                        "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                        "                0,0, FieldLoss, ResidueRemoval,HarvestDate, HarvestTT);",
+                        "                management = new ScrumManagementInstance(cropName:CropName,",
+                        "                                                 establishDate:EstablishDate,",
+                        "                                                 establishStage:EstablishStage,",
+                        "                                                 harvestDate:HarvestDate,",
+                        "                                                 harvestStage:HarvestStage,",
+                        "                                                 expectedYield:ExpectedYield,",
+                        "                                                 fieldLoss:FieldLoss,",
+                        "                                                 residueRemoval:ResidueRemoval,",
+                        "                                                 residueIncorporation:ResidueIncorporation,",
+                        "                                                 residueIncorporationDepth:ResidueIncorporationDepth);",
                         "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                         "                currentCrop.Establish(management);  ",
                         "            }",
@@ -28031,24 +27976,12 @@
                           "Value": ""
                         },
                         {
-                          "Key": "PlantingDepth",
-                          "Value": "20"
-                        },
-                        {
                           "Key": "HarvestDate",
                           "Value": "01/01/0001 00:00:00"
                         },
                         {
-                          "Key": "HarvestTT",
-                          "Value": "NaN"
-                        },
-                        {
                           "Key": "HarvestStage",
                           "Value": ""
-                        },
-                        {
-                          "Key": "PotentialYield",
-                          "Value": "NaN"
                         },
                         {
                           "Key": "FieldLoss",
@@ -28056,6 +27989,18 @@
                         },
                         {
                           "Key": "ResidueRemoval",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ExpectedYield",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ResidueIncorporation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ResidueIncorporationDepth",
                           "Value": "0"
                         }
                       ],
@@ -28088,7 +28033,7 @@
                         "        [Link(Type = LinkType.Scoped, ByName = true)]",
                         "        public Plant scrum = null;",
                         "        ",
-                        "        [Separator(\"Choose one of your specified scrum crops to plant\")]",
+                        "        [Separator(\"Select Crop to sow and specify establish and harvest dates and stages\")]",
                         "        ",
                         "        /// <summary>Establishemnt Date</summary>",
                         "        [Description(\"Crop to plant\")]",
@@ -28103,21 +28048,11 @@
                         "        [Description(\"Establishment Stage\")]",
                         "        [Display(Type = DisplayType.ScrumEstablishStages)]",
                         "        public string EstablishStage {get; set;}",
-                        "        ",
-                        "        /// <summary>Planting depth (mm)</summary>",
-                        "        [Description(\"Planting depth (mm)\")]",
-                        "        public double PlantingDepth { get; set; }",
                         "",
-                        "        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]",
-                        "        ",
                         "        /// <summary>Harvest Date</summary>",
                         "        [Description(\"Harvest Date\")]",
                         "        public DateTime HarvestDate { get; set; }",
                         "",
-                        "        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>",
-                        "        [Description(\"Harvest Tt (oCd)\")]",
-                        "        public double HarvestTT { get; set; }",
-                        "        ",
                         "        /// <summary>Stage that Scrum crop is harvested at</summary>",
                         "        [Description(\"Harvest Stage\")]",
                         "        [Display(Type = DisplayType.ScrumHarvestStages)]",
@@ -28127,7 +28062,7 @@
                         "        ",
                         "        /// <summary>Expected Yield (g FW/m2)</summary>",
                         "        [Description(\"Potential Yield (t/Ha)\")]",
-                        "        public double PotentialYield {get; set;}",
+                        "        public double ExpectedYield {get; set;}",
                         "        ",
                         "        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]",
                         "        ",
@@ -28141,7 +28076,17 @@
                         "        [Description(\"Residue removal (%)\")]",
                         "        public double ResidueRemoval { get; set; }",
                         "        ",
-                        "",
+                        "        [Separator(\"Specify proportion of residue incorporated and depth of incorporatin\")]",
+                        "        ",
+                        "        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation (%)\")]",
+                        "        public double ResidueIncorporation { get; set; }",
+                        "        ",
+                        "        /// <summary>Residue incorporation depth (i.e the depth residues that are incorporated to by cultivation  ",
+                        "        /// at or soon after harvest)</summary>",
+                        "        [Description(\"Residue incorporation depth (mm)\")]",
+                        "        public double ResidueIncorporationDepth { get; set; }",
                         "        ",
                         "        private ScrumManagementInstance management {get; set;}",
                         "        ",
@@ -28150,8 +28095,16 @@
                         "        {",
                         "            if (clock.Today == EstablishDate)",
                         "            {",
-                        "                management = new ScrumManagementInstance(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,",
-                        "                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);",
+                        "                management = new ScrumManagementInstance(cropName:CropName,",
+                        "                                                 establishDate:EstablishDate,",
+                        "                                                 establishStage:EstablishStage,",
+                        "                                                 harvestDate:HarvestDate,",
+                        "                                                 harvestStage:HarvestStage,",
+                        "                                                 expectedYield:ExpectedYield,",
+                        "                                                 fieldLoss:FieldLoss,",
+                        "                                                 residueRemoval:ResidueRemoval,",
+                        "                                                 residueIncorporation:ResidueIncorporation,",
+                        "                                                 residueIncorporationDepth:ResidueIncorporationDepth);",
                         "                ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);",
                         "                currentCrop.Establish(management);  ",
                         "            }",
@@ -28173,24 +28126,12 @@
                           "Value": "Seed"
                         },
                         {
-                          "Key": "PlantingDepth",
-                          "Value": "70"
-                        },
-                        {
                           "Key": "HarvestDate",
                           "Value": "03/14/2005 00:00:00"
                         },
                         {
-                          "Key": "HarvestTT",
-                          "Value": "NaN"
-                        },
-                        {
                           "Key": "HarvestStage",
                           "Value": "Maturity"
-                        },
-                        {
-                          "Key": "PotentialYield",
-                          "Value": "65"
                         },
                         {
                           "Key": "FieldLoss",
@@ -28198,6 +28139,18 @@
                         },
                         {
                           "Key": "ResidueRemoval",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ExpectedYield",
+                          "Value": "60"
+                        },
+                        {
+                          "Key": "ResidueIncorporation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ResidueIncorporationDepth",
                           "Value": "0"
                         }
                       ],
@@ -34218,10 +34171,10 @@
                       "EstablishDate": "1998-05-14T00:00:00",
                       "EstablishStage": "Seed",
                       "PlantingDepth": 15.0,
-                      "HarvestDate": "1998-10-08T00:00:00",
+                      "HarvestDate": "1998-09-25T00:00:00",
                       "TtEstabToHarv": 0.0,
                       "HarvestStage": "Vegetative",
-                      "ExpectedYield": 9.95,
+                      "ExpectedYield": 5.6,
                       "FieldLoss": 0.0,
                       "ResidueRemoval": 0.0,
                       "ResidueIncorporation": 0.0,
