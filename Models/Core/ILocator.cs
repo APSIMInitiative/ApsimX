@@ -37,6 +37,11 @@ namespace Models.Core
         /// If set, Report columns will be considered in the search; otherwise these are ignored
         /// </summary>
         IncludeReportVars = 16,
+
+        /// <summary>
+        /// If set, fetch only model references, do not return properties or methods of the same name
+        /// </summary>
+        ModelsOnly = 32,
     };
 
     /// <summary>
