@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
+using Shared.Utilities;
 
 namespace Models
 {
@@ -62,9 +62,17 @@ namespace Models
                 var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
-                scriptCompiler = simulations.ScriptCompiler;
+                SetCompiler(simulations.ScriptCompiler);
             }
             return true;
+        }
+
+        /// <summary>
+        /// Set compiler to given script compiler
+        /// </summary>
+        private void SetCompiler(ScriptCompiler compiler)
+        {
+            scriptCompiler = compiler;
         }
 
         /// <summary>The array of code lines that gets stored in file</summary>
@@ -98,8 +106,15 @@ namespace Models
             }
             set
             {
-                cSharpCode = value.Split('\n');
-                RebuildScriptModel();
+                if (value == null)
+                {
+                    throw new Exception("Value 'Null' cannot be stored in Manager.Code");
+                }
+                else
+                {
+                    cSharpCode = value.Split('\n');
+                    RebuildScriptModel();
+                }
             }
         }
 
@@ -107,19 +122,11 @@ namespace Models
         public List<KeyValuePair<string, string>> Parameters { get; set; }
 
         /// <summary>
-        /// Stores column and line of caret, and scrolling position when editing in GUI
-        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
-        /// way to store both the caret position and scrolling information.
-        /// </summary>
-        [JsonIgnore]
-        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
-
-        /// <summary>
-        /// Stores whether we are currently on the tab displaying the script.
+        /// Stores the cursor position so the page location is saved when moving around the GUI
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore]
-        public int ActiveTabIndex { get; set; }
+        public ManagerCursorLocation Cursor { get; set; } = new ManagerCursorLocation();
 
         /// <summary>
         /// Stores the success of the last compile
@@ -191,6 +198,7 @@ namespace Models
                     SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
                 }
+
                 SetParametersInScriptModel();
             }
         }
@@ -201,7 +209,7 @@ namespace Models
             if (Enabled && Children.Count > 0)
             {
                 var script = Children[0];
-                if (Parameters != null)
+                if (Parameters != null)  //GetParametersFromScriptModel must be run first before this can be run.
                 {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
@@ -273,13 +281,16 @@ namespace Models
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Nasty!
-            IModel script = Children[0];
+            if (Children.Count > 0)
+            {
+                // Nasty!
+                IModel script = Children[0];
 
-            Type scriptType = script.GetType();
-            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                foreach (ITag tag in script.Document())
-                    yield return tag;
+                Type scriptType = script.GetType();
+                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                    foreach (ITag tag in script.Document())
+                        yield return tag;
+            }
         }
     }
 }

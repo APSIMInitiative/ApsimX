@@ -1149,15 +1149,23 @@ namespace UserInterface.Presenters
         /// <param name="leftTab">Should the file be opened in the left tabset?</param>
         public void Import(string fileName)
         {
+            // When an old .apsim file is imported, exceptions can occur when converting the file but the 
+            // file is still converted i.e. exception isn't fatal. Catch these exceptions and show to user
+            // in the 
+
+            List<Exception> importExceptions = new();
             try
             {
                 var importer = new Importer();
-                importer.ProcessFile(fileName);
+                importer.ProcessFile(fileName, e => { importExceptions.Add(e); });
             }
             catch (Exception err)
             {
                 throw new Exception("Error during Import: " + err.Message);
             }
+            string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
+            if (!string.IsNullOrEmpty(importExceptionsAsString))
+                ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
         }
 
         /// <summary>

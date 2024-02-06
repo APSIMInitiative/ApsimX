@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,8 @@ namespace Models
         public static int Main(string[] args)
         {
             bool isApplyOptionPresent = false;
+            // Resets exitCode to help with unit testing.
+            exitCode = 0;
             // Required to allow the --apply switch functionality of not including
             // an apsimx file path on the command line.
             if (args.Length > 0 && args[0].Equals("--apply"))
@@ -77,6 +80,13 @@ namespace Models
         /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
+            // To help with Jenkins only errors.
+            foreach (var error in errors)
+            {
+                Console.WriteLine("Console error output: " + error.ToString());
+                Trace.WriteLine("Trace error output: " + error.ToString());
+            }
+
             if (!(errors.IsHelp() || errors.IsVersion()))
                 exitCode = 1;
         }
@@ -119,6 +129,11 @@ namespace Models
                     foreach (string file in files)
                         ListReferencedFileNames(file);
                 }
+                else if (options.ListReferencedFileNamesUnmodified)
+                {
+                    foreach (string file in files)
+                        ListReferencedFileNames(file, false);
+                }
                 else if (options.MergeDBFiles)
                 {
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
@@ -128,6 +143,7 @@ namespace Models
                 // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
+                    Runner runner = null;
                     bool isSimToBeRun = false;
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
@@ -217,14 +233,21 @@ namespace Models
 
                                 if (isSimToBeRun)
                                 {
-                                    Runner runner = new Runner(sim,
-                                                                true,
-                                                                true,
-                                                                options.RunTests,
-                                                                runType: options.RunType,
-                                                                numberOfProcessors: options.NumProcessors,
-                                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                                    if (!string.IsNullOrWhiteSpace(options.Playlist))
+                                        runner = CreateRunnerForPlaylistOption(options, new string[] { sim.FileName });
+                                    else
+                                    {
+                                        runner = new Runner(sim,
+                                                            true,
+                                                            true,
+                                                            options.RunTests,
+                                                            runType: options.RunType,
+                                                            numberOfProcessors: options.NumProcessors,
+                                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                                    }
                                     RunSimulations(runner, options);
+                                    if (options.Verbose)
+                                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                                     isSimToBeRun = false;
                                 }
                             }
@@ -301,14 +324,22 @@ namespace Models
                                     sim.Write(savePath);
                                 if (isSimToBeRun)
                                 {
-                                    Runner runner = new Runner(sim,
+                                    //Runner runner;
+                                    if (!string.IsNullOrWhiteSpace(options.Playlist))
+                                        runner = CreateRunnerForPlaylistOption(options, new string[] { sim.FileName });
+                                    else
+                                    {
+                                        runner = new Runner(sim,
                                                             true,
                                                             true,
                                                             options.RunTests,
                                                             runType: options.RunType,
                                                             numberOfProcessors: options.NumProcessors,
                                                             simulationNamePatternMatch: options.SimulationNameRegex);
+                                    }
                                     RunSimulations(runner, options);
+                                    if (options.Verbose)
+                                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                                     isSimToBeRun = false;
                                 }
                             }
@@ -329,24 +360,31 @@ namespace Models
                         }
 
                     }
+                    // If errors occurred, write them to the console.
+                    if (exitCode != 0)
+                        Console.WriteLine("ERRORS FOUND!!");
                 }
                 else
                 {
                     Runner runner = null;
                     if (string.IsNullOrEmpty(options.EditFilePath))
                     {
-                        runner = new Runner(files,
+                        if (!string.IsNullOrWhiteSpace(options.Playlist))
+                        {
+                            runner = CreateRunnerForPlaylistOption(options, files);
+                        }
+                        else
+                        {
+                            runner = new Runner(files,
                                             options.RunTests,
-                                            options.RunType,
+                                            runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
-
+                        }
                         RunSimulations(runner, options);
-
                     }
                     else if (!string.IsNullOrEmpty(options.EditFilePath))
                     {
-
                         runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
@@ -370,6 +408,36 @@ namespace Models
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
+        }
+
+        /// <summary>
+        /// Creates a runner specifically for the playlist option/switch.
+        /// </summary>
+        /// <param name="options">Switches used on the command line</param>
+        /// <param name="files">The files included when models is called. Can be null.</param>
+        /// <returns>Runner that uses the Playlist model as the parameter 'relativeTo'.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        private static Runner CreateRunnerForPlaylistOption(Options options, string[] files)
+        {
+
+            Runner runner;
+            if (files.Length > 1)
+                throw new ArgumentException("The playlist switch cannot be run with more than one file.");
+            Simulations file = FileFormat.ReadFromFile<Simulations>(files.First(), e => throw e, false).NewModel as Simulations;
+            Playlist playlistModel = file.FindChild<Playlist>();
+            if (playlistModel.Enabled == false)
+                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
+            IEnumerable<Playlist> playlists = new List<Playlist> { file.FindChild<Playlist>(options.Playlist) };
+            if (playlists.Any() && playlists.First() == null)
+                throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {file.FileName}.");
+            runner = new Runner(playlists,
+                                runSimulations: true,
+                                runPostSimulationTools: true,
+                                options.RunTests,
+                                runType: options.RunType,
+                                numberOfProcessors: options.NumProcessors,
+                                simulationNamePatternMatch: options.SimulationNameRegex);
+            return runner;
         }
 
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
@@ -435,11 +503,11 @@ namespace Models
 
         }
 
-        private static void ListReferencedFileNames(string fileName)
+        private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            foreach (var referencedFileName in file.FindAllReferencedFiles())
+            foreach (var referencedFileName in file.FindAllReferencedFiles(isAbsolute))
                 Console.WriteLine(referencedFileName);
         }
 

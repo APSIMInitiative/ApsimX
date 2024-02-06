@@ -5,16 +5,13 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
-    using Models.Interfaces;
     using Models.Storage;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
-    using UnitTests.Core;
     using UnitTests.Storage;
     using UnitTests.Weather;
 
@@ -26,6 +23,7 @@
         private IClock clock;
         private Report report;
         private MockStorage storage;
+        private MockSummary summary;
         private Runner runner;
 
         /// <summary>
@@ -63,6 +61,7 @@
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
+            summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
         }
@@ -768,6 +767,26 @@ namespace Models
             report.VariableNames = new[] { variableName };
             List<Exception> errors = runner.Run();
             Assert.AreEqual(1, errors.Count);
+        }
+
+        /// <summary>
+        /// Ensure report puts a warning in the summary file when user reports on StartOfSimulation.
+        /// </summary>
+        [Test]
+        public void TestWriteMessageToSummaryWhenStartOfSimulationIsUsed()
+        {
+            report.EventNames = new string[]
+            {
+                "[Clock].StartOfSimulation",
+            };
+
+            // Run the simulation.
+
+            Utilities.ResolveLinks(simulation);
+            Utilities.CallEventAll(simulation, "SubscribeToEvents");
+
+            var summary = simulation.FindDescendant<MockSummary>();
+            Assert.AreEqual(summary.messages.First(), "WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised.");
         }
     }
 }
