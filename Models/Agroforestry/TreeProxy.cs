@@ -727,16 +727,10 @@ namespace Models.Agroforestry
             }
             else
                 F = 1;
-            NStress = Math.Min(1, Math.Max(0, PotNO3Supply / NDemandkg));
 
-            List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN Z in Uptakes)
-            {
                 Z.NO3N = MathUtilities.Multiply_Value(Z.NO3N, F);
-                uptakeList.Add(Z.TotalNO3N);
-            }
 
-            NUptake = uptakeList.ToArray();
             return Uptakes;
         }
         double PotentialNO3Uptake(double thickness, double NO3N, double SWmm, double RLD, double RootRadius, double BD, double Kd)
@@ -795,6 +789,8 @@ namespace Models.Agroforestry
         /// <param name="info"></param>
         public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
+            double NO3Supply = 0; // Total N supply (kg)
+            List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN ZI in info)
             {
                 foreach (Zone SearchZ in forestryZones)
@@ -806,9 +802,14 @@ namespace Models.Agroforestry
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
                             NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
                         NO3Solute.SetKgHa(SoluteSetterType.Plant, NewNO3);
+                        NO3Supply += NewNO3.Sum() * SearchZ.Area;
+                        uptakeList.Add(ZI.TotalNO3N);
                     }
                 }
             }
+            double NDemandkg = GetNDemandToday() * 10 * treeZone.Area;
+            NUptake = uptakeList.ToArray();
+            NStress = Math.Min(1, Math.Max(0, NO3Supply / NDemandkg));
         }
 
     }

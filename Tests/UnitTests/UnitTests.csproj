@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\totalc.apsimx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Project references -->
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj" />
     <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
