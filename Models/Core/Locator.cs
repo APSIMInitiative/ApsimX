@@ -565,7 +565,7 @@ namespace Models.Core
             }
             else
             {
-                throw new Exception($"{name} is a not a child, property or method of {relativeToObject}");
+                return null;
             }
         }
     }
