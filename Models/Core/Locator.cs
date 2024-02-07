@@ -424,6 +424,7 @@ namespace Models.Core
             argumentsList = null;
             PropertyInfo propertyInfo = null;
             MethodInfo methodInfo = null;
+            IModel modelInfo = null;
 
             if (!onlyModelChildren)
             {
@@ -439,13 +440,9 @@ namespace Models.Core
                 {
                     propertyInfo = relativeToObject.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 }
-
-                if (propertyInfo != null)
-                    if (!(propertyInfo.PropertyType.IsPrimitive && remainingNames > 0))
-                        return propertyInfo;
             }
 
-            if (!onlyModelChildren)
+            if (!onlyModelChildren && propertyInfo == null)
             {
                 if (name.IndexOf('(') > 0)
                 {
@@ -521,22 +518,54 @@ namespace Models.Core
                         }
                     }
                 }
-
-                if (methodInfo != null)
-                    return methodInfo;
             }
 
             // Not a property or method, may be a child model.
             if (relativeToObject as IModel != null)
-                return (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(name, compareType));
+                modelInfo = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(name, compareType));
+
+
+            if (methodInfo != null) //if we found a method, return it
+            {
+                return methodInfo;
+            } 
+            else if (propertyInfo != null && modelInfo == null) //if only propertyInfo was found, return it
+            {
+                return propertyInfo;
+            } 
+            else if (propertyInfo == null && modelInfo != null) //if only a child model was found, return it
+            {
+                return modelInfo;
+            }
+            else if (propertyInfo != null && modelInfo != null) //if a child model and a property were both found, we need to handle is
+            {
+                //if the property is a primitive type, but we have more names to dig through, return the child instead
+                if (propertyInfo.PropertyType.IsPrimitive && remainingNames > 0)
+                {
+                    return modelInfo;
+                } 
+                else
+                {
+                    //get the value of the property and see if it can be evaluated, if it can't return the child instead
+                    try
+                    {
+                        //I hate this still throws when in debug mode, but it's the only way to actually check if the property is actually a getter
+                        // that will throw if it's run.
+                        object val = propertyInfo.GetValue(relativeToObject);
+                        if (val != null)
+                            return propertyInfo;
+                        else
+                            return modelInfo;
+                    }
+                    catch
+                    {
+                        return modelInfo;
+                    }
+                }
+            }
             else
             {
-                if (propertyInfo != null)
-                    return propertyInfo;
-                else if (methodInfo != null)
-                    return methodInfo;
-                else
-                    return null;
+                throw new Exception($"{name} is a not a child, property or method of {relativeToObject}");
             }
         }
     }
