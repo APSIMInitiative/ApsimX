@@ -421,8 +421,6 @@ namespace Models.PMF.SimplePlantModels
             thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
             thisDero["LAImax"] += clean(CurrentCropParams["LAImax"]);
             thisDero["ExtCoeff"] += clean(CurrentCropParams["ExtCoeff"]);
-            thisDero["LAIWaterStressSens"] += clean(CurrentCropParams["LAIWaterStressSens"]);
-            thisDero["ExtCoeffWaterStressSens"] += clean(CurrentCropParams["ExtCoeffWaterStressSens"]);
             thisDero["RUEtotal"] += clean(CurrentCropParams["RUEtotal"]);
             thisDero["RUETempThresholds"] += clean(CurrentCropParams["RUETempThresholds"]);
             thisDero["PhotosynthesisType"] += clean(CurrentCropParams["PhotosynthesisType"]);
@@ -439,6 +437,14 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TrunkMaxNConc"] += clean(CurrentCropParams["TrunkMaxNConc"]);
             thisDero["TrunkMinNConc"] += clean(CurrentCropParams["TrunkMinNConc"]);
             thisDero["MaxRootDepth"] += clean(CurrentCropParams["MaxRootDepth"]);
+            thisDero["Frost_Temp_X"] += clean(CurrentCropParams["Frost_Temp_X"]);
+            thisDero["Frost_Frac_Y"] += clean(CurrentCropParams["Frost_Frac_Y"]);
+            thisDero["WaterStressLAI_Fw_X"] += clean(CurrentCropParams["WaterStressLAI_Fw_X"]);
+            thisDero["WaterStressLAI_Frac_Y"] += clean(CurrentCropParams["WaterStressLAI_Frac_Y"]);
+            thisDero["WaterStressExtCoeff_Fw_X"] += clean(CurrentCropParams["WaterStressExtCoeff_Fw_X"]);
+            thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
+            thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
+            thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -488,8 +494,6 @@ namespace Models.PMF.SimplePlantModels
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
             {"LAImax","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.Delta.Integral.LAIMax.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
-            {"LAIWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y[1] = " },
-            {"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " },
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
@@ -506,6 +510,14 @@ namespace Models.PMF.SimplePlantModels
             {"TrunkMaxNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
             {"TrunkMinNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
             {"MaxRootDepth","[DEROPAPY].Root.Network.MaximumRootDepth.FixedValue = " },
+            {"Frost_Temp_X","[DEROPAPY].Leaf.FrostFraction.XYPairs.X = " },
+            {"Frost_Frac_Y","[DEROPAPY].Leaf.FrostFraction.XYPairs.Y = " },
+            {"WaterStressLAI_Fw_X","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.X = " },
+            {"WaterStressLAI_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y = " },
+            {"WaterStressExtCoeff_Fw_X","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X = " },
+            {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
+            {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
+            {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
         };
     }
 }
