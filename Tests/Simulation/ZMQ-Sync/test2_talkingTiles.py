@@ -89,6 +89,7 @@ def poll_zmq(sockets):
     ts_arrs = []
     sw_arrs = []
     rain_arrs = []
+    runoff_arrs = []
 
     counter = [0]*len(sockets)
     pdb.set_trace()
@@ -96,6 +97,7 @@ def poll_zmq(sockets):
         ts_arr = []
         sw_arr = []
         rain_arr = []
+        runoff_arr = []
         for i, ret in enumerate(sockets):
             _, socket = ret
             msg = socket.recv_string()
@@ -125,11 +127,12 @@ def poll_zmq(sockets):
 
                 sendCommand(socket, "get", ["[Soil].SoilWater.Runoff"])
                 runoff = msgpack.unpackb(socket.recv())  # unknown units on runoff
+                runoff_arr.append(runoff)
                 if runoff > 0:
                     RUNOFF_FLAGS[i] = True
 
                 if RUNOFF_FLAGS[(i-1)**2]:
-                    # print(f'tile {i}', end=' ')
+                    print(f'Field {i+1} runoff event', end=' ')
                     sendCommand(socket, "do", ["applyIrrigation", "amount", runoff])
                     socket.recv()
                     RUNOFF_FLAGS[(i-1)**2] = False
@@ -138,13 +141,14 @@ def poll_zmq(sockets):
                 sendCommand(socket, "resume")
             elif msg == "finished":
                 sendCommand(socket, "ok")
-                return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs))
+                return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs), np.array(runoff_arrs))
 
             counter[i] += 1
         if msg != "connect":
             ts_arrs.append(ts_arr)
             sw_arrs.append(sw_arr)
             rain_arrs.append(rain_arr)
+            runoff_arrs.append(runoff_arr)
 
     # return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs))
 
@@ -154,7 +158,7 @@ if __name__ == '__main__':
     ports = [27746, 27747]
     ret = open_zmq2(ports=ports)
 
-    ts_arr, sw_arr, rain_arr = poll_zmq(ret)
+    ts_arr, sw_arr, rain_arr, runoff_arr = poll_zmq(ret)
     # print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
 
     # Code for testing with echo server
@@ -167,21 +171,28 @@ if __name__ == '__main__':
     #print('Do we get a reply?')
     #reply = socket.recv_multipart()
     #print(reply)
-    plt.figure()
+    fig, ax = plt.subplots(2,1, sharex=True)
+    ax[0].plot(ts_arr[:,0], sw_arr[:,0], label='sw_field1')
+    ax[0].plot(ts_arr[:,1], sw_arr[:,1], label='sw_field2')
+    ax[0].plot(ts_arr[:,0], sw_arr[:,0]-sw_arr[:,1], label='sw_diff')
+    ax[0].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
 
-    plt.plot(ts_arr[:,0], sw_arr[:,0])
-    plt.plot(ts_arr[:,1], sw_arr[:,1], ':', linewidth=3.0)
-    plt.plot(ts_arr[:,0], sw_arr[:,0]-sw_arr[:,1])
-    plt.xlabel("Time (Unix Epochs)")
-    plt.ylabel("Volumetric Water Content")
-    plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
+    ax[1].plot(ts_arr[:,0], runoff_arr[:,0], ':',label='runoff_field1')
+    ax[1].plot(ts_arr[:,1], runoff_arr[:,1], ':', label='runoff_field2')
+    ax[1].plot(ts_arr[:,0], runoff_arr[:,0]-runoff_arr[:,1], label='runoff_diff')
+    ax[1].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
+    ax[1].set_xlabel("Time (Unix Epochs)")
+    ax[0].set_ylabel("Volumetric Water Content")
+    ax[1].set_ylabel("Runoff (mm)")
 
     # plt.twinx()
     # plt.plot(ts_arr, rain_arr, color="orange")
     # plt.ylabel("Rain")
 
-    plt.legend()
-    plt.grid(True)
+    ax[0].legend()
+    ax[1].legend()
+    ax[0].grid(True)
+    ax[1].grid(True)
     plt.show()
 
     # make plot
