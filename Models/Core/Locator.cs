@@ -422,10 +422,12 @@ namespace Models.Core
         {
 
             argumentsList = null;
+            PropertyInfo propertyInfo = null;
+            MethodInfo methodInfo = null;
 
             if (!onlyModelChildren)
             {
-                PropertyInfo propertyInfo = null;
+                
                 // Check if property
                 Type declaringType;
                 if (properties.Any())
@@ -445,8 +447,6 @@ namespace Models.Core
 
             if (!onlyModelChildren)
             {
-                MethodInfo methodInfo = null;
-
                 if (name.IndexOf('(') > 0)
                 {
                     // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
@@ -499,12 +499,26 @@ namespace Models.Core
                         }
                     }
 
-                    // try to get the method with identified arguments
-                    methodInfo = relativeToObject.GetType().GetMethod(name.Substring(0, name.IndexOf('(')), argumentsTypes.ToArray<Type>());
+                    
+                    string functionName = name.Substring(0, name.IndexOf('('));
+                    methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
                     if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                     {
-                        BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
-                        methodInfo = relativeToObject.GetType().GetMethod(name.Substring(0, name.IndexOf('(')), argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
+                        // try to get the method with identified arguments
+                        BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.IgnoreCase;
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
+                    }
+                    if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
+                    {
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName);          
+                        if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
+                        {
+                            ParameterInfo[] parameters = methodInfo.GetParameters();
+                            while(argumentsList.Count < parameters.Length) {
+                                argumentsTypes.Add(typeof(object));
+                                argumentsList.Add(Type.Missing);
+                            }
+                        }
                     }
                 }
 
@@ -516,7 +530,14 @@ namespace Models.Core
             if (relativeToObject as IModel != null)
                 return (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(name, compareType));
             else
-                return null;
+            {
+                if (propertyInfo != null)
+                    return propertyInfo;
+                else if (methodInfo != null)
+                    return methodInfo;
+                else
+                    return null;
+            }
         }
     }
 }
