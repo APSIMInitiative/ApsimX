@@ -57,10 +57,11 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double TOYfrac = (double)weather.DaysSinceWinterSolstice < 160 ? 1.0 : 0.0;
+                //double TOYfrac = (double)weather.DaysSinceWinterSolstice < 160 ? 1.0 : 0.0;
                 double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
                 double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value()/TemptoProgress));
-                return Math.Min(Math.Min(TOYfrac, daysFrac), tempFrac);
+               // return Math.Min(Math.Min(TOYfrac, daysFrac), tempFrac);
+                return Math.Min(daysFrac, tempFrac);
             }
         }
 
@@ -71,8 +72,10 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-               // in the first half of the growth year   && Past the ealiest date to start growth              && Warm enough               
-            if ((weather.DaysSinceWinterSolstice <= 160) && (weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
+            // in the first half of the growth year   && Past the ealiest date to start growth              && Warm enough               
+            // if ((weather.DaysSinceWinterSolstice <= 160) && (weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
+            if ((weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
+
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
