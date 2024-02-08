@@ -7,6 +7,7 @@ import pdb
 import numpy as np
 import matplotlib.pyplot as plt
 
+FIELDS = 2
 LAYERS = 7
 
 RAIN_DAY = 90
@@ -14,20 +15,17 @@ RAIN_LOC = 0
 RUNOFF_FLAGS = [False, False]
 
 
-def open_zmq2(ports=[27746]):
+def open_zmq2(ports=27746):
     #  Socket to talk to server
-    ret = []
-    for port in ports:
-        context = zmq.Context.instance()
-        print("Connecting to server...")
-        print(f"Port {port}")
-        socket = context.socket(zmq.REP)
-        socket.bind(f"tcp://0.0.0.0:{port}")
-        print('    ...connected.')
-        ret.append([context, socket])
+    context = zmq.Context.instance()
+    print("Connecting to server...")
+    print(f"Port {ports}")
+    socket = context.socket(zmq.REP)
+    socket.bind(f"tcp://0.0.0.0:{ports}")
+    print('    ...connected.')
     # print(context.closed)
     # print(socket.closed)
-    return ret
+    return context, socket
 
 
 def close_zmq2(socket : zmq.Socket, port=27746):
@@ -69,7 +67,7 @@ def sendCommand(socket : zmq.Socket, command : str, args=None):
         socket.send_multipart(msg)
 
 
-def poll_zmq(sockets):
+def poll_zmq(ret, fields):
     """Runs the simulation and obtains simulated data
 
     Implements a response loop to control the simulation and transfer data. The
@@ -86,53 +84,54 @@ def poll_zmq(sockets):
     -------
     Returns a tuple of (timestamp, extractable soil water (mm), rain)
     """
+    _, socket = ret
 
     ts_arrs = []
     sw_arrs = []
     rain_arrs = []
     runoff_arrs = []
 
-    counter = [0]*len(sockets)
+    counter = [0]*fields
     # pdb.set_trace()
     while (True):
         ts_arr = []
         sw_arr = []
         rain_arr = []
         runoff_arr = []
-        for i, ret in enumerate(sockets):
-            _, socket = ret
-            msg = socket.recv_string()
-            # print(f"recv msg: {msg}")
-            if msg == "connect":
-                sendCommand(socket, "ok")
-                continue
-            elif msg == "paused":
-                sendCommand(socket, "get", ["[Clock].Today"])
-                ts = msgpack.unpackb(socket.recv())
-                ts_arr.append(ts.to_unix())
 
+        msg = socket.recv_string()
+        # print(f"recv msg: {msg}")
+        if msg == "connect":
+            sendCommand(socket, "ok")
+            continue
+        elif msg == "paused":
+            sendCommand(socket, "get", ["[Clock].Today"])
+            ts = msgpack.unpackb(socket.recv())
+            ts_arr.append(ts.to_unix())
+
+            if counter[RAIN_LOC] == RAIN_DAY and i == RAIN_LOC:
+                # print("Our rainy day.")
+                sendCommand(socket, "do", ["applyIrrigation", "amount", 80.27, "location", RAIN_LOC+1])
+                socket.recv()
+                global rain_day_ts
+                rain_day_ts = ts.to_unix()
+
+            sendCommand(socket, "get", ["[Weather].Rain"])
+            rain = msgpack.unpackb(socket.recv())
+            rain_arr.append(rain)
+
+            for i in range(fields):
                 tmp = []
                 for layer in range(LAYERS):
-                    sendCommand(socket, "get", [f"[Soil].Water.Volumetric[{layer+1}]"])
+                    sendCommand(socket, "get", [f"[Field{i+1}].Soil.Water.Volumetric[{layer+1}]"])
                     sw = msgpack.unpackb(socket.recv())
                     # print(f'field {i}, vwc @ layer {layer+1}: {sw}')
                     tmp.append(sw)
                 sw_arr.append(tmp)
 
-                if counter[RAIN_LOC] == RAIN_DAY and i == RAIN_LOC:
-                    # print("Our rainy day.")
-                    sendCommand(socket, "do", ["applyIrrigation", "amount", 80.27])
-                    socket.recv()
-                    global rain_day_ts
-                    rain_day_ts = ts.to_unix()
-
-                sendCommand(socket, "get", ["[Weather].Rain"])
-                rain = msgpack.unpackb(socket.recv())
-                rain_arr.append(rain)
-
-                sendCommand(socket, "get", ["[Soil].SoilWater.Runoff"])
+                sendCommand(socket, "get", [f"[Field{i+1}].Soil.SoilWater.Runoff"])
                 runoff = msgpack.unpackb(socket.recv())  # unknown units on runoff
-                # print(f'field {i}, runoff: {runoff}')
+                print(f'field {i}, runoff: {runoff}')
                 runoff_arr.append(runoff)
                 if runoff > 0:
                     RUNOFF_FLAGS[i] = True
@@ -143,13 +142,13 @@ def poll_zmq(sockets):
                     socket.recv()
                     RUNOFF_FLAGS[(i-1)**2] = False
 
-                # resume simulation until next ReportEvent
-                sendCommand(socket, "resume")
-            elif msg == "finished":
-                sendCommand(socket, "ok")
-                return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs), np.array(runoff_arrs))
+            # resume simulation until next ReportEvent
+            sendCommand(socket, "resume")
+        elif msg == "finished":
+            sendCommand(socket, "ok")
+            return (np.array(ts_arrs), np.array(sw_arrs), np.array(rain_arrs), np.array(runoff_arrs))
 
-            counter[i] += 1
+        counter[i] += 1
         if msg != "connect":
             ts_arrs.append(ts_arr)
             sw_arrs.append(sw_arr)
@@ -161,11 +160,11 @@ def poll_zmq(sockets):
 
 if __name__ == '__main__':
     # initialize connection
-    ports = [27746, 27747]
+    ports = 27747
     ret = open_zmq2(ports=ports)
 
-    ts_arr, sw_arr, rain_arr, runoff_arr = poll_zmq(ret)
-    # print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
+    ts_arr, sw_arr, rain_arr, runoff_arr = poll_zmq(ret, FIELDS)
+    print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
