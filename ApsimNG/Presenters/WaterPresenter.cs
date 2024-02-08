@@ -199,14 +199,7 @@ namespace UserInterface.Presenters
         private void OnRelativeToChanged(object sender, EventArgs e)
         {
             var changeRelativeTo = new ChangeProperty.Property(water, nameof(water.RelativeTo), relativeToDropDown.SelectedValue);
-
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
-            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
-
-            // Create a single ChangeProperty object with two actual changes.
-            // This will cause both changes to be applied (and be undo-able) in
-            // a single atomic action.
-            ChangeProperty changes = new ChangeProperty(new[] { changeRelativeTo, changeFractionFull });
+            ChangeProperty changes = new ChangeProperty(new[] { changeRelativeTo });
             ChangePropertyValue(changes);
         }
 

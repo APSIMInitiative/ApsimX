@@ -196,8 +196,20 @@ namespace Models.Soils
             }
         }
 
+        [JsonIgnore]
+        private string relativeTo;
+
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
-        public string RelativeTo { get; set; }
+        public string RelativeTo
+        {
+            get => relativeTo;
+            set
+            {
+                double val = FractionFull;
+                relativeTo = value;
+                UpdateInitialValuesFromFractionFull(val);
+            }
+        }
 
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
         public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
