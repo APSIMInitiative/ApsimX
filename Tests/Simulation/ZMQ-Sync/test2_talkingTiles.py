@@ -7,6 +7,7 @@ import pdb
 import numpy as np
 import matplotlib.pyplot as plt
 
+LAYERS = 7
 
 RAIN_DAY = 90
 RAIN_LOC = 0
@@ -92,7 +93,7 @@ def poll_zmq(sockets):
     runoff_arrs = []
 
     counter = [0]*len(sockets)
-    pdb.set_trace()
+    # pdb.set_trace()
     while (True):
         ts_arr = []
         sw_arr = []
@@ -101,7 +102,7 @@ def poll_zmq(sockets):
         for i, ret in enumerate(sockets):
             _, socket = ret
             msg = socket.recv_string()
-            print(f"recv msg: {msg}")
+            # print(f"recv msg: {msg}")
             if msg == "connect":
                 sendCommand(socket, "ok")
                 continue
@@ -110,12 +111,16 @@ def poll_zmq(sockets):
                 ts = msgpack.unpackb(socket.recv())
                 ts_arr.append(ts.to_unix())
 
-                sendCommand(socket, "get", ["sum([Soil].Water.Volumetric)"])
-                sw = msgpack.unpackb(socket.recv())
-                sw_arr.append(sw)
+                tmp = []
+                for layer in range(LAYERS):
+                    sendCommand(socket, "get", [f"[Soil].Water.Volumetric[{layer+1}]"])
+                    sw = msgpack.unpackb(socket.recv())
+                    # print(f'field {i}, vwc @ layer {layer+1}: {sw}')
+                    tmp.append(sw)
+                sw_arr.append(tmp)
 
                 if counter[RAIN_LOC] == RAIN_DAY and i == RAIN_LOC:
-                    print("Our rainy day.")
+                    # print("Our rainy day.")
                     sendCommand(socket, "do", ["applyIrrigation", "amount", 80.27])
                     socket.recv()
                     global rain_day_ts
@@ -127,12 +132,13 @@ def poll_zmq(sockets):
 
                 sendCommand(socket, "get", ["[Soil].SoilWater.Runoff"])
                 runoff = msgpack.unpackb(socket.recv())  # unknown units on runoff
+                # print(f'field {i}, runoff: {runoff}')
                 runoff_arr.append(runoff)
                 if runoff > 0:
                     RUNOFF_FLAGS[i] = True
 
                 if RUNOFF_FLAGS[(i-1)**2]:
-                    print(f'Field {i+1} runoff event', end=' ')
+                    # print(f'Field {i+1} runoff event', end=' ')
                     sendCommand(socket, "do", ["applyIrrigation", "amount", runoff])
                     socket.recv()
                     RUNOFF_FLAGS[(i-1)**2] = False
@@ -159,7 +165,7 @@ if __name__ == '__main__':
     ret = open_zmq2(ports=ports)
 
     ts_arr, sw_arr, rain_arr, runoff_arr = poll_zmq(ret)
-    # print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
+    print(ts_arr.shape, sw_arr.shape, rain_arr.shape)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
@@ -171,28 +177,37 @@ if __name__ == '__main__':
     #print('Do we get a reply?')
     #reply = socket.recv_multipart()
     #print(reply)
-    fig, ax = plt.subplots(2,1, sharex=True)
-    ax[0].plot(ts_arr[:,0], sw_arr[:,0], label='sw_field1')
-    ax[0].plot(ts_arr[:,1], sw_arr[:,1], label='sw_field2')
-    ax[0].plot(ts_arr[:,0], sw_arr[:,0]-sw_arr[:,1], label='sw_diff')
-    ax[0].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
+    fig, ax = plt.subplots(4,2, sharex=True, figsize=(10, 10))
+    plt.tight_layout()
+    for i in range(LAYERS):
+        ax[i%4,i//4].plot(ts_arr[:,0], sw_arr[:,0,i], label='vwc_field1')
+        ax[i%4,i//4].plot(ts_arr[:,1], sw_arr[:,1,i], label='vwc_field2')
+        ax[i%4,i//4].plot(ts_arr[:,0], sw_arr[:,0,i]-sw_arr[:,1,i], label='vwc_diff')
+        ax[i%4,i//4].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
+        ax[i%4,i//4].set_ylim(bottom=-0.1, top=1)
+        ax[i%4,i//4].set_ylabel("VWC")
+        ax[i%4,i//4].set_title(f'Layer {i+1}')
+        ax[i%4,i//4].grid(True)
 
-    ax[1].plot(ts_arr[:,0], runoff_arr[:,0], ':',label='runoff_field1')
-    ax[1].plot(ts_arr[:,1], runoff_arr[:,1], ':', label='runoff_field2')
-    ax[1].plot(ts_arr[:,0], runoff_arr[:,0]-runoff_arr[:,1], label='runoff_diff')
-    ax[1].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
-    ax[1].set_xlabel("Time (Unix Epochs)")
-    ax[0].set_ylabel("Volumetric Water Content")
-    ax[1].set_ylabel("Runoff (mm)")
+    ax[3,1].scatter(ts_arr[:,0], runoff_arr[:,0], s=2, label='sr_field1')
+    ax[3,1].plot(ts_arr[:,0], runoff_arr[:,0], alpha=0.3)
+    ax[3,1].scatter(ts_arr[:,1], runoff_arr[:,1], s=2, label='sr_field2')
+    ax[3,1].plot(ts_arr[:,1], runoff_arr[:,1], alpha=0.3)
+    ax[3,1].scatter(ts_arr[:,0], runoff_arr[:,0]-runoff_arr[:,1], c='g', s=2, label='runoff_diff')
+    ax[3,1].plot(ts_arr[:,0], runoff_arr[:,0]-runoff_arr[:,1],'g', alpha=0.5)
+    ax[3,1].axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
+    ax[3,1].set_xlabel("Time (Unix Epochs)")
+    ax[3,0].set_xlabel("Time (Unix Epochs)")
+    ax[3,1].set_ylabel("Runoff (mm)")
+
 
     # plt.twinx()
     # plt.plot(ts_arr, rain_arr, color="orange")
     # plt.ylabel("Rain")
 
-    ax[0].legend()
-    ax[1].legend()
-    ax[0].grid(True)
-    ax[1].grid(True)
+    ax[0,0].legend()
+    ax[3,1].legend()
+    ax[3,1].grid(True)
     plt.show()
 
     # make plot

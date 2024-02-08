@@ -70,7 +70,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
-          "Name": "Field1",
+          "Name": "Field",
           "ResourceName": null,
           "Children": [
             {
@@ -557,7 +557,7 @@
             },
             {
               "$type": "Models.Irrigation, Models",
-              "Name": "Irrigationblabla",
+              "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -685,8 +685,12 @@
                 "               Summary.WriteMessage(this, \"Need an endpoint to connect to\", MessageType.Error);",
                 "               return;",
                 "           } ",
-                "           Console.WriteLine(\"Identifier\" + Identifier);",
-                "           Identifier = \"tcp://\" + Identifier;",
+                "           Console.WriteLine(\"Identifier: \" + Identifier);",
+                "           bool tcp_check = false;",
+                "           tcp_check = Identifier[0] != 't';",
+                "           if (tcp_check) {",
+                "               Identifier = \"tcp://\" + Identifier;",
+                "           }",
                 "           connection = new RequestSocket(Identifier);",
                 "           connection.SendFrame(\"connect\");",
                 "           Console.WriteLine(\"Sent connect\");",
