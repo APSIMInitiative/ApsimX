@@ -57,14 +57,13 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double TOYfrac = (double)weather.DaysSinceWinterSolstice < 160 ? 1.0 : 0.0;
                 double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
                 double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value()/TemptoProgress));
-                return Math.Min(Math.Min(TOYfrac, daysFrac), tempFrac);
-                //return Math.Min(daysFrac, tempFrac);
+                return Math.Min(daysFrac, tempFrac);
             }
         }
 
+        private bool startedThisYear = true;
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -72,11 +71,10 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            // in the first half of the growth year   && Past the ealiest date to start growth              && Warm enough               
-             if ((weather.DaysSinceWinterSolstice <= 160) && (weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
-            //if ((weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
-
+            // not already started this season  && Past the ealiest date to start growth      && Warm enough               
+             if ((startedThisYear==false)&&(weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
             {
+                startedThisYear = true;
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
                 NewGrowthPhaseStarting?.Invoke(this, EventArgs.Empty);
@@ -87,6 +85,13 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
+        }
+
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (weather.DaysSinceWinterSolstice == 0)
+                startedThisYear=false;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

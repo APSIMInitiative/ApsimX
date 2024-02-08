@@ -134,7 +134,7 @@ namespace Models.PMF.SimplePlantModels
             readData = ApsimTextFile.ToTable(FullFileName);
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
-            if (CurrentCropName != null)
+            if ((CurrentCropName != null)&&(CurrentCropName != ""))
             {
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
             }

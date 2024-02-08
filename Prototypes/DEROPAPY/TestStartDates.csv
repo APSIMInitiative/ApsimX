@@ -2,7 +2,7 @@ ParamName,ParamUnit,Description,Wheat0,Wheat50,Wheat100,Wheat150,Wheat200,Wheat2
 CropType,string,Type of crop (i.e. crop name) used for characterising organic matter residues composition,Maize,Maize,Maize,Maize,Maize,Maize,Maize,Maize,Maize
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0)
-D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,0,50,100,150,200,250,300,350,365
+D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,0,50,100,150,200,250,300,350,364
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,0,0,0,0,0,0,0,0,0
 Tt_Vegetative_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,1000,1000,1000,1000,1000,1000,1000,1000,1000
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (Reproductive or Graze),Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive
