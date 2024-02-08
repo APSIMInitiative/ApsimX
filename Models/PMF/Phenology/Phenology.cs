@@ -304,6 +304,7 @@ namespace Models.PMF.Phen
                     
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
+                    PhaseChangedData.StageNumber = newStage;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
                 }
             }
