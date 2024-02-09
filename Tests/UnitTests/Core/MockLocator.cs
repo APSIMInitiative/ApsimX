@@ -13,11 +13,6 @@ namespace UnitTests.Core
         {
         }
 
-        public IModel Get(Type typeToMatch)
-        {
-            throw new NotImplementedException();
-        }
-
         public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             if (Values.ContainsKey(namePath))

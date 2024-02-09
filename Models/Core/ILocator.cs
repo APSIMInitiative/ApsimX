@@ -57,11 +57,6 @@ namespace Models.Core
         /// <param name="flags"><see cref="LocatorFlags"/> controlling the search</param>
         object Get(string namePath, LocatorFlags flags = LocatorFlags.None);
 
-        /// <summary>Gets a model in scope of the specified type</summary>
-        /// <param name="typeToMatch">The type of the model to return</param>
-        /// <returns>The found model or null if not found</returns>
-        IModel Get(Type typeToMatch);
-
         /// <summary>
         /// Get the underlying variable object for the given path.
         /// </summary>

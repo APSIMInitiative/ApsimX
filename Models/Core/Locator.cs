@@ -60,23 +60,15 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
-            IVariable variable = GetInternal(namePath, flags);
+            IVariable variable = GetObject(namePath, flags);
             if (variable == null)
-                return variable;
+                return null;
             else
                 return variable.Value;
         }
 
-        /// <summary>Gets a model in scope of the specified type</summary>
-        /// <param name="typeToMatch">The type of the model to return</param>
-        /// <returns>The found model or null if not found</returns>
-        public IModel Get(Type typeToMatch)
-        {
-            return relativeToModel.FindAllInScope().FirstOrDefault(m => typeToMatch.IsAssignableFrom(m.GetType()));
-        }
-
         /// <summary>
-        /// 
+        /// Returns a Variable from the given path and flags
         /// </summary>
         /// <param name="namePath"></param>
         /// <param name="flags">LocatorFlags controlling the search</param>
@@ -123,7 +115,7 @@ namespace Models.Core
             path = path.Replace(" ", "").Replace("()", "");
             if (path.Length == 0 || path[0] == '.')
                 return false;
-            if (path.IndexOfAny("+*/^".ToCharArray()) >= 0) // operators indicate an expression
+            if (path.IndexOfAny("+-*/^".ToCharArray()) >= 0) // operators indicate an expression
                 return true;
             int openingParen = path.IndexOf('(');
             if (openingParen >= 0 && path.Substring(0, openingParen).IndexOfAny("[.".ToCharArray()) == -1)
@@ -241,7 +233,7 @@ namespace Models.Core
                 if (namePathBits[j].Contains("["))
                     arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
-                object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, namePathBits.Length-j-1, compareType, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
+                object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
 
                 //Depending on the type we found, handle it
                 bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
@@ -323,6 +315,7 @@ namespace Models.Core
         private IModel GetInternalRelativeTo(IModel relativeTo, string namePath, StringComparison compareType, bool throwOnError, out string namePathFiltered)
         {
             string path = namePath;
+            namePathFiltered = "";
 
             // Remove a square bracketed model name and change our relativeTo model to 
             // the referenced model.
@@ -331,7 +324,6 @@ namespace Models.Core
                 int posCloseBracket = path.IndexOf(']');
                 if (posCloseBracket == -1)
                 {
-                    namePathFiltered = path;
                     if (throwOnError)
                         throw new Exception($"No closing square bracket in variable name '{path}'.");
                     else
@@ -350,7 +342,6 @@ namespace Models.Core
                 }
                 if (foundModel == null)
                 {
-                    namePathFiltered = path;
                     if (throwOnError)
                         throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
                     else
@@ -383,7 +374,6 @@ namespace Models.Core
                     path = path.Remove(0, posPeriod);
                 else
                 {
-                    namePathFiltered = path;
                     if (throwOnError)
                         throw new Exception($"Incorrect root name in absolute path '.{path}'");
                     else
@@ -398,15 +388,26 @@ namespace Models.Core
             } 
             else
             {
-                namePathFiltered = path;
-                return null;
+                if (throwOnError)
+                    throw new Exception($"Path does not start with . or [ '{path}'");
+                else
+                    return null;
             }
         }
         private string[] GetInternalNameBits(string namePath, string cacheKey, bool throwOnError)
         {
             // Now walk the series of '.' separated path bits, assuming the path bits
             // are child models. Stop when we can't find the child model.
-            string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+            string[] bits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            List<string> bitsTrimmed = new List<string>();
+            for(int i = 0; i < bits.Length; i++)
+            {
+                bits[i] = bits[i].Trim();
+                if (bits[i].Length > 0)
+                    bitsTrimmed.Add(bits[i]);
+            }
+            string[] namePathBits = bitsTrimmed.ToArray();
+
             if (namePathBits.Length == 0 && !string.IsNullOrEmpty(namePath))
             {
                 if (throwOnError)
@@ -418,7 +419,7 @@ namespace Models.Core
             return namePathBits;
         }
 
-        private object GetInternalObjectInfo(object relativeToObject, string name, List<IVariable> properties, int remainingNames, StringComparison compareType, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
+        private object GetInternalObjectInfo(object relativeToObject, string name, List<IVariable> properties, int remainingNames, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
         {
 
             argumentsList = null;
@@ -522,8 +523,13 @@ namespace Models.Core
 
             // Not a property or method, may be a child model.
             if (relativeToObject as IModel != null)
-                modelInfo = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(name, compareType));
+            {
+                StringComparison compareType = StringComparison.Ordinal;
+                if (ignoreCase)
+                    compareType = StringComparison.OrdinalIgnoreCase;
 
+                modelInfo = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(name, compareType));
+            }
 
             if (methodInfo != null) //if we found a method, return it
             {
