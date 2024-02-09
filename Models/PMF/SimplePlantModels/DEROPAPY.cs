@@ -449,7 +449,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
             thisDero["FlowerStress_Temp_X"] += clean(CurrentCropParams["FlowerStress_Temp_X"]);
             thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
-
+            thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
+           
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
             Cultivar deroValues = new Cultivar(this.Name, commands);
@@ -526,6 +527,7 @@ namespace Models.PMF.SimplePlantModels
             {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
             {"FlowerStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.X = " },
             {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
+            {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
     };
     }
 }
