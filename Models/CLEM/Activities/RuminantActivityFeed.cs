@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
         private double feedEstimated = 0;
-        //private double overfeedProportion = 1;
+        private double excessreduction = 1;
 
         /// <summary>
         /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
@@ -74,6 +74,7 @@ namespace Models.CLEM.Activities
         /// Stop feeding when animals are satisfied
         /// </summary>
         [Description("Stop feeding when satisfied")]
+        [Core.Display(VisibleCallback = "RestrictIntakeAllowed")]
         [Required]
         public bool StopFeedingWhenSatisfied { get; set; }
 
@@ -102,6 +103,12 @@ namespace Models.CLEM.Activities
         {
             SetDefaults();
         }
+
+        /// <summary>
+        /// Determines if style needs the restrict intake property displayed
+        /// </summary>
+        /// <returns>True or false</returns>
+        public bool RestrictIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -223,7 +230,6 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()
         {
-            //overfeedProportion = 0;
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
             {
@@ -250,6 +256,8 @@ namespace Models.CLEM.Activities
             
             // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
             int numberNotAllowed = numberToSkip;
+            double totalfed = 0;
+            excessreduction = 1;
 
             foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Reverse())
             {
@@ -288,19 +296,14 @@ namespace Models.CLEM.Activities
                     iChild.CurrentResourceRequest.Required -= wastedByGroup;
                 }
                 // calculate excess fed
-                double excess = 0;
-                if (MathUtilities.IsGreaterThanOrEqual(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), iChild.FeedToOverSatisfy))
+                if (MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), iChild.FeedToSatisfy))
                 {
-                    excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToOverSatisfy;
+                    double excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToSatisfy;
+                    totalfed += Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required);
                     excessFed += excess;
-                    //if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy))
-                    //    overfeedProportion = 1;
-
                     iChild.CurrentResourceRequest.Available -= excess;
                     iChild.CurrentResourceRequest.Required -= excess;
                 }
-                //else if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy) && MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToSatisfy))
-                //    overfeedProportion = (Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
 
                 // adjust for, and report, wastage
                 if (MathUtilities.IsPositive(wasted))
@@ -323,6 +326,7 @@ namespace Models.CLEM.Activities
                 // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
                 if (MathUtilities.IsPositive(excessFed))
                 {
+                    excessreduction = 1 - excessFed / totalfed;
                     ResourceRequest excessRequest = new()
                     {
                         AllowTransmutation = false,
@@ -343,6 +347,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
+            double overfed = 0;
             int numberFed = 0;
             foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>())
             {
@@ -365,7 +370,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * ind.Parameters.Feeding.OverfeedPotentialIntakeModifier) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval); // max that can be consumed
+                                details.Amount = ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
                                 details.Amount *= feedLimit; // shortfall in feed available.
                                 details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
                                 break;
@@ -388,15 +393,11 @@ namespace Models.CLEM.Activities
                             default:
                                 throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                         }
-                        // limit feeding to max possible... probably should be moved to Ruminant.Intake
-                        details.Amount = Math.Min(details.Amount, ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval));
-
-                        //if (MathUtilities. IsGreaterThan(details.Amount, (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval)))
-                        //    details.Amount = (ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))) - ind.Intake.SolidsDaily.Actual;
-
+                        details.Amount *= excessreduction;
                         // convert to daily intake for the ruminant intake store. 
                         details.Amount /= (double)events.Interval;
-                        ind.Intake.AddFeed(details);
+                        // try to feed. excess will be returned.
+                        overfed += ind.Intake.AddFeed(details);
                     }
                 }
             }

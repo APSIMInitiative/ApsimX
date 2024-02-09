@@ -17,6 +17,11 @@ namespace Models.CLEM.Resources
         public double Expected { get; set; } = 0;
 
         /// <summary>
+        /// Maximum expected or potential value required, before condition and lactation factors.
+        /// </summary>
+        public double MaximumExpected { get; set; } = 0;
+
+        /// <summary>
         /// The actual value achieved
         /// </summary>
         public double Actual { get; set; } = 0;

@@ -196,7 +196,8 @@ namespace Models.CLEM.Activities
 
             // Intake max SCA Eq.2
             // Restricted here to Expected (potential) time OverFeedPotentialIntakeModifier
-            ind.Intake.SolidsDaily.Expected = Math.Max(0.0, ind.Parameters.GrowSCA.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowSCA.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize) * cf * yf * tf * lf);
+            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.GrowSCA.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowSCA.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
+            ind.Intake.SolidsDaily.Expected = ind.Intake.SolidsDaily.MaximumExpected * cf * yf * tf * lf;
         }
 
         /// <summary>Function to calculate growth of herd for the time-step</summary>

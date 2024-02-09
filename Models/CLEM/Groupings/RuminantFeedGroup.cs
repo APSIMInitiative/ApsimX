@@ -67,10 +67,10 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public double FeedToSatisfy { get; set; }
 
-        /// <summary>
-        /// Amount of feed required to over satisfy the animals (if potental intake max modifier >1)
-        /// </summary>
-        public double FeedToOverSatisfy { get; set; }
+        ///// <summary>
+        ///// Amount of feed required to over satisfy the animals (if potental intake max modifier >1)
+        ///// </summary>
+        //public double FeedToOverSatisfy { get; set; }
 
         /// <summary>
         /// The current individuals being fed for this feed group
@@ -172,7 +172,7 @@ namespace Models.CLEM.Groupings
         {
             double value = CurrentValue;
             FeedToSatisfy = 0;
-            FeedToOverSatisfy = 0;
+            //FeedToOverSatisfy = 0;
             double feedNeeed = 0;
 
             var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
@@ -180,8 +180,7 @@ namespace Models.CLEM.Groupings
                 Count = countNeeded ? a.Count() : 0,
                 Weight = weightNeeded ? a.Sum(b => b.Weight.Live) : 0,
                 Intake = a.Sum(b => b.Intake.SolidsDaily.ActualForTimeStep(events.Interval)),
-                PotentialIntake = a.Sum(b => b.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval)),
-                IntakeMultiplier = a.FirstOrDefault().Parameters.Feeding.OverfeedPotentialIntakeModifier
+                PotentialIntake = a.Sum(b => b.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval))
             }).FirstOrDefault();
 
             if (selectedIndividuals != null)
@@ -215,12 +214,10 @@ namespace Models.CLEM.Groupings
                 // accounts for some feeding style allowing overeating to the user declared value in ruminant 
 
                 FeedToSatisfy = selectedIndividuals.PotentialIntake - selectedIndividuals.Intake;
-                FeedToOverSatisfy = selectedIndividuals.PotentialIntake * selectedIndividuals.IntakeMultiplier - selectedIndividuals.Intake;
-
-                if (feedActivityParent.StopFeedingWhenSatisfied)
+                if (feedActivityParent.RestrictIntakeAllowed() && feedActivityParent.StopFeedingWhenSatisfied)
                 {
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
-                    feedNeeed = Math.Min(feedNeeed, Math.Max(FeedToOverSatisfy, FeedToSatisfy));
+                    feedNeeed = Math.Min(feedNeeed, FeedToSatisfy);
                 }
                 (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeed;
                 currentFeedRequest.Required = feedNeeed;

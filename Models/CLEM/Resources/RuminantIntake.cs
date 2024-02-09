@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,19 @@ namespace Models.CLEM.Resources
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
         /// </summary>
         /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
-        public void AddFeed(FoodResourcePacket packet)
+        /// <returns>The excess feed to the individual</returns>
+        public double AddFeed(FoodResourcePacket packet)
         {
+            double excess = 0;
             if (packet.Amount > 0)
             {
+                if (packet.TypeOfFeed != FeedType.Milk)
+                {
+                    // limit feed to animals maximum intake.
+                    excess = StdMath.DIM(packet.Amount, SolidsDaily.Required);
+                    packet.Amount -= excess;
+                }
+
                 if (!feedTypeStoreDict.TryGetValue(packet.TypeOfFeed, out FoodResourceStore frs))
                 {
                     frs = new FoodResourceStore();
@@ -47,6 +57,7 @@ namespace Models.CLEM.Resources
                 else
                     SolidsDaily.Actual += packet.Amount;
             }
+            return excess;
         }
 
         /// <summary>
