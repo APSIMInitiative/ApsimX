@@ -239,13 +239,13 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.05 },
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.027 },
             { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",1.0},{"Ripe",1.0 } };
 
         /// <summary> the proportion of Tt that has accumulated at each stage drrived from the proporiton of DM at each stage and the logistic funciton rearanged</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.11875061484377547 },
-            { "Vegetative", 0.45},{ "EarlyReproductive",0.5453210092935604},{ "MidReproductive",0.654220121246803},{  "LateReproductive",0.7812493851562246},{"Maturity",1.0},{"Ripe",1.3 } };
+        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.145 },
+            { "Vegetative", 0.5},{ "EarlyReproductive",0.58},{ "MidReproductive",0.68},{  "LateReproductive",0.79},{"Maturity",0.995},{"Ripe",1.15 } };
 
         
         [JsonIgnore]
