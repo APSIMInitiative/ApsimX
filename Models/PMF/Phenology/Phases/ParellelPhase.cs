@@ -86,10 +86,10 @@ namespace Models.PMF.Phen
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
 
-        [EventSubscribe("PhaseChanged")]
-        private void onPhaseChanged(object sender, PhaseChangedType pct)
+        [EventSubscribe("StageWasReset")]
+        private void onStageWasReset(object sender, StageSetType sst)
         {
-            if (pct.StageNumber <= Start)
+            if (sst.StageNumber <= Start)
             {
                 ResetPhase();   
             }

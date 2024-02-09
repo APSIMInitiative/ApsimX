@@ -59,7 +59,7 @@ namespace Models.PMF.Phen
         public event EventHandler<PhaseChangedType> PhaseChanged;
 
         /// <summary>Occurs when phase is set externally.</summary>
-        public event EventHandler StageWasReset;
+        public event EventHandler<StageSetType> StageWasReset;
 
         /// <summary>Occurs when emergence phase completed</summary>
         public event EventHandler PlantEmerged;
@@ -304,7 +304,6 @@ namespace Models.PMF.Phen
                     
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
-                    PhaseChangedData.StageNumber = newStage;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
                 }
             }
@@ -320,7 +319,9 @@ namespace Models.PMF.Phen
             if ((phases[currentPhaseIndex] is PhotoperiodPhase) || (phases[currentPhaseIndex] is LeafDeathPhase))
                 stagesPassedToday.Add(phases[currentPhaseIndex].Start);
 
-            StageWasReset?.Invoke(this, new EventArgs());
+            StageSetType StageSetData = new StageSetType();
+            StageSetData.StageNumber = newStage;
+            StageWasReset?.Invoke(this, StageSetData);
         }
 
         /// <summary>Allows setting of age if phenology has an age child</summary>
