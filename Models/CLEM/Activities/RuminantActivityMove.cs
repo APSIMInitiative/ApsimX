@@ -113,6 +113,7 @@ namespace Models.CLEM.Activities
                 {
                     AddStatusMessage("Moved individuals at start up");
                     Status = ActivityStatus.Success;
+                    TriggerOnActivityPerformed();
                 }
             }
         }
