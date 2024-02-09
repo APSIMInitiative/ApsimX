@@ -72,7 +72,7 @@ namespace Models.PostSimulationTools
             set
             {
                 if (value == null)
-                    sheetNames = new string[0];
+                    sheetNames = Array.Empty<string>();
                 else
                     sheetNames = value;
             }
