@@ -284,16 +284,35 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
-            double[] values = new double[numValues-startRow];
+            double[] values;
+            //bool hasHeaders = false;
+            //int headerOffset = 0;
+
+            // Checks for headers
+            //string tablesFirstValue = table.Rows[0][columnName] as string;
+            //double firstValue;
+            //if (!Double.TryParse(tablesFirstValue, out firstValue) || tablesFirstValue == null)
+            //{
+            //    hasHeaders = true;
+            //    //headerOffset = -1;
+            //    values = new double[(numValues - startRow) /*+ headerOffset*/];
+            //}
+            //else values = new double[numValues - startRow];
+            values = new double[numValues - startRow];
+
             int index = 0;
-            for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
+            for (int Row = startRow; Row != table.Rows.Count && index != numValues /*+ headerOffset*/; Row++)
             {
+
                 if (table.Rows[Row][columnName].ToString() == string.Empty)
                     values[index] = double.NaN;
                 else
                 {
                     try
                     {
+                        //if (hasHeaders)
+                        //    values[index] = Convert.ToDouble(table.Rows[Row + 1][columnName], culture);
+                        //else
                         values[index] = Convert.ToDouble(table.Rows[Row][columnName], culture);
                     }
                     catch (Exception)
@@ -1392,6 +1411,19 @@ namespace APSIM.Shared.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if table has a double as its very first value.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns>a <see cref="bool">bool</see></returns>
+        public static bool IsTablesFirstValueDouble(DataTable table)
+        {
+            double firstValue;
+            if (Double.TryParse(table.Rows[0][0] as string, out firstValue))
+                return true;
+            else return false;
         }
     }
 }

@@ -179,7 +179,8 @@ namespace APSIM.Shared.Utilities
         {
             if (depthStrings == null)
                 return null;
-
+            //if (depthStrings[0].Contains("mm"))
+            //    depthStrings = depthStrings.Skip(1).Take(depthStrings.Length - 1).ToArray();
             double[] Thickness = new double[depthStrings.Length];
             for (int i = 0; i != depthStrings.Length; i++)
             {

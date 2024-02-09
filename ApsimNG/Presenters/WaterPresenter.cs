@@ -137,7 +137,15 @@ namespace UserInterface.Presenters
         /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
         private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
         {
-            Refresh();
+
+            if (water.AreInitialValuesWithinPhysicalBoundaries(water.InitialValues))
+                Refresh();
+            else
+            {
+                this.explorerPresenter.CommandHistory.Undo();
+                this.explorerPresenter.MainPresenter.ShowMessage("A water initial value exceeded acceptable bounds. Initial value has been reset to it's previous value.", Models.Core.Simulation.MessageType.Information);
+            }
+
         }
 
         /// <summary>Invoked when the PAW edit box is changed.</summary>

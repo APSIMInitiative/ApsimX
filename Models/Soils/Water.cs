@@ -532,5 +532,24 @@ namespace Models.Soils
             }
             return newSoilCropNames;
         }
+
+        /// <summary>
+        /// Checks to make sure every InitialValue value is within airdry and dul values.
+        /// </summary>
+        /// <param name="initialValues"></param>
+        /// <returns>a <see cref="bool">bool</see> value</returns>
+        /// <exception cref="Exception"></exception>
+        public bool AreInitialValuesWithinPhysicalBoundaries(double[] initialValues)
+        {
+            bool isWithinBoundaries = true;
+            if (this.Physical == null)
+                throw new Exception("To check boundaries of InitialValues Physical must not be null.");
+            for (int i = 0; i < initialValues.Length; i++)
+            {
+                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.DUL[i])
+                    isWithinBoundaries = false;
+            }
+            return isWithinBoundaries;
+        }
     }
 }
