@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class ParallelPhase : Model
+    public class ParallelPhaseFollowing : Model, IParallelPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -26,14 +26,23 @@ namespace Models.PMF.Phen
 
         [Link(Type = LinkType.Scoped)] private Phenology phenology = null;
 
+        [Link(Type = LinkType.Ancestor)] IPlant plant = null;
+
         // 2. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
-        /// <summary>The phenological stage number at the start of this phase.</summary>
-        [Description("Start")]
-        public double Start { get; set; }
+        /// <summary>The parallel phenological phase prior to this phase.</summary>
+        [Description("Prior Phase")]
+        public string PriorParallelPhaseName { get; set; }
+
+        private IParallelPhase priorPhase = null;
+
+        /// <summary>The phenological stage at the start of this parallel phase.</summary>
+        [JsonIgnore]
+        public Nullable<double> StartStage { get; set; }
 
         /// <summary>Property specifying if we are currently with this phase</summary>
+        [JsonIgnore]
         public bool IsInPhase { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
@@ -65,8 +74,11 @@ namespace Models.PMF.Phen
         [EventSubscribe("PostPhenology")]
         public void OnPostPhenology(object sender, EventArgs e)
         {
-            if ((phenology.Stage >= Start) && (ProgressThroughPhase <= Target))
+             
+            if ((priorPhase.FractionComplete >= 1.0) && (ProgressThroughPhase <= Target))
             {
+                if (StartStage == null)
+                    StartStage = phenology.Stage;
                 ProgressThroughPhase += progression.Value();
                 IsInPhase = true;
             }
@@ -81,6 +93,7 @@ namespace Models.PMF.Phen
         {
             ProgressThroughPhase = 0.0;
             IsInPhase = false;
+            StartStage = null;  
         }
 
         // 4. Private method
@@ -89,7 +102,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("StageWasReset")]
         private void onStageWasReset(object sender, StageSetType sst)
         {
-            if (sst.StageNumber <= Start)
+            if (sst.StageNumber <= StartStage)
             {
                 ResetPhase();   
             }
@@ -98,6 +111,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Commencing")]
         private void onSimulationCommencing(object sender, EventArgs e)
         {
+            priorPhase = plant.FindDescendant<IParallelPhase>(PriorParallelPhaseName);
             ResetPhase();
         }
     }
