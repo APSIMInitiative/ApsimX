@@ -445,6 +445,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
             thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
             thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
+            thisDero["Tt_Flowering"] += clean(CurrentCropParams["Tt_Flowering"]);
+            thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
+            thisDero["FlowerStress_Temp_X"] += clean(CurrentCropParams["FlowerStress_Temp_X"]);
+            thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -518,6 +522,10 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
             {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
             {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
-        };
+            {"Tt_Flowering","[DEROPAPY].Phenology.Flowering.Target.FixedValue = " },
+            {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
+            {"FlowerStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.X = " },
+            {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
+    };
     }
 }
