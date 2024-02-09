@@ -60,10 +60,10 @@ namespace Models.Functions
             return currentValue;
         }
 
-        [EventSubscribe("PhaseChanged")]
-        private void onPhaseChanged(object sender, PhaseChangedType pct)
+        [EventSubscribe("StageWasReset")]
+        private void onStageWasReset(object sender, StageSetType sst)
         {
-            if (pct.StageNumber <= pPhase.Start)
+            if (sst.StageNumber <= pPhase.Start)
             {
                 currentValue = StartValue.Value(); 
             }
