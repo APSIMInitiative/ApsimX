@@ -5,9 +5,9 @@ TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10  18  26   
 D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,60,116,310,106,100,100,100,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,13,0,0,0,10,0,0,0,10,0,0
 Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,750,1000,1500,750,1000,1000,1000,510,450,300,300
-DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (Reproductive or Graze),Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Graze,Graze
-Pp_Reproductive_02,oCd,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Reproductive_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(700 700),(250 250),(55 300),(500 500),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
+DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
+Pp_FullCover_02,oCd,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(700 700),(250 250),(55 300),(500 500),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,500,250,300,100,100,100,120,200,0,0
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,0,0,0,0,0,0,0,0,50,0,0
 EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune

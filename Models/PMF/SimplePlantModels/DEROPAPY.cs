@@ -366,7 +366,7 @@ namespace Models.PMF.SimplePlantModels
         private void onStartNewGrowthCycle(object sender, EventArgs e)
         {
             //Reset leaf biomass so it is ready for new growth
-            if (CurrentCropParams["DefoliateOrDevelop"] == "Reproductive")
+            if (CurrentCropParams["DefoliateOrDevelop"] == "FullCover")
             {
                 Leaf.initialiseBiomass();
             }
@@ -403,8 +403,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["T_StartGrowth_00"] += clean(CurrentCropParams["T_StartGrowth_00"]);
             thisDero["Tt_Growing_01"] += clean(CurrentCropParams["Tt_Growing_01"]);
             thisDero["DefoliateOrDevelop"] += clean(CurrentCropParams["DefoliateOrDevelop"]);
-            thisDero["Pp_Reproductive_02"] += clean(CurrentCropParams["Pp_Reproductive_02"]);
-            thisDero["Tt_Reproductive_02"] += clean(CurrentCropParams["Tt_Reproductive_02"]);
+            thisDero["Pp_FullCover_02"] += clean(CurrentCropParams["Pp_FullCover_02"]);
+            thisDero["Tt_FullCover_02"] += clean(CurrentCropParams["Tt_FullCover_02"]);
             thisDero["Tt_Senescent_03"] += clean(CurrentCropParams["Tt_Senescent_03"]);
             thisDero["Tt_Mature_04"] += clean(CurrentCropParams["Tt_Mature_04"]);
             thisDero["EndOrHarvest"] += clean(CurrentCropParams["EndOrHarvest"]);
@@ -482,8 +482,8 @@ namespace Models.PMF.SimplePlantModels
             {"T_StartGrowth_00","[DEROPAPY].Phenology.Waiting.TemptoProgress = " },
             {"Tt_Growing_01","[DEROPAPY].Phenology.Growing.Target.FixedValue = " },
             {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
-            {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
-            {"Tt_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.Y = " },
+            {"Pp_FullCover_02","[DEROPAPY].Phenology.FullCover.Target.XYPairs.X = " },
+            {"Tt_FullCover_02","[DEROPAPY].Phenology.FullCover.Target.XYPairs.Y = " },
             {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.FixedValue = " },
             {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },
             {"EndOrHarvest"," [DEROPAPY].Phenology.EndOrHarvest.PhaseNameToGoto = " },
