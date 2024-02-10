@@ -22,7 +22,7 @@ namespace Models.Functions
         [Description("Parallel Phase Name")]
         public string ParallelPhaseName { get; set; }
 
-        private ParallelPhase pPhase { get; set; }
+        private IParallelPhase pPhase { get; set; }
 
         [Link(Type = LinkType.Ancestor)] IPlant plant = null;
 
@@ -63,7 +63,7 @@ namespace Models.Functions
         [EventSubscribe("StageWasReset")]
         private void onStageWasReset(object sender, StageSetType sst)
         {
-            if (sst.StageNumber <= pPhase.Start)
+            if (sst.StageNumber <= pPhase.StartStage)
             {
                 currentValue = StartValue.Value(); 
             }
@@ -76,7 +76,7 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             currentValue = StartValue.Value();
-            pPhase = plant.FindDescendant<ParallelPhase>(ParallelPhaseName);
+            pPhase = plant.FindDescendant<IParallelPhase>(ParallelPhaseName);
         }
     }
 }
