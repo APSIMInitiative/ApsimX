@@ -451,6 +451,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
             thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
             thisDero["ProduceGrowthLengthTt"] += clean(CurrentCropParams["ProduceGrowthLengthTt"]);
+            thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
             
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -530,6 +531,7 @@ namespace Models.PMF.SimplePlantModels
             {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
             {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
             {"ProduceGrowthLengthTt","[DEROPAPY].Phenology.GrowingProduct.Target.FixedValue = " },
+            {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
             
     };
     }
