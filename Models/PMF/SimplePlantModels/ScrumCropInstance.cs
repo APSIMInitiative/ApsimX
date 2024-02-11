@@ -239,13 +239,13 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.027 },
-            { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",1.0},{"Ripe",1.0 } };
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0067 },{ "Seedling", 0.011 },
+            { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.99325},{"Ripe",0.99965 } };
 
         /// <summary> the proportion of Tt that has accumulated at each stage drrived from the proporiton of DM at each stage and the logistic funciton rearanged</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.145 },
-            { "Vegetative", 0.5},{ "EarlyReproductive",0.58},{ "MidReproductive",0.68},{  "LateReproductive",0.79},{"Maturity",0.995},{"Ripe",1.15 } };
+        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.00011 },{ "Seedling", 0.05 },
+            { "Vegetative", 0.5},{ "EarlyReproductive",0.5847},{ "MidReproductive",0.6815},{  "LateReproductive",0.7944},{"Maturity",0.999},{"Ripe",1.295 } };
 
         
         [JsonIgnore]
@@ -439,8 +439,8 @@ namespace Models.PMF.SimplePlantModels
             {
                 Tt_EmergtoMat -= tT_SowToEmerg;
             }
-            double Xo_Biomass = Tt_EmergtoMat * .45;
-            double b_Biomass = Xo_Biomass * .23;
+            double Xo_Biomass = Tt_EmergtoMat * .5;
+            double b_Biomass = Xo_Biomass * .2;
             double Xo_cov = Xo_Biomass * 0.4;
             double b_cov = Xo_cov * 0.2;
             double Xo_hig = Xo_Biomass * 0.7;
@@ -459,14 +459,14 @@ namespace Models.PMF.SimplePlantModels
             {
                 transplantTt = Tt_EmergtoMat* PropnTt["Seedling"];
             }
-            double irm = 1 / sigmoid.Function(ttEstabToHarv + transplantTt, Xo_Biomass, b_Biomass);
+            double irm = 1 / (sigmoid.Function(ttEstabToHarv + transplantTt, Xo_Biomass, b_Biomass) + PropnMaxDM["Emergence"]);
             if (EstablishStage == "Seed")
-            {
-                //Need to adjust relative development for the period when the crop is not emerged
-                double SeedTtAdjust = MathUtilities.Divide(sigmoid.Function(ttEstabToHarv, Xo_Biomass, b_Biomass),
-                                                           sigmoid.Function(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass),1);
-                irm *= SeedTtAdjust;
-            }
+             {
+                 //Need to adjust relative development for the period when the crop is not emerged
+                 double SeedTtAdjust = MathUtilities.Divide(sigmoid.Function(ttEstabToHarv, Xo_Biomass, b_Biomass),
+                                                            sigmoid.Function(ttEstabToHarv - tT_SowToEmerg, Xo_Biomass, b_Biomass),1);
+                 irm *= SeedTtAdjust;
+             }
             cropParams["InvertedRelativeMaturity"] += irm.ToString();
             cropParams["TtSeed"] += (tT_SowToEmerg).ToString();
             cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
