@@ -115,7 +115,7 @@ namespace Models.Core
             path = path.Replace(" ", "").Replace("()", "");
             if (path.Length == 0 || path[0] == '.')
                 return false;
-            if (path.IndexOfAny("+-*/^".ToCharArray()) >= 0) // operators indicate an expression
+            if (path.IndexOfAny("+*/^".ToCharArray()) >= 0) // operators indicate an expression
                 return true;
             int openingParen = path.IndexOf('(');
             if (openingParen >= 0 && path.Substring(0, openingParen).IndexOfAny("[.".ToCharArray()) == -1)
