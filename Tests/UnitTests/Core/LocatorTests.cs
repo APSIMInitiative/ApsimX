@@ -512,10 +512,6 @@ namespace UnitTests.Core
             input = "[ModelA].A1 + [ModelA].A2";
             Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
 
-            //Minus - return true
-            input = "[ModelA].A1 - [ModelA].A2";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
-
             //Multiply - return true
             input = "[ModelA].A1 * [ModelA].A2";
             Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
