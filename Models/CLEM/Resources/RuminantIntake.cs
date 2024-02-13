@@ -32,13 +32,14 @@ namespace Models.CLEM.Resources
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
         /// </summary>
         /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
+        /// <param name="bypassPotIntakeLimits">A switch to force animals to eat the amount provided.</param>
         /// <returns>The excess feed to the individual</returns>
-        public double AddFeed(FoodResourcePacket packet)
+        public double AddFeed(FoodResourcePacket packet, bool bypassPotIntakeLimits = false)
         {
             double excess = 0;
             if (packet.Amount > 0)
             {
-                if (packet.TypeOfFeed != FeedType.Milk)
+                if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
                 {
                     // limit feed to animals maximum intake.
                     excess = StdMath.DIM(packet.Amount, SolidsDaily.Required);

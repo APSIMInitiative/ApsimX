@@ -301,8 +301,11 @@ namespace Models.CLEM.Activities
                     double excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToSatisfy;
                     totalfed += Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required);
                     excessFed += excess;
-                    iChild.CurrentResourceRequest.Available -= excess;
-                    iChild.CurrentResourceRequest.Required -= excess;
+                    if (FeedStyle != RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual)
+                    {
+                        iChild.CurrentResourceRequest.Available -= excess;
+                        iChild.CurrentResourceRequest.Required -= excess;
+                    }
                 }
 
                 // adjust for, and report, wastage
@@ -326,20 +329,28 @@ namespace Models.CLEM.Activities
                 // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
                 if (MathUtilities.IsPositive(excessFed))
                 {
-                    excessreduction = 1 - excessFed / totalfed;
-                    ResourceRequest excessRequest = new()
+                    if(FeedStyle == RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual)
                     {
-                        AllowTransmutation = false,
-                        Required = excessFed,
-                        Available = excessFed,
-                        Resource = FeedResource,
-                        ResourceType = typeof(AnimalFoodStore),
-                        ResourceTypeName = FeedTypeName,
-                        ActivityModel = this,
-                        Category = $"{TransactionCategory}.Overfed wastage",
-                        RelatesToResource = PredictedHerdNameToDisplay
-                    };
-                    ResourceRequestList.Insert(0, excessRequest);
+                        string warn = $"Individuals were forced to eat more than required by [a={NameWithParent}].";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
+                    else
+                    {
+                        excessreduction = 1 - excessFed / totalfed;
+                        ResourceRequest excessRequest = new()
+                        {
+                            AllowTransmutation = false,
+                            Required = excessFed,
+                            Available = excessFed,
+                            Resource = FeedResource,
+                            ResourceType = typeof(AnimalFoodStore),
+                            ResourceTypeName = FeedTypeName,
+                            ActivityModel = this,
+                            Category = $"{TransactionCategory}.Overfed wastage",
+                            RelatesToResource = PredictedHerdNameToDisplay
+                        };
+                        ResourceRequestList.Insert(0, excessRequest);
+                    }
                 }
             }
         }
@@ -375,6 +386,7 @@ namespace Models.CLEM.Activities
                                 details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                            case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                                 details.Amount = iChild.CurrentValue * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
@@ -397,7 +409,7 @@ namespace Models.CLEM.Activities
                         // convert to daily intake for the ruminant intake store. 
                         details.Amount /= (double)events.Interval;
                         // try to feed. excess will be returned.
-                        overfed += ind.Intake.AddFeed(details);
+                        overfed += ind.Intake.AddFeed(details, (FeedStyle == RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual));
                     }
                 }
             }

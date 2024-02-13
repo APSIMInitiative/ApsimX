@@ -124,6 +124,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     countNeeded = true;
                     break;
+                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     countNeeded = true;
                     break;
@@ -191,6 +192,7 @@ namespace Models.CLEM.Groupings
                         feedNeeed = value * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                         feedNeeed = (value * events.Interval) * selectedIndividuals.Count;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
