@@ -391,9 +391,8 @@ namespace Models.CLEM.Resources
 
             //ToDo: Check this is correct
             DateLastConceived = date.AddDays(ageOffset);
-            //AgeAtLastConception = this.Age + ageOffset;
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true) : this.Weight.Live;
+            WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true, false) : this.Weight.Live;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -528,7 +527,6 @@ namespace Models.CLEM.Resources
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();
-            base.Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale);
 
             //ToDo: Set conceptus weight if needed
         }

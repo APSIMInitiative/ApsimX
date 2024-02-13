@@ -259,7 +259,6 @@ namespace Models.CLEM.Activities
 
             // calculate here as is also needed in not weaned.. in case consumed feed and milk.
             ind.Energy.Km = 0.02 * ind.Intake.MDSolid + 0.5;
-            //double kg;
 
             if (ind.Weaned)
             {
@@ -307,7 +306,7 @@ namespace Models.CLEM.Activities
                 // YoungFactor in CalculatePotentialIntake determines how much these individuals can eat when milk is in shortfall
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.MilkDaily.Actual = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable/ind.Mother.SucklingOffspringList.Count());
+                ind.Intake.MilkDaily.Actual = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable/ ind.Mother.SucklingOffspringList.Count);
                 // remove consumed milk from mother.
                 ind.Mother?.TakeMilk(ind.Intake.MilkDaily.Actual, MilkUseReason.Suckling);
                 double milkIntakeME = ind.Intake.MilkME;

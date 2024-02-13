@@ -64,7 +64,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age that is not assigned sire
@@ -95,7 +94,7 @@ namespace Models.CLEM.Resources
         public RuminantMale(RuminantType setParams, DateTime date, int setAge, double birthScalar, double setWeight)
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
-            base.Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale* setParams.Parameters.General.SRWMaleMultiplier);
+            // needed for female specific actions
         }
 
     }

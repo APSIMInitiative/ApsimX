@@ -53,6 +53,11 @@ namespace Models.CLEM.Resources
         public double Live { get { return live; } }
 
         /// <summary>
+        /// The empty body mass of the individual (kg)
+        /// </summary>
+        public double EmptyBodyMass { get; private set; }
+
+        /// <summary>
         /// Previous weight of individual  (kg)
         /// </summary>
         public double Previous { get { return Base.Previous + Conceptus.Previous + Wool.Previous; } }
@@ -83,6 +88,11 @@ namespace Models.CLEM.Resources
         public double AtBirth { get; private set; }
 
         /// <summary>
+        /// Maximum normalised weight for current age
+        /// </summary>
+        public double MaximumNormalisedForAge { get; private set; }
+
+        /// <summary>
         /// Normalised weight for current age
         /// </summary>
         public double NormalisedForAge { get; private set; }
@@ -91,9 +101,11 @@ namespace Models.CLEM.Resources
         /// Set the normal weight for age of individual
         /// </summary>
         /// <param name="normalWeight">Normal weight</param>
-        public void SetNormalWeightForAge(double normalWeight)
+        /// <param name="maxNormalWeight">The maximum normalised weight</param>
+        public void SetNormalWeightForAge(double normalWeight, double maxNormalWeight)
         {
             NormalisedForAge = normalWeight;
+            MaximumNormalisedForAge = maxNormalWeight;
         }
 
         /// <summary>
@@ -152,11 +164,12 @@ namespace Models.CLEM.Resources
         public void Adjust(double change, Ruminant individual)
         {
             EmptyBodyMassChange = change / individual.Parameters.General.EBW2LW_CG18;
+            EmptyBodyMass += EmptyBodyMassChange;
 
             Base.Adjust(change);
 
             UpdateLiveWeight();
-
+            
             if (individual.Sex == Sex.Female)
             {
                 (individual as RuminantFemale).UpdateHighWeightWhenNotPregnant(Live);
@@ -180,6 +193,7 @@ namespace Models.CLEM.Resources
         public RuminantInfoWeight(double weightAtBirth)
         {
             AtBirth = weightAtBirth;
+            
         }
     }
 }
