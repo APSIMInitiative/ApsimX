@@ -251,7 +251,7 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
-            {"InvertedRelativeMaturity","[SCRUM].TotalDMAtMaturity.InvertedRelativeMaturityAtHarvest.FixedValue = " },
+            {"InvertedRelativeDM","[SCRUM].Stover.Photosynthesis.UnStressedBiomass.Integral.Ymax.InvertedRelativeDMAtHarvest.FixedValue = " },
             {"ExpectedYield","[Product].ExpectedYield.FixedValue = "},
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
@@ -434,7 +434,7 @@ namespace Models.PMF.SimplePlantModels
 
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
             Tt_EmergtoMat = ttEstabToHarv * 1 / PropnTt_EstToHarv;
-
+            
             double Xo_Biomass = Tt_EmergtoMat * .5;
             double b_Biomass = Xo_Biomass * .2;
             double Xo_cov = Xo_Biomass * 0.4;
@@ -449,10 +449,10 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            double ttPreEstab = PropnTt[management.EstablishStage] * ttEstabToHarv;
-            double irm = 1 / sigmoid.Function(ttEstabToHarv+ttPreEstab, Xo_Biomass, b_Biomass);
+            double ttPreEstab = PropnTt[management.EstablishStage] * Tt_EmergtoMat + (-PropnTt["Seed"] * Tt_EmergtoMat);
+            double irdm = 1 / sigmoid.Function(ttEstabToHarv+ttPreEstab, Xo_Biomass, b_Biomass);
 
-            cropParams["InvertedRelativeMaturity"] += irm.ToString();
+            cropParams["InvertedRelativeDM"] += irdm.ToString();
             cropParams["TtSeed"] += (Tt_EmergtoMat * (PropnTt["Emergence"] - PropnTt["Seed"])).ToString();
             cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
             cropParams["TtVegetative"] += (Tt_EmergtoMat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
@@ -462,14 +462,13 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtMaturity"] += (Tt_EmergtoMat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
-            double agDM = ey * dmc * (1 / this.HarvestIndex) * irm;
+            double agDM = ey * dmc * (1 / this.HarvestIndex) * irdm;
             double tDM = agDM + (agDM *  this.Proot);
-            double iDM = tDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
+            double iDM = tDM * PropnMaxDM[management.EstablishStage];
             cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot) * (1 - this.HarvestIndex)).ToString();
             cropParams["InitialProductWt"] += (iDM * (1 - this.Proot) * this.HarvestIndex).ToString();
             cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
-            double tTpreEstab = Tt_EmergtoMat * PropnTt[management.EstablishStage];
-            cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(tTpreEstab - Xo_cov) / b_cov))).ToString();
+            cropParams["InitialCover"] += (this.MaxCover * 1 / (1 + Math.Exp(-(ttPreEstab - Xo_cov) / b_cov))).ToString();
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
