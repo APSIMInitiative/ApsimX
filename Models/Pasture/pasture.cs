@@ -13,6 +13,7 @@ using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Models.G_Range;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 
@@ -2691,20 +2692,20 @@ namespace Models.GrazPlan
             for (int Idx = 1; Idx <= 3; Idx++)
                 removed.FOMTypes[Idx-1] = sFOMTypes[Idx];
 
-            removed.Layers = new double[FNoLayers];
+            removed.Layers = new double[FNoLayers + 1];
             for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
-                removed.Layers[Ldx-1] = FLayerProfile[Ldx]; // [1..
+                removed.Layers[Ldx] = FLayerProfile[Ldx]; // [1..
 
-            removed.FOM = new OrganicMatter[FNoLayers][];
-            removed.FOM[0] = new OrganicMatter[3];          // surface
+            removed.FOM = new OrganicMatter[FNoLayers+1][];
+            removed.FOM[1] = new OrganicMatter[3];          // first layer has space for leaf and stem residue
             for (int i = 0; i < 3; i++)
-                removed.FOM[0][i] = new OrganicMatter();
+                removed.FOM[1][i] = new OrganicMatter();
 
             for (int Ldx = 2; Ldx <= FNoLayers; Ldx++)
             {
-                // root layers
-                removed.FOM[Ldx - 1] = new OrganicMatter[1];
-                removed.FOM[Ldx-1][0] = new OrganicMatter();
+                // further root layers
+                removed.FOM[Ldx] = new OrganicMatter[1];
+                removed.FOM[Ldx][0] = new OrganicMatter();
             }
 
             if (PastureModel != null)
@@ -2713,52 +2714,43 @@ namespace Models.GrazPlan
                 PastureModel.MassUnit = "kg/ha";
                 for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)                                                 // Root residues
                 {
-                    DMPool2Value(PastureModel.GetResidueFlux(ptROOT, Ldx), ref removed.FOM[Ldx - 1][0]);
+                    DMPool2Value(PastureModel.GetResidueFlux(ptROOT, Ldx), ref removed.FOM[Ldx][0]);
                 }
-                DMPool2Value(PastureModel.GetResidueFlux(ptLEAF), ref removed.FOM[0][1]);       // Surface residues all go into the first soil layer
-                DMPool2Value(PastureModel.GetResidueFlux(ptSTEM), ref removed.FOM[0][2]);
+
+                // Surface residues all go into the first soil layer
+                DMPool2Value(PastureModel.GetResidueFlux(ptLEAF), ref removed.FOM[1][1]);       // leaf
+                DMPool2Value(PastureModel.GetResidueFlux(ptSTEM), ref removed.FOM[1][2]);       // stem
 
                 PastureModel.MassUnit = sPrevUnit;
 
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = this.Species;
+                FOMData.Layer = new FOMLayerLayerType[FNoLayers];
+
                 // Fill a FOMLayerType and do the Incorp
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[FNoLayers];
 
                 // root layers
-                for (int layer = 1; layer < FNoLayers; layer++)
+                for (int layer = 0; layer < FNoLayers; layer++)
                 {
-                    FOMType fomData = new FOMType();
-                    fomData.amount = removed.FOM[layer][0].Weight;
-                    fomData.N = removed.FOM[layer][0].N;
-                    fomData.C = fomData.amount * carbonFractionInDM;
-                    fomData.P = removed.FOM[layer][0].P;
-                    fomData.AshAlk = removed.FOM[layer][0].AshAlk;
+                    FOMData.Layer[layer] = new FOMLayerLayerType();
+                    FOMData.Layer[layer].FOM = new FOMType();
+                    FOMData.Layer[layer].FOM.amount = removed.FOM[layer + 1][0].Weight;
+                    FOMData.Layer[layer].FOM.N = removed.FOM[layer + 1][0].N;
+                    FOMData.Layer[layer].FOM.C = FOMData.Layer[layer].FOM.amount * carbonFractionInDM;
+                    FOMData.Layer[layer].FOM.P = removed.FOM[layer + 1][0].P;
+                    FOMData.Layer[layer].FOM.AshAlk = removed.FOM[layer + 1][0].AshAlk;
 
-                    FOMLayerLayerType layerData = new FOMLayerLayerType();
-                    layerData.FOM = fomData;
-                    layerData.CNR = 0.0;        // not used here
-                    layerData.LabileP = 0.0;    // not used here
-
-                    FOMdataLayer[layer] = layerData;
+                    FOMData.Layer[layer].CNR = 0.0;        // not used here
+                    FOMData.Layer[layer].LabileP = 0.0;    // not used here
                 }
 
                 // surface residues into first layer
-                FOMType fom0Data = new FOMType();
-                fom0Data.amount = removed.FOM[0][1].Weight + removed.FOM[0][2].Weight;
-                fom0Data.N = removed.FOM[0][1].N + removed.FOM[0][2].N;
-                fom0Data.C = fom0Data.amount * carbonFractionInDM;
-                fom0Data.P = removed.FOM[0][1].P + removed.FOM[0][2].P;
-                fom0Data.AshAlk = removed.FOM[0][1].AshAlk + removed.FOM[0][2].AshAlk; // ?
+                FOMData.Layer[0].FOM.amount += removed.FOM[1][1].Weight + removed.FOM[1][2].Weight;
+                FOMData.Layer[0].FOM.N += removed.FOM[1][1].N + removed.FOM[1][2].N;
+                FOMData.Layer[0].FOM.C = FOMData.Layer[0].FOM.amount * carbonFractionInDM;
+                FOMData.Layer[0].FOM.P += removed.FOM[1][1].P + removed.FOM[1][2].P;
+                FOMData.Layer[0].FOM.AshAlk += removed.FOM[1][1].AshAlk + removed.FOM[1][2].AshAlk; // ?
 
-                FOMLayerLayerType layer0Data = new FOMLayerLayerType();
-                layer0Data.FOM = fom0Data;
-                layer0Data.CNR = 0.0;        // not used here
-                layer0Data.LabileP = 0.0;    // not used here
-
-                FOMdataLayer[0] = layer0Data;
-
-                FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = this.Species;
-                FOMData.Layer = FOMdataLayer;
                 nutrient.DoIncorpFOM(FOMData);
             }
         }
@@ -2890,40 +2882,6 @@ namespace Models.GrazPlan
                     FTranspiration[Idx][Jdx] = layerWater[Jdx - 1] * fRootPropn;
                 }
             }
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="layers"></param>
-        /// <param name="LayerA"></param>
-        /// <param name="bLayersOuter"></param>
-        /// <param name="iDataField"></param>
-        protected void Layers2LayerArray(SoilLayer[] layers, ref double[] LayerA, bool bLayersOuter = false, int iDataField = 2)
-        {
-            int Ldx;
-            SoilLayer soilLayer;
-            double[] FLayerValues = new double[layers.Length + 1]; //[1..
-
-            if (FInputProfile == null)
-                FInputProfile = new double[layers.Length + 1];
-            if (bLayersOuter)
-            {
-                FNoInputLayers = layers.Length;
-                for (Ldx = 0; Ldx < FNoInputLayers; Ldx++)
-                {
-                    soilLayer = layers[Ldx];
-                    FInputProfile[Ldx + 1] = soilLayer.thickness;
-                    if (iDataField == 2)
-                        FLayerValues[Ldx + 1] = soilLayer.amount;
-                }
-            }
-            else
-            {   //// TODO: check if unused - uses layer[], value[]
-                ////setInputProfile(aValue[1]);
-                ////Value2LayerArray(aValue[2], ref FLayerValues);
-            }
-            Input2LayerProfile(FLayerValues, true, ref LayerA);
         }
 
         /// <summary>
