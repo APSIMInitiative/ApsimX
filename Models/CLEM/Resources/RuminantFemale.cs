@@ -1,6 +1,11 @@
-﻿using DocumentFormat.OpenXml.Drawing;
+﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Reporting;
+using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -337,7 +342,22 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The sex of each fetus
         /// </summary>
-        public List<Sex> Fetuses = new();
+        private List<Sex> Fetuses { get; set; } = new();
+
+        /// <summary>
+        /// Add fetus to female conception
+        /// </summary>
+        /// <param name="sex"></param>
+        public void AddFetus(Sex sex)
+        {
+            Fetuses.Add(sex);
+            MixedSexMultipleFetuses = Fetuses.Distinct().Count() > 1;
+        }
+
+        /// <summary>
+        /// Are the fetuses of a multiple birth mixed sex
+        /// </summary>
+        public bool MixedSexMultipleFetuses { get; private set; }
 
         /// <summary>
         /// The number of fetuses being carryied
@@ -382,19 +402,85 @@ namespace Models.CLEM.Resources
                 Fetuses.Add(isMale ? Sex.Male : Sex.Female);
             }
 
-            // check for Freemartins
-            // multiple birth with male and female in womb with Freemartinism turned on (cattle)
-            if(Parameters.Breeding.AllowFreemartins && Fetuses.Distinct().Count() > 1)
-            {
-                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
-            }
-
             //ToDo: Check this is correct
             DateLastConceived = date.AddDays(ageOffset);
             // use normalised weight for age if offset provided for pre simulation allocation
             WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true, false) : this.Weight.Live;
             NumberOfConceptions++;
             ReplacementBreeder = false;
+        }
+
+        /// <summary>
+        /// Determine any fetus mortality including new born
+        /// </summary>
+        /// <param name="events">A link to the CLEM event timer model</param>
+        /// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
+        /// <returns>True if pregnacny is lost</returns>
+        public bool FetusNewBornMortality(CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs)
+        {
+            for (int i = 0; i < CarryingCount; i++)
+            {
+                if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), Parameters.Breeding.PrenatalMortality / Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+                {
+                    OneOffspringDies(events.Clock.Today);
+                    if (CarryingCount == 0)
+                    {
+                        // report conception status changed when last multiple birth dies.
+                        conceptionArgs.Update(ConceptionStatus.Failed, this, events.Clock.Today);
+                        BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Give birth to all fetuses
+        /// </summary>
+        /// <param name="herd">A link to the CLEM herd to place newborn</param>
+        /// <param name="events">A link to the CLEM event timer model</param>
+        /// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
+        /// <param name="activity">A link to the activity model calling this method for reporting</param>
+        public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
+        {
+            if (!BirthDue)
+                return false;
+            
+            for (int i = 0; i < CarryingCount; i++)
+            {
+                //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
+                double weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+
+                Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], BreedDetails, events.TimeStepStart, 0, CurrentBirthScalar, weight);
+                newSucklingRuminant.HerdName = HerdName;
+                newSucklingRuminant.Breed = Parameters.General.Breed;
+                newSucklingRuminant.ID = herd.NextUniqueID;
+                newSucklingRuminant.Location = Location;
+                newSucklingRuminant.Mother = this;
+                newSucklingRuminant.Number = 1;
+                // suckling/calf weight from Freer
+                newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
+
+                // add attributes inherited from mother
+                foreach (var attribute in Attributes.Items.Where(a => a.Value is not null))
+                    newSucklingRuminant.AddInheritedAttribute(attribute);
+
+                // create freemartin if needed
+                if (newSucklingRuminant.Sex == Sex.Female && Parameters.Breeding.AllowFreemartins && MixedSexMultipleFetuses)
+                    newSucklingRuminant.AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
+
+                herd.AddRuminant(newSucklingRuminant, activity);
+
+                // add to sucklings
+                SucklingOffspringList.Add(newSucklingRuminant);
+
+                // this now reports for each individual born not a birth event as individual wean events are reported
+                conceptionArgs.Update(ConceptionStatus.Birth, this, events.Clock.Today);
+                BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+            }
+            UpdateBirthDetails(events.Clock.Today);
+            return true;
         }
 
         /// <summary>

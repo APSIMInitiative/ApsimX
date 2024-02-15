@@ -12,7 +12,7 @@ using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
-using System.Xml;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Models.CLEM.Activities
 {
@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         private bool useControlledMating { get { return (controlledMating != null); }  }
 
         private RuminantActivityControlledMating controlledMating = null;
-        private ConceptionStatusChangedEventArgs conceptionArgs = new();
+        private readonly ConceptionStatusChangedEventArgs conceptionArgs = new();
 
         /// <summary>
         /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.
@@ -184,33 +184,8 @@ namespace Models.CLEM.Activities
                                 DateTime checkMortality = conceiveDate;
                                 while (checkMortality < events.Clock.Today)
                                 {
-                                    for (int i = 0; i < female.CarryingCount; i++)
-                                    {
-                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
-                                        {
-                                            female.OneOffspringDies(events.Clock.Today);
-                                            if (!female.Fetuses.Any())
-                                            {
-                                                // report conception status changed when last multiple birth dies.
-                                                conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
-                                                female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
-                                            }
-                                        }
-                                    }
+                                    female.FetusNewBornMortality(events, conceptionArgs);
 
-                                    //for (int k = 0; k < female.CarryingCount; k++)
-                                    //{
-                                    //    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))
-                                    //    {
-                                    //        female.OneOffspringDies(checkMortality);
-                                    //        if (female.NumberOfOffspring == 0)
-                                    //        {
-                                    //            // report conception status changed when last multiple birth dies.
-                                    //            conceptionArgs.Update(ConceptionStatus.Failed, female, checkMortality, null, false);
-                                    //            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                                    //        }
-                                    //    }
-                                    //}
                                     if (events.TimeStep == TimeStepTypes.Monthly)
                                     {
                                         checkMortality.AddMonths(1);
@@ -224,185 +199,6 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-////                    int monthsAgoStart = 0 - (Convert.ToInt32(herd.FirstOrDefault().BreedParams.GestationLength, CultureInfo.InvariantCulture) - 1);
-////                    int monthsAgoStop = -1;
-
-////                    for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
-//                    //{
-//                    //    DateTime previousDate = clock.Today.AddMonths(i);
-//                    //    DateTime conceiveDate = clock.Today.AddMonths(i);
-//                    //    conceiveDate = new DateTime(conceiveDate.Year, conceiveDate.Month, DateTime.DaysInMonth(conceiveDate.Year, conceiveDate.Month));
-
-//                        // get list of all individuals of breeding age and condition
-//                        // grouped by location
-//                        var breeders = from ind in herd
-//                                       where
-//                                       !ind.IsSterilised && 
-//                                       (ind.Sex == Sex.Male && (previousDate - ind.DateOfBirth).TotalDays >= ind.BreedParams.MinimumAge1stMating.InDays) ||
-//                                       (ind.Sex == Sex.Female &&
-//                                       (previousDate - ind.DateOfBirth).TotalDays >= ind.BreedParams.MinimumAge1stMating.InDays &&
-//                                       !(ind as RuminantFemale).IsPregnant
-//                                       )
-//                                       group ind by ind.Location into grp
-//                                       select grp;
-
-                        
-
-
-//                        // must be breeders to bother checking any further
-//                        // must be either uncontrolled mating or the timing of controlled mating
-//                        if (breeders.Any()) // & (!useControlledMating || controlledMating.TimingCheck(previousDate)))
-//                        {
-//                            int numberPossible = 0;
-//                            int numberServiced = 1;
-//                            double limiter = 1;
-//                            List<Ruminant> maleBreeders = new ();
-
-//                            // for each location where parts of this herd are located
-//                            foreach (var location in breeders)
-//                            {
-//                                // uncontrolled conception
-//                                if (!useControlledMating)
-//                                {
-//                                    // check if males and females of breeding condition are together
-//                                    if (location.GroupBy(a => a.Sex).Count() == 2)
-//                                    {
-//                                        // servicing rate
-//                                        int maleCount = location.Where(a => a.Sex == Sex.Male).Count();
-//                                        // get a list of males to provide attributes when incontrolled mating.
-//                                        if (maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
-//                                            maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
-
-//                                        int femaleCount = location.OfType<RuminantFemale>().Count();
-//                                        double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-
-//                                        double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
-
-//                                        // only get non-pregnant females of breeding age at the time before the simulation included
-//                                        var availableBreeders = location.OfType<RuminantFemale>().Where(b => !b.IsPregnant && (previousDate - b.DateOfBirth).TotalDays >= b.BreedParams.MinimumAge1stMating.InDays);
-
-//                                        // only get selection of these of breeders available to spread conceptions
-//                                        // only 15% of breeding herd of age can conceive in any month or male limited proportion whichever is smaller
-//                                        int count = Convert.ToInt32(Math.Ceiling(availableBreeders.Count() * Math.Min(0.15, maleLimiter)), CultureInfo.InvariantCulture);
-//                                        availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count);
-
-//                                        foreach (RuminantFemale female in availableBreeders)
-//                                        {
-//                                            // get times suitable for this breeder
-
-
-
-//                                            // calculate conception
-//                                            Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
-//                                            double conceptionRate = ConceptionRate(female, out status);
-//                                            if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
-//                                            {
-//                                                // ToDo: CLOCK Check when conception rate should be.
-//                                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i, conceiveDate);
-//                                                female.LastMatingStyle = MatingStyle.PreSimulation;
-
-//                                                // if mandatory attributes are present in the herd, save male value with female details.
-//                                                if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
-//                                                    // randomly select male as father
-//                                                    AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)]);
-
-//                                                // report conception status changed
-//                                                conceptionArgs.Status = ConceptionStatus.Conceived;
-//                                                conceptionArgs.Female = female;
-
-//                                                conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
-//                                                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-
-//                                                // check for perinatal mortality
-//                                                // Todo: match functionality of controlled below that was made to work with i and j to give month
-//                                                for (int j = i; j < monthsAgoStop; j++)
-//                                                {
-//                                                    DateTime lossDate = clock.Today.AddMonths(i);
-//                                                    lossDate = new DateTime(lossDate.Year, lossDate.Month, DateTime.DaysInMonth(lossDate.Year, lossDate.Month));
-
-//                                                    for (int k = 0; k < female.CarryingCount; k++)
-//                                                    {
-//                                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength.InDays / 30.4 + 1)))
-//                                                        {
-//                                                            female.OneOffspringDies(lossDate);
-//                                                            if (female.NumberOfOffspring == 0)
-//                                                            {
-//                                                                // report conception status changed when last multiple birth dies.
-//                                                                conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate, null, false);
-//                                                                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                            //else
-//                                            //{
-//                                            //    // report conception status changed when last multiple birth dies.
-//                                            //    // ToDo: not sure this is working.. Do we need an unsuccessful tag in history
-//                                            //    conceptionArgs.Update(ConceptionStatus.Unsuccessful, female, conceiveDate, null, false);
-//                                            //    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-//                                            //    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, conceiveDate));
-//                                            //}
-//                                        }
-//                                    }
-//                                }
-//                                // controlled conception
-//                                else
-//                                {
-//                                    numberPossible = Convert.ToInt32(limiter * location.OfType<RuminantFemale>().Count(), CultureInfo.InvariantCulture);
-//                                    foreach (RuminantFemale female in location.OfType<RuminantFemale>())
-//                                    {
-//                                        if (!female.IsPregnant && MathUtilities.IsGreaterThanOrEqual(female.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays, female.BreedParams.MinimumDaysBirthToConception))
-//                                        {
-//                                            // calculate conception
-//                                            ConceptionStatus status = ConceptionStatus.NotMated;
-//                                            double conceptionRate = ConceptionRate(female, out status);
-//                                            if (numberServiced <= numberPossible) // labour/finance limited number
-//                                            {
-//                                                if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
-//                                                {
-//                                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i, conceiveDate);
-//                                                    female.LastMatingStyle = MatingStyle.Controlled;
-
-//                                                    // if mandatory attributes are present in the herd, save male value with female details.
-//                                                    if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
-//                                                        // save all male attributes
-//                                                        AddMalesAttributeDetails(female, controlledMating.SireAttributes);
-
-//                                                    // report conception status changed
-//                                                    conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
-//                                                    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-
-//                                                    // check for perenatal mortality
-//                                                    for (int j = i+1; j < monthsAgoStop; j++)
-//                                                    {
-//                                                        DateTime lossDate = conceiveDate.AddMonths(j-i);
-//                                                        lossDate = new DateTime(lossDate.Year, lossDate.Month, DateTime.DaysInMonth(lossDate.Year, lossDate.Month));
-
-//                                                        for (int k = 0; k < female.CarryingCount; k++)
-//                                                        {
-//                                                            if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength.InDays / 30.4 + 1)))
-//                                                            {
-//                                                                female.OneOffspringDies(lossDate);
-//                                                                if (female.NumberOfOffspring == 0)
-//                                                                {
-//                                                                    // report conception status changed when last multiple birth dies.
-//                                                                    conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate, null, false);
-//                                                                    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }
-
-//                                                }
-//                                                numberServiced++;
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-                   // }
                 }
             }
 
@@ -442,70 +238,12 @@ namespace Models.CLEM.Activities
                 // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
                 // needs to be calculated for each offspring carried.
 
-                for (int i = 0; i < female.CarryingCount; i++)
-                {
-                    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
-                    {
-                        female.OneOffspringDies(events.Clock.Today);
-                        if (!female.Fetuses.Any())
-                        {
-                            // report conception status changed when last multiple birth dies.
-                            conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
-                            female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
-                            preglost = true;
-                        }
-                    }
-                }
+                if (female.FetusNewBornMortality(events, conceptionArgs))
+                    preglost = true;
 
-                //for (int i = 0; i < female.CarryingCount; i++)
-                //{
-                //    preglost=true;
-                //    var rnd = RandomNumberGenerator.Generator.NextDouble();
-                //    if (MathUtilities.IsLessThan(rnd, female.Parameters.Breeding.PrenatalMortality / (female.Parameters.General.GestationLength.InDays + 1)))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
-                //    {
-                //        female.OneOffspringDies(events.Clock.Today);
-                //        if (female.NumberOfOffspring == 0)
-                //        {
-                //            // report conception status changed when last multiple birth dies.
-                //            conceptionArgs.Update(ConceptionStatus.Failed, female, events.Clock.Today);
-                //            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                //        }
-                //    }
-                //}
-
-                if (female.BirthDue)
-                {
-                    birthoccurred=true;
-                    for (int i = 0; i < female.CarryingCount; i++)
-                    {
-                        //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
-                        double weight = female.Parameters.General.BirthScalar[female.NumberOfFetuses] * female.Weight.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight.Live / female.Weight.StandardReferenceWeight));
-
-                        Ruminant newSucklingRuminant = Ruminant.Create(female.Fetuses[i], female.BreedDetails, events.TimeStepStart, 0, female.CurrentBirthScalar, weight);
-                        newSucklingRuminant.HerdName = female.HerdName;
-                        newSucklingRuminant.Breed = female.Parameters.General.Breed;
-                        newSucklingRuminant.ID = HerdResource.NextUniqueID;
-                        newSucklingRuminant.Location = female.Location;
-                        newSucklingRuminant.Mother = female;
-                        newSucklingRuminant.Number = 1;
-                        // suckling/calf weight from Freer
-                        newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
-
-                        // add attributes inherited from mother
-                        foreach (var attribute in female.Attributes.Items.Where(a => a.Value is not null))
-                            newSucklingRuminant.AddInheritedAttribute(attribute);
-
-                        HerdResource.AddRuminant(newSucklingRuminant, this);
-
-                        // add to sucklings
-                        female.SucklingOffspringList.Add(newSucklingRuminant);
-                        // this now reports for each individual born not a birth event as individual wean events are reported
-
-                        conceptionArgs.Update(ConceptionStatus.Birth, female, events.Clock.Today);
-                        female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
-                    }
-                    female.UpdateBirthDetails(events.Clock.Today);
-                }
+                // give birth if needed.
+                if (female.GiveBirth(HerdResource, events, conceptionArgs, this))
+                    birthoccurred = true;
             }
 
             if (preglost)
