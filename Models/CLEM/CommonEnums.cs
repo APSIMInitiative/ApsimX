@@ -1155,59 +1155,103 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// A list of labels used for communication between an activity and companion models
+    /// Reasons for milk to be taken from female
     /// </summary>
-    [Serializable]
-    public struct LabelsForCompanionModels
+    public enum MilkUseReason
     {
         /// <summary>
-        /// List of available identifiers
+        /// Consumed by sucklings
         /// </summary>
-        public List<string> Identifiers;
+        Suckling,
         /// <summary>
-        /// List of available measures
+        /// Milked
         /// </summary>
-        public List<string> Measures;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="identifiers"></param>
-        /// <param name="measures"></param>
-        public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
-        {
-            Identifiers = identifiers;
-            Measures = measures;
-        }
+        Milked
     }
 
     /// <summary>
-    /// Additional linq extensions
+    /// Style of mating
     /// </summary>
-    public static class LinqExtensions
+    public enum MatingStyle
     {
         /// <summary>
-        /// Method to extend linq and allow DistinctBy for unions
-        /// Provided by MoreLinQ
+        /// Natural mating
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="keySelector"></param>
-        /// <returns></returns>
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-         (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            HashSet<TKey> knownKeys = new HashSet<TKey>();
-            foreach (TSource element in source)
-            {
-                if (knownKeys.Add(keySelector(element)))
-                {
-                    yield return element;
-                }
-            }
-        }
-
+        Natural,
+        /// <summary>
+        /// Controlled mating
+        /// </summary>
+        Controlled,
+        /// <summary>
+        /// Wild breeder
+        /// </summary>
+        WildBreeder,
+        /// <summary>
+        /// Mating assigned at setup
+        /// </summary>
+        PreSimulation,
+        /// <summary>
+        /// Individual not mated
+        /// </summary>
+        NotMated
     }
+
+
+
+    ///// <summary>
+    ///// A list of labels used for communication between an activity and companion models
+    ///// </summary>
+    //[Serializable]
+    //public struct LabelsForCompanionModels
+    //{
+    //    /// <summary>
+    //    /// List of available identifiers
+    //    /// </summary>
+    //    public List<string> Identifiers;
+    //    /// <summary>
+    //    /// List of available measures
+    //    /// </summary>
+    //    public List<string> Measures;
+
+    //    /// <summary>
+    //    /// Constructor
+    //    /// </summary>
+    //    /// <param name="identifiers"></param>
+    //    /// <param name="measures"></param>
+    //    public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
+    //    {
+    //        Identifiers = identifiers;
+    //        Measures = measures;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Additional linq extensions
+    ///// </summary>
+    //public static class LinqExtensions
+    //{
+    //    /// <summary>
+    //    /// Method to extend linq and allow DistinctBy for unions
+    //    /// Provided by MoreLinQ
+    //    /// </summary>
+    //    /// <typeparam name="TSource"></typeparam>
+    //    /// <typeparam name="TKey"></typeparam>
+    //    /// <param name="source"></param>
+    //    /// <param name="keySelector"></param>
+    //    /// <returns></returns>
+    //    public static IEnumerable<TSource> DistinctBy<TSource, TKey>
+    //     (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+    //    {
+    //        HashSet<TKey> knownKeys = new HashSet<TKey>();
+    //        foreach (TSource element in source)
+    //        {
+    //            if (knownKeys.Add(keySelector(element)))
+    //            {
+    //                yield return element;
+    //            }
+    //        }
+    //    }
+
+    //}
 
 }

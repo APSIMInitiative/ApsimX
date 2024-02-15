@@ -286,28 +286,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-        /// <summary>
-        /// Method to handle birth changes
-        /// </summary>
-        public void UpdateBirthDetails(DateTime date)
-        {
-            if (Fetuses.Any())
-            {
-                NumberOfBirths++;
-                NumberOfOffspring += CarryingCount;
-                NumberOfBirthsThisTimestep = CarryingCount;
-            }
-            base.Weight.Conceptus.Reset();
-            BodyConditionParturition = Weight.BodyCondition;
-            DateOfLastBirth = date;
-            ProportionMilkProductionAchieved = 1;
-            MilkLag = 1;
-            Fetuses.Clear();
-            MilkingPerformed = false;
-            RelativeConditionAtParturition = Weight.RelativeCondition;
-        }
-
         /// <summary>
         /// Allows an activity to pre calculate conception rate
         /// </summary>
@@ -484,6 +462,28 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Method to handle birth changes
+        /// </summary>
+        public void UpdateBirthDetails(DateTime date)
+        {
+            if (Fetuses.Any())
+            {
+                NumberOfBirths++;
+                NumberOfOffspring += CarryingCount;
+                NumberOfBirthsThisTimestep = CarryingCount;
+            }
+            base.Weight.Conceptus.Reset();
+            BodyConditionParturition = Weight.BodyCondition;
+            DateOfLastBirth = date;
+            ProportionMilkProductionAchieved = 1;
+            MilkLag = 1;
+            Fetuses.Clear();
+            MilkingPerformed = false;
+            RelativeConditionAtParturition = Weight.RelativeCondition;
+        }
+
+
+        /// <summary>
         /// Indicates if the individual is lactating
         /// </summary>
         [FilterByProperty]
@@ -618,45 +618,4 @@ namespace Models.CLEM.Resources
         }
     }
 
-    /// <summary>
-    /// Reasons for milk to be taken from female
-    /// </summary>
-    public enum MilkUseReason
-    {
-        /// <summary>
-        /// Consumed by sucklings
-        /// </summary>
-        Suckling,
-        /// <summary>
-        /// Milked
-        /// </summary>
-        Milked
-    }
-
-    /// <summary>
-    /// Style of mating
-    /// </summary>
-    public enum MatingStyle
-    {
-        /// <summary>
-        /// Natural mating
-        /// </summary>
-        Natural,
-        /// <summary>
-        /// Controlled mating
-        /// </summary>
-        Controlled,
-        /// <summary>
-        /// Wild breeder
-        /// </summary>
-        WildBreeder,
-        /// <summary>
-        /// Mating assigned at setup
-        /// </summary>
-        PreSimulation,
-        /// <summary>
-        /// Individual not mated
-        /// </summary>
-        NotMated
-    }
 }
