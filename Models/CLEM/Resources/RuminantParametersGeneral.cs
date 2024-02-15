@@ -45,13 +45,22 @@ namespace Models.CLEM.Resources
         #region breeding
 
         /// <summary>
-        /// Minimum age for 1st mating
+        /// Female Minimum age for 1st mating
         /// </summary>
         [Category("Farm", "Breeding")]
-        [Description("Minimum age for 1st mating")]
+        [Description("Female minimum age for 1st mating")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
+
+        /// <summary>
+        /// Male minimum age for 1st mating
+        /// </summary>
+        [Category("Farm", "Breeding")]
+        [Description("Male minimum age for 1st mating")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaleMinimumAge1stMating { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW

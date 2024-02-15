@@ -144,7 +144,7 @@ namespace Models.CLEM.Activities
                         // find any suitable times and randomly pick one
                         var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays).ToList();
                         DateTime conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MinimumAge1stMating.InDays).ToList();
+                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MaleMinimumAge1stMating.InDays).ToList();
 
                         // pick a male to mate
                         if (useControlledMating)

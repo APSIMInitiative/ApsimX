@@ -1135,7 +1135,7 @@ namespace Models.CLEM.Activities
                             // only consider individuals that will mature in next 12 months and are not castrated
                             foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungMalesFromSales"))
                                 // male, saleflag is AgeWeightSale, not castrated and age will mature in next 12 months
-                                foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.Weaned && (a.AgeInDays - a.Parameters.General.MinimumAge1stMating.InDays > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
+                                foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.Weaned && (a.AgeInDays - a.Parameters.General.MaleMinimumAge1stMating.InDays > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
                                 {
                                     male.Location = grazeStoreSires;
                                     male.SaleFlag = HerdChangeReason.None;
@@ -1151,7 +1151,7 @@ namespace Models.CLEM.Activities
                             if (GrowOutYoungMales && maleBreedersRequired > 0)
                             {
                                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungMalesFromGrowOut"))
-                                    foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.AgeInDays - a.Parameters.General.MinimumAge1stMating.InDays > -334) && a.Attributes.Exists("GrowOut") && !a.IsCastrated)).Take(maleBreedersRequired).ToList())
+                                    foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.AgeInDays - a.Parameters.General.MaleMinimumAge1stMating.InDays > -334) && a.Attributes.Exists("GrowOut") && !a.IsCastrated)).Take(maleBreedersRequired).ToList())
                                     {
                                         male.Location = grazeStoreSires;
                                         male.SaleFlag = HerdChangeReason.None;
