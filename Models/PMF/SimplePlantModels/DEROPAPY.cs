@@ -134,7 +134,7 @@ namespace Models.PMF.SimplePlantModels
             readData = ApsimTextFile.ToTable(FullFileName);
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
-            if (CurrentCropName != null)
+            if ((CurrentCropName != null)&&(CurrentCropName != ""))
             {
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
             }
@@ -366,7 +366,7 @@ namespace Models.PMF.SimplePlantModels
         private void onStartNewGrowthCycle(object sender, EventArgs e)
         {
             //Reset leaf biomass so it is ready for new growth
-            if (CurrentCropParams["DefoliateOrDevelop"] == "Reproductive")
+            if (CurrentCropParams["DefoliateOrDevelop"] == "FullCover")
             {
                 Leaf.initialiseBiomass();
             }
@@ -401,10 +401,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TT_Acc_Y"] += clean(CurrentCropParams["TT_Acc_Y"]);
             thisDero["D_StartGrowth_00"] += clean(CurrentCropParams["D_StartGrowth_00"]);
             thisDero["T_StartGrowth_00"] += clean(CurrentCropParams["T_StartGrowth_00"]);
-            thisDero["Tt_Vegetative_01"] += clean(CurrentCropParams["Tt_Vegetative_01"]);
+            thisDero["Tt_Growing_01"] += clean(CurrentCropParams["Tt_Growing_01"]);
             thisDero["DefoliateOrDevelop"] += clean(CurrentCropParams["DefoliateOrDevelop"]);
-            thisDero["Pp_Reproductive_02"] += clean(CurrentCropParams["Pp_Reproductive_02"]);
-            thisDero["Tt_Reproductive_02"] += clean(CurrentCropParams["Tt_Reproductive_02"]);
+            thisDero["Pp_FullCover_02"] += clean(CurrentCropParams["Pp_FullCover_02"]);
+            thisDero["Tt_FullCover_02"] += clean(CurrentCropParams["Tt_FullCover_02"]);
             thisDero["Tt_Senescent_03"] += clean(CurrentCropParams["Tt_Senescent_03"]);
             thisDero["Tt_Mature_04"] += clean(CurrentCropParams["Tt_Mature_04"]);
             thisDero["EndOrHarvest"] += clean(CurrentCropParams["EndOrHarvest"]);
@@ -445,7 +445,14 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
             thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
             thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
-
+            thisDero["Tt_Flowering"] += clean(CurrentCropParams["Tt_Flowering"]);
+            thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
+            thisDero["FlowerStress_Temp_X"] += clean(CurrentCropParams["FlowerStress_Temp_X"]);
+            thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
+            thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
+            thisDero["ProduceGrowthLengthTt"] += clean(CurrentCropParams["ProduceGrowthLengthTt"]);
+            thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
+            
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
             Cultivar deroValues = new Cultivar(this.Name, commands);
@@ -474,10 +481,10 @@ namespace Models.PMF.SimplePlantModels
             {"TT_Acc_Y","[DEROPAPY].Phenology.ThermalTime.XYPairs.Y = " },
             {"D_StartGrowth_00","[DEROPAPY].Phenology.Waiting.DOYtoProgress = " },
             {"T_StartGrowth_00","[DEROPAPY].Phenology.Waiting.TemptoProgress = " },
-            {"Tt_Vegetative_01","[DEROPAPY].Phenology.Vegetative.Target.FixedValue = " },
+            {"Tt_Growing_01","[DEROPAPY].Phenology.Growing.Target.FixedValue = " },
             {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
-            {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
-            {"Tt_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.Y = " },
+            {"Pp_FullCover_02","[DEROPAPY].Phenology.FullCover.Target.XYPairs.X = " },
+            {"Tt_FullCover_02","[DEROPAPY].Phenology.FullCover.Target.XYPairs.Y = " },
             {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.FixedValue = " },
             {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },
             {"EndOrHarvest"," [DEROPAPY].Phenology.EndOrHarvest.PhaseNameToGoto = " },
@@ -518,6 +525,14 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
             {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
             {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
-        };
+            {"Tt_Flowering","[DEROPAPY].Phenology.Flowering.Target.FixedValue = " },
+            {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
+            {"FlowerStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.X = " },
+            {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
+            {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
+            {"ProduceGrowthLengthTt","[DEROPAPY].Phenology.GrowingProduct.Target.FixedValue = " },
+            {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
+            
+    };
     }
 }
