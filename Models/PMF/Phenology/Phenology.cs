@@ -552,7 +552,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Emerged = false;
+            
         }
 
         /// <summary>Called when crop is ending</summary>
