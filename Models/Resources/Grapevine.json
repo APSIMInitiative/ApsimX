@@ -164,7 +164,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Endodormancy",
               "End": "Ecodormancy",
-              "IsEmerged": true,
+              "IsEmerged": false,
               "Name": "Dormancy",
               "ResourceName": null,
               "Children": [
@@ -261,7 +261,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Ecodormancy",
               "End": "BudBurst",
-              "IsEmerged": true,
+              "IsEmerged": false,
               "Name": "Budding",
               "ResourceName": null,
               "Children": [
