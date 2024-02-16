@@ -652,6 +652,8 @@ namespace Models.Core.Apsim710File
             this.CopyNodeAndValueArray(childNode, newNode, "DUL", "DUL");
             childNode = XmlUtilities.Find(compNode, "SAT");
             this.CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
+            childNode = XmlUtilities.Find(compNode, "KS");
+            this.CopyNodeAndValueArray(childNode, newNode, "KS", "KS");
 
             this.AddChildComponents(compNode, newNode);
 
