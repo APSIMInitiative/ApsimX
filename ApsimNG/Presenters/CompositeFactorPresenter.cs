@@ -47,6 +47,8 @@
             intellisense = new IntellisensePresenter(factorView as ViewBase);
             if (factor.Specifications != null)
                 this.factorView.Lines = factor.Specifications.ToArray();
+            else
+                factorView.Lines = new string[] { };
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -143,7 +145,10 @@
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            factorView.Lines = factor.Specifications.ToArray();
+            if (factor.Specifications != null) 
+                factorView.Lines = factor.Specifications.ToArray();
+            else
+                factorView.Lines = new string[] { };
         }
 
         /// <summary>
