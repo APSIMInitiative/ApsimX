@@ -4383,6 +4383,9 @@ namespace Models.Core.ApsimFile
                     swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
 
+            foreach (JObject swimWT in JsonUtilities.ChildrenRecursively(root, "SwimWaterTable"))
+                swimWT.Remove();
+
             // Make sure all solutes have the new $type
             foreach (JObject solute in JsonUtilities.ChildrenRecursively(root, "Solute"))
                 solute["$type"] = "Models.Soils.Solute, Models";
