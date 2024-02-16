@@ -2,14 +2,14 @@ ParamName,ParamUnit,Description,Maize,Wheat,Hemp,OSR,Grapevine,Macadamia,Lemons,
 CropType,string,Type of crop (i.e. crop name) used for characterising organic matter residues composition,Maize,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine,Grapevine,pasture,whiteclover
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18  26  34  44),(0  26  37),(1.9 26  40),2  30  35,(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10  18  26   0),(0  26  0),(0 24.1 0),0  28  0,(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,310,116,310,106,100,100,100,102,0,0
+D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,310,116,310,90,100,100,80,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,13,0,7,0,10,0,0,0,10,0,0
-Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,750,1700,600,750,1000,1000,1000,510,450,300,300
+Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,750,1700,600,750,1000,1000,1000,510,700,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
 Pp_FullCover_02,oCd,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(700 700),(800 750),(55 300),(500 500),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,500,450,300,100,100,100,120,200,0,0
-Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,0,0,0,0,0,0,0,0,50,0,0
+Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(700 700),(800 750),(55 300),(500 500),(450 450),(1167 1167),(450 450),(350 350),(200 1000),(1300 1300),(1300 1300)
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,500,450,300,500,100,100,610,200,0,0
+Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,0,0,0,0,50,0,50,10,50,0,0
 EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune
 Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,(0 0 0 0),(-2 -1 16 17),(0 0 0 0),(0 2 8 15),(-5 0 7 15),(0 0 0 0),(0 0 0 0),(0 0 0 0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
 Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,(0 0 0 0),(0 1 1 0),(0 0 0 0),(0 1 0.5 0),(0 1 1 0),(0 0 0 0),(0 0 0 0),(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
