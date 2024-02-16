@@ -1147,20 +1147,7 @@ namespace Models.Core.Apsim710File
 
                 string childText = string.Empty;
                 childNode = XmlUtilities.Find(oper, "date");
-                DateTime when;
-                if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
-                    childText = when.ToString("yyyy-MM-dd");
-                else if (childNode != null && childNode.InnerText != string.Empty)
-                {
-                    childText = DateUtilities.GetDateISO(childNode.InnerText);
-                    if (childText == "0001-01-01")
-                    {
-                        childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
-                    }
-                }
-                else
-                    childText = "0001-01-01";
-                dateNode.InnerText = childText;
+                dateNode.InnerText = OperationDateToNGDate(childNode?.InnerText);
 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
@@ -1213,6 +1200,33 @@ namespace Models.Core.Apsim710File
             } // next operation
 
             return newNode;
+        }
+
+        /// <Summary>
+        /// Method for parsing a date used by a classic Operations manager to
+        /// a format recognized by NG Operations.
+        /// </Summary>
+        /// <param name="date">The (possibly null or empty) date string.</param>
+        /// <returns>A date string recognized by NG's Operations.</returns>
+        private string OperationDateToNGDate(string date)
+        {
+            string[] dateFormatsFixed = {"d/M/yyyy", "d-M-yyy", "d-MMM-yyyy", "d_MMM_yyyy"};
+            string[] dateFormatsAnnual = {"d-MMM", "d_MMM"};
+
+            if (string.IsNullOrEmpty(date))
+                return "0001-01-01";
+
+            if (DateTime.TryParseExact(date, dateFormatsFixed, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime when))
+                return when.ToString("yyyy-MM-dd");
+
+            if (DateTime.TryParseExact(date, dateFormatsAnnual, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                return date;
+
+            var result  = DateUtilities.GetDateISO(date);
+            if (result == "0001-01-01")
+                result = DateUtilities.GetDate(date, startDate).ToString("yyyy-MM-dd");
+
+            return result;
         }
 
         /// <summary>
