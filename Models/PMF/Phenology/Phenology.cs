@@ -244,7 +244,6 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    Emerged = phase.IsEmerged;
                     if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind))
                     { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
