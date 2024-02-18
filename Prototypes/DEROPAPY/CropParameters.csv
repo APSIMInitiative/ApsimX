@@ -32,12 +32,12 @@ LeafPartitionFrac,fractional,Proportion of total biomass partitioned to Leaf (No
 ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,0.4,0.4,0.02,0.3,0.25,0.06,0.1,0.04,0.4,0.7,0.7
 RootPartitionFrac,fractional,Proportion of total biomass partitioned to Root,0.2,0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.2
 TrunkPartitionFrac,fractional,Proportion of total biomass partitioned to Trunk (note this is permenant biomass that is not removed),0,0,0,0,0.47,0.6,0.3,0.6,0.1,0,0
-LeafMaxNConc,gN/gDM,Highest N conc of organ,0.04,0.05,0.06,0.06,0.03,0.014,0.024,0.021,0.02,0.02,0.02
-LeafMinNConc,gN/gDM,Lowest N conc of organ,0.015,0.01,0.015,0.02,0.002,0.012,0.013,0.015,0.01,0.01,0.01
-ProductMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.03,0.05,0.058,0.025,0.012,0.01,0.02,0.02,0.02,0.02
-ProductMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.012,0.035,0.01,0.002,0.001,0.005,0.018,0.01,0.01,0.01
-RootMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.013,0.013,0.01,0.015,0.004,0.01,0.01,0.015,0.015,0.015
-RootMinNConc,gN/gDM,Lowest N conc of organ,0.016,0.01,0.005,0.005,0.0005,0.001,0.008,0.008,0.01,0.01,0.01
+LeafMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+LeafMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+ProductMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+ProductMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+RootMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
+RootMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
 TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
 TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0
 MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,1600,1100,2000,2300,3000,1600,1500,1400,3000,600,600
@@ -55,5 +55,5 @@ FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,1000,
 FlowerStress_Temp_X,oC,Maximum temperature at flowering,(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45)
 FlowerStress_Factor_Y,fractional,Multiplier of maximum flower number at thresold maximum temperature,(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0)
 ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,0.2,0.8,0.92,0.2,0.2,0.2,0.2,0.2,0.2,0.2
-ProduceGrowthLengthTt,oCd,Thermal-time duration of produce growth post flowering,700,700,700,700,700,700,700,700,700,700,700
+ProduceGrowthLengthTt,oCd,Thermal-time duration of produce growth post flowering,3000,3000,3000,3000,700,700,700,700,700,700,700
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,10,10,10,10,10,10,10,10,10,10,10
