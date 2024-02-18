@@ -130,7 +130,7 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-
+		
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>

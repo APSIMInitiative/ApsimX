@@ -1862,7 +1862,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "WeatherFiles\\Site1003_SEA.met",
+          "FileName": "%root%/Examples/WeatherFiles/Site1003_SEA.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,

@@ -1,17 +1,18 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Globalization;
 
 namespace UnitTests.Weather
 {
@@ -55,7 +56,8 @@ namespace UnitTests.Weather
 
             baseSim.Prepare();
             baseSim.Run();
-            Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
+            var summary = baseSim.FindDescendant<MockSummary>();
+            Assert.AreEqual(summary.messages[0], "Simulation terminated normally");
         }
 
         [Test]
@@ -128,7 +130,7 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
-        
+
         [Test]
         public void TestGetAnyDayMetData()
         {
@@ -185,6 +187,33 @@ namespace UnitTests.Weather
             Assert.AreEqual(weather1900.Radn, weather.TomorrowsMetData.Radn, 0.01);
             Assert.AreEqual(weather1900.Rain, weather.TomorrowsMetData.Rain, 0.01);
         }
+
+        /// <summary>
+        /// Ensures all example .met files contain %root%
+        /// </summary>
+        [Test]
+        public void TestAllExampleFilesWeatherModelsHaveCorrectRootReferenceInFileName()
+        {
+            bool allFilesHaveRootReference = true;
+            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exampleFileDirectory = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples"));
+            IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx");
+            foreach (string exampleFile in exampleFileNames)
+            {
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
+                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
+                foreach (Models.Climate.Weather weatherModel in weatherModels)
+                {
+                    if (!weatherModel.FileName.Contains("%root%/Examples/WeatherFiles/") && weatherModel.FileName.Contains('\\'))
+                    {
+                        allFilesHaveRootReference = false;
+                        Console.WriteLine($"{sim.FileName} has simulation {weatherModel.Parent.Name} with weather model {weatherModel.Name} that does not contain correct root reference.");
+                    }
+                }
+            }
+            Assert.True(allFilesHaveRootReference);
+        }
+
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
