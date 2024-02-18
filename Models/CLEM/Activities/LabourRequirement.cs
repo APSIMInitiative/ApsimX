@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         [Description("Labour required (days)")]
         [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
-        [Category("Labour", "Rate")]
+        [Category("Farm", "Rate")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         public double LabourPerUnit { get; set; }
 
@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         [Description("Number of units")]
         [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
-        [Category("Labour", "Units")]
+        [Category("Farm", "Units")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         public double UnitSize { get; set; }
 
@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Tooltip("The style of units to consider")]
         [Description("Measure of units")]
-        [Category("Labour", "Units")]
+        [Category("Farm", "Units")]
         public string Measure { get; set; }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Use whole units")]
         [Tooltip("Labour supplied in whole blocks of the number of units only")]
-        [Category("Labour", "Units")]
+        [Category("Farm", "Units")]
         public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
         [Description("Limit style")]
         [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
         [Tooltip("The style of providing limits to the amount of labour provided")]
-        [Category("Labour", "Limits")]
+        [Category("Farm", "Limits")]
         [Required]
         public LabourLimitType LimitStyle { get; set; }
 
@@ -100,7 +100,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum per group for task")]
         [Required, GreaterThanValue(0)]
-        [Category("Labour", "Limits")]
+        [Category("Farm", "Limits")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         public double MaximumPerGroup { get; set; }
 
@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Minimum per person for task")]
         [Required, GreaterThanEqualValue(0)]
-        [Category("Labour", "Limits")]
+        [Category("Farm", "Limits")]
         public double MinimumPerPerson { get; set; }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum per person for task")]
         [Required, GreaterThanValue(0), GreaterThan("MinimumPerPerson", ErrorMessage ="Maximum per individual must be greater than minimum per individual in Labour Required")]
-        [Category("Labour", "Limits")]
+        [Category("Farm", "Limits")]
         public double MaximumPerPerson { get; set; }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Apply to all matching (everyone performs activity)")]
         [Required]
-        [Category("Labour", "Rate")]
+        [Category("Farm", "Rate")]
         public bool ApplyToAll { get; set; }
 
         /// <summary>

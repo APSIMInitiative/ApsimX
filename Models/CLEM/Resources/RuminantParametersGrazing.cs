@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
-    public class RuminantParametersGrazing: CLEMModel
+    public class RuminantParametersGrazing: CLEMModel, ISubParameters
     {
         /// <summary>
         /// Maximum green in diet

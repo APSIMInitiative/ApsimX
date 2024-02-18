@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersBreed: CLEMModel
+    public class RuminantParametersBreed: CLEMModel, ISubParameters
     {
         /// <summary>
         /// Advanced conception parameters if present

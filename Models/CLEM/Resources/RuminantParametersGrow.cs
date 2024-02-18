@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,7 +15,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
-    public class RuminantParametersGrow: CLEMModel
+    public class RuminantParametersGrow: CLEMModel, ISubParameters
     {
         #region Mortality
 

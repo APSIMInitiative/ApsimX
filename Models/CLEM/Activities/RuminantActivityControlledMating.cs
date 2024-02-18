@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         /// Maximum age for mating
         /// </summary>
         [Description("Maximum female age for mating")]
-        [Category("General", "All")]
+        [Category("Farm", "Breeding")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier MaximumAgeMating { get; set; } = new int[] { 20, 0, 0 };
@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
         /// Number joinings per male before male genetics replaced
         /// </summary>
         [Description("Joinings per individual male (genetics)")]
-        [Category("Genetics", "All")]
+        [Category("Farm", "Genetics")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1)]
         public int JoiningsPerMale { get; set; }

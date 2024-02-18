@@ -30,14 +30,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Cut-off for condition-based conception
         /// </summary>
-        [Category("Advanced", "Survival")]
+        [Category("Farm", "Survival")]
         [Description("Cut-off for condition-based conception")]
         [Required, GreaterThanEqualValue(0)]
         public double ConditionBasedConceptionCutOff { get; set; }
         /// <summary>
         /// Probability of dying if less than condition-based mortality cut-off
         /// </summary>
-        [Category("Advanced", "Survival")]
+        [Category("Farm", "Survival")]
         [Description("Probability of conception when above cut-off")]
         [System.ComponentModel.DefaultValue(1)]
         [Required, Proportion, GreaterThanValue(0)]

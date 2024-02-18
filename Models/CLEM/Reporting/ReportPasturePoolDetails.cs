@@ -25,98 +25,98 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Per ha
         /// </summary>
-        [Category("Style", "Units")]
+        [Category("Report", "Units")]
         [Description("Report per hectare")]
         public bool ReportPerHectare { get; set; }
 
         /// <summary>
         /// Report in tonnes
         /// </summary>
-        [Category("Style", "Units")]
+        [Category("Report", "Units")]
         [Description("Report in tonnes")]
         public bool ReportInTonnes { get; set; }
 
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Total")]
         public bool ReportTotal { get; set; }
 
         /// <summary>
         /// Pasture growth in timestep (kg)
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("New growth")]
         public bool ReportGrowth { get; set; }
 
         /// <summary>
         /// Pasture consumed in timestep
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Consumed")]
         public bool ReportConsumed { get; set; }
 
         /// <summary>
         /// Pasture detached in timestep
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Detached")]
         public bool ReportDetached { get; set; }
 
         /// <summary>
         /// Pasture Nitrogen (%)
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Nitrogen (%)")]
         public bool ReportNitrogen { get; set; }
 
         /// <summary>
         /// Dry Matter Digestibility (DMD, %)
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Dry matter digestibility (%, DMD)")]
         public bool ReportDMD { get; set; }
 
         /// <summary>
         /// Average age in timestep
         /// </summary>
-        [Category("By pasture", "Output")]
+        [Category("Report", "By pasture")]
         [Description("Average pasture age")]
         public bool ReportAge { get; set; }
 
         /// <summary>
         /// Pools Amount (kg)
         /// </summary>
-        [Category("By pools", "Output")]
+        [Category("Report", "By pools")]
         [Description("Total in each pool")]
         public bool ReportPoolsTotal { get; set; }
 
         /// <summary>
         /// Pools consumed in timestep (kg)
         /// </summary>
-        [Category("By pools", "Output")]
+        [Category("Report", "By pools")]
         [Description("Consumed from each pool")]
         public bool ReportPoolsConsumed { get; set; }
 
         /// <summary>
         /// Pools detached in timestep (kg)
         /// </summary>
-        [Category("By pools", "Output")]
+        [Category("Report", "By pools")]
         [Description("Detached from each pool")]
         public bool ReportPoolsDetached { get; set; }
 
         /// <summary>
         /// Pools nitrogen content (%)
         /// </summary>
-        [Category("By pools", "Output")]
+        [Category("Report", "By pools")]
         [Description("Nitrogen (%) of each pool")]
         public bool ReportPoolsNitrogen { get; set; }
 
         /// <summary>
         /// Pools dry matter digestibility (%)
         /// </summary>
-        [Category("By pools", "Output")]
+        [Category("Report", "By pools")]
         [Description("Dry matter digestibility (DMD) of each pool")]
         public bool ReportPoolsDMD { get; set; }
 

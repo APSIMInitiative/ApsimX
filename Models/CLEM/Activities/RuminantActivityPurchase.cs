@@ -37,7 +37,6 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchases in for grazing
         /// </summary>
-        [Category("General", "Pasture details")]
         [Description("GrazeFoodStore (paddock) to place purchases in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]

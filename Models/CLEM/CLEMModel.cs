@@ -33,7 +33,7 @@ namespace Models.CLEM
         /// Model settings notes
         /// </summary>
         [Description("Notes")]
-        [Category("*", "*")]
+        [Category("Simulation", "Details")]
         [Core.Display(Order = 9999)]
         public string Notes { get; set; }
 

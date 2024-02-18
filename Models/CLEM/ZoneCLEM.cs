@@ -43,6 +43,11 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
+        /// The type of user set for this simulation
+        /// </summary>
+        public CLEMUserType UserType { get; set; } = CLEMUserType.General;
+
+        /// <summary>
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [Required, GreaterThanValue(0)]
@@ -77,25 +82,21 @@ namespace Models.CLEM
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool UseModelNameAsTransactionCategory { get; set; }
 
-        // ignore zone base class properties
+        // ignore zone base class properties from Models.Zone
 
-        /// <summary>Area of the zone.</summary>
-        /// <value>The area.</value>
+        /// <inheritdoc/>
         [JsonIgnore]
         public new double Area { get; set; }
 
-        /// <summary>Gets or sets the slope.</summary>
-        /// <value>The slope.</value>
+        /// <inheritdoc/>
         [JsonIgnore]
         public new double Slope { get; set; }
 
-        /// <summary>
-        /// not used in CLEM
-        /// </summary>
+        /// <inheritdoc/>
         [JsonIgnore]
         public new double AspectAngle { get; set; }
 
-        /// <summary>Local altitude (meters above sea level).</summary>
+        /// <inheritdoc/>
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 

@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Presentation;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.DCAPST.Environment;
 using System;
@@ -18,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrowSCA : CLEMModel
+    public class RuminantParametersGrowSCA : CLEMModel, ISubParameters
     {
         #region Rumen Degradability CRD#
 
@@ -177,7 +178,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG8)
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Energy per kg growth #1 [CG8]")]
         [System.ComponentModel.DefaultValue(27.0)] // B.indicus 23.2
         [Required, GreaterThanValue(0)] // [breed] - Growth
@@ -185,7 +186,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG9)
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
         [System.ComponentModel.DefaultValue(20.3)] // B.indicus 16.5
         [Required, GreaterThanValue(0)] // [breed] - Growth
@@ -195,7 +196,7 @@ namespace Models.CLEM.Resources
         /// Slope parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG10)
         /// </summary>
         /// <values>Default is for cattle</values>
-        [Category("Advanced", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Growth energy slope #1 [CG10]")]
         [System.ComponentModel.DefaultValue(2.0)]
         [Required, GreaterThanValue(0)] // [breed] - Growth
@@ -205,7 +206,7 @@ namespace Models.CLEM.Resources
         /// Slope parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG11)
         /// </summary>
         /// <values>Default is for cattle (20.3), Bos indicus breed value used</values>
-        [Category("Advanced", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG11]")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(13.8)]// [breed] - Growth
@@ -474,7 +475,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Farm", "Lactation")]
         [Description("Relative condition effect [CI20]")]
-        [Required, GreaterThanValue(0)]
+        [Required, GreaterThanValue(1)]
         [System.ComponentModel.DefaultValue(1.5)]
         public double RelativeConditionEffect_CI20 { get; set; }
 

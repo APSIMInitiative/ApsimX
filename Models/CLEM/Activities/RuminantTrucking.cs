@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) truckDetails;
 
         /// <inheritdoc/>
-        [Category("General", "")]
+        [Category("Farm", "General")]
         [Description("Purchase or sales identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Distance to market
         /// </summary>
-        [Category("General", "")]
+        [Category("Farm", "General")]
         [Description("Travel distance (km)")]
         [Required, GreaterThanValue(0)]
         public double DistanceToMarket { get; set; }
@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Number animals per truck load
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Number of animals per load unit (deck/pod)")]
         [Required, GreaterThanValue(0)]
         public double NumberPerLoadUnit { get; set; }
@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum load units per truck
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units (deck/pod) per truck (0 any)")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadUnitsPerTruck { get; set; }
@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum load units per truck
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Maximum load units (deck/pod) per truck")]
         [Required, GreaterThanValue(0)]
         public double MaximumLoadUnitsPerTruck { get; set; }
@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Load units per trailer 
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Load units (deck/pod) per trailer")]
         [Required, GreaterThanValue(0)]
         public double[] LoadUnitsPerTrailer { get; set; }
@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum number of load units before transporting (0 continuous)
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units before transporting (0 continuous)")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadUnitsBeforeTransporting { get; set; }
@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum number of load units before adding a trailer if available (0 continuous)
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units before adding trailer (0 continuous)")]
         [Required, GreaterThanEqualValue(0)]
         public double[] MinimumLoadUnitsBeforeAddTrailer { get; set; }

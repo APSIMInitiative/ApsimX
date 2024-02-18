@@ -1196,62 +1196,23 @@ namespace Models.CLEM
         NotMated
     }
 
-
-
-    ///// <summary>
-    ///// A list of labels used for communication between an activity and companion models
-    ///// </summary>
-    //[Serializable]
-    //public struct LabelsForCompanionModels
-    //{
-    //    /// <summary>
-    //    /// List of available identifiers
-    //    /// </summary>
-    //    public List<string> Identifiers;
-    //    /// <summary>
-    //    /// List of available measures
-    //    /// </summary>
-    //    public List<string> Measures;
-
-    //    /// <summary>
-    //    /// Constructor
-    //    /// </summary>
-    //    /// <param name="identifiers"></param>
-    //    /// <param name="measures"></param>
-    //    public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
-    //    {
-    //        Identifiers = identifiers;
-    //        Measures = measures;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Additional linq extensions
-    ///// </summary>
-    //public static class LinqExtensions
-    //{
-    //    /// <summary>
-    //    /// Method to extend linq and allow DistinctBy for unions
-    //    /// Provided by MoreLinQ
-    //    /// </summary>
-    //    /// <typeparam name="TSource"></typeparam>
-    //    /// <typeparam name="TKey"></typeparam>
-    //    /// <param name="source"></param>
-    //    /// <param name="keySelector"></param>
-    //    /// <returns></returns>
-    //    public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-    //     (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-    //    {
-    //        HashSet<TKey> knownKeys = new HashSet<TKey>();
-    //        foreach (TSource element in source)
-    //        {
-    //            if (knownKeys.Add(keySelector(element)))
-    //            {
-    //                yield return element;
-    //            }
-    //        }
-    //    }
-
-    //}
+    /// <summary>
+    /// The level of the current user for access to properties
+    /// </summary>
+    public enum CLEMUserType
+    {
+        /// <summary>
+        /// General user creating farm simulations
+        /// </summary>
+        General,
+        /// <summary>
+        /// Advanced user creating components such as breeds
+        /// </summary>
+        Creator,
+        /// <summary>
+        /// Expert user further developing the model
+        /// </summary>
+        Developer
+    }
 
 }

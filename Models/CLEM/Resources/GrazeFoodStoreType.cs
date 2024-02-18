@@ -82,7 +82,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
         /// </summary>
-        [Category("Advanced", "Quality")]
+        [Category("Pasture", "Quality")]
         [Description("Coefficient to convert initial N% to DMD%")]
         [Required]
         public double NToDMDCoefficient { get; set; }
@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept to convert initial N% to DMD%
         /// </summary>
-        [Category("Advanced", "Quality")]
+        [Category("Pasture", "Quality")]
         [Description("Intercept to convert initial N% to DMD%")]
         [Required]
         public double NToDMDIntercept { get; set; }
@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Nitrogen of new growth (%)
         /// </summary>
-        [Category("Basic", "Quality")]
+        [Category("Farm", "Quality")]
         [Description("Nitrogen content of new growth (%)")]
         [Required, Percentage]
         public double GreenNitrogen { get; set; }
@@ -106,7 +106,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
         [Required, GreaterThanEqualValue(0)]
         public double DecayNitrogen { get; set; }
@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("Minimum nitrogen %")]
         [Required, Percentage]
         public double MinimumNitrogen { get; set; }
@@ -122,7 +122,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion Dry Matter Digestibility loss each month from pools
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("Proportion DMD loss each month from pools")]
         [Required, Proportion]
         public double DecayDMD { get; set; }
@@ -130,7 +130,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Dry Matter Digestibility
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("Minimum Dry Matter Digestibility")]
         [Required, Percentage]
         public double MinimumDMD { get; set; }
@@ -138,7 +138,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Monthly detachment rate
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("Detachment rate")]
         [Required, Proportion]
         public double DetachRate { get; set; }
@@ -146,7 +146,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Detachment rate of 12 month or older plants
         /// </summary>
-        [Category("Basic", "Decay")]
+        [Category("Farm", "Decay")]
         [Description("Carryover detachment rate")]
         [Required, Proportion]
         public double CarryoverDetachRate { get; set; }
@@ -170,14 +170,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Initial pasture biomass
         /// </summary>
-        [Category("Basic", "Initial biomass")]
+        [Category("Farm", "Initial biomass")]
         [Description("Initial biomass (kg per ha)")]
         public double StartingAmount { get; set; }
 
         /// <summary>
         /// First month of seasonal growth
         /// </summary>
-        [Category("Basic", "Initial biomass")]
+        [Category("Farm", "Initial biomass")]
         [Description("First month of seasonal growth")]
         [System.ComponentModel.DefaultValueAttribute(11)]
         [Required, Month]
@@ -186,7 +186,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last month of seasonal growth
         /// </summary>
-        [Category("Basic", "Initial biomass")]
+        [Category("Farm", "Initial biomass")]
         [Description("Last month of seasonal growth")]
         [System.ComponentModel.DefaultValueAttribute(3)]
         [Required, Month]
@@ -195,7 +195,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number of months for initial biomass
         /// </summary>
-        [Category("Basic", "Initial biomass")]
+        [Category("Farm", "Initial biomass")]
         [Description("Number of months for initial biomass")]
         [System.ComponentModel.DefaultValueAttribute(5)]
         public int NumberMonthsForInitialBiomass { get; set; }
