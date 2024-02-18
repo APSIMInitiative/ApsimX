@@ -45,8 +45,6 @@ namespace UserInterface.Views
             mainWidget = hpaned;
             rightHandView.BorderWidth = 7;
 
-
-
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();

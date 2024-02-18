@@ -83,7 +83,7 @@ namespace UserInterface.Presenters
                           BindingFlags.Instance
                           );
 
-                    // check if any category attribtes other than "*" fould and if so make this a PropertyCategoryPresenter
+                    // check if any category attribtes other than "*" found and if so make this a PropertyCategoryPresenter
                     bool categoryAttributeFound = props.Where(prop => prop.IsDefined(typeof(CategoryAttribute), false) && (prop.GetCustomAttribute(typeof(CategoryAttribute)) as CategoryAttribute).Category != "*").Any();
                     if (categoryAttributeFound)
                     {
@@ -96,8 +96,7 @@ namespace UserInterface.Presenters
                         (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.View }, null, null);
-                        IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
-                        if (newView != null && propertyPresenter != null)
+                        if (newView != null && Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) is IPresenter propertyPresenter)
                         {
                             this.View.AddTabView("Properties", newView);
                             propertyPresenter.Attach(model, newView, this.ExplorerPresenter);

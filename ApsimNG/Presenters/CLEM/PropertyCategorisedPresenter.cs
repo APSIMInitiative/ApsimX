@@ -3,28 +3,35 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    using System.Linq;
     using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using Interfaces;
-    using Models;
+    using global::UserInterface.Interfaces;
+    using global::UserInterface.Views;
+    using Models.CLEM;
     using Models.Core;
-    using Views;
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 
     /// tree view of category and sub-category property attributes that define the filter rule used and 
-    /// which properties are displayed. This was developed to hepl the user when a large number of properties are
-    /// provided with a model, you you want to distinguish general and advanced properties
+    /// which properties are displayed. This was developed to help the user when a large number of properties are
+    /// provided with a model, and you want to distinguish the type of user relevant to the properties
     /// This presenter uses the PropertyView and PropertyMultiModelView views.
     /// </summary>
     public class PropertyCategorisedPresenter : IPresenter
     {
+        private readonly Dictionary<string, int> sortOrderList = new ()
+        {
+            { "Simulation", 0 },
+            { "Farm", 0 },
+            { "Breed", 1 },
+            { "Pasture", 1 },
+            { "Core", 2 },
+            { "Unspecified", 0 }
+        };
+
+        protected int userLevel = 0;
+        protected CategoryTree categoryTree = null;
+
         /// <summary>The visual instance</summary>
         protected IPropertyCategorisedView treeview;
         protected IPropertyView propertyView;
@@ -51,8 +58,8 @@ namespace UserInterface.Presenters
         /// <value>The width of the tree.</value>
         public int TreeWidth
         {
-            get { return this.treeview.TreeWidth; }
-            set { this.treeview.TreeWidth = value; }
+            get { return treeview.TreeWidth; }
+            set { treeview.TreeWidth = value; }
         }
 
         /// <summary>
@@ -66,7 +73,7 @@ namespace UserInterface.Presenters
         {
             get
             {
-                return this.propertyPresenter;
+                return propertyPresenter;
             }
         }
 
@@ -76,7 +83,7 @@ namespace UserInterface.Presenters
         {
             get
             {
-                return this.treeview.SelectedNode;
+                return treeview.SelectedNode;
             }
         }
 
@@ -89,27 +96,35 @@ namespace UserInterface.Presenters
         public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.treeview = view as IPropertyCategorisedView;
+
+            userLevel = (int)((model as IModel).FindInScope<ZoneCLEM>()?.UserType?? CLEMUserType.General);
+
+            treeview = view as IPropertyCategorisedView;
             if(view is null)
                 throw new ArgumentException($"The view must be an PropertyCategorisedView instance");
 
-            this.treeview.SelectedNodeChanged += this.OnNodeSelected;
+            treeview.SelectedNodeChanged += OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
             //Fill in the nodes in the tree view
-            this.RefreshTreeView();
+            propertyView = new PropertyView(treeview as ViewBase);
+
+            propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, propertyView, explorerPresenter);
+
+            categoryTree = GetPropertyCategories();
+            RefreshTreeView();
 
             //Initialise the Right Hand View
-            this.propertyPresenter = new PropertyPresenter();
-            this.ShowRightHandView();
+            ShowRightHandView();
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
+            treeview.SelectedNodeChanged -= OnNodeSelected;
 
-            this.HideRightHandView();
+            HideRightHandView();
             (treeview as ViewBase).Dispose();
         }
 
@@ -118,27 +133,26 @@ namespace UserInterface.Presenters
         /// </summary>
         public void RefreshTreeView()
         {
-            CategoryTree categoryTree = this.GetPropertyCategories();
-            this.treeview.Refresh(this.GetNodeDescription(categoryTree));
+            treeview.Refresh(GetNodeDescription(categoryTree));
         }
 
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
         {
-            this.treeview.SelectedNode = nodePath;
-            this.HideRightHandView();
-            this.ShowRightHandView();
+            treeview.SelectedNode = nodePath;
+            HideRightHandView();
+            ShowRightHandView();
         }
 
         /// <summary>Hide the right hand panel.</summary>
         public void HideRightHandView()
         {
-            if (this.propertyPresenter != null)
+            if (propertyPresenter != null)
             {
                 try
                 {
-                    this.propertyPresenter.Detach();
+                    propertyPresenter.Detach();
                 }
                 catch (Exception err)
                 {
@@ -146,17 +160,18 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.selectedCategory = "";
-            this.selectedSubCategory = "";
-            this.treeview.AddRightHandView(null); //add an Empty right hand view
+            selectedCategory = "";
+            selectedSubCategory = "";
+            treeview.AddRightHandView(null); //add an Empty right hand view
         }
 
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandView()
         {
-            if (this.treeview.SelectedNode != string.Empty)
+            (propertyPresenter as PropertyPresenter).Filter = IsPropertyVisibleToUser;
+            if (treeview.SelectedNode != string.Empty)
             {
-                string[] path = this.treeview.SelectedNode.Split('.');
+                string[] path = treeview.SelectedNode.Split('.');
                 string root = "";
                 string category = "";
                 string subcategory = "";
@@ -187,17 +202,16 @@ namespace UserInterface.Presenters
                         subcategory = path[3];
                         break;
                 }
-                this.selectedCategory = category;
-                this.selectedSubCategory = subcategory;
-                (this.propertyPresenter as PropertyPresenter).Filter = IsPropertySelected;
+                selectedCategory = category;
+                selectedSubCategory = subcategory;
+                if(selectedCategory != "")
+                    (propertyPresenter as PropertyPresenter).Filter = IsPropertySelected;
             }
             else
             {
-                //this will show all the properties in the model 
-                //there will be no filtering on Category and Subcategory.
-                (this.propertyPresenter as PropertyPresenter).Filter = null;
-                this.selectedCategory = "";
-                this.selectedSubCategory = "";
+                //this will show all the properties in the model based categories available for the current user level
+                selectedCategory = "";
+                selectedSubCategory = "";
             }
 
             CreateAndAttachRightPanel();
@@ -205,11 +219,16 @@ namespace UserInterface.Presenters
 
         public virtual void CreateAndAttachRightPanel()
         {
-            //create a new grid view to be added as a RightHandView
-            //nb. the grid view is owned by the tree view not by this presenter.
-            this.propertyView = new PropertyView(this.treeview as ViewBase);
-            this.treeview.AddRightHandView(this.propertyView);
-            this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);
+            // create a new grid view to be added as a RightHandView
+            // nb. the grid view is owned by the tree view not by this presenter.
+            propertyView = new PropertyView(treeview as ViewBase);
+
+            // disable right pane if user is not authorised
+            if((selectedCategory ?? "") != "")
+                (propertyView as PropertyView).MainWidget.SetProperty("sensitive", new GLib.Value(sortOrderList[selectedCategory] <= userLevel));
+
+            propertyPresenter.Attach(model, propertyView, explorerPresenter);
+            treeview.AddRightHandView(propertyView);
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
@@ -217,13 +236,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Node arguments</param>
         protected void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
-            this.HideRightHandView();
-            this.ShowRightHandView();
+            HideRightHandView();
+            ShowRightHandView();
         }
 
         public virtual IModel ModelForProperties()
         {
-            return this.model;
+            return model;
         }
 
         /// <summary>
@@ -233,66 +252,38 @@ namespace UserInterface.Presenters
         private CategoryTree GetPropertyCategories()
         {
             CategoryTree categories = new CategoryTree();
-            IModel modelToUse = ModelForProperties();
 
-            if (modelToUse != null)
+            foreach (var propertyPair in (propertyPresenter as PropertyPresenter).GetPropertyMap.Values)
             {
-                foreach (PropertyInfo property in modelToUse.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
-                {
-                    // Properties must have a [Description], not be called Name, and be read/write.
-                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                    bool includeProperty = hasDescription &&
-                                           property.Name != "Name" &&
-                                           property.CanRead &&
-                                           property.CanWrite;
 
-                    // Only allow lists that are double[], int[] or string[]
-                    if (includeProperty && property.PropertyType.GetInterface("IList") != null)
-                        includeProperty = property.PropertyType == typeof(double[]) ||
-                                          property.PropertyType == typeof(int[]) ||
-                                          property.PropertyType == typeof(string[]);
-
-                    if (includeProperty)
-                    { 
-                        // Those properties with a [Catagory] attribute 
-                        bool hasCategory = property.IsDefined(typeof(CategoryAttribute), false);
-                        if (hasCategory)
+                if(propertyPair.Category is not null)
+                { 
+                    int catIndex = 0;
+                    foreach (var catLabel in (propertyPair.Category.Category.Split(':')))
+                    {
+                        if (catLabel != "*")
                         {
-                            //get the attribute data
-                            CategoryAttribute catAtt = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
-                            // add the category name to the list of category items
-                            // allow : separated list for multiple categories
-                            int catIndex = 0;
-                            foreach (var catLabel in catAtt.Category.Split(':'))
-                            {
-                                if (catLabel != "*")
-                                {
-                                    categories.AddCategoryToTree(catLabel);
-                                    //add the subcategory name to the list of subcategories for the category
-                                    CategoryItem catItem = categories.FindCategoryInTree(catLabel);
-                                    var subLabels = catAtt.Subcategory.Split(':');
-                                    if (subLabels.Length >= catIndex + 1)
-                                        if (subLabels[catIndex] != "*")
-                                            catItem.AddSubcategoryName(subLabels[catIndex]);
-                                }
-                                catIndex++;
-                            }
-                            //categories.AddCategoryToTree(catAtt.Category);
-                            ////add the subcategory name to the list of subcategories for the category
-                            //CategoryItem catItem = categories.FindCategoryInTree(catAtt.Category);
-                            //catItem.AddSubcategoryName(catAtt.Subcategory);
+                            categories.AddCategoryToTree(catLabel);
+                            //add the subcategory name to the list of subcategories for the category
+                            CategoryItem catItem = categories.FindCategoryInTree(catLabel);
+                            var subLabels = propertyPair.Category.Subcategory.Split(':');
+                            if (subLabels.Length >= catIndex + 1)
+                                if (subLabels[catIndex] != "*")
+                                    catItem.AddSubcategoryName(subLabels[catIndex]);
                         }
-                        else
-                        {
-                            //If there is not [Category] attribute at all on the property in the model.
-                            //Add it to the "Unspecified" Category, and "Unspecified" Subcategory
-                            categories.AddCategoryToTree("Unspecified");
-                            CategoryItem catItem = categories.FindCategoryInTree("Unspecified");
-                            catItem.AddSubcategoryName("Unspecified");
-                        }
+                        catIndex++;
                     }
                 }
+                else
+                {
+                    // If there is no [Category] attribute at all on the property in the model add it to the "Unspecified" Category, and "Unspecified" Subcategory
+                    categories.AddCategoryToTree("Unspecified");
+                    CategoryItem catItem = categories.FindCategoryInTree("Unspecified");
+                    catItem.AddSubcategoryName("Unspecified");
+                }
             }
+
+            categories.CategoryItems = categories.CategoryItems.OrderBy(x => sortOrderList.Keys.ToList().IndexOf(x.Name)).ToList();
             return categories;
         }
  
@@ -303,7 +294,7 @@ namespace UserInterface.Presenters
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {
-            TreeViewNode root = new TreeViewNode();
+            TreeViewNode root = new();
             root.Name =  model.Name;
 
             // find namespace and image name needed to find image file in the Resources of UserInterface project
@@ -331,20 +322,15 @@ namespace UserInterface.Presenters
 
         protected bool IsPropertySelected(PropertyInfo property)
         {
-            if ((this.selectedCategory??"") != "") // a category has been selected
+            if ((selectedCategory??"") != "") // a category has been selected
             {
                 if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
                 {
                     CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
-                    if (catAtt.Category.StartsWith("*") || Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
+                    if (Array.Exists(catAtt.Category.Split(':'), element => element == selectedCategory))
                     {
                         if ((selectedSubCategory ?? "") != "") // a sub category has been selected
-                        {
-                            // The catAtt.Subcategory is by default given a value of 
-                            // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
-                            // so this line below will also handle "Unspecified" subcategories.
-                            return (catAtt.Subcategory.StartsWith("*") || Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
-                        }
+                            return (Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
                     }
                     else
                     {
@@ -353,11 +339,29 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    // if we are filtering on "Unspecified" category then there is no Category Attribute
-                    // just a Description Attribute on the property in the model.
-                    // So we still may need to include it in this case.
-                    return (this.selectedCategory == "Unspecified");
+                    // if we are filtering on "Unspecified" category then there is no Category Attribute on the property in the model.
+                    return (selectedCategory == "Unspecified");
                 }
+            }
+            return true;
+        }
+
+        protected bool IsPropertyVisibleToUser(PropertyInfo property)
+        {
+            if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
+            {
+                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
+                foreach (var subCat in catAtt.Category.Split(':'))
+                {
+                    if (sortOrderList.ContainsKey(subCat))
+                    {
+                        if (sortOrderList[subCat] <= userLevel)
+                            { return true; }
+                    }
+                    else
+                        { return true; }
+                }
+                return false;
             }
             return true;
         }
