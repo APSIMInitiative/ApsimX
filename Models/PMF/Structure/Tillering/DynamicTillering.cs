@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -7,6 +8,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Utilities;
 using Newtonsoft.Json;
+using PdfSharpCore.Pdf.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,12 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(LeafCulms))]
     public class DynamicTillering : Model, ITilleringMethod
     {
+        /// <summary>
+        /// Link to clock (used for FTN calculations at time of sowing).
+        /// </summary>
+        [Link]
+        private IClock clock = null;
+
         /// <summary>The parent Plant</summary>
         [Link]
         Plant plant = null;
@@ -41,6 +49,12 @@ namespace Models.PMF.Struct
         /// <summary>The met data</summary>
         [Link]
         private IWeather metData = null;
+
+        /// <summary>
+		/// Link to weather.
+		/// </summary>
+		[Link]
+        private IWeather weather = null;
 
         /// <summary> Culms on the leaf </summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -74,6 +88,10 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public double CalculatedTillerNumber { get; set; }
 
+        /// <summary>Tillering calculation type</summary>
+        [JsonIgnore]
+        public int TilleringMethod { get; set; }
+
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
@@ -87,7 +105,7 @@ namespace Models.PMF.Struct
         public double FertileTillerNumber
         {
             get => CurrentTillerNumber;
-            set { throw new Exception("Cannot set the FertileTillerNumber for Dynamic Tillering. Make sure you set TilleringMethod before FertileTillerNmber"); }
+            set { }
         }
 
         /// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
@@ -106,6 +124,7 @@ namespace Models.PMF.Struct
         private double radiationValues = 0.0;
         private double temperatureValues = 0.0;
         private readonly List<int> tillerOrder = new();
+        private bool initialTillersAdded = false;
 
         private double GetDeltaDmGreen() { return leaf.potentialDMAllocation.Structural; }
 
@@ -151,7 +170,7 @@ namespace Models.PMF.Struct
         {
             if (culms.Culms?.Count == 0) return 0.0;
             if (!plant.IsEmerged) return 0.0;
-            
+
             if (BeforeEndJuvenileStage())
             {
                 // ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
@@ -177,13 +196,37 @@ namespace Models.PMF.Struct
                 }
             }
 
+            // Calculate Potential Tiller Number.
+
             var newLeafNo = (int)Math.Floor(mainCulm.CurrentLeafNo);
 
-            if (nLeaves > startThermalQuotientLeafNo)
+            // Up to L5 FE store PTQ. At L5 FE calculate tiller number (endThermalQuotientLeafNo).
+            // At L5 FE newLeaf = 6 and currentLeaf = 5
+            if (newLeafNo >= startThermalQuotientLeafNo && existingLeafNo < endThermalQuotientLeafNo)
             {
-                CalcTillers(newLeafNo, existingLeafNo);
+                radiationValues += metData.Radn;
+                temperatureValues += phenology.thermalTime.Value();
+            }
+            if (newLeafNo == endThermalQuotientLeafNo && !initialTillersAdded)   // L5 Fully Expanded
+            {
+                if (TilleringMethod == 1)        // Dynamic calculation
+                {
+                    double PTQ = radiationValues / temperatureValues;
+                    CalcTillerNumber(PTQ);
+                }
+
+                AddInitialTillers();
+                initialTillersAdded = true;
+            }
+
+
+
+            //CalcTillers(newLeafNo, existingLeafNo);
+            if (newLeafNo >= 5)
+            {
                 CalcTillerAppearance(newLeafNo, existingLeafNo);
             }
+
 
             return dltLeafNoMainCulm;
         }
@@ -218,7 +261,7 @@ namespace Models.PMF.Struct
                     CalcTillerNumber(PTQ);
                     AddInitialTillers();
                 }
-            }            
+            }
         }
 
         private void CalcTillerNumber(double PTQ)
@@ -238,7 +281,7 @@ namespace Models.PMF.Struct
             SupplyDemandRatio = MathUtilities.Divide(supply, demand, 0);
 
             CalculatedTillerNumber = Math.Max(
-                tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio, 
+                tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio,
                 0.0
             );
         }
@@ -298,20 +341,20 @@ namespace Models.PMF.Struct
             // 4. there should be a tiller at that node. (Check tillerOrder)
 
             var tillersAdded = culms.Culms.Count - 1;
-            double lLAI = CalcLinearLAI();
+            if (TilleringMethod == 1)
+            {
+                double lLAI = CalcLinearLAI();
+                if (lLAI > maxLAIForTillerAddition.Value()) return;
+            }
 
-            if (newLeaf >= 5 &&
-                newLeaf > currentLeaf &&
-                CalculatedTillerNumber > tillersAdded &&
-                lLAI < maxLAIForTillerAddition.Value()
-            )
+            if (newLeaf >= 5 && newLeaf > currentLeaf && CalculatedTillerNumber > tillersAdded)
             {
                 // Axil = currentLeaf - 3
                 int newNodeNumber = newLeaf - 3;
                 if (tillerOrder.Contains(newNodeNumber))
                 {
                     var fractionToAdd = Math.Min(1.0, CalculatedTillerNumber - tillersAdded);
-                    
+
                     DltTillerNumber = fractionToAdd;
                     CurrentTillerNumber += fractionToAdd;
 
@@ -364,7 +407,8 @@ namespace Models.PMF.Struct
             if (mainCulm != null &&
                 AfterEndJuvenileStage() &&
                 CalculatedTillerNumber > 0.0 &&
-                mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf
+                mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf &&
+                TilleringMethod == 1
             )
             {
                 CalculateTillerCessation(dltStressedLAI);
@@ -429,7 +473,7 @@ namespace Models.PMF.Struct
                         // Use the amount of LAI past the target as an indicator of how much of the tiller
                         // to remove which will affect tomorrow's growth - up to the maxTillerLoss
                         double propn = Math.Max(
-                            0.0, 
+                            0.0,
                             Math.Min(maxTillerLoss - accProportion, tillerLaiLeftToReduce / tillerLAI)
                         );
 
@@ -446,7 +490,7 @@ namespace Models.PMF.Struct
                 if (!(tillerLaiLeftToReduce > 0) || accProportion >= maxTillerLoss) break;
             }
             CurrentTillerNumber = 0;
-            culms.Culms.ForEach(c => CurrentTillerNumber += c.Proportion); CurrentTillerNumber-=1;
+            culms.Culms.ForEach(c => CurrentTillerNumber += c.Proportion); CurrentTillerNumber -= 1;
 
         }
 
@@ -482,7 +526,7 @@ namespace Models.PMF.Struct
             // Changing to Reeves + 10%
             double nLeaves = mainCulm.CurrentLeafNo;
             double maxSLA;
-            maxSLA = 429.72 - 18.158 * (nLeaves);            
+            maxSLA = 429.72 - 18.158 * (nLeaves);
             maxSLA = Math.Min(400, maxSLA);
             maxSLA = Math.Max(150, maxSLA);
             var dltLaiPossible = dltDmGreen * maxSLA / 10000.0;
@@ -546,9 +590,9 @@ namespace Models.PMF.Struct
             //reduce new leaf growth proportionally across all culms
             //not reducing the number of tillers at this stage
             culms.Culms.ForEach(
-                c => 
+                c =>
                 c.DltStressedLAI -= Math.Max(
-                    c.DltStressedLAI / totalDltLeaf * laiReduction, 
+                    c.DltStressedLAI / totalDltLeaf * laiReduction,
                     0.0
                 )
             );
@@ -570,7 +614,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (data.Plant == plant && data.TilleringMethod == 1)
+            if (data.Plant == plant)
             {
                 population = data.Population;
                 plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
@@ -579,7 +623,177 @@ namespace Models.PMF.Struct
 
                 radiationValues = 0.0;
                 temperatureValues = 0.0;
+
+                TilleringMethod = data.TilleringMethod;
+
+                if (data.TilleringMethod == -1)     // Rule Of Thumb
+                    CalculatedTillerNumber = CalculateFtn();
+                else if (data.TilleringMethod == 0) // Fixed tiller number
+                    CalculatedTillerNumber = data.FTN;
+                //if (data.TilleringMethod != 1)      // Not dynamically calculated 
+                //  CalculatedTillerNumber = FertileTillerNumber;
             }
         }
+        private double CalculateFtn()
+        {
+            // Estimate tillering given latitude, density, time of planting and
+            // row configuration. this will be replaced with dynamic
+            // calculations in the near future. Above latitude -25 is CQ, -25
+            // to -29 is SQ, below is NNSW.
+            double intercept, slope;
+
+            if (weather.Latitude > -12.5 || weather.Latitude < -38.0)
+                // Unknown region.
+                throw new Exception("Unable to estimate number of tillers at latitude {weather.Latitude}");
+
+            if (weather.Latitude > -25.0)
+            {
+                // Central Queensland.
+                if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+                {
+                    // Between 1 July and 15 November.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 0.5786; slope = -0.0521;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 0.8786; slope = -0.0696;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 1.1786; slope = -0.0871;
+                    }
+                }
+                else
+                {
+                    // After 15 November.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 0.4786; slope = -0.0421;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5)
+                        intercept = 0.6393; slope = -0.0486;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 0.8000; slope = -0.0550;
+                    }
+                }
+            }
+            else if (weather.Latitude > -29.0)
+            {
+                // South Queensland.
+                if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+                {
+                    // Between 1 July and 15 November.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double  (2.0).
+                        intercept = 1.1571; slope = -0.1043;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 1.7571; slope = -0.1393;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 2.3571; slope = -0.1743;
+                    }
+                }
+                else
+                {
+                    // After 15 November.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 0.6786; slope = -0.0621;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 1.1679; slope = -0.0957;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 1.6571; slope = -0.1293;
+                    }
+                }
+            }
+            else
+            {
+                // Northern NSW.
+                if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+                {
+                    //  Between 1 July and 15 November.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 1.3571; slope = -0.1243;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 2.2357; slope = -0.1814;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 3.1143; slope = -0.2386;
+                    }
+                }
+                else if (clock.Today.DayOfYear > 349 || clock.Today.DayOfYear < 182)
+                {
+                    // Between 15 December and 1 July.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 0.4000; slope = -0.0400;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 1.0571; slope = -0.0943;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 1.7143; slope = -0.1486;
+                    }
+                }
+                else
+                {
+                    // Between 15 November and 15 December.
+                    if (plant.SowingData.SkipRow > 1.9)
+                    {
+                        // Double (2.0).
+                        intercept = 0.8786; slope = -0.0821;
+                    }
+                    else if (plant.SowingData.SkipRow > 1.4)
+                    {
+                        // Single (1.5).
+                        intercept = 1.6464; slope = -0.1379;
+                    }
+                    else
+                    {
+                        // Solid (1.0).
+                        intercept = 2.4143; slope = -0.1936;
+                    }
+                }
+            }
+
+            return Math.Max(slope * plant.SowingData.Population + intercept, 0);
+        }
+
     }
 }

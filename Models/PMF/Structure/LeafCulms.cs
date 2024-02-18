@@ -66,7 +66,7 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public int TilleringMethod { get; set; }
 
-        private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
+        private ITilleringMethod tillering => TilleringMethod == 0 ? dynamicTillering : dynamicTillering;
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
