@@ -1,5 +1,6 @@
 using APSIM.Shared.Utilities;
 using Models;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections;
@@ -12,6 +13,7 @@ using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using static AutoMapper.QueryableExtensions.LetPropertyMaps;
 
 namespace UserInterface.Presenters
 {
@@ -43,6 +45,11 @@ namespace UserInterface.Presenters
         /// the view, and the object to which that property belongs.
         /// </summary>
         private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
+
+        /// <summary>
+        /// Provide the list of properties for category presenters to work with
+        /// </summary>
+        public Dictionary<Guid, PropertyObjectPair> GetPropertyMap { get { return propertyMap; } }
 
         /// <summary>
         /// Attach the model to the view.
@@ -107,8 +114,17 @@ namespace UserInterface.Presenters
             // yield multiple properties to be displayed in the view.
             List<Property> properties = new List<Property>();
             List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
+            CategoryAttribute categoryAttribute = null;
             foreach (PropertyInfo property in allProperties)
             {
+                // Assign any category attribute details here for category based property presenter (currently in CLEM)
+                if (property.IsDefined(typeof(CategoryAttribute), false))
+                {
+                    categoryAttribute = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
+                    if(categoryAttribute.Category == "*")
+                        categoryAttribute = new CategoryAttribute("Simulation", "Details");
+                }
+
                 DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
                 if (display != null && display.Type == DisplayType.SubModel)
                 {
@@ -138,16 +154,25 @@ namespace UserInterface.Presenters
                         PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
 
                         result = new Property(subObject, subProperty, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty, Category = categoryAttribute });
                     }
                     else
                     {
                         result = new Property(obj, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property, Category = categoryAttribute });
                     }
                     properties.Add(result);
                 }
             }
+
+            // Also allow children of parent object to be added as groups if they are of type ISubParameters (Used in CLEM and CategoryProperyPresenter)
+            foreach (var submodel in (obj as IModel).FindAllDescendants<ISubParameters>().Cast<IModel>())
+            {
+                PropertyGroup group = GetProperties(submodel);
+                group.Name = submodel.Name;
+                subModelProperties.Add(group);
+            }
+
             string name = obj is IModel model ? model.Name : obj.GetType().Name;
             return new PropertyGroup(name, properties, subModelProperties);
         }
@@ -247,10 +272,11 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Stores a property and the object to which it belongs.
         /// </summary>
-        private struct PropertyObjectPair
+        public struct PropertyObjectPair
         {
             public object Model { get; set; }
             public PropertyInfo Property { get; set; }
+            public CategoryAttribute Category { get; set; }
         }
     }
 }
