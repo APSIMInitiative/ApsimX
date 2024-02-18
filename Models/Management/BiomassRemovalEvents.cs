@@ -165,6 +165,17 @@ namespace Models.Management
         {
             LinkCrop();
 
+            if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
+                Cutting?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
+                Grazing?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Pruning.ToString())
+                Pruning?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
+                Harvesting?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.EndCrop.ToString())
+                EndCrop?.Invoke(this, new EventArgs());
+
             foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
             {
                 if (removal.Type == RemovalType)
@@ -177,16 +188,6 @@ namespace Models.Management
                 }
             }
 
-            if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
-                Cutting?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
-                Grazing?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Pruning.ToString())
-                Pruning?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
-                Harvesting?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.EndCrop.ToString())
-                EndCrop?.Invoke(this, new EventArgs());
 
             double stage;
             Double.TryParse(StageToSet, out stage);
