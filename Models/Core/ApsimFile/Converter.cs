@@ -5151,7 +5151,7 @@ namespace Models.Core.ApsimFile
                 // check for an existing Nutrient node. If it exists, do not add another one.
                 JObject parentObject = parent.ToObject<JObject>();
                 var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
-                if (existingNutrient == null)
+                if (existingNutrient.Count == 0)
                 {
                     var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
                     nutrient["ResourceName"] = "Nutrient";
@@ -5330,7 +5330,7 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion169(JObject root, string _)
         {
-            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
             {
                 rotationManager["TopLevel"] = true;
             }

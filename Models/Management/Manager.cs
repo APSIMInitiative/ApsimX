@@ -42,7 +42,7 @@ namespace Models
         /// Simulations object and get its compiler.
         /// 
         /// </summary>
-        private ScriptCompiler Compiler()
+        public ScriptCompiler Compiler()
         {
             if (TryGetCompiler())
                 return scriptCompiler;
