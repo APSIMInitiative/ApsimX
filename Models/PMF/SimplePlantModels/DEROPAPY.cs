@@ -452,6 +452,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
             thisDero["ProduceGrowthLengthTt"] += clean(CurrentCropParams["ProduceGrowthLengthTt"]);
             thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
+            thisDero["FlowerStartStage"] += clean(CurrentCropParams["FlowerStartStage"]);
             
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -532,7 +533,8 @@ namespace Models.PMF.SimplePlantModels
             {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
             {"ProduceGrowthLengthTt","[DEROPAPY].Phenology.GrowingProduct.Target.FixedValue = " },
             {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
-            
+            {"FlowerStartStage","[DEROPAPY].Phenology.Flowering.StartStage = " },
+
     };
     }
 }
