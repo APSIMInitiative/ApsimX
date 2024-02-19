@@ -10,6 +10,8 @@
     using Views;
     using Interfaces;
     using Utility;
+    using DocumentFormat.OpenXml.Math;
+
 
 
 
@@ -62,7 +64,7 @@
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            scriptModel = manager.Children.FirstOrDefault();
+            scriptModel = manager.compiledModel;
 
             // See if manager script has a description attribute on it's class.
             if (scriptModel != null)

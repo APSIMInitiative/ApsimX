@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using System.Reflection;
 using APSIM.Shared.Documentation;
@@ -7,6 +8,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation.Extensions;
 
 namespace Models
 {
@@ -36,6 +38,9 @@ namespace Models
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
+
+        /// <summary>Which child is the compiled script model.</summary>
+        public IModel compiledModel { get; private set; } = null;
 
         /// <summary>
         /// At design time the [Link] above will be null. In that case search for a 
@@ -153,15 +158,12 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Children.Count != 0)
-            {
-                //throw an expection to stop simulations from running with an old binary
-                if (SuccessfullyCompiledLast == false)
-                    throw new Exception("Errors found in manager model " + Name);
+            // throw an exception to stop simulations from running with an old binary
+            if (SuccessfullyCompiledLast == false)
+                throw new Exception("Errors found in manager model " + Name);
 
-                GetParametersFromScriptModel();
-                SetParametersInScriptModel();
-            }
+            GetParametersFromScriptModel();
+            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -170,20 +172,23 @@ namespace Models
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
-                if (Children.Count != 0)
+                if (compiledModel != null)
                     GetParametersFromScriptModel();
+
+                if (compiledModel != null)
+                   Children.RemoveAll(o => o == compiledModel);
+                compiledModel = null;
 
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
                     SuccessfullyCompiledLast = true;
-                    if (Children.Count != 0)
-                        Children.Clear();
+
                     var newModel = results.Instance as IModel;
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
-                        Structure.Add(newModel, this);
+                        compiledModel = Structure.Add(newModel, this);
                     }
                 }
                 else
@@ -198,41 +203,38 @@ namespace Models
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            if (Enabled && Children.Count > 0)
+            var script = compiledModel;
+            if (Enabled && script != null && Parameters != null)
             {
-                var script = Children[0];
-                if (Parameters != null)
+                List<Exception> errors = new List<Exception>();
+                foreach (var parameter in Parameters)
                 {
-                    List<Exception> errors = new List<Exception>();
-                    foreach (var parameter in Parameters)
+                    try
                     {
-                        try
+                        PropertyInfo property = script.GetType().GetProperty(parameter.Key);
+                        if (property != null)
                         {
-                            PropertyInfo property = script.GetType().GetProperty(parameter.Key);
-                            if (property != null)
-                            {
-                                object value;
-                                if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
-                                    value = this.FindByPath(parameter.Value)?.Value;
-                                else if (property.PropertyType == typeof(IPlant))
-                                    value = this.FindInScope(parameter.Value);
-                                else
-                                    value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                                property.SetValue(script, value, null);
-                            }
-                        }
-                        catch (Exception err)
-                        {
-                            errors.Add(err);
+                            object value;
+                            if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
+                                value = this.FindByPath(parameter.Value)?.Value;
+                            else if (property.PropertyType == typeof(IPlant))
+                                value = this.FindInScope(parameter.Value);
+                            else
+                                value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
+                            property.SetValue(script, value, null);
                         }
                     }
-                    if (errors.Count > 0)
+                    catch (Exception err)
                     {
-                        string message = "";
-                        foreach (Exception error in errors)
-                            message += error.Message;
-                        throw new Exception(message);
+                        errors.Add(err);
                     }
+                }
+                if (errors.Count > 0)
+                {
+                    string message = "";
+                    foreach (Exception error in errors)
+                        message += error.Message;
+                    throw new Exception(message);
                 }
             }
         }
@@ -241,13 +243,13 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (Children.Count > 0)
-            {
-                var script = Children[0];
+            if (Parameters == null)
+                Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Clear();
 
-                if (Parameters == null)
-                    Parameters = new List<KeyValuePair<string, string>>();
-                Parameters.Clear();
+            var script = compiledModel;
+            if (script != null)
+            {
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
@@ -274,7 +276,7 @@ namespace Models
         public override IEnumerable<ITag> Document()
         {
             // Nasty!
-            IModel script = Children[0];
+            var script = compiledModel;
 
             Type scriptType = script.GetType();
             if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)

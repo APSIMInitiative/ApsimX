@@ -843,7 +843,9 @@ namespace UserInterface.Presenters
         public bool ShowModelStructureChecked()
         {
             IModel model = explorerPresenter.CurrentNode as IModel;
-            if (model != null && model.Children.Count < 1)
+            if (model == null) 
+                return false;
+            if (model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
         }
