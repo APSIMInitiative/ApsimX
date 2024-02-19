@@ -453,7 +453,9 @@ namespace Models.PMF.SimplePlantModels
             thisDero["ProduceGrowthLengthTt"] += clean(CurrentCropParams["ProduceGrowthLengthTt"]);
             thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
             thisDero["FlowerStartStage"] += clean(CurrentCropParams["FlowerStartStage"]);
-            
+            thisDero["RainfallExcessDamage_mm_X"] += clean(CurrentCropParams["RainfallExcessDamage_mm_X"]);
+            thisDero["RainfallExcessDamage_Fract_Y"] += clean(CurrentCropParams["RainfallExcessDamage_Fract_Y"]);
+
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
             Cultivar deroValues = new Cultivar(this.Name, commands);
@@ -534,6 +536,8 @@ namespace Models.PMF.SimplePlantModels
             {"ProduceGrowthLengthTt","[DEROPAPY].Phenology.GrowingProduct.Target.FixedValue = " },
             {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
             {"FlowerStartStage","[DEROPAPY].Phenology.Flowering.StartStage = " },
+            {"RainfallExcessDamage_mm_X","[DEROPAPY].Product.RainfallExcessFactor.XYPairs.X = " },
+            {"RainfallExcessDamage_Fract_Y","[DEROPAPY].Product.RainfallExcessFactor.XYPairs.Y = " },
 
     };
     }
