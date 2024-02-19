@@ -106,8 +106,10 @@ namespace Models.CLEM.Activities
                 foreach (var ind in groupInd)
                 {
                     // reset actual expected containers as expected determined during CalculatePotentialIntake
-                    ind.Intake.SolidsDaily.Actual = 0;
-                    ind.Intake.MilkDaily.Actual = 0;
+                    ind.Intake.SolidsDaily.Received = 0;
+                    ind.Intake.MilkDaily.Received = 0;
+                    ind.Intake.SolidsDaily.Unneeded = 0;
+                    ind.Intake.MilkDaily.Unneeded = 0;
 
                     CalculatePotentialIntake(ind);
                     // Perform after potential intake calculation as it needs MEContent from previous month for Lactation energy calculation.
@@ -125,20 +127,11 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Individual for which potential intake is determined.</param>
         private void CalculatePotentialIntake(Ruminant ind)
         {
-            // ToDo: Questions for JD.
-            // Does RelativeCondition (weight over srw) exclude conceptus weight? (as discussed 17/1/24)
-            // where is the logic for increased diet as a function of current or previous shortfall in E or CP?
-            //   BC factor only decreases intake when > 1
-            //   should there be an increase for individuals in poorer condition
-            // is the potential intake a true maximum?
-            //   clearly not given the lactation increase.
-
             // CF - Condition factor SCA Eq.3
             double cf = 1.0;
-            double bc = ind.Weight.BodyCondition;
-            if(bc > 1)
+            if(ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > ind.Parameters.GrowSCA.LowerRelativeConditionForBCFactor)
             {
-                cf = bc * (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - bc) / (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - 1);
+                cf = ind.Weight.BodyCondition * (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - ind.Weight.BodyCondition) / (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - ind.Parameters.GrowSCA.LowerRelativeConditionForBCFactor);
             }
 
             // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
@@ -221,8 +214,12 @@ namespace Models.CLEM.Activities
                     else if(!ind.Weaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
                         unfedcalves++;
 
-                    // Adjusting potential intake for digestability of fodder is now done in RuminantActivityGrazePasture.
-                    // Limiting intake to potential x miltiplier now performed in Ruminant.Intake
+                    // Adjusting potential intake for digestability of fodder is now done in RuminantIntake along with concentrates and fodder.
+                    // Now performed in Intake
+                    if(ind is RuminantFemale rumFemale)
+                        ind.Intake.AdjustIntakeBasedOnFeedQuality(rumFemale.IsLactating, ind);
+                    else
+                        ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
 
                     CalculateEnergy(ind);
                 }
@@ -306,7 +303,7 @@ namespace Models.CLEM.Activities
                 // YoungFactor in CalculatePotentialIntake determines how much these individuals can eat when milk is in shortfall
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.MilkDaily.Actual = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable/ ind.Mother.SucklingOffspringList.Count);
+                ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable/ ind.Mother.SucklingOffspringList.Count);
                 // remove consumed milk from mother.
                 ind.Mother?.TakeMilk(ind.Intake.MilkDaily.Actual, MilkUseReason.Suckling);
                 double milkIntakeME = ind.Intake.MilkME;
@@ -314,7 +311,6 @@ namespace Models.CLEM.Activities
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
-                //double kgl = 1; overwrite kg in statement below so it can be used in common code outside weaned loop
                 ind.Energy.Kg = (0.006 + ind.Intake.MDSolid * 0.042) + 0.7 * (milkIntakeME / (milkIntakeME + solidsIntakeME)); // MJ milk/MJ total intake;
 
                 if (MathUtilities.IsPositive(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual))
@@ -322,7 +318,6 @@ namespace Models.CLEM.Activities
                     // average energy efficiency for maintenance
                     kml = ((milkIntakeME * 0.85) + (solidsIntakeME * ind.Energy.Km)) / (milkIntakeME + solidsIntakeME);
                     // average energy efficiency for growth
-                    // previously kgl, but we can override kg as it is next used in energyPredictedBodyMassChange outside the loop with the same equation as weaned except for the kg vs kgl term
                     ind.Energy.Kg = ((milkIntakeME * 0.7) + (solidsIntakeME * ind.Energy.Kg)) / (milkIntakeME + solidsIntakeME);
                 }
 
@@ -372,8 +367,6 @@ namespace Models.CLEM.Activities
 
             double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.NetForGain / energyEmptyBodyGain));
 
-            //double emptyBodyGainkg = 0;
-
             if (milkProtein > 0 && ProteinNet1 < milkProtein)
             {
                 // MilkProteinLimit replaces MP2 in equations 75 and 76
@@ -401,8 +394,6 @@ namespace Models.CLEM.Activities
                 ind.Energy.NetForGain = netEnergyForGain + ind.BreedDetails.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
             }
             double emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
-
-            //double predictedLiveWeightChange = ind.Parameters.GrowSCA.EBW2LW_CG18 * emptyBodyGainkg;
             
             // update weight based on the time-step
             ind.Weight.Adjust(ind.Parameters.General.EBW2LW_CG18 * emptyBodyGainkg * events.Interval, ind);
@@ -699,7 +690,7 @@ namespace Models.CLEM.Activities
             //    if (ind.IsWeaner)
             //        mr += (ind.Parameters.GrowSCA.UpperLimitForMortalityInWeaners_CD13 - ind.Parameters.GrowSCA.BasalMortalityRate_CD1) * (ind.DaysSinceWeaned / (365 - (ind.AgeInDays - ind.DaysSinceWeaned)));
                 
-            //    // ToDo: Check that the normalised weight difference is in fact the normalised weight calulated at the end of the time step - current normalised weight (last calculated start of time step)
+            //    // ToDo: Check that the normalised weight difference is in fact the normalised weight calculated at the end of the time step - current normalised weight (last calculated start of time step)
             //    if (0.1 * ind.EmptyBodyMassChange < 0.2 * (ind.CalculateNormalisedWeight(ind.AgeInDays + events.Interval) - ind.NormalisedAnimalWeight) / events.Interval)
             //        mr += ind.Parameters.GrowSCA.EffectBCOnMortality1_CD2 * Math.Max(0, (ind.Parameters.GrowSCA.EffectBCOnMortality2_CD3 * ind.BodyCondition));
 

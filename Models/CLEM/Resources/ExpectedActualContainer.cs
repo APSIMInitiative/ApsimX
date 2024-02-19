@@ -24,7 +24,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The actual value achieved
         /// </summary>
-        public double Actual { get; set; } = 0;
+        public double Actual { get { return Received - Unneeded;  } }
+
+        /// <summary>
+        /// The amount received from feeding
+        /// </summary>
+        public double Received { get; set; } = 0;
+
+        /// <summary>
+        /// The amount not needed by the individual based on feed quality etc
+        /// </summary>
+        public double Unneeded { get; set; } = 0;
 
         /// <summary>
         /// Get the proportion of expected achieved
@@ -66,7 +76,8 @@ namespace Models.CLEM.Resources
         public void Reset()
         {
             Expected = 0;
-            Actual = 0;
+            Received = 0;
+            Unneeded = 0;
         }
     }
 }

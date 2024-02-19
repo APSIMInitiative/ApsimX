@@ -54,11 +54,65 @@ namespace Models.CLEM.Resources
                 frs.Add(packet);
 
                 if (packet.TypeOfFeed == FeedType.Milk)
-                    MilkDaily.Actual += packet.Amount;
+                    MilkDaily.Received += packet.Amount;
                 else
-                    SolidsDaily.Actual += packet.Amount;
+                    SolidsDaily.Received += packet.Amount;
             }
             return excess;
+        }
+
+        /// <summary>
+        /// Adjust intake consumed based on feed quality
+        /// </summary>
+        public void AdjustIntakeBasedOnFeedQuality(bool islactating, Ruminant ind )
+        {
+            // ToDo: work out how to pass these.
+            double BmassAvail = 2.0;
+            double PropnLegume = 0;
+
+            double sumFs = 0;
+            double iReduction = 0;
+
+            //for each food type
+            foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility))
+            {
+                double FS = 0;
+                double RS = 0;
+                switch (item.Key)
+                {
+                    case FeedType.Concentrate:
+                    case FeedType.HaySilage:
+                        double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
+                        double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
+                        double unsatisfied_adj = Math.Max(0, 1-sumFs);
+                        double quality_adj = (islactating?11.5:10.5)/item.Value.Details.MEContent;
+                        FS =  Math.Min(offered_adj, Math.Min(unsatisfied_adj, quality_adj));
+                        RS = FS * RQ;
+                        break;
+                    case FeedType.PastureTemperate:
+                    case FeedType.PastureTropical:
+                        double propLegume = 0;
+                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - propLegume)), item.Value.Details.DryMatterDigestibility/100.0);
+                        // CLEM assumes you can only graze one paddock in a time step
+                        double ZF = 1.0;
+                        if (ind.Weight.RelativeSize < 0.5)
+                        {
+                            ZF = 1 + 0.5 - ind.Weight.RelativeSize;
+                        }
+                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * BmassAvail);
+                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * BmassAvail));
+                        unsatisfied_adj = Math.Max(0, 1 - sumFs);
+                        FS = unsatisfied_adj * RR * RT;
+                        RS = FS * RQ * (1 + (0.17 * PropnLegume * Math.Pow(sumFs,2)));
+                        break;
+                    default:
+                        break;
+                }
+                iReduction = (1 - RS) * SolidsDaily.Expected;
+                item.Value.AdjustAmount(-iReduction);
+                sumFs += FS;
+                SolidsDaily.Unneeded += iReduction;
+            }
         }
 
         /// <summary>
@@ -150,6 +204,9 @@ namespace Models.CLEM.Resources
             {
                 item.Value.Reset();
             }
+            //SolidsDaily.Reset();
+            //MilkDaily.Reset();
+
         }
 
         /// <summary>

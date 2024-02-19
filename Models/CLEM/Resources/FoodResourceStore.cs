@@ -55,6 +55,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Adjust amount
+        /// </summary>
+        /// <param name="amount">the amount to add or subtract</param>
+        public void AdjustAmount(double amount)
+        {
+            if (MathUtilities.IsNegative(amount) && MathUtilities.IsGreaterThan(Math.Abs(amount), Details.Amount))
+                amount = Details.Amount;
+            Details.Amount += amount;
+            CrudeProtein += Details.CrudeProteinContent * -amount;
+            DegradableCrudeProtein += Details.RumenDegradableProteinContent * -amount;
+        }
+
+        /// <summary>
         /// Reduce the rumen degradable protein by a proportion provided.
         /// </summary>
         /// <param name="factor">The reduction factor.</param>
