@@ -545,8 +545,9 @@ namespace Models.Core
             }
             else if (propertyInfo != null && modelInfo != null) //if a child model and a property were both found, we need to handle is
             {
-                //if the property is a primitive type, but we have more names to dig through, return the child instead
-                if (propertyInfo.PropertyType.IsPrimitive && remainingNames > 0)
+                //if the property is a primitive type or a list, but we have more names to dig through, return the child instead
+                //This will break if you tried to get the length of the list though
+                if ((propertyInfo.PropertyType.IsPrimitive || typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType)) && remainingNames > 0)
                 {
                     return modelInfo;
                 } 
