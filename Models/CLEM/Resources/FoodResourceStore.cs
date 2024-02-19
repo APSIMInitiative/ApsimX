@@ -63,8 +63,8 @@ namespace Models.CLEM.Resources
             if (MathUtilities.IsNegative(amount) && MathUtilities.IsGreaterThan(Math.Abs(amount), Details.Amount))
                 amount = Details.Amount;
             Details.Amount += amount;
-            CrudeProtein += Details.CrudeProteinContent * -amount;
-            DegradableCrudeProtein += Details.RumenDegradableProteinContent * -amount;
+            CrudeProtein += (Details.CrudeProteinContent/100.0) * amount;
+            DegradableCrudeProtein += (Details.RumenDegradableProteinContent/100.0) * amount;
         }
 
         /// <summary>

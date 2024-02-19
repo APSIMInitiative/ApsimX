@@ -204,9 +204,6 @@ namespace Models.CLEM.Resources
             {
                 item.Value.Reset();
             }
-            //SolidsDaily.Reset();
-            //MilkDaily.Reset();
-
         }
 
         /// <summary>
