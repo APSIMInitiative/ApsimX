@@ -45,6 +45,7 @@ namespace Models.CLEM
         /// <summary>
         /// The type of user set for this simulation
         /// </summary>
+        [Description("Type of user")]
         public CLEMUserType UserType { get; set; } = CLEMUserType.General;
 
         /// <summary>
