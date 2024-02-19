@@ -412,6 +412,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["Chill_Acc_Y"] += clean(CurrentCropParams["Chill_Acc_Y"]);
             thisDero["AC_Dormant_05"] += clean(CurrentCropParams["AC_Dormant_05"]);
             thisDero["Tt_Dormant_05"] += clean(CurrentCropParams["Tt_Dormant_05"]);
+            thisDero["Pp_Vegetative"] += clean(CurrentCropParams["Pp_Vegetative"]);
+            thisDero["Tt_Vegetative"] += clean(CurrentCropParams["Tt_Vegetative"]);
+            thisDero["Tt_Flowering"] += clean(CurrentCropParams["Tt_Flowering"]);
+            thisDero["Tt_Reproductive"] += clean(CurrentCropParams["Tt_Reproductive"]);
             thisDero["MaxCanopyBaseHeight"] += clean(CurrentCropParams["MaxCanopyBaseHeight"]);
             thisDero["MaxCanopyPrunedHeight"] += clean(CurrentCropParams["MaxCanopyPrunedHeight"]);
             thisDero["MaxCanopyHeight"] += clean(CurrentCropParams["MaxCanopyHeight"]);
@@ -445,12 +449,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
             thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
             thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
-            thisDero["Tt_Flowering"] += clean(CurrentCropParams["Tt_Flowering"]);
             thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
             thisDero["FlowerStress_Temp_X"] += clean(CurrentCropParams["FlowerStress_Temp_X"]);
             thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
             thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
-            thisDero["ProduceGrowthLengthTt"] += clean(CurrentCropParams["ProduceGrowthLengthTt"]);
             thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
             
             string[] commands = new string[deroParams.Count];
@@ -492,6 +494,10 @@ namespace Models.PMF.SimplePlantModels
             {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
             {"AC_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.X = " },
             {"Tt_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.Y = " },
+            {"Pp_Vegetative","[DEROPAPY].Phenology.Vegetative.Target.XYPairs.X = " },
+            {"Tt_Vegetative","[DEROPAPY].Phenology.Vegetative.Target.XYPairs.Y = " },
+            {"Tt_Flowering","[DEROPAPY].Phenology.Flowering.Target.FixedValue = " },
+            {"Tt_Reproductive","[DEROPAPY].Phenology.Reproductive.Target.FixedValue = " },
             {"MaxCanopyBaseHeight","[DEROPAPY].Height.CanopyBaseHeight.Maximum.FixedValue = " },
             {"MaxCanopyPrunedHeight","[DEROPAPY].Height.PrunedCanopyDepth.Maximum.MaxPrunedHeight.FixedValue = " },
             {"MaxCanopyHeight","[DEROPAPY].Height.SeasonalGrowth.Maximum.MaxHeight.FixedValue = " },
@@ -505,7 +511,7 @@ namespace Models.PMF.SimplePlantModels
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
             {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.AllometricDemand.Const = " },
+            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.AllometricDemand.AllometricDemand.Const = " },
             {"RootPartitionFrac","[DEROPAPY].Root.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"TrunkPartitionFrac","[DEROPAPY].Trunk.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"LeafMaxNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
@@ -525,12 +531,10 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
             {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
             {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
-            {"Tt_Flowering","[DEROPAPY].Phenology.Flowering.Target.FixedValue = " },
             {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
             {"FlowerStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.X = " },
             {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
             {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
-            {"ProduceGrowthLengthTt","[DEROPAPY].Phenology.GrowingProduct.Target.FixedValue = " },
             {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
             
     };

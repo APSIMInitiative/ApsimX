@@ -6,7 +6,7 @@ D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,10,0,7,0,10,0,0,0,10,0,0
 Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,500,1000,600,1180,1000,1000,1000,510,450,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
-Pp_FullCover_02,oCd,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Pp_FullCover_02,h,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(200 500),(2000 1000),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,500,600,450,700,100,100,100,120,200,0,0
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,300,300,200,150,0,0,0,0,50,0,0
@@ -15,6 +15,10 @@ Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,(0 0 0 0),(-
 Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,(0 0 0 0),(0 1 1 0),(0 0 0 0),(0 1 0.5 0),(0 1 1 0),(0 0 0 0),(0 0 0 0),(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
 AC_Dormant_05,oCd,Accumulated chill units (x-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0.0 30),(0.0 30)
 Tt_Dormant_05,oCd,Thermal-time duration of dormant phase at  accumulated chill unit (y-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0)
+Pp_Vegetative,h,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Tt_Vegetative,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(200 500),(2000 1000),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
+Tt_Flowering,oCd,Thermal time for flowering window,500,1000,200,200,200,200,200,200,200,200,200
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,1000,500,3000,3000,700,700,700,700,700,700,700
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,1100,1100,1000,1370,700,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,3000,3000,3500,4500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,2500,1800,1800,1800,4500,5700,4500,3500,3500,300,300
@@ -50,10 +54,9 @@ WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),
 WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-Tt_Flowering,oCd,Thermal time from StarGrowth until FLOWERING,500,1000,200,200,200,200,200,200,200,200,200
+,,,,,,,,,,,,,
 FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,5000,24000,1000,1000,1000,1000,1000,1000,1000,1000,1000
 FlowerStress_Temp_X,oC,Maximum temperature at flowering,(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45)
 FlowerStress_Factor_Y,fractional,Multiplier of maximum flower number at thresold maximum temperature,(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0)
 ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,0.2,0.8,0.92,0.2,0.2,0.2,0.2,0.2,0.2,0.2
-ProduceGrowthLengthTt,oCd,Thermal-time duration of produce growth post flowering,1000,500,3000,3000,700,700,700,700,700,700,700
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,0.3,0.05,10,10,10,10,10,10,10,10,10
