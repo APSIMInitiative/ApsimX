@@ -166,7 +166,7 @@ namespace UserInterface.Presenters
             }
 
             // Also allow children of parent object to be added as groups if they are of type ISubParameters (Used in CLEM and CategoryProperyPresenter)
-            foreach (var submodel in (obj as IModel).FindAllDescendants<ISubParameters>().Cast<IModel>())
+            foreach (var submodel in (obj as IModel).FindAllChildren<ISubParameters>().Cast<IModel>())
             {
                 PropertyGroup group = GetProperties(submodel);
                 group.Name = submodel.Name;
