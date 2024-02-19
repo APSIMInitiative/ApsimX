@@ -248,6 +248,7 @@ namespace Models.Management
                                  Description = $"Fuel, Oil & Tyre costs of {job.Tractor} and {job.Implement}",
                                  Category = job.Category,
                                  Paddock = job.Paddock,
+                                 Area =  areaToday,
                                  Rate = cost }});
 
                hoursWorkedToday[job.Tractor] += hours;
