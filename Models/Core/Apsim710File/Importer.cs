@@ -1210,23 +1210,17 @@ namespace Models.Core.Apsim710File
         /// <returns>A date string recognized by NG's Operations.</returns>
         private string OperationDateToNGDate(string date)
         {
-            string[] dateFormatsFixed = {"d/M/yyyy", "d-M-yyy", "d-MMM-yyyy", "d_MMM_yyyy"};
-            string[] dateFormatsAnnual = {"d-MMM", "d_MMM"};
-
+            // This case occurs for an empty entry in classic's operations schedule.
+            // It is common for there to be a few, as they can't be deleted through classic's UI.
             if (string.IsNullOrEmpty(date))
-                return "0001-01-01";
+                return "";
 
-            if (DateTime.TryParseExact(date, dateFormatsFixed, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime when))
-                return when.ToString("yyyy-MM-dd");
-
+            // Both classic and NextGen support annually repeating entries in the Operations module.
+            string[] dateFormatsAnnual = {"d-MMM", "d_MMM"};
             if (DateTime.TryParseExact(date, dateFormatsAnnual, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
                 return date;
 
-            var result  = DateUtilities.GetDateISO(date);
-            if (result == "0001-01-01")
-                result = DateUtilities.GetDate(date, startDate).ToString("yyyy-MM-dd");
-
-            return result;
+            return DateUtilities.GetDate(date).ToString("yyyy-MM-dd");
         }
 
         /// <summary>
