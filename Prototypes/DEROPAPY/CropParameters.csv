@@ -50,11 +50,11 @@ WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),
 WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-Tt_Flowering,oCd,Thermal time from StarGrowth until FLOWERING,50,200,200,200,200,200,200,200,200,200,200
+Tt_Flowering,oCd,Thermal time duration of FLOWERING,50,200,200,200,200,200,200,200,200,200,200
 FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000
 FlowerStress_Temp_X,oC,Maximum temperature at flowering,(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45)
 FlowerStress_Factor_Y,fractional,Multiplier of maximum flower number at thresold maximum temperature,(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0)
 ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,0.2,0.8,0.92,0.2,0.2,0.2,0.2,0.2,0.2,0.2
 ProduceGrowthLengthTt,oCd,Thermal-time duration of produce growth post flowering,700,700,700,700,700,700,700,700,700,700,700
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,10,10,10,10,10,10,10,10,10,10,10
-FlowerStartStage,phenoCode,Phenological code stage where flowering starts,6,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3
+FlowerStartStage,phenoCode,Phenological code stage where flowering starts,6,6,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3
