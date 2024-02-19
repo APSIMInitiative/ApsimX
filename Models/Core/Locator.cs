@@ -545,12 +545,17 @@ namespace Models.Core
             }
             else if (propertyInfo != null && modelInfo != null) //if a child model and a property were both found, we need to handle is
             {
-                //if the property is a primitive type or a list, but we have more names to dig through, return the child instead
-                //This will break if you tried to get the length of the list though
-                if ((propertyInfo.PropertyType.IsPrimitive || typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType)) && remainingNames > 0)
+                //if the property is a primitive type, but we have more names to dig through, return the child instead
+                
+                if ((propertyInfo.PropertyType.IsPrimitive && remainingNames > 0) && remainingNames > 0)
                 {
                     return modelInfo;
-                } 
+                }
+                //This was put in place to stop Graph.Series returning the list of series instead of the commonly named child Series.
+                else if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType) && modelInfo.GetType().Name == "Series")
+                {
+                    return modelInfo;
+                }
                 else
                 {
                     //get the value of the property and see if it can be evaluated, if it can't return the child instead

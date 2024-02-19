@@ -26,10 +26,11 @@ namespace Models.Core.ApsimFile
 
             modelToAdd.Parent = parent;
             modelToAdd.ParentAllDescendants();
-            parent.Children.Add(modelToAdd);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
+
+            parent.Children.Add(modelToAdd);
 
             // Call OnCreated
             modelToAdd.OnCreated();
@@ -94,13 +95,6 @@ namespace Models.Core.ApsimFile
 
             // Correctly parent all models.
             modelToAdd = Add(modelToAdd, parent);
-
-            // Ensure the model name is valid.
-            EnsureNameIsUnique(modelToAdd);
-
-            // Call OnCreated
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
-                model.OnCreated();
 
             return modelToAdd;
         }
