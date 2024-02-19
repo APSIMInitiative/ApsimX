@@ -58,3 +58,5 @@ ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,0.2,0.8,0.
 ProduceGrowthLengthTt,oCd,Thermal-time duration of produce growth post flowering,700,700,700,700,700,700,700,700,700,700,700
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,10,10,10,10,10,10,10,10,10,10,10
 FlowerStartStage,phenoCode,Phenological code stage where flowering starts,6,6,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3
+RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
+RainfallExcessDamage_Fract_Y,fractional,Fractional multiplier of produce,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
