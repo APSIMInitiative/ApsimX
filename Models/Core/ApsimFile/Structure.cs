@@ -156,13 +156,31 @@ namespace Models.Core.ApsimFile
             Simulations sims = modelToCheck.FindAncestor<Simulations>();
             if (sims != null)
             {
-                var obj = sims.FindByPath(modelToCheck.FullPath);
-                while (obj != null && counter < 10000)
+                bool badName = true;
+                while (badName && counter < 10000)
                 {
-                    counter++;
-                    newName = originalName + counter.ToString();
-                    obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                }
+                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
+                    if (obj == null)
+                    {
+                        badName = false;
+                    }
+                    else if (obj is IVariable variable)
+                    {
+                        if (variable.DataType.Name.CompareTo(originalName) == 0)
+                        {
+                            badName = false;
+                        } 
+                        else
+                        {
+                            counter++;
+                            newName = originalName + counter.ToString();
+                        }
+                    }
+                    else
+                    {
+                        badName = false;
+                    }
+                }   
             }
             if (counter == 10000)
             {
