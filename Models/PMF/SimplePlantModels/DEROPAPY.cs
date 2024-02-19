@@ -505,7 +505,7 @@ namespace Models.PMF.SimplePlantModels
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
             {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.AllometricDemand.Const = " },
             {"RootPartitionFrac","[DEROPAPY].Root.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"TrunkPartitionFrac","[DEROPAPY].Trunk.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"LeafMaxNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
