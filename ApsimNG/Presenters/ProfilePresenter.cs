@@ -60,8 +60,11 @@ namespace UserInterface.Presenters
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             Soil soilNode = this.model.FindAncestor<Soil>();
-            physical = soilNode.FindChild<Physical>();
-            water = soilNode.FindChild<Water>();
+            if (soilNode != null)
+            {
+                physical = soilNode.FindChild<Physical>();
+                water = soilNode.FindChild<Water>();
+            }
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
