@@ -36,7 +36,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model, ITotalDMFixationSupply
+    public class BiomassArbitrator : Model, ITotalCFixationSupply
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -79,8 +79,14 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientsDelta Nitrogen { get; private set; }
 
-        /// <summary> The amount of DM fixed by photosynthesis</summary>
-        public double TotalDMFixationSupply { get { return Carbon.TotalFixationSupply; } }
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCFixationSupply { get { return Carbon.TotalFixationSupply; } }
+
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCReTranslocationSupply { get { return Carbon.TotalReTranslocationSupply; } }
+
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCReAllocationSupply { get { return Carbon.TotalReAllocationSupply; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
