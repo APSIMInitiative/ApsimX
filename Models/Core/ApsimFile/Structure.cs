@@ -153,7 +153,17 @@ namespace Models.Core.ApsimFile
                 newName = originalName + counter.ToString();
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
-
+            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            if (sims != null)
+            {
+                var obj = sims.FindByPath(modelToCheck.FullPath);
+                while (obj != null && counter < 10000)
+                {
+                    counter++;
+                    newName = originalName + counter.ToString();
+                    obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
+                }
+            }
             if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
