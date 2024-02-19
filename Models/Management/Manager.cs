@@ -75,6 +75,9 @@ namespace Models
             scriptCompiler = compiler;
         }
 
+        /// <summary>Which child is the compiled script model.</summary>
+        public IModel compiledModel { get; private set; } = null;
+
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
         {
@@ -160,15 +163,11 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Children.Count != 0)
-            {
-                //throw an expection to stop simulations from running with an old binary
-                if (SuccessfullyCompiledLast == false)
-                    throw new Exception("Errors found in manager model " + Name);
-
-                GetParametersFromScriptModel();
-                SetParametersInScriptModel();
-            }
+            // throw an exception to stop simulations from running with an old binary
+            if (SuccessfullyCompiledLast == false)
+                throw new Exception("Errors found in manager model " + Name);
+            GetParametersFromScriptModel();
+            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -177,20 +176,22 @@ namespace Models
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
-                if (Children.Count != 0)
+                if (compiledModel != null)
                     GetParametersFromScriptModel();
+
+                if (compiledModel != null)
+                   Children.RemoveAll(o => o == compiledModel);
+                compiledModel = null;
 
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
                     SuccessfullyCompiledLast = true;
-                    if (Children.Count != 0)
-                        Children.Clear();
                     var newModel = results.Instance as IModel;
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
-                        Structure.Add(newModel, this);
+                        compiledModel =  Structure.Add(newModel, this);
                     }
                 }
                 else
@@ -206,11 +207,9 @@ namespace Models
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            if (Enabled && Children.Count > 0)
+            var script = compiledModel;
+            if (Enabled && script != null && Parameters != null)
             {
-                var script = Children[0];
-                if (Parameters != null)  //GetParametersFromScriptModel must be run first before this can be run.
-                {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
                     {
@@ -241,7 +240,6 @@ namespace Models
                             message += error.Message;
                         throw new Exception(message);
                     }
-                }
             }
         }
 
@@ -249,13 +247,11 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (Children.Count > 0)
-            {
-                var script = Children[0];
-
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Clear();
+
+                var script = compiledModel;
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
@@ -272,7 +268,6 @@ namespace Models
                                              ReflectionUtilities.ObjectToString(value)));
                     }
                 }
-            }
         }
 
         /// <summary>
@@ -284,7 +279,7 @@ namespace Models
             if (Children.Count > 0)
             {
                 // Nasty!
-                IModel script = Children[0];
+                var script = compiledModel;
 
                 Type scriptType = script.GetType();
                 if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)

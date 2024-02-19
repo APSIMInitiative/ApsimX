@@ -244,7 +244,10 @@ namespace Models.Core.ApsimFile
                 private IEnumerable<IModel> ChildrenToSerialize(IModel model)
                 {
                     if (model is Manager)
-                        return new Model[0];
+                    {
+                        // Zap any script components
+                        model.Children.RemoveAll(o => o == (model as Manager).compiledModel);
+                    }
 
                     // Serialise all child if ResourceName is empty.
                     if (string.IsNullOrEmpty(model.ResourceName))
