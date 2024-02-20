@@ -206,7 +206,7 @@ namespace Models.PMF
         [JsonIgnore]
         public OrganNutrientsState Respired { get; private set; }
 
-        /// <summary>Rate of senescence for the day</summary>
+        /// <summary>total demand for the day</summary>
         [JsonIgnore]
         public double totalDMDemand { get; private set; }
 
@@ -331,8 +331,8 @@ namespace Models.PMF
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        [EventSubscribe("PostPhenology")]
+        protected void OnPostPhenology(object sender, EventArgs e)
         {
             totalDMDemand = TotalDMDemand.Value();
         }
