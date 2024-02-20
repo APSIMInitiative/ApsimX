@@ -197,17 +197,25 @@ namespace Models.Soils
         }
 
         [JsonIgnore]
-        private string relativeTo;
+        private string relativeToCheck;
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
         public string RelativeTo
         {
-            get => relativeTo;
+            get => relativeToCheck;
             set
             {
-                double val = FractionFull;
-                relativeTo = value;
-                UpdateInitialValuesFromFractionFull(val);
+                // This structure is required to create a 'source of truth' to ensure
+                // a stack overflow does not occurs.
+                if (relativeToCheck != value)
+                {
+                    relativeToCheck = value;
+                    UpdateInitialValuesFromFractionFull(FractionFull);
+                }
+                else
+                {
+                    relativeToCheck = value;
+                }
             }
         }
 
@@ -236,14 +244,24 @@ namespace Models.Soils
             {
                 if (Physical != null)
                 {
+                    double newFractionFull;
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                     double[] dulMM = MathUtilities.Multiply(dul, Thickness);
-                    return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                       MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                    if (InitialValues == null)
+                        return 0;
+                    else
+                    {
+                        newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
+                            MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                        return newFractionFull;
+                    }
                 }
                 else return 0;
             }
-            set => UpdateInitialValuesFromFractionFull(value);
+            set
+            {
+                UpdateInitialValuesFromFractionFull(value);
+            }
         }
 
         /// <summary>

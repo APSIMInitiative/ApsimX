@@ -122,9 +122,9 @@ namespace UnitTests.Core
         public void TestChangingRelativeTo_ChangesAllEffectedValues()
         {
             Water waterModel = GetSoilModel().FindChild<Water>();
+            waterModel.RelativeTo = "Wheat";
             waterModel.FractionFull = 0.66;
             waterModel.FilledFromTop = true;
-            waterModel.RelativeTo = "Wheat";
             double[] expectedInitialValues = new double[] {
                 0.521,
                 0.497,
