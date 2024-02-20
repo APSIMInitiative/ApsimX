@@ -5373,10 +5373,14 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "GerminatingPhase"))
             {
-                Constant value = new Constant();
-                value.Name = "MinSoilTemperature";
-                value.FixedValue = 0.0;
-                JsonUtilities.AddModel(NNP, value);
+                //check if child already has a MinSoilTemperature
+                if (JsonUtilities.ChildWithName(NNP, "MinSoilTemperature") == null)
+                {
+                    Constant value = new Constant();
+                    value.Name = "MinSoilTemperature";
+                    value.FixedValue = 0.0;
+                    JsonUtilities.AddModel(NNP, value);
+                }
             }
         }
     }
