@@ -486,9 +486,17 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>Perform a reset.</summary>
-        public void Reset()
+        public void Reset(double[] values = null)
         {
-            Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+            if (values == null)
+                Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+            else
+            {
+                if (values.Length != soilTemp.Length - 3)
+                    throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {soilTemp.Length-3} values.");
+                Array.ConstrainedCopy(values, 0, soilTemp, TOPSOILnode, values.Length);
+            }
+        
             soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
             soilTemp[SURFACEnode] = SurfaceTemperatureInit();
             soilTemp[numNodes + 1] = weather.Tav;
