@@ -216,17 +216,10 @@ namespace Models.Management
             return;
         }
 
-        [EventSubscribe("PhenologyCut")]
-        private void OnPhenologyCut(object sender, EventArgs e)
+        [EventSubscribe("PhenologyDefoliate")]
+        private void OnPhenologyDefoliate(object sender, BiomassRemovalEventArgs e)
         {
-            if (RemovalType == BiomassRemovalType.Cutting)
-                Remove();
-        }
-
-        [EventSubscribe("PhenologyGraze")]
-        private void OnPhenologyGraze(object sender, EventArgs e)
-        {
-            if (RemovalType == BiomassRemovalType.Grazing)
+            if (RemovalType == e.RemovalType)
                 Remove();
         }
 
