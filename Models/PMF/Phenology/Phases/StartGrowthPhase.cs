@@ -57,13 +57,21 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
-                double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value()/TemptoProgress));
-                return Math.Min(daysFrac, tempFrac);
+                if (yearcomplete == false)
+                {
+                    double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
+                    double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value() / TemptoProgress));
+                    return Math.Min(daysFrac, tempFrac);
+                }
+                else
+                {
+                    return 0.0;
+                }
             }
         }
 
-        private bool startedThisYear = true;
+        private bool startedThisYear = false;
+        private bool yearcomplete = false;
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -85,13 +93,18 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
+            yearcomplete = true;
         }
 
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (weather.DaysSinceWinterSolstice == 0)
-                startedThisYear=false;
+            {
+                startedThisYear = false;
+                yearcomplete = false;
+            }
+
         }
 
         /// <summary>Called when [simulation commencing].</summary>

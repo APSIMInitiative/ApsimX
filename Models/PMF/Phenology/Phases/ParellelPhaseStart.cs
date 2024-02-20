@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PostPhenology")]
         public void OnPostPhenology(object sender, EventArgs e)
         {
-            if ((phenology.Stage >= StartStage) && (ProgressThroughPhase >= Target) && (completed == false))
+            if ((phenology.Stage > StartStage) && (ProgressThroughPhase >= Target) && (completed == false))
             {
                 completed = true;
             }
