@@ -105,8 +105,15 @@ namespace Models.Core.ApsimFile
         /// <returns>The newly created model.</returns>
         public static void Rename(IModel model, string newName)
         {
-            model.Name = newName;
-            EnsureNameIsUnique(model);
+            //use a clone to see if the name is good
+            IModel clone = model.Clone();
+            clone.Name = newName;
+            clone.Parent = model.Parent;
+            model.Name = ""; //rename the existing model so it doesn't conflict
+            EnsureNameIsUnique(clone);
+
+            //set the name to whatever was found using the clone.
+            model.Name = clone.Name;
             Apsim.ClearCaches(model);
         }
 
@@ -122,9 +129,9 @@ namespace Models.Core.ApsimFile
                 // The models in scope will be different after the move so we will
                 // need to do this again after we move the model.
                 Apsim.ClearCaches(model);
+                EnsureNameIsUnique(model);
                 newParent.Children.Add(model as Model);
                 model.Parent = newParent;
-                EnsureNameIsUnique(model);
                 Apsim.ClearCaches(model);
             }
             else
