@@ -17,8 +17,8 @@ AC_Dormant_05,oCd,Accumulated chill units (x-value),(0 0),(0 0),(0 0),(0 0),(0 0
 Tt_Dormant_05,oCd,Thermal-time duration of dormant phase at  accumulated chill unit (y-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0)
 Pp_Vegetative,h,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Vegetative,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(200 500),(2000 1000),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
-Tt_Flowering,oCd,Thermal time for flowering window,500,1000,200,200,200,200,200,200,200,200,200
-Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,1000,500,3000,3000,700,700,700,700,700,700,700
+Tt_Flowering,oCd,Thermal time for flowering window,500,500,200,200,200,200,200,200,200,200,200
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,1000,1000,3000,3000,700,700,700,700,700,700,700
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,1100,1100,1000,1370,700,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,3000,3000,3500,4500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,2500,1800,1800,1800,4500,5700,4500,3500,3500,300,300
