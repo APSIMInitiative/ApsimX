@@ -246,7 +246,7 @@ namespace Models.Core.ApsimFile
                     if (model is Manager)
                     {
                         // Zap any script components
-                        model.Children.RemoveAll(o => o == (model as Manager).compiledModel);
+                        model.Children.RemoveAll(o => o == (model as Manager).ScriptModel);
                     }
 
                     // Serialise all child if ResourceName is empty.

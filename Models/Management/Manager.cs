@@ -76,7 +76,8 @@ namespace Models
         }
 
         /// <summary>Which child is the compiled script model.</summary>
-        public IModel compiledModel { get; private set; } = null;
+        [JsonIgnore]
+        public IModel ScriptModel { get; private set; } = null;
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
@@ -176,12 +177,12 @@ namespace Models
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
-                if (compiledModel != null)
+                if (ScriptModel != null)
                     GetParametersFromScriptModel();
 
-                if (compiledModel != null)
-                   Children.RemoveAll(o => o == compiledModel);
-                compiledModel = null;
+                if (ScriptModel != null)
+                   Children.RemoveAll(o => o == ScriptModel);
+                ScriptModel = null;
 
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
@@ -191,7 +192,7 @@ namespace Models
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
-                        compiledModel =  Structure.Add(newModel, this);
+                        ScriptModel =  Structure.Add(newModel, this);
                     }
                 }
                 else
@@ -207,7 +208,7 @@ namespace Models
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            var script = compiledModel;
+            var script = ScriptModel;
             if (Enabled && script != null && Parameters != null)
             {
                     List<Exception> errors = new List<Exception>();
@@ -251,7 +252,7 @@ namespace Models
                     Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Clear();
 
-                var script = compiledModel;
+                var script = ScriptModel;
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
@@ -279,7 +280,7 @@ namespace Models
             if (Children.Count > 0)
             {
                 // Nasty!
-                var script = compiledModel;
+                var script = ScriptModel;
 
                 Type scriptType = script.GetType();
                 if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
