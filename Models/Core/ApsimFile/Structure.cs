@@ -26,10 +26,11 @@ namespace Models.Core.ApsimFile
 
             modelToAdd.Parent = parent;
             modelToAdd.ParentAllDescendants();
-            parent.Children.Add(modelToAdd);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
+
+            parent.Children.Add(modelToAdd);
 
             // Call OnCreated
             modelToAdd.OnCreated();
@@ -95,13 +96,6 @@ namespace Models.Core.ApsimFile
             // Correctly parent all models.
             modelToAdd = Add(modelToAdd, parent);
 
-            // Ensure the model name is valid.
-            EnsureNameIsUnique(modelToAdd);
-
-            // Call OnCreated
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
-                model.OnCreated();
-
             return modelToAdd;
         }
 
@@ -153,7 +147,35 @@ namespace Models.Core.ApsimFile
                 newName = originalName + counter.ToString();
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
-
+            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            if (sims != null)
+            {
+                bool badName = true;
+                while (badName && counter < 10000)
+                {
+                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
+                    if (obj == null)
+                    {
+                        badName = false;
+                    }
+                    else if (obj is IVariable variable)
+                    {
+                        if (variable.DataType.Name.CompareTo(originalName) == 0)
+                        {
+                            badName = false;
+                        } 
+                        else
+                        {
+                            counter++;
+                            newName = originalName + counter.ToString();
+                        }
+                    }
+                    else
+                    {
+                        badName = false;
+                    }
+                }   
+            }
             if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
