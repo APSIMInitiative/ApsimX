@@ -1147,7 +1147,7 @@ namespace Models.Core.Apsim710File
 
                 string childText = string.Empty;
                 childNode = XmlUtilities.Find(oper, "date");
-                dateNode.InnerText = OperationDateToNGDate(childNode?.InnerText);
+                dateNode.InnerText = DateUtilities.ValidateDateString(childNode?.InnerText ?? string.Empty);
 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
@@ -1200,27 +1200,6 @@ namespace Models.Core.Apsim710File
             } // next operation
 
             return newNode;
-        }
-
-        /// <Summary>
-        /// Method for parsing a date used by a classic Operations manager to
-        /// a format recognized by NG Operations.
-        /// </Summary>
-        /// <param name="date">The (possibly null or empty) date string.</param>
-        /// <returns>A date string recognized by NG's Operations.</returns>
-        private string OperationDateToNGDate(string date)
-        {
-            // This case occurs for an empty entry in classic's operations schedule.
-            // It is common for there to be a few, as they can't be deleted through classic's UI.
-            if (string.IsNullOrEmpty(date))
-                return "";
-
-            // Both classic and NextGen support annually repeating entries in the Operations module.
-            string[] dateFormatsAnnual = {"d-MMM", "d_MMM"};
-            if (DateTime.TryParseExact(date, dateFormatsAnnual, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                return date;
-
-            return DateUtilities.GetDate(date).ToString("yyyy-MM-dd");
         }
 
         /// <summary>
