@@ -165,7 +165,7 @@ namespace Models
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // throw an exception to stop simulations from running with an old binary
-            if (SuccessfullyCompiledLast == false)
+            if (ScriptModel != null && SuccessfullyCompiledLast == false)
                 throw new Exception("Errors found in manager model " + Name);
             GetParametersFromScriptModel();
             SetParametersInScriptModel();
@@ -208,15 +208,14 @@ namespace Models
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            var script = ScriptModel;
-            if (Enabled && script != null && Parameters != null)
+            if (Enabled && ScriptModel != null && Parameters != null)
             {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
                     {
                         try
                         {
-                            PropertyInfo property = script.GetType().GetProperty(parameter.Key);
+                            PropertyInfo property = ScriptModel.GetType().GetProperty(parameter.Key);
                             if (property != null)
                             {
                                 object value;
@@ -226,7 +225,7 @@ namespace Models
                                     value = this.FindInScope(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                                property.SetValue(script, value, null);
+                                property.SetValue(ScriptModel, value, null);
                             }
                         }
                         catch (Exception err)
@@ -248,18 +247,19 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
+            if (ScriptModel != null)
+            {
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Clear();
 
-                var script = ScriptModel;
-                foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
+                foreach (PropertyInfo property in ScriptModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
                         ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null &&
                         Attribute.IsDefined(property, typeof(DescriptionAttribute)))
                     {
-                        object value = property.GetValue(script, null);
+                        object value = property.GetValue(ScriptModel, null);
                         if (value == null)
                             value = "";
                         else if (value is IModel)
@@ -269,6 +269,7 @@ namespace Models
                                              ReflectionUtilities.ObjectToString(value)));
                     }
                 }
+            }
         }
 
         /// <summary>
