@@ -165,7 +165,7 @@ namespace Models
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // throw an exception to stop simulations from running with an old binary
-            if (ScriptModel != null && SuccessfullyCompiledLast == false)
+            if (ScriptModel == null || SuccessfullyCompiledLast == false)
                 throw new Exception("Errors found in manager model " + Name);
             GetParametersFromScriptModel();
             SetParametersInScriptModel();
@@ -280,7 +280,6 @@ namespace Models
         {
             if (Children.Count > 0)
             {
-                // Nasty!
                 var script = ScriptModel;
 
                 Type scriptType = script.GetType();

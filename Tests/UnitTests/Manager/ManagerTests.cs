@@ -289,9 +289,9 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager;
 
-            //should not throw, but not do anything
+            //should throw, but not do anything
             testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
+            Assert.Throws<TargetInvocationException>(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
             Assert.IsNull(testManager.Parameters);
 
             //should work
