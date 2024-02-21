@@ -245,8 +245,12 @@ namespace Models.Core.ApsimFile
                 {
                     if (model is Manager)
                     {
-                        // Zap any script components
-                        model.Children.RemoveAll(o => o == (model as Manager).ScriptModel);
+                        List<Model> children = new List<Model>();
+                        foreach (Model child in model.Children) {
+                            if (child != (model as Manager).ScriptModel)
+                                children.Add(child);
+                        }
+                        return children.ToArray();
                     }
 
                     // Serialise all child if ResourceName is empty.

@@ -165,7 +165,7 @@ namespace Models
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // throw an exception to stop simulations from running with an old binary
-            if (ScriptModel == null || SuccessfullyCompiledLast == false)
+            if (ScriptModel != null && SuccessfullyCompiledLast == false)
                 throw new Exception("Errors found in manager model " + Name);
             GetParametersFromScriptModel();
             SetParametersInScriptModel();
@@ -180,10 +180,6 @@ namespace Models
                 if (ScriptModel != null)
                     GetParametersFromScriptModel();
 
-                if (ScriptModel != null)
-                   Children.RemoveAll(o => o == ScriptModel);
-                ScriptModel = null;
-
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
@@ -192,7 +188,7 @@ namespace Models
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
-                        ScriptModel =  Structure.Add(newModel, this);
+                        ScriptModel = Structure.Add(newModel, this);
                     }
                 }
                 else
