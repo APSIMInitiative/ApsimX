@@ -99,7 +99,11 @@ namespace Models.Core.ConfigFile
                     else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
                     else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                     else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
-                    else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
+                    else if (keywordString.Contains("run"))
+                    {
+                        keyword = Keyword.Run;
+                        return tempSim;
+                    }
                     else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
                     else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
@@ -112,7 +116,6 @@ namespace Models.Core.ConfigFile
                             Match secondSplitResult = rxNode.Match(commandSplits[1]);
                             Match secondSplitComplexResult = rxNodeComplex.Match(commandSplits[1]);
                             // Check for required format
-                            //if (commandSplits[1].Contains('[') && commandSplits[1].Contains(']'))
                             if (secondSplitResult.Success || secondSplitComplexResult.Success)
                             {
                                 string modifiedNodeName = commandSplits[1];
@@ -179,7 +182,7 @@ namespace Models.Core.ConfigFile
                             }
                         }
                         // Ignore the command as these cases are handled outside of this method.
-                        else if (keyword == Keyword.Load || keyword == Keyword.Save)
+                        else if (keyword == Keyword.Load || keyword == Keyword.Save || keyword == Keyword.Run)
                             return tempSim;
                     }
 
@@ -222,7 +225,9 @@ namespace Models.Core.ConfigFile
         {
             try
             {
+                (simulations as Simulations).ResetSimulationFileNames();
                 Locator locator = new Locator(simulations);
+
                 string keyword = instruction.keyword.ToString();
                 switch (keyword)
                 {
@@ -245,9 +250,12 @@ namespace Models.Core.ConfigFile
                         break;
                     case "Copy":
                         nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
-                        IModel parentNodeForCopiedNode = locator.Get(instruction.NodeForAction) as IModel;
+                        IModel nodeToCopyTo = locator.Get(instruction.NodeForAction) as IModel;
+                        IModel parentNodeForCopiedNode = nodeToBeCopied.Parent;
                         nodeClone = nodeToBeCopied.Clone();
-                        Structure.Add(nodeClone, parentNodeForCopiedNode);
+                        if (nodeToCopyTo != null)
+                            Structure.Add(nodeClone, nodeToCopyTo);
+                        else throw new Exception($"Unable to copy {instruction.NodeToModify} to node {instruction.NodeForAction}. Make sure {instruction.NodeForAction} is in the APSIM file.");
                         break;
                 }
                 return simulations;

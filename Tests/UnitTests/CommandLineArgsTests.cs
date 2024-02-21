@@ -626,7 +626,6 @@ save {apsimxFileName}";
             Assert.True(File.Exists(newTempConfigFile));
 
             Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
-            //Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
         }
 
         [Test]
@@ -808,6 +807,38 @@ save {apsimxFileName}
 
             File.WriteAllText(newTempConfigFile, newFileString);
             Assert.Throws<Exception>(() => Utilities.RunModels($"--apply {newTempConfigFile} -p playlist"));
+
+        }
+
+        [Test]
+        public void TestApplySwitch_ConfigFileWithTwoRunStatements_RunsAppropriateFiles()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string firstSimName = (sims.FindChild<Simulation>()).Name;
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string firstApsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
+            string firstApsimxFileNameWithoutExtension = firstApsimxFileName.Split('.')[0];
+            string newFileString =
+@$"load {firstApsimxFileName}
+copy [Simulation] [Simulations]
+save {firstApsimxFileNameWithoutExtension + "1" + ".apsimx"}
+run
+load {firstApsimxFileName}
+copy [Simulation] [Simulations]
+save {firstApsimxFileNameWithoutExtension + "2" + ".apsimx"}
+run";
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+            // Check that original file is unmodified.
+            Simulations originalSims = FileFormat.ReadFromFile<Simulations>(sims.FileName, e => throw e, false).NewModel as Simulations;
+            List<Simulation> simulations = originalSims.FindAllChildren<Simulation>().ToList();
+            Assert.IsTrue(simulations.Count() == 1);
+            // Check that 'Simulation1' has a duplicate simulation called 'Simulation1'.
+            Simulations firstModdedSims = FileFormat.ReadFromFile<Simulations>(Path.GetTempPath() + firstApsimxFileNameWithoutExtension + "1" + ".apsimx", e => throw e, false).NewModel as Simulations;
+            // Check that 'Simulation2' has a duplicate simulation called 'Simulation2'.
+            Simulations secondModdedSims = FileFormat.ReadFromFile<Simulations>(Path.GetTempPath() + firstApsimxFileNameWithoutExtension + "2" + ".apsimx", e => throw e, false).NewModel as Simulations;
+
 
         }
     }
