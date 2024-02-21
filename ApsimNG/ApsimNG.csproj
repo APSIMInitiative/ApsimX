@@ -73,6 +73,7 @@
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	<PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />  
   </ItemGroup>
   
   <ItemGroup>
