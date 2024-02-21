@@ -139,6 +139,7 @@ namespace Models.PMF.SimplePlantModels
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
             }
             CropNames = readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
+
             return readData;
         }
 
@@ -431,7 +432,12 @@ namespace Models.PMF.SimplePlantModels
             thisDero["LeafPartitionFrac"] += clean(CurrentCropParams["LeafPartitionFrac"]);
             thisDero["ProductPartitionFrac"] += clean(CurrentCropParams["ProductPartitionFrac"]);
             thisDero["RootPartitionFrac"] += clean(CurrentCropParams["RootPartitionFrac"]);
-            thisDero["TrunkPartitionFrac"] += clean(CurrentCropParams["TrunkPartitionFrac"]);
+            thisDero["TrunkWtAtMaxDimension"] += clean(CurrentCropParams["TrunkWtAtMaxDimension"]);
+            double relativeAge = MathUtilities.Divide(Double.Parse(clean(CurrentCropParams["AgeAtStartSimulation"])),
+                                                     Double.Parse(clean(CurrentCropParams["AgeToMaxDimension"])), 0);
+            double initialTrunkwt = Double.Parse(clean(CurrentCropParams["TrunkWtAtMaxDimension"])) * relativeAge;
+            thisDero["InitialTrunkWt"] += initialTrunkwt.ToString();
+            thisDero["InitialRootWt"] += (200 * relativeAge).ToString();
             thisDero["LeafMaxNConc"] += clean(CurrentCropParams["LeafMaxNConc"]);
             thisDero["LeafMinNConc"] += clean(CurrentCropParams["LeafMinNConc"]);
             thisDero["ProductMaxNConc"] += clean(CurrentCropParams["ProductMaxNConc"]);
@@ -515,7 +521,9 @@ namespace Models.PMF.SimplePlantModels
             {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.AllometricDemand.AllometricDemand.Const = " },
             {"RootPartitionFrac","[DEROPAPY].Root.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"TrunkPartitionFrac","[DEROPAPY].Trunk.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"TrunkWtAtMaxDimension","[DEROPAPY].Trunk.MatureWt.FixedValue = "},
+            {"InitialTrunkWt","[DEROPAPY].Trunk.InitialWt.FixedValue = "},
+            {"InitialRootWt","[DEROPAPY].Root.InitialWt.FixedValue = "},
             {"LeafMaxNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
             {"LeafMinNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
             {"ProductMaxNConc","[DEROPAPY].Product.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
