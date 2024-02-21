@@ -63,7 +63,7 @@ namespace Models.Functions
         [EventSubscribe("StageWasReset")]
         private void onStageWasReset(object sender, StageSetType sst)
         {
-            if (sst.StageNumber <= pPhase.StartStage)
+            if ((sst.StageNumber <= pPhase.StartStage)||(pPhase.StartStage==0))
             {
                 currentValue = StartValue.Value(); 
             }

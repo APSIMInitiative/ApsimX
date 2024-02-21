@@ -39,11 +39,13 @@ namespace Models.PMF.Phen
 
         /// <summary>The phenological stage at the start of this parallel phase.</summary>
         [JsonIgnore]
-        public Nullable<double> StartStage { get; set; }
+        public double StartStage { get; set; }
 
         /// <summary>Property specifying if we are currently with this phase</summary>
         [JsonIgnore]
         public bool IsInPhase { get; set; }
+
+        private bool firstDayinPhase { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
@@ -77,8 +79,11 @@ namespace Models.PMF.Phen
              
             if ((priorPhase.FractionComplete >= 1.0) && (ProgressThroughPhase <= Target))
             {
-                if (StartStage == null)
+                if (firstDayinPhase == true)
+                {
                     StartStage = phenology.Stage;
+                    firstDayinPhase = false;
+                }
                 ProgressThroughPhase += progression.Value();
                 IsInPhase = true;
             }
@@ -93,7 +98,8 @@ namespace Models.PMF.Phen
         {
             ProgressThroughPhase = 0.0;
             IsInPhase = false;
-            StartStage = null;  
+            firstDayinPhase = true;
+            StartStage = 0;  
         }
 
         // 4. Private method

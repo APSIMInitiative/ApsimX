@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The phenological stage number at the start of this phase.</summary>
         [Description("Start Stage")]
-        public Nullable<double> StartStage { get; set; }
+        public double StartStage { get; set; }
 
         /// <summary>Property specifying if we are currently with this phase</summary>
         [XmlIgnore]
@@ -44,12 +44,15 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target == 0.0)
-                    return 1.0;
                 if (completed == true)
                     return 1.0;
                 else
-                    return ProgressThroughPhase / Target;
+                {
+                    if (Target == 0)
+                        return 0.0;
+                    else
+                        return ProgressThroughPhase / Target;
+                }
             }
         }
 
