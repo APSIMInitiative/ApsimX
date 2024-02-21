@@ -424,6 +424,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["MaxCanopyWidth"] += clean(CurrentCropParams["MaxCanopyWidth"]);
             thisDero["AgeToMaxDimension"] += clean(CurrentCropParams["AgeToMaxDimension"]);
             thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
+            thisDero["LAIbase"] += clean(CurrentCropParams["LAIbase"]);
             thisDero["LAImax"] += clean(CurrentCropParams["LAImax"]);
             thisDero["ExtCoeff"] += clean(CurrentCropParams["ExtCoeff"]);
             thisDero["RUEtotal"] += clean(CurrentCropParams["RUEtotal"]);
@@ -513,6 +514,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxCanopyWidth","[DEROPAPY].Width.SeasonalGrowth.Maximum.MaxWidth.FixedValue = " },
             {"AgeToMaxDimension","[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
+            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.FixedValue = " },
             {"LAImax","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.Delta.Integral.LAIMax.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
