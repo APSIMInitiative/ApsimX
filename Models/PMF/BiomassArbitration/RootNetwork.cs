@@ -618,6 +618,9 @@ namespace Models.PMF
         public void InitailiseNetwork(OrganNutrientsState Initial)
         {
             Clear();
+            RootFrontVelocity = rootFrontVelocity.Value();
+            MaximumRootDepth = maximumRootDepth.Value();
+
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {
