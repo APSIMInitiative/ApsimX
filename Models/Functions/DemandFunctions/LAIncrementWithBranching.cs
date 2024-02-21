@@ -7,8 +7,9 @@ using Models.PMF.Phen;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>Daily increment in leaf area is calculated from plant population, number of nodes on main stem, number of branchers, 
-    /// area of largest leaf (or leaf pair), rate of leaf appearance, and relative leaf area. It is assume that main stem and all branches are similar when fully grown</summary>
+    /// <summary>Daily increment in leaf area is calculated from plant population, number of nodes on the main stem, number of branchers,
+    /// area of the largest leaf (or leaf pair), rate of leaf appearance, and relative leaf area. It is assumed that the main stem and all 
+    /// branches are similar when fully grown.</summary>
     [Serializable]
     public class LAIncrementWithBranching : Model, IFunction
     {
