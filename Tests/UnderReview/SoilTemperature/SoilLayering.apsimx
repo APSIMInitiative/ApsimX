@@ -113,6 +113,7 @@
                     "using Models.Interfaces;",
                     "using Models.Soils;",
                     "using APSIM.Shared.Utilities;",
+                    "using Newtonsoft.Json;",
                     "",
                     "namespace Models",
                     "{",
@@ -147,6 +148,7 @@
                     "        public double[] K { get { throw new NotImplementedException(); } }",
                     "        ",
                     "        ///<summary>Gets PoreInteractionIndex</summary>",
+                    "        [JsonIgnore]",
                     "        public double[] PoreInteractionIndex { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); }}",
                     "                ",
                     "        ///<summary>Gets potential evaporation from soil surface (mm)</summary>",
@@ -367,21 +369,13 @@
                         100.0,
                         100.0,
                         200.0,
-                        300.0,
-                        999999.0,
-                        999999.0,
-                        999999.0,
-                        999999.0
+                        300.0
                       ],
                       "ParticleSizeClay": [
                         9.0,
                         9.0,
                         9.0,
-                        9.0,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        9.0
                       ],
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
@@ -391,51 +385,31 @@
                         1.5,
                         1.5,
                         1.5,
-                        1.5,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        1.5
                       ],
                       "AirDry": [
                         0.01,
                         0.01,
                         0.01,
-                        0.01,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.01
                       ],
                       "LL15": [
                         0.05,
                         0.05,
                         0.05,
-                        0.05,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.05
                       ],
                       "DUL": [
                         0.16,
                         0.16,
                         0.16,
-                        0.16,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.16
                       ],
                       "SAT": [
                         0.29,
                         0.29,
                         0.29,
-                        0.29,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.29
                       ],
                       "KS": null,
                       "BDMetadata": null,
@@ -565,6 +539,7 @@
                     },
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": null,
                       "InitialValues": null,
                       "Name": "SoilTemperature",
@@ -770,6 +745,7 @@
                     "using Models.Interfaces;",
                     "using Models.Soils;",
                     "using APSIM.Shared.Utilities;",
+                    "using Newtonsoft.Json;",
                     "",
                     "namespace Models",
                     "{",
@@ -804,6 +780,7 @@
                     "        public double[] K { get { throw new NotImplementedException(); } }",
                     "        ",
                     "        ///<summary>Gets PoreInteractionIndex</summary>",
+                    "        [JsonIgnore]",
                     "        public double[] PoreInteractionIndex { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); }}",
                     "                ",
                     "        ///<summary>Gets potential evaporation from soil surface (mm)</summary>",
@@ -1024,21 +1001,13 @@
                         100.0,
                         100.0,
                         200.0,
-                        300.0,
-                        999999.0,
-                        999999.0,
-                        999999.0,
-                        999999.0
+                        300.0
                       ],
                       "ParticleSizeClay": [
                         9.0,
                         9.0,
                         9.0,
-                        9.0,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        9.0
                       ],
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
@@ -1048,51 +1017,31 @@
                         1.5,
                         1.5,
                         1.5,
-                        1.5,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        1.5
                       ],
                       "AirDry": [
                         0.01,
                         0.01,
                         0.01,
-                        0.01,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.01
                       ],
                       "LL15": [
                         0.05,
                         0.05,
                         0.05,
-                        0.05,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.05
                       ],
                       "DUL": [
                         0.16,
                         0.16,
                         0.16,
-                        0.16,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.16
                       ],
                       "SAT": [
                         0.29,
                         0.29,
                         0.29,
-                        0.29,
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.29
                       ],
                       "KS": null,
                       "BDMetadata": null,
@@ -1222,6 +1171,7 @@
                     },
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": null,
                       "InitialValues": null,
                       "Name": "SoilTemperature",

@@ -185,6 +185,12 @@ namespace Models.Soils.SoilTemp
 
         private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
 
+        /// <summary>
+        /// Depth to the constant temperature lower boundary condition (m)
+        /// </summary>
+        public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
+
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -536,8 +542,6 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getProfileVariables()
         {
-            const double CONSTANT_TEMPdepth = 10.0;    // Metres. Depth to constant temperature zone
-                                                       // re-dimension dlayer, bd. These will now be treated as '1-based' so 0th element will not be used
             numLayers = physical.Thickness.Length;
             numNodes = numLayers + 1;
 
