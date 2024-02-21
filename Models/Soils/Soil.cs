@@ -134,6 +134,7 @@ namespace Models.Soils
             var organic = FindChild<Organic>();
             var water = FindChild<Water>();
             var waterBalance = FindInScope<ISoilWater>();
+            var temperature = FindInScope<SoilTemp.SoilTemperature>();
 
             // Determine the target layer structure.
             var targetThickness = physical.Thickness;
@@ -145,6 +146,7 @@ namespace Models.Soils
             organic.Standardise(targetThickness);
             water.Standardise(targetThickness);
             waterBalance.Standardise(targetThickness);
+            temperature?.Standardise(targetThickness);
 
             foreach (var solute in FindAllChildren<Solute>())
                 solute.Standardise(targetThickness);
