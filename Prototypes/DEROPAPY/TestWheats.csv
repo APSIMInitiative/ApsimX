@@ -19,7 +19,7 @@ VegetativeStartStage,,Phenological stage to start accumulating vegetative tt,6.0
 Pp_Vegetative,h,Photoperiod x-values for reproductive target thermal-time lengths,(12 17),(12 17),(12 17),(12 17),(12 17),(12 17),(12 17)
 Tt_Vegetative,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(5000 500),(5000 500),(5000 500),(5000 500),(800 300),(800 300),(800 300)
 Tt_Flowering,oCd,Thermal time for flowering window,200,200,200,200,200,200,200
-Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,950,950,950,950,950,950,950
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,800,800,800,800,800,800,800
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,0,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,0,0,0
 MaxCanopyHeight,mm,Maximum canopy height,1800,1800,1800,1800,1800,1800,1800
