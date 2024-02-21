@@ -21,7 +21,7 @@ namespace Models.Functions.DemandFunctions
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction NodeNumber = null;
 
-        /// <summary>The number of branchers</summary>
+        /// <summary>The number of branches (excluding the main stem)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction BranchNumber = null;
 
@@ -46,16 +46,18 @@ namespace Models.Functions.DemandFunctions
         {
             double currNodeNumber = NodeNumber.Value();
             int numBranches = (int)BranchNumber.Value();
-            double cumDelta = 0;
 
-            for (int i = 0; i < numBranches; i++)
+            branchNodeLag[0] = 0;
+            double cumDelta = RelativeArea.ValueIndexed(currNodeNumber - branchNodeLag[0]);
+
+            for (int i = 1; i < numBranches + 1; i++)
             {
                 if (branchNodeLag[i] < 0)
                     branchNodeLag[i] = (int)currNodeNumber;
 
-                cumDelta += PlantNumber.Value() * AreaLargestLeaf.Value() * LAR.Value() * RelativeArea.ValueIndexed(currNodeNumber - branchNodeLag[i]);
+                cumDelta += RelativeArea.ValueIndexed(currNodeNumber - branchNodeLag[i]);
             }
-            return cumDelta;
+            return cumDelta * PlantNumber.Value() * AreaLargestLeaf.Value() * LAR.Value();
         }
 
         /// <summary>Document the model.</summary>
