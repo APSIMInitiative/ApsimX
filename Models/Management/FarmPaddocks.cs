@@ -12,6 +12,7 @@ using Models.Interfaces;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using MigraDocCore.DocumentObjectModel.Tables;
 
 
 namespace Models.Management
@@ -62,6 +63,18 @@ namespace Models.Management
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
+           PaddockNames = new string[dt.Rows.Count];
+           IsManaged = new bool[dt.Rows.Count];
+           InitialState = new string[dt.Rows.Count];
+           DaysSinceHarvest = new int[dt.Rows.Count];
+
+           for (var row = 0 ; row < dt.Rows.Count; row++) 
+           {
+               PaddockNames[row] = dt.Rows[row][0] as string;
+               IsManaged[row] =  dt.Rows[row][1].ToString().ToLower() == "true" ? true : false  ;
+               InitialState[row] = dt.Rows[row][2] as string;
+               int.TryParse(dt.Rows[row][3].ToString(), out DaysSinceHarvest[row]);
+           }
            return(dt);
         }
 
@@ -80,7 +93,7 @@ namespace Models.Management
                if ( ! dtFields.Contains(f)) {
                   DataRow newRow = dt.NewRow();
                   newRow["Paddock"] = f;
-                  newRow["Managed"] = false;
+                  newRow["Managed"] = true;
                   newRow["Initial State"] = "NA";
                   newRow["Days since harvest (d)"] = 0;
                   dt.Rows.Add(newRow);

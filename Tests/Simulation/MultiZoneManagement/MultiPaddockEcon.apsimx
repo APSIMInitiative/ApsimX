@@ -1718,10 +1718,10 @@
             "    [Serializable]",
             "    public class Script : Model",
             "    {",
-            "        // The paddocks and initial states of each",
-            "        public List<string> myPaddockNames = new List<string> { \"Field 1\", \"Field 2\" };",
-            "        public Dictionary<string, string> initialStates = new Dictionary<string, string> { {\"Field 1\", \"Fallow 1\"}, {\"Field 2\",\"Summer Fallow\"}};",
-            "        public Dictionary<string, int> initialDays = new Dictionary<string, int> { {\"Field 1\", 30}, {\"Field 2\",  180}};",
+            "        // The paddocks and initial states of each. These are found from child components",
+            "        public List<string> myPaddockNames;",
+            "        public Dictionary<string, string> initialStates;",
+            "        public Dictionary<string, int> initialDays;",
             " ",
             "        // Default parameters for crops we manage.",
             "        // The parameters for each alias are child components (FarmCropMgtInfo) of this manager ",
@@ -1730,7 +1730,8 @@
             "        private static readonly Dictionary<string, FarmCropMgtInfo> cropDefaults = new Dictionary<string, FarmCropMgtInfo>();",
             "        ",
             "       ",
-            "        // Helpers for rotation arc rules. These will be called wh",
+            "        // Helpers for rotation arc rules. These will be called from the rotation manager ",
+            "        // component, which in turn is asked to do the daily management step by us. ",
             "        public double CanSowEarlyWheat {get { return(canSow(\"Early Wheat\")); } set {} }",
             "        public double CanSowWheat {get { return(canSow(\"Wheat\")); } set {} }",
             "        public double CanSowMaize {get { return(canSow(\"Maize\")); } set {} }",
@@ -1781,6 +1782,20 @@
             "            ",
             "            currentState = new Dictionary<string, string>();",
             "            daysSinceLastHarvests = new Dictionary<string, int>();",
+            "            var initStates = (this.Parent.Children).OfType<FarmPaddocks>().FirstOrDefault();",
+            "            //var n = initStates.IsManaged.Where(x => x == true).Count();",
+            "            myPaddockNames = new List<string>();",
+            "            initialStates = new Dictionary<string, string>();",
+            "            initialDays = new Dictionary<string, int>();",
+            "            for (var i = 0; i <initStates.PaddockNames.Length; i++) {",
+            "               if (initStates.IsManaged[i]) ",
+            "               {",
+            "                  myPaddockNames.Add(initStates.PaddockNames[i]);",
+            "                  initialStates.Add(initStates.PaddockNames[i], initStates.InitialState[i]);",
+            "                  initialDays.Add(initStates.PaddockNames[i], initStates.DaysSinceHarvest[i]);",
+            "               }",
+            "            }",
+            "",
             "            foreach (var paddock in myPaddockNames) {",
             "                myPaddockZones[ paddock ] = FindInScope(paddock) as Zone; ",
             "                if (myPaddockZones[ paddock ]  == null) { throw new Exception(\"Can't find a paddock called '\" + paddock + \"'\");}",
@@ -2073,6 +2088,30 @@
               "$type": "Models.Memo, Models",
               "Text": "Blorkla barg",
               "Name": "Memo",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmPaddocks, Models",
+              "PaddockNames": [
+                "Field 1",
+                "Field 2"
+              ],
+              "IsManaged": [
+                true,
+                true
+              ],
+              "InitialState": [
+                "Fallow 1",
+                "Summer Fallow"
+              ],
+              "DaysSinceHarvest": [
+                44,
+                16
+              ],
+              "Name": "Initial Values",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2614,7 +2653,7 @@
               "Name": "Summer Fallow",
               "Location": "454, 271",
               "Colour": "143, 89, 2",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2622,8 +2661,8 @@
               "Description": null,
               "Name": "Wheat",
               "Location": "256, 50",
-              "Colour": "255, 0, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Red",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2632,7 +2671,7 @@
               "Name": "Maize",
               "Location": "265, 426",
               "Colour": "96, 96, 217",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2640,8 +2679,8 @@
               "Description": null,
               "Name": "Fallow 1",
               "Location": "78, 276",
-              "Colour": "0, 255, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Lime",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2650,7 +2689,7 @@
               "Name": "Early Wheat",
               "Location": "256, 193",
               "Colour": "173, 127, 168",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             }
           ],
@@ -2666,7 +2705,7 @@
               "SourceName": "Wheat",
               "DestinationName": "Summer Fallow",
               "Location": "479, 47",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 1"
             },
             {
@@ -2682,7 +2721,7 @@
               "SourceName": "Summer Fallow",
               "DestinationName": "Maize",
               "Location": "448, 409",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 2"
             },
             {
@@ -2696,7 +2735,7 @@
               "SourceName": "Maize",
               "DestinationName": "Fallow 1",
               "Location": "55, 405",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 3"
             },
             {
@@ -2712,7 +2751,7 @@
               "SourceName": "Fallow 1",
               "DestinationName": "Wheat",
               "Location": "81, 59",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 4"
             },
             {
@@ -2728,7 +2767,7 @@
               "SourceName": "Fallow 1",
               "DestinationName": "Early Wheat",
               "Location": "123, 146",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 5"
             },
             {
@@ -2742,7 +2781,7 @@
               "SourceName": "Early Wheat",
               "DestinationName": "Summer Fallow",
               "Location": "392, 161",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 6"
             }
           ],

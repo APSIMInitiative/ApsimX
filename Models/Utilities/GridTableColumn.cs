@@ -102,6 +102,10 @@ namespace Models.Utilities
                             values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                         else if (property.DataType == typeof(double[]))
                             values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
+                        else if (property.DataType == typeof(bool[]))
+                            values = ((bool[])propertyValue).Select(v => v.ToString()).ToArray();
+                        else if (property.DataType == typeof(int[]))
+                            values = ((int[])propertyValue).Select(v => v.ToString()).ToArray();
                         else if (property.DataType == typeof(DateTime[]))
                             values = ((DateTime[])propertyValue).Select(v => v.ToString("yyyy/MM/dd")).ToArray();
 
