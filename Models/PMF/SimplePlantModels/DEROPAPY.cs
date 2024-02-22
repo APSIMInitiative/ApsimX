@@ -414,6 +414,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["AC_Dormant_05"] += clean(CurrentCropParams["AC_Dormant_05"]);
             thisDero["Tt_Dormant_05"] += clean(CurrentCropParams["Tt_Dormant_05"]);
             thisDero["Pp_Vegetative"] += clean(CurrentCropParams["Pp_Vegetative"]);
+            thisDero["VegetativeStartStage"] += clean(CurrentCropParams["VegetativeStartStage"]);
             thisDero["Tt_Vegetative"] += clean(CurrentCropParams["Tt_Vegetative"]);
             thisDero["Tt_Flowering"] += clean(CurrentCropParams["Tt_Flowering"]);
             thisDero["Tt_Reproductive"] += clean(CurrentCropParams["Tt_Reproductive"]);
@@ -503,6 +504,7 @@ namespace Models.PMF.SimplePlantModels
             {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
             {"AC_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.X = " },
             {"Tt_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.Y = " },
+            { "VegetativeStartStage","[DEROPAPY].Phenology.Vegetative.StartStage = "},
             {"Pp_Vegetative","[DEROPAPY].Phenology.Vegetative.Target.XYPairs.X = " },
             {"Tt_Vegetative","[DEROPAPY].Phenology.Vegetative.Target.XYPairs.Y = " },
             {"Tt_Flowering","[DEROPAPY].Phenology.Flowering.Target.FixedValue = " },
