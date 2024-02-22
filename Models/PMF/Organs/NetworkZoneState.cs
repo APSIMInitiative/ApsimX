@@ -272,7 +272,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress;
+                Depth = Depth + (rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress);
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)

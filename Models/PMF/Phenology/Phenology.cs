@@ -32,9 +32,6 @@ namespace Models.PMF.Phen
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
-        private Structure structure = null;
-
-        [Link(IsOptional = true)]
         private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
 
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -115,7 +112,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { get; set; } = false;
+        public bool Emerged { get { return CurrentPhase.IsEmerged; } }
 
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
@@ -262,9 +259,6 @@ namespace Models.PMF.Phen
                 AccumulatedTT = Math.Max(0, AccumulatedTT);
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
 
-                //if the first phase wound back to is not emerged that set emerged to false
-                if (!phasesToRewind[0].IsEmerged)
-                    Emerged = false;
             }
             else
             {
@@ -291,9 +285,8 @@ namespace Models.PMF.Phen
                     {
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        if (phase.IsEmerged==false) 
                         {
-                            Emerged = true;
                             PlantEmerged?.Invoke(this, new EventArgs());
                         }
                         else
@@ -524,18 +517,17 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if (!Emerged && (CurrentPhase.IsEmerged || CurrentPhase.End == structure?.LeafInitialisationStage))
+                    stagesPassedToday.Add(CurrentPhase.End);
+                    currentPhaseIndex = currentPhaseIndex + 1;
+
+                    if (currentPhaseIndex >= phases.Count)
+                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+
+                    if (CurrentPhase.IsEmerged)
                     {
-                        Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
-                    stagesPassedToday.Add(CurrentPhase.End);
-                    if (currentPhaseIndex + 1 >= phases.Count)
-                        throw new Exception("Cannot transition to the next phase. No more phases exist");
-
-                    currentPhaseIndex = currentPhaseIndex + 1;
-                    
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = CurrentPhase.Start;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
@@ -561,7 +553,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Emerged = false;
+            
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -595,7 +587,6 @@ namespace Models.PMF.Phen
             Stage = 1;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;
-            Emerged = false;
             stagesPassedToday.Clear();
             currentPhaseIndex = 0;
             foreach (IPhase phase in phases)

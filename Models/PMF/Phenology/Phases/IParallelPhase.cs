@@ -14,6 +14,6 @@ namespace Models.PMF.Phen
         bool IsInPhase { get; }
 
         /// <summary> The stage in the main phenology sequence that this parallel phase started at</summary>
-        Nullable<double> StartStage { get; }
+        double StartStage { get; }
     }
 }

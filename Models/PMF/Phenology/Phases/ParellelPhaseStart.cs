@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The phenological stage number at the start of this phase.</summary>
         [Description("Start Stage")]
-        public Nullable<double> StartStage { get; set; }
+        public double StartStage { get; set; }
 
         /// <summary>Property specifying if we are currently with this phase</summary>
         [XmlIgnore]
@@ -44,10 +44,15 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target == 0.0)
+                if (completed == true)
                     return 1.0;
                 else
-                    return ProgressThroughPhase / Target;
+                {
+                    if (Target == 0)
+                        return 0.0;
+                    else
+                        return ProgressThroughPhase / Target;
+                }
             }
         }
 
@@ -60,6 +65,8 @@ namespace Models.PMF.Phen
         [Units("oD")]
         public double Target { get { return target.Value(); } }
 
+        private bool completed { get; set; }
+
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
         
@@ -67,7 +74,11 @@ namespace Models.PMF.Phen
         [EventSubscribe("PostPhenology")]
         public void OnPostPhenology(object sender, EventArgs e)
         {
-            if ((phenology.Stage >= StartStage) && (ProgressThroughPhase <= Target))
+            if ((phenology.Stage > StartStage) && (ProgressThroughPhase >= Target) && (completed == false))
+            {
+                completed = true;
+            }
+            if ((phenology.Stage >= StartStage) && (ProgressThroughPhase <= Target) && (completed == false))
             {
                 ProgressThroughPhase += progression.Value();
                 IsInPhase = true;
@@ -83,6 +94,7 @@ namespace Models.PMF.Phen
         {
             ProgressThroughPhase = 0.0;
             IsInPhase = false;
+            completed = false;  
         }
 
         // 4. Private method

@@ -655,5 +655,105 @@ save {apsimxFileName}";
             Assert.True(outputText.Contains("example.xlsx"));
 
         }
+
+        /// <summary>
+        /// Test to make sure playlist switch works.
+        /// </summary>
+        [Test]
+        public void TestPlaylistSwitch()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            Playlist newplaylist = new Playlist()
+            {
+                Name = "playlist",
+                Text = firstSimName
+            };
+            sims.Children.Add(newplaylist);
+            sims.Write(sims.FileName);
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string apsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
+            string newFileString = @$"load {apsimxFileName}
+        duplicate [Simulation] Simulation1
+        save {apsimxFileName}
+        run";
+
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Utilities.RunModels($"--apply {newTempConfigFile} -p playlist");
+
+            Simulations simsAfterRun = FileFormat.ReadFromFile<Simulations>(sims.FileName, e => throw e, false).NewModel as Simulations;
+            DataStore datastore = simsAfterRun.FindChild<DataStore>();
+            List<String> dataStoreNames = datastore.Reader.SimulationNames;
+            Assert.IsTrue(dataStoreNames.Count == 1);
+            Assert.AreEqual(dataStoreNames.First(), firstSimName);
+        }
+
+        /// <summary>
+        /// Tests that an exception is thrown when a playlist is specified that does not exist.
+        /// </summary>
+        [Test]
+        public void TestPlaylistSwitchFailsGracefully()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            Assert.Throws<Exception>(() => Utilities.RunModels($"{sims.FileName} --playlist playlistNameThatDoesntExist --verbose"));
+        }
+
+        /// <summary>
+        /// Tests to make sure Playlist continues to run if there is a difference in case in the specified Playlist name.
+        /// </summary>
+        [Test]
+        public void TestPlaylistCaseInsensitivity()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            Playlist newplaylist = new Playlist()
+            {
+                Name = "playlist",
+                Text = firstSimName
+            };
+            sims.Children.Add(newplaylist);
+            sims.Write(sims.FileName);
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string apsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
+            string newFileString = @$"load {apsimxFileName}
+        duplicate [Simulation] Simulation1
+        save {apsimxFileName}
+        run";
+
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Utilities.RunModels($"--apply {newTempConfigFile} -p Playlist");
+
+            Simulations simsAfterRun = FileFormat.ReadFromFile<Simulations>(sims.FileName, e => throw e, false).NewModel as Simulations;
+            DataStore datastore = simsAfterRun.FindChild<DataStore>();
+            List<String> dataStoreNames = datastore.Reader.SimulationNames;
+            Assert.IsTrue(dataStoreNames.Count == 1);
+            Assert.AreEqual(dataStoreNames.First(), firstSimName);
+        }
+
+
+        [Test]
+        public void TestPlaylistDoesNotRunWhenDisabled()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            Playlist newplaylist = new Playlist()
+            {
+                Name = "playlist",
+                Text = firstSimName,
+                Enabled = false
+            };
+            sims.Children.Add(newplaylist);
+            sims.Write(sims.FileName);
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string apsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
+            string newFileString = @$"load {apsimxFileName}
+        duplicate [Simulation] Simulation1
+        save {apsimxFileName}
+        run";
+
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Assert.Throws<Exception>(() => Utilities.RunModels($"--apply {newTempConfigFile} -p playlist"));
+
+        }
     }
 }
