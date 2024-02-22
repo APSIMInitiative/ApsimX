@@ -945,7 +945,35 @@
                   ],
                   "Name": "DummyWaterBalance",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Script, APSIMee9a07e8-e955-4754-9463-bf31d76e9fda",
+                      "SW": [
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.15
+                      ],
+                      "Eos": 0.0,
+                      "Es": 0.0,
+                      "Eo": 0.0,
+                      "Salb": 0.0,
+                      "PotentialInfiltration": 0.0,
+                      "PrecipitationInterception": 0.0,
+                      "WaterTable": 0.0,
+                      "Pond": 0.0,
+                      "SubsurfaceDrain": 0.0,
+                      "SoluteFluxEfficiency": null,
+                      "SoluteFlowEfficiency": null,
+                      "Name": "Script",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
