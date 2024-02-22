@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Microsoft.VisualBasic;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -156,7 +157,7 @@ namespace Models.PMF.Organs
                 yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
             }
         }
-
+        bool flag = true;
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
@@ -1154,7 +1155,13 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-            if (leafInitialised)
+
+            if(leafInitialised && flag == true)
+            {
+                flag = false;
+            }
+            else
+            if (leafInitialised && !flag)
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
