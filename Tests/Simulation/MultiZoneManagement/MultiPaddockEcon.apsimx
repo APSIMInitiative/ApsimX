@@ -1603,6 +1603,61 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Management.FarmMachinery, Models",
+          "TractorNames": [
+            "220kW FWA",
+            "220kW FWA"
+          ],
+          "ImplementNames": [
+            "Planter",
+            "Sprayer"
+          ],
+          "WorkRates": [
+            42.0,
+            84.0
+          ],
+          "FuelConsRates": [
+            15.0,
+            5.0
+          ],
+          "Name": "FarmMachinery",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Management.FarmMachineryItem, Models",
+              "MachineryType": 0,
+              "xyz": null,
+              "Name": "220kW FWA",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmMachineryItem, Models",
+              "MachineryType": 1,
+              "xyz": "42",
+              "Name": "Planter",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmMachineryItem, Models",
+              "MachineryType": 1,
+              "xyz": "420",
+              "Name": "Sprayer",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Manager, Models",
           "CodeArray": [
             "using System;",
@@ -1835,6 +1890,13 @@
             "                      Category = \"Sowing\", ",
             "                      Name = cropDefaults[crop].fertType,",
             "                      Rate = cropDefaults[crop].fertAmount,",
+            "                      Area = myPaddockZones [ currentPaddock ].Area}}); ",
+            "",
+            "            myEvents.Publish(\"Operate\",  new object[] { this, ",
+            "                  new FarmMachinery.FarmMachineryOperateArgs{",
+            "                      Tractor = \"220kW FWA\",",
+            "                      Implement = \"Planter\",",
+            "                      Paddock = currentPaddock,",
             "                      Area = myPaddockZones [ currentPaddock ].Area}}); ",
             " ",
             "            killWeeds(currentPaddock);",
@@ -2452,7 +2514,7 @@
               "Name": "Summer Fallow",
               "Location": "454, 271",
               "Colour": "143, 89, 2",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2460,8 +2522,8 @@
               "Description": null,
               "Name": "Wheat",
               "Location": "256, 50",
-              "Colour": "255, 0, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Red",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2470,7 +2532,7 @@
               "Name": "Maize",
               "Location": "265, 426",
               "Colour": "96, 96, 217",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2478,8 +2540,8 @@
               "Description": null,
               "Name": "Fallow 1",
               "Location": "78, 276",
-              "Colour": "0, 255, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Lime",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2488,7 +2550,7 @@
               "Name": "Early Wheat",
               "Location": "256, 193",
               "Colour": "173, 127, 168",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             }
           ],
@@ -2504,7 +2566,7 @@
               "SourceName": "Wheat",
               "DestinationName": "Summer Fallow",
               "Location": "496, 67",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 1"
             },
             {
@@ -2519,7 +2581,7 @@
               "SourceName": "Summer Fallow",
               "DestinationName": "Maize",
               "Location": "448, 409",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 2"
             },
             {
@@ -2533,7 +2595,7 @@
               "SourceName": "Maize",
               "DestinationName": "Fallow 1",
               "Location": "55, 405",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 3"
             },
             {
@@ -2548,7 +2610,7 @@
               "SourceName": "Fallow 1",
               "DestinationName": "Wheat",
               "Location": "81, 59",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 4"
             },
             {
@@ -2563,7 +2625,7 @@
               "SourceName": "Fallow 1",
               "DestinationName": "Early Wheat",
               "Location": "119, 153",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 5"
             },
             {
@@ -2577,7 +2639,7 @@
               "SourceName": "Early Wheat",
               "DestinationName": "Summer Fallow",
               "Location": "385, 176",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 6"
             }
           ],
