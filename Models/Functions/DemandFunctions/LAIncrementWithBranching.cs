@@ -15,27 +15,27 @@ namespace Models.Functions.DemandFunctions
     {
         /// <summary>The plant population</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction PlantNumber = null;
+        private IFunction plantNumber = null;
 
         /// <summary>The number of nodes on the main stem</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction NodeNumber = null;
+        private IFunction nodeNumber = null;
 
         /// <summary>The number of branches (excluding the main stem)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction BranchNumber = null;
+        private IFunction branchNumber = null;
 
         /// <summary>The area of the largest leaf</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction AreaLargestLeaf = null;
+        private IFunction areaLargestLeaf = null;
 
         /// <summary>The rate of leaf appearance</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction LAR = null;
+        private IFunction lAR = null;
 
-        /// <summary>The relative leaf area as a function of NodeNumber</summary>
+        /// <summary>The relative leaf area as a function of nodeNumber</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private XYPairs RelativeArea = null;
+        private XYPairs relativeArea = null;
 
         /// <summary>The lag (in terms of node number) between each individual branch (including the main stem) and the main stem</summary>
         private int[] branchNodeLag = Enumerable.Repeat(-1, 20).ToArray();
@@ -44,20 +44,20 @@ namespace Models.Functions.DemandFunctions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            double currNodeNumber = NodeNumber.Value();
-            int numBranches = (int)BranchNumber.Value();
+            double currNodeNumber = nodeNumber.Value();
+            int numBranches = (int)branchNumber.Value();
 
             branchNodeLag[0] = 0;
-            double cumDelta = RelativeArea.ValueIndexed(currNodeNumber - branchNodeLag[0]);
+            double cumDelta = relativeArea.ValueIndexed(currNodeNumber - branchNodeLag[0]);
 
             for (int i = 1; i < numBranches + 1; i++)
             {
                 if (branchNodeLag[i] < 0)
                     branchNodeLag[i] = (int)currNodeNumber;
 
-                cumDelta += RelativeArea.ValueIndexed(currNodeNumber - branchNodeLag[i]);
+                cumDelta += relativeArea.ValueIndexed(currNodeNumber - branchNodeLag[i]);
             }
-            return cumDelta * PlantNumber.Value() * AreaLargestLeaf.Value() * LAR.Value();
+            return cumDelta * plantNumber.Value() * areaLargestLeaf.Value() * lAR.Value();
         }
 
         /// <summary>Document the model.</summary>
