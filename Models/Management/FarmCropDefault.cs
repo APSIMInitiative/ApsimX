@@ -16,46 +16,46 @@ namespace Models.Management
     public class FarmCropMgtInfo : Model
     {
         /// <summary>.</summary>
-        [Description("The real (PMF) name that this crop represents")]
+        [Description("The real (PMF) crop that this alias represents")]
         public string RealName { get; set; }
         /// <summary>.</summary>
-        [Description("")]
+        [Description("Rainfall required for sowing (mm)")]
+        public double MinRain{ get; set; }
+        /// <summary>.</summary>
+        [Description("Duration of rainfall accumulation (d)")]
         public int RainDays { get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public string StartDate{ get; set; }
+        [Description("Start of sowing window (d-mmm)")]
+        public string StartDate{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public string EndDate{ get; set; }
+        [Description("End of sowing window (d-mmm)")]
+         public string EndDate{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double MinRain{ get; set; }
+        [Description("Minimum extractable soil water (mm)")]
+         public double MinESW{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double MinESW{ get; set; }
+        [Description("Must sow at end of window")]
+        public bool MustSow{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public bool MustSow{ get; set; }
+        [Description("Established plant population (/m2)")]
+        public double Population{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double Population{ get; set; }
+        [Description("Cultivar to be sown")]
+        public string CultivarName{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public string CultivarName{ get; set; }
+        [Description("Depth of sowing (mm)")]
+        public double SowingDepth{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double SowingDepth{ get; set; }
+        [Description("Row spacing (mm)")]
+        public double RowSpacing{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double RowSpacing{ get; set; }
+        [Description("Maximum area of farm to plant to this crop (0-1, fraction)")]
+        public double maxArea{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public double maxArea{ get; set; }
+        [Description("Fertiliser type to apply")]
+        public string fertType{ get; set; }
         /// <summary>.</summary>
-        [Description("")]
-           public string fertType{ get; set; }
-        /// <summary>.</summary>
-        [Description("")]
-           public double fertAmount{ get; set; }
+        [Description("Fertiliser amount to apply")]
+        public double fertAmount{ get; set; }
     }
 }
