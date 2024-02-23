@@ -475,7 +475,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Farm", "Lactation")]
         [Description("Relative condition effect [CI20]")]
-        [Required, GreaterThanValue(1), GreaterThan("LowerRelativeConditionForBCFactor")]
+        [Required, GreaterThanValue(1)]
         [System.ComponentModel.DefaultValue(1.5)]
         public double RelativeConditionEffect_CI20 { get; set; }
 
