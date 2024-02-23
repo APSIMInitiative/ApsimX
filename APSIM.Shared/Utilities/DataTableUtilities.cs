@@ -285,35 +285,18 @@ namespace APSIM.Shared.Utilities
         static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
             double[] values;
-            //bool hasHeaders = false;
-            //int headerOffset = 0;
-
-            // Checks for headers
-            //string tablesFirstValue = table.Rows[0][columnName] as string;
-            //double firstValue;
-            //if (!Double.TryParse(tablesFirstValue, out firstValue) || tablesFirstValue == null)
-            //{
-            //    hasHeaders = true;
-            //    //headerOffset = -1;
-            //    values = new double[(numValues - startRow) /*+ headerOffset*/];
-            //}
-            //else values = new double[numValues - startRow];
             values = new double[numValues - startRow];
 
             int index = 0;
-            for (int Row = startRow; Row != table.Rows.Count && index != numValues /*+ headerOffset*/; Row++)
+            for (int row = startRow; row != table.Rows.Count && index != numValues; row++)
             {
-
-                if (table.Rows[Row][columnName].ToString() == string.Empty)
+                if (table.Rows[row][columnName].ToString() == string.Empty)
                     values[index] = double.NaN;
                 else
                 {
                     try
                     {
-                        //if (hasHeaders)
-                        //    values[index] = Convert.ToDouble(table.Rows[Row + 1][columnName], culture);
-                        //else
-                        values[index] = Convert.ToDouble(table.Rows[Row][columnName], culture);
+                        values[index] = Convert.ToDouble(table.Rows[row][columnName], culture);
                     }
                     catch (Exception)
                     {
@@ -1420,10 +1403,7 @@ namespace APSIM.Shared.Utilities
         /// <returns>a <see cref="bool">bool</see></returns>
         public static bool IsTablesFirstValueDouble(DataTable table)
         {
-            double firstValue;
-            if (Double.TryParse(table.Rows[0][0] as string, out firstValue))
-                return true;
-            else return false;
+            return Double.TryParse(table.Rows[0][0] as string, out double firstValue);
         }
     }
 }

@@ -178,8 +178,8 @@ namespace UserInterface.Presenters
             // pending events.
             if (string.IsNullOrEmpty(percentFullEdit.Text) && Gtk.Application.EventsPending())
                 return;
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
-            ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
+            if (double.TryParse(percentFullEdit.Text, out double val))
+                ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), val / 100));
         }
 
         /// <summary>Invoked when the filled from top checkbox is changed.</summary>

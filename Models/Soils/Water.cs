@@ -134,6 +134,7 @@ namespace Models.Soils
             {
                 if (Physical != null)
                 {
+                    double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                     if (FilledFromTop)
                         InitialValues = DistributeAmountWaterFromTop(value, Physical.Thickness, RelativeToLL, dul, RelativeToXF);
@@ -251,8 +252,25 @@ namespace Models.Soils
                         return 0;
                     else
                     {
-                        newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                            MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                        if (RelativeTo != "LL15")
+                        {
+                            //Get layer indices that have a XF as 0.
+                            var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
+
+                            double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, InitialValuesMM);
+                            double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, RelativeToLLMM);
+                            double[] dulMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, dulMM);
+
+                            newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
+                                                MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
+
+                        }
+                        else
+                        {
+                            newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
+                                                MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                        }
+
                         return newFractionFull;
                     }
                 }
@@ -273,13 +291,12 @@ namespace Models.Soils
         {
             if (Physical != null)
             {
-                if (value < 0 || value > 1)
-                    throw new InvalidOperationException($"Invalid value for fraction full: {value}. Must be between [0, 1]");
+                double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Thickness, RelativeToLL, dul, RelativeToXF);
+                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, RelativeToLL, dul);
+                    InitialValues = DistributeAmountWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
             }
         }
 
@@ -353,7 +370,7 @@ namespace Models.Soils
             {
                 if (RelativeTo != "LL15")
                 {
-                    var plantCrop = FindInScope<SoilCrop>(RelativeTo);
+                    var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop != null)
                         return SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
                 }
@@ -364,44 +381,163 @@ namespace Models.Soils
         /// <summary>Distribute water from the top of the profile using a fraction full.</summary>
         /// <param name="fractionFull">The fraction to fill the profile to.</param>
         /// <param name="thickness">Layer thickness (mm).</param>
+        /// <param name="airdry">Airdry</param>
         /// <param name="ll">Relative ll (ll15 or crop ll).</param>
         /// <param name="dul">Drained upper limit.</param>
         /// <param name="xf">XF.</param>
+        /// <param name="sat">SAT figures from Water's Physical model sibling.</param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeWaterFromTop(double fractionFull, double[] thickness, double[] ll, double[] dul, double[] xf)
+        public static double[] DistributeWaterFromTop(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
         {
-
             double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
+            pawcmm = MathUtilities.Multiply(xf, pawcmm);
+
             double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
-            return DistributeAmountWaterFromTop(amountWater, thickness, ll, dul, xf);
+            return DistributeAmountWaterFromTop(amountWater, thickness, airdry, ll, dul, sat, xf);
         }
+
+        private enum FillFlag { AirDry, DUL, SAT }
 
         /// <summary>Distribute amount of water from the top of the profile.</summary>
         /// <param name="amountWater">The amount of water to fill the profile to.</param>
         /// <param name="thickness">Layer thickness (mm).</param>
+        /// <param name="airdry"></param>
         /// <param name="ll">Relative ll (ll15 or crop ll).</param>
         /// <param name="dul">Drained upper limit.</param>
         /// <param name="xf">XF.</param>
+        /// <param name="sat">SATmm figures from Physical model.</param>
+        /// <param name="sw">Pass in an optional sw table</param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        private static double[] DistributeAmountWaterFromTop(double amountWater, double[] thickness, double[] ll, double[] dul, double[] xf)
+        private static double[] DistributeAmountWaterFromTop(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf, double[] sw = null)
         {
-            double[] sw = new double[thickness.Length];
-            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
+            double waterAmount = amountWater;
+            double[] soilWater = new double[thickness.Length];
+
+            double[] airDryToLL = MathUtilities.Subtract(ll, airdry);
+            double[] llToDul = MathUtilities.Subtract(dul, ll);
+            double[] dulToSat = MathUtilities.Subtract(sat, dul);
+
+            FillFlag flag = FillFlag.DUL;
+
+            if (sw != null) //this means we are filling past DUL
+            {
+                soilWater = sw;
+                flag = FillFlag.SAT;
+            }
+            else if (amountWater < 0) //filling to airdry
+            {
+                waterAmount = -waterAmount;
+                flag = FillFlag.AirDry;
+            }
+
+            double[] pawcmm = new double[thickness.Length];
+            if (flag == FillFlag.AirDry)
+                pawcmm = MathUtilities.Multiply(airDryToLL, thickness);
+            else if (flag == FillFlag.DUL)
+                pawcmm = MathUtilities.Multiply(llToDul, thickness);
+            else if (flag == FillFlag.SAT)
+                pawcmm = MathUtilities.Multiply(dulToSat, thickness);
+
+            pawcmm = MathUtilities.Multiply(xf, pawcmm);
 
             for (int layer = 0; layer < thickness.Length; layer++)
             {
-                if (amountWater >= 0 && xf[layer] == 0)
-                    sw[layer] = ll[layer];
-                else if (amountWater >= pawcmm[layer])
+                double prop = 1;
+                if (pawcmm[layer] == 0)
+                    prop = 1;
+                else if (waterAmount < pawcmm[layer])
+                    prop = waterAmount / pawcmm[layer];
+
+                if (flag == FillFlag.AirDry)
+                    soilWater[layer] = ll[layer] - (prop * airDryToLL[layer] * xf[layer]);
+                else if (flag == FillFlag.DUL)
+                    soilWater[layer] = ll[layer] + (prop * llToDul[layer] * xf[layer]);
+                else if (flag == FillFlag.SAT)
+                    soilWater[layer] = ll[layer] + (llToDul[layer] * xf[layer]) + (prop * dulToSat[layer] * xf[layer]);
+
+                waterAmount = waterAmount - pawcmm[layer];
+                if (waterAmount < 0)
+                    waterAmount = 0;
+            }
+            // If there is still water left fill the layers to SAT, starting from the top.
+            if (flag == FillFlag.DUL && waterAmount > 0)
+                soilWater = DistributeAmountWaterFromTop(waterAmount, thickness, airdry, ll, dul, sat, xf, soilWater);
+
+            return soilWater;
+        }
+
+
+        /// <summary>
+        /// Calculate a layered soil water using a FractionFull and evenly distributed. Units: mm/mm
+        /// </summary>
+        /// <param name="amountWater"></param>
+        /// <param name="thickness"></param>
+        /// <param name="airdry"></param>
+        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
+        /// <param name="dul">Drained upper limit.</param>
+        /// <param name="sat"></param>
+        /// <param name="xf"></param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        public static double[] DistributeWaterEvenly(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
+        {
+            double[] sw = new double[ll.Length];
+            double[] llToDul = MathUtilities.Subtract(dul, ll);
+            double waterAmount = amountWater;
+            double waterAmountPerLayer = amountWater / sw.Length;
+
+            FillFlag flag = FillFlag.DUL;
+            if (waterAmount < 0)
+                flag = FillFlag.AirDry;
+
+            double[] pawcmm = MathUtilities.Multiply(llToDul, thickness);
+
+            if (flag == FillFlag.DUL)
+            {
+
+                //Apply water based on fraction full, and store excess water over SAT as a percentage over SAT
+                double excessWater = 0;
+                for (int layer = 0; layer < sw.Length; layer++)
                 {
-                    sw[layer] = dul[layer];
-                    amountWater = amountWater - pawcmm[layer];
+                    double percentageOfLayerToFill = waterAmountPerLayer / pawcmm[layer];
+                    sw[layer] = ll[layer] + (percentageOfLayerToFill * llToDul[layer]);
+                    if (sw[layer] > sat[layer])
+                    {
+                        excessWater += (sw[layer] - sat[layer]) / llToDul[layer];
+                        sw[layer] = sat[layer];
+                    }
                 }
-                else
+
+                //spread excess water across other layers, using percentage relative to that layer
+                while (excessWater > 0)
                 {
-                    double prop = amountWater / pawcmm[layer];
-                    sw[layer] = (prop * (dul[layer] - ll[layer])) + ll[layer];
-                    amountWater = 0;
+                    //determine how many layers are full to SAT
+                    int fullLayers = 0;
+                    for (int layer = 0; layer < sw.Length; layer++)
+                        if (sw[layer] >= sat[layer])
+                            fullLayers += 1;
+
+                    //put excess water into layers that aren't ful
+                    if (fullLayers < sw.Length)
+                    {
+                        double water = (excessWater / (sw.Length - fullLayers)); //spilt water across non-full layers
+                        excessWater = 0; //reset excess water
+                        for (int layer = 0; layer < sw.Length; layer++)
+                        {
+                            if (sw[layer] < sat[layer]) //only do unfilled layers
+                            {
+                                sw[layer] += water * llToDul[layer]; //convert excess percentage back to water amount
+                                if (sw[layer] >= sat[layer])
+                                {
+                                    excessWater += (sw[layer] - sat[layer]) / llToDul[layer];
+                                    sw[layer] = sat[layer];
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        excessWater = 0;
+                    }
                 }
             }
 
@@ -409,34 +545,27 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Calculate a layered soil water using a FractionFull and evenly distributed. Units: mm/mm
-        /// </summary>
-        /// <param name="fractionFull">The fraction to fill the profile to.</param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeWaterEvenly(double fractionFull, double[] ll, double[] dul)
-        {
-            double[] sw = new double[ll.Length];
-            for (int layer = 0; layer < ll.Length; layer++)
-                sw[layer] = (fractionFull * (dul[layer] - ll[layer])) + ll[layer];
-
-            return sw;
-        }
-
-        /// <summary>
         /// Calculate a layered soil water using an amount of water and evenly distributed. Units: mm/mm
         /// </summary>
-        /// <param name="amountWater">The amount of water to fill the profile to.</param>
+        /// <param name="fractionFull"></param>
         /// <param name="thickness">Layer thickness (mm).</param>
+        /// <param name="airdry"></param>
         /// <param name="ll">Relative ll (ll15 or crop ll).</param>
         /// <param name="dul">Drained upper limit.</param>
+        /// <param name="sat"></param>
+        /// <param name="xf"></param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeAmountWaterEvenly(double amountWater, double[] thickness, double[] ll, double[] dul)
+        public static double[] DistributeAmountWaterEvenly(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
         {
             double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
-            double fractionFull = MathUtilities.Divide(amountWater, MathUtilities.Sum(pawcmm), 0);
-            return DistributeWaterEvenly(fractionFull, ll, dul);
+            pawcmm = MathUtilities.Multiply(xf, pawcmm);
+
+            double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
+            return DistributeWaterEvenly(amountWater, thickness, airdry, ll, dul, sat, xf);
+
+            //double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
+            //double fractionFull = MathUtilities.Divide(amountWater, MathUtilities.Sum(pawcmm), 0);
+            //return DistributeWaterEvenly(fractionFull, airdry, ll, dul, sat, xf);
         }
 
         /// <summary>
@@ -552,22 +681,21 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Checks to make sure every InitialValue value is within airdry and dul values.
+        /// Checks to make sure every InitialValue value is within airdry and SAT values.
         /// </summary>
         /// <param name="initialValues"></param>
         /// <returns>a <see cref="bool">bool</see> value</returns>
         /// <exception cref="Exception"></exception>
         public bool AreInitialValuesWithinPhysicalBoundaries(double[] initialValues)
         {
-            bool isWithinBoundaries = true;
             if (this.Physical == null)
                 throw new Exception("To check boundaries of InitialValues Physical must not be null.");
             for (int i = 0; i < initialValues.Length; i++)
             {
-                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.DUL[i])
-                    isWithinBoundaries = false;
+                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.SAT[i])
+                    return false;
             }
-            return isWithinBoundaries;
+            return true;
         }
     }
 }
