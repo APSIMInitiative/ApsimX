@@ -129,7 +129,7 @@ def poll_zmq(ret, fields):
                     tmp.append(sw)
                 sw_arr.append(tmp)
 
-                sendCommand(socket, "get", [f"[Field{i+1}].Soil.SoilWater.Runoff"])
+                sendCommand(socket, "get", [f"[Field{i+1}].Soil.Runoff"])
                 runoff = msgpack.unpackb(socket.recv())  # unknown units on runoff
                 print(f'field {i}, runoff: {runoff}')
                 runoff_arr.append(runoff)

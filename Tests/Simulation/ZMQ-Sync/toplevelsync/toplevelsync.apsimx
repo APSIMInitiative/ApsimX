@@ -96,7 +96,7 @@
               "Name": "Report",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -600,7 +600,7 @@
               "Name": "Report",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -1165,7 +1165,7 @@
           "Name": "GlobalIrrigationManager",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -1428,6 +1428,42 @@
             }
           ],
           "Name": "Synchroniser",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Weather].Rain",
+            "",
+            "[Field1].HeavyClay..HeavyClay.SoilWater.ESW",
+            "[Field1].HeavyClay.Water.Volumetric",
+            "[Field1].HeavyClay.Water.Volumetric",
+            "[Field1].HeavyClay.SoilWater.Es",
+            "[Field1].HeavyClay.SoilWater.Runoff",
+            "[Field1].HeavyClay.SoilWater.Drainage",
+            "[Field1].HeavyClay.NO3.kgha",
+            "[Field1].HeavyClay.Nutrient.MineralisedN",
+            "[Field1].SurfaceOrganicMatter.Wt",
+            "[Field1].SurfaceOrganicMatter.Cover",
+            "",
+            "[Field2].HeavyClay..HeavyClay.SoilWater.ESW",
+            "[Field2].HeavyClay.Water.Volumetric",
+            "[Field2].HeavyClay.Water.Volumetric",
+            "[Field2].HeavyClay.SoilWater.Es",
+            "[Field2].HeavyClay.SoilWater.Runoff",
+            "[Field2].HeavyClay.SoilWater.Drainage",
+            "[Field2].HeavyClay.NO3.kgha",
+            "[Field2].HeavyClay.Nutrient.MineralisedN",
+            "[Field2].SurfaceOrganicMatter.Wt",
+            "[Field2].SurfaceOrganicMatter.Cover"
+          ],
+          "EventNames": null,
+          "GroupByVariableName": null,
+          "Name": "Report",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
