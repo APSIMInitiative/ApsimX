@@ -2,13 +2,13 @@ ParamName,ParamUnit,Description,Maize,Wheat,Hemp,OSR,Grapevine,Macadamia,Lemons,
 CropType,string,Type of crop (i.e. crop name) used for characterising organic matter residues composition,Maize,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine,Grapevine,pasture,whiteclover
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18  26  34  44),(0  26  37),(1.9 26  40),2  30  35,(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10  18  26   0),(0  26  0),(0 24.1 0),0  28  0,(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,294,116,267,106,100,100,100,102,0,0
+D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,72,254,116,267,106,100,100,100,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,13,0,7,0,10,0,0,0,10,0,0
-Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,500,1000,600,1180,1000,1000,1000,510,450,300,300
+Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,500,500,600,1180,1000,1000,1000,510,450,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
-Pp_FullCover_02,h,Photoperiod x-values for reproductive target thermal-time lengths,(11 14 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(0 700 700),(2200 1200),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,500,600,450,700,100,100,100,120,200,0,0
+Pp_FullCover_02,h,Photoperiod x-values for full cover target thermal-time lengths,(11 14 24),(12 17),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Tt_FullCover_02,oCd,Thermal-time duration of full-cover phase at PP x-values (FullCanopy to StartSenescence),(0 700 700),(7000 700),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(200 1000),(1300 1300),(1300 1300)
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,500,800,450,700,100,100,100,120,200,0,0
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,0,150,0,0,0,0,0,0,50,0,0
 EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune
 Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,(0 0 0 0),(-2 -1 16 17),(0 0 0 0),(0 2 8 15),(-5 0 7 15),(0 0 0 0),(0 0 0 0),(0 0 0 0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
@@ -16,10 +16,10 @@ Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,(0 0 
 AC_Dormant_05,oCd,Accumulated chill units (x-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 100),(0.0 30),(0.0 30)
 Tt_Dormant_05,oCd,Thermal-time duration of dormant phase at  accumulated chill unit (y-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(500 0),(0 0),(0 0)
 VegetativeStartStage,,Phenological stage to start accumulating vegetative tt,3.01,6.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01
-Pp_Vegetative,h,Photoperiod x-values for reproductive target thermal-time lengths,(12.5 24),(8 16),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Vegetative,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(200 500),(2800 1800),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(0 0),(1300 1300),(1300 1300)
+Pp_Vegetative,h,Photoperiod x-values for pre flowering target thermal-time lengths,(12.5 24),(12 17),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Tt_Vegetative,oCd,Thermal-time duration of pre flowering phase at PP x-values ,(200 500),(5000 500),(55 300),(500 700),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(0 0),(1300 1300),(1300 1300)
 Tt_Flowering,oCd,Thermal time for flowering window,500,200,200,200,200,200,200,200,200,200,200
-Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,1000,600,3000,3000,700,700,700,700,1000,700,700
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,1000,800,3000,3000,700,700,700,700,1000,700,700
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,1100,1100,1000,1370,1500,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,3000,3000,3500,4500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,2500,1800,1800,1800,4500,5700,4500,3500,3500,300,300
@@ -30,7 +30,7 @@ AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,0,0,0
 SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 0.5),(0.5 1 1 1),(0.5 1 1 1),(0.5 1 1 1),(0.5 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,0,0,0,0,500,1500,1000,1500,1500,0,0
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,0,0,0,0,0,6,6,6,0,0,0
-LAImax,m2/m2,Maximum achievable leaf are index (optimal management),6,7,7,6,4,2,2,2,8,6,3
+LAImax,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),6,7,7,6,4,2,2,2,8,6,3
 ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.5,0.5,0.96,0.55,0.5,0.4,0.4,0.6,0.7,0.5,0.8
 RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),2,1.5,2.32,1.69,0.9,2.3,1,1,1.2,1,0.9
 RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,(8 15 35 50),(0 15 25 35),(0 25 30 45),(0  10 22 30),(5 25 30 45),(10  24 26  35),(10 25 30 45),(10 25 33 45),(5 20 30 40),(3 18 25 35),(5 20 25 35)
@@ -56,10 +56,10 @@ WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),
 WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,1000,1000,1000,1000,1000,1000,1000,1000,40,1000,1000
+FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,1000,30000,1000,1000,1000,1000,1000,1000,40,1000,1000
 FlowerStress_Temp_X,oC,Maximum temperature at flowering,(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45)
 FlowerStress_Factor_Y,fractional,Multiplier of maximum flower number at thresold maximum temperature,(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0)
-ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,0.2,0.8,0.92,0.2,0.2,0.2,0.2,0.2,0.2,0.2
-FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,10,10,10,10,10,10,10,10,35,10,10
+ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.86,.86,0.8,0.92,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,10,.05,10,10,10,10,10,10,35,10,10
 RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
 RainfallExcessDamage_Fract_Y,fractional,Fractional multiplier of produce,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
