@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine the amount still required to attain expected
         /// </summary>
-        public double Required { get { return Math.Max(0, Expected - Actual); } }
+        public double Required { get { return Math.Max(0, Expected - Actual + Unneeded); } }
 
         /// <summary>
         /// Expected or potential value required over specified time period

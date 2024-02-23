@@ -76,12 +76,17 @@ namespace Models.CLEM.Resources
             //for each food type
             foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility))
             {
+                // RQ is relative quality
+
+                // FS relative availability of the feed
                 double FS = 0;
+                // RS relative 
                 double RS = 0;
                 switch (item.Key)
                 {
                     case FeedType.Concentrate:
                     case FeedType.HaySilage:
+                        // relative quality
                         double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
                         double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                         double unsatisfied_adj = Math.Max(0, 1-sumFs);
@@ -108,10 +113,11 @@ namespace Models.CLEM.Resources
                     default:
                         break;
                 }
-                iReduction = (1 - RS) * SolidsDaily.Expected;
+                double amountEaten = RS * SolidsDaily.Expected;
+                iReduction = StdMath.DIM(item.Value.Details.Amount, amountEaten);
                 item.Value.AdjustAmount(-iReduction);
-                sumFs += FS;
                 SolidsDaily.Unneeded += iReduction;
+                sumFs += FS;
             }
         }
 
@@ -235,7 +241,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
+                return feedTypeStoreDict.Sum(a => a.Value.ME);
             }
         }
 
@@ -246,7 +252,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key == FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
+                return feedTypeStoreDict.Where(a => a.Key == FeedType.Milk).Sum(a => a.Value.ME);
             }
         }
 
@@ -257,7 +263,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
+                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.ME);
             }
         }
 
@@ -271,7 +277,7 @@ namespace Models.CLEM.Resources
             {
                 if (MathUtilities.IsGreaterThan(SolidIntake, 0))
                 {
-                    return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount) / SolidIntake;
+                    return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.ME) / SolidIntake;
                 }
                 return 0;
             }

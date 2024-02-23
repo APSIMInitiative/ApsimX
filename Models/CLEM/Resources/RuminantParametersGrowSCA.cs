@@ -479,15 +479,6 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValue(1.5)]
         public double RelativeConditionEffect_CI20 { get; set; }
 
-        /// <summary>
-        /// Relative condition at which body condition effect on Imax (potential intake) occurs (SCA CI20)
-        /// </summary>
-        [Category("Farm", "Lactation")]
-        [Description("Relative condition where BC effect starts")]
-        [Required, GreaterThanEqualValue(1)]
-        [System.ComponentModel.DefaultValue(1.1)]
-        public double LowerRelativeConditionForBCFactor { get; set; }
-
         #endregion
 
         #region Efficiency of... CK#
