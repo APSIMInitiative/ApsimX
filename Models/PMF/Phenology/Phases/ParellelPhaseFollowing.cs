@@ -37,6 +37,9 @@ namespace Models.PMF.Phen
 
         private IParallelPhase priorPhase = null;
 
+        /// <summary>Occurs when [phase changed].</summary>
+        public event EventHandler<PhaseChangedType> ParallelPhaseChanged;
+
         /// <summary>The phenological stage at the start of this parallel phase.</summary>
         [JsonIgnore]
         public double StartStage { get; set; }
@@ -59,6 +62,9 @@ namespace Models.PMF.Phen
                     return ProgressThroughPhase / Target;
             }
         }
+
+        private bool hasBegun { get; set; } = false;
+        private bool hasFinished { get; set; } = false;
 
         /// <summary>Accumulated units of progress through this phase.</summary>
         [JsonIgnore]
@@ -91,6 +97,27 @@ namespace Models.PMF.Phen
             {
                 IsInPhase = false;
             }
+
+            if ((hasBegun == false) && (IsInPhase == true))
+            {
+                PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                PhaseChangedData.StageName = "Start"+this.Name ;
+                ParallelPhaseChanged?.Invoke(plant, PhaseChangedData);
+            }
+            if ((hasBegun == false) && (IsInPhase == true))
+            {
+                hasBegun = true;
+            }
+            if ((hasBegun == true) && (IsInPhase == false) && (hasFinished == false)) // only occurs on the day we complete this phase
+            {
+                PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                PhaseChangedData.StageName = "End"+this.Name ;
+                ParallelPhaseChanged?.Invoke(plant, PhaseChangedData);
+            }
+            if ((hasBegun == true) && (IsInPhase == false))
+            {
+                hasFinished = true;
+            }
         }
 
         /// <summary>Resets the phase.</summary>
@@ -99,6 +126,8 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0.0;
             IsInPhase = false;
             firstDayinPhase = true;
+            hasBegun = false;
+            hasFinished = false;
             StartStage = 0;  
         }
 
