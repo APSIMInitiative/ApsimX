@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Models.Climate
 {
@@ -547,6 +548,17 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Check values in weather and return a collection of warnings.
+        /// </summary>
+        public IEnumerable<string> Validate()
+        {
+            if (Amp > 20)
+            {
+                yield return $"The value of Weather.AMP ({Amp}) is > 20 oC. Please check the value.";
+            }
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
         [EventSubscribe("Commencing")]
@@ -587,6 +599,9 @@ namespace Models.Climate
                 FirstDateOfSpring = FirstDateOfAutumn;
                 FirstDateOfAutumn = temp;
             }
+
+            foreach (var message in Validate())
+                summary.WriteMessage(this, message, MessageType.Warning);
         }
 
         /// <summary>
@@ -1038,8 +1053,8 @@ namespace Models.Climate
             double yearlySumAmp = 0;
             for (int y = 0; y < nyears; y++)
             {
-                maxMean = -999;
-                minMean = 999;
+                maxMean = double.MinValue;
+                minMean = double.MaxValue;
                 sumOfMeans = 0;
                 for (int m = 0; m < 12; m++)
                 {
@@ -1052,8 +1067,11 @@ namespace Models.Climate
                     }
                 }
 
-                yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
-                yearlySumAmp += maxMean - minMean;          // accum the amp of means
+                if (maxMean != double.MinValue && minMean != double.MaxValue)
+                {
+                    yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
+                    yearlySumAmp += maxMean - minMean;          // accum the amp of means
+                }
             }
 
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
