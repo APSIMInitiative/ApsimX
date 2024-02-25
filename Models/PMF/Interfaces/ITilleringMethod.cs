@@ -24,5 +24,8 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Calculated Tiller Number</summary>
         double CalculatedTillerNumber { get; set; }
+
+        /// <summary>Number of potential Fertile Tillers at harvest</summary>
+        double MaxSLA { get; set; }
     }
 }
