@@ -1,7 +1,5 @@
 [weather.met.weather]
 latitude = 42 (DECIMAL DEGREES)
-tav = 9.35 (oC) ! annual average ambient temperature
-amp = 29.64 (oC) ! annual amplitude in mean monthly temperature
 year          day           radn          maxt          mint          rain
 ()            ()            (MJ/m^2)      (oC)          (oC)          (mm)
  1982          1             5.3          -10.6         -20            0 

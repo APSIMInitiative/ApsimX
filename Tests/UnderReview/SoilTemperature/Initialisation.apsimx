@@ -53,6 +53,7 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [],
                       "InitialValues": null,
                       "Name": "SoilTemperature",
@@ -77,6 +78,7 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [
                         100.0,
                         150.0,
@@ -117,6 +119,7 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [
                         100.0,
                         150.0,
@@ -1388,6 +1391,7 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [
                             100.0,
                             150.0,
@@ -3345,6 +3349,7 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -5131,6 +5136,7 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
