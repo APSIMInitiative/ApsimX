@@ -195,6 +195,14 @@ namespace Models.Core
 
         }
 
+        /// <summary>
+        /// Resets the FileName property of each Simulation model in the APSIMX file.
+        /// </summary>
+        public void ResetSimulationFileNames()
+        {
+            SetFileNameInAllSimulations();
+        }
+
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
