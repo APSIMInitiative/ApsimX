@@ -63,7 +63,7 @@
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
               "FileName": "AnalyticalWeather.xlsx",
-              "ExcelWorkSheetName": "Dalby",
+              "ExcelWorkSheetName": "Cool",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -695,7 +695,7 @@
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
               "FileName": "AnalyticalWeather.xlsx",
-              "ExcelWorkSheetName": "Dalby",
+              "ExcelWorkSheetName": "Cool",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -945,8 +945,7 @@
                   ],
                   "Name": "DummyWaterBalance",
                   "ResourceName": null,
-                  "Children": [
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },

@@ -19667,7 +19667,7 @@
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
                   "FileName": "AnalyticalWeather.xlsx",
-                  "ExcelWorkSheetName": "Sheet1",
+                  "ExcelWorkSheetName": "Warm",
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -22503,8 +22503,7 @@
                       ],
                       "Name": "DummyWaterBalance",
                       "ResourceName": null,
-                      "Children": [
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
