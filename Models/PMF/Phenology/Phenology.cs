@@ -108,9 +108,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The Thermal time accumulated tt following emergence</summary>
         [JsonIgnore]
-        public double AccumulatedEmergedTT 
-        { get; 
-            set; }
+        public double AccumulatedEmergedTT { get; set; }
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
