@@ -186,13 +186,6 @@
                         double yDouble = 0;
                         if (y is DateTime)
                             yDouble = ((DateTime)y).ToOADate();
-                        else if (y is String)
-                        {
-                            if ((String)y == "True")
-                                yDouble = 1.0;
-                            if ((String)y == "False")
-                                yDouble = 0.0;
-                        }
                         else
                             yDouble = Convert.ToDouble(y);
                         valuesY.Add(yDouble);
