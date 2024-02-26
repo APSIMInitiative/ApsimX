@@ -272,7 +272,7 @@ namespace Models.Climate
 
                 // Determine the year range to sample from.
                 var firstYearToSampleFrom = firstDateInFile.Year;
-                var lastYearToSampleFrom = lastDateInFile.Year - 1;
+                var lastYearToSampleFrom = lastDateInFile.Year - 1;  //VOS - tried setting this with " - 2" to avoid the last partial year but no joy. Wierd stuff is happening!
                 if (firstDateInFile > StartDate)
                     firstYearToSampleFrom++;
 
@@ -312,7 +312,7 @@ namespace Models.Climate
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
-                if (currentYearIndex < Years.Length)
+                if (currentYearIndex < Years.Length)  // VOS - so when this is false the simulation should be done but it keeps running into this statement even when there are way more years than required
                 {
                     var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
                     currentRowIndex = FindRowForDate(dateToFind);
