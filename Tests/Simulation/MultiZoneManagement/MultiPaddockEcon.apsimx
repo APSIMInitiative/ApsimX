@@ -1757,8 +1757,6 @@
             "        public string getCurrentStateOfPaddock(string paddock) {",
             "           return currentStateAll[paddock];",
             "        }",
-            "        //public string[] CurrentState {get { return currentState.Values.ToArray();} set {}}",
-            "        //public string CurrentStateCSV {get { return string.Join(\",\", currentState.Values);} set {}}",
             "",
             "        private Dictionary<string, int> daysSinceLastHarvests;",
             "        [NonSerialized] private Events myEvents;",
@@ -2022,8 +2020,8 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Blorkla barg",
-              "Name": "Memo",
+              "Text": "### Whole farm management \n\nThis simulation aims to manage paddocks from a single \"top level\" manager that applies a rotation to each, testing environmental (rainfall, water content), current (eg %age of farm planted) and historical (eg max 2 cereals in a row) states for what crop to sow next. \n\nThe top level manager ",
+              "Name": "APSFarm",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2294,15 +2292,15 @@
           "Parameters": [
             {
               "Key": "rainAmount",
-              "Value": 25
+              "Value": "25"
             },
             {
               "Key": "ttSum",
-              "Value": 250
+              "Value": "250"
             },
             {
               "Key": "swFrac",
-              "Value": 0.5
+              "Value": "0.5"
             },
             {
               "Key": "controlChemical",
@@ -2310,7 +2308,7 @@
             },
             {
               "Key": "controlRate",
-              "Value": 1.6
+              "Value": "1.6"
             }
           ],
           "Name": "Weeds",
@@ -2350,7 +2348,8 @@
             "        [Link] Weather Weather;",
             "        [Link] ISummary Summary;",
             "",
-            "        [Link(IsOptional = true)] private Script Manager;",
+            "        [Link(ByName = true)] private Manager Manager;",
+            "        private Script ManagerScript ;",
             "        ",
             "        [Link(IsOptional = true)] private RotationManager RotationManager;",
             "        [Link(IsOptional = true)] private Zone defaultZone;",
@@ -2368,9 +2367,9 @@
             "        private Dictionary<string, int> meInt = new Dictionary<string, int>();",
             "        ",
             "        private string currentPaddock {get { ",
-            "           return((Manager is null) ? ",
+            "           return((ManagerScript is null) ? ",
             "             defaultZone.Name : ",
-            "                Manager.currentPaddock); } set {}} ",
+            "                ManagerScript.currentPaddock); } set {}} ",
             "",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        public void OnStart_Simulation(object sender, EventArgs e) { ",
@@ -2380,6 +2379,9 @@
             "            myFert = new Dictionary<string, Fertiliser>();",
             "            myNutrient = new Dictionary<string, Nutrient>();",
             "            myCrops = new Dictionary<string, Plant>();",
+            "            ",
+            "            ManagerScript = Manager.ScriptModel as Script;",
+            "            ",
             "            foreach (var z in Simulation.FindAllChildren<Zone>() ) {",
             "               myPaddockZones.Add(z.Name, z);",
             "               ",
@@ -2443,9 +2445,7 @@
             "       ",
             "       [EventSubscribe(\"Transition\")] ",
             "       public void OnTransition(object sender, EventArgs e) {",
-            "               //Console.WriteLine(\"T ransition to\"); ",
             "          me[currentPaddock + \"__NeedReset\"] = 1;",
-            "               //Console.WriteLine(\"T ransition from\"); ",
             "       } ",
             "   ",
             "   [EventSubscribe(\"StartOfDay\")] ",
