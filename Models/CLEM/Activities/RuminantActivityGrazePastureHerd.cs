@@ -267,6 +267,7 @@ namespace Models.CLEM.Activities
                     }
                     if (MathUtilities.IsPositive(totalPastureRequired))
                     {
+                        GrazeFoodStoreModel.SetCurrentBiomass();
                         pastureRequest = new ResourceRequest()
                         {
                             AllowTransmutation = false,

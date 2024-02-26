@@ -97,14 +97,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return 0.7 * MEContent;
-                //return TypeOfFeed switch
-                //{
-                //    FeedType.HaySilage or
-                //    FeedType.PastureTemperate or
-                //    FeedType.PastureTropical => MEContent,
-                //    FeedType.Concentrate => MEContent - (36 * FatContent / 100) - (14* UndegradableCrudeProteinContent/100),
-                //    _ => throw new NotImplementedException($"Cannot provide FMEContent for the TypeOfFeed: {TypeOfFeed}."),
-                //};
             }
         }
 

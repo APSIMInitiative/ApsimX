@@ -76,6 +76,15 @@ namespace Models.CLEM.Resources
         public double FatContent { get; set; } = 0;
 
         /// <inheritdoc/>
+        [JsonIgnore]
+        public double OverallPastureBiomass { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Proportion]
+        [Description("Proportion of legume in this pasture")]
+        public double ProportionLegumeInPasture { get; set; } = 0;
+
+        /// <inheritdoc/>
         [Description("Crude protein degradability")]
         public double CPDegradability { get; set; }
 
@@ -261,6 +270,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Amount (kg)
+        /// </summary>
+        [JsonIgnore]
+        public double Amount
+        {
+            get
+            {
+                return Pools.Sum(a => a.Amount);
+            }
+        }
+
+        /// <summary>
         /// The biomass per hectare of pasture available
         /// </summary>
         public double KilogramsPerHa
@@ -271,6 +292,29 @@ namespace Models.CLEM.Resources
                     return Amount / Manager.Area;
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Amount (tonnes per ha)
+        /// </summary>
+        [JsonIgnore]
+        public double TonnesPerHectare
+        {
+            get
+            {
+                if (Manager != null)
+                    return KilogramsPerHa / 1000.0;
+                else
+                    return 0;
+            }
+        }
+
+        /// <summary>
+        /// Set the current pasture biomass for analysis
+        /// </summary>
+        public void SetCurrentBiomass()
+        {
+            OverallPastureBiomass = KilogramsPerHa;
         }
 
         /// <summary>
@@ -326,33 +370,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return (DetachRate + CarryoverDetachRate + DecayDMD + DecayNitrogen != 0);
-            }
-        }
-
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
-        [JsonIgnore]
-        public double Amount
-        {
-            get
-            {
-                return Pools.Sum(a => a.Amount);
-            }
-        }
-
-        /// <summary>
-        /// Amount (tonnes per ha)
-        /// </summary>
-        [JsonIgnore]
-        public double TonnesPerHectare
-        {
-            get
-            {
-                if (Manager != null)
-                    return Pools.Sum(a => a.Amount) / 1000 / Manager.Area;
-                else
-                    return 0;
             }
         }
 

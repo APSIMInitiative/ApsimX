@@ -24,10 +24,12 @@ namespace Models.CLEM.Resources
         /// Total crude protein in the store.
         /// </summary>
         public double CrudeProtein { get; set; }
+        
         /// <summary>
         /// Total rumen degradable crude protein in the store.
         /// </summary>
         public double DegradableCrudeProtein { get; set; }
+        
         /// <summary>
         /// Total rumen undegradable crude protein in the store.
         /// </summary>
@@ -55,13 +57,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Adjust amount
+        /// Reduce current amount supplied
         /// </summary>
         /// <param name="amount">the amount to add or subtract</param>
-        public void AdjustAmount(double amount)
+        public void ReduceAmount(double amount)
         {
-            if (MathUtilities.IsNegative(amount) && MathUtilities.IsGreaterThan(Math.Abs(amount), Details.Amount))
-                amount = Details.Amount;
+            if (MathUtilities.IsGreaterThan(amount, Details.Amount))
+            {
+                Details.Amount = 0;
+                CrudeProtein = 0;
+                DegradableCrudeProtein = 0;
+                return;
+            }
             Details.Amount += amount;
             CrudeProtein += (Details.CrudeProteinContent/100.0) * amount;
             DegradableCrudeProtein += (Details.RumenDegradableProteinContent/100.0) * amount;
