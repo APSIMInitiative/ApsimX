@@ -13,6 +13,7 @@ using APSIM.Shared.JobRunning;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using MigraDocCore.DocumentObjectModel.Tables;
+using SixLabors.ImageSharp.Processing;
 
 
 namespace Models.Management
@@ -58,30 +59,38 @@ namespace Models.Management
                 return tables;
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-           PaddockNames = new string[dt.Rows.Count];
-           IsManaged = new bool[dt.Rows.Count];
-           InitialState = new string[dt.Rows.Count];
-           DaysSinceHarvest = new int[dt.Rows.Count];
+      /// <summary>
+      /// Convert the table to model variables, ensure blanks are removed.
+      /// </summary>
+      public DataTable ConvertDisplayToModel(DataTable dt)
+      {
+         var myPaddockNames = new List<string>();
+         var myIsManaged = new List<bool>();
+         var myInitialState = new List<string>();
+         var myDaysSinceHarvest = new List<int>();
+         for (var row = 0; row < dt.Rows.Count; row++)
+         {
+            if ((dt.Rows[row][0] as string) != null)
+            {
+               myPaddockNames.Add(dt.Rows[row][0] as string);
+               myIsManaged.Add(dt.Rows[row][1].ToString().ToLower() == "true" ? true : false);
+               myInitialState.Add(dt.Rows[row][2] as string);
+               int dsh = 0;
+               int.TryParse(dt.Rows[row][3].ToString(), out dsh);
+               myDaysSinceHarvest.Add(dsh);
+            }  
+         }
+         PaddockNames = myPaddockNames.ToArray();
+         IsManaged = myIsManaged.ToArray();
+         InitialState = myInitialState.ToArray();
+         DaysSinceHarvest = myDaysSinceHarvest.ToArray();
+         return (dt);
+      }
 
-           for (var row = 0 ; row < dt.Rows.Count; row++) 
-           {
-               PaddockNames[row] = dt.Rows[row][0] as string;
-               IsManaged[row] =  dt.Rows[row][1].ToString().ToLower() == "true" ? true : false  ;
-               InitialState[row] = dt.Rows[row][2] as string;
-               int.TryParse(dt.Rows[row][3].ToString(), out DaysSinceHarvest[row]);
-           }
-           return(dt);
-        }
-
-        /// <summary>
-        /// Ensure any new child components added by user are present in the arrays
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
+      /// <summary>
+      /// Ensure any new child components added by user are present in the arrays
+      /// </summary>
+      public DataTable ConvertModelToDisplay(DataTable dt)
         { 
             var newFields = getFieldNames();
 
