@@ -1166,15 +1166,10 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-
                 double result = WeightAverage(PastureModel.Digestibility(GrazType.sgGREEN, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
                                      PastureModel.Digestibility(GrazType.sgDRY, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
-
-                PastureModel.MassUnit = sUnit;
 
                 return result;
             }
@@ -1186,15 +1181,10 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-
                 double result = WeightAverage(PastureModel.CrudeProtein(GrazType.sgGREEN, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
                                      PastureModel.CrudeProtein(GrazType.sgDRY, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
-
-                PastureModel.MassUnit = sUnit;
 
                 return result;
             }
@@ -1338,12 +1328,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
             }
         }
 
@@ -1353,12 +1338,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
             }
         }
 
@@ -1368,12 +1348,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
             }
         }
 
@@ -1398,7 +1373,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average nitrogen content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileN
+        public double[] RootProfileN
         {
             get
             {
@@ -1417,7 +1392,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average phosphorus content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileP
+        public double[] RootProfileP
         {
             get
             {
@@ -1436,7 +1411,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average sulphur content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileS
+        public double[] RootProfileS
         {
             get
             {
@@ -1557,12 +1532,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.SeedCrudeProtein(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.SeedCrudeProtein(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
             }
         }
 
@@ -1572,12 +1542,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
             }
         }
 
@@ -1587,12 +1552,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
             }
         }
 
@@ -1602,12 +1562,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
             }
         }
 
@@ -1617,12 +1572,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.EstablishIndex();
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.EstablishIndex();
             }
         }
 
@@ -1632,12 +1582,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.SeedlingStress();
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.SeedlingStress();
             }
         }
 
@@ -1647,12 +1592,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double[] result = LayerArray2Value(PastureModel.Transpiration(GrazType.sgGREEN), PastureModel.SoilLayerCount);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return LayerArray2Value(PastureModel.Transpiration(GrazType.sgGREEN), PastureModel.SoilLayerCount);
             }
         }
 
