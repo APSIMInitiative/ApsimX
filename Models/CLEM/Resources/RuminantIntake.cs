@@ -89,18 +89,18 @@ namespace Models.CLEM.Resources
                         break;
                     case FeedType.PastureTemperate:
                     case FeedType.PastureTropical:
-                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.ProportionLegumeInPasture)), item.Value.Details.DryMatterDigestibility/100.0);
+//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.ProportionLegumeInPasture)), item.Value.Details.DryMatterDigestibility/100.0);
                         // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
                         double ZF = 1.0;
                         if (ind.Weight.RelativeSize < 0.5)
                         {
                             ZF = 1 + 0.5 - ind.Weight.RelativeSize;
                         }
-                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass);
-                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass));
+//                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass);
+//                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass));
                         unsatisfied_adj = Math.Max(0, 1 - sumFs);
-                        FS = unsatisfied_adj * RR * RT;
-                        RS = FS * RQ * (1 + (0.17 * item.Value.Details.ProportionLegumeInPasture * Math.Pow(sumFs,2)));
+//                        FS = unsatisfied_adj * RR * RT;
+//                        RS = FS * RQ * (1 + (0.17 * item.Value.Details.ProportionLegumeInPasture * Math.Pow(sumFs,2)));
                         break;
                     default:
                         break;
@@ -317,12 +317,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double sumAmount = 0;
-                foreach (var item in feedTypeStoreDict)
-                {
-                    sumAmount += item.Value.DegradableCrudeProtein;
-                }
-                return sumAmount;
+                return feedTypeStoreDict.Sum(a => a.Value.DegradableCrudeProtein);
             }
         }
 

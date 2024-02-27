@@ -69,9 +69,9 @@ namespace Models.CLEM.Resources
                 DegradableCrudeProtein = 0;
                 return;
             }
-            Details.Amount += amount;
-            CrudeProtein += (Details.CrudeProteinContent/100.0) * amount;
-            DegradableCrudeProtein += (Details.RumenDegradableProteinContent/100.0) * amount;
+            Details.Amount -= amount;
+            CrudeProtein -= (Details.CrudeProteinContent/100.0) * amount;
+            DegradableCrudeProtein = CrudeProtein * Details.RumenDegradableProteinContent; // / 100.0) * amount;
         }
 
         /// <summary>

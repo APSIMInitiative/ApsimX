@@ -368,7 +368,7 @@ namespace Models.CLEM.Activities
             if (netEnergyForGain > 0)
                 netEnergyForGain *= ind.Parameters.GrowSCA.BreedGrowthEfficiencyScalar;
 
-            double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.NetForGain / energyEmptyBodyGain));
+            double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (netEnergyForGain / energyEmptyBodyGain));
 
             if (milkProtein > 0 && ProteinNet1 < milkProtein)
             {
