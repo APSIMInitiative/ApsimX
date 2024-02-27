@@ -5,6 +5,7 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -17,7 +18,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, ITabularData
+    public class Water : Model, IGridModel
     {
         private double[] volumetric;
 
@@ -179,20 +180,28 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new TabularData(Name, new TabularData.Column[]
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            });
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
+            }
         }
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
         public string RelativeTo { get; set; }
 
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
-        public IEnumerable<string> AllowedRelativeTo => new string[] { "LL15" }.Concat(FindAllInScope<SoilCrop>().Select(s => s.Name.Replace("Soil", "")));
+        public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
+
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
         public bool FilledFromTop { get; set; }
@@ -266,7 +275,7 @@ namespace Models.Soils
                     values = Physical.LL15;
                 else
                 {
-                    var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
+                    var plantCrop = FindAncestor<Soil>().FindDescendant<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";
@@ -467,6 +476,25 @@ namespace Models.Soils
 
             // Convert mass back to concentration and return
             return MathUtilities.Divide(SoilUtilities.MapMass(massValues, thickness.ToArray(), toThickness), toThickness);
+        }
+
+        /// <summary>
+        /// Get all soil crop names as strings from the relevant Soil this water node is a child of as well as LL15 (default value).
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<string> GetAllowedRelativeToStrings()
+        {
+            IEnumerable<string> results = new List<string>();
+            IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
+            // LL15 is here as this is the default value.
+            List<string> newSoilCropNames = new List<string> { "LL15" };
+            Soil ancestorSoil = FindAncestor<Soil>();
+            if (ancestorSoil != null)
+            {
+                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
+            }
+            return newSoilCropNames;
         }
     }
 }

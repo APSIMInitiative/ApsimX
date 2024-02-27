@@ -53,11 +53,6 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.FieldName)]
         public string[] FieldNamesUsedForMatch { get; set; }
 
-        /// <summary>Gets or sets the name of the predicted table.</summary>
-        [Description("Base simulation name that other simulations are compared against")]
-        [Display(Type = DisplayType.TableName)]
-        public string BaseSimulationName { get; set; }
-
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
@@ -100,10 +95,14 @@ namespace Models.PostSimulationTools
                 List<List<string>> distinctMatchValues = new List<List<string>>();
                 foreach (var matchColumnName in FieldNamesUsedForMatch)
                 {
-                    var distinctValues = DataTableUtilities.GetColumnAsStrings(view, matchColumnName)
-                                                           .Distinct()
-                                                           .ToList();
-                    distinctMatchValues.Add(distinctValues);
+                    IEnumerable<string> values;
+                    if (table.Columns[matchColumnName].DataType == typeof(DateTime))
+                        values = DataTableUtilities.GetColumnAsDates(view, matchColumnName)
+                                                   .Select(d => d.ToString("#yyyy-MM-dd#"));
+                    else
+                        values = DataTableUtilities.GetColumnAsStrings(view, matchColumnName);
+
+                    distinctMatchValues.Add(values.Distinct().ToList());
                 }
 
                 foreach (var combination in MathUtilities.AllCombinationsOf(distinctMatchValues.ToArray()))

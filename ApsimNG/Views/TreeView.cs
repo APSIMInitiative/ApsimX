@@ -1,11 +1,11 @@
-using APSIM.Shared.Utilities;
-using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
+using APSIM.Shared.Utilities;
+using Gtk;
 using UserInterface.Interfaces;
 using Utility;
 using TreeModel = Gtk.ITreeModel;
@@ -36,6 +36,7 @@ namespace UserInterface.Views
         private CellRendererText textRender;
         private const string modelMime = "application/x-model-component";
         private Timer timer = new Timer();
+        private bool isEdittingNodeLabel = false;
 
         /// <summary>
         /// Keep track of whether the accelerator group is attached to the toplevel window.
@@ -104,6 +105,7 @@ namespace UserInterface.Views
             treeview1.RowActivated += OnRowActivated;
             treeview1.FocusInEvent += OnTreeGainFocus;
             treeview1.FocusOutEvent += OnTreeLoseFocus;
+            treeview1.RowExpanded += OnRowExpanded;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -385,11 +387,7 @@ namespace UserInterface.Views
                 expandedRows.Add(path.ToString());
             }));
 
-            treeview1.CursorChanged -= OnAfterSelect;
-
             treemodel.Clear();
-
-            treeview1.CursorChanged += OnAfterSelect;
 
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions, false);
@@ -400,8 +398,9 @@ namespace UserInterface.Views
             {
                 expandedRows.ForEach(row => treeview1.ExpandRow(new TreePath(row), false));
             }
-            catch
+            catch (Exception err)
             {
+                ShowError(err);
             }
 
             if (ContextMenu != null)
@@ -641,7 +640,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (SelectedNodeChanged != null)
+                if (SelectedNodeChanged != null && treeview1 != null)
                 {
                     treeview1.CursorChanged -= OnAfterSelect;
                     NodeSelectedArgs selectionChangedData = new NodeSelectedArgs();
@@ -772,6 +771,25 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// A row in the tree view has been expanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowExpanded(object sender, RowExpandedArgs e)
+        {
+            try
+            {
+                TreePath path = e.Path.Copy();
+                path.Down();
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -796,8 +814,6 @@ namespace UserInterface.Views
         {
             try
             {
-                if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
-                    textRender.StopEditing(true);
                 DragStartArgs args = new DragStartArgs();
                 args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
                 if (DragStarted != null)
@@ -825,6 +841,7 @@ namespace UserInterface.Views
         {
             try
             {
+                EndRenaming();
                 if (dragSourceHandle.IsAllocated)
                 {
                     dragSourceHandle.Free();
@@ -986,9 +1003,8 @@ namespace UserInterface.Views
         {
             try
             {
+                isEdittingNodeLabel = true;
                 nodePathBeforeRename = SelectedNode;
-                // TreeView.ContextMenuStrip = null;
-                // e.CancelEdit = false;
             }
             catch (Exception err)
             {
@@ -1003,24 +1019,29 @@ namespace UserInterface.Views
         {
             try
             {
-                textRender.Editable = false;
-                // TreeView.ContextMenuStrip = this.PopupMenu;
-                if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
+                if (isEdittingNodeLabel == true)
                 {
-                    NodeRenameArgs args = new NodeRenameArgs()
+                    textRender.Editable = false;
+                    // TreeView.ContextMenuStrip = this.PopupMenu;
+                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
                     {
-                        NodePath = this.nodePathBeforeRename,
-                        NewName = e.NewText
-                    };
-                    Renamed(this, args);
-                    if (!args.CancelEdit)
-                        previouslySelectedNodePath = args.NodePath;
+                        NodeRenameArgs args = new NodeRenameArgs()
+                        {
+                            NodePath = this.nodePathBeforeRename,
+                            NewName = e.NewText
+                        };
+                        Renamed(this, args);
+                        if (!args.CancelEdit)
+                            previouslySelectedNodePath = args.NodePath;
+                    }
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
+
+            isEdittingNodeLabel = false;
         }
 
         /// <summary>
@@ -1063,6 +1084,16 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        private void EndRenaming()
+        {
+            if (isEdittingNodeLabel)
+            {
+                textRender.StopEditing(true);
+                isEdittingNodeLabel = false;
+                nodePathBeforeRename = "";
             }
         }
 

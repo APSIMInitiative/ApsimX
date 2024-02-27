@@ -238,6 +238,27 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Computes the water filled pore space for the entire profile.
+        /// </summary>
+        /// <param name="sw">Layered sw content.</param>
+        /// <param name="sat">Layered sat.</param>
+        /// <param name="dul">Layered dul.</param>
+        /// <returns>Layered wfps.</returns>
+        public static double[] WFPS(double[] sw, double[] sat, double[] dul)
+        {
+            return sw.Zip(sat, dul).Select(layerWfps).ToArray();
+
+            static double layerWfps((double sw, double sat, double dul) layer)
+            {
+                if (layer.sw < layer.dul)
+                    return 0;
+                if (layer.sw > layer.sat)
+                    return 1;
+                return MathUtilities.Divide(layer.sw - layer.dul, layer.sat - layer.dul, 0.0);
+            }
+        }
+
+        /// <summary>
         /// Convert organic carbon Walkley Black to Total %.
         /// </summary>
         /// <param name="values">Values to convert.</param>
@@ -398,6 +419,46 @@ namespace APSIM.Shared.Utilities
             }
 
             return ToMass;
+        }
+
+        /// <summary>Map soil variables (using concentration) from one layer structure to another.</summary>
+        /// <param name="fromValues">The from values.</param>
+        /// <param name="fromThickness">The from thickness.</param>
+        /// <param name="toThickness">To thickness.</param>
+        /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <returns></returns>
+        public static double[] MapInterpolation(double[] fromValues, double[] fromThickness,
+                                                double[] toThickness,
+                                                bool allowMissingValues = false)
+        {
+            if (fromValues != null && !MathUtilities.AreEqual(fromThickness, toThickness))
+            {
+                if (fromValues.Length != fromThickness.Length && !allowMissingValues)
+                    throw new Exception($"In MapInterpolation, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                if (fromValues == null || fromThickness == null)
+                    return null;
+
+                double[] fromThicknessMidPoints = SoilUtilities.ToMidPoints(fromThickness);
+                List<double> values = new List<double>();
+                List<double> thickness = new List<double>();
+                for (int i = 0; i < fromValues.Length; i++)
+                {
+                    if (!allowMissingValues && double.IsNaN(fromValues[i]))
+                        break;
+                    if (!double.IsNaN(fromValues[i]))
+                    {
+                        values.Add(fromValues[i]);
+                        thickness.Add(fromThicknessMidPoints[i]);
+                    }
+                }
+
+                double[] toThicknessMidPoints = SoilUtilities.ToMidPoints(toThickness);
+                double[] newValues = new double[toThickness.Length];
+                for (int i = 0; i != toThickness.Length; i++)
+                    newValues[i] = MathUtilities.LinearInterpReal(toThicknessMidPoints[i], thickness.ToArray(), values.ToArray(), out bool didInterpolate);
+                return newValues;
+            }
+            return fromValues;
         }
     }
 }

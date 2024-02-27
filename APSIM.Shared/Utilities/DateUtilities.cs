@@ -52,7 +52,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// List of all separators that can be used for date strings
         /// </summary>
-        static public readonly char[] VALID_SEPERATORS = new char[] { '-', '/',  ',', '.', '_', ' ' };
+        static public readonly char[] VALID_SEPERATORS = new char[] { '-', '/', ',', '.', '_', ' ' };
         private const char SEPERATOR_REPLACEMENT = '-';
 
         /// <summary>
@@ -85,7 +85,8 @@ namespace APSIM.Shared.Utilities
             rxYearShort = new Regex(@"^\d\d$"),
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
             rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
-            rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$");
+            rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$"),
+            rxDateAndTime = new Regex(@"^(\d+)/(\d+)/(\d+)\s\d+:\d+:\d+\s*\w*$");
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
@@ -122,7 +123,8 @@ namespace APSIM.Shared.Utilities
             if (parts.parseError)
                 throw new Exception(parts.errorMsg);
 
-            if (parts.yearWasMissing) {
+            if (parts.yearWasMissing)
+            {
                 return GetDate(parts.day, parts.month, year);
             }
             else
@@ -473,8 +475,17 @@ namespace APSIM.Shared.Utilities
 
                 if (types > 1)
                 {
-                    values.parseError = true;
-                    values.errorMsg = $"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).";
+                    Match match = rxDateAndTime.Match(dateTrimmed);
+                    if (match.Success)
+                    {
+                        dateCleaned = match.Groups[1] + SEPERATOR_REPLACEMENT.ToString() + match.Groups[2] + SEPERATOR_REPLACEMENT.ToString() + match.Groups[3];
+                    }
+                    else
+                    {
+                        values.parseError = true;
+                        values.errorMsg = $"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).";
+                        return values;
+                    }
                 }
                 else if (types == 0)
                 {
@@ -489,6 +500,7 @@ namespace APSIM.Shared.Utilities
                     {
                         values.parseError = true;
                         values.errorMsg = $"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).";
+                        return values;
                     }
                 }
             }

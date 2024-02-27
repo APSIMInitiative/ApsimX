@@ -1,14 +1,13 @@
 namespace UserInterface.Classes
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Models.Core;
     using Models.LifeCycle;
     using Models.PMF;
     using Models.PMF.Phen;
-    using Models.PMF.Scrum;
-
+    using Models.PMF.SimplePlantModels;
+   
     /// <summary>
     /// Helper functions for the property presenter. Most involve
     /// fetching valid values for the various DisplayType options.
@@ -109,6 +108,26 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
+		
+		/// <summary>Get a list of life phases for the plant.</summary>
+        /// <param name="plant">The the plant.</param>
+        /// <returns>A list of phases.</returns>
+        public static string[] GetCropPhaseNames(Plant plant)
+        {
+            List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
+            if (phases.Count > 0)
+            {
+                string[] Namelist = new string[phases.Count + 1];
+                int i = 0;
+                foreach (IPhase p in phases)
+                {
+                    Namelist[i] = p.Name;
+                    i += 1;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
 
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
@@ -141,12 +160,12 @@ namespace UserInterface.Classes
         /// <returns>A list of phases.</returns>
         public static string[] GetSCRUMcropNames(Zone zone)
         {
-            List<ScrumCrop> crops = zone.FindAllInScope<ScrumCrop>().ToList();
+            List<ScrumCropInstance> crops = zone.FindAllInScope<ScrumCropInstance>().ToList();
             if (crops.Count > 0)
             {
                 string[] Namelist = new string[crops.Count];
                 int i = 0;
-                foreach (ScrumCrop c in crops)
+                foreach (ScrumCropInstance c in crops)
                 {
                     Namelist[i] = c.Name;
                     i++;

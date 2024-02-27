@@ -585,7 +585,8 @@
             Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual("Sold 50 animals", MockSummary.messages[0]);
+            var summary = stock.FindDescendant<MockSummary>();
+            Assert.AreEqual("Sold 50 animals", summary.messages[0]);
         }
 
         /// <summary>Ensure a user can sell animals by weight.</summary>
@@ -642,7 +643,8 @@
             Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual("Sold 50 animals", MockSummary.messages[0]);
+            var summary = stock.FindDescendant<MockSummary>();
+            Assert.AreEqual("Sold 50 animals", summary.messages[0]);
         }
 
         /// <summary>Ensure a user can shear animals.</summary>
@@ -696,7 +698,8 @@
             Assert.AreEqual(70, cfw);
 
             // Make sure summary file was written to.
-            Assert.AreEqual("Shearing animals", MockSummary.messages[0]);
+            var summary = stock.FindDescendant<MockSummary>();
+            Assert.AreEqual("Shearing animals", summary.messages[0]);
         }
 
         /// <summary>Ensure a user can move animals between paddocks.</summary>

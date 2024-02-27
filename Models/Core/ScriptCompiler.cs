@@ -10,6 +10,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
+using NetMQ;
+using MessagePack;
 
 namespace Models.Core
 {
@@ -136,18 +138,20 @@ namespace Models.Core
                                     previousCompilations.Add(compilation);
                                 }
 
-                                // Write the assembly to disk
-                                ms.Seek(0, SeekOrigin.Begin);
-                                string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
-                                using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-                                    ms.WriteTo(file);
+                                // Write the assembly to disk if this is a GUI run. Only need the .dll for debugging runs.
+                                if (Path.GetFileName(Assembly.GetEntryAssembly().Location) == "ApsimNG.dll")
+                                {
+                                    ms.Seek(0, SeekOrigin.Begin);
+                                    string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                                    using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                        ms.WriteTo(file);
 
-                                // Write XML Documentation file.
-                                string documentationFile = Path.ChangeExtension(fileName, ".xml");
-                                xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
-                                using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
-                                    xmlDocumentationStream.WriteTo(documentationWriter);
-
+                                    // Write XML Documentation file.
+                                    string documentationFile = Path.ChangeExtension(fileName, ".xml");
+                                    xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
+                                    using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
+                                        xmlDocumentationStream.WriteTo(documentationWriter);
+                                }
                                 // Set the compilation properties.
                                 ms.Seek(0, SeekOrigin.Begin);
                                 pdbStream.Seek(0, SeekOrigin.Begin);
@@ -214,6 +218,10 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Memory.dll"))
+
             };
 
             if (previousCompilations != null)
@@ -288,19 +296,17 @@ namespace Models.Core
         /// <summary>Cleanup old files.</summary>
         private void Cleanup()
         {
-            // Clean up old files.
-            var filesToCleanup = new List<string>();
-            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), $"{tempFileNamePrefix}*.dll"));
-            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), $"{tempFileNamePrefix}*.cs"));
-            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), $"{tempFileNamePrefix}*.pdb"));
+            string[] extensionsToCleanUp = new[] { ".dll", ".xml" };
+            var filesToCleanup = Directory.GetFiles(Path.GetTempPath(), "APSIM*.*")
+                                          .Where(f => extensionsToCleanUp.Contains(Path.GetExtension(f)))
+                                          .Where(f => (DateTime.Now - File.GetLastAccessTime(f)).Hours > 1);
 
             foreach (string fileName in filesToCleanup)
             {
                 try
                 {
                     TimeSpan timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(fileName);
-                    if (timeSinceLastAccess.Hours > 1)
-                        File.Delete(fileName);
+                    File.Delete(fileName);
                 }
                 catch (Exception)
                 {

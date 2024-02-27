@@ -41,6 +41,10 @@ namespace Models.Management
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
 
+        /// <summary>detailed logging component</summary>
+        [Link(Type = LinkType.Child, IsOptional = true)]
+        public RotationRugplot detailedLogger = null;
+
         /// <summary>
         /// Events service. Used to publish events when transitioning
         /// between stages/nodes.
@@ -59,6 +63,13 @@ namespace Models.Management
         /// between stages (nodes).
         /// </summary>
         public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
+
+        /// <summary>
+        /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
+        /// </summary>
+        [Description("Top Level")]
+        [Tooltip("When enabled, this component will control other management components, if not it does nothing")]
+        public bool TopLevel { get; set; }
 
         /// <summary>
         /// Initial state of the rotation.
@@ -80,7 +91,7 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { get; private set; }
+        public string CurrentState { get; set; }
 
         /// <summary>
         /// All dynamic events published by the rotation manager.
@@ -125,6 +136,18 @@ namespace Models.Management
                 summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
         /// <summary>
         /// Called once per day during the simulation.
         /// </summary>
@@ -133,6 +156,9 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            if (! TopLevel) { return; }
+
+            MadeAChange = false;
             bool more = true;
             while (more)
             {
@@ -144,10 +170,20 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
                     {
-                        object value = FindByPath(testCondition)?.Value;
-                        if (value == null)
-                            throw new Exception($"Test condition '{testCondition}' returned nothing");
-                        score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        object value;
+                        try 
+                        { 
+                           value = FindByPath(testCondition)?.Value;
+                           if (value == null)
+                              throw new Exception("Test condition returned nothing");
+                        }
+                        catch (Exception ex) 
+                        {
+                            throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
+                        }
+                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        detailedLogger?.DoRuleEvaluation(arc.DestinationName, testCondition, result);
+                        score *= result;
                     }
 
                     if (Verbose)
@@ -174,12 +210,34 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
+                    detailedLogger?.DoTransition(bestArc.DestinationName);
                     TransitionTo(bestArc);
                     more = true;
+                    MadeAChange = true;
                 }
             }
         }
+        
+        private bool MadeAChange;
 
+        /// <summary>
+        /// Do our rule evaluation when asked by method call
+        /// </summary>
+        public bool DoManagement() 
+        {
+            bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
+            TopLevel = true;
+            OnDoManagement(null, new EventArgs());
+            TopLevel = oldState;
+            return(MadeAChange);
+        }
+        /// <summary>
+        /// Log the state of the system (usually beginning/end of simulation)
+        /// </summary>
+        public void DoLogState() 
+        {
+            detailedLogger?.DoTransition(CurrentState);
+        }
         /// <summary>
         /// Transition along an arc to another stage/node.
         /// </summary>

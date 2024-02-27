@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.Soils.SoilTemp
 {
@@ -18,7 +22,9 @@ namespace Models.Soils.SoilTemp
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public class SoilTemperature : Model, ISoilTemperature
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    public class SoilTemperature : Model, ISoilTemperature, IGridModel
     {
         [Link]
         private IWeather weather = null;
@@ -34,6 +40,9 @@ namespace Models.Soils.SoilTemp
 
         [Link]
         ISoilWater waterBalance = null;
+
+        /// <summary>Invoke when the soil temperature has changed.</summary>
+        public event EventHandler SoilTemperatureChanged;
 
         // ------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
@@ -175,6 +184,50 @@ namespace Models.Soils.SoilTemp
         private const double defaultInstrumentHeight = 1.2;  // default instrument height (m)
 
         private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
+
+        /// <summary>
+        /// Depth to the constant temperature lower boundary condition (m)
+        /// </summary>
+        public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
+
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
+        [Units("mm")]
+        [JsonIgnore]
+        public string[] Depth
+        {
+            get => SoilUtilities.ToDepthStrings(Thickness);
+            set => Thickness = SoilUtilities.ToThickness(value);
+        }
+
+        /// <summary>Thickness</summary>
+        public double[] Thickness { get; set; }
+
+        /// <summary>Initial values</summary>
+        [Summary]
+        [Display(Format = "N2")]
+        [Units("oC")]
+        public double[] InitialValues { get; set; }
+
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                return new List<GridTable>()
+                {
+                    new(Name, new List<GridTableColumn>()
+                    {
+                        new("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                        new("Initial temperature", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                    },
+                    this)
+                };
+            }
+        }
 
         #region outputs
 
@@ -376,8 +429,19 @@ namespace Models.Soils.SoilTemp
 
             if (doInit1Stuff)
             {
-                // set t and tnew values to TAve. soil_temp is currently not used
-                CalcSoilTemp(ref soilTemp);
+                if (MathUtilities.ValuesInArray(InitialValues))
+                {
+                    soilTemp = new double[numNodes + 1 + 1];
+                    Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+                }
+                else
+                {
+                    // set t and tnew values to TAve. soil_temp is currently not used
+                    CalcSoilTemp(ref soilTemp);
+                    InitialValues = new double[numLayers];
+                    Array.ConstrainedCopy(soilTemp, TOPSOILnode, InitialValues, 0, numLayers);
+                }
+                
                 soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
                 soilTemp[SURFACEnode] = SurfaceTemperatureInit();
                 soilTemp[numNodes + 1] = weather.Tav;
@@ -398,6 +462,8 @@ namespace Models.Soils.SoilTemp
             }
 
             doProcess();
+
+            SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         } // OnProcess
 
 
@@ -417,6 +483,31 @@ namespace Models.Soils.SoilTemp
 
 
         #endregion
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+            InitialValues = SoilUtilities.MapInterpolation(InitialValues, Thickness, targetThickness, allowMissingValues:true);
+        }
+
+        /// <summary>Perform a reset.</summary>
+        public void Reset(double[] values = null)
+        {
+            if (values == null)
+                Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+            else
+            {
+                if (values.Length != soilTemp.Length - 3)
+                    throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {soilTemp.Length-3} values.");
+                Array.ConstrainedCopy(values, 0, soilTemp, TOPSOILnode, values.Length);
+            }
+        
+            soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
+            soilTemp[SURFACEnode] = SurfaceTemperatureInit();
+            soilTemp[numNodes + 1] = weather.Tav;
+            soilTemp.CopyTo(tempNew, 0);
+        }
 
         /// <summary>
         /// initialise global variables to initial values
@@ -451,8 +542,6 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getProfileVariables()
         {
-            const double CONSTANT_TEMPdepth = 10.0;    // Metres. Depth to constant temperature zone
-                                                       // re-dimension dlayer, bd. These will now be treated as '1-based' so 0th element will not be used
             numLayers = physical.Thickness.Length;
             numNodes = numLayers + 1;
 
@@ -1828,6 +1917,7 @@ namespace Models.Soils.SoilTemp
             DateTime newdate = new DateTime(iyr, 1, 1).AddDays(doy - 1 + ndays);
             return newdate.DayOfYear;
         }
+
     }
 
 }

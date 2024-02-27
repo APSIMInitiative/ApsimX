@@ -1346,7 +1346,7 @@ namespace Models.PMF.Organs
                 CohortsAtInitialisation += 1;
                 if (Leaf.Area > 0)
                     TipsAtEmergence += 1;
-                Leaf.DoInitialisation();
+                Leaf.DoInitialisation(CohortParameters);
             }
         }
 
@@ -1362,7 +1362,7 @@ namespace Models.PMF.Organs
             NewLeaf.Age = 0;
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
-            NewLeaf.DoInitialisation();
+            NewLeaf.DoInitialisation(CohortParameters);
             Leaves.Add(NewLeaf);
             needToRecalculateLiveDead = true;
         }
@@ -1396,6 +1396,7 @@ namespace Models.PMF.Organs
                 {
                     L.DoActualGrowth(thermalTime, CohortParameters);
                     needToRecalculateLiveDead = true;
+                    Detached.Add(L.Detached);
                 }
 
                 Structure.UpdateHeight();

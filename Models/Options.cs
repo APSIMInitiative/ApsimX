@@ -84,10 +84,16 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
-        /// List all files that are referenced by an .apsimx file(s)
+        /// List all files that are referenced by an .apsimx file(s) with absolute paths.
         /// </summary>
-        [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s).")]
+        [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s) as an absolute path.")]
         public bool ListReferencedFileNames { get; set; }
+
+        /// <summary>
+        /// List all files that are referenced by an .apsimx file(s) as they are. 
+        /// </summary>
+        [Option("list-referenced-filenames-unmodified", HelpText = "List all files that are referenced by an .apsimx file(s) as is.")]
+        public bool ListReferencedFileNamesUnmodified { get; set; }
 
         /// <summary>
         /// Run all simulations sequentially on a single thread.
@@ -109,8 +115,8 @@ namespace Models
         /// </summary>
         /// <value></value>
         [Option("simulation-names", HelpText = "Only run simulations if their names match this regular expression.")]
-
         public string SimulationNameRegex { get; set; }
+
         /// <summary>
         /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
         /// </summary>
@@ -119,6 +125,15 @@ namespace Models
         /// </remarks>
         [Option("apply", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.")]
         public string Apply { get; set; }
+
+        /// <summary>
+        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// </summary>
+        /// <remarks>
+        /// Intended to provide a overall approach to simulation handling.
+        /// </remarks>
+        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        public string Playlist { get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.

@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
 {
 
     ///<summary>
-    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
+    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -35,7 +35,7 @@ namespace Models.PMF.Organs
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>The RootShape model</summary> 
+        /// <summary>The RootShape model</summary>
         [Link(Type = LinkType.Child, ByName = false)]
         public IRootShape RootShape = null;
 
@@ -139,7 +139,7 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remobilisationCost = null;
 
-        /// <summary>The proportion of biomass respired each day</summary> 
+        /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
@@ -253,6 +253,25 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// The wet root fraction. Profile water filled pore space average weighted by root length.
+        /// </summary>
+        [Units("0-1")]
+        public double WetRootFraction
+        {
+            get
+            {
+                var rootLength = LengthDensity.Zip(PlantZone.Physical.Thickness, (rld, th) => rld * th).ToArray();
+                var rootSum = rootLength.Sum();
+                if (rootSum == 0.0)
+                    return 0.0;
+                return SoilUtilities
+                    .WFPS(PlantZone.WaterBalance.SWmm, PlantZone.Physical.SATmm, PlantZone.Physical.DULmm)
+                    .Zip(rootLength, (wfps, rl) => wfps * rl / rootSum)
+                    .Sum();
+            }
+        }
+
         /// <summary>Air filled pore space factor (mm/mm).</summary>
         [Units("mm/mm")]
         public double AirFilledPoreSpace
@@ -305,6 +324,23 @@ namespace Models.PMF.Organs
                 foreach (ZoneState zone in Zones)
                     uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
                 return -uptake;
+            }
+        }
+
+        /// <summary>Gets the water uptake.</summary>
+        [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                double[] uptake = new double[Zones.Count];  
+                int i = 0;
+                foreach (ZoneState zone in Zones)
+                {
+                    uptake[i] = -MathUtilities.Sum(zone.WaterUptake);
+                    i += 1;
+                }
+                return uptake;
             }
         }
 
@@ -591,7 +627,7 @@ namespace Models.PMF.Organs
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
             }
         }
-
+        
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)

@@ -1,18 +1,21 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using UserInterface.Commands;
+using Models.Soils;
+using System;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Views;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the water model.</summary>
     public class WaterPresenter : IPresenter
     {
         /// <summary>The grid presenter.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -54,9 +57,13 @@
         {
             water = model as Water;
             view = v as ViewBase;
+
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
+
             this.explorerPresenter = explorerPresenter;
-            gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, v, explorerPresenter);
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");
@@ -260,6 +267,8 @@
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
+            
+
             if (llsoil != null && llsoilsName != null)
             {       //draw the area relative to the water LL instead.
                 graph.DrawRegion($"PAW relative to {llsoilsName}", llsoil, swCumulativeThickness,
@@ -309,8 +318,31 @@
                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
 
-            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            List<double> vols = new List<double>();
+            foreach (double val in airdry)
+                vols.Add(val);
+            foreach (double val in cll)
+                vols.Add(val);
+            foreach (double val in dul)
+                vols.Add(val);
+            foreach (double val in sat)
+                vols.Add(val);
+
+            if (llsoil != null)
+                foreach (double val in llsoil)
+                    vols.Add(val);
+
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = MathUtilities.Min(vols);
+            double xTopMax = MathUtilities.Max(vols);
+            xTopMin -= xTopMax * padding;
+            xTopMax += xTopMax * padding;
+
+            double height = MathUtilities.Max(cumulativeThickness);
+            height += height * padding;
+
+            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
             graph.Refresh();
         }

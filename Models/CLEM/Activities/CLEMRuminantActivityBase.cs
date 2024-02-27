@@ -96,15 +96,21 @@ namespace Models.CLEM.Activities
         /// <param name="excludeFlags">A list of HerdChangeReasons to exclude individuals matching flag. Default null</param>
         /// <param name="predictedBreedOnly">Flag to only return the single predicted breed for this activity. Default is true</param>
         /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only expected once per activity or if herd changing. Default false</param>
+        /// <param name="individualsToConsider">Provides the base herd to use instead of the default CurrentHerd object</param>
         /// <returns>A list of individuals in the herd</returns>
-        protected private IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool predictedBreedOnly = true, bool includeCheckHerdMeetsCriteria = false) where T: Ruminant
+        protected private IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool predictedBreedOnly = true, bool includeCheckHerdMeetsCriteria = false, List<Ruminant> individualsToConsider = null) where T: Ruminant
         {
             if(herdStyle == GetRuminantHerdSelectionStyle.ForPurchase)
                 return HerdResource.PurchaseIndividuals.OfType<T>().Where(a => !predictedBreedOnly || a.Breed == PredictedHerdBreed);
             else
             {
                 bool readyForSale = herdStyle == GetRuminantHerdSelectionStyle.MarkedForSale;
-                return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+                if(individualsToConsider is null)
+                    return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+                else
+                {
+                    return individualsToConsider.OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+                }
             }
         }
 

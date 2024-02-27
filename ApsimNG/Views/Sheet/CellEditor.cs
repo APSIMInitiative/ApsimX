@@ -1,5 +1,6 @@
-﻿using Gdk;
-using Gtk;
+﻿using Gtk;
+using System;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Views
 {
@@ -16,6 +17,9 @@ namespace UserInterface.Views
 
         /// <summary>The gtk fixed positioning container for the entry box used when editing a sheet cell.</summary>
         private Fixed fix = new Fixed();
+
+        /// <summary></summary>
+        public event EventHandler<NeedContextItemsArgs> ShowIntellisense;
 
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
@@ -56,13 +60,14 @@ namespace UserInterface.Views
         /// <summary>Display an entry box for the user to edit the current selected cell data.</summary>
         public void Edit(char defaultChar = char.MinValue)
         {
+            
             EndEdit();
-
+            
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
             if (!sheet.DataProvider.IsColumnReadonly(selectedColumnIndex))
             {
                 var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
-
+                
                 entry = new Entry();
                 entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
                 entry.WidthChars = 5;
@@ -85,9 +90,30 @@ namespace UserInterface.Views
                 }
                 fix.Put(entry, (int)cellBounds.Left + 1, (int)cellBounds.Top + 1);
 
+                //////////////////////////////////////
+                Paned parentPane = null;
+                Widget parent = sheetWidget;
+                while (parent != null && parentPane == null)
+                {
+                    if (!(parent is Paned))
+                        parent = parent.Parent;
+                    else
+                        parentPane = parent as Paned;
+                }
+                int panedPos = 0;
+                if (parentPane != null)
+                    panedPos = parentPane.Position;
+
+                //this causes paned windows to move, but it's GTK code. So we have to manually reset paned positions here.
                 sheetWidget.ShowAll();
                 sheet.Refresh();
 
+                if (parentPane != null)
+                    parentPane.Position = panedPos;
+                if (sheetWidget.Parent.Parent is Paned)
+                    (sheetWidget.Parent.Parent as Paned).Position = panedPos;
+                //////////////////////////////////////
+                
                 entry.GrabFocus();
                 if (defaultChar != char.MinValue)
                 {
@@ -95,6 +121,7 @@ namespace UserInterface.Views
                     entry.Position = 1;
                 }
             }
+
         }
 
         /// <summary>End edit mode.</summary>
@@ -106,12 +133,14 @@ namespace UserInterface.Views
                 {
                     sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
                     sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, entry.Text);
+                    sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }
 
                 entry.KeyPressEvent -= OnEntryKeyPress;
                 fix.Remove(entry);
                 entry = null;
                 sheet.Refresh();
+                sheet.RecalculateColumnWidths();
                 sheetWidget.GrabFocus();
             }
         }
@@ -149,7 +178,51 @@ namespace UserInterface.Views
                             sheet.CellSelector.MoveDown(key.Shift);
                     }
                 }
+                if (key.Key == Keys.Period)
+                {
+                    NeedContextItemsArgs contextArgs = new NeedContextItemsArgs()
+                    {
+                        Coordinates = GetPositionOfCursor(),
+                        Code = entry.Text,
+                        Offset = 0,
+                        ControlSpace = false,
+                        ControlShiftSpace = false,
+                        LineNo = 0,
+                        ColNo = 0
+                    };
+
+                    ShowIntellisense?.Invoke(sender, contextArgs);
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the cursor.
+        /// </summary>
+        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
+        public System.Drawing.Point GetPositionOfCursor()
+        {
+            if (entry == null)
+                return new System.Drawing.Point(0, 0);
+
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = entry.Allocation;
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            entry.TranslateCoordinates(entry.Toplevel, location.X, location.Y, out int windowX, out int windowY);
+
+            // Don't forget to account for the offset of the window within the screen.
+            // (Remember that the screen is made up of multiple monitors, so this is
+            // what accounts for which particular monitor the on which the window is
+            // physically displayed.)
+            Widget win = entry;
+            while(win.Parent != null)
+                win = win.Parent;
+
+            win.Window.GetOrigin(out int frameX, out int frameY);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY);
         }
     }
 }
