@@ -32,9 +32,16 @@ namespace Models.Functions
         Plant Plant = null;
 
         // Internal variables
-        private string CropType;
+        //private string CropType;
 
         // Define parameters
+
+        /// <summary>Crop to be simulated</summary>
+        [Separator("Crop to be simulated, barley, wheat or canola?")]
+        // <summary>Crop to be simulated</summary>
+        [Description("Crop to be simulated")]
+        public string CropType { get; set; }
+        //public IPlant PlantType { get; set; }
 
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
@@ -142,12 +149,12 @@ namespace Models.Functions
         /// [Units("g/m2")]
         public double FrostHeatYield { get; set; }
 
-
         [EventSubscribe("Sowing")]
         private void OnDoSowing(object sender, EventArgs e)
         {
             // initialize
-            CropType = Plant.PlantType;
+            //CropType = Plant.PlantType;
+            //CropType = PlantType.PlantType;
 
             FinalStressMultiplier = 1.0;
             FinalFrostMultiplier = 1.0;
@@ -285,7 +292,19 @@ namespace Models.Functions
             Phenology phen = (Phenology)zone.Get("[" + CropType + "].Phenology");
             ReproductiveOrgan organs = (ReproductiveOrgan)zone.Get("[" + CropType + "].Grain");
 
-            double GrowthStageToday = phen.Stage;
+            double GrowthStageToday = 0;
+            if (CropType == "Wheat" | CropType == "wheat" | CropType == "Barley" | CropType == "barley")
+            {
+                GrowthStageToday = phen.Zadok;
+            }
+            else if (CropType == "Canola" | CropType == "canola")
+            {
+                GrowthStageToday = phen.Stage;
+            }
+            else
+            {
+                throw new Exception("Crop type not supported!");
+            }
 
             // frost survival
             FrostSurv = FrostSurvFun(Weather.MinT);
