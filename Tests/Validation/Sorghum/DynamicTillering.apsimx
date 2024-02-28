@@ -126,7 +126,7 @@
             {
               "$type": "Models.PostSimulationTools.Input, Models",
               "FileNames": [
-                "C:\\Apsim\\ApsimQaafi\\Tests\\Validation\\Sorghum\\old\\classic_apsim_file\\dynamic_tillering\\combined_dynamic.csv"
+                "old\\classic_apsim_file\\dynamic_tillering\\combined_dynamic.csv"
               ],
               "Name": "OldApsimDynamic",
               "ResourceName": null,
