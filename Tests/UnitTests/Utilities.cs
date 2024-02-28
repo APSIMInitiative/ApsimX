@@ -62,13 +62,21 @@ namespace UnitTests
         /// <summary>Call an event in a model</summary>
         public static void CallEvent(object model, string eventName, object[] arguments = null)
         {
-            MethodInfo eventToInvoke = model.GetType().GetMethod("On" + eventName, BindingFlags.Instance | BindingFlags.NonPublic);
+            CallMethod(model, "On" + eventName, arguments);
+        }
+
+        /// <summary>Call a private method in a model</summary>
+        public static object CallMethod(object model, string methodName, object[] arguments = null)
+        {
+            object returnValue = null;
+            MethodInfo eventToInvoke = model.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
             if (eventToInvoke != null)
             {
                 if (arguments == null)
                     arguments = new object[] { model, new EventArgs() };
-                eventToInvoke.Invoke(model, arguments);
+                returnValue = eventToInvoke.Invoke(model, arguments);
             }
+            return returnValue;
         }
 
         /// <summary>Call an event in a model and all child models.</summary>

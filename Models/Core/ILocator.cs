@@ -37,6 +37,11 @@ namespace Models.Core
         /// If set, Report columns will be considered in the search; otherwise these are ignored
         /// </summary>
         IncludeReportVars = 16,
+
+        /// <summary>
+        /// If set, fetch only model references, do not return properties or methods of the same name
+        /// </summary>
+        ModelsOnly = 32,
     };
 
     /// <summary>
@@ -51,11 +56,6 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         /// <param name="flags"><see cref="LocatorFlags"/> controlling the search</param>
         object Get(string namePath, LocatorFlags flags = LocatorFlags.None);
-
-        /// <summary>Gets a model in scope of the specified type</summary>
-        /// <param name="typeToMatch">The type of the model to return</param>
-        /// <returns>The found model or null if not found</returns>
-        IModel Get(Type typeToMatch);
 
         /// <summary>
         /// Get the underlying variable object for the given path.
