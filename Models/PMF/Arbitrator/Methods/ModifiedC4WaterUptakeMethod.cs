@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
+using Models.PMF.Organs;
+using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
 
@@ -12,7 +15,7 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class WaterUptakeMethod : Model, IUptakeMethod
+    public class ModifiedC4WaterUptakeMethod : Model, IUptakeMethod
     {
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -20,7 +23,14 @@ namespace Models.PMF.Arbitrator
 
         /// <summary>The zone.</summary>
         [Link(Type = LinkType.Ancestor)]
-        private IZone zone = null;
+        protected IZone zone = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Root root = null;
+
+        ///<summary>The soil</summary> needed to get KL values
+        [Link]
+        public Soils.Soil Soil = null;
 
         /// <summary>A list of organs or suborgans that have watardemands</summary>
         protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
@@ -33,13 +43,20 @@ namespace Models.PMF.Arbitrator
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
         [JsonIgnore]
-        public double WSupply { get; protected set; }
+        public double WatSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
         [JsonIgnore]
         public double WAllocated { get; protected set; }
 
+        ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+		[JsonIgnore]
+        public double SDRatio { get; set; }
+
+        /// <summary>Total available SW.</summary>
+		[JsonIgnore]
+        public double SWAvail { get; private set; }
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -53,6 +70,8 @@ namespace Models.PMF.Arbitrator
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;
+            SDRatio = 0.0;
+            SWAvail = 0.0;
         }
 
         /// <summary>The method used to arbitrate N allocations</summary>
@@ -82,10 +101,7 @@ namespace Models.PMF.Arbitrator
             foreach (IHasWaterDemand WD in WaterDemands)
                 waterDemand += WD.CalculateWaterDemand() * zone.Area;
 
-            // Calculate demand / supply ratio.
-            double fractionUsed = 0;
-            if (waterSupply > 0)
-                fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+            double waterUsed = 0;
 
             // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
             // to return to caller.
@@ -94,7 +110,14 @@ namespace Models.PMF.Arbitrator
             {
                 // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
-                uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                uptake.Water = new double[supplies[i].Length]; 
+                for (int j = 0; j < supplies[i].Length; j++) {
+                    var avail = supplies[i][j];
+                    var req = waterDemand - waterUsed;
+                    var amt = Math.Max(0.0, Math.Min(avail, req));
+                    uptake.Water[j] += amt;
+                    waterUsed += amt;
+                }
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
                 ZWNs.Add(uptake);
@@ -132,7 +155,51 @@ namespace Models.PMF.Arbitrator
                 WD.WaterAllocation = allocation;
                 WAllocated += allocation;
             }
+            foreach (ZoneWaterAndN Z in zones)
+                StoreWaterVariablesForNitrogenUptake(Z);
+        }
 
+        private void StoreWaterVariablesForNitrogenUptake(ZoneWaterAndN zoneWater)
+        {
+            ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
+            if (myZone != null)
+            {
+                var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+                var waterBalance = myZone.Soil.FindChild<ISoilWater>();
+
+                //store Water variables for N Uptake calculation
+                //Old sorghum doesn't do actualUptake of Water until end of day
+                myZone.StartWater = new double[soilPhysical.Thickness.Length];
+                myZone.AvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.PotentialAvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.Supply = new double[soilPhysical.Thickness.Length];
+
+                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
+
+                double[] kl = soilCrop.KL;
+
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, soilPhysical.Thickness);
+
+                var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
+                for (int layer = 0; layer <= currentLayer; ++layer)
+                {
+                    myZone.StartWater[layer] = waterBalance.SWmm[layer];
+
+                    myZone.AvailableSW[layer] = Math.Max(waterBalance.SWmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.PotentialAvailableSW[layer] = Math.Max(soilPhysical.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * myZone.RootProportionVolume[layer], 0.0);
+                }
+                var totalAvail = SWAvail = myZone.AvailableSW.Sum();
+                var totalAvailPot = myZone.PotentialAvailableSW.Sum();
+                var totalSupply = myZone.Supply.Sum();
+                WatSupply = totalSupply;
+
+                //used for SWDef ExpansionStress table lookup
+                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
+            }
         }
     }
 }

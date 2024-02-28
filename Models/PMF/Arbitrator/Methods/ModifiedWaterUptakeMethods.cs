@@ -12,7 +12,7 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class WaterUptakeMethod : Model, IUptakeMethod
+    public class ModifiedWaterUptakeMethod : Model, IUptakeMethod
     {
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -82,10 +82,7 @@ namespace Models.PMF.Arbitrator
             foreach (IHasWaterDemand WD in WaterDemands)
                 waterDemand += WD.CalculateWaterDemand() * zone.Area;
 
-            // Calculate demand / supply ratio.
-            double fractionUsed = 0;
-            if (waterSupply > 0)
-                fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+            double waterUsed = 0;
 
             // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
             // to return to caller.
@@ -94,7 +91,14 @@ namespace Models.PMF.Arbitrator
             {
                 // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
-                uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                uptake.Water = new double[supplies[i].Length]; 
+                for (int j = 0; j < supplies[i].Length; j++) {
+                    var avail = supplies[i][j];
+                    var req = waterDemand - waterUsed;
+                    var amt = Math.Max(0.0, Math.Min(avail, req));
+                    uptake.Water[j] += amt;
+                    waterUsed += amt;
+                }
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
                 ZWNs.Add(uptake);
