@@ -70,6 +70,10 @@ namespace Models.PMF.Struct
 		[JsonIgnore]
 		public double CalculatedTillerNumber { get; set; } = 0.0;
 
+		/// <summary>Maximum SLA for tiller cessation</summary>
+		[JsonIgnore]
+		public double MaxSLA { get; set; } = 0.0;
+
         private int floweringStage;
 		private int endJuvenilePhase;
 		private int dayOfClassicsEmergence = -1;

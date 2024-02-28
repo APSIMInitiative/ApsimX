@@ -81,6 +81,13 @@ namespace Models.PMF.Struct
             }
         }
 
+        /// <summary>Maximum SLA for tiller cessation</summary>
+        [JsonIgnore]
+        public double MaxSLA
+        {
+            get => tillering.MaxSLA;
+        }
+
         /// <summary>CalculatedTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
         public double CalculatedTillerNumber

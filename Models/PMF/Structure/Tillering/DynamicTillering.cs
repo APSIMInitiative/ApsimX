@@ -108,6 +108,10 @@ namespace Models.PMF.Struct
             set { }
         }
 
+        /// <summary>Maximum SLA for tiller cessation</summary>
+        [JsonIgnore]
+        public double MaxSLA { get; set; }
+       
         /// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
         [JsonIgnore]
         public double SupplyDemandRatio { get; private set; }
@@ -501,18 +505,18 @@ namespace Models.PMF.Struct
             // Calculate sla target that is below the actual SLA - so as the leaves gets thinner it signals to the tillers to cease growing further
             // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
             double nLeaves = mainCulm.CurrentLeafNo;
-            var maxSLA = 429.72 - 18.158 * (nLeaves);
+            MaxSLA = 429.72 - 18.158 * (nLeaves);
             // sla bound vary 30 - 40%
-            maxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);
-            maxSLA = Math.Min(400, maxSLA);
-            maxSLA = Math.Max(150, maxSLA);
+            MaxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);
+            MaxSLA = Math.Min(400, MaxSLA);
+            MaxSLA = Math.Max(150, MaxSLA);
 
             double dmGreen = leaf.Live.Wt;
             double dltDmGreen = GetDeltaDmGreen();
 
             // Calc how much LAI we need to remove to get back to the SLA target line.
             // This is done by reducing the proportion of tiller area.
-            var maxLaiTarget = maxSLA * (dmGreen + dltDmGreen) / 10000;
+            var maxLaiTarget = MaxSLA * (dmGreen + dltDmGreen) / 10000;
             return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
         }
 
@@ -525,11 +529,10 @@ namespace Models.PMF.Struct
 
             // Changing to Reeves + 10%
             double nLeaves = mainCulm.CurrentLeafNo;
-            double maxSLA;
-            maxSLA = 429.72 - 18.158 * (nLeaves);
-            maxSLA = Math.Min(400, maxSLA);
-            maxSLA = Math.Max(150, maxSLA);
-            var dltLaiPossible = dltDmGreen * maxSLA / 10000.0;
+            MaxSLA = 429.72 - 18.158 * (nLeaves);
+            MaxSLA = Math.Min(400, MaxSLA);
+            MaxSLA = Math.Max(150, MaxSLA);
+            var dltLaiPossible = dltDmGreen * MaxSLA / 10000.0;
 
             double fraction = Math.Min(dltStressedLAI > 0 ? (dltLaiPossible / dltStressedLAI) : 1.0, 1.0);
             return fraction;

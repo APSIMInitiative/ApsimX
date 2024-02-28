@@ -652,6 +652,8 @@ namespace Models.Core.Apsim710File
             this.CopyNodeAndValueArray(childNode, newNode, "DUL", "DUL");
             childNode = XmlUtilities.Find(compNode, "SAT");
             this.CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
+            childNode = XmlUtilities.Find(compNode, "KS");
+            this.CopyNodeAndValueArray(childNode, newNode, "KS", "KS");
 
             this.AddChildComponents(compNode, newNode);
 
@@ -1145,20 +1147,7 @@ namespace Models.Core.Apsim710File
 
                 string childText = string.Empty;
                 childNode = XmlUtilities.Find(oper, "date");
-                DateTime when;
-                if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
-                    childText = when.ToString("yyyy-MM-dd");
-                else if (childNode != null && childNode.InnerText != string.Empty)
-                {
-                    childText = DateUtilities.GetDateISO(childNode.InnerText);
-                    if (childText == "0001-01-01")
-                    {
-                        childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
-                    }
-                }
-                else
-                    childText = "0001-01-01";
-                dateNode.InnerText = childText;
+                dateNode.InnerText = DateUtilities.ValidateDateString(childNode?.InnerText ?? string.Empty);
 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 

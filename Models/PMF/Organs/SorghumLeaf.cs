@@ -189,6 +189,14 @@ namespace Models.PMF.Organs
             get => culms?.CalculatedTillerNumber ?? 0;
         }
 
+        /// <summary>Maximum SLA for tiller cessation.</summary>
+       // [JsonIgnore]
+        [Description("Maximum SLA for tiller cessation")]
+        public double MaxSLA
+        {
+            get => culms?.MaxSLA ?? 0;
+        }
+
         /// <summary>Determined by the tillering method chosen.</summary>
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
         [JsonIgnore]
@@ -314,9 +322,13 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double LAITotal => LAI + LAIDead;
 
-        /// <summary>Gets the LAI</summary>
+        /// <summary>Gets the SLN</summary>
         [JsonIgnore]
         public double SLN { get; set; }
+
+        /// <summary>Gets the SLA</summary>
+        [JsonIgnore]
+        public double SLA { get; set; }
 
         /// <summary>Used in metabolic ndemand calc.</summary>
         [JsonIgnore]
@@ -644,6 +656,7 @@ namespace Models.PMF.Organs
 
             LAI = 0;
             SLN = 0;
+            SLA = 0;
             SLN0 = 0;
             Live.StructuralN = 0;
             Live.StorageN = 0;
@@ -965,6 +978,7 @@ namespace Models.PMF.Organs
             //Should not include any retranloocated biomass
             // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
             double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
+            SLA = MathUtilities.Divide(laiToday, Live.Wt, 0.0) * 10000; // m2/g?
             double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
 
             // This is equivalent to dividing by slaToday
