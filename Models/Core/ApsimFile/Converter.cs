@@ -4383,6 +4383,9 @@ namespace Models.Core.ApsimFile
                     swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
 
+            foreach (JObject swimWT in JsonUtilities.ChildrenRecursively(root, "SwimWaterTable"))
+                swimWT.Remove();
+
             // Make sure all solutes have the new $type
             foreach (JObject solute in JsonUtilities.ChildrenRecursively(root, "Solute"))
                 solute["$type"] = "Models.Soils.Solute, Models";
@@ -5151,7 +5154,7 @@ namespace Models.Core.ApsimFile
                 // check for an existing Nutrient node. If it exists, do not add another one.
                 JObject parentObject = parent.ToObject<JObject>();
                 var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
-                if (existingNutrient == null)
+                if (existingNutrient.Count == 0)
                 {
                     var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
                     nutrient["ResourceName"] = "Nutrient";
@@ -5330,7 +5333,7 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion169(JObject root, string _)
         {
-            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
             {
                 rotationManager["TopLevel"] = true;
             }
@@ -5373,10 +5376,14 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "GerminatingPhase"))
             {
-                Constant value = new Constant();
-                value.Name = "MinSoilTemperature";
-                value.FixedValue = 0.0;
-                JsonUtilities.AddModel(NNP, value);
+                //check if child already has a MinSoilTemperature
+                if (JsonUtilities.ChildWithName(NNP, "MinSoilTemperature") == null)
+                {
+                    Constant value = new Constant();
+                    value.Name = "MinSoilTemperature";
+                    value.FixedValue = 0.0;
+                    JsonUtilities.AddModel(NNP, value);
+                }
             }
         }
     }

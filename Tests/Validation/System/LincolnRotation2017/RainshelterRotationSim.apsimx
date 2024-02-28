@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 171,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2851,6 +2851,7 @@
                     "[Oats].Phenology.Stage ",
                     "",
                     "[FodderBeet].Structure.MainStemPopn",
+                    "[FodderBeet].AboveGround.Wt",
                     "[FodderBeet].Leaf.Live.Wt ",
                     "[FodderBeet].Petiole.Live.Wt",
                     "[FodderBeet].StorageRoot.Live.Wt",
@@ -2939,7 +2940,7 @@
                     "[Soil].Water.MM",
                     "",
                     "[Fertiliser].NitrogenApplied as FertiliserN",
-                    "sum([Soil].Nutrient.SurfaceResidue.Decomposition.MineralisedN) as SurfOMMineralisedN",
+                    "sum([SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN) as SurfOMMineralisedN",
                     "sum([Soil].Nutrient.MineralisedN) as MineralisedN",
                     "sum([Soil].Nutrient.DenitrifiedN) as DenitrifiedN",
                     "(-[FodderBeet].Root.NUptake - [Oats].Root.NUptake) as UptakeN",
@@ -3008,6 +3009,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3018,6 +3020,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3046,9 +3049,9 @@
                   "LineThickness": 0,
                   "TableName": "FRNLReport",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "FodderBeet.AboveGround.Live.Wt",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
+                  "YFieldName": "FodderBeet.AboveGround.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -3161,6 +3164,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3171,6 +3175,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3314,6 +3319,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3324,6 +3330,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3409,6 +3416,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3419,6 +3427,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3511,6 +3520,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3521,6 +3531,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3529,7 +3540,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AboveGroundLive",
                   "ResourceName": null,
@@ -3549,9 +3560,9 @@
                       "LineThickness": 0,
                       "TableName": "FRNLReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.AboveGround.Live.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
+                      "YFieldName": "FodderBeet.AboveGround.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -3606,6 +3617,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3616,6 +3628,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3624,7 +3637,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Leaf",
                   "ResourceName": null,
@@ -3701,6 +3714,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3711,6 +3725,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3719,7 +3734,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Petiole",
                   "ResourceName": null,
@@ -3796,6 +3811,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3806,6 +3822,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3814,7 +3831,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Bulb",
                   "ResourceName": null,
@@ -3902,6 +3919,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3912,6 +3930,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -3920,7 +3939,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AboveGroundLive",
                   "ResourceName": null,
@@ -3997,6 +4016,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4007,6 +4027,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4015,7 +4036,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Leaf",
                   "ResourceName": null,
@@ -4092,6 +4113,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4102,6 +4124,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4187,6 +4210,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4197,6 +4221,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4293,6 +4318,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4303,6 +4329,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": null,
                       "Interval": null
@@ -4311,7 +4338,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AboveGroundN",
                   "ResourceName": null,
@@ -4359,6 +4386,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4369,6 +4397,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": null,
                       "Interval": null
@@ -4377,7 +4406,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Leaf",
                   "ResourceName": null,
@@ -4454,6 +4483,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4464,6 +4494,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4472,7 +4503,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Petiole",
                   "ResourceName": null,
@@ -4549,6 +4580,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4559,6 +4591,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4567,7 +4600,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Bulb",
                   "ResourceName": null,
@@ -4655,6 +4688,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4665,6 +4699,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4673,7 +4708,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AboveGround",
                   "ResourceName": null,
@@ -4721,6 +4756,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4731,6 +4767,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4739,7 +4776,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Leaf",
                   "ResourceName": null,
@@ -4816,6 +4853,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4826,6 +4864,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4834,7 +4873,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Stem",
                   "ResourceName": null,
@@ -4911,6 +4950,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4921,6 +4961,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4929,7 +4970,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Grain",
                   "ResourceName": null,
@@ -5017,6 +5058,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5027,6 +5069,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5083,6 +5126,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5093,6 +5137,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5178,6 +5223,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5188,6 +5234,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5273,6 +5320,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5283,6 +5331,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5379,6 +5428,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5389,6 +5439,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5397,7 +5448,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AboveGround",
                   "ResourceName": null,
@@ -5445,6 +5496,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5455,6 +5507,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5463,7 +5516,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Leaf",
                   "ResourceName": null,
@@ -5540,6 +5593,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5550,6 +5604,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5558,7 +5613,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Stem",
                   "ResourceName": null,
@@ -5635,6 +5690,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5645,6 +5701,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5653,7 +5710,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Grain",
                   "ResourceName": null,
@@ -5741,6 +5798,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5751,6 +5809,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5759,7 +5818,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "ResourceName": null,
@@ -5828,7 +5887,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Irr",
+                      "FactorToVaryColours": "Nit",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": "Irr",
                       "Marker": 11,
@@ -5838,8 +5897,8 @@
                       "TableName": "FRNLReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Oats.Leaf.LAI",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -5894,6 +5953,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5904,6 +5964,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5912,7 +5973,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LeafAppearance",
                   "ResourceName": null,
@@ -6047,6 +6108,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6057,6 +6119,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6065,7 +6128,7 @@
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI_FB_PO",
                   "ResourceName": null,
@@ -6125,6 +6188,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6135,6 +6199,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6143,7 +6208,7 @@
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI_Os_PO",
                   "ResourceName": null,
@@ -6203,6 +6268,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6213,6 +6279,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6221,7 +6288,7 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationLocation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "GreenNo",
                   "ResourceName": null,
@@ -6327,6 +6394,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6337,6 +6405,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6433,6 +6502,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6443,6 +6513,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 2.0,
                       "Interval": null
@@ -6528,6 +6599,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6538,6 +6610,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 2.0,
                       "Interval": null
@@ -6623,6 +6696,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6633,6 +6707,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 2.0,
                       "Interval": null
@@ -6733,6 +6808,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -6743,6 +6819,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -6828,6 +6905,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -6838,6 +6916,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -6923,6 +7002,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -6933,6 +7013,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7018,6 +7099,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7028,6 +7110,7 @@
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7120,6 +7203,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7130,6 +7214,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7186,6 +7271,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7196,6 +7282,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7252,6 +7339,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7262,6 +7350,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7318,6 +7407,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7328,6 +7418,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7395,6 +7486,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7405,6 +7497,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7490,6 +7583,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7500,6 +7594,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7556,6 +7651,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7566,6 +7662,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7622,6 +7719,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7632,6 +7730,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7688,6 +7787,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7698,6 +7798,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7754,6 +7855,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7764,6 +7866,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7878,6 +7981,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -7888,6 +7992,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8009,6 +8114,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8019,6 +8125,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8104,6 +8211,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8114,6 +8222,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8189,6 +8298,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8199,6 +8309,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8284,6 +8395,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8294,6 +8406,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8379,6 +8492,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8389,6 +8503,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8474,6 +8589,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8484,6 +8600,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8569,6 +8686,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8579,6 +8697,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8664,6 +8783,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8674,6 +8794,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8770,6 +8891,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8780,6 +8902,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8865,6 +8988,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8875,6 +8999,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8960,6 +9085,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -8970,6 +9096,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9055,6 +9182,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9065,6 +9193,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9150,6 +9279,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9160,6 +9290,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9245,6 +9376,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9255,6 +9387,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9355,6 +9488,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9365,6 +9499,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9450,6 +9585,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9460,6 +9596,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9535,6 +9672,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9545,6 +9683,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9630,6 +9769,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9640,6 +9780,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9725,6 +9866,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9735,6 +9877,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9820,6 +9963,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9830,6 +9974,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9915,6 +10060,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -9925,6 +10071,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10010,6 +10157,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10020,6 +10168,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10116,6 +10265,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10126,6 +10276,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10211,6 +10362,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10221,6 +10373,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10306,6 +10459,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10316,6 +10470,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10401,6 +10556,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10411,6 +10567,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10496,6 +10653,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10506,6 +10664,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10591,6 +10750,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10601,6 +10761,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10701,6 +10862,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -10711,6 +10873,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -10796,6 +10959,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -10806,6 +10970,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -10881,6 +11046,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10891,6 +11057,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10976,6 +11143,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -10986,6 +11154,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11071,6 +11240,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11081,6 +11251,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11166,6 +11337,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11176,6 +11348,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11261,6 +11434,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11271,6 +11445,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11356,6 +11531,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11366,6 +11542,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11462,6 +11639,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11472,6 +11650,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11557,6 +11736,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11567,6 +11747,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11652,6 +11833,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11662,6 +11844,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11747,6 +11930,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11757,6 +11941,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11842,6 +12027,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11852,6 +12038,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11937,6 +12124,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -11947,6 +12135,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12051,6 +12240,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12061,6 +12251,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12146,6 +12337,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12156,6 +12348,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12224,6 +12417,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12234,6 +12428,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12377,6 +12572,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12387,6 +12583,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12472,6 +12669,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12482,6 +12680,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -12639,6 +12838,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12649,6 +12849,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12734,6 +12935,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12744,6 +12946,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12829,6 +13032,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12839,6 +13043,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12924,6 +13129,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -12934,6 +13140,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13019,6 +13226,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13029,6 +13237,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13114,6 +13323,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13124,6 +13334,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13209,6 +13420,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13219,6 +13431,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13304,6 +13517,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13314,6 +13528,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13410,6 +13625,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13420,6 +13636,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13505,6 +13722,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13515,6 +13733,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13600,6 +13819,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13610,6 +13830,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13695,6 +13916,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13705,6 +13927,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13790,6 +14013,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13800,6 +14024,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13885,6 +14110,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13895,6 +14121,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13980,6 +14207,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -13990,6 +14218,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -14075,6 +14304,7 @@
                               "Position": 3,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -14085,6 +14315,7 @@
                               "Position": 0,
                               "Inverted": false,
                               "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
@@ -14196,6 +14427,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14206,6 +14438,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14291,6 +14524,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14301,6 +14535,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14386,6 +14621,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14396,6 +14632,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14481,6 +14718,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14491,6 +14729,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14576,6 +14815,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14586,6 +14826,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14671,6 +14912,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14681,6 +14923,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14766,6 +15009,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14776,6 +15020,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14872,6 +15117,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14882,6 +15128,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14967,6 +15214,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14977,6 +15225,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15062,6 +15311,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15072,6 +15322,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15157,6 +15408,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15167,6 +15419,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15252,6 +15505,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15262,6 +15516,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15347,6 +15602,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15357,6 +15613,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15442,6 +15699,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15452,6 +15710,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15552,6 +15811,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15562,6 +15822,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15630,6 +15891,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15640,6 +15902,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15708,6 +15971,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15718,6 +15982,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15786,6 +16051,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15796,6 +16062,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -15871,6 +16138,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15881,6 +16149,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15949,6 +16218,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15959,6 +16229,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16027,6 +16298,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16037,6 +16309,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16105,6 +16378,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16115,6 +16389,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16183,6 +16458,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16193,6 +16469,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16261,6 +16538,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16271,6 +16549,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16339,6 +16618,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16349,6 +16629,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16428,6 +16709,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16438,6 +16720,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16506,6 +16789,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16516,6 +16800,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16584,6 +16869,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16594,6 +16880,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16662,6 +16949,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16672,6 +16960,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16740,6 +17029,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16750,6 +17040,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16818,6 +17109,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16828,6 +17120,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16907,6 +17200,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16917,6 +17211,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16985,6 +17280,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16995,6 +17291,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17063,6 +17360,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17073,6 +17371,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17141,6 +17440,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17151,6 +17451,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17219,6 +17520,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17229,6 +17531,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17297,6 +17600,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17307,6 +17611,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17386,6 +17691,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17396,6 +17702,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17464,6 +17771,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17474,6 +17782,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17542,6 +17851,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17552,6 +17862,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17620,6 +17931,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17630,6 +17942,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17698,6 +18011,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17708,6 +18022,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17776,6 +18091,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -17786,6 +18102,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
