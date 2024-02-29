@@ -1274,9 +1274,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
-            DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
-            DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            if (!culms.AreAllLeavesFullyExpanded())
+            {
+                DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            }
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
