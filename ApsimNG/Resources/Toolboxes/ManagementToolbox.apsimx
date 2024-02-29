@@ -1944,7 +1944,7 @@
             "        {",
             "            double[] cumThickness = soilPhysical.ThicknessCumulative;",
             "            int layerIdx = 0;",
-            "            while ((layerIdx < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))",
+            "            while ((layerIdx + 1 < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))",
             "            {",
             "                layerIdx += 1;",
             "            }",
