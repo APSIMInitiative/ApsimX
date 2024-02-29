@@ -1,5 +1,5 @@
 name: "\U0001F527 Refactor Feature"
-description: Exising code requires rewriting or improvement
+description: Existing code requires rewriting or improvement
 labels: ["Improvement", "Refactor"]
 body:
   - type: textarea
