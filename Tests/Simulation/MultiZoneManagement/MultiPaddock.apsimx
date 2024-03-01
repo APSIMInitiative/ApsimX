@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 170,
+  "Version": 171,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1950,12 +1950,6 @@
             "            Summary.WriteMessage(this, this.FullPath + \" -  sowing \" + Crop.FullPath, MessageType.Diagnostic);",
             "            Crop.Sow(population: cropDefaults[crop].Population, cultivar: cropDefaults[crop].CultivarName, ",
             "                     depth: cropDefaults[crop].SowingDepth, rowSpacing: cropDefaults[crop].RowSpacing);",
-            "            myEvents.Publish(\"DoExpenditure\",  new object[] { this, ",
-            "                  new Economics.ExpenditureArgs{Description = $\"{crop} aka {Crop.Name} Sowing\",",
-            "                                                Category = \"Sowing\", ",
-            "                                                Name = Crop.Name,",
-            "                                                Rate = 1,",
-            "                                                Area = myPaddockZones [ currentPaddock ].Area}}); ",
             " ",
             "        }",
             "        ",
@@ -1966,12 +1960,6 @@
             "            Plant Crop = myPaddock.FindInScope(cropDefaults[crop].RealName) as Plant;",
             "",
             "            Summary.WriteMessage(this, this.FullPath + \" -  harvesting \" + Crop.FullPath, MessageType.Diagnostic);",
-            "            myEvents.Publish(\"DoIncome\",  new object[] { this, ",
-            "                  new Economics.IncomeArgs{Description = $\"{crop} aka {Crop.Name} Harvest\",",
-            "                                           Name = Crop.Name, ",
-            "                                           Yield = GetValuebyName(myPaddock.Get(\"[\" + Crop.Name + \"].Grain.Total.Wt\")) * 10,  // g/m2 -> kg/ha",
-            "                                           Protein = GetValuebyName(myPaddock.Get(\"[\" + Crop.Name + \"].Grain.Protein\")) ,",
-            "                                           Area = myPaddockZones [ currentPaddock ].Area}});   ",
             "            Crop.Harvest();",
             "            Crop.EndCrop();",
             "            daysSinceLastHarvests[currentPaddock] = 0;",
@@ -2673,8 +2661,9 @@
             "[Clock].Today",
             "[Manager].Script.currentPaddock as Paddock",
             "[Manager].Script.currentState as currentState",
-            "[Economics].Economics.Balance as Balance",
-            "[PhaseAccumulations].Script.TRainfall as Rain"
+            "[PhaseAccumulations].Script.TRainfall as Rain",
+            "[PhaseAccumulations].Script.yield_kgha",
+            "[PhaseAccumulations].Script.biomass_kgha"
           ],
           "EventNames": [
             "[RotationManager].Transition"
