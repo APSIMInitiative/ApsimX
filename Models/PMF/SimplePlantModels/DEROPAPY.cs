@@ -94,6 +94,9 @@ namespace Models.PMF.SimplePlantModels
         ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary> 
         private bool HasRewondThisSeason { get; set; }
 
+        ///<summary>bool to indicate if crop started growth this season</summary> 
+        private bool HasStartedGrowthhisSeason { get; set; } = false;
+
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
@@ -272,7 +275,7 @@ namespace Models.PMF.SimplePlantModels
                 Establish();
             }
 
-            if ((weather.DaysSinceWinterSolstice==EndSeasonDAWS)&&(HasRewondThisSeason==false))
+            if ((weather.DaysSinceWinterSolstice==EndSeasonDAWS)&&(HasRewondThisSeason==false)&&(HasStartedGrowthhisSeason==true))
             {
                 phenology.SetToStage((double)phenology.IndexFromPhaseName("EndOrHarvest")+1);
             }
@@ -375,6 +378,7 @@ namespace Models.PMF.SimplePlantModels
         {
             canopy.resetCanopy();
             HasRewondThisSeason = true;
+            HasStartedGrowthhisSeason = false;
         }
 
         /// <summary>
@@ -390,6 +394,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 Leaf.initialiseBiomass();
                 HasRewondThisSeason = false;
+                HasStartedGrowthhisSeason = true;
             }
         }
 
