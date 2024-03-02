@@ -37,6 +37,8 @@ Boundary voxels, those which touch atmosphere or the edge of the simulated regio
 
 The generated fields are required to have a rectangular cross-section when viewed from a top-down perspective.
 
+The size of a field and the height of each voxel column will be specifed by the Python client before the APSIM server is launched. Subsequent adjustments of the properties of each voxel, as well as specifications of weather patterns, can be executed via the Python client at runtime.
+
 ### Coupled Column Physics Implementation
 
 Our physics model couples soil columns at the surface, only. Subsurface water transport is currently modeled as laterally independent of neighboring voxels (all transport is strictly vertical).
