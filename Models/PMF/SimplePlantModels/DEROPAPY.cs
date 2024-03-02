@@ -88,6 +88,12 @@ namespace Models.PMF.SimplePlantModels
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
+        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary> 
+        private int EndSeasonDAWS { get; set; }
+
+        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary> 
+        private bool HasRewondThisSeason { get; set; }
+
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
@@ -103,6 +109,9 @@ namespace Models.PMF.SimplePlantModels
 
         [Link(Type = LinkType.Scoped)]
         private Soil soil = null;
+
+        [Link(Type = LinkType.Scoped)]
+        private Weather weather = null;
 
         [Link]
         private ISummary summary = null;
@@ -262,11 +271,19 @@ namespace Models.PMF.SimplePlantModels
                 readCSVandUpdateProperties();
                 Establish();
             }
+
+            if ((weather.DaysSinceWinterSolstice==EndSeasonDAWS)&&(HasRewondThisSeason==false))
+            {
+                phenology.SetToStage((double)phenology.IndexFromPhaseName("EndOrHarvest")+1);
+            }
         }
 
         /// <summary> Method that sets DEROPAPY running</summary>
         public void Establish()
         {
+            EndSeasonDAWS = (int)Double.Parse(CurrentCropParams["D_EndGrowth"]);
+            HasRewondThisSeason = false;
+
             double soilDepthMax = 0;
 
             var soilCrop = soil.FindDescendant<SoilCrop>(deropapy.Name + "Soil");
@@ -345,6 +362,7 @@ namespace Models.PMF.SimplePlantModels
             root.Depth = 0;
             //ClearCanopy
             canopy.resetCanopy();
+            HasRewondThisSeason = true;
         }
 
         /// <summary>
@@ -356,6 +374,7 @@ namespace Models.PMF.SimplePlantModels
         private void onHarvesting(object sender, EventArgs e)
         {
             canopy.resetCanopy();
+            HasRewondThisSeason = true;
         }
 
         /// <summary>
@@ -370,6 +389,7 @@ namespace Models.PMF.SimplePlantModels
             if (CurrentCropParams["DefoliateOrDevelop"] == "FullCover")
             {
                 Leaf.initialiseBiomass();
+                HasRewondThisSeason = false;
             }
         }
 
