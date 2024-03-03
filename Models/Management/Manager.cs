@@ -183,12 +183,23 @@ namespace Models
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
-                    SuccessfullyCompiledLast = true;
+                    //remove all old script children
+                    for(int i = this.Children.Count - 1; i >= 0; i--)
+                        if (this.Children[i].GetType().Name.CompareTo("Script") == 0)
+                            this.Children.Remove(this.Children[i]);
+
+                    //add new script model
                     var newModel = results.Instance as IModel;
                     if (newModel != null)
                     {
+                        SuccessfullyCompiledLast = true;
                         newModel.IsHidden = true;
                         ScriptModel = Structure.Add(newModel, this);
+                    }
+                    else
+                    {
+                        ScriptModel = null;
+                        SuccessfullyCompiledLast = false;
                     }
                 }
                 else
