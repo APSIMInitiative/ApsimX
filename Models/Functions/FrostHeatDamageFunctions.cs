@@ -1,16 +1,9 @@
-﻿using Models.Utilities;
-using System;
-using System.Linq;
+﻿using System;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using Models.Climate;
-using System.Collections;
-using System.Collections.Generic;
-using Models.Interfaces;
-using APSIM.Shared.Documentation;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace Models.Functions
 {
@@ -41,8 +34,7 @@ namespace Models.Functions
         // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
         public string CropType { get; set; }
-        //public IPlant PlantType { get; set; }
-
+      
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
         // <summary>Lower thereshold</summary>
@@ -293,14 +285,15 @@ namespace Models.Functions
             ReproductiveOrgan organs = (ReproductiveOrgan)zone.Get("[" + CropType + "].Grain");
 
             double GrowthStageToday = 0;
-            if (CropType == "Wheat" | CropType == "wheat" | CropType == "Barley" | CropType == "barley")
+            if (CropType == "Wheat" | CropType == "wheat" | CropType == "Barley" | CropType == "barley" | CropType == "Canola" | CropType == "canola")
             {
-                GrowthStageToday = phen.Zadok;
-            }
-            else if (CropType == "Canola" | CropType == "canola")
-            {
+                //GrowthStageToday = phen.Zadok;
                 GrowthStageToday = phen.Stage;
             }
+            //else if (CropType == "Canola" | CropType == "canola")
+            //{
+            //    GrowthStageToday = phen.Stage;
+            //}
             else
             {
                 throw new Exception("Crop type not supported!");
