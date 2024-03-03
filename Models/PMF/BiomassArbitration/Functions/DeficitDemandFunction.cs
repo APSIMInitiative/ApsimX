@@ -108,7 +108,7 @@ namespace Models.PMF
 
         private double calcStructuralCarbonDemand()
         {
-            return parentOrgan.totalDMDemand * parentOrgan.Cconc * dCarbon.ConcentrationOrFraction.Structural;
+            return parentOrgan.totalCarbonDemand * dCarbon.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForCarbonPool(double currentAmount, double poolTargetConc)

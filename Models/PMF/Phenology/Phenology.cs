@@ -169,6 +169,9 @@ namespace Models.PMF.Phen
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
         public double Zadok { get { return zadok?.Stage ?? 0; } }
 
+        /// <summary>flag set to true is a phase does a stage set that increments currentPhaseNumber</summary>
+        private bool currentPhaseNumberIncrementedByPhaseTimeStep { get; set; } = false;
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -222,6 +225,7 @@ namespace Models.PMF.Phen
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
+            currentPhaseNumberIncrementedByPhaseTimeStep = true;
             int oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             stagesPassedToday.Clear();
 
@@ -512,13 +516,18 @@ namespace Models.PMF.Phen
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
 
                 // Calculate progression through current phase
+                currentPhaseNumberIncrementedByPhaseTimeStep = false;
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                 while (incrementPhase)
                 {
                     stagesPassedToday.Add(CurrentPhase.End);
-                    currentPhaseIndex = currentPhaseIndex + 1;
+                    if (currentPhaseNumberIncrementedByPhaseTimeStep == false)
+                    { //Phase index does not need to be incrementd if prior phase was go to as it will have set the correct phase index in the setStage call it makes
+                        currentPhaseIndex = currentPhaseIndex + 1;
+                    }
+                    currentPhaseNumberIncrementedByPhaseTimeStep = false;
 
                     if (currentPhaseIndex >= phases.Count)
                         throw new Exception("Cannot transition to the next phase. No more phases exist");

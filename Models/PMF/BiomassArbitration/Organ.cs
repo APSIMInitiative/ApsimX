@@ -83,7 +83,7 @@ namespace Models.PMF
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        private IFunction TotalDMDemand = null;
+        private IFunction TotalCarbonDemand = null;
 
         ///<summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -208,7 +208,7 @@ namespace Models.PMF
 
         /// <summary>total demand for the day</summary>
         [JsonIgnore]
-        public double totalDMDemand { get; private set; }
+        public double totalCarbonDemand { get; private set; }
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
@@ -334,7 +334,7 @@ namespace Models.PMF
         [EventSubscribe("PostPhenology")]
         protected void OnPostPhenology(object sender, EventArgs e)
         {
-            totalDMDemand = TotalDMDemand.Value();
+            totalCarbonDemand = TotalCarbonDemand.Value();
         }
 
         /// <summary>Called when crop is ending</summary>
