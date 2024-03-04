@@ -88,6 +88,15 @@ namespace Models.PMF.SimplePlantModels
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
+        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary> 
+        private int EndSeasonDAWS { get; set; }
+
+        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary> 
+        private bool HasRewondThisSeason { get; set; }
+
+        ///<summary>bool to indicate if crop started growth this season</summary> 
+        private bool HasStartedGrowthhisSeason { get; set; } = false;
+
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant deropapy = null;
@@ -103,6 +112,9 @@ namespace Models.PMF.SimplePlantModels
 
         [Link(Type = LinkType.Scoped)]
         private Soil soil = null;
+
+        [Link(Type = LinkType.Scoped)]
+        private Weather weather = null;
 
         [Link]
         private ISummary summary = null;
@@ -262,11 +274,19 @@ namespace Models.PMF.SimplePlantModels
                 readCSVandUpdateProperties();
                 Establish();
             }
+
+            if ((weather.DaysSinceWinterSolstice==EndSeasonDAWS)&&(HasRewondThisSeason==false)&&(HasStartedGrowthhisSeason==true))
+            {
+                phenology.SetToStage((double)phenology.IndexFromPhaseName("EndOrHarvest")+1);
+            }
         }
 
         /// <summary> Method that sets DEROPAPY running</summary>
         public void Establish()
         {
+            EndSeasonDAWS = (int)Double.Parse(CurrentCropParams["D_EndGrowth"]);
+            HasRewondThisSeason = false;
+
             double soilDepthMax = 0;
 
             var soilCrop = soil.FindDescendant<SoilCrop>(deropapy.Name + "Soil");
@@ -345,6 +365,7 @@ namespace Models.PMF.SimplePlantModels
             root.Depth = 0;
             //ClearCanopy
             canopy.resetCanopy();
+            HasRewondThisSeason = true;
         }
 
         /// <summary>
@@ -356,6 +377,8 @@ namespace Models.PMF.SimplePlantModels
         private void onHarvesting(object sender, EventArgs e)
         {
             canopy.resetCanopy();
+            HasRewondThisSeason = true;
+            HasStartedGrowthhisSeason = false;
         }
 
         /// <summary>
@@ -370,6 +393,8 @@ namespace Models.PMF.SimplePlantModels
             if (CurrentCropParams["DefoliateOrDevelop"] == "FullCover")
             {
                 Leaf.initialiseBiomass();
+                HasRewondThisSeason = false;
+                HasStartedGrowthhisSeason = true;
             }
         }
 
@@ -522,9 +547,9 @@ namespace Models.PMF.SimplePlantModels
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
-            {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.AllometricDemand.AllometricDemand.Const = " },
-            {"RootPartitionFrac","[DEROPAPY].Root.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalCarbonDemand.PartitionFraction.FixedValue = " },
+            {"ProductPartitionFrac","[DEROPAPY].Product.TotalCarbonDemand.TotalDMDemand.AllometricDemand.AllometricDemand.Const = " },
+            {"RootPartitionFrac","[DEROPAPY].Root.TotalCarbonDemand.PartitionFraction.FixedValue = " },
             {"TrunkWtAtMaxDimension","[DEROPAPY].Trunk.MatureWt.FixedValue = "},
             {"InitialTrunkWt","[DEROPAPY].Trunk.InitialWt.FixedValue = "},
             {"InitialRootWt","[DEROPAPY].Root.InitialWt.FixedValue = "},
@@ -537,8 +562,8 @@ namespace Models.PMF.SimplePlantModels
             {"TrunkMaxNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
             {"TrunkMinNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
             {"MaxRootDepth","[DEROPAPY].Root.Network.MaximumRootDepth.FixedValue = " },
-            {"Frost_Temp_X","[DEROPAPY].Leaf.FrostedLAIPropn.AccumulatedFrostDamage.FrostAccumFunction.FrostFraction.XYPairs.X = " },
-            {"Frost_Frac_Y","[DEROPAPY].Leaf.FrostedLAIPropn.AccumulatedFrostDamage.FrostAccumFunction.FrostFraction.XYPairs.Y = " },
+            {"Frost_Temp_X","[DEROPAPY].Leaf.FrostedLAIPropn.AccumulatedFrostDamage.FrostFraction.XYPairs.X = " },
+            {"Frost_Frac_Y","[DEROPAPY].Leaf.FrostedLAIPropn.AccumulatedFrostDamage.FrostFraction.XYPairs.Y = " },
             {"WaterStressLAI_Fw_X","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.X = " },
             {"WaterStressLAI_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y = " },
             {"WaterStressExtCoeff_Fw_X","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X = " },
