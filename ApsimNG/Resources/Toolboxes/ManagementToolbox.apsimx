@@ -1924,6 +1924,7 @@
             "            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);",
             "        ",
             "            int nlayr = GetLayerIndex(FASWDepth);",
+            "            nlayr = Math.Min(nlayr, soilPhysical.Thickness.Length-1);",
             "            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);    // tricky function that sums up to before nlayr",
             "",
             "            double part_layer = MathUtilities.Divide((FASWDepth - cumdep), soilPhysical.Thickness[nlayr], 0.0);",
