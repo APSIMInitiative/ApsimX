@@ -49,7 +49,7 @@ TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,1600,1600,1600,1100,1100,1100,2000,2000,2000,2300,2300,3000,1600,1500,1400,3000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-Frost_Temp_X,oC,Minimum temperatures for frost damage,(-5 0),(-4 0),(-5 0),(-15 -10),(-15 -10),(-15 -10),(-5 0),(-5 0),(-5 0),(-3 0),(-3 0),(-5 0),(-5 0),(-7 -3),(-5 0),(-10 -5),(-5 0),(-5 0)
+Frost_Temp_X,oC,Minimum temperatures for frost damage,(-5 0),(-5 0),(-5 0),(-15 -10),(-15 -10),(-15 -10),(-5 0),(-5 0),(-5 0),(-3 0),(-3 0),(-5 0),(-5 0),(-7 -3),(-5 0),(-10 -5),(-5 0),(-5 0)
 Frost_Frac_Y,fractional,Frost damage at x-axes temperaure,(1 0),(1 0),(0 0),(1 0),(1 0),(0 0),(1 0),(1 0),(0 0),(1 0),(0 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
 WaterStressLAI_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.8 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressLAI_Frac_Y,fractional,Fractional multiplier of LAI expansion rates,(0 1 1),(0 1 1),(1 1 1),(0 1 1),(0 1 1),(1 1 1),(0 1 1),(0 1 1),(1 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
