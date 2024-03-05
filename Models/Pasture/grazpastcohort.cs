@@ -340,7 +340,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set the nutrient value for this herbage part.
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
