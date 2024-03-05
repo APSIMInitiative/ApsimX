@@ -185,7 +185,7 @@ namespace Models
                 {
                     //remove all old script children
                     for(int i = this.Children.Count - 1; i >= 0; i--)
-                        if (this.Children[i].GetType().Name.CompareTo("Script") == 0)
+                        if (this.Children[i].GetType().Name.Contains("Script"))
                             this.Children.Remove(this.Children[i]);
 
                     //add new script model
