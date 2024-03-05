@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/19 17:56:26</lastsaved>
+  <lastsaved>2024/02/27 11:32:26</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -15,7 +15,7 @@
               <val>1990/01/01</val>
             </init>
             <init name="finish" kind="string">
-              <val>2005/02/03</val>
+              <val>2000/02/03</val>
             </init>
             <init name="timestep" kind="integer4">
               <val>1</val>
@@ -395,6 +395,23 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_n</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -899,6 +916,57 @@
                   <val>mm</val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.n_fixed</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>n_fixed</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
@@ -1301,6 +1369,23 @@
                   <val>kg/ha</val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_dm_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_dm_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
@@ -1657,10 +1742,38 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.nitrogenbalance</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.surfaceom.model.nitrogenbalance</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.surfaceom.model.surfaceom_cover</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>surfaceom_cover</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_n</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -2605,7 +2718,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231019152934075.html</val>
+  <val>output_240226160738531.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>

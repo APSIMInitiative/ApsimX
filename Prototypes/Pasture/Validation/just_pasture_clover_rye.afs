@@ -953,6 +953,57 @@
                   <val>mm</val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.n_fixed</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>n_fixed</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
