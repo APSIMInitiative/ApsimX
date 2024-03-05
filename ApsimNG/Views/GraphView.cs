@@ -1585,7 +1585,7 @@ namespace UserInterface.Views
                     // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
                     if (d != defaultDate)
                         dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    else MasterView.ShowMessage($"A DateTime data point of {d} was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
+                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
                     if (d < smallestDate)
                         smallestDate = d;
                     if (d > largestDate)
