@@ -255,7 +255,7 @@ namespace Models.Soils
                         return 0;
                     else
                     {
-                        if (RelativeTo != "LL15")
+                        if (RelativeTo != null && RelativeTo != "LL15")
                         {
                             //Get layer indices that have a XF as 0.
                             var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
