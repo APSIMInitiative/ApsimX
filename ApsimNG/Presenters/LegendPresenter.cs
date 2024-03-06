@@ -70,7 +70,7 @@
 
             // Tell the view to populate the axis.
             this.PopulateView();
-        
+
             // Trap events from the view.
             this.view.LegendInsideGraphChanged += this.OnLegendInsideGraphChanged;
             this.view.OrientationDropDown.Changed += OnOrientationChanged;
@@ -101,7 +101,7 @@
 
             List<string> seriesNames = this.GetSeriesNames();
             this.view.SetSeriesNames(seriesNames.ToArray());
-            if (graph.DisabledSeries != null)
+            if (graph.DisabledSeries.Count() > 0)
                 this.view.SetDisabledSeriesNames(this.graph.DisabledSeries.ToArray());
 
             this.view.DisabledSeriesChanged += this.OnDisabledSeriesChanged;

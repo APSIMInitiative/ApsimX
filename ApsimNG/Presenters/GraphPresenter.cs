@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using APSIM.Shared.Documentation.Extensions;
@@ -199,10 +198,12 @@
                         if (double.IsNaN(x) && !double.IsNaN(y))
                         {
                             xNaNCount += 1;
-                        } else if (!double.IsNaN(x) && double.IsNaN(y))
+                        }
+                        else if (!double.IsNaN(x) && double.IsNaN(y))
                         {
                             yNaNCount += 1;
-                        } else if (double.IsNaN(x) && double.IsNaN(y))
+                        }
+                        else if (double.IsNaN(x) && double.IsNaN(y))
                         {
                             bothNaNCount += 1;
                         }
@@ -284,7 +285,7 @@
         {
             // The rectange numbers below are optimised for generation of PDF document
             // on a computer that has its display settings at 100%.
-            Rectangle r = new Rectangle(0, 0, 600, 450);
+            System.Drawing.Rectangle r = new System.Drawing.Rectangle(0, 0, 600, 450);
             Gdk.Pixbuf img;
             graphView.Export(out img, r, true);
 
@@ -331,7 +332,7 @@
             {
                 try
                 {
-                    Color colour = GetColour(definition.Colour);
+                    System.Drawing.Color colour = GetColour(definition.Colour);
 
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
@@ -421,12 +422,12 @@
             }
         }
 
-        private Color GetColour(Color colour)
+        private System.Drawing.Color GetColour(System.Drawing.Color colour)
         {
             // If dark theme is active, and colour is black, use white instead.
             // This won't help at all if the colour is a dark grey.
             if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                return Color.White;
+                return System.Drawing.Color.White;
 
             return colour;
         }

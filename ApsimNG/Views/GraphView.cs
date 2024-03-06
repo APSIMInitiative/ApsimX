@@ -1,31 +1,28 @@
-﻿using APSIM.Interop.Graphing.CustomSeries;
-using APSIM.Interop.Graphing.Extensions;
-using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
-using APSIM.Shared.Utilities;
-using UserInterface.EventArguments;
-using Gtk;
-using UserInterface.Interfaces;
-using MathNet.Numerics.Statistics;
-using OxyPlot;
-using OxyPlot.Annotations;
-using OxyPlot.Axes;
-using OxyPlot.GtkSharp;
-using OxyPlot.Series;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Interop.Graphing.CustomSeries;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Gtk;
+using MathNet.Numerics.Statistics;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 using Utility;
 using LegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-
-using static Gdk.Cursor;
-using static Gdk.CursorType;
 
 namespace UserInterface.Views
 {
@@ -837,7 +834,7 @@ namespace UserInterface.Views
                     else
                         series.Title = title;
                 }
-                    
+
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -1197,35 +1194,35 @@ namespace UserInterface.Views
             {
                 if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
                 {
-                    var matchingSeries = FindMatchingSeries(series);
-                    if (matchingSeries != null)
-                    {
-                        var newFakeSeries = new OxyPlot.Series.LineSeries();
-                        newFakeSeries.Title = series.Title;
-                        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
-                        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
-                        if (newFakeSeries.LineStyle == LineStyle.None)
-                            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
-                        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
-                        {
-                            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
-                        }
-                        else
-                        {
-                            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
-                        }
+                    //var matchingSeries = FindMatchingSeries(series);
+                    //if (matchingSeries != null)
+                    //{
+                    //    var newFakeSeries = new OxyPlot.Series.LineSeries();
+                    //    newFakeSeries.Title = series.Title;
+                    //    newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
+                    //    newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
+                    //    if (newFakeSeries.LineStyle == LineStyle.None)
+                    //        (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
+                    //    if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                    //    {
+                    //        newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
+                    //        newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
+                    //        newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
+                    //        newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
+                    //    }
+                    //    else
+                    //    {
+                    //        newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
+                    //        newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
+                    //        newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
+                    //        newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
+                    //    }
 
-                        newSeriesToAdd.Add(newFakeSeries);
+                    //    newSeriesToAdd.Add(newFakeSeries);
 
-                        series.Title = null;          // remove from legend.
-                        matchingSeries.Title = null;  // remove from legend.
-                    }
+                    //    series.Title = null;          // remove from legend.
+                    //    matchingSeries.Title = null;  // remove from legend.
+                    //}
                 }
             }
             newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
@@ -2034,7 +2031,7 @@ namespace UserInterface.Views
                         if (y > (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height) - plot1.Model.ActualPlotMargins.Bottom &&
                             y < (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height))
                             showH = true;
-                    } 
+                    }
                     else if (ax.Position == OxyPlot.Axes.AxisPosition.Left)
                     {
                         if (x < plot1.Model.ActualPlotMargins.Left)
