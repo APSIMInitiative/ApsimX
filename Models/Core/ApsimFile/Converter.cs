@@ -4334,7 +4334,7 @@ namespace Models.Core.ApsimFile
                             if (filledFromTop)
                                 water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, airdry, ll, dul, sat, xf));
                             else
-                                water["InitialValues"] = new JArray(Water.DistributeAmountWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
+                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
                         }
                         water["Thickness"] = new JArray(thickness);
                         water["FilledFromTop"] = filledFromTop;

@@ -236,7 +236,8 @@ namespace Models.Soils
             set
             {
                 filledFromTop = value;
-                UpdateInitialValuesFromFractionFull(FractionFull);
+                if(Physical != null)
+                    UpdateInitialValuesFromFractionFull(FractionFull);
             }
         }
 

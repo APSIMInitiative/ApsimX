@@ -13,7 +13,8 @@ namespace UnitTests.Core
         /// <summary>
         /// Tests all values for fractionfull, filledfromtop, relativeto and paw mm which are all 
         /// based on intial values and edits that array to store their value.
-        /// The value fed and stored as intial value should be the same value that is returned.
+        /// The value provided for each test should be the same value that can be fetched back if it is calculating correctly.
+        /// If not, there is a mistake in the water distribution calculations.
         /// </summary>
         [Test]
         public void TestChangingWaterValues()
