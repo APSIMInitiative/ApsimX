@@ -4,66 +4,135 @@ import zmq
 import msgpack
 
 import matplotlib.pyplot as plt
+    
+import pdb
 
-
+# iteration that rain happens on
 RAIN_DAY = 90
+rain_day_ts = 0
 
-def open_zmq2(ports=[27746]):
-    #  Socket to talk to server
-    ret = []
-    for port in ports:
-        context = zmq.Context.instance()
-        print("Connecting to server...")
-        print(f"Port {port}")
-        socket = context.socket(zmq.REP)
-        socket.bind(f"tcp://0.0.0.0:{port}")
-        print('    ...connected.')
-        ret.append([context, socket])
-    # print(context.closed)
-    # print(socket.closed)
-    return ret
+class ApsimController:
+    """Controller for apsim server"""
+    
+    def __init__(self, addr="0.0.0.0", port=27746):
+        """Initializes a ZMQ connection to the Apsim synchronizer
+       
+        Starts the command sequence by checking connect was received and sending
+        "ok" back.
+        
+        Args:
+            addr: Server address
+            port: Server port number
+        """
+
+        # connection string
+        self.conn_str = f"tcp://{addr}:{port}"
+        self.open_socket()
+        
+        # initialize the connection protocol
+        msg = self.socket.recv_string()
+        print(f"recv msg: {msg}")
+        if msg == "connect":
+            self.send_command("ok", unpack=False)
+    
+    def __del__(self):
+        """Handles cleanup of protocol"""
+        
+        # TODO implement cleanup of protocol, something to restart sim
+        
+        self.close_socket()
+    
+    def open_socket(self):
+        """Opens socket to apsim ZQM synchronizer
+       
+        Should not be called externally. Uses self.conn_str 
+        """
+        
+        # connect to server
+        self.context = zmq.Context.instance()
+        print(f"Connecting to server @ {self.conn_str}...")
+        self.socket = self.context.socket(zmq.REP)
+        self.socket.bind(self.conn_str)
+        print('    ...connected.')    
+    
+    def close_socket(self):
+        """Closes connection to apsim server"""
+        
+        self.socket.disconnect(self.conn_str)
+        self.context.destroy() 
+
+    def send_command(self, command : str, args = None, unpack : bool = True):
+        """Sends a string command and optional arguments to the server
+
+        The objects in args can be any serializable type. Internally uses
+        msgpack.packb for serialization.
+
+        Args:
+            socket: Opened ZMQ created socket
+            command: Command string
+            args: List of arguments
+            unpack: Unpack the resulting bytes
+            
+        Returns:
+            Bytes received from the server. If unpack is True, then the data is
+            decoded in a python object. Else if unpack is False the raw bytes is
+            returned.
+        """
+        
+        # check for arguments, otherwise just send string
+        if args:
+            self.socket.send_string(command, flags=zmq.SNDMORE)
+            
+            # list of data to send
+            msg = []
+
+            # loop over them
+            for arg in args:
+                # serialize using msgpack
+                ser = msgpack.packb(arg)
+                msg.append(ser)
+
+            self.socket.send_multipart(msg)
+        else:
+            self.socket.send_string(command)
+            
+        # get the response
+        recv_bytes = self.socket.recv()
+        # process based on arg
+        if unpack:
+            recv_data = msgpack.unpackb(recv_bytes)
+        else:
+            recv_data = recv_bytes
+
+        # return data
+        return recv_data
+    
+    def step(self) -> bool:
+        """Steps the simulation to the next timestep
+        
+        Returns:
+            Status if simulation has finished. True if simulation is done. False
+            if it is still running and can be stepped.
+            
+        Raises:
+            ValueError: When a response the server doesn't match a expected string
+        """
+
+        rc = None 
+        
+        resp_bytes = self.send_command("resume", unpack=False)
+        resp = resp_bytes.decode("utf-8")
+        if resp == "paused":
+            rc = False
+        elif resp == "finished":
+            rc = True
+        else:
+            raise ValueError
+            
+        return rc
 
 
-def close_zmq2(socket : zmq.Socket, port=27746):
-    socket.disconnect(f"tcp://127.0.0.1:{port}")
-    print('disconnected from server')
-
-
-def sendCommand(socket : zmq.Socket, command : str, args=None):
-    """Sends a string command and optional arguments to the server
-
-    The objects in args can be any serializable type. Internally uses
-    msgpack.packb for serialization.
-
-    Args
-    ----
-    socket: Opened ZMQ created socket
-    command: Command string
-    args: List of arguments
-    """
-
-    # quick and dirty way dealing with this
-    if args:
-        socket.send_string(command, flags=zmq.SNDMORE)
-    else:
-        socket.send_string(command)
-
-    # check for additional arguments
-    if args:
-
-        # list of data to send
-        msg = []
-
-        # loop over them
-        for arg in args:
-            # serialize using msgpack
-            ser = msgpack.packb(arg)
-            msg.append(ser)
-
-        socket.send_multipart(msg)
-
-
-def poll_zmq(socket : zmq.Socket) -> tuple:
+def poll_zmq(controller : ApsimController) -> tuple:
     """Runs the simulation and obtains simulated data
 
     Implements a response loop to control the simulation and transfer data. The
@@ -72,63 +141,61 @@ def poll_zmq(socket : zmq.Socket) -> tuple:
         paused      -> resume/get/set/do
         finished    -> ok
 
-    Args
-    ----
-    socket: Opened ZMQ created socket
+    Args:
+        controller: Reference to apsim controller
 
-    Returns
-    -------
-    Returns a tuple of (timestamp, extractable soil water (mm), rain)
+    Returns:
+        Returns a tuple of (timestamp, extractable soil water (mm), rain)
     """
 
     ts_arr = []
-    esw_arr = []
+    esw1_arr = []
+    esw2_arr = []
     rain_arr = []
 
     counter = 0
+    
+    running = True
 
-    while (True):
-        msg = socket.recv_string()
-        print(f"recv msg: {msg}")
-        if msg == "connect":
-            sendCommand(socket, "ok")
-        elif msg == "paused":
-            sendCommand(socket, "get", ["[Clock].Today"])
-            ts = msgpack.unpackb(socket.recv())
-            ts_arr.append(ts.to_unix())
+    while (running):
+        ts = controller.send_command("get", ["[Clock].Today"])
+        ts_arr.append(ts.to_unix())
+        
+        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
+        esw1_arr.append(sw1)
+        
+        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
+        esw2_arr.append(sw2)
 
-            sendCommand(socket, "get", ["sum([Soil].Water.Volumetric)"])
-            sw = msgpack.unpackb(socket.recv())
-            sw_arr.append(sw)
+        rain = controller.send_command("get", ["[Weather].Rain"])
+        rain_arr.append(rain)
 
-            sendCommand(socket, "get", ["[Weather].Rain"])
-            rain = msgpack.unpackb(socket.recv())
-            rain_arr.append(rain)
+        if counter == RAIN_DAY:
+            print("Applying irrigation")
+            controller.send_command(
+                "do",
+                ["applyIrrigation", "amount", 204200.0, "field", 1],
+                unpack=False
+                )
+            global rain_day_ts
+            rain_day_ts = ts.to_unix()
 
-            if counter == RAIN_DAY:
-                print("Applying irrigation")
-                sendCommand(socket, "do", ["applyIrrigation", "amount", 204200.0])
-                socket.recv()
-                global rain_day_ts
-                rain_day_ts = ts.to_unix()
+        # resume simulation until next ReportEvent
+        running = not controller.step()
 
-            # resume simulation until next ReportEvent
-            sendCommand(socket, "resume")
-        elif msg == "finished":
-            sendCommand(socket, "ok")
-            break
-
+        # increment counter
         counter += 1
 
-    return (ts_arr, esw_arr, rain_arr)
+    return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
 if __name__ == '__main__':
     # initialize connection
-    ports = [27746, 27747]
-    ret = open_zmq2(ports=ports)
+    
+    
+    apsim = ApsimController() 
 
-    ts_arr, esw_arr, rain_arr = poll_zmq(socket)
+    ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
@@ -141,9 +208,11 @@ if __name__ == '__main__':
     #reply = socket.recv_multipart()
     #print(reply)
 
+    # make plot
     plt.figure()
 
-    plt.plot(ts_arr, esw_arr)
+    plt.plot(ts_arr, esw1_arr)
+    plt.plot(ts_arr, esw2_arr)
     plt.xlabel("Time (Unix epochs)")
     plt.ylabel("Volumetric Water Content")
     plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
@@ -155,9 +224,3 @@ if __name__ == '__main__':
     plt.legend()
     plt.grid(True)
     plt.show()
-
-    # make plot
-
-    # make a clean getaway
-    # close_zmq2(socket)
-    context.destroy()
