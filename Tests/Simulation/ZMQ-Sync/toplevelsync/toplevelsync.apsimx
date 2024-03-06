@@ -1438,6 +1438,7 @@
             "        private RequestSocket connection = null;",
             "        ",
             "        // class to store irrigation data",
+            "        [Serializable]",
             "        public class IrrigationData",
             "\t\t{",
             "\t\t\tpublic int Index { get; set; }",

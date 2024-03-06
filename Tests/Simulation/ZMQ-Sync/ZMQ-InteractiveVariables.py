@@ -4,10 +4,12 @@ import zmq
 import msgpack
 
 import matplotlib.pyplot as plt
+    
+import pdb
 
 # iteration that rain happens on
 RAIN_DAY = 90
-
+rain_day_ts = 0
 
 class ApsimController:
     """Controller for apsim server"""
@@ -26,17 +28,17 @@ class ApsimController:
         # connection string
         self.conn_str = f"tcp://{addr}:{port}"
         self.open_socket()
-       
-         
+        
+        # initialize the connection protocol
         msg = self.socket.recv_string()
         print(f"recv msg: {msg}")
         if msg == "connect":
-            self.send_command("ok") 
+            self.send_command("ok", unpack=False)
     
     def __del__(self):
         """Handles cleanup of protocol"""
         
-        # TODO implement cleanup of protocol
+        # TODO implement cleanup of protocol, something to restart sim
         
         self.close_socket()
     
@@ -59,7 +61,7 @@ class ApsimController:
         self.socket.disconnect(self.conn_str)
         self.context.destroy() 
 
-    def send_command(self, command : str, args = None):
+    def send_command(self, command : str, args = None, unpack : bool = True):
         """Sends a string command and optional arguments to the server
 
         The objects in args can be any serializable type. Internally uses
@@ -69,19 +71,18 @@ class ApsimController:
             socket: Opened ZMQ created socket
             command: Command string
             args: List of arguments
+            unpack: Unpack the resulting bytes
             
         Returns:
-            Message received from server
+            Bytes received from the server. If unpack is True, then the data is
+            decoded in a python object. Else if unpack is False the raw bytes is
+            returned.
         """
         
-        # quick and dirty way dealing with this
+        # check for arguments, otherwise just send string
         if args:
             self.socket.send_string(command, flags=zmq.SNDMORE)
-        else:
-            self.socket.send_string(command)
-
-        # check for additional arguments
-        if args:
+            
             # list of data to send
             msg = []
 
@@ -92,10 +93,43 @@ class ApsimController:
                 msg.append(ser)
 
             self.socket.send_multipart(msg)
-           
+        else:
+            self.socket.send_string(command)
+            
+        # get the response
         recv_bytes = self.socket.recv()
-        recv_data = msgpack.unpackb(recv_bytes)
+        # process based on arg
+        if unpack:
+            recv_data = msgpack.unpackb(recv_bytes)
+        else:
+            recv_data = recv_bytes
+
+        # return data
         return recv_data
+    
+    def step(self) -> bool:
+        """Steps the simulation to the next timestep
+        
+        Returns:
+            Status if simulation has finished. True if simulation is done. False
+            if it is still running and can be stepped.
+            
+        Raises:
+            ValueError: When a response the server doesn't match a expected string
+        """
+
+        rc = None 
+        
+        resp_bytes = self.send_command("resume", unpack=False)
+        resp = resp_bytes.decode("utf-8")
+        if resp == "paused":
+            rc = False
+        elif resp == "finished":
+            rc = True
+        else:
+            raise ValueError
+            
+        return rc
 
 
 def poll_zmq(controller : ApsimController) -> tuple:
@@ -119,32 +153,33 @@ def poll_zmq(controller : ApsimController) -> tuple:
     rain_arr = []
 
     counter = 0
+    
+    running = True
 
-    while (True):
-        msg = controller.socket.recv_string()
-        print(f"recv msg: {msg}")
-        if msg == "paused":
-            ts = controller.send_command("get", ["[Clock].Today"])
-            ts_arr.append(ts.to_unix())
+    while (running):
+        ts = controller.send_command("get", ["[Clock].Today"])
+        ts_arr.append(ts.to_unix())
 
-            sw = controller.send_command("get", ["sum([Soil].Water.Volumetric)"])
-            esw_arr.append(sw)
+        sw = controller.send_command("get", ["sum([Soil].Water.Volumetric)"])
+        esw_arr.append(sw)
 
-            rain = controller.send_command("get", ["[Weather].Rain"])
-            rain_arr.append(rain)
+        rain = controller.send_command("get", ["[Weather].Rain"])
+        rain_arr.append(rain)
 
-            if counter == RAIN_DAY:
-                print("Applying irrigation")
-                controller.send_command("do", ["applyIrrigation", "amount", 204200.0])
-                global rain_day_ts
-                rain_day_ts = ts.to_unix()
+        if counter == RAIN_DAY:
+            print("Applying irrigation")
+            controller.send_command(
+                "do",
+                ["applyIrrigation", "amount", 204200.0, "field", 1],
+                unpack=False
+                )
+            global rain_day_ts
+            rain_day_ts = ts.to_unix()
 
-            # resume simulation until next ReportEvent
-            controller.send_command("resume")
-        elif msg == "finished":
-            controller.send_command("ok")
-            break
+        # resume simulation until next ReportEvent
+        running = not controller.step()
 
+        # increment counter
         counter += 1
 
     return (ts_arr, esw_arr, rain_arr)
@@ -152,6 +187,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
 
 if __name__ == '__main__':
     # initialize connection
+    
     
     apsim = ApsimController() 
 
