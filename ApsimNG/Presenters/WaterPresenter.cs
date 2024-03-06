@@ -161,8 +161,8 @@ namespace UserInterface.Presenters
             // pending events.
             if (string.IsNullOrEmpty(pawEdit.Text) && Gtk.Application.EventsPending())
                 return;
-            double paw = Convert.ToDouble(pawEdit.Text, CultureInfo.CurrentCulture);
-            ChangePropertyValue(new ChangeProperty(water, "InitialPAWmm", paw));
+            if (double.TryParse(pawEdit.Text, out double val) && string.Compare(pawEdit.Text,"-") != 0)
+                ChangePropertyValue(new ChangeProperty(water, "InitialPAWmm", val));                
         }
 
         /// <summary>Invoked when the percent full edit box is changed.</summary>
@@ -218,8 +218,8 @@ namespace UserInterface.Presenters
         {
             if (string.IsNullOrEmpty(depthWetSoilEdit.Text) && Gtk.Application.EventsPending())
                 return;
-            double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.CurrentCulture);
-            ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
+            if (double.TryParse(depthWetSoilEdit.Text, out double val) && string.Compare(depthWetSoilEdit.Text, "-") != 0)
+                ChangePropertyValue(nameof(water.DepthWetSoil), val);
         }
 
         /// <summary>

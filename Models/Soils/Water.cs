@@ -137,10 +137,12 @@ namespace Models.Soils
                     double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                     double[] sat = SoilUtilities.MapConcentration(Physical.SAT, Physical.Thickness, Thickness, Physical.SAT.Last());
+                    double[] thickness = Physical.Thickness;
+                    
                     if (FilledFromTop)
-                        InitialValues = DistributeAmountWaterFromTop(value, Physical.Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                     else
-                        InitialValues = DistributeAmountWaterEvenly(value, Physical.Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = DistributeAmountWaterEvenly(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 }
             }
         }
@@ -297,7 +299,7 @@ namespace Models.Soils
                 if (FilledFromTop)
                     InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
                 else
-                    InitialValues = DistributeAmountWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
 
                 double fraction = FractionFull;
             }
@@ -481,7 +483,7 @@ namespace Models.Soils
         /// <param name="sat"></param>
         /// <param name="xf"></param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeWaterEvenly(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
+        public static double[] DistributeAmountWaterEvenly(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
         {
             //returned array
             double[] sw = new double[ll.Length];
@@ -582,13 +584,13 @@ namespace Models.Soils
         /// <param name="sat"></param>
         /// <param name="xf"></param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeAmountWaterEvenly(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
+        public static double[] DistributeWaterEvenly(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
         {
             double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
             pawcmm = MathUtilities.Multiply(xf, pawcmm);
 
             double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
-            return DistributeWaterEvenly(amountWater, thickness, airdry, ll, dul, sat, xf);
+            return DistributeAmountWaterEvenly(amountWater, thickness, airdry, ll, dul, sat, xf);
         }
 
         /// <summary>
