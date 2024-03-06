@@ -149,7 +149,8 @@ def poll_zmq(controller : ApsimController) -> tuple:
     """
 
     ts_arr = []
-    esw_arr = []
+    esw1_arr = []
+    esw2_arr = []
     rain_arr = []
 
     counter = 0
@@ -159,9 +160,12 @@ def poll_zmq(controller : ApsimController) -> tuple:
     while (running):
         ts = controller.send_command("get", ["[Clock].Today"])
         ts_arr.append(ts.to_unix())
-
-        sw = controller.send_command("get", ["sum([Soil].Water.Volumetric)"])
-        esw_arr.append(sw)
+        
+        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
+        esw1_arr.append(sw1)
+        
+        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
+        esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
         rain_arr.append(rain)
@@ -182,7 +186,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
         # increment counter
         counter += 1
 
-    return (ts_arr, esw_arr, rain_arr)
+    return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
 if __name__ == '__main__':
@@ -191,7 +195,7 @@ if __name__ == '__main__':
     
     apsim = ApsimController() 
 
-    ts_arr, esw_arr, rain_arr = poll_zmq(apsim)
+    ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
 
     # Code for testing with echo server
     #start_str = socket.recv_string()
@@ -207,7 +211,8 @@ if __name__ == '__main__':
     # make plot
     plt.figure()
 
-    plt.plot(ts_arr, esw_arr)
+    plt.plot(ts_arr, esw1_arr)
+    plt.plot(ts_arr, esw2_arr)
     plt.xlabel("Time (Unix epochs)")
     plt.ylabel("Volumetric Water Content")
     plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")

@@ -135,7 +135,7 @@
               "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
               "Comments": "oc and ph estimated",
-              "Name": "Heavy Clay",
+              "Name": "HeavyClay",
               "ResourceName": null,
               "Children": [
                 {
@@ -889,7 +889,7 @@
               "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
               "Comments": "oc and ph estimated",
-              "Name": "Heavy Clay",
+              "Name": "HeavyClay",
               "ResourceName": null,
               "Children": [
                 {
