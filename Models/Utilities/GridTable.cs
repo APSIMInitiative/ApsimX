@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Models.Core;
-using System;
 using Models.Interfaces;
 
 namespace Models.Utilities
@@ -63,7 +63,7 @@ namespace Models.Utilities
                 foreach (var column in columns)
                     unitsRow[column.Name] = column.Units;
                 data.Rows.Add(unitsRow);
-            }                
+            }
 
             // Add values to data table.
             foreach (var column in columns)
@@ -82,15 +82,15 @@ namespace Models.Utilities
         {
             if (data.Rows.Count == 0)
                 return;
-            
+
             //if the last row is empty in all spaces, remove it
-            for(int i = data.Rows.Count-1; i >= 0; i--)
+            for (int i = data.Rows.Count - 1; i >= 0; i--)
             {
                 DataRow row = data.Rows[i];
                 bool blank = true;
                 foreach (var value in row.ItemArray)
                     if (!String.IsNullOrEmpty(value.ToString()))
-                            blank = false;
+                        blank = false;
 
                 if (blank)
                     data.Rows.RemoveAt(i); //remove blank row
@@ -99,7 +99,7 @@ namespace Models.Utilities
             //copy values into properties
             foreach (var column in columns)
                 if (!column.IsReadOnly)
-                    column.Set(data);
+                    column.Set(data, HasUnits());
         }
 
         /// <summary>
@@ -136,6 +136,6 @@ namespace Models.Utilities
         {
             if (columnIndex < columns.Count)
                 columns[columnIndex].Units = units;
-        } 
+        }
     }
 }
