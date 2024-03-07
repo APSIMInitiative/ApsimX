@@ -1,13 +1,13 @@
-﻿using APSIM.Shared.Graphing;
-using UserInterface.Commands;
-using Models.Soils;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using UserInterface.Views;
-using Models.Interfaces;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using System.Collections.Generic;
+using Models.Interfaces;
+using Models.Soils;
+using UserInterface.Commands;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         public WaterPresenter()
         {
         }
-        
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="v">Data store view to work with.</param>
@@ -267,7 +267,7 @@ namespace UserInterface.Presenters
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
-            
+
 
             if (llsoil != null && llsoilsName != null)
             {       //draw the area relative to the water LL instead.
@@ -275,7 +275,7 @@ namespace UserInterface.Presenters
                              sw, swCumulativeThickness,
                              AxisPosition.Top, AxisPosition.Left,
                              System.Drawing.Color.LightSkyBlue, true);
-            } 
+            }
             else
             {       //draw the area relative to whatever the water node is currently relative to
                 graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
@@ -283,7 +283,7 @@ namespace UserInterface.Presenters
                             AxisPosition.Top, AxisPosition.Left,
                             System.Drawing.Color.LightSkyBlue, true);
             }
-            
+
 
             graph.DrawLineAndMarkers("Airdry", airdry,
                                      cumulativeThickness,
@@ -343,7 +343,9 @@ namespace UserInterface.Presenters
 
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+#pragma warning disable CS0612 // Type or member is obsolete
+            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical, null);
+#pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
     }

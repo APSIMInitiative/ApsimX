@@ -249,7 +249,7 @@
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
+                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation, null);
 
                 // Format the title
                 graphView.FormatTitle(graph.Name);

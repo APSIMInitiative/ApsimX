@@ -126,6 +126,7 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
+            this.owner = ownerView;
             vbox1 = gtkControl as Box;
             mainWidget = vbox1;
 
@@ -152,6 +153,7 @@ namespace UserInterface.Views
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
             plot1.Model.MouseLeave += OnChartMouseMove;
+            plot1.Model.Updated += Model_Updated;
 #pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
@@ -175,6 +177,28 @@ namespace UserInterface.Views
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
+        // Delete if doesn't work.
+        private void Model_Updated(object sender, EventArgs e)
+        {
+            if ((sender as PlotModel).Legends.Count() > 0)
+            {
+                // Get the series in the changed model.
+                // Get the series with false 'isVisible' property.
+                List<string> unselectedSeriesTitles = new();
+                foreach (OxyPlot.Series.Series series in (sender as PlotModel).Series)
+                    if (series.IsVisible == false)
+                        unselectedSeriesTitles.Add(series.Title);
+                LegendPosition legendPosition;
+                LegendOrientation legendOrientation;
+                Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
+                Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                // Reformat the legend without the matching unselectedSeries.
+#pragma warning disable CS0612 // Type or member is obsolete
+                FormatLegend(legendPosition, legendOrientation, unselectedSeriesTitles.ToArray());
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
@@ -184,6 +208,7 @@ namespace UserInterface.Views
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
                 plot1.Model.MouseLeave -= OnChartMouseMove;
+                plot1.Model.Updated -= Model_Updated;
 #pragma warning restore CS0618
                 if (captionEventBox != null)
                     captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
@@ -1170,7 +1195,9 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
+        /// <param name="namesOfSeriesToRemove">Names of Series to remove.</param>
+        [Obsolete]
+        public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, string[] namesOfSeriesToRemove)
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
@@ -1192,41 +1219,52 @@ namespace UserInterface.Views
             var newSeriesToAdd = new List<OxyPlot.Series.LineSeries>();
             foreach (var series in plot1.Model.Series)
             {
-                if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
+                if (namesOfSeriesToRemove != null)
                 {
-                    //var matchingSeries = FindMatchingSeries(series);
-                    //if (matchingSeries != null)
-                    //{
-                    //    var newFakeSeries = new OxyPlot.Series.LineSeries();
-                    //    newFakeSeries.Title = series.Title;
-                    //    newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
-                    //    newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
-                    //    if (newFakeSeries.LineStyle == LineStyle.None)
-                    //        (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
-                    //    if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
-                    //    {
-                    //        newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
-                    //        newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
-                    //        newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
-                    //        newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
-                    //    }
-                    //    else
-                    //    {
-                    //        newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
-                    //        newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
-                    //        newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
-                    //        newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
-                    //    }
-
-                    //    newSeriesToAdd.Add(newFakeSeries);
-
-                    //    series.Title = null;          // remove from legend.
-                    //    matchingSeries.Title = null;  // remove from legend.
-                    //}
+                    foreach (var nameToRemove in namesOfSeriesToRemove)
+                        if (series.Title == nameToRemove)
+                        {
+                            series.IsVisible = false;
+                        }
                 }
+                //if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
+                //{
+                //    var matchingSeries = FindMatchingSeries(series);
+                //    if (matchingSeries != null)
+                //    {
+                //        var newFakeSeries = new OxyPlot.Series.LineSeries();
+                //        newFakeSeries.Title = series.Title;
+                //        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
+                //        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
+                //        if (newFakeSeries.LineStyle == LineStyle.None)
+                //            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
+                //        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                //        {
+                //            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
+                //            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
+                //            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
+                //            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
+                //        }
+                //        else
+                //        {
+                //            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
+                //            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
+                //            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
+                //            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
+                //        }
+                //        series.Title = null;          // remove from legend.
+                //        matchingSeries.Title = null;  // remove from legend.
+                //        newSeriesToAdd.Add(newFakeSeries);
+                //    }
+                //}
             }
-            newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
+            //newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
+
+            //foreach (var newSeries in newSeriesToAdd)
+            //    plot1.Model.Series.Add(newSeries);
+
         }
+
 
         /// <summary>
         /// Format the title.
@@ -1455,15 +1493,15 @@ namespace UserInterface.Views
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
                 }
 
-                if (axis.PlotModel.Series[0] is BoxPlotSeries &&
-                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
-                    axis.PlotModel.Series?.Count > 0)
-                {
-                    // Need to put a bit of extra space on the x axis.
-                    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-                    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
+                //if (axis.PlotModel.Series[0] is BoxPlotSeries &&
+                //    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
+                //    axis.PlotModel.Series?.Count > 0)
+                //{
+                //    // Need to put a bit of extra space on the x axis.
+                //    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
+                //    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
 
-                }
+                //}
             }
         }
 

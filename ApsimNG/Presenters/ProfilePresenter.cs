@@ -1,10 +1,10 @@
-﻿using APSIM.Shared.Graphing;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
-using System;
-using System.Collections.Generic;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
         public ProfilePresenter()
         {
         }
-        
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="v">Data store view to work with.</param>
@@ -132,13 +132,13 @@ namespace UserInterface.Presenters
                             llsoilName = llsoilName + " LL";
 
                             llsoil = (model as SoilCrop).LL;
-                            
+
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
                                                           "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
                     }
-                        
+
                     else if (model is Organic organic)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
@@ -190,7 +190,7 @@ namespace UserInterface.Presenters
             double padding = 0.01; //add 1% to bounds
             double xTopMin = MathUtilities.Min(fom);
             double xTopMax = MathUtilities.Max(fom);
-            xTopMin -= xTopMax * padding; 
+            xTopMin -= xTopMax * padding;
             xTopMax += xTopMax * padding;
 
             double height = MathUtilities.Max(cumulativeThickness);
@@ -199,7 +199,9 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1.01, 0.2, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+#pragma warning disable CS0612 // Type or member is obsolete
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+#pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
 
@@ -216,7 +218,7 @@ namespace UserInterface.Presenters
             double padding = 0.01; //add 1% to bounds
             double xTopMin = 0;
             double xTopMax = MathUtilities.Max(values);
-            
+
 
             double height = MathUtilities.Max(cumulativeThickness);
             height += height * padding;
@@ -225,7 +227,7 @@ namespace UserInterface.Presenters
             {
                 xTopMin -= 0.5;
                 xTopMax += 0.5;
-            } 
+            }
             else
             {
                 xTopMin -= xTopMax * padding;
@@ -234,7 +236,9 @@ namespace UserInterface.Presenters
 
             graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+#pragma warning disable CS0612 // Type or member is obsolete
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+#pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
 
@@ -277,7 +281,9 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, $"pH ({units})", inverted: false, 2, 12, 2, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, xBottomMin, xBottomMax, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+#pragma warning disable CS0612 // Type or member is obsolete
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+#pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
 
