@@ -1468,15 +1468,7 @@ namespace Models.GrazPlan
         [Units("mm")]
         public double RootDep
         {
-            get
-            {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
-            }
+            get { return PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS); }
         }
 
         /// <summary>Average radius of all roots</summary>
