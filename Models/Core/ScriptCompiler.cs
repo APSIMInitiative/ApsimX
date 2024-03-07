@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
-using NetMQ;
 using MessagePack;
 
 namespace Models.Core
@@ -76,10 +75,31 @@ namespace Models.Core
 
                 if (code != null)
                 {
-                    // See if we have compiled the code already. If so then no need to compile again.
-                    compilation = previousCompilations?.Find(c => c.Code == code);
+                    Regex regex = new Regex("(public class\\s)(\\w+)( : Model)");
+                    Match m = regex.Match(code);
 
-                    if (compilation == null || compilation.Code != code)
+                    string modifiedCode = code;
+                    if (m.Success)
+                    {
+                        //remove existing class name
+                        int position = modifiedCode.IndexOf(m.Groups[2].Value);
+                        modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
+                        //add unique class name in
+                        string newClassName = $"Script{model.FullPath.Replace(".", "")}";
+                        modifiedCode = modifiedCode.Insert(position, newClassName);
+                        //Add IScriptBase parent to class so we can type check it
+                        position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
+                        modifiedCode = modifiedCode.Insert(position, ", IScript");
+                    } 
+                    else
+                    {
+                        throw new Exception($"Error: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
+                    }
+
+                    // See if we have compiled the code already. If so then no need to compile again.
+                    compilation = previousCompilations?.Find(c => c.Code == modifiedCode);
+
+                    if (compilation == null || compilation.Code != modifiedCode)
                     {
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
@@ -88,14 +108,14 @@ namespace Models.Core
 
                         // We haven't compiled the code so do it now.
                         string sourceName;
-                        Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
+                        Compilation compiled = CompileTextToAssembly(modifiedCode, assemblies, out sourceName);
 
                         List<EmbeddedText> embeddedTexts = null;
                         if (withDebug)
                         {
                             System.Text.Encoding encoding = System.Text.Encoding.UTF8;
 
-                            byte[] buffer = encoding.GetBytes(code);
+                            byte[] buffer = encoding.GetBytes(modifiedCode);
                             SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
                             embeddedTexts = new List<EmbeddedText>
                             {
@@ -155,7 +175,7 @@ namespace Models.Core
                                 // Set the compilation properties.
                                 ms.Seek(0, SeekOrigin.Begin);
                                 pdbStream.Seek(0, SeekOrigin.Begin);
-                                compilation.Code = code;
+                                compilation.Code = modifiedCode;
                                 compilation.Reference = compiled.ToMetadataReference();
                                 compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
                             }
@@ -168,9 +188,9 @@ namespace Models.Core
                     {
                         // We have a compiled assembly so get the class name.
                         var regEx = new Regex(@"class\s+(\w+)\s");
-                        var match = regEx.Match(code);
+                        var match = regEx.Match(modifiedCode);
                         if (!match.Success)
-                            throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
+                            throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
                         var className = match.Groups[1].Value;
 
                         // Create an instance of the class and give it to the model.
