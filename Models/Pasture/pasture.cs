@@ -1330,7 +1330,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
             }
         }
 
@@ -1340,7 +1340,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
             }
         }
 
@@ -1350,7 +1350,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                return PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
             }
         }
 
@@ -2139,7 +2139,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Get average nutrient content of a plant
+        /// Get average nutrient content of a plant (g/g)
         /// </summary>
         /// <param name="comp">Herbage</param>
         /// <param name="part">Plant part</param>
@@ -2147,12 +2147,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         private double GetPlantNutr(int comp, int part, TPlantElement elem)
         {
-            string sUnit = PastureModel.MassUnit;
-            PastureModel.MassUnit = "kg/ha";
-            double result = PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
-            PastureModel.MassUnit = sUnit;
-
-            return result;
+            return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
 
         /// <summary>
