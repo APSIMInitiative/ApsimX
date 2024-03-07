@@ -179,7 +179,7 @@ namespace APSIM.Shared.Utilities
         {
             if (depthStrings == null)
                 return null;
-
+            depthStrings = depthStrings.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             double[] Thickness = new double[depthStrings.Length];
             for (int i = 0; i != depthStrings.Length; i++)
             {
@@ -218,8 +218,7 @@ namespace APSIM.Shared.Utilities
             if (LL == null || DUL == null)
                 return PAWC;
             if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
-                throw new Exception("Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
-
+                return PAWC;
             for (int layer = 0; layer != Thickness.Length; layer++)
                 if (DUL[layer] == MathUtilities.MissingValue ||
                     LL[layer] == MathUtilities.MissingValue)
