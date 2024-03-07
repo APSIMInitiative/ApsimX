@@ -3607,7 +3607,7 @@ namespace Models.GrazPlan
             switch (comp)
             {
                 case GrazType.TOTAL:
-                    result = false;
+                    result = true;
                     break;
                 case GrazType.stSEEDL:
                 case GrazType.stESTAB:
