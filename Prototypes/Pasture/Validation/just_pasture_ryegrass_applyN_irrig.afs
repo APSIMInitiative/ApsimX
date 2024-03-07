@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/12/19 10:12:48</lastsaved>
+  <lastsaved>2024/03/07 11:41:01</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -59,7 +59,7 @@
                   <val>Manager.do_management</val>
                 </field>
                 <field name="order" kind="integer4">
-                  <val>2000</val>
+                  <val>9000</val>
                 </field>
               </element>
               <element>
@@ -354,11 +354,11 @@
               <val>define real padd_soil_layer[10]</val>
               <val>define real padd_soil_water[10]</val>
               <val>define real padd_soil_limit[10]</val>
-              <val>define real pasture_sw_uptake[10]</val>
+              <val>define real padd_sw_uptake[10]</val>
               <val>define real padd_nh4[10]</val>
               <val>define real padd_no3[10]</val>
               <val></val>
-              <val>define real avail_soil_water = 0.0             ! soil water level used to trigger irrigation</val>
+              <val>define real soil_water = 0.0             ! soil water level used to trigger irrigation</val>
               <val>define real surface_soil_water = 0.0</val>
               <val>define real total_sw_uptake = 0.0</val>
               <val></val>
@@ -366,24 +366,26 @@
               <val>define real total_no3 = 0.0</val>
               <val>define real total_n = 0.0</val>
               <val></val>
+              <val>define padd_name = 'farm.pasture01'</val>
+              <val></val>
               <val>! ----------------------------------------------------------</val>
               <val>! check the soil moisture level in the paddock</val>
               <val></val>
               <val>from start</val>
               <val>{</val>
-              <val>   set padd_soil_layer = @('farm.pasture01.water.model.dlayer')  ! Calculate  soil water in the profile to a nominated depth</val>
-              <val>   set padd_soil_water = @('farm.pasture01.water.model.sw_dep')</val>
+              <val>   set padd_soil_layer = @(padd_name &amp; '.water.model.dlayer')  ! Calculate  soil water in the profile to a nominated depth</val>
+              <val>   set padd_soil_water = @(padd_name &amp; '.water.model.sw_dep')</val>
               <val></val>
-              <val>   set padd_nh4 = @('farm.pasture01.nitrogen.model.nh4')</val>
-              <val>   set padd_no3 = @('farm.pasture01.nitrogen.model.no3')</val>
+              <val>   set padd_nh4 = @(padd_name &amp; '.nitrogen.model.nh4')</val>
+              <val>   set padd_no3 = @(padd_name &amp; '.nitrogen.model.no3')</val>
               <val></val>
-              <val>   set pasture_sw_uptake = @('farm.pasture01.ryegrass.sw_uptake')</val>
-              <val>   set padd_soil_limit = @('farm.pasture01.ryegrass.ll')</val>
+              <val>   set padd_sw_uptake = @(padd_name &amp; '.ryegrass.sw_uptake')</val>
+              <val>   set padd_soil_limit = @(padd_name &amp; '.ryegrass.ll')</val>
               <val></val>
               <val></val>
               <val>   set surface_soil_water = padd_soil_layer[1] * max( 0.0, padd_soil_water[1] - padd_soil_limit[1] )</val>
               <val></val>
-              <val>   set avail_soil_water = 0.0</val>
+              <val>   set soil_water = 0.0</val>
               <val>   set total_sw_uptake = 0.0</val>
               <val>   set total_nh4 = 0.0</val>
               <val>   set total_no3 = 0.0</val>
@@ -392,8 +394,8 @@
               <val></val>
               <val>   for layer = 1 to length(padd_soil_layer)</val>
               <val>   {</val>
-              <val>      set avail_soil_water = avail_soil_water + padd_soil_water[layer]</val>
-              <val>      set total_sw_uptake = total_sw_uptake + pasture_sw_uptake[layer]</val>
+              <val>      set soil_water = soil_water + padd_soil_water[layer]</val>
+              <val>      set total_sw_uptake = total_sw_uptake + padd_sw_uptake[layer]</val>
               <val>      set total_nh4 = total_nh4 + padd_nh4[layer]</val>
               <val>      set total_no3 = total_no3 + padd_no3[layer]</val>
               <val>      set total_n = total_nh4 + total_no3</val>
@@ -425,7 +427,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -480,6 +482,23 @@
                 </field>
                 <field name="decplaces" kind="integer4">
                   <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
                 </field>
                 <field name="units" kind="string">
                   <val>kg/ha</val>
@@ -708,10 +727,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.soil_water</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>avail_soil_water</val>
+                  <val>total_soil_water</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -734,7 +753,7 @@
                   <val></val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>3</val>
+                  <val>4</val>
                 </field>
                 <field name="units" kind="string">
                   <val>mm</val>
@@ -978,6 +997,108 @@
                   <val>mm</val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_sw_uptake</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.shoot_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>shoot_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.green_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>green_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dry_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>dry_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.root_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.WaterDemand</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>waterdemand</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
@@ -997,7 +1118,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1331,7 +1452,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1342,10 +1463,10 @@
             <init name="outputs" array="T">
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.soil_water</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>avail_soil_water</val>
+                  <val>totall_soil_water</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -1413,7 +1534,7 @@
               <val>silo</val>
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
             </init>
             <init name="locality" kind="string">
               <val></val>
@@ -1447,7 +1568,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="dbname" kind="string">
-              <val>C:\Users\RIC394\AppData\Local\Temp\dbFolderLabel.db</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\dbFolderLabel.db</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1458,44 +1579,30 @@
             <init name="outputs" array="T">
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.padd_sw_uptake</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.padd_sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.soil_water</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.soil_water</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
                   <val>0</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>Manager.cumul_depth</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>Manager.cumul_depth</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
                 </field>
               </element>
               <element>
@@ -1556,38 +1663,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
+                  <val>farm.pasture01.water_uptake</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
+                  <val>farm.pasture01.water_uptake</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1616,34 +1695,6 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>surfaceom_wt</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.phenology</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.phenology</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.seeds</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.seeds</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1696,20 +1747,6 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.height</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.height</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.dead_dm</val>
                 </field>
                 <field name="alias" kind="string">
@@ -1752,34 +1789,6 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.leaf_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.leaf_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.stem_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.stem_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.avail_dm</val>
                 </field>
                 <field name="alias" kind="string">
@@ -1808,94 +1817,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.avail_dry</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.avail_dry</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.root_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.root_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.rtdep</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.rtdep</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.stress_index</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.stress_index</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.sw_uptake</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>farm.pasture01.ryegrass.sw_uptake</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.npp</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.npp</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.growth</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.growth</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1999,34 +1924,6 @@
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>4</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.incorp_rate</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.incorp_rate</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.lai</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.lai</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
                   <val>2</val>
                 </field>
               </element>
@@ -2035,7 +1932,7 @@
               <val>Pasture_component_test</val>
             </init>
             <init name="fwsnam" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
             </init>
             <init name="runid" kind="integer4">
               <val>1</val>
@@ -2059,7 +1956,7 @@
               <val>masterkey</val>
             </init>
             <init name="sdml_gen_time" kind="string">
-              <val>2023-12-19 10:12:48.586</val>
+              <val></val>
             </init>
           </initsection>
       ]]>
@@ -2085,7 +1982,7 @@
       ]]>
     </initdata>
     <system name="pasture01" active="T" class="Paddock">
-      <executable name="PADDOCK.dll" version="1.3"/>
+      <executable name="paddock.dll" version="1.3"/>
       <initdata>
         <![CDATA[
             <initsection>
@@ -2357,7 +2254,7 @@
                   <val></val>
                 </init>
                 <init name="forage_params" kind="string">
-                  <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
+                  <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
                 </init>
                 <init name="kno3" kind="single" unit="kg/mg/d">
                   <val>0</val>
@@ -2393,7 +2290,7 @@
       </system>
 
       <component name="ryegrass" active="T" class="Pasture">
-        <executable name="PASTURE.dll" version="1.5"/>
+        <executable name="pasture.dll" version="1.5"/>
         <initdata>
           <![CDATA[
               <initsection>
@@ -2612,7 +2509,7 @@
                   <val></val>
                 </field>
                 <field name="value" kind="string">
-                  <val>'C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\'</val>
+                  <val>'D:\Projects\ApsimX\Prototypes\Pasture\Validation\'</val>
                 </field>
               </element>
             </init>
@@ -2738,7 +2635,7 @@
       <author>CSIRO Plant Industry</author>
     </module>
     <module>
-      <file>PADDOCK.dll</file>
+      <file>paddock.dll</file>
       <version>1.3</version>
       <class>Paddock</class>
       <author>CSIRO Plant Industry</author>
@@ -2771,7 +2668,7 @@
       <contextfile>SurfaceOM.xml</contextfile>
     </module>
     <module>
-      <file>PASTURE.dll</file>
+      <file>pasture.dll</file>
       <version>1.5</version>
       <class>Pasture</class>
       <author>CSIRO Plant Industry</author>
@@ -3030,7 +2927,7 @@
 </scenarios>
 
 <report>
-  <defaultreport>Biomass</defaultreport>
+  <defaultreport>Nothing</defaultreport>
 <node text="Biomass" type="0" empty="False" ver="0.27">
  <init name="id" kind="string">
   <val>{7EE72047-A0EC-43A4-9CE5-21D3BB14EB3A}</val>
@@ -3045,7 +2942,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231219100942464.html</val>
+  <val>output_240307105506187.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>
@@ -5182,13 +5079,13 @@
       <val>0</val>
      </field>
      <field name="name" kind="string">
-      <val>Manager.avail_soil_water</val>
+      <val>Manager.soil_water</val>
      </field>
      <field name="title" kind="string">
-      <val>Manager.avail_soil_water</val>
+      <val>Manager.soil_water</val>
      </field>
      <field name="descr" kind="string">
-      <val>avail_soil_water</val>
+      <val>total_soil_water</val>
      </field>
      <field name="select" kind="boolean">
       <val>true</val>
@@ -5288,7 +5185,7 @@
 </report>
   <session>
     <trace on="False">
-      <file>C:\Users\RIC394\AppData\Local\Temp\trace.log</file>
+      <file>C:\Users\her123\AppData\Local\Temp\trace.log</file>
       <start>0</start>
       <end>0</end>
       <names>True</names>
@@ -5297,7 +5194,7 @@
       <msgdetail>True</msgdetail>
     </trace>
     <errors on="True">
-      <file>C:\Users\RIC394\AppData\Local\Temp\error_temora.log</file>
+      <file>C:\Users\her123\AppData\Local\Temp\error_temora.log</file>
     </errors>
     <layout modelswidth="314"/>
   </session>
