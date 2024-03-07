@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_clover_rye">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/27 16:42:09</lastsaved>
+  <lastsaved>2024/03/07 11:58:41</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -51,7 +51,7 @@
                   <val>Manager.do_management</val>
                 </field>
                 <field name="order" kind="integer4">
-                  <val>2000</val>
+                  <val>9000</val>
                 </field>
               </element>
               <element>
