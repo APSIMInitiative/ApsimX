@@ -70,6 +70,9 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction DeadAreaIndex = null;
 
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction WaterDemandFunction = null;
+
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
 
@@ -165,9 +168,9 @@ namespace Models.PMF
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-
+            //if (WaterDemandFunction != null)
+            //    return WaterDemandFunction.Value();
             return WaterDemand;
-
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
@@ -250,10 +253,18 @@ namespace Models.PMF
                 Height = Tallness.Value();
                 Depth = Deepness.Value();
                 Width = Wideness.Value();
-                LAI = GreenAreaIndex.Value();
-                LAIDead = DeadAreaIndex.Value();
-                KDead = DeadExtinctionCoefficient.Value();
-            }
+             }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            LAI = GreenAreaIndex.Value();
+            LAIDead = DeadAreaIndex.Value();
+            KDead = DeadExtinctionCoefficient.Value();
         }
 
         /// <summary>Constructor</summary>
