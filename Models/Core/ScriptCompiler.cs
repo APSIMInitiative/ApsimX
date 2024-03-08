@@ -75,7 +75,7 @@ namespace Models.Core
 
                 if (code != null)
                 {
-                    Regex regex = new Regex("(public class\\s)(\\w+)( : Model)");
+                    Regex regex = new Regex("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
                     Match m = regex.Match(code);
 
                     string modifiedCode = code;
@@ -95,7 +95,7 @@ namespace Models.Core
                     } 
                     else
                     {
-                        throw new Exception($"Error: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
+                        throw new Exception($"Errors Found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
                     }
 
                     // See if we have compiled the code already. If so then no need to compile again.

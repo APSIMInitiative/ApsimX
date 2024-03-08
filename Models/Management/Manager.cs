@@ -77,15 +77,7 @@ namespace Models
 
         /// <summary>Which child is the compiled script model.</summary>
         [JsonIgnore]
-        private IModel ScriptModel { get; set; } = null;
-
-        /// <summary>Which child is the compiled script model.</summary>
-        [JsonIgnore]
-        public IModel Script { 
-            get {
-                return ScriptModel;
-            } 
-        }
+        public IModel ScriptModel { get; private set; } = null;
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray

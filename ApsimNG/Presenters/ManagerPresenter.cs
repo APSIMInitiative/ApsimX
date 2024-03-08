@@ -71,7 +71,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            scriptModel = manager.Script;
+            scriptModel = manager.ScriptModel;
 
             // See if manager script has a description attribute on it's class.
             if (scriptModel != null)
