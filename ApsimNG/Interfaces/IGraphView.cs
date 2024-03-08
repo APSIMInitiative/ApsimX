@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Drawing;
     using APSIM.Shared.Graphing;
     using EventArguments;
@@ -314,7 +315,8 @@
         /// <param name="position">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
         /// <param name="namesOfSeriesToRemove">Names of series to remove from Graph.</param>
-        void FormatLegend(LegendPosition position, LegendOrientation orientation, string[] namesOfSeriesToRemove);
+        /// <param name="reselectedSeriesNames">Names of reselected series to be reenabled.</param>
+        void FormatLegend(LegendPosition position, LegendOrientation orientation, List<string> namesOfSeriesToRemove, List<string> reselectedSeriesNames);
 
         /// <summary>
         /// Format the title.

@@ -200,7 +200,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1.01, 0.2, false, false);
 #pragma warning disable CS0612 // Type or member is obsolete
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
 #pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
@@ -237,7 +237,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
 #pragma warning disable CS0612 // Type or member is obsolete
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
 #pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }
@@ -282,7 +282,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, xBottomMin, xBottomMax, double.NaN, false, false);
 #pragma warning disable CS0612 // Type or member is obsolete
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
 #pragma warning restore CS0612 // Type or member is obsolete
             graph.Refresh();
         }

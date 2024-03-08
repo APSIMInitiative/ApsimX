@@ -249,7 +249,7 @@
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation, null);
+                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation, null, null);
 
                 // Format the title
                 graphView.FormatTitle(graph.Name);
@@ -517,9 +517,6 @@
             }
         }
 
-        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
-        {
-        }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
