@@ -24,8 +24,8 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Tree Age")]
-        [Description("Tree Age At Start of Simulation")]
-        public int AgeAtSimulationStart { get; set; }
+        [Description("Tree Age At Start of Simulation (years)")]
+        public double AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Years from planting to reach Maximum dimension (years)")]
@@ -52,37 +52,41 @@ namespace Models.PMF.SimplePlantModels
         [Description("End of Leaf fall (Days after Winter Solstice)")]
         public int EndLeafFallDAWS { get; set; }
 
+        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
+        [Separator("Tree Dimnesions")]
+        [Description("Grow roots into neighbouring zone (yes or no)")]
+        public bool GRINZ { get; set; }
+
         /// <summary>Root depth at harvest (mm)</summary>
-        [Separator("Plant Dimnesions")]
         [Description("Root depth when mature (mm)")]
         public double MaxRD { get; set; }
 
-        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
-        [Description("Grow roots into neighbouring zone (yes or no)")]
-        public bool RootThyNeighbour { get; set; }
+        /// <summary>Root Biomass proportion (0-1)</summary>
+        [Description("Root Biomass proportion (0-1)")]
+        public double Proot { get; set; }
 
         /// <summary>Hight of the bottom of the canop (mm)</summary>
         [Description("Hight of the bottom of the canopy (mm)")]
         public double CanopyBaseHeight { get; set; }
 
-        /// <summary>Hight of the top of the canopy after pruning mature tree (mm)</summary>
-        [Description("Hight of the top of the canopy after pruning mature tree (mm)")]
+        /// <summary>Hight of mature tree after pruning (mm)</summary>
+        [Description("Hight of mature tree after pruning (mm)")]
         public double MaxPrunedHeight { get; set; }
 
-        /// <summary>Increase in hight between bud burst and pruning of mature tree  (mm)</summary>
-        [Description("Increase in hight between bud burst and pruning of mature tree (mm)")]
-        public double SeasonalHeightGrowth { get; set; }
+        /// <summary>maximum hight of mature tree before pruning (mm)</summary>
+        [Description("maximum hight of mature tree before pruning (mm)")]
+        public double MaxHeight { get; set; }
 
-        /// <summary>Hight of the top of the canopy after pruning mature tree (mm)</summary>
-        [Description("Width of the top of the canopy after pruning mature tree (mm)")]
+        /// <summary>Width of mature tree after pruning (mm)</summary>
+        [Description("Width of mature tree after pruning  (mm)")]
         public double MaxPrunedWidth { get; set; }
 
-        /// <summary>Increase in width between bud burst and pruning of mature tree (mm)</summary>
-        [Description("Increase in width between bud burst and pruning of mature tree (mm)")]
-        public double SeasonalWidthGrowth { get; set; }
+        /// <summary>Width of mature tree before pruning (mm)</summary>
+        [Description("Width of mature tree before pruning (mm)")]
+        public double MaxWidth { get; set; }
         
         /// <summary>Root Nitrogen Concentration</summary>
-        [Separator("Plant Nitrogen contents")]
+        [Separator("Tree Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
         public double RootNConc { get; set; }
 
@@ -103,11 +107,16 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum LAI of mature tree prior to pruning (m2/m2)</summary>
-        [Description("Maximum LAI of mature tree prior to pruning (m2/m2)")]
-        public double MaxLAI { get; set; }
+        /// <summary>Winter cover of tree canopy (0-1)</summary>
+        [Description("Winter cover of tree canopy (0-1)")]
+        public double BaseCover { get; set; }
+
+        /// <summary>Maximum cover of tree canopy (0-1)</summary>
+        [Description("Maximum cover of tree canopy (0-1)")]
+        public double MaxCover { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
+        [Separator("Water demand and response")]
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
         public double GSMax { get; set; }
 
@@ -115,8 +124,15 @@ namespace Models.PMF.SimplePlantModels
         [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
         public double R50 { get; set; }
 
-        /// <summary>Maximum green cover</summary>
+        /// <summary>"Does the crop respond to water stress?"</summary>
+        [Description("Does the crop respond to water stress?")]
+        public bool WaterStress { get; set; }
+
+        /// <summary>
+        /// Parameters relating to fruit size and growth
+        /// </summary>
         [Separator("Fruit parameters")]
+
         [Description("Fruit number retained (/m2 post thinning)")]
         public int Number { get; set; }
 
@@ -129,7 +145,7 @@ namespace Models.PMF.SimplePlantModels
         public double Density { get; set; }
 
         /// <summary>Fruit DM conc </summary>
-        [Description("Fruit DM conc (g/g)")]
+        [Description("Product DM conc (g/g)")]
         public double DMC { get; set; }
 
         /// <summary>Maximum Bloom </summary>
@@ -143,6 +159,27 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum Size </summary>
         [Description("Max Size (Days After Winter Solstice)")]
         public int DAWSMaxSize { get; set; }
+
+        /// <summary>Management events</summary>
+        [Separator("Management Event Timings.  May be sent from a manager if not set here")]
+
+        [Description("Tick this box if you are sending pruning and harvest events from a manager.  If not untick the box and specify days below")]
+        public bool PrunAndHarvestFromManager { get; set; }
+
+        /// <summary></summary>
+        [Description("Pruning (Days After Winter Solstice)")]
+        public int pruneDAWS { get; set; }
+
+        /// <summary></summary>
+        [Description("Harvest (Days After Winter Solstice)")]
+        public int harvestDAWS { get; set; }
+
+
+        /// <summary>Cutting Event</summary>
+        public event EventHandler<EventArgs> PhenologyHarvest;
+
+        /// <summary>Grazing Event</summary>
+        public event EventHandler<EventArgs> PhenologyPrune;
 
 
         /// <summary>The plant</summary>
@@ -173,45 +210,47 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
 
-        private int harvestDAWS = 320;
-        private int pruneDAWS = 360;
-
-        
+       
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
-            {"SpringDormancy","[Phenology].SpringDormancy.DAWStoProgress = " },
-            {"CanopyExpansion","[Phenology].CanopyExpansion.DAWStoProgress = " },
-            {"FullCanopy","[Phenology].FullCanopy.DAWStoProgress = " },
-            {"LeafFall", "[Phenology].LeafFall.DAWStoProgress = " },
-            {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
-            {"MaxPrunedHeight","[MaxPrunedHeight].FixedValue = " },
-            {"CanopyBaseHeight","[Height].CanopyBaseHeight.Maximum.FixedValue = " },
-            {"MaxSeasonalHeight","[Height].SeasonalGrowth.Maximum.FixedValue = " },
-            {"MaxPrunedWidth","[Width].PrunedWidth.Maximum.FixedValue = "},
-            {"MaxSeasonalWidth","[Width].SeasonalGrowth.Maximum.FixedValue = " },
-            {"FruitNConc","[Fruit].MaxNConcAtHarvest.FixedValue = "},
-            {"LeafNConc","[Leaf].MaxNConcAtStartLeafFall.FixedValue = "},
-            {"RootNConc","[Root].MaximumNConc.FixedValue = "},
-            {"TrunkNConc","[Trunk].MaximumNConc.FixedValue = "},
-            {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
-            {"MaxLAI","[Leaf].Area.Maximum.FixedValue = " },
-            {"GSMax","[Leaf].Gsmax350 = " },
-            {"R50","[Leaf].R50 = " },
-            {"InitialTrunkWt","[Trunk].InitialWt.Structural.FixedValue = "},
-            {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
-            {"InitialFruitWt","[Fruit].InitialWt.Structural.FixedValue = "},
-            {"InitialLeafWt", "[Leaf].InitialWt.FixedValue = " },
-            {"YearsToMaturity","[RelativeAnnualDimension].XYPairs.X[2] = " },
-            {"YearsToMaxRD","[Root].RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
-            {"Number","[Fruit].Number.RetainedPostThinning.FixedValue = " },
-            {"Size","[Fruit].MaximumSize.FixedValue = " },
-            {"Density","[Fruit].Density.FixedValue = " },
-            {"DMC", "[Fruit].MinimumDMC.FixedValue = " },
-            {"DAWSMaxBloom","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
-            {"DAWSLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
-            {"DAWSEndLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
-            {"DAWSMaxSize","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
+            {"SpringDormancy","[STRUM].Phenology.SpringDormancy.DAWStoProgress = " },
+            {"CanopyExpansion","[STRUM].Phenology.CanopyExpansion.DAWStoProgress = " },
+            {"FullCanopy","[STRUM].Phenology.FullCanopy.DAWStoProgress = " },
+            {"LeafFall", "[STRUM].Phenology.LeafFall.DAWStoProgress = " },
+            {"MaxRootDepth","[STRUM].Root.MaximumRootDepth.FixedValue = "},
+            {"Proot","[STRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.AcitveGrowth.Constant.FixedValue = " },
+            {"MaxPrunedHeight","[STRUM].MaxPrunedHeight.FixedValue = " },
+            {"CanopyBaseHeight","[STRUM].Height.CanopyBaseHeight.Maximum.FixedValue = " },
+            {"MaxSeasonalHeight","[STRUM].Height.SeasonalGrowth.Maximum.FixedValue = " },
+            {"MaxPrunedWidth","[STRUM].Width.PrunedWidth.Maximum.FixedValue = "},
+            {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
+            {"ProductNConc","[STRUM].Fruit.MaxNConcAtHarvest.FixedValue = "},
+            {"ResidueNConc","[STRUM].Leaf.MaxNConcAtStartLeafFall.FixedValue = "},
+            {"RootNConc","[STRUM].Root.MaximumNConc.FixedValue = "},
+            {"WoodNConc","[STRUM].Trunk.MaximumNConc.FixedValue = "},
+            {"ExtinctCoeff","[STRUM].Leaf.ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
+            {"BaseLAI","[STRUM].Leaf.Area.Winter.BaseArea.FixedValue = " },
+            {"MaxLAI","[STRUM].Leaf.Area.SeasonalGrowth.AnnualDelta.FixedValue = " },
+            {"GSMax","[STRUM].Leaf.Gsmax350 = " },
+            {"R50","[STRUM].Leaf.R50 = " },
+            {"InitialTrunkWt","[STRUM].Trunk.InitialWt.Structural.FixedValue = "},
+            {"InitialRootWt", "[STRUM].Root.InitialWt.Structural.FixedValue = " },
+            {"InitialFruitWt","[STRUM].Fruit.InitialWt.Structural.FixedValue = "},
+            {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
+            {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
+            {"YearsToMaxRD","[STRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
+            {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
+            {"Size","[STRUM].Fruit.MaximumSize.FixedValue = " },
+            {"Density","[STRUM].Fruit.Density.FixedValue = " },
+            {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
+            {"DAWSMaxBloom","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
+            {"DAWSLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
+            {"DAWSEndLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
+            {"DAWSMaxSize","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
+            {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
+            {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>
@@ -238,7 +277,7 @@ namespace Models.PMF.SimplePlantModels
             }
 
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
-            if (RootThyNeighbour)
+            if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
                 List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
@@ -272,7 +311,7 @@ namespace Models.PMF.SimplePlantModels
             double population = 1.0;
             double rowWidth = 0.0;
 
-            tree = coeffCalc();
+            tree = CoeffCalc();
             strum.Children.Add(tree);
             strum.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
@@ -284,53 +323,68 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Data structure that holds STRUM parameter names and the cultivar overwrite they map to
         /// </summary>
-        public Cultivar coeffCalc()
+        public Cultivar CoeffCalc()
         {
-            Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
+            Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
-            cropParams["SpringDormancy"] += BudBreakDAWS.ToString();
-            cropParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
-            cropParams["FullCanopy"] += StartLeafFallDAWS.ToString();
-            cropParams["LeafFall"] += EndLeafFallDAWS.ToString();
-            pruneDAWS = EndLeafFallDAWS;
-            cropParams["MaxRootDepth"] += MaxRD.ToString();
-            cropParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            cropParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
-            cropParams["MaxSeasonalHeight"] += SeasonalHeightGrowth.ToString();
-            cropParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
-            cropParams["MaxSeasonalWidth"] += SeasonalWidthGrowth.ToString();
-            cropParams["FruitNConc"] += FruitNConc.ToString();
-            cropParams["LeafNConc"] += LeafNConc.ToString();
-            cropParams["RootNConc"] += RootNConc.ToString();
-            cropParams["TrunkNConc"] += TrunkNConc.ToString();
-            cropParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            cropParams["MaxLAI"] += MaxLAI.ToString();
-            cropParams["GSMax"] += GSMax.ToString();
-            cropParams["R50"] += R50.ToString();
-            cropParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            cropParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            cropParams["Number"] += Number.ToString();
-            cropParams["Size"] += Size.ToString();
-            cropParams["Density"] += Density.ToString();
-            cropParams["DMC"] += DMC.ToString();
-            cropParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
-            cropParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
-            cropParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
-            cropParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
-            harvestDAWS = DAWSMaxSize;
+            if (this.WaterStress)
+            {
+                treeParams["WaterStressPhoto"] += "0.0";
+                //treeParams["WaterStressCover"] += "0.2";
+                treeParams["WaterStressExtinct"] += "0.2"; 
+                treeParams["WaterStressNUptake"] += "0.0";
+            }
+            else
+            {
+                treeParams["WaterStressPhoto"] += "1.0";
+                //treeParams["WaterStressCover"] += "1.0";
+                treeParams["WaterStressExtinct"] += "1.0";
+                treeParams["WaterStressNUptake"] += "1.0";
+            }
+
+            treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
+            treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
+            treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
+            treeParams["LeafFall"] += EndLeafFallDAWS.ToString();
+            treeParams["MaxRootDepth"] += MaxRD.ToString();
+            treeParams["Proot"] += Proot.ToString();
+            treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
+            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
+            treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
+            treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
+            treeParams["MaxSeasonalWidth"] += (MaxWidth - MaxPrunedWidth).ToString();
+            treeParams["ProductNConc"] += FruitNConc.ToString();
+            treeParams["ResidueNConc"] += LeafNConc.ToString();
+            treeParams["RootNConc"] += RootNConc.ToString();
+            treeParams["WoodNConc"] += TrunkNConc.ToString();
+            treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
+            treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
+            treeParams["MaxLAI"] += ((Math.Log(1 - MaxCover) / (ExtinctCoeff * -1))).ToString();
+            treeParams["GSMax"] += GSMax.ToString();
+            treeParams["R50"] += R50.ToString();
+            treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
+            treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
+            treeParams["Number"] += Number.ToString();
+            treeParams["Size"] += Size.ToString();
+            treeParams["Density"] += Density.ToString();
+            treeParams["DryMatterContent"] += DMC.ToString();
+            treeParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
+            treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
+            treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
+            treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
 
 
             if (AgeAtSimulationStart <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            cropParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            cropParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
-            cropParams["InitialFruitWt"] += (0).ToString();
-            cropParams["InitialLeafWt"] += (0).ToString();
+            treeParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
+            treeParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
+            treeParams["InitialFruitWt"] += (0).ToString();
+            treeParams["InitialLeafWt"] += (0).ToString();
                 
-            string[] commands = new string[cropParams.Count];
-            cropParams.Values.CopyTo(commands, 0);
+            string[] commands = new string[treeParams.Count];
+            treeParams.Values.CopyTo(commands, 0);
 
             Cultivar TreeValues = new Cultivar(this.Name, commands);
             return TreeValues;
@@ -339,16 +393,16 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (weather.DaysSinceWinterSolstice == harvestDAWS)
-                strum.Harvest();
-            if (weather.DaysSinceWinterSolstice == pruneDAWS)
+            if (PrunAndHarvestFromManager == false)
             {
-                var leaf = strum.FindChild<IHasDamageableBiomass>("Leaf");
-                var trunk = strum.FindChild<IHasDamageableBiomass>("Trunk");
-                var fruit = strum.FindChild<IHasDamageableBiomass>("Fruit");
-                leaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
-                trunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);
-                fruit.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
+                if (weather.DaysSinceWinterSolstice == harvestDAWS)
+                {
+                    PhenologyHarvest?.Invoke(this, new EventArgs());
+                }
+                if (weather.DaysSinceWinterSolstice == pruneDAWS)
+                {
+                    PhenologyPrune?.Invoke(this, new EventArgs());
+                }
             }
         }
 

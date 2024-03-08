@@ -1,10 +1,10 @@
-﻿using APSIM.Shared.Graphing;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
-using System;
-using System.Collections.Generic;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
         public ProfilePresenter()
         {
         }
-        
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="v">Data store view to work with.</param>
@@ -60,8 +60,11 @@ namespace UserInterface.Presenters
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             Soil soilNode = this.model.FindAncestor<Soil>();
-            physical = soilNode.FindChild<Physical>();
-            water = soilNode.FindChild<Water>();
+            if (soilNode != null)
+            {
+                physical = soilNode.FindChild<Physical>();
+                water = soilNode.FindChild<Water>();
+            }
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
@@ -71,7 +74,7 @@ namespace UserInterface.Presenters
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
-            int paneWidth = view.MainWidget.ParentWindow.Width; //this shoudl get the width of this view
+            int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
@@ -129,13 +132,13 @@ namespace UserInterface.Presenters
                             llsoilName = llsoilName + " LL";
 
                             llsoil = (model as SoilCrop).LL;
-                            
+
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
                                                           "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
                     }
-                        
+
                     else if (model is Organic organic)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
@@ -184,9 +187,18 @@ namespace UserInterface.Presenters
                                      System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, double.NaN, double.NaN, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1, 0.2, false, false);
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = MathUtilities.Min(fom);
+            double xTopMax = MathUtilities.Max(fom);
+            xTopMin -= xTopMax * padding;
+            xTopMax += xTopMax * padding;
+
+            double height = MathUtilities.Max(cumulativeThickness);
+            height += height * padding;
+
+            graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1.01, 0.2, false, false);
             graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
@@ -201,8 +213,27 @@ namespace UserInterface.Presenters
                                      System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, 0, double.NaN, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false, false);
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = 0;
+            double xTopMax = MathUtilities.Max(values);
+
+
+            double height = MathUtilities.Max(cumulativeThickness);
+            height += height * padding;
+
+            if (xTopMax == xTopMin)
+            {
+                xTopMin -= 0.5;
+                xTopMax += 0.5;
+            }
+            else
+            {
+                xTopMin -= xTopMax * padding;
+                xTopMax += xTopMax * padding;
+            }
+
+            graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
@@ -218,6 +249,8 @@ namespace UserInterface.Presenters
                                      "", "", null, null, AxisPosition.Top, AxisPosition.Left,
                                      ColourUtilities.ChooseColour(nColor++), LineType.Solid, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            List<double> sols = new List<double>();
             foreach (var solute in solutes)
             {
                 double[] vals = solute.InitialValues;
@@ -228,12 +261,22 @@ namespace UserInterface.Presenters
                                          "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,
                                          ColourUtilities.ChooseColour(nColor++), LineType.Solid, MarkerType.None,
                                          LineThickness.Normal, MarkerSize.Normal, 1, true);
-
+                foreach (double v in vals)
+                    sols.Add(v);
             }
 
+            double padding = 0.01; //add 1% to bounds
+            double xBottomMin = MathUtilities.Min(sols);
+            double xBottomMax = MathUtilities.Max(sols);
+            xBottomMin -= xBottomMax * padding;
+            xBottomMax += xBottomMax * padding;
+
+            double height = MathUtilities.Max(cumulativeThickness);
+            height += height * padding;
+
             graph.FormatAxis(AxisPosition.Top, $"pH ({units})", inverted: false, 2, 12, 2, false, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, 0, double.NaN, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, xBottomMin, xBottomMax, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
@@ -241,7 +284,6 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            DisconnectEvents();
             gridPresenter.CellChanged += OnCellChanged;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 
 namespace Models.Functions
@@ -35,7 +36,7 @@ namespace Models.Functions
                         if (denominator == 0)
                             returnValue = 0;
                         else
-                            returnValue = returnValue / denominator;
+                            returnValue = MathUtilities.Divide(returnValue, denominator,0);
                     }
 
             }
