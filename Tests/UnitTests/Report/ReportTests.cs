@@ -112,8 +112,8 @@
             };
             report.VariableNames = new[]
             {
-                "[Manager1].Script1.A as M1A",
-                "[Manager2].Script2.A as M2A"
+                "[Manager1].Script.A as M1A",
+                "[Manager2].Script.A as M2A"
             };
             report.EventNames = new[]
             {

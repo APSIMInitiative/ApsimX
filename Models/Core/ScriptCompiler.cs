@@ -85,8 +85,7 @@ namespace Models.Core
                         int position = modifiedCode.IndexOf(m.Groups[2].Value);
                         modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
                         //add unique class name in
-                        string path = model.FullPath.Replace(".", "");
-                        path = path.Replace(" ", "");
+                        string path = StringUtilities.CleanStringOfSymbols(model.FullPath);                        
                         string newClassName = $"Script{path}";
                         modifiedCode = modifiedCode.Insert(position, newClassName);
                         //Add IScriptBase parent to class so we can type check it
@@ -95,7 +94,7 @@ namespace Models.Core
                     } 
                     else
                     {
-                        throw new Exception($"Errors Found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
+                        throw new Exception($"Errors found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
                     }
 
                     // See if we have compiled the code already. If so then no need to compile again.
