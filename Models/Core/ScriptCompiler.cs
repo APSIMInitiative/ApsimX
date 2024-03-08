@@ -85,7 +85,9 @@ namespace Models.Core
                         int position = modifiedCode.IndexOf(m.Groups[2].Value);
                         modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
                         //add unique class name in
-                        string newClassName = $"Script{model.FullPath.Replace(".", "")}";
+                        string path = model.FullPath.Replace(".", "");
+                        path = path.Replace(" ", "");
+                        string newClassName = $"Script{path}";
                         modifiedCode = modifiedCode.Insert(position, newClassName);
                         //Add IScriptBase parent to class so we can type check it
                         position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
