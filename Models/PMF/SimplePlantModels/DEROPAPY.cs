@@ -483,8 +483,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
             thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
             thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
-            thisDero["FlowerStress_Temp_X"] += clean(CurrentCropParams["FlowerStress_Temp_X"]);
-            thisDero["FlowerStress_Factor_Y"] += clean(CurrentCropParams["FlowerStress_Factor_Y"]);
+            thisDero["FlowerMaxTempStress_Temp_X"] += clean(CurrentCropParams["FlowerMaxTempStress_Temp_X"]);
+            thisDero["FlowerMaxTempStress_Factor_Y"] += clean(CurrentCropParams["FlowerMaxTempStress_Factor_Y"]);
+            thisDero["FlowerMinTempStress_Temp_X"] += clean(CurrentCropParams["FlowerMinTempStress_Temp_X"]);
+            thisDero["FlowerMinTempStress_Factor_Y"] += clean(CurrentCropParams["FlowerMinTempStress_Factor_Y"]);
             thisDero["ProduceDryMatterFrac"] += clean(CurrentCropParams["ProduceDryMatterFrac"]);
             thisDero["FruitWeightPotential"] += clean(CurrentCropParams["FruitWeightPotential"]);
             thisDero["RainfallExcessDamage_mm_X"] += clean(CurrentCropParams["RainfallExcessDamage_mm_X"]);
@@ -571,8 +573,10 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
             {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
             {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
-            {"FlowerStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.X = " },
-            {"FlowerStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.TemperatureStress.XYPairs.Y = " },
+            {"FlowerMaxTempStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MaxTempStress.XYPairs.X = " },
+            {"FlowerMaxTempStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MaxTempStress.XYPairs.Y = " },
+            {"FlowerMinTempStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MinTempStress.XYPairs.X = " },
+            {"FlowerMinTempStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MinTempStress.XYPairs.Y = " },
             {"ProduceDryMatterFrac","[DEROPAPY].Product.FreshWeight.DryMatterProportion.FixedValue = " },
             {"FruitWeightPotential","[DEROPAPY].Product.PotentialFruitDryWt.FixedValue = " },
             {"RainfallExcessDamage_mm_X","[DEROPAPY].Product.RainfallExcessFactor.XYPairs.X = " },
