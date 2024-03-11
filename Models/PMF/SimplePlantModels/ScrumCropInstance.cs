@@ -78,6 +78,11 @@ namespace Models.PMF.SimplePlantModels
         [Description("Root Nitrogen concentration (g/g)")]
         public double RootNConc { get; set; }
 
+        /// <summary>ThermalTime from establishment to emergence</summary>
+        [Description("ThermalTime from sowing to emergence (oCd)")]
+        public double Tt_SowtoEmerge { get; set; }
+
+
         /// <summary>Base temperature for crop</summary>
         [Description("Base temperature for crop (oC)")]
         public double BaseT { get; set; }
@@ -432,8 +437,12 @@ namespace Models.PMF.SimplePlantModels
                 this._harvestDate = (DateTime)management.HarvestDate;
             }
 
-            double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
-            Tt_EmergtoMat = ttEstabToHarv * 1 / PropnTt_EstToHarv;
+            
+            double tt_SowtoEmerg = 0;
+            if (management.EstablishStage == "Seed")
+                tt_SowtoEmerg = this.Tt_SowtoEmerge;
+            double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - Math.Max(PropnTt[management.EstablishStage], PropnTt["Emergence"]);
+            Tt_EmergtoMat = (ttEstabToHarv - tt_SowtoEmerg ) * 1 / PropnTt_EstToHarv ;
             
             double Xo_Biomass = Tt_EmergtoMat * .5;
             double b_Biomass = Xo_Biomass * .2;
@@ -449,11 +458,14 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            double ttPreEstab = PropnTt[management.EstablishStage] * Tt_EmergtoMat + (-PropnTt["Seed"] * Tt_EmergtoMat);
-            double irdm = 1 / sigmoid.Function(ttEstabToHarv+ttPreEstab, Xo_Biomass, b_Biomass);
+
+            double ttPreEstab = Math.Max(PropnTt[management.EstablishStage],PropnTt["Emergence"]) * Tt_EmergtoMat; 
+            if (management.EstablishStage != "Seed")
+                ttPreEstab += tt_SowtoEmerg;
+            double irdm = 1 / sigmoid.Function(ttEstabToHarv+ttPreEstab-tt_SowtoEmerg, Xo_Biomass, b_Biomass);
 
             cropParams["InvertedRelativeDM"] += irdm.ToString();
-            cropParams["TtSeed"] += (Tt_EmergtoMat * (PropnTt["Emergence"] - PropnTt["Seed"])).ToString();
+            cropParams["TtSeed"] += tt_SowtoEmerg;
             cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
             cropParams["TtVegetative"] += (Tt_EmergtoMat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
             cropParams["TtEarlyReproductive"] += (Tt_EmergtoMat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
