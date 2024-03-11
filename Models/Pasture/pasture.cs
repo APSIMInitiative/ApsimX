@@ -13,7 +13,6 @@ using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Models.G_Range;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 
@@ -30,12 +29,6 @@ namespace Models.GrazPlan
 
         /// <summary></summary>
         protected double[] FLayerProfile;               // [1..  [0] is unused
-
-        /// <summary></summary>
-        protected int FNoInputLayers;                   // Temporary arrays
-
-        /// <summary>Layer thicknesses</summary>
-        protected double[] FInputProfile = null;        // [1..
 
         /// <summary>
         /// Set the layer count and thicknesses
@@ -2813,20 +2806,6 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="Values1"></param>
-        /// <param name="bAsAverage"></param>
-        /// <param name="Values2"></param>
-        protected void Input2LayerProfile(double[] Values1, bool bAsAverage, ref double[] Values2)
-        {
-            if (bAsAverage)
-                MakeLayersAsAverage(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
-            else
-                MakeLayersAsFlow(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
-        }
-
         /// <summary></summary>
         protected const double EPS = 1.0E-5;
 
@@ -2964,18 +2943,6 @@ namespace Models.GrazPlan
                 if (mySoilWaterAvailable[layer - 1] > 0)
                     for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
                         FSoilPropn[iComp][layer] = 1.0;
-        }
-
-        /// <summary>
-        /// Set the layer thickness profile array
-        /// </summary>
-        /// <param name="aValue"></param>
-        protected void setInputProfile(double[] aValue)
-        {
-            this.FNoInputLayers = aValue.Length;
-            if (FInputProfile == null)
-                FInputProfile = new double[this.FNoLayers + 1];
-            Value2LayerArray(aValue, ref FInputProfile);
         }
 
         #endregion
