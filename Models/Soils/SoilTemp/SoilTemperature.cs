@@ -86,7 +86,6 @@ namespace Models.Soils.SoilTemp
         const int TOPSOILnode = 2;            // index of first soil layer node
         const int NUM_PHANTOM_NODES = 5;      // dummy/phantom nodes (invisible to the user) below the soil profile in order for the lower BC to work properly
 
-        private int firstPhantomNode;
         private double gDt = 0.0;             // Internal timestep in seconds.
         private double timeOfDaySecs = 0;     // Time of day in seconds from midnight.
         private int numNodes = 0;             // number of nodes
@@ -433,7 +432,7 @@ namespace Models.Soils.SoilTemp
             {
                 if (MathUtilities.ValuesInArray(InitialValues))
                 {
-                    soilTemp = new double[numNodes + 1 + NUM_PHANTOM_NODES];
+                    soilTemp = new double[numNodes + 1 + 1];
                     Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
                 }
                 else
@@ -503,14 +502,16 @@ namespace Models.Soils.SoilTemp
                 Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
             else
             {
-                if (values.Length != soilTemp.Length - 3)
-                    throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {soilTemp.Length-3} values.");
+                int expectedNumValues = soilTemp.Length - NUM_PHANTOM_NODES - 2;
+                if (values.Length != expectedNumValues)
+                    throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {expectedNumValues} values.");
                 Array.ConstrainedCopy(values, 0, soilTemp, TOPSOILnode, values.Length);
             }
         
             soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
             soilTemp[SURFACEnode] = SurfaceTemperatureInit();
-            for (int i = firstPhantomNode; i < NUM_PHANTOM_NODES; i++)
+            int firstPhantomNode = TOPSOILnode + InitialValues.Length;
+            for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
                 soilTemp[i] = weather.Tav;
             soilTemp.CopyTo(tempNew, 0);
         }
@@ -550,7 +551,6 @@ namespace Models.Soils.SoilTemp
         {
             numLayers = physical.Thickness.Length;
             numNodes = numLayers + NUM_PHANTOM_NODES;
-            firstPhantomNode = numLayers;
 
             thickness = new double[numLayers + 1 + NUM_PHANTOM_NODES]; // Dlayer dimensioned for layers 1 to gNumlayers + extra nodes for zone below bottom layer
             physical.Thickness.CopyTo(thickness, 1);
@@ -565,6 +565,7 @@ namespace Models.Soils.SoilTemp
             double BelowProfileDepth = Math.Max(CONSTANT_TEMPdepth * M2MM - SumOfRange(thickness, 1, numLayers), 1.0 * M2MM);    // Metres. Depth added below profile to take last node to constant temperature zone
 
             double thicknessForPhantomNodes = BelowProfileDepth * 2.0 / NUM_PHANTOM_NODES; // double depth so that bottom node at mid-point is at the ConstantTempDepth
+            int firstPhantomNode = numLayers;
             for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
                 thickness[i] = thicknessForPhantomNodes;   
             var oldDepth = depth;
@@ -635,7 +636,7 @@ namespace Models.Soils.SoilTemp
             if (oldGClay != null)
                 Array.Copy(oldGClay, clay, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldGClay.Length));     // Clay dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             clayFrac.CopyTo(clay, 1);
-            for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
+            for (int i = numLayers+1; i < numLayers + 1 + NUM_PHANTOM_NODES; i++)
                 clay[i] = clay[numLayers];   // Set zone below bottom layer to the same as bottom layer
             doThermalConductivityCoeffs();
 
