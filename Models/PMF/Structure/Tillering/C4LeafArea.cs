@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using MathNet.Numerics.Statistics.Mcmc;
+using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
@@ -109,14 +110,32 @@ namespace Models.PMF
 				var tmpArea = CalculateIndividualLeafArea(leafNoEffective, culm);
 
 				culm.LeafArea = tmpArea.ConvertSqM2SqMM() * sowingDensity * culm.dltLeafNo; // in dltLai
-                culm.TotalLAI += culm.LeafArea; //not sure what this is doing as actual growth may adjust this
+                //culm.TotalLAI += culm.LeafArea; //not sure what this is doing as actual growth may adjust this
 				
 				culm.DltLAI = culm.LeafArea * culm.Proportion;
-				dltCulmArea += culm.DltLAI;
-			}
+				//dltCulmArea += culm.DltLAI;
+
+                double leafAreaNow = calcCulmArea(leafNoEffective - culm.dltLeafNo,culm);
+                culm.LeafArea = calcCulmArea(leafNoEffective, culm);
+                double dltLeafArea = Math.Max(culm.LeafArea - leafAreaNow, 0.0);
+                culm.DltLAI = dltLeafArea.ConvertSqM2SqMM() * sowingDensity  * culm.Proportion;
+                dltCulmArea += culm.DltLAI;
+                culm.TotalLAI += culm.DltLAI;
+            }
 
             return dltCulmArea;
 		}
+        double calcCulmArea(double nLeaves, Culm culm)
+        {
+            // Sum the area of each leaf plus the fraction of the last.
+            double area = 0;
+            for (int i = 0; i < Math.Ceiling(nLeaves); i++)
+            {
+                double fraction = Math.Min(1.0, nLeaves - i);
+                area += culm.LeafSizes[i] * fraction;
+            }
+            return area;
+        }
 
         /// <inheritdoc/>
         public double CalculateAreaOfLargestLeaf(double finalLeafNo, int culmNo)

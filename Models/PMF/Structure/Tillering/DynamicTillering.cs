@@ -380,13 +380,16 @@ namespace Models.PMF.Struct
         void InitiateTiller(int tillerNumber, double fractionToAdd, double initialLeaf)
         {
             double leafNoAtAppearance = 1.0;
+            double fln = culms.Culms[0].FinalLeafNo - tillerNumber;
+//            double fln = culms.Culms[0].FinalLeafNo;
+
             Culm newCulm = new(leafNoAtAppearance)
             {
                 CulmNo = tillerNumber,
                 CurrentLeafNo = initialLeaf,
                 VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (CurrentTillerNumber * culms.VerticalTillerAdjustment.Value()),
                 Proportion = fractionToAdd,
-                FinalLeafNo = culms.Culms[0].FinalLeafNo
+                FinalLeafNo = fln
             };
             newCulm.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea);
             culms.Culms.Add(newCulm);
