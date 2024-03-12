@@ -84,7 +84,9 @@ namespace Models.Soils.SoilTemp
         const int AIRnode = 0;                // index of atomspheric node
         const int SURFACEnode = 1;            // index of surface node
         const int TOPSOILnode = 2;            // index of first soil layer node
+        const int NUM_PHANTOM_NODES = 5;      // dummy/phantom nodes (invisible to the user) below the soil profile in order for the lower BC to work properly
 
+        private int firstPhantomNode;
         private double gDt = 0.0;             // Internal timestep in seconds.
         private double timeOfDaySecs = 0;     // Time of day in seconds from midnight.
         private int numNodes = 0;             // number of nodes
@@ -431,7 +433,7 @@ namespace Models.Soils.SoilTemp
             {
                 if (MathUtilities.ValuesInArray(InitialValues))
                 {
-                    soilTemp = new double[numNodes + 1 + 1];
+                    soilTemp = new double[numNodes + 1 + NUM_PHANTOM_NODES];
                     Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
                 }
                 else
@@ -444,7 +446,10 @@ namespace Models.Soils.SoilTemp
                 
                 soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
                 soilTemp[SURFACEnode] = SurfaceTemperatureInit();
-                soilTemp[numNodes + 1] = weather.Tav;
+                // initialise the phantom nodes.
+                for (int i = numNodes + 1; i < soilTemp.Length; i++)
+                    soilTemp[i] = weather.Tav;
+
                 // gT_zb(gNz + 1) = gT_zb(gNz)
                 soilTemp.CopyTo(tempNew, 0);
 
@@ -505,7 +510,8 @@ namespace Models.Soils.SoilTemp
         
             soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
             soilTemp[SURFACEnode] = SurfaceTemperatureInit();
-            soilTemp[numNodes + 1] = weather.Tav;
+            for (int i = firstPhantomNode; i < NUM_PHANTOM_NODES; i++)
+                soilTemp[i] = weather.Tav;
             soilTemp.CopyTo(tempNew, 0);
         }
 
@@ -543,9 +549,10 @@ namespace Models.Soils.SoilTemp
         private void getProfileVariables()
         {
             numLayers = physical.Thickness.Length;
-            numNodes = numLayers + 1;
+            numNodes = numLayers + NUM_PHANTOM_NODES;
+            firstPhantomNode = numLayers;
 
-            thickness = new double[numLayers + 1 + 1];     // Dlayer dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
+            thickness = new double[numLayers + 1 + NUM_PHANTOM_NODES]; // Dlayer dimensioned for layers 1 to gNumlayers + extra nodes for zone below bottom layer
             physical.Thickness.CopyTo(thickness, 1);
             BoundCheckArray(thickness, 0.0, 1000.0, "thickness");
 
@@ -556,7 +563,10 @@ namespace Models.Soils.SoilTemp
 
             // add enough to make last node at 9-10 meters - should always be enough to assume constant temperature
             double BelowProfileDepth = Math.Max(CONSTANT_TEMPdepth * M2MM - SumOfRange(thickness, 1, numLayers), 1.0 * M2MM);    // Metres. Depth added below profile to take last node to constant temperature zone
-            thickness[numLayers + 1] = BelowProfileDepth * 2.0;       // double depth so that node at mid-point is at the ConstantTempDepth
+
+            double thicknessForPhantomNodes = BelowProfileDepth * 2.0 / NUM_PHANTOM_NODES; // double depth so that bottom node at mid-point is at the ConstantTempDepth
+            for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
+                thickness[i] = thicknessForPhantomNodes;   
             var oldDepth = depth;
             depth = new double[numNodes + 1 + 1];
 
@@ -573,9 +583,9 @@ namespace Models.Soils.SoilTemp
             // BD
             BoundCheck(physical.BD.Length, numLayers, numLayers, "bd layers");
             var oldBulkDensity = bulkDensity;
-            bulkDensity = new double[numLayers + 1 + 1];
+            bulkDensity = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             if (oldBulkDensity != null)
-                Array.Copy(oldBulkDensity, bulkDensity, Math.Min(numLayers + 1 + 1, oldBulkDensity.Length));     // Rhob dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
+                Array.Copy(oldBulkDensity, bulkDensity, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldBulkDensity.Length));     // Rhob dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             physical.BD.CopyTo(bulkDensity, 1);
             BoundCheckArray(bulkDensity, 0.0, 2.65, "bulkDensity");
             // if bd (rhob) has more or less elements than the number of layers, throw exception
@@ -586,52 +596,23 @@ namespace Models.Soils.SoilTemp
             // SW
             BoundCheck(waterBalance.SWmm.Length, numLayers, numLayers, "sw layers");
             var oldSoilWater = soilWater;
-            soilWater = new double[numLayers + 1 + 1];
+            soilWater = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             if (oldSoilWater != null)
-                Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + 1, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
+                Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             for (int layer = 1; layer <= numLayers; layer++)
                 soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
             soilWater[numNodes] = soilWater[numLayers];
-            var oldMaxSoilTemp = maxSoilTemp;
-            maxSoilTemp = new double[numLayers + 1 + 1];
-            if (oldMaxSoilTemp != null)
-                Array.Copy(oldMaxSoilTemp, maxSoilTemp, Math.Min(numLayers + 1 + 1, oldMaxSoilTemp.Length));     // MaxTsoil dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            var oldMinSoilTemp = minSoilTemp;
-            minSoilTemp = new double[numLayers + 1 + 1];
-            if (oldMinSoilTemp != null)
-                Array.Copy(oldMinSoilTemp, minSoilTemp, Math.Min(numLayers + 1 + 1, oldMinSoilTemp.Length));     // MinTsoil dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            var oldGAveTsoil = aveSoilTemp;
-            aveSoilTemp = new double[numLayers + 1 + 1];
-            if (oldGAveTsoil != null)
-                Array.Copy(oldGAveTsoil, aveSoilTemp, Math.Min(numLayers + 1 + 1, oldGAveTsoil.Length));     // AveTsoil dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            var oldVolSpecHeatSoil = volSpecHeatSoil;
+
+            maxSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
+            minSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
+            aveSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             volSpecHeatSoil = new double[numNodes + 1];
-            if (oldVolSpecHeatSoil != null)
-                Array.Copy(oldVolSpecHeatSoil, volSpecHeatSoil, Math.Min(numNodes + 1, oldVolSpecHeatSoil.Length));        // HeatStore dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            var oldSoilTemp = soilTemp;
             soilTemp = new double[numNodes + 1 + 1];
-            if (oldSoilTemp != null)
-                Array.Copy(oldSoilTemp, soilTemp, Math.Min(numNodes + 1 + 1, oldSoilTemp.Length));               // T_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
-            var oldMorningSoilTemp = morningSoilTemp;
             morningSoilTemp = new double[numNodes + 1 + 1];
-            if (oldMorningSoilTemp != null)
-                Array.Copy(oldMorningSoilTemp, morningSoilTemp, Math.Min(numNodes + 1 + 1, oldMorningSoilTemp.Length));               // Thr_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
-            var oldTempNew = tempNew;
             tempNew = new double[numNodes + 1 + 1];
-            if (oldTempNew != null)
-                Array.Copy(oldTempNew, tempNew, Math.Min(numNodes + 1 + 1, oldTempNew.Length));            // TNew_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
-            var oldTermalConductivity = thermalConductivity;
             thermalConductivity = new double[numNodes + 1];
-            if (oldTermalConductivity != null)
-                Array.Copy(oldTermalConductivity, thermalConductivity, Math.Min(numNodes + 1, oldTermalConductivity.Length));   // ThermCond_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
-            var oldHeatStorage = heatStorage;
             heatStorage = new double[numNodes + 1];
-            if (oldHeatStorage != null)
-                Array.Copy(oldHeatStorage, heatStorage, Math.Min(numNodes + 1, oldHeatStorage.Length));     // CP; heat storage between nodes - index is same as upper node
-            var oldThermalConductance = thermalConductance;
             thermalConductance = new double[numNodes + 1 + 1];
-            if (oldThermalConductance != null)
-                Array.Copy(oldThermalConductance, thermalConductance, Math.Min(numNodes + 1 + 1, oldThermalConductance.Length)); // K; conductance between nodes - index is same as upper node
         }
 
         /// <summary>
@@ -650,11 +631,12 @@ namespace Models.Soils.SoilTemp
             for (int layer = 0; layer <= numLayers - 1; layer++)
                 clayFrac[layer] = physical.ParticleSizeClay[layer] / 100.0;// convert from % units ased as user input to proportion  // layer
             var oldGClay = clay;
-            clay = new double[numLayers + 1 + 1];
+            clay = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             if (oldGClay != null)
-                Array.Copy(oldGClay, clay, Math.Min(numLayers + 1 + 1, oldGClay.Length));     // Clay dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
+                Array.Copy(oldGClay, clay, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldGClay.Length));     // Clay dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             clayFrac.CopyTo(clay, 1);
-            clay[numNodes] = clay[numLayers];   // Set zone below bottom layer to the same as bottom layer
+            for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
+                clay[i] = clay[numLayers];   // Set zone below bottom layer to the same as bottom layer
             doThermalConductivityCoeffs();
 
             // set t and tn values to TAve. soil_temp is currently not used
