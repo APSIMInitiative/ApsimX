@@ -1263,6 +1263,15 @@ namespace Models.Core.ApsimFile
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
                     }
 
+                    if (chemical["Rocks"] != null && chemical["Rocks"].HasValues)
+                    {
+                        var values = chemical["Rocks"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                        physical["Rocks"] = new JArray(mappedValues);
+                    }
+
                     // convert ph units
                     var phUnits = physical["PHUnits"];
                     if (phUnits != null)
