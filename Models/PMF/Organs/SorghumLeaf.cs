@@ -1276,6 +1276,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
+            DMDemand.Structural = 0;
+            DMDemand.Metabolic = 0;
+            DMDemand.Storage = 0;
+
             if (!culms.AreAllLeavesFullyExpanded())
             {
                 DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
