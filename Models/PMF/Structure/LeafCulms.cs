@@ -151,6 +151,21 @@ namespace Models.PMF.Struct
             }
         }
 
+        /// <summary>Determines whether all leaves on all tillers have fully expanded.</summary>
+        public bool AreAllLeavesFullyExpanded()
+        {
+            var areAllLeavesFullyExpanded = true;
+            foreach (var culm in Culms)
+            {
+                if (culm.Proportion > 0 && culm.CurrentLeafNo < culm.FinalLeafNo)
+                {
+                    areAllLeavesFullyExpanded = false;
+                    break;
+                }
+            }
+            return areAllLeavesFullyExpanded;
+        }
+
         /// <summary>
         /// Remove all then add the first culm (which is the main culm).
         /// Shouldn't be called once sown.
