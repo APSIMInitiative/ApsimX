@@ -1558,8 +1558,6 @@
             "             }",
             "           }",
             "        }",
-            "        ",
-            "        [Link] Irrigation Irrigation;",
             "",
             "        // Handle the following commands:",
             "        // applyIrrigation \"amount\" <double>",
