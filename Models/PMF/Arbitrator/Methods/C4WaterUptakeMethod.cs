@@ -196,7 +196,8 @@ namespace Models.PMF.Arbitrator
                 WatSupply = totalSupply;
 
                 //used for SWDef ExpansionStress table lookup
-                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
+                // TODO - COME BACK TO THIS.
+                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.1), 0.0, 1000);
             }
         }
     }

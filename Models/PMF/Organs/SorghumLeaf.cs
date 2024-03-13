@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Microsoft.VisualBasic;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -158,7 +159,7 @@ namespace Models.PMF.Organs
                 yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
             }
         }
-
+        bool flag = true;
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
@@ -180,6 +181,22 @@ namespace Models.PMF.Organs
                 //setting it after sowing will produce unexpected results
                 culms.FertileTillerNumber = value;
             }
+        }
+
+        /// <summary>Determined by the tillering method chosen.</summary>
+        [JsonIgnore]
+        [Description("Calculated Tiller Number")]
+        public double CalculatedTillerNumber
+        {
+            get => culms?.CalculatedTillerNumber ?? 0;
+        }
+
+        /// <summary>Maximum SLA for tiller cessation.</summary>
+       // [JsonIgnore]
+        [Description("Maximum SLA for tiller cessation")]
+        public double MaxSLA
+        {
+            get => culms?.MaxSLA ?? 0;
         }
 
         /// <summary>Determined by the tillering method chosen.</summary>
@@ -307,9 +324,13 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double LAITotal => LAI + LAIDead;
 
-        /// <summary>Gets the LAI</summary>
+        /// <summary>Gets the SLN</summary>
         [JsonIgnore]
         public double SLN { get; set; }
+
+        /// <summary>Gets the SLA</summary>
+        [JsonIgnore]
+        public double SLA { get; set; }
 
         /// <summary>Used in metabolic ndemand calc.</summary>
         [JsonIgnore]
@@ -544,6 +565,79 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
+        #region LeafSizes
+        /// <summary>The leaf sizes on the main culm.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesMain
+        {
+            get
+            {
+                return GetLeafSizesForTiller(0);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 1.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller1 
+        { 
+            get
+            {
+                return GetLeafSizesForTiller(1);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 2.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller2
+        {
+            get
+            {
+                return GetLeafSizesForTiller(2);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 3.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller3
+        {
+            get
+            {
+                return GetLeafSizesForTiller(3);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 4.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller4
+        {
+            get
+            {
+                return GetLeafSizesForTiller(4);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 5.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller5
+        {
+            get
+            {
+                return GetLeafSizesForTiller(5);
+            }
+        }
+
+        /// <summary>Gets the leaf sizes for the the specific culm.</summary>
+        private List<double> GetLeafSizesForTiller(int culmNumber)
+        {
+            if (culms.Culms.Count > culmNumber)
+            {
+                return culms.Culms[culmNumber].LeafSizes;
+            }
+
+            return new();           
+        }
+        #endregion
+
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -564,6 +658,7 @@ namespace Models.PMF.Organs
 
             LAI = 0;
             SLN = 0;
+            SLA = 0;
             SLN0 = 0;
             Live.StructuralN = 0;
             Live.StorageN = 0;
@@ -885,6 +980,7 @@ namespace Models.PMF.Organs
             //Should not include any retranloocated biomass
             // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
             double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
+            SLA = MathUtilities.Divide(laiToday, Live.Wt, 0.0) * 10000; // m2/g?
             double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
 
             // This is equivalent to dividing by slaToday
@@ -1075,7 +1171,13 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-            if (leafInitialised)
+
+            if(leafInitialised && flag == true)
+            {
+                flag = false;
+            }
+            else
+            if (leafInitialised && !flag)
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
@@ -1174,9 +1276,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
-            DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
-            DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            if (!culms.AreAllLeavesFullyExpanded())
+            {
+                DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            }
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>

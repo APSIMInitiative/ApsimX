@@ -66,7 +66,7 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public int TilleringMethod { get; set; }
 
-        private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
+        private ITilleringMethod tillering => TilleringMethod == 0 ? dynamicTillering : dynamicTillering;
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
@@ -79,6 +79,20 @@ namespace Models.PMF.Struct
                 //this is here to enable access by external processes immediately following sowing
                 fixedTillering.FertileTillerNumber = value;
             }
+        }
+
+        /// <summary>Maximum SLA for tiller cessation</summary>
+        [JsonIgnore]
+        public double MaxSLA
+        {
+            get => tillering.MaxSLA;
+        }
+
+        /// <summary>CalculatedTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
+        public double CalculatedTillerNumber
+        {
+            get => tillering.CalculatedTillerNumber;
         }
 
         /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
@@ -137,6 +151,21 @@ namespace Models.PMF.Struct
             }
         }
 
+        /// <summary>Determines whether all leaves on all tillers have fully expanded.</summary>
+        public bool AreAllLeavesFullyExpanded()
+        {
+            var areAllLeavesFullyExpanded = true;
+            foreach (var culm in Culms)
+            {
+                if (culm.Proportion > 0 && culm.CurrentLeafNo < culm.FinalLeafNo)
+                {
+                    areAllLeavesFullyExpanded = false;
+                    break;
+                }
+            }
+            return areAllLeavesFullyExpanded;
+        }
+
         /// <summary>
         /// Remove all then add the first culm (which is the main culm).
         /// Shouldn't be called once sown.
@@ -144,8 +173,11 @@ namespace Models.PMF.Struct
         public void Initialize()
         {
             Culms.Clear();
-            Culms.Add(new Culm(0));
-            Culms[0].CurrentLeafNo = leafNoAtEmergence.Value();
+            Culms.Add(new Culm(0)
+            {
+                CurrentLeafNo = leafNoAtEmergence.Value(),
+                CulmNo = 0
+            });
 
             TTTargetFI = 0;
             FinalLeafNo = 0;
@@ -165,7 +197,7 @@ namespace Models.PMF.Struct
         public void CalculatePotentialArea()
         {
             //FinalLeafNo = numberOfLeaves.Value();
-            Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
+            Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo - c.CulmNo);
 
             dltLeafNo = tillering.CalcLeafNumber();
 
@@ -180,7 +212,7 @@ namespace Models.PMF.Struct
         {
             double actualLAI = tillering.CalcActualLeafArea(dltStressedLAI);
 
-            Culms.ForEach(c => c.TotalLAI = c.TotalLAI + c.DltStressedLAI);
+            Culms.ForEach(c => c.TotalLAI += c.DltStressedLAI);
             return actualLAI;
         }
 
@@ -207,6 +239,5 @@ namespace Models.PMF.Struct
                 TilleringMethod = data.TilleringMethod;
             }
         }
-
     }
 }

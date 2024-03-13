@@ -62,5 +62,6 @@ CurrentDescriptiveSummary.html
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
 /testEnvironments.json
-/Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.out
+/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.out
+/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.sim/Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.out
 /Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.sim

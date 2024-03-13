@@ -3598,6 +3598,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3616,8 +3625,35 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aX0",
                           "Name": "aX0",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3751,6 +3787,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3769,8 +3814,35 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aX0",
                           "Name": "aX0",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4542,8 +4614,8 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Emergence",
-                          "End": "FlagLeaf",
-                          "Name": "BetweenEmergenceAndFlag",
+                          "End": "Flowering",
+                          "Name": "BetweenEmergenceAndFlower",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5745,7 +5817,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.009,
+                  "FixedValue": 0.00955,
                   "Units": null,
                   "Name": "A0",
                   "ResourceName": null,
@@ -5765,7 +5837,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.2,
+                  "FixedValue": 0.0608,
                   "Units": null,
                   "Name": "A1",
                   "ResourceName": null,
@@ -5785,9 +5857,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0006,
+                  "FixedValue": -0.1293,
                   "Units": null,
-                  "Name": "B0",
+                  "Name": "A2",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -5805,14 +5877,54 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.43,
+                  "FixedValue": 0.00144,
+                  "Units": null,
+                  "Name": "B0",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[3]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0025,
                   "Units": null,
                   "Name": "B1",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[3]",
+                      "Text": "bellCurveParams[4]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.11,
+                  "Units": null,
+                  "Name": "B2",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[5]",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -5895,7 +6007,27 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.25,
+                  "FixedValue": 3.58,
+                  "Units": null,
+                  "Name": "aX0I",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.60,
+                  "Units": null,
+                  "Name": "aX0S",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 42.1,
                   "Units": null,
                   "Name": "aMaxSlope",
                   "ResourceName": null,
@@ -5905,7 +6037,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 92.45,
+                  "FixedValue": -137.4,
                   "Units": null,
                   "Name": "aMaxIntercept",
                   "ResourceName": null,
@@ -6015,7 +6147,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 15.0,
                   "Units": "%",
                   "Name": "tillerSlaBound",
                   "ResourceName": null,
@@ -9062,14 +9194,10 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Lines": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Name": "Buster",
                   "ResourceName": null,

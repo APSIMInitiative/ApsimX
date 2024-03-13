@@ -51,7 +51,6 @@ def combineResults(directory):
 
     # Concatenate all data frames into a single big dataframe
     combined = pd.concat(data, sort = False)
-    combined.to_csv('combined_%s.csv' % directory, header = True, index = False)
+    combined.to_csv('combined_dynamic.csv', header = True, index = False)
 
-combineResults('fixed')
-combineResults('dynamic')
+combineResults(directory='.')
