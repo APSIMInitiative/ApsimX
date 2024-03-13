@@ -386,7 +386,7 @@ namespace Models.PMF.Struct
                 CurrentLeafNo = initialLeaf,
                 VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (CurrentTillerNumber * culms.VerticalTillerAdjustment.Value()),
                 Proportion = fractionToAdd,
-                FinalLeafNo = culms.Culms[0].FinalLeafNo
+                FinalLeafNo = culms.Culms[0].FinalLeafNo - tillerNumber
             };
             newCulm.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea);
             culms.Culms.Add(newCulm);

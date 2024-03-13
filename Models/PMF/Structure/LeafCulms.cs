@@ -182,7 +182,7 @@ namespace Models.PMF.Struct
         public void CalculatePotentialArea()
         {
             //FinalLeafNo = numberOfLeaves.Value();
-            Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
+            Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo - c.CulmNo);
 
             dltLeafNo = tillering.CalcLeafNumber();
 
