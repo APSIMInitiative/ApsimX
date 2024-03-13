@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Functions;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Models.PMF.Struct
 {
@@ -66,13 +67,26 @@ namespace Models.PMF.Struct
             Initialize();
         }
 
-        /// <summary> Potential Leaf sizes can be calculated early and then referenced</summary>
-        public void UpdatePotentialLeafSizes(ICulmLeafArea areaCalc)
+        /// <summary>Potential Leaf sizes can be calculated early and then referenced</summary>
+        public void UpdatePotentialLeafSizes(Culm mainCulm, ICulmLeafArea areaCalc)
         {
             LeafSizes.Clear();
 
-            AreaOfLargestLeaf = areaCalc.CalculateAreaOfLargestLeaf(FinalLeafNo, CulmNo);
-            PositionOfLargestLeaf = areaCalc.CalculateLargestLeafPosition(FinalLeafNo, CulmNo);
+            if (CulmNo == 0)
+            {
+                AreaOfLargestLeaf = areaCalc.CalculateAreaOfLargestLeaf(FinalLeafNo, CulmNo);
+                PositionOfLargestLeaf = areaCalc.CalculateLargestLeafPosition(FinalLeafNo, CulmNo);
+            }
+            else
+            {
+                var relLeafSize = 0.0;
+                if (CulmNo == 1) relLeafSize = 0.23;
+                else if (CulmNo < 5) relLeafSize = 0.13;
+                else relLeafSize = 0.39;
+
+                AreaOfLargestLeaf = mainCulm.AreaOfLargestLeaf * (1 - relLeafSize);
+                PositionOfLargestLeaf = mainCulm.PositionOfLargestLeaf - (CulmNo + 1);
+            }
 
             for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
             {

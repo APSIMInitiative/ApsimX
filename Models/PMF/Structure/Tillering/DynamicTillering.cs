@@ -177,9 +177,9 @@ namespace Models.PMF.Struct
 
             if (BeforeEndJuvenileStage())
             {
-                // ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-                // FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
-                culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
+                //// ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+                //// FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+                culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.Culms[0], areaCalc as ICulmLeafArea));
             }
 
             var mainCulm = culms.Culms[0];
@@ -380,8 +380,7 @@ namespace Models.PMF.Struct
         void InitiateTiller(int tillerNumber, double fractionToAdd, double initialLeaf)
         {
             double leafNoAtAppearance = 1.0;
-            double fln = culms.Culms[0].FinalLeafNo - tillerNumber;
-//            double fln = culms.Culms[0].FinalLeafNo;
+            var mainCulm = culms.Culms[0];
 
             Culm newCulm = new(leafNoAtAppearance)
             {
@@ -389,9 +388,9 @@ namespace Models.PMF.Struct
                 CurrentLeafNo = initialLeaf,
                 VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (CurrentTillerNumber * culms.VerticalTillerAdjustment.Value()),
                 Proportion = fractionToAdd,
-                FinalLeafNo = culms.Culms[0].FinalLeafNo - tillerNumber
+                FinalLeafNo = mainCulm.FinalLeafNo - tillerNumber
             };
-            newCulm.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea);
+            newCulm.UpdatePotentialLeafSizes(mainCulm, areaCalc as ICulmLeafArea);
             culms.Culms.Add(newCulm);
         }
 

@@ -114,7 +114,7 @@ namespace Models.PMF.Struct
 			{
 				//ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
 				//FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
-				culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
+				culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.Culms[0], areaCalc as ICulmLeafArea));
 			}
 
 			dltLeafNoMainCulm = calcLeafAppearance(culms.Culms[0]);
@@ -239,7 +239,7 @@ namespace Models.PMF.Struct
 				newCulm.Proportion = fraction;
 				newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
 				//newCulm.calcLeafAppearance();
-				newCulm.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea);
+				newCulm.UpdatePotentialLeafSizes(culms.Culms[0], areaCalc as ICulmLeafArea);
 				calcLeafAppearance(newCulm);
 				//newCulm.calculateLeafSizes();
 				culms.Culms.Add(newCulm);
