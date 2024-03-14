@@ -374,6 +374,10 @@ namespace Models.DCAPST
 
             // We've got a Cultivar so apply all of the specified overrides to manipulate this models settings.
             cultivar.Apply(this);
+
+            // Reset DCAPST trigger point because the crop has just been sown again and we don't want to start using DCAPST
+            // until it is triggered again (LAI dependent).
+            dcapsReachedLAITriggerPoint = false;
         }
 
         private static double GetRootShootRatio(IPlant plant)
