@@ -203,7 +203,7 @@
                 "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 12000, 15000",
                 "[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y=0.1, 0.5, 1.0, 0.5",
                 "",
-                "[Leaf].InitialLeaves[1].Area=10",
+                "//[Leaf].InitialLeaves[1].Area=10",
                 "",
                 "[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X=0,0.05,0.15"
               ],
