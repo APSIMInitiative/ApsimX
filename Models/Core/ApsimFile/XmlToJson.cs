@@ -131,6 +131,7 @@ namespace Models.Core.ApsimFile
             "Models.Functions.DemandFunctions.InternodeCohortDemandFunction","Models.Functions.DemandFunctions.BerryFillingRateFunction",
             "Models.Functions.DemandFunctions.TEWaterDemandFunction","Models.Functions.DemandFunctions.FillingRateFunction",
             "Models.Functions.DemandFunctions.AllometricDemandFunction","Models.Functions.DemandFunctions.InternodeDemandFunction",
+            "Models.Functions.DemandFunctions.LAIncrementWithBranching",
             "Models.Functions.DemandFunctions.PartitionFractionDemandFunction","Models.Functions.DemandFunctions.PopulationBasedDemandFunction",
             "Models.Functions.DemandFunctions.PotentialSizeDemandFunction","Models.Functions.DemandFunctions.RelativeGrowthRateDemandFunction",
             "Models.Core.Alias","Models.Core.Replacements",

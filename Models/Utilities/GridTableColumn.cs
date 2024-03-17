@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using System;
-using System.Collections;
-using System.ComponentModel;
 
 namespace Models.Utilities
 {
@@ -102,6 +102,10 @@ namespace Models.Utilities
                             values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                         else if (property.DataType == typeof(double[]))
                             values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
+                        else if (property.DataType == typeof(bool[]))
+                            values = ((bool[])propertyValue).Select(v => v.ToString()).ToArray();
+                        else if (property.DataType == typeof(int[]))
+                            values = ((int[])propertyValue).Select(v => v.ToString()).ToArray();
                         else if (property.DataType == typeof(DateTime[]))
                             values = ((DateTime[])propertyValue).Select(v => v.ToString("yyyy/MM/dd")).ToArray();
 
@@ -132,7 +136,7 @@ namespace Models.Utilities
                                 else if (fieldInfo != null)
                                     val = fieldInfo.GetValue(obj);
                             }
-                                
+
                             if (val is double && double.IsNaN((double)val))
                                 values.Add(string.Empty);
                             else
@@ -146,7 +150,8 @@ namespace Models.Utilities
 
         /// <summary>Setting model data. Called by GUI.</summary>
         /// <param name="data"></param>'
-        public void Set(DataTable data)
+        /// <param name="hasUnits"></param>'
+        public void Set(DataTable data, bool hasUnits)
         {
             if (properties != null)
             {
@@ -158,10 +163,13 @@ namespace Models.Utilities
                     {
                         if (!property.IsReadOnly)
                         {
+                            int startRow = 0;
+                            if (hasUnits)
+                                startRow = 1;
                             if (property.DataType == typeof(string[]))
-                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, 0, CultureInfo.CurrentCulture);
+                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
                             else if (property.DataType == typeof(double[]))
-                                property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, 0, CultureInfo.CurrentCulture);
+                                property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
                             else if (property.DataType == typeof(DateTime[]))
                                 property.Value = DataTableUtilities.GetColumnAsDates(data, Name); //todo: add numRows/startRow option for dates
                         }
@@ -244,7 +252,7 @@ namespace Models.Utilities
                     propInfo.SetValue(obj, value);
                 }
             }
-                    
+
             else if (fieldInfo != null)
             {
                 if (fieldInfo.FieldType == typeof(double))
@@ -260,7 +268,7 @@ namespace Models.Utilities
                     fieldInfo.SetValue(obj, value);
                 }
             }
-                    
+
         }
 
         private bool VariableIsPrimitive(object obj)
