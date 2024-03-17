@@ -35201,7 +35201,7 @@
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
           "GraphsPerPage": 6,
-          "Name": "Leaf1",
+          "Name": "SLAComponents",
           "ResourceName": null,
           "Children": [
             {
