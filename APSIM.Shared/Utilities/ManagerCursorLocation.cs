@@ -42,8 +42,8 @@ namespace Shared.Utilities
             this.TabIndex = 0;
             this.Column = 0;
             this.Line = 0;
-            this.ScrollH = new ScrollerAdjustmentValues(0, 0, 100, 0, 0, 0);
-            this.ScrollV = new ScrollerAdjustmentValues(0, 0, 100, 0, 0, 0);
+            this.ScrollH = new ScrollerAdjustmentValues();
+            this.ScrollV = new ScrollerAdjustmentValues();
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace Shared.Utilities
             this.TabIndex = 0;
             this.Column = column;
             this.Line = line;
-            this.ScrollH = new ScrollerAdjustmentValues(0, 0, 100, 0, 0, 0);
-            this.ScrollV = new ScrollerAdjustmentValues(0, 0, 100, 0, 0, 0);
+            this.ScrollH = new ScrollerAdjustmentValues();
+            this.ScrollV = new ScrollerAdjustmentValues();
         }
     }
 
@@ -69,32 +69,37 @@ namespace Shared.Utilities
         /// <summary>
         /// Value
         /// </summary>
-        public double Value { get; set; }
+        public double Value { get; }
 
         /// <summary>
         /// Lower
         /// </summary>
-        public double Lower { get; set; }
+        public double Lower { get; }
 
         /// <summary>
         /// Upper
         /// </summary>
-        public double Upper { get; set; }
+        public double Upper { get; }
 
         /// <summary>
         /// StepIncrement
         /// </summary>
-        public double StepIncrement { get; set; }
+        public double StepIncrement { get; }
 
         /// <summary>
         /// PageIncrement
         /// </summary>
-        public double PageIncrement { get; set; }
+        public double PageIncrement { get; }
 
         /// <summary>
         /// PageSize
         /// </summary>
-        public double PageSize { get; set; }
+        public double PageSize { get; }
+
+        /// <summary>
+        /// Stores if this object has been set with values or not.
+        /// </summary>
+        public bool Valid { get; }
 
         /// <summary>
         /// Default Constructor
@@ -103,10 +108,11 @@ namespace Shared.Utilities
         {
             this.Value = 0;
             this.Lower = 0;
-            this.Upper = 100;
+            this.Upper = 0;
             this.StepIncrement = 0;
             this.PageIncrement = 0;
             this.PageSize = 0;
+            this.Valid = false;
         }
 
         /// <summary>
@@ -120,6 +126,7 @@ namespace Shared.Utilities
             this.StepIncrement = stepIncrement;
             this.PageIncrement = pageIncrement;
             this.PageSize = pageSize;
+            this.Valid = true;
         }
     }
 

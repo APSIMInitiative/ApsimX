@@ -653,9 +653,10 @@ namespace Models.PMF.Organs
         {
             get
             {
+                double factor = 0.0;
                 if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
-                return 0;
+                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                return Math.Min(1.0,factor);
             }
         }
 
@@ -877,7 +878,7 @@ namespace Models.PMF.Organs
         {
             if (MathUtilities.IsPositive(dmConversionEfficiency.Value()))
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
+                DMDemand.Structural = MathUtilities.Divide(dmDemands.Structural.Value() , dmConversionEfficiency.Value(),0) + remobilisationCost.Value();
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dmConversionEfficiency.Value());
                 DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();

@@ -325,7 +325,7 @@ namespace Models.PMF.Organs
             double dMCE = DMConversionEfficiency.Value();
             if (dMCE > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                DMDemand.Structural = MathUtilities.Divide(dmDemands.Structural.Value() , dMCE,0) + remobilisationCost.Value();
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                 DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE);
                 DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();

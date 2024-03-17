@@ -66,7 +66,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\-225_36025.met",
+          "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -3050,7 +3050,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\-225_36025.met",
+          "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
