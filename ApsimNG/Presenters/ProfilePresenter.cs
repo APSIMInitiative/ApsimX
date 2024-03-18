@@ -74,7 +74,7 @@ namespace UserInterface.Presenters
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
-            int paneWidth = view.MainWidget.ParentWindow.Width; //this shoudl get the width of this view
+            int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
@@ -290,7 +290,6 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            DisconnectEvents();
             gridPresenter.CellChanged += OnCellChanged;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
