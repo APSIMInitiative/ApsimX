@@ -91,6 +91,10 @@ namespace Models
                 cSharpCode = value;
             }
         }
+        
+        /// <summary>Script model compiled for this manager.</summary>
+        [JsonIgnore]
+        public IModel Script { get; } = null;
 
         /// <summary>Gets or sets the code to compile.</summary>
         [JsonIgnore]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using APSIM.Shared.Utilities;
 using UserInterface.EventArguments;
 using Models;
