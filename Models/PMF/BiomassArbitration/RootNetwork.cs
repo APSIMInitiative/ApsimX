@@ -299,7 +299,7 @@ namespace Models.PMF
                         var waterBalance = Z.Soil.FindChild<ISoilWater>();
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
-                        int i = 1;
+                        int i = 0;
                         foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             if (pawc[i] > 0)

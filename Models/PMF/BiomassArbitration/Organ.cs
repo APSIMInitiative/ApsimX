@@ -68,12 +68,12 @@ namespace Models.PMF
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        public IFunction senescenceRateFunction = null;
+        public IFunction senescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        private IFunction detachmentRateFunction = null;
+        private IFunction detachmentRate = null;
 
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -212,11 +212,11 @@ namespace Models.PMF
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
-        public double senescenceRate { get; private set; }
+        public double theSenescenceRate { get; private set; }
 
         /// <summary>the detachment rate for the day</summary>
         [JsonIgnore]
-        public double detachmentRate { get; private set; }
+        public double theDetachmentRate { get; private set; }
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
@@ -404,8 +404,8 @@ namespace Models.PMF
                 }
 
                 //Do initial calculations
-                senescenceRate = senescenceRateFunction.Value();
-                detachmentRate = detachmentRateFunction.Value();
+                theSenescenceRate = senescenceRate.Value();
+                theDetachmentRate = detachmentRate.Value();
                 setNconcs();
                 Carbon.SetSuppliesAndDemands();
             }
@@ -421,9 +421,9 @@ namespace Models.PMF
             if (parentPlant.IsAlive)
             {
                 //Calculate biomass to be lost from senescene
-                if (senescenceRate > 0)
+                if (theSenescenceRate > 0)
                 {
-                    Senesced = OrganNutrientsState.multiply(Live, senescenceRate, Cconc);
+                    Senesced = OrganNutrientsState.multiply(Live, theSenescenceRate, Cconc);
                     Live = OrganNutrientsState.subtract(Live, Senesced, Cconc);
 
                     //Catch the bits that were reallocated and add the bits that wernt into dead.
@@ -447,11 +447,11 @@ namespace Models.PMF
                 Live = OrganNutrientsState.add(Live, Allocated, Cconc);
 
                 // Do detachment
-                if ((detachmentRate > 0) && (Dead.Wt > 0))
+                if ((theDetachmentRate > 0) && (Dead.Wt > 0))
                 {
-                    if (Dead.Weight.Total * (1.0 - detachmentRate) < 0.00000001)
-                        detachmentRate = 1.0;  // remaining amount too small, detach all
-                    Detached = OrganNutrientsState.multiply(Dead, detachmentRate, Cconc);
+                    if (Dead.Weight.Total * (1.0 - theDetachmentRate) < 0.00000001)
+                        theDetachmentRate = 1.0;  // remaining amount too small, detach all
+                    Detached = OrganNutrientsState.multiply(Dead, theDetachmentRate, Cconc);
                     Dead = OrganNutrientsState.subtract(Dead, Detached, Cconc);
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }

@@ -88,6 +88,44 @@ namespace Models.PMF
         /// <summary> The amount of carbon fixed by photosynthesis</summary>
         public double TotalCReAllocationSupply { get { return Carbon.TotalReAllocationSupply; } }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        public double FN
+        {
+            get
+            {
+                double fn = 1.0;
+                if (Nitrogen != null)
+                    fn = Math.Min(1, MathUtilities.Divide(Nitrogen.TotalPlantSupply, Nitrogen.TotalPlantDemand, 1));
+                return fn;
+            }
+        }
+
+        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gC/m2")]
+        public double UnallocatedC { get; private set; }
+
+        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double UnallocatedN { get; private set; }
+
+        /// <summary>The amount of C not allocated because supply was insufficient to maintain minimum N conc</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double CUnallocatedDueToNLimitation { get; private set; }
+
+        /// <summary>The amount of C not allocated because supply was insufficient to maintain minimum N conc</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double CFixationDownRegulationToNLimitation { get; private set; }
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -286,7 +324,7 @@ namespace Models.PMF
                         totalAllocated += allocation.Total;
                     }
                 }
-                double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
+                double RemainingDemand = Math.Max(0,PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated);
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {

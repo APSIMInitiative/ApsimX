@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
 
@@ -57,7 +58,8 @@ namespace Models.PMF
 
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
             //cleaner method would probably be to use classes
-            var nutrientName = this.Parent.Parent.Name;
+            var nutrientName = this.FindAllAncestors<OrganNutrientDelta>().FirstOrDefault().Name;
+            //var nutrientName = this.Parent.Parent.Name;
             if (nutrientName == "Nitrogen")
             {
                 switch (this.Name)
@@ -88,10 +90,7 @@ namespace Models.PMF
                         break;
                 };
             }
-            else
-            {
-                //throw exception for unhandled nutrient as parent?
-            }
+            if (CalcDeficit == null) throw new Exception("Naming error in "+parentOrgan.Name+" Deficit Demand Function. Must be named Structural Or Metabolic Or Storage and Must have an ansestor of OrganNutrientDelta type");
         }
 
         private double calcStructuralNitrogenDemand()
