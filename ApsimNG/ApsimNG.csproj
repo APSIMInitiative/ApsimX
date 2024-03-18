@@ -20,7 +20,8 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
+    <!-- DebugType changed to portable for vs code as described here: https://github.com/dotnet/vscode-csharp/wiki/Portable-PDBs#net-cli-projects-projectjson  -->
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <SelfContained>false</SelfContained>
   </PropertyGroup>

@@ -181,35 +181,38 @@ namespace UserInterface.Views
 
         private void OnModelUpdated(object sender, EventArgs e)
         {
-            if ((sender as PlotModel).Legends.Count() > 0 && (sender as PlotModel).Series.First() is INameableSeries)
+            if ((sender as PlotModel).Series.Count > 0)
             {
-                // Get the series in the changed model.
-                // Get the series with false 'isVisible' property.
-                List<string> reselectedSeriesNames = new();
-                List<string> newUnselectedSeriesNames = new();
-                foreach (INameableSeries series in (sender as PlotModel).Series)
+                if ((sender as PlotModel).Legends.Count() > 0 && (sender as PlotModel).Series.First() is INameableSeries)
                 {
-                    bool seriesNamePreviouslyUnselected = false;
-                    List<string> matchingNames = new();
+                    // Get the series in the changed model.
+                    // Get the series with false 'isVisible' property.
+                    List<string> reselectedSeriesNames = new();
+                    List<string> newUnselectedSeriesNames = new();
+                    foreach (INameableSeries series in (sender as PlotModel).Series)
+                    {
+                        bool seriesNamePreviouslyUnselected = false;
+                        List<string> matchingNames = new();
 
-                    if (UnselectedSeriesNames.Any())
-                        matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(series.Name)).ToList();
-                    if (matchingNames.Any())
-                        seriesNamePreviouslyUnselected = true;
-                    if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
-                        newUnselectedSeriesNames.Add(series.Name);
-                    else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
-                        reselectedSeriesNames.Add(series.Name);
+                        if (UnselectedSeriesNames.Any())
+                            matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(series.Name)).ToList();
+                        if (matchingNames.Any())
+                            seriesNamePreviouslyUnselected = true;
+                        if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
+                            newUnselectedSeriesNames.Add(series.Name);
+                        else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                            reselectedSeriesNames.Add(series.Name);
+                    }
+                    UnselectedSeriesNames = newUnselectedSeriesNames;
+                    LegendPosition legendPosition;
+                    LegendOrientation legendOrientation;
+                    Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
+                    Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                    // Reformat the legend without the matching unselectedSeries.
+    #pragma warning disable CS0612 // Type or member is obsolete
+                    FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
+    #pragma warning restore CS0612 // Type or member is obsolete
                 }
-                UnselectedSeriesNames = newUnselectedSeriesNames;
-                LegendPosition legendPosition;
-                LegendOrientation legendOrientation;
-                Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
-                Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
-                // Reformat the legend without the matching unselectedSeries.
-#pragma warning disable CS0612 // Type or member is obsolete
-                FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
-#pragma warning restore CS0612 // Type or member is obsolete
             }
         }
 
