@@ -55,12 +55,6 @@ namespace Models.PMF
         [Link]
         public Plant parentPlant = null;
 
-        /// <summary>
-        /// clock
-        /// </summary>
-        [Link]
-        public Clock clock = null;
-
         /// <summary>The surface organic matter model</summary>
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
@@ -237,6 +231,11 @@ namespace Models.PMF
         [JsonIgnore]
         [Units("g/m^2")]
         public double Wt { get; private set; }
+
+        /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double C { get; private set; }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
