@@ -433,7 +433,7 @@ namespace Models.Core
                 // Check if property
                 Type declaringType;
                 if (properties.Any())
-                    declaringType = properties.Last().DataType;
+                    declaringType = properties.Last().Value.GetType();
                 else
                     declaringType = relativeToObject.GetType();
                 propertyInfo = declaringType.GetProperty(name);
