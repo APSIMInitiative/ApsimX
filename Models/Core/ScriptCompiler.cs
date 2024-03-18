@@ -27,8 +27,6 @@ namespace Models.Core
         private const string tempFileNamePrefix = "APSIM";
         [NonSerialized]
 
-
-
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
 
         /// <summary>Constructor.</summary>
@@ -81,13 +79,17 @@ namespace Models.Core
                     string modifiedCode = code;
                     if (m.Success)
                     {
-                        //remove existing class name
-                        int position = modifiedCode.IndexOf(m.Groups[2].Value);
-                        modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
-                        //add unique class name in
-                        string path = StringUtilities.CleanStringOfSymbols(model.FullPath);                        
-                        string newClassName = $"Script{path}";
-                        modifiedCode = modifiedCode.Insert(position, newClassName);
+                        int position;
+                        //only do this if the script class has not been renamed
+                        if (m.Groups[2].Value.CompareTo("Script") == 0) {
+                            //remove existing class name
+                            position = modifiedCode.IndexOf(m.Groups[2].Value);
+                            modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
+                            //add unique class name in
+                            string path = StringUtilities.CleanStringOfSymbols(model.FullPath);                        
+                            string newClassName = $"Script{path}";
+                            modifiedCode = modifiedCode.Insert(position, newClassName);
+                        }
                         //Add IScriptBase parent to class so we can type check it
                         position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
                         modifiedCode = modifiedCode.Insert(position, ", IScript");
