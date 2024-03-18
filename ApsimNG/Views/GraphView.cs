@@ -2016,44 +2016,6 @@ namespace UserInterface.Views
             {
                 e.Handled = false;
                 inRightClick = false;
-
-                //Change the cursor when hovering over an axis so users know to zoom
-                //The axis don't have events, so we need to measure them manually to do this.
-                bool showV = false;
-                bool showH = false;
-                double x = e.Position.X;
-                double y = e.Position.Y;
-                foreach (OxyPlot.Axes.Axis ax in plot1.Model.Axes)
-                {
-                    if (ax.Position == OxyPlot.Axes.AxisPosition.Top)
-                    {
-                        if (y > plot1.Model.TitleArea.Height && y < plot1.Model.Height - plot1.Model.PlotArea.Height - plot1.Model.ActualPlotMargins.Bottom)
-                            showH = true;
-                    }
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Bottom)
-                    {
-                        if (y > (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height) - plot1.Model.ActualPlotMargins.Bottom &&
-                            y < (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height))
-                            showH = true;
-                    }
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Left)
-                    {
-                        if (x < plot1.Model.ActualPlotMargins.Left)
-                            showV = true;
-                    }
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Right)
-                    {
-                        if (x > plot1.Model.PlotAndAxisArea.Width - plot1.Model.ActualPlotMargins.Right &&
-                            x < plot1.Model.PlotAndAxisArea.Width)
-                            showV = true;
-                    }
-                }
-                if (showV && !showH)
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.SbVDoubleArrow);
-                else if (!showV && showH)
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.SbHDoubleArrow);
-                else
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Arrow);
             }
             catch (Exception err)
             {
