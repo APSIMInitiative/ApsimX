@@ -20,6 +20,9 @@ namespace Models.Utilities
         /// <summary>A collection of properties that need to be kept in sync i.e. when one changes they all get changed. e.g. 'Depth'</summary>
         private IEnumerable<VariableProperty> properties { get; }
 
+        /// <summary>Metadata about the property.</summary>
+        private readonly VariableProperty metadata;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -27,9 +30,11 @@ namespace Models.Utilities
         /// <param name="property">The PropertyInfo instance</param>
         /// <param name="readOnly">Is the column readonly?</param>
         /// <param name="units">The units of the column.</param>
-        public GridTableColumn(string name, object property, bool readOnly = false, string units = null)
+        /// <param name="metadata">Metadata about the property.</param>
+        public GridTableColumn(string name, object property, bool readOnly = false, string units = null, VariableProperty metadata = null)
         {
             Name = name;
+            this.metadata = metadata;
 
             //This is a merger of the old DataTables and the TabularData systems.
             //If an property array is provided, it uses the VariableProperty system
@@ -49,9 +54,6 @@ namespace Models.Utilities
                 this.units = properties.First().Units;
         }
 
-        /// <summary>Name of column.</summary>
-        public string Name { get; }
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -63,6 +65,9 @@ namespace Models.Utilities
             this.properties = properties;
         }
 
+        /// <summary>Name of column.</summary>
+        public string Name { get; }
+
         /// <summary>Column units.</summary>
         public string Units
         {
@@ -71,6 +76,24 @@ namespace Models.Utilities
             {
                 properties.First().Units = value;
                 units = value;
+            }
+        }
+
+        /// <summary>Which rows of this column are calculated?</summary>
+        public List<bool> IsCalculated 
+        { 
+            get
+            {
+                var metadataValues = metadata?.Value as string[];
+                if (metadataValues == null)
+                    return null;
+
+                return metadataValues.Select(m => m == "Calculated" || m == "Estimated").Prepend(false).Prepend(false).ToList();
+            }
+            set
+            {
+                if (value != null)
+                    metadata.Value = value.Select(v => v ? "Calculated" : null).ToArray();
             }
         }
 
@@ -169,7 +192,29 @@ namespace Models.Utilities
                             if (property.DataType == typeof(string[]))
                                 property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
                             else if (property.DataType == typeof(double[]))
+                            {
+                                double[] modified = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                                if (metadata?.Value != null)
+                                {
+                                    if (modified == null)
+                                        metadata.Value = null;
+                                    else
+                                    {
+                                        // Detect if values have been changed and updated metadata accordingly.
+                                        string[] metadataValues = metadata.Value as string[];
+                                        double[] original = property.Value as double[];
+                                        if (original != null)
+                                            for (int i = 0; i < original.Length; i++)
+                                            {
+                                                if (!MathUtilities.FloatsAreEqual(original[i], modified[i], 0.001))
+                                                    metadataValues[i] = null;
+                                            }
+        
+                                        metadata.Value = metadataValues;
+                                    }
+                                }
                                 property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                            }
                             else if (property.DataType == typeof(DateTime[]))
                                 property.Value = DataTableUtilities.GetColumnAsDates(data, Name); //todo: add numRows/startRow option for dates
                         }
