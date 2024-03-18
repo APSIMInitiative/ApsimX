@@ -25,9 +25,12 @@ namespace Models.Core
         private static object compilingScriptLock = new object();
 
         private const string tempFileNamePrefix = "APSIM";
+        
         [NonSerialized]
-
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
+
+        [NonSerialized]
+        private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
         /// <summary>Constructor.</summary>
         public ScriptCompiler()
@@ -80,15 +83,32 @@ namespace Models.Core
                     if (m.Success)
                     {
                         int position;
+                        string className = m.Groups[2].Value;
+                        string path = model.FullPath;
                         //only do this if the script class has not been renamed
-                        if (m.Groups[2].Value.CompareTo("Script") == 0) {
+                        if (className.CompareTo("Script") == 0) {
                             //remove existing class name
-                            position = modifiedCode.IndexOf(m.Groups[2].Value);
-                            modifiedCode = modifiedCode.Remove(position, m.Groups[2].Value.Length);
+                            position = modifiedCode.IndexOf(className);
+                            modifiedCode = modifiedCode.Remove(position, className.Length);
                             //add unique class name in
-                            string path = StringUtilities.CleanStringOfSymbols(model.FullPath);                        
-                            string newClassName = $"Script{path}";
+                            string newClassName = $"Script{StringUtilities.CleanStringOfSymbols(path)}";
                             modifiedCode = modifiedCode.Insert(position, newClassName);
+                        } else {
+                            //we have a custom script name, make sure we haven't compiled with this before
+                            foreach ((string, string) name in runtimeClasses) {
+                                if (name.Item1.CompareTo(className) == 0)
+                                {
+                                    //check if the code from the matching class is this code
+                                    if (name.Item2.CompareTo(path) != 0) {
+                                        //check if the model from the other path still exists (model may have moved)
+                                        IModel matchingClass = model.FindAncestor<Simulations>().Locator.Get(name.Item2) as IModel;
+                                        if (matchingClass != null)
+                                            throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
+                                    }
+                                }
+                            }
+                            runtimeClasses.Remove((className, path));
+                            runtimeClasses.Add((className, path));
                         }
                         //Add IScriptBase parent to class so we can type check it
                         position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
