@@ -153,7 +153,7 @@ namespace Models.PMF
 
         private void AllocationMade()
         {
-            FW = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
+            Fw = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
         }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
@@ -219,7 +219,7 @@ namespace Models.PMF
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        public double FW { get; private set; }
+        public double Fw { get; private set; }
 
 
         /// <summary>Clears this instance.</summary>
@@ -235,6 +235,7 @@ namespace Models.PMF
             WaterAllocation = 0.0;
             WaterDemand = 0.0;
             _PotentialEP = 0.0;
+            LightProfile = new CanopyEnergyBalanceInterceptionlayerType[0];
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -301,6 +302,14 @@ namespace Models.PMF
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        /// <summary>
+        /// Called when canopy is reset but crop not ended.  Used for deciduious crops
+        /// </summary>
+        public void resetCanopy()
         {
             Clear();
         }

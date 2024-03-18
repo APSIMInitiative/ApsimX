@@ -68,12 +68,7 @@ namespace Models.PMF
 
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
-
-        /// <summary>Name of the organ and nutrient represented by this instance</summary>
-        /// 
-        [JsonIgnore]
-        public string OrganAndNutrientNames
-        { get { return organ.Name + this.Name; } }
+        /// <summary>The dry matter potentially being allocated</summary>
 
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
@@ -142,7 +137,7 @@ namespace Models.PMF
             ConcentrationOrFraction = concentrationOrFractionFunction.ConcentrationsOrFractionss;
             if (this.Name == "Carbon")
                 if ((ConcentrationOrFraction.Total > 1.01) || (ConcentrationOrFraction.Total < 0.99))
-                    throw new Exception("Concentrations of Carbon in "+organ.Name+" must add to 1 to keep demands entire");
+                    throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
@@ -151,7 +146,7 @@ namespace Models.PMF
             Clear();
             setConcentrationsOrProportions();
             Supplies.ReAllocation = ThrowIfNegative(supplyFunctions.ReAllocation);
-            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRateToday);
+            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRate);
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
             Supplies.Uptake = ThrowIfNegative(supplyFunctions.Uptake);
 

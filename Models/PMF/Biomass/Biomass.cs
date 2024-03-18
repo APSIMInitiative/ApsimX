@@ -192,18 +192,6 @@ namespace Models.PMF
         public Biomass() { }
 
         /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
-        public Biomass(double structuralWt, double metabolicWt, double storageWt,
-                       double structuralN, double metabolicN, double storageN) 
-        {
-            _StructuralWt = structuralWt;
-            _StorageWt = storageWt;
-            _MetabolicWt = metabolicWt;
-            _StructuralN = structuralN;
-            _StorageN = storageN;
-            _MetabolicN = metabolicN;
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         /// <param name="from">From.</param>
         public Biomass(Biomass from)
         {
@@ -214,6 +202,20 @@ namespace Models.PMF
             _StorageN = from.StorageN;
             _MetabolicN = from.MetabolicN;
         }
+
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class from the OrganNutrientState passed in</summary>
+        /// <param name="ons">ons.</param>
+        public Biomass(OrganNutrientsState ons)
+        {
+            StructuralWt = ons.Weight.Structural;
+            MetabolicWt = ons.Weight.Metabolic;
+            StorageWt = ons.Weight.Storage;
+            StructuralN = ons.Nitrogen.Structural;
+            MetabolicN = ons.Nitrogen.Metabolic;
+            StorageN = ons.Nitrogen.Storage;
+        }
+
+
 
         /// <summary>Clears this instance.</summary>
         virtual public void Clear()
