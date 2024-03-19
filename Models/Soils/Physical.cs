@@ -807,7 +807,7 @@ namespace Models.Soils
                     if (MathUtilities.ValuesInArray(ec))
                     {
                         crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                        ec = SoilUtilities.MapConcentration(ec, StandardThickness, Thickness, ec.Last());
+                        ec = SoilUtilities.MapConcentration(ec, chemical.Thickness, Thickness, ec.Last());
                         for (int i = 0; i < Thickness.Length; i++)
                             crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }
