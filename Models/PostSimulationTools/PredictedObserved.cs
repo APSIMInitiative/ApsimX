@@ -32,6 +32,9 @@ namespace Models.PostSimulationTools
         [Link]
         private IDataStore dataStore = null;
 
+        [Link]
+        private Simulation simulation = null;
+
         /// <summary> First field name used for match.</summary>
         private string fieldNameUsedForMatch = null;
         /// <summary> Second field name used for match.</summary>
@@ -312,7 +315,7 @@ namespace Models.PostSimulationTools
             }
             catch (Exception err)
             {
-                throw new Exception($"Error in PredictedObserved tool {Name}", err);
+                throw new Exception($"Error in PredictedObserved tool {Name}. File: {simulation.FileName}", err);
             }
         }
 
