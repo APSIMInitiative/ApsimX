@@ -6,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -194,26 +195,14 @@ namespace Models.Utilities
                             else if (property.DataType == typeof(double[]))
                             {
                                 double[] modified = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
-                                if (metadata?.Value != null)
+                                if (metadata != null)
                                 {
-                                    if (modified == null)
-                                        metadata.Value = null;
-                                    else
-                                    {
-                                        // Detect if values have been changed and updated metadata accordingly.
-                                        string[] metadataValues = metadata.Value as string[];
-                                        double[] original = property.Value as double[];
-                                        if (original != null)
-                                            for (int i = 0; i < original.Length; i++)
-                                            {
-                                                if (!MathUtilities.FloatsAreEqual(original[i], modified[i], 0.001))
-                                                    metadataValues[i] = null;
-                                            }
-        
-                                        metadata.Value = metadataValues;
-                                    }
+                                    double[] original = property.Value as double[];                                
+                                    string[] originalMetadata = metadata.Value as string[];
+                                    string[] modifiedMetadata = SoilUtilities.DetermineMetadata(original, originalMetadata, modified, null);
+                                    metadata.Value = modifiedMetadata;
                                 }
-                                property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                                    property.Value = modified;
                             }
                             else if (property.DataType == typeof(DateTime[]))
                                 property.Value = DataTableUtilities.GetColumnAsDates(data, Name); //todo: add numRows/startRow option for dates

@@ -242,35 +242,50 @@ namespace Models.Soils
         /// <summary>Called to infill data if necessary.</summary>
         public void InFill()
         {
-            // Temporary testing code next 4 lines.
-            if (Rocks == null)
-            {
-                Rocks = Enumerable.Repeat(10.0, Thickness.Length).ToArray();
-                RocksMetadata = Enumerable.Repeat("Calculated", Thickness.Length).ToArray();
-            }
+            // Add soil/crop parameterisations is on a vertosol soil.
             AddPredictedCrops();
+
+            // Fill in missing XF values.
             foreach (var crop in FindAllChildren<SoilCrop>())
             {
-                if (crop.XF == null)
-                {
-                    crop.XF = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-                    crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", Thickness.Length);
-                }
                 if (crop.KL == null)
                     FillInKLForCrop(crop);
 
-                CheckCropForMissingValues(crop);
+                var (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.LL, crop.LLMetadata, Thickness.Length, (i) => LL15[i]);
+                crop.LL = cropValues;
+                crop.LLMetadata = cropMetadata;
+
+                (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.KL, crop.KLMetadata, Thickness.Length, (i) => 0.06);
+                crop.KL = cropValues;
+                crop.KLMetadata = cropMetadata;
+
+                (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.XF, crop.XFMetadata, Thickness.Length, (i) => 1.0);
+                crop.XF = cropValues;
+                crop.XFMetadata = cropMetadata;
 
                 // Modify wheat crop for sub soil constraints.
                 if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
                     ModifyKLForSubSoilConstraints(crop);
             }
 
-            // Make sure there are the correct number of KS values.
-            if (KS != null && KS.Length > 0)
+            // Fill in missing particle size values.
+            var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeClay, ParticleSizeClayMetadata, Thickness.Length, (i) => 30.0);
+            ParticleSizeClay = values;
+            ParticleSizeClayMetadata = metadata;
+
+            // Fill in missing rocks.
+            (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) => 
             {
-                KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);            
-            }
+                double particleDensity = 2.65;
+                double totalPorosity = (1 - BD[i] / particleDensity) * 0.93;
+                double rocksFraction = 1 - SAT[i] / totalPorosity;
+                if (rocksFraction > 0.1)
+                    return rocksFraction;
+                else
+                    return 0;
+            });
+            Rocks = values;
+            RocksMetadata = metadata;
         }
 
         private Water WaterNode
@@ -370,21 +385,6 @@ namespace Models.Soils
                 values.Add(array[row, col]);
 
             return values.ToArray();
-        }
-
-        /// <summary>Checks the crop for missing values.</summary>
-        /// <param name="crop">The crop.</param>
-        private void CheckCropForMissingValues(SoilCrop crop)
-        {
-            for (int i = 0; i < Thickness.Length; i++)
-            {
-                if (crop.LL != null && double.IsNaN(crop.LL[i]))
-                    crop.LL[i] = LL15[i];
-                if (crop.KL != null && double.IsNaN(crop.KL[i]))
-                    crop.KL[i] = 0.06;
-                if (crop.XF != null && double.IsNaN(crop.XF[i]))
-                    crop.XF[i] = 1;
-            }
         }
 
         private static string[] cropNames = {"Wheat", "Oats",
