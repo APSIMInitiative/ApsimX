@@ -77,7 +77,11 @@ namespace Models
 
         /// <summary>Which child is the compiled script model.</summary>
         [JsonIgnore]
-        public IModel ScriptModel { get; private set; } = null;
+        private IModel ScriptModel { get; set; } = null;
+
+        /// <summary>Script model compiled for this manager.</summary>
+        [JsonIgnore]
+        public IModel Script { get {return ScriptModel;} }
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
@@ -91,10 +95,6 @@ namespace Models
                 cSharpCode = value;
             }
         }
-        
-        /// <summary>Script model compiled for this manager.</summary>
-        [JsonIgnore]
-        public IModel Script { get; } = null;
 
         /// <summary>Gets or sets the code to compile.</summary>
         [JsonIgnore]
@@ -194,7 +194,6 @@ namespace Models
 
                     //add new script model
                     var newModel = results.Instance as IModel;
-                    newModel.Name = "Script";
                     if (newModel != null)
                     {
                         SuccessfullyCompiledLast = true;
