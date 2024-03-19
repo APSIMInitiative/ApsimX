@@ -672,7 +672,7 @@ namespace Models.CLEM.Activities
         {
             if (manureStore is not null)
             {
-                // sort by animal location to ensure coreect deposit location.
+                // sort by animal location to ensure correct deposit location.
                 foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
                 {
                     manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));

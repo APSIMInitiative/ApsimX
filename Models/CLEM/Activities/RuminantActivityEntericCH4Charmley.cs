@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [Description("Produces enteric methane emissions based on Charmley et al equations")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantEntericCH4Charmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantEntericCH4Charmley: CLEMRuminantActivityBase
+    public class RuminantActivityEntericCH4Charmley: CLEMRuminantActivityBase
     {
         [Link]
         private CLEMEvents events = null;
