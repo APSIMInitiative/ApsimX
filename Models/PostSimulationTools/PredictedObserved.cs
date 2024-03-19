@@ -312,7 +312,7 @@ namespace Models.PostSimulationTools
             }
             catch (Exception err)
             {
-                var simulation = FindAncestor<Simulation>();
+                var simulation = (dataStore as DataStore).Parent as Simulation;
                 throw new Exception($"Error in PredictedObserved tool {Name}. File: {simulation.FileName}", err);
             }
         }
