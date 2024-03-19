@@ -215,9 +215,9 @@ namespace Models.Core.Apsim710File
             XmlNode child = systemNode.FirstChild;
             while (child != null)
             {
-                if (child.Name == "simulation")
+                if (child.Name.ToLower() == "simulation")
                     this.AddComponent(child, ref destParent);
-                else if (child.Name == "folder")
+                else if (child.Name.ToLower() == "folder")
                 {
                     XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
