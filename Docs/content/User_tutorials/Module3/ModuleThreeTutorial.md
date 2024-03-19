@@ -2,7 +2,7 @@
 title: "Module 3: The Nitrogen Cycle"
 draft: false
 ---
-<p style="font-size: 10px">Created 01/03/2023</p>
+<p style="font-size: 10px">Created 01/03/2023 - Last updated 05/03/2023</p>
 
 <em style="color: red"> IMPORTANT NOTE: It is highly recommended that you upgrade your APSIM Next Gen version to at least version 2023.2.7164.0 or later.</em>
 
@@ -68,4 +68,4 @@ Make the depth equal to the entire soil profile (check Water node for the profil
 
 *Congratulations on finishing the 3rd module!*
 
-
+<i><span style="color:red;">Note</span>: If you found any incorrect/outdated information in this tutorial, please let us know on GitHub by <a href="https://www.github.com/APSIMInitiative/Apsimx/issues/new/choose/">submitting an issue.</a></i>

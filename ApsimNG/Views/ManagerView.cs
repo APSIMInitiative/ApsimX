@@ -50,15 +50,17 @@ namespace UserInterface.Views
         /// </summary>
         public void OnPageChanged(object sender, EventArgs e)
         {
-            //if we are switching from the script page, save the position
-            if (this.TabIndex == TAB_PROPERTY)
+            
+            if (cursor != null)
             {
-                cursor = scriptEditor.Location;
-            }
-            else if (cursor != null)
-            {
-                scriptEditor.Location = cursor;
-                scriptEditor.Refresh();
+                if (this.TabIndex == TAB_PROPERTY) //if we are switching from the script page, save the position
+                {
+                    cursor = scriptEditor.Location;
+                }
+                else
+                {
+                    scriptEditor.Location = cursor;
+                }
             }
         }
 
@@ -67,24 +69,22 @@ namespace UserInterface.Views
         /// </summary>
         public void OnDrawn(object sender, EventArgs e)
         {
-            //We can move the scrollbar until everything is displayed on screen,
-            //So we skip the first two draw calls and move it on the 3rd.
-            if (drawCount < 2)
+            //Wait either 20 frames or until the scrollbars match in size
+            //This is required because the text is loaded in over time from a buffer, so big files
+            //can take a while to completely load in. If we set the scrollbar too early, it scrolls
+            //to the wrong position as more text is loaded.
+            if (cursor == null)
+                cursor = CursorLocation;
+
+            if (drawCount < 20 && !(scriptEditor.Location.ScrollV.Upper == cursor.ScrollV.Upper && scriptEditor.Location.ScrollH.Upper == cursor.ScrollH.Upper))
             {
                 drawCount += 1;
-            }
-            else if (cursor != null && this.TabIndex == TAB_SCRIPT)
-            {
-                //We then only do this once and disable the event
-                notebook.Drawn -= OnDrawn;
-                scriptEditor.Location = cursor;
-                scriptEditor.Refresh();
             } 
-            else if (this.TabIndex == TAB_PROPERTY)
-            { //on the other tab, disable the event
+            else
+            {
                 notebook.Drawn -= OnDrawn;
-                TabIndex = 1; //REMOVE THIS WHEN BUG IS FOUND - AP
-                TabIndex = 0;
+                if (cursor != null && this.TabIndex == TAB_SCRIPT)
+                    scriptEditor.Location = cursor;
             }
         }
 

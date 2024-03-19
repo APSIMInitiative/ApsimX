@@ -1269,7 +1269,30 @@ namespace Models.AgPasture
         private double myDefoliatedFraction = 0.0;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
-        public double DefoliatedDigestibility { get; private set; }
+        public double DefoliatedDigestibility 
+        { 
+            get 
+            {
+                double dmRemoved = 0;
+                foreach (var organ in AboveGroundOrgans)
+                    dmRemoved += organ.Tissue.Sum(tissue => tissue.DMRemoved);
+                if (dmRemoved > 0)
+                {
+                    double digestibleMaterial = 0;
+                    foreach (var organ in AboveGroundOrgans)
+                    {
+                        foreach (var tissue in organ.LiveTissue)
+                        {
+                            digestibleMaterial += tissue.Digestibility * tissue.DMRemoved;
+                        }
+                        digestibleMaterial += organ.DeadTissue.Digestibility * organ.DeadTissue.DMRemoved;
+                    }
+                    return digestibleMaterial / dmRemoved;
+                }
+                else
+                    return 0;
+            }
+        }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -2195,9 +2218,9 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable + Stolon.DMTotalHarvestable,
                     N = Leaf.NTotalHarvestable + Stem.NTotalHarvestable + Stolon.NTotalHarvestable,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.DMTotal +
-                                                         Stem.StandingDigestibility * Stem.DMTotal +
-                                                         Stolon.StandingDigestibility * Stolon.DMTotal,
+                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.NTotalHarvestable +
+                                                         Stem.StandingDigestibility * Stem.NTotalHarvestable +
+                                                         Stolon.StandingDigestibility * Stolon.NTotalHarvestable,
                                                          Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable +
                                                          Stolon.DMTotalHarvestable, 0.0)
                 };
@@ -2623,7 +2646,6 @@ namespace Models.AgPasture
         internal void ClearDailyTransferredAmounts()
         {
             // reset variables for whole plant
-            DefoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
             dGrowthPot = 0.0;
@@ -3739,12 +3761,6 @@ namespace Models.AgPasture
                         }
                     }
                 }
-
-                // Get digestibility of DM being harvested (do this before updating pools)
-                double greenDigestibility = (Leaf.DigestibilityLive * fracRemoving[0]) + (Stem.DigestibilityLive * fracRemoving[1])
-                                            + (Stolon.DigestibilityLive * fracRemoving[2]);
-                double deadDigestibility = (Leaf.DigestibilityDead * fracRemoving[3]) + (Stem.DigestibilityDead * fracRemoving[4]) + (Stolon.DigestibilityDead * fracRemoving[5]);
-                DefoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
                 Leaf.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0)),
