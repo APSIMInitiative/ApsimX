@@ -6,26 +6,14 @@
     <BaseOutputPath>../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
     <Platform Condition="'$(Platform)'==''">Any CPU</Platform>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <WarningsAsErrors />
-    <NoWarn>CS1591,CS1572</NoWarn>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CS1591,CS1572</NoWarn>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <SelfContained>false</SelfContained>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <SelfContained>false</SelfContained>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   
