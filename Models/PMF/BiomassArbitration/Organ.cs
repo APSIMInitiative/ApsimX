@@ -230,31 +230,67 @@ namespace Models.PMF
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double Wt { get; private set; }
+        public double Wt
+        {
+            get
+            {
+                return Live.Wt + Dead.Wt;
+            }
+        }
 
         /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double C { get; private set; }
+        public double C 
+        { 
+            get
+            {
+                return Live.Carbon.Total + Dead.Carbon.Total;
+            }
+        }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double N { get; private set; }
+        public double N
+        {
+            get
+            {
+                return Live.Nitrogen.Total + Dead.Nitrogen.Total;
+            }
+        }
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc { get; private set; }
+        public double Nconc
+        {
+            get
+            {
+                return Wt > 0.0 ? N / Wt : 0.0;
+            }
+        }
 
         /// <summary>
         /// Gets the nitrogen factor.
         /// </summary>
-        public double Fn { get; private set; }
+        public double Fn
+        {
+            get
+            {
+                return Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
+            }
+        }
 
         /// <summary>
         /// Gets the metabolic N concentration factor.
         /// </summary>
-        public double FNmetabolic { get; private set; }
+        public double FNmetabolic
+        {
+            get
+            {
+                return (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
+            }
+        }
 
 
         ///6. Public methods
@@ -374,8 +410,6 @@ namespace Models.PMF
 
             Live = new OrganNutrientsState(initC, initN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
             Dead = new OrganNutrientsState();
-
-            UpdateProperties();
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -452,16 +486,14 @@ namespace Models.PMF
                         theDetachmentRate = 1.0;  // remaining amount too small, detach all
                     Detached = OrganNutrientsState.multiply(Dead, theDetachmentRate, Cconc);
                     Dead = OrganNutrientsState.subtract(Dead, Detached, Cconc);
-                    surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
+                    if (RootNetworkObject == null)
+                        surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Remove respiration
                 Respired = new OrganNutrientsState(new NutrientPoolsState(respiration.CalculateLosses()),
                     new NutrientPoolsState(), new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
                 Live = OrganNutrientsState.subtract(Live, Respired, Cconc);
-
-
-                UpdateProperties();
 
                 if (RootNetworkObject != null)
                 {
@@ -522,21 +554,10 @@ namespace Models.PMF
                 Live = new OrganNutrientsState();
                 Detached = OrganNutrientsState.add(Detached, Dead, Cconc);
                 Dead = new OrganNutrientsState();
-                UpdateProperties();
                 surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();
-        }
-
-        /// <summary> Update properties </summary>
-        private void UpdateProperties()
-        {
-            Wt = Live.Wt + Dead.Wt;
-            N = Live.Nitrogen.Total + Dead.Nitrogen.Total;
-            Nconc = Wt > 0.0 ? N / Wt : 0.0;
-            Fn = Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
-            FNmetabolic = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
         }
 
         private void setNconcs()
