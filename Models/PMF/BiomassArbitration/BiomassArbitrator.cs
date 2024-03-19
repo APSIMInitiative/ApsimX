@@ -49,6 +49,9 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         protected IZone zone = null;
 
+        [Link] 
+        private Clock clock = null;
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
         private double tolerence = 1e-12;
@@ -291,18 +294,18 @@ namespace Models.PMF
                 double checkN = StartN;
                 foreach (Organ o in PlantOrgans)
                 {
-                    checkC += (o.Carbon.SuppliesAllocated.Fixation + o.Carbon.SuppliesAllocated.Uptake - o.Detached.C);
-                    checkN += (o.Nitrogen.SuppliesAllocated.Fixation + o.Nitrogen.SuppliesAllocated.Uptake - o.Detached.N);
+                    checkC += (o.Carbon.SuppliesAllocated.Fixation + o.Carbon.SuppliesAllocated.Uptake - o.Detached.C - o.LiveRemoved.C - o.DeadRemoved.C);
+                    checkN += (o.Nitrogen.SuppliesAllocated.Fixation + o.Nitrogen.SuppliesAllocated.Uptake - o.Detached.N - o.LiveRemoved.N - o.DeadRemoved.N);
                     endC += o.C;
                     endN += o.N;
                 }
 
                 double cdiff = Math.Abs(checkC - endC);
                 if (cdiff > 1e-12)
-                    throw new Exception("Mass balance violation in Carbon");
+                    throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
                 double ndiff = Math.Abs(checkN - endN);
                 if (ndiff > 1e-12)
-                    throw new Exception("Mass balance violation in Nitrogen");
+                    throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }
 
