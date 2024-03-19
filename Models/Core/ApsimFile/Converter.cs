@@ -5409,15 +5409,22 @@ namespace Models.Core.ApsimFile
 				{"Site1003_SEA.met","NZ_Seddon.met"},
 				{"Popondetta.met", "PG_Popondetta.met"}
 			};
-			
+
+			List<string> splits = new List<string>();
 			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
 			{
 				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
 				{
 					if(weather["FileName"] != null)
 					{
-						if(weather["FileName"].ToString() == pair.Key)
-							weather["FileName"] = pair.Value;
+						string currentFileNameString = weather["FileName"].ToString();
+						if(currentFileNameString.Contains(pair.Key))
+						{
+							splits = currentFileNameString.Split(new char[]{Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar}).ToList();
+                        	splits[^1] = pair.Value;
+							var fixedFileNameString = String.Join(Path.DirectorySeparatorChar, splits);
+							weather["FileName"] = fixedFileNameString;
+						}
 					}
 				}
 			}
