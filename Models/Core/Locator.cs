@@ -432,8 +432,14 @@ namespace Models.Core
                 
                 // Check if property
                 Type declaringType;
-                if (properties.Any())
-                    declaringType = properties.Last().Value.GetType();
+                if (properties.Any()) 
+                {
+                    declaringType = properties.Last().DataType;
+                    //Make sure we get the runtime created type of a manager script
+                    if ((relativeToObject.GetType() == typeof(Manager) && name.CompareTo("Script") == 0) || relativeToObject.GetType().GetInterfaces().Contains(typeof(IScript)))
+                        declaringType = properties.Last().Value.GetType();
+                }
+                    
                 else
                     declaringType = relativeToObject.GetType();
                 propertyInfo = declaringType.GetProperty(name);
