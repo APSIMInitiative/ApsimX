@@ -209,9 +209,7 @@ namespace UserInterface.Views
                     Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
                     Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
                     // Reformat the legend without the matching unselectedSeries.
-    #pragma warning disable CS0612 // Type or member is obsolete
                     FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
-    #pragma warning restore CS0612 // Type or member is obsolete
                 }
             }
         }
@@ -1214,7 +1212,6 @@ namespace UserInterface.Views
         /// <param name="orientation">Orientation of items in the legend.</param>
         /// <param name="namesOfSeriesToRemove">Names of Series to remove.</param>
         /// <param name="reselectedSeriesNames">Names of series to reenable.</param>
-        [Obsolete]
         public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, List<string> namesOfSeriesToRemove, List<string> reselectedSeriesNames)
         {
             if (!plot1.Model.Legends.Any())
@@ -1502,16 +1499,6 @@ namespace UserInterface.Views
                     int numDecimalPlaces = st.Length - pos - 1;
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
                 }
-
-                //if (axis.PlotModel.Series[0] is BoxPlotSeries &&
-                //    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
-                //    axis.PlotModel.Series?.Count > 0)
-                //{
-                //    // Need to put a bit of extra space on the x axis.
-                //    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-                //    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-
-                //}
             }
         }
 
