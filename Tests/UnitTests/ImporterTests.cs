@@ -90,7 +90,7 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var w = sims.Children[0].Children[0] as Models.Climate.Weather;
-            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "Goond.met");
+            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "AU_Goondiwindi.met");
             Assert.AreEqual(w.FileName, expected);
         }
 
