@@ -111,7 +111,7 @@ namespace Models.PMF.Struct
         /// <summary>Maximum SLA for tiller cessation</summary>
         [JsonIgnore]
         public double MaxSLA { get; set; }
-       
+
         /// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
         [JsonIgnore]
         public double SupplyDemandRatio { get; private set; }
@@ -489,7 +489,7 @@ namespace Models.PMF.Struct
                         // Can't increase the proportion
                         culm.Proportion = remainingProportion;
 
-                        culm.DltLAI -= propn * tillerLAI;
+                        culm.TotalLAI -= propn * tillerLAI;
                     }
                 }
 
@@ -514,12 +514,14 @@ namespace Models.PMF.Struct
             MaxSLA = Math.Max(150, MaxSLA);
 
             double dmGreen = leaf.Live.Wt;
-            double dltDmGreen = GetDeltaDmGreen();
+            double dltDmGreen = GetDeltaDmGreen(); dltDmGreen = 0;
 
             // Calc how much LAI we need to remove to get back to the SLA target line.
             // This is done by reducing the proportion of tiller area.
-            var maxLaiTarget = MaxSLA * (dmGreen + dltDmGreen) / 10000;
-            return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
+            //            var maxLaiTarget = MaxSLA * (dmGreen + dltDmGreen) / 10000;
+            //          return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
+            var maxLaiTarget = MaxSLA * (dmGreen) / 10000;
+            return Math.Max(leaf.LAI - maxLaiTarget, 0);
         }
 
         private double CalcCarbonLimitation(double dltStressedLAI)
@@ -594,13 +596,8 @@ namespace Models.PMF.Struct
 
             //reduce new leaf growth proportionally across all culms
             //not reducing the number of tillers at this stage
-            culms.Culms.ForEach(
-                c =>
-                c.DltStressedLAI -= Math.Max(
-                    c.DltStressedLAI / totalDltLeaf * laiReduction,
-                    0.0
-                )
-            );
+            culms.Culms.ForEach(c => c.DltStressedLAI *= laiReduction);
+
         }
 
         /// <summary> Reset Culms at start of the simulation </summary>

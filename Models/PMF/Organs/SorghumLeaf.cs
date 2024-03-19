@@ -636,6 +636,40 @@ namespace Models.PMF.Organs
 
             return new();           
         }
+
+        /// <summary>Gets the LAI for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerLeafArea
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.LeafArea);
+                return result;
+            }
+        }
+        /// <summary>Gets the proportion for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerPropn
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.Proportion);
+                return result;
+            }
+        }
+        /// <summary>Gets the proportion for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerLAI
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.TotalLAI);
+                return result;
+            }
+        }
         #endregion
 
         /// <summary>Clears this instance.</summary>
