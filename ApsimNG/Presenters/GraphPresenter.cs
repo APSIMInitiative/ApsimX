@@ -599,7 +599,30 @@
                 CurrentPresenter.Detach();
             }
 
+            bool isXAxis = true;
+            if (axisType == AxisPosition.Left || axisType == AxisPosition.Right)
+                isXAxis = false;
+
+            bool isDateAxis = false;
+            foreach (SeriesDefinition definition in SeriesDefinitions)
+            {
+                
+                if (isXAxis)
+                {
+                    foreach (var x in definition.X)
+                        if (x is DateTime)
+                            isDateAxis = true;
+                } 
+                else
+                {
+                    foreach (var y in definition.Y)
+                        if (y is DateTime)
+                            isDateAxis = true;
+                }
+            }
+
             AxisPresenter axisPresenter = new AxisPresenter();
+            axisPresenter.SetAsDateAxis(isDateAxis);
             CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == AxisPosition.Left || axisType == AxisPosition.Right) ? "Y" : "X";
