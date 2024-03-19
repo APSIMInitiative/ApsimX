@@ -269,7 +269,13 @@ namespace Models.Soils
             }
 
             // Fill in missing particle size values.
-            var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeClay, ParticleSizeClayMetadata, Thickness.Length, (i) => 30.0);
+            var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSand, ParticleSizeSandMetadata, Thickness.Length, (i) => 5.0);
+            ParticleSizeSand = values;
+            ParticleSizeSandMetadata = metadata;   
+            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSilt, ParticleSizeSiltMetadata, Thickness.Length, (i) => 65.0);
+            ParticleSizeSilt = values;
+            ParticleSizeSiltMetadata = metadata;
+            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeClay, ParticleSizeClayMetadata, Thickness.Length, (i) => 30.0);
             ParticleSizeClay = values;
             ParticleSizeClayMetadata = metadata;
 
@@ -307,8 +313,8 @@ namespace Models.Soils
         /// <param name="targetThickness"></param>
         public void Standardise(double[] targetThickness)
         {
-            InFill();
             SetThickness(targetThickness);
+            InFill();
         }
 
         /// <summary>Sets the water thickness.</summary>
@@ -709,6 +715,7 @@ namespace Models.Soils
             KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());
             double[] XF = SoilUtilities.MapConcentration(PredictedXF, PredictedThickness, physical.Thickness, PredictedXF.Last());
             string[] Metadata = StringUtilities.CreateStringArray("Estimated", physical.Thickness.Length);
+            LL = MathUtilities.Constrain(LL, physical.LL15, physical.DUL);
 
             return new SoilCrop()
             {
@@ -790,6 +797,7 @@ namespace Models.Soils
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
+                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());                        
                     for (int i = 0; i < Thickness.Length; i++)
                         crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
@@ -799,6 +807,7 @@ namespace Models.Soils
                     if (MathUtilities.ValuesInArray(ec))
                     {
                         crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
+                        ec = SoilUtilities.MapConcentration(ec, StandardThickness, Thickness, ec.Last());
                         for (int i = 0; i < Thickness.Length; i++)
                             crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }
