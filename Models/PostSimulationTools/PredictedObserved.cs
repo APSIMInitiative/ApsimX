@@ -312,8 +312,12 @@ namespace Models.PostSimulationTools
             }
             catch (Exception err)
             {
-                var simulation = (dataStore as DataStore).Parent as Simulation;
-                throw new Exception($"Error in PredictedObserved tool {Name}. File: {simulation.FileName}", err);
+                string fileName = "Unknown";
+                if ((dataStore as DataStore).Parent is Simulation simulation)
+                    fileName = simulation.FileName;
+                else if ((dataStore as DataStore).Parent is Simulations simulations)
+                    fileName = simulations.FileName;
+                throw new Exception($"Error in PredictedObserved tool {Name}. File: {fileName}", err);
             }
         }
 
