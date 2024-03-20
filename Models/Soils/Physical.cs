@@ -268,6 +268,10 @@ namespace Models.Soils
                     ModifyKLForSubSoilConstraints(crop);
             }
 
+            // Make sure there are the correct number of KS values.
+            if (KS != null && KS.Length > 0)
+                KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
+
             // Fill in missing particle size values.
             var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSand, ParticleSizeSandMetadata, Thickness.Length, (i) => 5.0);
             ParticleSizeSand = values;
