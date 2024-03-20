@@ -49,7 +49,12 @@ namespace UnitTests.ManagerTests
             basicCode += "\tpublic class Script : Model {\n";
             basicCode += "\t\t[Description(\"AProperty\")]\n";
             basicCode += "\t\tpublic string AProperty { get; set; } = \"Hello World\";\n";
-            basicCode += "\t\t\tpublic void Document() { return; }\n";
+            basicCode += "\t\tpublic int AMethod() { return 0; }\n";
+            basicCode += "\t\tpublic int BMethod(int arg1) { return arg1; }\n";
+            basicCode += "\t\tpublic int CMethod(int arg1, int arg2) { return arg1; }\n";
+            basicCode += "\t\tpublic int DMethod(int arg1, int arg2, int arg3) { return arg1; }\n";
+            basicCode += "\t\tpublic int EMethod(int arg1, int arg2, int arg3, int arg4) { return arg1; }\n";
+            basicCode += "\t\tpublic void Document() { return; }\n";
             basicCode += "\t}\n";
             basicCode += "}\n";
 
@@ -66,8 +71,9 @@ namespace UnitTests.ManagerTests
                 {
                     testManager.OnCreated();
                     testManager.GetParametersFromScriptModel();
+                    testManager.RebuildScriptModel();
                 }
-            }
+            } 
                 
 
             return testManager;
@@ -568,6 +574,46 @@ namespace UnitTests.ManagerTests
             testManager = new Manager();
             testManager.Cursor = null;
             Assert.IsNull(testManager.Cursor);
+        }
+
+        /// <summary>
+        /// Specific test for GetProperty
+        /// Check that we can get values from the script of a manager
+        /// </summary>
+        [Test]
+        public void GetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.AreEqual("Hello World", testManager.GetProperty("AProperty"));
+            Assert.IsNull(testManager.GetProperty("BProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for SetProperty
+        /// Check that we can change values of the script from a manager
+        /// </summary>
+        [Test]
+        public void SetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.SetProperty("AProperty", "Another World"));
+            Assert.AreEqual("Another World", testManager.GetProperty("AProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for RunMethod
+        /// Check that we can call and run functions in a script from a manager
+        /// </summary>
+        [Test]
+        public void RunMethodTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.RunMethod("AMethod"));
+            Assert.DoesNotThrow(() => testManager.RunMethod("BMethod", 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("DMethod", 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("EMethod", 1, 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", new object[] {1, 1}));
         }
 
         /// <summary>

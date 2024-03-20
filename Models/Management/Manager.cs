@@ -152,6 +152,9 @@ namespace Models
         {
             base.OnCreated();
             afterCreation = true;
+
+            if (TryGetCompiler())
+                RebuildScriptModel();
         }
 
         /// <summary>
@@ -318,6 +321,46 @@ namespace Models
             }
 
             throw new Exception($"{this.Name} does not have an accessible method called {name}.");
+        }
+
+        /// <summary>Run a function defined in this Manager, up to four arguments can be passed
+        /// Use the other version of this method with an object array to pass more arguments.</summary>
+        /// <returns>The value the function returns</returns>
+        public object RunMethod(string name, object arg1 = null, object arg2 = null, object arg3 = null, object arg4 = null)
+        {
+            int count = 0;
+            if (arg1 != null)
+                count += 1;
+            if (arg2 != null)
+                count += 1;
+            if (arg3 != null)
+                count += 1;
+            if (arg4 != null)
+                count += 1;
+
+            object[] args = new object[count];
+            int index = 0;
+            if (arg1 != null)
+            {
+                args[index] = arg1;
+                index += 1;
+            }
+            if (arg2 != null)
+            {
+                args[index] = arg2;
+                index += 1;
+            }
+            if (arg3 != null)
+            {
+                args[index] = arg3;
+                index += 1;
+            }
+            if (arg4 != null)
+            {
+                args[index] = arg4;
+                index += 1;
+            }
+            return RunMethod(name, args);
         }
 
         /// <summary>
