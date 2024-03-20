@@ -185,6 +185,12 @@ namespace Models.Soils.SoilTemp
 
         private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
 
+        /// <summary>
+        /// Depth to the constant temperature lower boundary condition (m)
+        /// </summary>
+        public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
+
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -486,9 +492,17 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>Perform a reset.</summary>
-        public void Reset()
+        public void Reset(double[] values = null)
         {
-            Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+            if (values == null)
+                Array.ConstrainedCopy(InitialValues, 0, soilTemp, TOPSOILnode, InitialValues.Length);
+            else
+            {
+                if (values.Length != soilTemp.Length - 3)
+                    throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {soilTemp.Length-3} values.");
+                Array.ConstrainedCopy(values, 0, soilTemp, TOPSOILnode, values.Length);
+            }
+        
             soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
             soilTemp[SURFACEnode] = SurfaceTemperatureInit();
             soilTemp[numNodes + 1] = weather.Tav;
@@ -528,8 +542,6 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getProfileVariables()
         {
-            const double CONSTANT_TEMPdepth = 10.0;    // Metres. Depth to constant temperature zone
-                                                       // re-dimension dlayer, bd. These will now be treated as '1-based' so 0th element will not be used
             numLayers = physical.Thickness.Length;
             numNodes = numLayers + 1;
 

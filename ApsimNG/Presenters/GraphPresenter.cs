@@ -177,8 +177,11 @@
                         double xDouble = 0;
                         if (x is DateTime)
                             xDouble = ((DateTime)x).ToOADate();
+                        else if (x is string)
+                            xDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             xDouble = Convert.ToDouble(x);
+
                         valuesX.Add(xDouble);
                     }
                     foreach (var y in definition.Y)
@@ -186,15 +189,11 @@
                         double yDouble = 0;
                         if (y is DateTime)
                             yDouble = ((DateTime)y).ToOADate();
-                        else if (y is String)
-                        {
-                            if ((String)y == "True")
-                                yDouble = 1.0;
-                            if ((String)y == "False")
-                                yDouble = 0.0;
-                        }
+                        else if (y is string) 
+                            yDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             yDouble = Convert.ToDouble(y);
+
                         valuesY.Add(yDouble);
                     }
 

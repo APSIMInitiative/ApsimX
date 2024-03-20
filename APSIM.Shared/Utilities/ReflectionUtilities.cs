@@ -94,6 +94,16 @@
             List<MethodInfo> methods = ReflectionUtilities.GetAllMethods(type, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, false);
             List<PropertyInfo> properties = ReflectionUtilities.GetAllProperties(type, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, false);
 
+            //remove methods with < or > in the name, these don't actually exist in the source.
+            for (int i = methods.Count - 1; i >= 0; i--)
+            {
+                string name = methods[i].Name;
+                if (name.Contains("<") || name.Contains(">"))
+                {
+                    methods.Remove(methods[i]);
+                }
+            }
+
             //remove properties from methods list
             foreach (PropertyInfo prop in properties)
             {

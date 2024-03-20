@@ -290,7 +290,9 @@ namespace UserInterface.Views
                 case PropertyType.DropDown:
                     // Dropdown list - use a DropDownView (which wraps GtkComboBox).
                     DropDownView dropDown = new DropDownView(this);
-                    dropDown.Values = new string[1] { "" }.Concat(property.DropDownOptions).ToArray();
+                    dropDown.Values = new string[1] { "" };
+                    if (property.DropDownOptions != null)
+                        dropDown.Values = dropDown.Values.Concat(property.DropDownOptions).ToArray();
                     dropDown.SelectedValue = property.Value?.ToString();
                     dropDown.Changed += OnDropDownChanged;
                     component = dropDown.MainWidget;
