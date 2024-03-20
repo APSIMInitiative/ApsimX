@@ -264,8 +264,8 @@ namespace Models.Soils
                 crop.XFMetadata = cropMetadata;
 
                 // Modify wheat crop for sub soil constraints.
-                if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
-                    ModifyKLForSubSoilConstraints(crop);
+                //if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
+                //    ModifyKLForSubSoilConstraints(crop);
             }
 
             // Make sure there are the correct number of KS values.
