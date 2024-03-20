@@ -277,6 +277,49 @@ namespace Models
             }
         }
 
+        /// <summary>Get the value of a property in this Manager</summary>
+        /// <returns>The value of the property</returns>
+        public object GetProperty(string name)
+        {
+            object script = this.Script;
+            if (script == null)
+                throw new Exception($"{this.Name} has not been compiled and cannot get the value of a property.");
+
+            return ReflectionUtilities.GetValueOfFieldOrProperty(name, script);
+        }
+
+        /// <summary>Set the value of a property in this Manager</summary>
+        public void SetProperty(string name, object newValue)
+        {
+            object script = this.Script;
+            if (script == null)
+                throw new Exception($"{this.Name} has not been compiled and cannot set the value of a property.");
+
+            ReflectionUtilities.SetValueOfFieldOrProperty(name, script, newValue);
+            return;
+        }
+
+        /// <summary>Run a function defined in this Manager, arguments can be passed if required for the function</summary>
+        /// <returns>The value the function returns</returns>
+        public object RunMethod(string name, object[] args)
+        {
+            object script = this.Script;
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod;
+
+            Type t = script.GetType();
+            List<MethodInfo> methods = ReflectionUtilities.GetAllMethods(t, flags, false);
+
+            foreach(MethodInfo method in methods)
+            {
+                if (method.Name.CompareTo(name) == 0) 
+                {
+                    return method.Invoke(script, args);
+                }
+            }
+
+            throw new Exception($"{this.Name} does not have an accessible method called {name}.");
+        }
+
         /// <summary>
         /// Document the script iff it overrides its Document() method.
         /// Otherwise, return nothing.
