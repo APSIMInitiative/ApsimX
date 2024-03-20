@@ -1,3 +1,4 @@
+
 {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
@@ -28,7 +29,7 @@
             "name": ".NET Core Launch (APSIM.Cli)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "cleanbuild",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
             "args": [
                 "document",
@@ -42,7 +43,7 @@
             "name": ".NET Core Launch (APSIM Server)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "cleanbuild",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
@@ -63,7 +64,7 @@
             "name": "Mono Launch",
             "type": "mono",
             "request": "launch",
-            "preLaunchTask": "cleanbuild",
+            "preLaunchTask": "build",
             "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
