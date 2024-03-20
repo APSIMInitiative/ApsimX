@@ -152,12 +152,6 @@ namespace Models
         {
             base.OnCreated();
             afterCreation = true;
-
-            // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
-            // resolved and there is no parent Simulations object which leads to no ScriptCompiler
-            // instance. This needs to be fixed.
-            if (TryGetCompiler())
-                RebuildScriptModel();
         }
 
         /// <summary>
