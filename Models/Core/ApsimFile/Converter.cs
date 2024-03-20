@@ -5410,7 +5410,7 @@ namespace Models.Core.ApsimFile
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 //rename uses of ScriptModel to Script
-                bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ");
+                bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ", true);
                 if (changeMade)
                     manager.Save();
                 
@@ -5453,7 +5453,7 @@ namespace Models.Core.ApsimFile
                             if (className == name) {
                                 string newName = name + count.ToString();
                                 count += 1;
-                                bool changeMade = manager.Replace(m.Value, m.Groups[1] + newName + m.Groups[3]);
+                                bool changeMade = manager.Replace(m.Value, m.Groups[1] + newName + m.Groups[3], true);
                                 if (changeMade)
                                     manager.Save();
                                 //replace the name of this class in all other manager scripts within the same simulation
@@ -5461,15 +5461,14 @@ namespace Models.Core.ApsimFile
                                 {
                                     if (manager.Token.Path.CompareTo(manager2.Token.Path) != 0 && ConverterUtilities.NodesInSameSimulation(manager.Token, manager2.Token)) 
                                     {
-                                        changeMade = manager2.Replace(className, newName);
+                                        changeMade = manager2.Replace($"{className}", $"{newName}", true);
                                         if (changeMade)
-                                            manager.Save();
+                                            manager2.Save();
                                     }
                                 }
                             }
                         }
                     }
-                    
                 }
             }
         }

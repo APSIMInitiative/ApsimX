@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using UnitTests.Storage;
 using Shared.Utilities;
+using Models.Logging;
 
 namespace UnitTests.ManagerTests
 {
@@ -241,6 +242,46 @@ namespace UnitTests.ManagerTests
             double[] actual = storage.Get<double>("[Script2].B");
             double[] expected = new double[] { 2 };
             Assert.AreNotEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Make sure the correct manager script is called and accessed when both script are just class 'Script'
+        /// See issue #8624 where two zones with different scripts had reflection calling the wrong code.
+        /// </summary>
+        [Test]
+        public void CorrectManagerCalledWhenBothHaveSameClassName()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+
+            // Run the file.
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Summary sum = file.FindDescendant<Summary>();
+            bool found = false;
+            foreach (Message message in sum.GetMessages("Simulation"))
+                if (message.Text.Contains("Correct Manager Called"))
+                    found = true;
+
+            Assert.True(found);
+        }
+
+        /// <summary>
+        /// The converter will check that it updates correctly, but this will run the file afterwards to make sure all the 
+        /// connections still connect.
+        /// </summary>
+        [Test]
+        public void TestMultipleScriptsWithSameClassNameConnectStill()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            ConverterReturnType ret = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
+            Simulations file = ret.NewModel as Simulations;
+
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Assert.Pass();
         }
 
         /// <summary>
