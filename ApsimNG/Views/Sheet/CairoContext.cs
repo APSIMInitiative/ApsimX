@@ -45,8 +45,10 @@ namespace UserInterface.Views
                 else
                     layoutGenerator.StyleContext.State = Gtk.StateFlags.Normal;
                 var c = layoutGenerator.StyleContext.GetColor(layoutGenerator.StyleContext.State);
-                cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
-
+                if (layoutGenerator.StyleContext.State == Gtk.StateFlags.Normal && state == States.Calculated)
+                    cr.SetSourceColor(System.Drawing.Color.Red.ToCairo());
+                else
+                    cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
             }
         }
 
