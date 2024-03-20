@@ -12,6 +12,7 @@ using Models.Core.ApsimFile;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
 using Models.Storage;
+using System.Threading;
 
 namespace Models
 {
@@ -30,6 +31,7 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            string currentDirectory = "";
             bool isApplyOptionPresent = false;
             // Resets exitCode to help with unit testing.
             exitCode = 0;
@@ -55,6 +57,8 @@ namespace Models
 
             // Holds the switch(es) used in the command line call.
             ParserResult<Options> result = parser.ParseArguments<Options>(args);
+            if (result.Value.Apply != null)
+                currentDirectory = Path.GetDirectoryName(Path.GetFullPath(result.Value.Apply));
 
             if (isApplyOptionPresent)
             {
@@ -70,6 +74,8 @@ namespace Models
             }
 
             result.WithParsed(Run).WithNotParsed(HandleParseError);
+            if (!string.IsNullOrWhiteSpace(currentDirectory))
+                CleanUpTempFiles(currentDirectory);
             return exitCode;
         }
 
@@ -147,7 +153,6 @@ namespace Models
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                     List<string> commandsList = ParseConfigFileCommands(options);
                     DoCommands(options, files, configFileDirectory, commandsList);
-                    CleanUpTempFiles(configFileDirectory);
                 }
                 else
                 {
@@ -208,8 +213,6 @@ namespace Models
             return ConfigFile.EncodeSpacesInCommandList(commandsWithSpacesRemoved);
         }
 
-
-
         /// <summary>
         /// Takes an array of commands and runs them in sequence.
         /// </summary>
@@ -269,8 +272,13 @@ namespace Models
                             RunModifiedApsimxFile(options, file, tempSim, sim, originalFilePath, lastSaveFilePath);
                             isSimToBeRun = false;
                         }
+                        // Close datastore connection.
+                        sim.FindChild<DataStore>().Dispose();
                     }
                 }
+                // Close datastore connection.
+                if(tempSim != null)
+                    tempSim.FindChild<DataStore>().Dispose();
             }
             // If no apsimx file path included proceeding --apply switch...              
             else if (files.Length < 1)
@@ -314,6 +322,10 @@ namespace Models
                             RunModifiedApsimxFile(options, loadPath, tempSim, sim, originalFilePath, lastSaveFilePath);
                             isSimToBeRun = false;
                         }
+
+                        // Close datastore connection.
+                        sim.FindChild<DataStore>().Dispose();
+                        tempSim.FindChild<DataStore>().Dispose();
                     }
                     else if (!string.IsNullOrEmpty(savePath))
                     {
@@ -324,7 +336,6 @@ namespace Models
                     }
                     else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
                 }
-
             }
         }
 
@@ -686,11 +697,15 @@ namespace Models
                 foreach (string matchingFile in matchingTempFiles)
                 {
                     while (isFileInUse == true)
+                    {
                         isFileInUse = IsFileLocked(matchingFile);
+                        Thread.Sleep(50);
+                    }
                     File.Delete(matchingFile);
                     isFileInUse = true;
                 }
             }
+            CleanupEmptyDBFiles(configFileDirectoryPath);
         }
 
         /// <summary>
@@ -719,6 +734,38 @@ namespace Models
 
             //file is not locked
             return false;
+        }
+
+        /// <summary>
+        /// Cleans up empty db files in the config file directory.
+        /// </summary>
+        /// <param name="configFileDirectoryPath"></param>
+        private static void CleanupEmptyDBFiles(string configFileDirectoryPath)
+        {
+            int sizeOfEmptyDB = 4096;
+            bool isFileInUse = false;
+            string dbPattern = "*.db";
+            List<string> dbFiles = new();
+            foreach (string match in Directory.GetFiles(configFileDirectoryPath, dbPattern))
+                if (match != null)
+                    dbFiles.Add(match);
+            if (dbFiles.Count > 0)
+            {
+                foreach (string dbFile in dbFiles)
+                {
+                    isFileInUse = IsFileLocked(dbFile);
+                    while (isFileInUse == true)
+                    {
+                        isFileInUse = IsFileLocked(dbFile);
+                        Thread.Sleep(10);
+                    }
+                    FileInfo dbFileInfo = new FileInfo(dbFile);
+                    // Removes if file size is zero.
+                    if(dbFileInfo.Length <= sizeOfEmptyDB)
+                        File.Delete(dbFile);
+                    isFileInUse = true;
+                }
+            }
         }
     }
 }

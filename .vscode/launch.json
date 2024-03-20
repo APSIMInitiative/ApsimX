@@ -5,6 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name":"Models: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "debug",
+            "program":"${workspaceFolder}/bin/Debug/net6.0/Models.dll",
+            // Change this to where you have config file etc.
+            "cwd":"C:/Users/RIC394/Downloads/8741Cleanup",
+            "console":"internalConsole",
+            // Command line args go here.
+            "args": [
+                "wheat.apsimx",
+                "--apply",
+                "commands.txt"
+            ]
+        },
+        {
             "name": "ApsimNG: Debug",
             "type": "coreclr",
             "request": "launch",
