@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using APSIM.Shared.Utilities;
+using CommandLine;
+using Microsoft.Win32;
 using Models.Core;
+using Models.GrazPlan;
 using Models.Interfaces;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -39,10 +43,151 @@ namespace Models.Soils.SoilTemp
         private Physical physical = null;
 
         [Link]
+        private Organic organic = null;        
+
+        [Link]
         ISoilWater waterBalance = null;
+
+        /// <summary>Particle density of organic matter (Mg /m3) (Campbell, 1985)</summary>
+        private double pom = 1.3;
+
+        /// <summary>Particle density of soil fines (Mg /m3)</summary>
+        private double ps = 2.63;
 
         /// <summary>Invoke when the soil temperature has changed.</summary>
         public event EventHandler SoilTemperatureChanged;
+
+        /// <summary>Volumetric fraction rocks.</summary>
+        public double VolumetricFractionRocks(int i) => physical.Rocks[i] / 100;
+
+        /// <summary>Volumetric fraction organic matter.</summary>
+        public double VolumetricFractionOrganicMatter(int i) => organic.Carbon[i] / 100 * 2.5 * physical.BD[i] / pom;
+
+        /// <summary>Volumetric fraction sand.</summary>
+        public double VolumetricFractionSand(int i) => (1 - VolumetricFractionOrganicMatter(i) - VolumetricFractionRocks(i)) *
+                                                       physical.ParticleSizeSand[i] / 100 * physical.BD[i] / ps;
+
+        /// <summary>Volumetric fraction silt.</summary>
+        public double VolumetricFractionSilt(int i) => (1 - VolumetricFractionOrganicMatter(i) - VolumetricFractionRocks(i)) *
+                                                       physical.ParticleSizeSilt[i] / 100 * physical.BD[i] / ps;
+
+        /// <summary>Volumetric fraction clay.</summary>
+        public double VolumetricFractionClay(int i) => (1 - VolumetricFractionOrganicMatter(i) - VolumetricFractionRocks(i)) *
+                                                       physical.ParticleSizeClay[i] / 100 * physical.BD[i] / ps;
+
+        /// <summary>Volumetric fraction water.</summary>
+        public double VolumetricFractionWater(int i) => (1 - VolumetricFractionOrganicMatter(i)) * soilWater[i];
+
+        /// <summary>Volumetric fraction ice. Ma be simulated in the future.</summary>
+        /// <remarks>Something like: (1 - VolumetricFractionOrganicMatter(i)) * waterBalance.Ice[i];</remarks>
+        public double VolumetricFractionIce(int i) => 0;
+
+        /// <summary>Volumetric fraction air.</summary>
+        public double VolumetricFractionAir(int i) => 1 - VolumetricFractionRocks(i) -
+                                                          VolumetricFractionOrganicMatter(i) -
+                                                          VolumetricFractionSand(i) -
+                                                          VolumetricFractionSilt(i) - 
+                                                          VolumetricFractionClay(i) -
+                                                          VolumetricFractionWater(i) - 
+                                                          VolumetricFractionIce(i);
+                                                                
+
+
+        #region Table1
+        /// <summary>
+        /// Encapsulates properties of constituents.
+        /// </summary>
+        [Serializable]
+        private class Constituents
+        {
+            private SoilTemperature soilTemperature;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="soilTemperature">The soil temperature model.</param>
+            public Constituents(SoilTemperature soilTemperature)
+            {
+                this.soilTemperature = soilTemperature;
+            }
+
+            [Serializable]
+            class Constituent
+            {
+                public double SpecificHeat { get; set; }
+
+                public double ThermalConductance { get; set; }
+
+                public double ShapeFactor { get; set; }
+            }
+            private Dictionary<string, Constituent> constituents = new()
+            {
+                {"Rocks", new() { SpecificHeat = 7.70, ThermalConductance = 0.182, ShapeFactor = 0.182}},
+                {"OrganicMatter", new() {  SpecificHeat = 0.25, ThermalConductance = 2.50, ShapeFactor = 0.5}},
+                {"Sand", new() { SpecificHeat = 7.70, ThermalConductance = 0.182, ShapeFactor = 0.182}},
+                {"Silt", new() { SpecificHeat = 2.74, ThermalConductance = 2.39, ShapeFactor = 0.125}},
+                {"Clay", new() { SpecificHeat = 2.92, ThermalConductance = 1.39, ShapeFactor = 0.007755}},
+                {"Water", new() { SpecificHeat = 0.57, ThermalConductance = 4.18, ShapeFactor = 1.0}},
+                {"Ice", new() { SpecificHeat = 2.18, ThermalConductance = 1.73, ShapeFactor = 0.0}},
+                {"Air", new() { SpecificHeat = 0.025, ThermalConductance = 0.0012, ShapeFactor = double.NaN}}
+            };
+
+            public IEnumerable<string> Names => constituents.Keys;
+
+            /// <summary>
+            /// Specific heat (MJ/m3/K)
+            /// </summary>
+            /// <param name="name">Name of the constituent.</param>
+            /// <param name="layer">The layer index.</param>
+
+            public double SpecificHeat(string name, int layer) 
+            {
+                if (name == "Minerals")
+                    throw new Exception("Cannot return specific heat for minerals constitute");
+                return constituents[name].SpecificHeat;
+            }
+
+            /// <summary>
+            /// Thermal conductance (W/m/K)
+            /// </summary>
+            /// <param name="name">Name of the constituent.</param>
+            /// <param name="layer">The layer index.</param>
+            public double ThermalConductance(string name, int layer) 
+            {
+                if (name == "Minerals")
+                    return Math.Pow(constituents["Rocks"].ThermalConductance, soilTemperature.VolumetricFractionRocks(layer)) *
+                           Math.Pow(constituents["Sand"].ThermalConductance, soilTemperature.VolumetricFractionSand(layer)) +
+                           Math.Pow(constituents["Silt"].ThermalConductance, soilTemperature.VolumetricFractionSilt(layer)) +
+                           Math.Pow(constituents["Clay"].ThermalConductance, soilTemperature.VolumetricFractionClay(layer));
+
+                return constituents[name].SpecificHeat;
+            }
+
+            /// <summary>
+            /// Shape factor (W/m/K)
+            /// </summary>
+            /// <param name="name">Name of the constituent.</param>
+            /// <param name="layer">The layer index.</param>
+            public double ShapeFactor(string name, int layer) 
+            {
+                if (name == "Minerals")
+                    return constituents["Rocks"].ShapeFactor * soilTemperature.VolumetricFractionRocks(layer) +
+                           constituents["Sand"].ShapeFactor * soilTemperature.VolumetricFractionSand(layer) +  
+                           constituents["Silt"].ShapeFactor * soilTemperature.VolumetricFractionSilt(layer) +             
+                           constituents["Clay"].ShapeFactor * soilTemperature.VolumetricFractionClay(layer);
+                else if (name == "Ice")
+                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionIce(layer) / 
+                           (soilTemperature.VolumetricFractionWater(layer) + soilTemperature.VolumetricFractionIce(layer) + soilTemperature.VolumetricFractionAir(layer));
+                else if (name == "Air")
+                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionAir(layer) / 
+                           (soilTemperature.VolumetricFractionWater(layer) + soilTemperature.VolumetricFractionIce(layer) + soilTemperature.VolumetricFractionAir(layer));
+                return constituents[name].SpecificHeat;
+            }            
+        }
+
+        private Constituents constituents;
+        #endregion
+
 
         // ------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
@@ -420,6 +565,13 @@ namespace Models.Soils.SoilTemp
 
         #region events
 
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            constituents = new(this);
+        }
+
         [EventSubscribe("DoSoilTemperature")]
         private void OnProcess(object sender, EventArgs e)
         {
@@ -602,7 +754,9 @@ namespace Models.Soils.SoilTemp
                 Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             for (int layer = 1; layer <= numLayers; layer++)
                 soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
-            soilWater[numNodes] = soilWater[numLayers];
+            // Initialise soil water in phantom layers.
+            for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
+                soilWater[layer] = soilWater[numLayers]; 
 
             maxSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             minSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
@@ -857,7 +1011,7 @@ namespace Models.Soils.SoilTemp
         /// models for soil-plant systems" (Amsterdam, Elsevier)
         /// RETURNS volSpecHeatSoil()  [Joules*m-3*K-1]
         /// </summary>
-        private void doVolumetricSpecificHeat()
+        private void doVolumetricSpecificHeatCampbell()
         {
             const double SPECIFICbd = 2.65;   // (g/cc) specific bulk density
             double[] volSpecHeatSoil = new double[numLayers + 1];
@@ -877,6 +1031,56 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>
+        /// Calculate the volumetric specific heat (volumetric heat capicity Cv) of the soil layer
+        /// to Campbell, G.S. (1985) "Soil physics with BASIC: Transport
+        /// models for soil-plant systems" (Amsterdam, Elsevier)
+        /// RETURNS volSpecHeatSoil()  [Joules*m-3*K-1]
+        /// </summary>
+        private void doVolumetricSpecificHeat()
+        {
+            double[] volSpecHeatSoil = new double[numLayers + 1];
+
+            for (int layer = 1; layer <= numLayers; layer++)
+            {
+                volSpecHeatSoil[layer] = 0;
+                foreach (var constituentName in constituents.Names.Except(new string[] {"Minerals"}))
+                {
+                    volSpecHeatSoil[layer] += constituents.SpecificHeat(constituentName, layer) * MJ2J * soilWater[layer];
+                }
+            }
+            volSpecHeatSoil.CopyTo(this.volSpecHeatSoil, 1);     // map volumetric heat capicity (Cv) from layers to nodes (node 2 in centre of layer 1)
+            this.volSpecHeatSoil[1] = volSpecHeatSoil[1];        // assume surface node Cv is same as top layer Cv
+        }        
+
+        /// <summary>
+        /// Calculate the thermal conductivity of the soil layer.
+        /// </summary>
+        private void doThermConductivity()
+        {
+            double[] thermCondLayers = new double[numNodes + 1];
+
+            for (int node = 1; node <= numNodes; node++)
+            {
+                double numerator = 0; 
+                double denominator = 0;
+                foreach (var constituentName in constituents.Names)
+                {
+                    double shapeFactor = constituents.ShapeFactor(constituentName, node);
+                    double thermalConductance = constituents.ThermalConductance(constituentName, node);
+                    double thermalConductanceWater = constituents.ThermalConductance("Water", node);
+                    double k = (2.0 / 3.0) * (1 + shapeFactor * Math.Pow(thermalConductance / thermalConductanceWater - 1.0, -1)) +
+                               (1.0 / 3.0) * (1 + shapeFactor * Math.Pow(thermalConductance / thermalConductanceWater - 1.0 * (1 - 2 * shapeFactor), -1));
+                    numerator += thermalConductance * soilWater[node] * k;
+                    denominator += soilWater[node] * k;
+                }
+                thermCondLayers[node] = numerator / denominator;
+            }
+
+            // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
+            mapLayer2Node(thermCondLayers, ref thermalConductivity);
+        }
+
+        /// <summary>
         /// Calculate the thermal conductivity of the soil layer following,
         /// to Campbell, G.S. (1985) "Soil physics with BASIC: Transport
         /// models for soil-plant systems" (Amsterdam, Elsevier)
@@ -888,7 +1092,7 @@ namespace Models.Soils.SoilTemp
         /// Here C1=A, C2=B, SW=theta, C3=C, C4=D, 4=E.
         /// RETURNS gThermConductivity_zb() (W/m2/K)
         /// </summary>
-        private void doThermConductivity()
+        private void doThermConductivityCampbell()
         {
             double temp = 0;
 
