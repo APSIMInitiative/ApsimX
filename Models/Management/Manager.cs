@@ -154,7 +154,7 @@ namespace Models
             afterCreation = true;
 
             if (TryGetCompiler())
-                RebuildScriptModel();
+                RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -173,7 +173,8 @@ namespace Models
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
-        public void RebuildScriptModel()
+        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
+        public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
@@ -181,7 +182,7 @@ namespace Models
                 if (ScriptModel != null)
                     GetParametersFromScriptModel();
 
-                var results = Compiler().Compile(Code, this);
+                var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
                 if (results.ErrorMessages == null)
                 {
                     //remove all old script children

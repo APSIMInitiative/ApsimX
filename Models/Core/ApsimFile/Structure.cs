@@ -33,28 +33,9 @@ namespace Models.Core.ApsimFile
             parent.Children.Add(modelToAdd);
 
             // Call OnCreated
-            try {
-                modelToAdd.OnCreated();
-            } 
-            catch (Exception e)
-            {
-                if (modelToAdd.GetType() != typeof(Manager)) { // don't if this is because a manager script couldn't compile
-                    throw new Exception(e.Message, e.InnerException);
-                }
-            }
-
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList()) {
-                // Call OnCreated
-                try {
-                    model.OnCreated();
-                } 
-                catch (Exception e)
-                {
-                    if (modelToAdd.GetType() != typeof(Manager)) { // don't if this is because a manager script couldn't compile
-                        throw new Exception(e.Message, e.InnerException);
-                    }
-                }
-            }           
+            modelToAdd.OnCreated();
+            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
+                model.OnCreated();
             
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();

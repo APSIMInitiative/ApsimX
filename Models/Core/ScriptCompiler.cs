@@ -63,8 +63,9 @@ namespace Models.Core
         /// <param name="code">The c# code to compile.</param>
         /// <param name="model">The model owning the script.</param>
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
+        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null)
+        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
         {
             string errors = null;
 
@@ -102,7 +103,7 @@ namespace Models.Core
                                     if (name.Item2.CompareTo(path) != 0) {
                                         //check if the model from the other path still exists (model may have moved)
                                         IModel matchingClass = model.FindAncestor<Simulations>().Locator.Get(name.Item2) as IModel;
-                                        if (matchingClass != null)
+                                        if (matchingClass != null && !allowDuplicateClassName)
                                             throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
                                     }
                                 }

@@ -5415,7 +5415,7 @@ namespace Models.Core.ApsimFile
                     manager.Save();
                 
                 MatchCollection ms = manager.FindRegexMatches("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
-                if (ms != null)
+                if (ms != null && ms.Count > 0)
                 {
                     Match m = ms.First();
                     if (m.Success)
@@ -5444,7 +5444,7 @@ namespace Models.Core.ApsimFile
                 {
                     //check if manager has this name
                     MatchCollection ms = manager.FindRegexMatches("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
-                    if (ms != null)
+                    if (ms != null && ms.Count > 0)
                     {
                         Match m = ms.First();
                         if (m.Success)
