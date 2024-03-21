@@ -4,7 +4,6 @@
     using APSIM.Shared.Utilities;
     using OxyPlot;
     using OxyPlot.Series;
-    using UserInterface.EventArguments;
 
     /// <summary>
     /// A line series with a better tracker.
@@ -55,11 +54,14 @@
                     xInput = MathUtilities.RoundSignificant(hitResult.DataPoint.X, 2).ToString();
                 else if (XType == typeof(DateTime))
                 {
-                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
-                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
-                        xInput = d.ToString("dd/MM/yyyy");
-                    else
-                        xInput = d.ToString();
+                    if (hitResult.DataPoint.X > 0)
+                    {
+                        DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
+                        if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                            xInput = d.ToString("dd/MM/yyyy");
+                        else
+                            xInput = d.ToString();
+                    }
                 }
 
                 if (YType == typeof(double))

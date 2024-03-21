@@ -1,31 +1,28 @@
-﻿using APSIM.Interop.Graphing.CustomSeries;
-using APSIM.Interop.Graphing.Extensions;
-using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
-using APSIM.Shared.Utilities;
-using UserInterface.EventArguments;
-using Gtk;
-using UserInterface.Interfaces;
-using MathNet.Numerics.Statistics;
-using OxyPlot;
-using OxyPlot.Annotations;
-using OxyPlot.Axes;
-using OxyPlot.GtkSharp;
-using OxyPlot.Series;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Interop.Graphing.CustomSeries;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Gtk;
+using MathNet.Numerics.Statistics;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 using Utility;
 using LegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-
-using static Gdk.Cursor;
-using static Gdk.CursorType;
 
 namespace UserInterface.Views
 {
@@ -837,7 +834,7 @@ namespace UserInterface.Views
                     else
                         series.Title = title;
                 }
-                    
+
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -1579,12 +1576,16 @@ namespace UserInterface.Views
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                DateTime defaultDate = new DateTime();
                 smallestDate = DateTime.MaxValue;
                 largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
+                    if (d != defaultDate)
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
                     if (d < smallestDate)
                         smallestDate = d;
                     if (d > largestDate)
