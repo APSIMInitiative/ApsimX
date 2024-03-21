@@ -200,7 +200,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1.01, 0.2, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
 
@@ -235,7 +235,7 @@ namespace UserInterface.Presenters
 
             graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
 
@@ -278,7 +278,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, $"pH ({units})", inverted: false, 2, 12, 2, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, xBottomMin, xBottomMax, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical, null, null);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
 

@@ -316,7 +316,7 @@
         /// <param name="orientation">Orientation of items in the legend.</param>
         /// <param name="namesOfSeriesToRemove">Names of series to remove from Graph.</param>
         /// <param name="reselectedSeriesNames">Names of reselected series to be reenabled.</param>
-        void FormatLegend(LegendPosition position, LegendOrientation orientation, List<string> namesOfSeriesToRemove, List<string> reselectedSeriesNames);
+        void FormatLegend(LegendPosition position, LegendOrientation orientation, List<string> namesOfSeriesToRemove=null, List<string> reselectedSeriesNames=null);
 
         /// <summary>
         /// Format the title.

@@ -335,7 +335,7 @@ namespace UserInterface.Presenters
 
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical, null, null);
+            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
             graph.Refresh();
         }
     }

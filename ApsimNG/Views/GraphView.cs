@@ -1212,7 +1212,7 @@ namespace UserInterface.Views
         /// <param name="orientation">Orientation of items in the legend.</param>
         /// <param name="namesOfSeriesToRemove">Names of Series to remove.</param>
         /// <param name="reselectedSeriesNames">Names of series to reenable.</param>
-        public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, List<string> namesOfSeriesToRemove, List<string> reselectedSeriesNames)
+        public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, List<string> namesOfSeriesToRemove=null, List<string> reselectedSeriesNames=null)
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
