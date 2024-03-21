@@ -1569,81 +1569,22 @@ namespace Models.Soils.SoilTemp
             return STEFAN_BOLTZMANNconst * emissivity * Math.Pow(kelvinT(tDegC), 4);
         }
 
-        /// <summary>
-        ///  Purpose
-        ///           Calculates average soil temperature at the centre of each layer
-        ///           based on the soil temperature model of EPIC (Williams et al 1984)
-        /// </summary>
+        /// <summary>Calculates average soil temperature at the centre of each layer</summary>
         /// <param name="soilTempIO">(OUTPUT) temperature of each layer in profile</param>
-        /// <remarks></remarks>
         private void CalcSoilTemp(ref double[] soilTempIO)
         {
-            const double SUMMER_SOLSTICE_NTH = 173.0;        // day of year of nth'rn summer solstice
-            const double TEMPERATURE_DELAY = 27.0;    // delay from solstice to warmest day (days)
-            const double HOTTEST_DAY_NTH = SUMMER_SOLSTICE_NTH + TEMPERATURE_DELAY;         // warmest day of year of nth hemisphere
-            const double SUMMER_SOLSTICE_STH = SUMMER_SOLSTICE_NTH + DAYSinYear / 2.0;     // day of year of sthrn summer solstice
-            const double HOTTEST_DAY_STH = SUMMER_SOLSTICE_STH + TEMPERATURE_DELAY; // warmest day of year of sth hemisphere
-            const double ANG = DOY2RAD; // length of one day in radians factor to convert day of year to radian fraction of year
+            double[] cumulativeDepth = SoilUtilities.ToCumThickness(thickness);
+            double w = 2 * Math.PI / (365.25 * 24 * 3600);
+            double dh = 0.8;
+            double zd = Math.Sqrt( 2 * dh / w);
 
             double[] soilTemp = new double[numNodes + 1 + 1];
-            Array.ConstrainedCopy(soilTempIO, SURFACEnode, soilTemp, 0, numNodes);
-
-            // Get a factor to calculate "normal" soil temperature from the
-            // day of g_year assumed to have the warmest average soil temperature
-            // of the g_year.  The normal soil temperature varies as a cosine
-            // function of alx.  This is the number of radians (time) of a
-            // g_year today is from the warmest soil temp.
-
-            double alx = 0.0;                // time in radians of year from hottest
-                                             // instance to current day of year as a
-                                             // radian fraction of one year for soil
-                                             // temperature calculations
-
-            // check for nth/sth hemisphere
-            if ((weather.Latitude > 0.0))
-                alx = ANG * (offsetDayOfYear(clock.Today.Year, clock.Today.DayOfYear, System.Convert.ToInt32(-HOTTEST_DAY_NTH)));
-            else
-                alx = ANG * (offsetDayOfYear(clock.Today.Year, clock.Today.DayOfYear, System.Convert.ToInt32(-HOTTEST_DAY_STH)));
-
-            BoundCheck(alx, 0.0, 6.31, "alx");
-
-            // get change in soil temperature since hottest day. deg c.
-
-            double dlt_temp = TempDelta(alx);    // change in soil temperature
-
-            // get temperature damping depth. (mm per radian of a g_year)
-
-            double damp = DampingDepth();    // temperature damping depth (mm depth/radians time)
-
-            double cum_depth = 0.0;       // cumulative depth in profile
-
-            // Now get the average soil temperature for each layer.
-            // The difference in temperature between surface and subsurface
-            // layers ( exp(zd)) is an exponential function of the ratio of
-            // the depth to the bottom of the layer and the temperature
-            // damping depth of the soil.
-
-            double depth_lag = 0.0;             // temperature lag factor in radians for depth
-
-            MathUtilities.Zero(soilTemp);
-            for (int layer = 1; layer <= numLayers; layer++)
+            for (int nodes = 1; nodes <= numNodes; nodes++)
             {
-
-                // get the cumulative depth to bottom of current layer
-
-                cum_depth = cum_depth + thickness[layer];
-
-                // get the lag factor for depth. This reduces changes in
-                // soil temperature with depth. (radians of a g_year)
-
-                depth_lag = Divide(cum_depth, damp, 0.0);
-
-                // allow subsurface temperature changes to lag behind
-                // surface temperature changes
-
-                soilTemp[layer] = LayerTemp(depth_lag, alx, dlt_temp);
-                BoundCheck(soilTemp[layer], -20.0, 80.0, "soil_temp");
+                soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) * 
+                                                              Math.Sin((clock.Today.DayOfYear / 365 + 0.25) * 2 * Math.PI - cumulativeDepth[nodes] / zd);
             }
+
             Array.ConstrainedCopy(soilTemp, 0, soilTempIO, SURFACEnode, numNodes);
         }
 
