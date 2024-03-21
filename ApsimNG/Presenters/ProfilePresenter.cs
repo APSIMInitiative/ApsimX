@@ -54,17 +54,18 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
-            gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
-            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
-
             Soil soilNode = this.model.FindAncestor<Soil>();
             if (soilNode != null)
             {
                 physical = soilNode.FindChild<Physical>();
+                physical.InFill();
                 water = soilNode.FindChild<Water>();
             }
+
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
