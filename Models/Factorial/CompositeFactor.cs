@@ -115,7 +115,7 @@ namespace Models.Factorial
             // a factor value (e.g. as a model replacement), throw an exception.
             IEnumerable<IModel> extraModels = Children.Except(values.OfType<IModel>());
             foreach (var model in extraModels)
-                if (!(model is Memo))
+                if (model.Enabled && !(model is Memo))
                     throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
         }
 

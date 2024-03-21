@@ -1263,6 +1263,15 @@ namespace Models.Core.ApsimFile
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
                     }
 
+                    if (chemical["Rocks"] != null && chemical["Rocks"].HasValues)
+                    {
+                        var values = chemical["Rocks"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                        physical["Rocks"] = new JArray(mappedValues);
+                    }
+
                     // convert ph units
                     var phUnits = physical["PHUnits"];
                     if (phUnits != null)
@@ -4286,10 +4295,12 @@ namespace Models.Core.ApsimFile
                         if (initWater["RelativeTo"] != null)
                             relativeTo = initWater["RelativeTo"].ToString();
                         double[] thickness = physical["Thickness"].Values<double>().ToArray();
+                        double[] airdry = physical["AirDry"].Values<double>().ToArray();
                         double[] ll15 = physical["LL15"].Values<double>().ToArray();
                         double[] dul = physical["DUL"].Values<double>().ToArray();
                         double[] ll;
                         double[] xf = null;
+                        double[] sat = physical["SAT"].Values<double>().ToArray();
                         if (relativeTo == "LL15")
                             ll = ll15;
                         else
@@ -4330,9 +4341,9 @@ namespace Models.Core.ApsimFile
                         else
                         {
                             if (filledFromTop)
-                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, ll, dul, xf));
+                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, airdry, ll, dul, sat, xf));
                             else
-                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, ll, dul));
+                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
                         }
                         water["Thickness"] = new JArray(thickness);
                         water["FilledFromTop"] = filledFromTop;
@@ -4382,6 +4393,9 @@ namespace Models.Core.ApsimFile
                 else
                     swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
+
+            foreach (JObject swimWT in JsonUtilities.ChildrenRecursively(root, "SwimWaterTable"))
+                swimWT.Remove();
 
             // Make sure all solutes have the new $type
             foreach (JObject solute in JsonUtilities.ChildrenRecursively(root, "Solute"))
