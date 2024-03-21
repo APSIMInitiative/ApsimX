@@ -1,13 +1,13 @@
 ﻿namespace UnitTests.Weather
 {
-    using Models;
-    using Models.Climate;
-    using Models.Core;
-    using NUnit.Framework;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using Models;
+    using Models.Climate;
+    using Models.Core;
+    using NUnit.Framework;
 
     /// <summary>Tests for weather randomiser</summary>
     class WeatherSamplerTests
@@ -19,7 +19,7 @@
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             const double delta = 0.000001;
 
-            var weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+            var weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Dalby.met"));
 
             var baseSim = new Simulation()
             {
