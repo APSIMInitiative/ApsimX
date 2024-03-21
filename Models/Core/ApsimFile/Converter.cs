@@ -5435,15 +5435,11 @@ namespace Models.Core.ApsimFile
 				{
 					if(weather["FileName"] != null)
 					{
-						string currentFileNameString = weather["FileName"].ToString();
-						if(currentFileNameString.Contains(pair.Key))
-						{
-							string fixedFileNameString = currentFileNameString;
-							fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
-							fixedFileNameString = fixedFileNameString.Replace("\\", "/");
-							fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
-							weather["FileName"] = fixedFileNameString;
-						}
+                        string fixedFileNameString = weather["FileName"].ToString();
+                        fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace("\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
+                        weather["FileName"] = fixedFileNameString;
 					}
 				}
 			}
