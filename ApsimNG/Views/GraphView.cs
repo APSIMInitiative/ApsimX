@@ -1611,12 +1611,16 @@ namespace UserInterface.Views
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                DateTime defaultDate = new DateTime();
                 smallestDate = DateTime.MaxValue;
                 largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
+                    if (d != defaultDate)
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
                     if (d < smallestDate)
                         smallestDate = d;
                     if (d > largestDate)
