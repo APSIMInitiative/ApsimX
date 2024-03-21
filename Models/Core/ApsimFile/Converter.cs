@@ -5405,71 +5405,12 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion172(JObject root, string fileName)
         {
-            List<string> uniqueNames = new List<string>();
-            List<string> conflictedUniqueNames = new List<string>();
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 //rename uses of ScriptModel to Script
                 bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ", true);
                 if (changeMade)
                     manager.Save();
-                
-                MatchCollection ms = manager.FindRegexMatches("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
-                if (ms != null && ms.Count > 0)
-                {
-                    Match m = ms.First();
-                    if (m.Success)
-                    {
-                        string className = m.Groups[2].Value;
-                        if (className.CompareTo("Script") != 0)
-                        {
-                            if (uniqueNames.Contains(className)) 
-                            {
-                                if (!conflictedUniqueNames.Contains(className))
-                                    conflictedUniqueNames.Add(className);
-                            }
-                            else 
-                            {
-                                uniqueNames.Add(className);
-                            }
-                        }
-                    }
-                }
-            }
-            int count = 1;
-            //find managers with this name that have to be renamed
-            foreach (string name in conflictedUniqueNames)
-            {
-                foreach (var manager in JsonUtilities.ChildManagers(root))
-                {
-                    //check if manager has this name
-                    MatchCollection ms = manager.FindRegexMatches("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
-                    if (ms != null && ms.Count > 0)
-                    {
-                        Match m = ms.First();
-                        if (m.Success)
-                        {
-                            string className = m.Groups[2].Value;
-                            if (className == name) {
-                                string newName = name + count.ToString();
-                                count += 1;
-                                bool changeMade = manager.Replace(m.Value, m.Groups[1] + newName + m.Groups[3], true);
-                                if (changeMade)
-                                    manager.Save();
-                                //replace the name of this class in all other manager scripts within the same simulation
-                                foreach (var manager2 in JsonUtilities.ChildManagers(root)) 
-                                {
-                                    if (manager.Token.Path.CompareTo(manager2.Token.Path) != 0 && ConverterUtilities.NodesInSameSimulation(manager.Token, manager2.Token)) 
-                                    {
-                                        changeMade = manager2.Replace($"{className}", $"{newName}", true);
-                                        if (changeMade)
-                                            manager2.Save();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
