@@ -103,7 +103,7 @@
             "        ",
             "        public void Test()",
             "        {",
-            "    \t\tsummary.WriteMessage(this, \"Correct Manager Called\", MessageType.All);",
+            "    \t\tsummary.WriteMessage(this, \"Manager Called\", MessageType.All);",
             "        }",
             "    }",
             "}"
@@ -166,12 +166,13 @@
             "    public class Script : Model",
             "    {",
             "        [Link] Summary summary;",
-            "        [Link(ByName=true)] MScript MScript;",
+            "        [Link(ByName=true)] Manager Manager2;",
             "        ",
             "\t\t[EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
             "        {",
-            "        \tMScript.Test();",
+            "        \tMScript script = Manager2.ScriptModel as MScript;",
+            "        \tscript.Test();",
             "        }",
             "    }",
             "}"
@@ -208,7 +209,7 @@
             "        ",
             "        public void Test()",
             "        {",
-            "    \t\tsummary.WriteMessage(this, \"Correct Manager Called\", MessageType.All);",
+            "    \t\tsummary.WriteMessage(this, \"Manager Called\", MessageType.All);",
             "        }",
             "    }",
             "}"
