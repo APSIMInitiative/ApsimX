@@ -1116,16 +1116,12 @@ namespace Models.PMF.Organs
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - nitrogen.Reallocation))
-            //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
             double storageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             Live.StorageN -= storageNRetranslocation;
             Live.MetabolicN -= Math.Max(0, nitrogen.Retranslocation - storageNRetranslocation);
             Allocated.StorageN -= nitrogen.Retranslocation;
 
             // Reallocation
-            //if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
-            //    throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
             double storageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
             Live.StorageN -= storageNReallocation;
             Live.MetabolicN -= Math.Max(0, nitrogen.Reallocation - storageNReallocation);
@@ -1138,7 +1134,6 @@ namespace Models.PMF.Organs
             if (extentOfError > 0.00000001)
                 throw new Exception(Name + "Some Leaf N was not allocated.");
         }
-
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public override IEnumerable<ITag> Document()
