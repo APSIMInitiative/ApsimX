@@ -81,7 +81,7 @@
             "<folder version=\"36\" creator=\"Apsim 7.5-r3183\" name=\"simulations\">" +
             "  <simulation name=\"Continuous Wheat\">" +
             "    <metfile name=\"met\">" +
-            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/MetFiles/Goond.met</filename>" +
+            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/WeatherFiles/Goond.met</filename>" +
             "    </metfile>" +
             "  </simulation>" +
             "</folder>";
@@ -90,8 +90,8 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var w = sims.Children[0].Children[0] as Models.Climate.Weather;
-            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "AU_Goondiwindi.met");
-            Assert.AreEqual(w.FileName, expected);
+            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "WeatherFiles", "AU_Goondiwindi.met");
+            Assert.AreEqual(expected, w.FileName.Replace("/", "\\"));
         }
 
         /// <summary>Ensure AREA imports OK</summary>
