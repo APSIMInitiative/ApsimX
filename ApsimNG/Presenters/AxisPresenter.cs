@@ -27,6 +27,11 @@
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// Whether this axis should hold a date value
+        /// </summary>
+        private bool isDateAxis = false;
+
+        /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
         /// <param name="model">The axis model</param>
@@ -40,7 +45,6 @@
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            // this.view.IsDateAxis = false/*axis.DateTimeAxis*/ // fixme;
 
             // Tell the view to populate the axis.
             PopulateView();
@@ -83,9 +87,9 @@
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
             view.LabelOnOneLine = axis.LabelOnOneLine;
-            view.SetMinimum(axis.Minimum ?? double.NaN, false/*axis.DateTimeAxis*/);
-            view.SetMaximum(axis.Maximum ?? double.NaN, false/*axis.DateTimeAxis*/);
-            view.SetInterval(axis.Interval ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.SetMinimum(axis.Minimum ?? double.NaN, isDateAxis);
+            view.SetMaximum(axis.Maximum ?? double.NaN, isDateAxis);
+            view.SetInterval(axis.Interval ?? double.NaN, isDateAxis);
         }
         
         /// <summary>
@@ -218,6 +222,15 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Set if this axis should hold a date
+        /// </summary>
+        /// <param name="isDate">Whether this is a date axis or not</param>
+        public void SetAsDateAxis(bool isDate)
+        {
+            this.isDateAxis = isDate;
         }
     }
 }

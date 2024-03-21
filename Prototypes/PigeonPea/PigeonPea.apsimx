@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 171,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -78,8 +78,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "PigeonPea",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "PigeonPea",
           "ResourceName": null,
           "Children": [
@@ -589,7 +587,18 @@
                   "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MinSoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7051,6 +7060,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -7061,6 +7071,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -7117,6 +7128,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -7127,6 +7139,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -7199,6 +7212,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7209,6 +7223,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7277,6 +7292,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7287,6 +7303,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -7355,6 +7372,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": null,
                   "Interval": null
@@ -7365,6 +7383,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": null,
                   "Interval": null
@@ -7443,7 +7462,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "These data [Timsina2007] were obtained from a field experiment conducted in 1999\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u20ac\u01532000 on a Hanwood loam soil at CSIRO Land and Water, Griffith, Australia.  Two indeterminate PigeonPea cultivars (Hooper and Stephens belonging to late maturity group [MG] 3 or early MG 4) were on 15 November, 8 December, and 6 January.",
+                  "Text": "These data [Timsina2007] were obtained from a field experiment conducted in 1999Ã¢â‚¬â€œ2000 on a Hanwood loam soil at CSIRO Land and Water, Griffith, Australia.  Two indeterminate PigeonPea cultivars (Hooper and Stephens belonging to late maturity group [MG] 3 or early MG 4) were on 15 November, 8 December, and 6 January.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -7459,7 +7478,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "1974-05-27T00:00:00",
-                      "End": "1974-10-23T00:00:00",
+                      "End": "1974-12-23T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
                       "Children": [],
@@ -7538,15 +7557,15 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                0.2406,
-                                0.2622,
-                                0.2631,
-                                0.2615,
-                                0.2626,
-                                0.2734,
-                                0.2734
+                                0.241,
+                                0.262,
+                                0.263,
+                                0.262,
+                                0.263,
+                                0.273,
+                                0.273
                               ],
-                              "InitialPAWmm": 29.97000000000002,
+                              "InitialPAWmm": 30.00000000000005,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -7593,7 +7612,15 @@
                                 23.8,
                                 23.9
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.135,
+                                0.0,
+                                0.0,
+                                0.114,
+                                0.11,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.2,
@@ -7640,26 +7667,90 @@
                                 0.48,
                                 0.48
                               ],
-                              "KS": [
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN"
+                              "KS": null,
+                              "BDMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
                               ],
-                              "BDMetadata": null,
-                              "AirDryMetadata": null,
-                              "LL15Metadata": null,
-                              "DULMetadata": null,
-                              "SATMetadata": null,
+                              "AirDryMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "LL15Metadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "DULMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "SATMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -7692,9 +7783,33 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "PigeonPeaSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7729,10 +7844,7 @@
                                 300.0,
                                 300.0,
                                 300.0,
-                                300.0,
-                                "NaN",
-                                "NaN",
-                                "NaN"
+                                300.0
                               ],
                               "SWCON": [
                                 0.1,
@@ -7741,10 +7853,7 @@
                                 0.1,
                                 0.1,
                                 0.1,
-                                0.1,
-                                "NaN",
-                                "NaN",
-                                "NaN"
+                                0.1
                               ],
                               "KLAT": null,
                               "Name": "SoilWater",
@@ -8029,8 +8138,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "PlantType": null,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "Name": "PigeonPea",
                           "ResourceName": "PigeonPea",
                           "Children": [],
@@ -8552,6 +8659,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8562,6 +8670,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8647,6 +8756,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8657,6 +8767,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8742,6 +8853,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8752,6 +8864,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8848,6 +8961,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8858,6 +8972,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8926,6 +9041,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8936,6 +9052,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9015,6 +9132,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -9025,6 +9143,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null

@@ -47,7 +47,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Is the phase emerged from the ground?</summary>
         [Description("Is the phase emerged?")]
-        public bool IsEmerged { get; set; } = true;
+        public bool IsEmerged { get; set; } = false;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]

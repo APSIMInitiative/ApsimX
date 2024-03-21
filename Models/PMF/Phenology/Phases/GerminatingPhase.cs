@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json;
@@ -39,6 +40,12 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
+        [Link]
+        private ISoilTemperature soilTemperature = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction minSoilTemperature = null;
+
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -66,7 +73,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete { get { return 0.999; } }
+        public double FractionComplete { get { return 0; } }
 
         /// <summary>
         /// Date for germination to occur.  null by default so model is used
@@ -82,6 +89,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
+            double sowLayerTemperature = soilTemperature.Value[SowLayer];
 
             if (GerminationDate != null)
             {
@@ -91,7 +99,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer])
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= minSoilTemperature.Value())
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }

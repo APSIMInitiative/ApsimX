@@ -1,18 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using Models;
+using Models.Core;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using Shared.Utilities;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Models;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Utility;
-
-
-
     /// <summary>
     /// Presenter for the Manager component
     /// </summary>
@@ -58,11 +55,23 @@
         {
             manager = model as Manager;
             managerView = view as IManagerView;
+
             explorerPresenter = presenter;
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            scriptModel = manager.Children.FirstOrDefault();
+            if (manager.Children.Count == 0)
+            {
+                try
+                {
+                    manager.RebuildScriptModel();
+                }
+                catch(Exception err) {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
+            }
+
+            scriptModel = manager.ScriptModel;
 
             // See if manager script has a description attribute on it's class.
             if (scriptModel != null)
@@ -88,8 +97,8 @@
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.Editor.Location = manager.Location;
-            managerView.TabIndex = manager.ActiveTabIndex;
+            managerView.CursorLocation = manager.Cursor;
+
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
         }
 
@@ -98,6 +107,9 @@
         /// </summary>
         public void Detach()
         {
+            manager.Cursor.TabIndex = managerView.TabIndex;
+            manager.Cursor = managerView.CursorLocation;
+
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
 
@@ -135,13 +147,12 @@
             // explorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
             if (!intellisense.Visible)
                 BuildScript();
-            if (scriptModel != null)
-                RefreshProperties();
         }
 
         private void RefreshProperties()
         {
-            propertyPresenter.RefreshView(scriptModel);
+            if (scriptModel != null && propertyPresenter != null)
+                propertyPresenter.RefreshView(scriptModel);
         }
 
         /// <summary>
@@ -165,9 +176,6 @@
 
             try
             {
-                manager.Location = managerView.Editor.Location;
-                manager.ActiveTabIndex = managerView.TabIndex;
-
                 string code = managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via
@@ -192,6 +200,7 @@
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
+                RefreshProperties();
             }
             catch (Exception err)
             {
@@ -211,8 +220,6 @@
             try
             {
                 BuildScript();
-                if (scriptModel != null)
-                    RefreshProperties();
             }
             catch (Exception err)
             {
@@ -229,9 +236,7 @@
         {
             try
             {
-
                 throw new NotImplementedException();
-
             }
             catch (Exception err)
             {
@@ -257,6 +262,15 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// A rectangle defining the position of the cursor within the editor text
+        /// </summary>
+        public ManagerCursorLocation CursorLocation
+        {
+            get { return managerView.CursorLocation; }
+            set { managerView.CursorLocation = value; }
         }
     }
 }

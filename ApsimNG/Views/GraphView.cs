@@ -1,32 +1,34 @@
-﻿namespace UserInterface.Views
+﻿using APSIM.Interop.Graphing.CustomSeries;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using Gtk;
+using UserInterface.Interfaces;
+using MathNet.Numerics.Statistics;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using OxyPlot.Series;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Utility;
+using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+
+using static Gdk.Cursor;
+using static Gdk.CursorType;
+
+namespace UserInterface.Views
 {
-    using APSIM.Interop.Graphing.CustomSeries;
-    using APSIM.Interop.Graphing.Extensions;
-    using APSIM.Shared.Documentation.Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using MathNet.Numerics.Statistics;
-    using OxyPlot;
-    using OxyPlot.Annotations;
-    using OxyPlot.Axes;
-    using OxyPlot.GtkSharp;
-    using OxyPlot.Series;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using Utility;
-    using LegendPlacement = OxyPlot.Legends.LegendPlacement;
-    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
-    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-
-
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -152,6 +154,7 @@
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
+            plot1.Model.MouseLeave += OnChartMouseMove;
 #pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
@@ -183,6 +186,7 @@
                 plot1.Model.MouseDown -= OnChartClick;
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
+                plot1.Model.MouseLeave -= OnChartMouseMove;
 #pragma warning restore CS0618
                 if (captionEventBox != null)
                     captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
@@ -1133,10 +1137,24 @@
                     oxyAxis.StartPosition = 0;
                     oxyAxis.EndPosition = 1;
                 }
+
+                double min = minimum;
                 if (!double.IsNaN(minimum))
                     oxyAxis.Minimum = minimum;
+                else
+                    min = AxisMinimum(axisType);
+
+                double max = maximum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
+                else
+                    max = AxisMaximum(axisType);
+
+                if (max <= min)
+                    max = min + 1;
+
+                oxyAxis.AbsoluteMinimum = min;
+                oxyAxis.AbsoluteMaximum = max;
 
                 if (oxyAxis is DateTimeAxis)
                 {

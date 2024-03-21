@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
+using Shared.Utilities;
 
 namespace Models
 {
@@ -42,7 +42,7 @@ namespace Models
         /// Simulations object and get its compiler.
         /// 
         /// </summary>
-        private ScriptCompiler Compiler()
+        public ScriptCompiler Compiler()
         {
             if (TryGetCompiler())
                 return scriptCompiler;
@@ -62,10 +62,22 @@ namespace Models
                 var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
-                scriptCompiler = simulations.ScriptCompiler;
+                SetCompiler(simulations.ScriptCompiler);
             }
             return true;
         }
+
+        /// <summary>
+        /// Set compiler to given script compiler
+        /// </summary>
+        private void SetCompiler(ScriptCompiler compiler)
+        {
+            scriptCompiler = compiler;
+        }
+
+        /// <summary>Which child is the compiled script model.</summary>
+        [JsonIgnore]
+        public IModel ScriptModel { get; private set; } = null;
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
@@ -98,8 +110,15 @@ namespace Models
             }
             set
             {
-                cSharpCode = value.Split('\n');
-                RebuildScriptModel();
+                if (value == null)
+                {
+                    throw new Exception("Value 'Null' cannot be stored in Manager.Code");
+                }
+                else
+                {
+                    cSharpCode = value.Split('\n');
+                    RebuildScriptModel();
+                }
             }
         }
 
@@ -107,19 +126,11 @@ namespace Models
         public List<KeyValuePair<string, string>> Parameters { get; set; }
 
         /// <summary>
-        /// Stores column and line of caret, and scrolling position when editing in GUI
-        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
-        /// way to store both the caret position and scrolling information.
-        /// </summary>
-        [JsonIgnore]
-        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
-
-        /// <summary>
-        /// Stores whether we are currently on the tab displaying the script.
+        /// Stores the cursor position so the page location is saved when moving around the GUI
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore]
-        public int ActiveTabIndex { get; set; }
+        public ManagerCursorLocation Cursor { get; set; } = new ManagerCursorLocation();
 
         /// <summary>
         /// Stores the success of the last compile
@@ -153,15 +164,11 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Children.Count != 0)
-            {
-                //throw an expection to stop simulations from running with an old binary
-                if (SuccessfullyCompiledLast == false)
-                    throw new Exception("Errors found in manager model " + Name);
-
-                GetParametersFromScriptModel();
-                SetParametersInScriptModel();
-            }
+            // throw an exception to stop simulations from running with an old binary
+            if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                throw new Exception("Errors found in manager model " + Name);
+            GetParametersFromScriptModel();
+            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -170,20 +177,29 @@ namespace Models
             if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
-                if (Children.Count != 0)
+                if (ScriptModel != null)
                     GetParametersFromScriptModel();
 
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
-                    SuccessfullyCompiledLast = true;
-                    if (Children.Count != 0)
-                        Children.Clear();
+                    //remove all old script children
+                    for(int i = this.Children.Count - 1; i >= 0; i--)
+                        if (this.Children[i].GetType().Name.Contains("Script"))
+                            this.Children.Remove(this.Children[i]);
+
+                    //add new script model
                     var newModel = results.Instance as IModel;
                     if (newModel != null)
                     {
+                        SuccessfullyCompiledLast = true;
                         newModel.IsHidden = true;
-                        Structure.Add(newModel, this);
+                        ScriptModel = Structure.Add(newModel, this);
+                    }
+                    else
+                    {
+                        ScriptModel = null;
+                        SuccessfullyCompiledLast = false;
                     }
                 }
                 else
@@ -191,6 +207,7 @@ namespace Models
                     SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
                 }
+
                 SetParametersInScriptModel();
             }
         }
@@ -198,17 +215,14 @@ namespace Models
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            if (Enabled && Children.Count > 0)
+            if (Enabled && ScriptModel != null && Parameters != null)
             {
-                var script = Children[0];
-                if (Parameters != null)
-                {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
                     {
                         try
                         {
-                            PropertyInfo property = script.GetType().GetProperty(parameter.Key);
+                            PropertyInfo property = ScriptModel.GetType().GetProperty(parameter.Key);
                             if (property != null)
                             {
                                 object value;
@@ -218,7 +232,7 @@ namespace Models
                                     value = this.FindInScope(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                                property.SetValue(script, value, null);
+                                property.SetValue(ScriptModel, value, null);
                             }
                         }
                         catch (Exception err)
@@ -233,7 +247,6 @@ namespace Models
                             message += error.Message;
                         throw new Exception(message);
                     }
-                }
             }
         }
 
@@ -241,20 +254,19 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (Children.Count > 0)
+            if (ScriptModel != null)
             {
-                var script = Children[0];
-
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Clear();
-                foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
+
+                foreach (PropertyInfo property in ScriptModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
                         ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null &&
                         Attribute.IsDefined(property, typeof(DescriptionAttribute)))
                     {
-                        object value = property.GetValue(script, null);
+                        object value = property.GetValue(ScriptModel, null);
                         if (value == null)
                             value = "";
                         else if (value is IModel)
@@ -273,13 +285,15 @@ namespace Models
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Nasty!
-            IModel script = Children[0];
+            if (Children.Count > 0)
+            {
+                var script = ScriptModel;
 
-            Type scriptType = script.GetType();
-            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                foreach (ITag tag in script.Document())
-                    yield return tag;
+                Type scriptType = script.GetType();
+                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                    foreach (ITag tag in script.Document())
+                        yield return tag;
+            }
         }
     }
 }
