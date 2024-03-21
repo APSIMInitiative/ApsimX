@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 171; } }
+        public static int LatestVersion { get { return 172; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5397,6 +5397,57 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
+
+		/// <summary>
+		/// Changes example met file names in Weather.FileName to conform to new naming.
+		/// </summary>
+		/// <param name="root"></param>
+		/// <param name="fileName"></param>
+		private static void UpgradeToVersion172(JObject root, string fileName)
+		{
+			Dictionary<string, string> newWeatherFileNames = new()
+			{
+				{"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
+				{"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
+				{"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
+				{"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
+				{"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
+				{"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
+				{"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
+				{"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
+				{"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
+				{"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
+				{"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
+				{"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
+				{"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
+				{"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
+				{"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
+				{"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
+				{"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
+				{"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
+				{"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
+			};
+
+			List<string> splits = new List<string>();
+			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
+			{
+				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
+				{
+					if(weather["FileName"] != null)
+					{
+						string currentFileNameString = weather["FileName"].ToString();
+						if(currentFileNameString.Contains(pair.Key))
+						{
+							string fixedFileNameString = currentFileNameString;
+							fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
+							fixedFileNameString = fixedFileNameString.Replace("\\", "/");
+							fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
+							weather["FileName"] = fixedFileNameString;
+						}
+					}
+				}
+			}
+		}
     }
 }
 
