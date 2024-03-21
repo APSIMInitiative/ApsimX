@@ -41,16 +41,15 @@ namespace UserInterface.Views
         {
             if (sheet.CellSelector != null && sheet.CellSelector.IsSelected(columnIndex, rowIndex))
                 return States.Selected; 
-            else if (sheet.DataProvider.IsColumnReadonly(columnIndex))
+            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.ReadOnly)
                 return States.Insensitive;
             else if (rowIndex < sheet.NumberFrozenRows)
                 return States.Insensitive;
+            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.Calculated)
+                return States.Calculated;
             else
                 return States.Normal;
         }
-
-
-
 
         /// <summary>Gets whether to use a bold font for a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>

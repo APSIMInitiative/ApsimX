@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Drawing;
-    using Models;
-    using EventArguments;
     using APSIM.Shared.Graphing;
+    using EventArguments;
 
     /// <summary>
     /// Event arguments for a Axis click
@@ -106,14 +106,14 @@
         /// <param name="showInLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLineAndMarkers(
-             string title, 
-             IEnumerable x, 
+             string title,
+             IEnumerable x,
              IEnumerable y,
              string xFieldName,
              string yFieldName,
              IEnumerable xError,
              IEnumerable yError,
-             AxisPosition xAxisType, 
+             AxisPosition xAxisType,
              AxisPosition yAxisType,
              Color colour,
              LineType lineType,
@@ -135,11 +135,11 @@
         /// <param name="showInLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawBar(
-            string title, 
-            IEnumerable x, 
-            IEnumerable y, 
-            AxisPosition xAxisType, 
-            AxisPosition yAxisType, 
+            string title,
+            IEnumerable x,
+            IEnumerable y,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour,
             bool showInLegend);
 
@@ -300,7 +300,7 @@
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         /// <param name="labelOnOneLine">Show Axis Label on one line</param>
         void FormatAxis(
-            AxisPosition axisType, 
+            AxisPosition axisType,
             string title,
             bool inverted,
             double minimum,
@@ -314,7 +314,9 @@
         /// </summary>
         /// <param name="position">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        void FormatLegend(LegendPosition position, LegendOrientation orientation);
+        /// <param name="namesOfSeriesToRemove">Names of series to remove from Graph.</param>
+        /// <param name="reselectedSeriesNames">Names of reselected series to be reenabled.</param>
+        void FormatLegend(LegendPosition position, LegendOrientation orientation, List<string> namesOfSeriesToRemove=null, List<string> reselectedSeriesNames=null);
 
         /// <summary>
         /// Format the title.
@@ -372,7 +374,7 @@
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
         double AxisMajorStep(AxisPosition axisType);
-        
+
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>
         string[] GetSeriesNames();

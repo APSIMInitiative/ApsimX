@@ -36,7 +36,7 @@ namespace Models.Core.ApsimFile
             modelToAdd.OnCreated();
             foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
-            
+
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
@@ -167,11 +167,11 @@ namespace Models.Core.ApsimFile
                     }
                     else if (obj is IVariable variable)
                     {
-                        if (variable.DataType.Name.CompareTo(originalName) == 0)
-                        {
+                        if (modelToCheck.FindSibling(newName) == null)
                             badName = false;
-                        } 
-                        else
+                        if (variable.DataType.Name.CompareTo(originalName) == 0)
+                            badName = false;
+                        if (badName == true)
                         {
                             counter++;
                             newName = originalName + counter.ToString();
@@ -181,7 +181,7 @@ namespace Models.Core.ApsimFile
                     {
                         badName = false;
                     }
-                }   
+                }
             }
             if (counter == 10000)
             {
