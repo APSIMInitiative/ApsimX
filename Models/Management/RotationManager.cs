@@ -83,7 +83,16 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public int CurrentState { get; set; }
+        public int CurrentStateId { get; set; }
+
+        /// <summary>
+        /// Current State of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public string CurrentState { 
+            get {return CurrentStateName; } 
+            set {CurrentStateId = getStateIDByName(value);} 
+        }
 
         /// <summary>
         /// Name of the Current State
@@ -91,7 +100,7 @@ namespace Models.Management
         [JsonIgnore]
         public string CurrentStateName
         {
-            get { return getStateNameByID(CurrentState); }
+            get { return getStateNameByID(CurrentStateId); }
         }
 
         /// <summary>
@@ -143,10 +152,10 @@ namespace Models.Management
         [EventSubscribe("Commencing")]
         private void OnCommence(object sender, EventArgs e)
         {
-            CurrentState = 0;
-            for (int i = 0; i < Nodes.Count && CurrentState == 0; i++)
+            CurrentStateId = 0;
+            for (int i = 0; i < Nodes.Count && CurrentStateId == 0; i++)
                 if (Nodes[i].Name == InitialState)
-                    CurrentState = Nodes[i].ID;
+                    CurrentStateId = Nodes[i].ID;
 
             if (Verbose)
                 summary.WriteMessage(this, $"Initialised, state={CurrentStateName} (of {Nodes.Count} total)", MessageType.Diagnostic);
@@ -181,7 +190,7 @@ namespace Models.Management
                 more = false;
                 double bestScore = -1.0;
                 Arc bestArc = null;
-                foreach (var arc in Arcs.FindAll(arc => arc.SourceID == CurrentState))
+                foreach (var arc in Arcs.FindAll(arc => arc.SourceID == CurrentStateId))
                 {
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
@@ -261,7 +270,7 @@ namespace Models.Management
         /// </summary>
         public void SetCurrentStateByName(string name)
         {
-            CurrentState = getStateIDByName(name);
+            CurrentStateId = getStateIDByName(name);
             return;
         }
 
@@ -270,7 +279,7 @@ namespace Models.Management
         /// </summary>
         public string GetCurrentStateName()
         {
-            return getStateNameByID(CurrentState);
+            return getStateNameByID(CurrentStateId);
         }
 
         /// <summary>
@@ -287,7 +296,7 @@ namespace Models.Management
                 eventService.Publish($"TransitionFrom{CurrentStateName}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
 
-                CurrentState = transition.DestinationID;
+                CurrentStateId = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
                 {
