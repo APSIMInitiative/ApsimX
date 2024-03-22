@@ -633,7 +633,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a list of Event Handles that are Invoked in the prodivded function
+        /// Gets a list of Event Handles that are Invoked in the provided function
         /// </summary>
         /// <remarks>
         /// Model source file must be included as embedded resource in project xml
