@@ -60,15 +60,15 @@ namespace Models.Management
         /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
         /// </summary>
         [Description("Top Level")]
-        [Tooltip("When enabled, this component will control other management components, if not it does nothing")]
+        [Tooltip("When enabled, this component will control and interact other (sub) management components, if not it does nothing unless requested")]
         public bool TopLevel { get; set; }
 
         /// <summary>
-        /// Initial state of the rotation.
+        /// Initial state of the rotation. Not relevant if we're in a multipaddock (non-toplevel) simulation.
         /// </summary>
         [Description("Initial State")]
         [Tooltip("Initial state of the rotation")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(States))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(States), VisibleCallback = "TopLevel")]
         public string InitialState { get; set; }
 
         /// <summary>

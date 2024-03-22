@@ -329,7 +329,7 @@ namespace UserInterface.Views
 
         /// <summary>Is the column readonly?</summary>
         /// <param name="colIndex">Column index of cell.</param>
-        public bool IsColumnReadonly(int colIndex)
+        public bool GetCellState(int colIndex)
         {
             return false;
         }
@@ -342,6 +342,22 @@ namespace UserInterface.Views
                 return "";
             else
                 return units[colIndex];
+        }
+
+        /// <summary>Get the cell state.</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
+        {
+            return SheetDataProviderCellState.Normal;
+        }
+
+        /// <summary>Set the cell state.</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        public void SetCellState(int colIndex, int rowIndex)
+        {
+            throw new NotImplementedException("Cannot set state of a PagedDataProvider");
         }
 
         /// <summary>

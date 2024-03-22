@@ -24,7 +24,7 @@
     <PackageReference Include="NetMQ" Version="4.0.1.12" />
     <PackageReference Include="MessagePack" Version="2.5.108" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
-
+    <PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />

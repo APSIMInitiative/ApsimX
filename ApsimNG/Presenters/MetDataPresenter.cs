@@ -356,6 +356,9 @@ namespace UserInterface.Presenters
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
 
+            foreach (string validationMessage in weatherData.Validate())
+                summary.AppendLine($"WARNING: {validationMessage}");
+
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
             summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
