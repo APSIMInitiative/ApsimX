@@ -189,9 +189,9 @@ namespace Models.Core
                     else if (matches.Count == 0)
                     {
                         string errorMsg = "Cannot find a match for link " + field.Name + " in model " + GetFullName(obj);
-                        if (obj is Manager)
-                            if ((obj as Manager).FindAncestor<Folder>() != null)
-                                errorMsg += ". If the manager script is within a folder, it's linking scope will be limited to that folder.";
+                        if (obj is IScript)
+                            if ((obj as Model).FindAncestor<Folder>() != null)
+                                errorMsg += "\nIf the manager script is within a folder, it's linking scope will be limited to that folder.";
                                 
                         if (throwOnFail && !link.IsOptional)
                             throw new Exception(errorMsg);
