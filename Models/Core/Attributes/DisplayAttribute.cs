@@ -112,7 +112,12 @@ namespace Models.Core
         /// <summary>
         /// Provides a EditorView object for display
         /// </summary>
-        Code
+        Code,
+
+         /// <summary>
+        /// Provides a GTK Colour Picker dialog
+        /// </summary>
+        ColourPicker
     }
 
     /// <summary>

@@ -444,7 +444,7 @@ namespace UserInterface.Presenters
 
             /// <summary>Property wrapper for name</summary>
             [Description("Colour")]
-            [Display(Type = DisplayType.None)]
+            [Display(Type = DisplayType.ColourPicker)]
             public Color Colour
             {
                 get

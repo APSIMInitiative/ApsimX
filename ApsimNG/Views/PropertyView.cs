@@ -357,6 +357,16 @@ namespace UserInterface.Views
                     colourChooser.MainWidget.Name = property.ID.ToString();
                     component = colourChooser.MainWidget;
                     break;
+                case PropertyType.ColourPicker:
+                    ColorButton colourPicker = new ColorButton();
+                    if (property.Value is System.Drawing.Color color)
+                        colourPicker.Rgba = color.ToRGBA();
+                    colourPicker.Xalign = 0;
+                    colourPicker.WidthRequest = 350;
+                    colourPicker.Name = property.ID.ToString();
+                    colourPicker.ColorSet += OnColourChanged;
+                    component = colourPicker;
+                    break;
                 case PropertyType.Numeric:
                     SpinButton button = new SpinButton(double.MinValue, double.MaxValue, 1);
                     component = button;
@@ -555,6 +565,27 @@ namespace UserInterface.Views
                     var args = new PropertyChangedEventArgs(id, colour);
                     PropertyChanged?.Invoke(this, args);
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a colour is picked from the colour picker
+        /// </summary>
+        /// <param name="sender">The GtkComboBox widget which has been changed.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnColourChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var gtkcolour = (sender as ColorButton).Rgba.ToColour().ToGdk();
+                var colour = Utility.Colour.FromGtk(gtkcolour);
+                Guid id = Guid.Parse((sender as ColorButton).Name);
+                var args = new PropertyChangedEventArgs(id, colour);
+                PropertyChanged?.Invoke(this, args);
             }
             catch (Exception err)
             {
