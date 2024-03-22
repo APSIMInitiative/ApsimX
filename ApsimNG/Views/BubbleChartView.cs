@@ -358,14 +358,13 @@ namespace UserInterface.Views
         {
             try
             {
-                // Get the point clicked by the mouse.
-                // FIXME - need to test if the user right-clicked on an object or the root window
-                //Cairo.PointD clickPoint = new PointD(args.X, args.Y);
-                // Look through nodes & arcs for the click point
-                //DGObject clickedObject = Graph.DirectedGraph.Nodes.FindLast(node => node.HitTest(clickPoint));
-
+                //pass right click over to the graph to update selection
+                graphView.SelectedObjects.Clear();
+                graphView.ProcessClick(new System.Drawing.Point((int)args.X, (int)args.Y));
+                
                 PopulateMenus();
-                if (ContextMenu.Children.Length > 0) ContextMenu.Popup();
+                if (ContextMenu.Children.Length > 0)
+                    ContextMenu.Popup();
             }
             catch (Exception err)
             {
@@ -407,6 +406,8 @@ namespace UserInterface.Views
                 else
                     Select(0);
             }
+            else
+                Select(0);
         }
 
         /// <summary>

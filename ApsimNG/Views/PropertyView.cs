@@ -278,7 +278,8 @@ namespace UserInterface.Views
                     Frame outline = new Frame();
                     outline.Add(editor);
                     component = outline;
-                    editor.FocusOutEvent += OnEntryFocusOut;
+                    editor.FocusOutEvent += UpdateText;
+                    editor.KeyPressEvent += UpdateText;
                     break;
                 case PropertyType.Code:
                     EditorView codeEditor = new EditorView(this);
@@ -300,7 +301,8 @@ namespace UserInterface.Views
                 case PropertyType.SingleLineText:
                     string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
                     Entry textInput = new Entry(entryValue ?? "");
-                    textInput.FocusOutEvent += OnEntryFocusOut;
+                    textInput.FocusOutEvent += UpdateText;
+                    textInput.KeyPressEvent += UpdateText;
                     component = textInput;
                     originalEntryText[property.ID] = textInput.Text;
                     break;
@@ -327,7 +329,7 @@ namespace UserInterface.Views
                     // Add an Entry and a Button inside a VBox.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
-                    fileNameInput.FocusOutEvent += OnEntryFocusOut;
+                    fileNameInput.FocusOutEvent += UpdateText;
                     originalEntryText[property.ID] = fileNameInput.Text;
 
                     Button fileChooserButton = new Button("...");
@@ -451,33 +453,47 @@ namespace UserInterface.Views
         /// <param name="sender">The entry which has been modified.</param>
         /// <param name="e">Event data.</param>
         [GLib.ConnectBefore]
-        private void OnEntryFocusOut(object sender, EventArgs e)
+        private void UpdateText(object sender, EventArgs e)
         {
             try
             {
-                Widget widget = null;
-                if (sender is Widget)
-                    widget = sender as Widget;
-                else if (sender is ViewBase)
-                    widget = (sender as ViewBase).MainWidget;
-
-                if (widget != null)
+                bool doUpdate = false;
+                if (e is KeyPressEventArgs) 
                 {
-                    Guid id = Guid.Parse(widget.Name);
-                    string text;
-                    if (widget is Entry entry)
-                        text = entry.Text;
-                    else if (widget is TextView editor)
-                        text = editor.Buffer.Text;
-                    else
-                        throw new Exception($"Unknown widget type {sender.GetType().Name}");
-                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                    if ((e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
+                        doUpdate = true;
+                }
+                else 
+                {
+                    doUpdate = true;
+                }
+                if (doUpdate) 
+                {
+                    Widget widget = null;
+                    if (sender is Widget)
+                        widget = sender as Widget;
+                    else if (sender is ViewBase)
+                        widget = (sender as ViewBase).MainWidget;
+
+                    if (widget != null)
                     {
-                        var args = new PropertyChangedEventArgs(id, text);
-                        originalEntryText[id] = text;
-                        PropertyChanged?.Invoke(this, args);
+                        Guid id = Guid.Parse(widget.Name);
+                        string text;
+                        if (widget is Entry entry)
+                            text = entry.Text;
+                        else if (widget is TextView editor)
+                            text = editor.Buffer.Text;
+                        else
+                            throw new Exception($"Unknown widget type {sender.GetType().Name}");
+                        if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                        {
+                            var args = new PropertyChangedEventArgs(id, text);
+                            originalEntryText[id] = text;
+                            PropertyChanged?.Invoke(this, args);
+                        }
                     }
                 }
+                
             }
             catch (Exception err)
             {

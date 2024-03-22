@@ -7,9 +7,6 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
-using APSIM.Interop.Drawing;
-using System.Drawing;
-using OxyPlot;
 
 namespace UserInterface.Views
 {
@@ -177,19 +174,36 @@ namespace UserInterface.Views
             return window.Pixbuf;
         }
 
+        public void ProcessClick(Point clickPoint) {
+            // Look through nodes for the click point
+            GraphObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+            // If not found, look through arcs for the click point
+            if (clickedObject == null)
+                clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+            if (clickedObject == null) 
+            {
+                UnSelect();
+            }
+            else 
+            {
+                Select(new DGRectangle(clickPoint.X, clickPoint.Y, 1, 1), true);
+            }
+                
+        }
+
         /// <summary>The drawing canvas is being exposed to user.</summary>
         private void OnDrawingAreaExpose(object sender, DrawnArgs args)
         {
             try
             {
-                DrawingArea area = (DrawingArea)sender;
+                this.drawable = (DrawingArea)sender;
 
                 Cairo.Context context = args.Cr;
 
-                GraphObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
-#pragma warning disable 0612
-                GraphObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
-#pragma warning restore 0612
+                GraphObject.DefaultOutlineColour = this.drawable.StyleContext.GetColor(StateFlags.Normal).ToColour();
+                GraphObject.DefaultBackgroundColour = this.drawable.StyleContext.GetColor(StateFlags.Normal).ToColour();
 
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
 
@@ -293,12 +307,14 @@ namespace UserInterface.Views
         {
             try
             {
+                // Get the point where the mouse is.
+                Point movePoint = new Point((int)args.Event.X - selectOffset.X, (int)args.Event.Y - selectOffset.Y);
+
+                this.MainWidget.HasFocus = true;
+
                 // Delselect existing object
                 if (HoverObject != null)
                     HoverObject.Hover = false;
-
-                // Get the point where the mouse is.
-                Point movePoint = new Point((int)args.Event.X - selectOffset.X, (int)args.Event.Y - selectOffset.Y);
 
                 //Move connected arcs half the distance the node is moved
                 Point diff = new Point(movePoint.X - lastPos.X, movePoint.Y - lastPos.Y);
@@ -314,12 +330,22 @@ namespace UserInterface.Views
                 {
                     if (isDragging)
                     {
-                        if (SelectedObjects != null && SelectedObjects.Count > 0) // If an object is under the mouse and the mouse is down, then move it
+                        if (SelectedObjects != null && SelectedObjects.Count > 0) // If  objects are selected and the mouse is down, then move it
                         {
                             for (int i = 0; i < SelectedObjects.Count; i++)
                             {
                                 int x = SelectedObjects[i].Location.X + diff.X;
                                 int y = SelectedObjects[i].Location.Y + diff.Y;
+                                if (x > drawable.AllocatedWidth)
+                                    x = drawable.AllocatedWidth;
+                                else if (x < 0)
+                                    x = 0;
+
+                                if (y > drawable.AllocatedHeight)
+                                    y = drawable.AllocatedHeight;
+                                else if (y < 0)
+                                    y = 0;
+
                                 SelectedObjects[i].Location = new Point(x, y);
 
                                 if (SelectedObjects[i] is APSIM.Shared.Graphing.Node)
@@ -415,15 +441,7 @@ namespace UserInterface.Views
                     else
                     {
                         Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
-                        // Look through nodes for the click point
-                        GraphObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-                        // If not found, look through arcs for the click point
-                        if (clickedObject == null)
-                            clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-                        if (clickedObject == null)
-                            UnSelect();
+                        ProcessClick(clickPoint);
                     }
                 }
                 isDragging = false;
@@ -493,20 +511,43 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// If the right-most node is out of the drawing area, doubles the width.
-        /// If the bottom-most node is out of the drawing area, doubles the height;
+        /// Corrects the position of Nodes and Arcs if they are off the screen.
         /// </summary>
         private void CheckSizing()
         {
             if (nodes != null && nodes.Any())
             {
-                APSIM.Shared.Graphing.Node rightMostNode = nodes.Aggregate((node1, node2) => node1.Location.X > node2.Location.X ? node1 : node2);
-                APSIM.Shared.Graphing.Node bottomMostNode = nodes.Aggregate((node1, node2) => node1.Location.Y > node2.Location.Y ? node1 : node2);
-                if (rightMostNode.Location.X + rightMostNode.Width >= drawable.Allocation.Width)
-                    drawable.WidthRequest = 2 * drawable.Allocation.Width;
-                // I Assume that the nodes are circles such that width = height.
-                if (bottomMostNode.Location.Y + bottomMostNode.Width >= drawable.Allocation.Height)
-                    drawable.HeightRequest = 2 * drawable.Allocation.Height;
+                for(int i = 0; i < nodes.Count; i++) {
+                    int x = nodes[i].Location.X;
+                    if (x < 0)
+                        x = 0;
+                    else if (x > drawable.AllocatedWidth)
+                        x = drawable.AllocatedWidth;
+
+                    int y = nodes[i].Location.Y;
+                    if (y < 0)
+                        y = 0;
+                    else if (y > drawable.AllocatedHeight)
+                        y = drawable.AllocatedHeight;
+
+                    nodes[i].Location = new Point(x, y);
+                }
+
+                for(int i = 0; i < arcs.Count; i++) {
+                    int x = arcs[i].Location.X;
+                    if (x < 0)
+                        x = 0;
+                    else if (x > drawable.AllocatedWidth)
+                        x = drawable.AllocatedWidth;
+
+                    int y = arcs[i].Location.Y;
+                    if (y < 0)
+                        y = 0;
+                    else if (y > drawable.AllocatedHeight)
+                        y = drawable.AllocatedHeight;
+
+                    arcs[i].Location = new Point(x, y);
+                }
             }
         }
 
