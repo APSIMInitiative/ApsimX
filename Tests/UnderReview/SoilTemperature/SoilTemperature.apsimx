@@ -5,6 +5,15 @@
   "ResourceName": null,
   "Children": [
     {
+      "$type": "Models.Memo, Models",
+      "Text": "# The APSIM SoilTemperature Model\n\nVal Snow (AgResearch, New Zealand) and Dean Holzworth (CSIRO, Australia)\n\nTested against data and simulaitons supplied by:\n- Neil Huth (CSIRO, Australia)\n- Sotirios Archontoulis and Isaiah Huber (Iowa State University, USA)\n- Hamish Brown (Plant and Food Research, New Zealand)\n\n## Acknowledgements\n\nSoilTemperature was completed using funding from AgResearch’s Strategic Science Investment Fund and CSIRO’s internal funding (SIP). \n\n## Introduction\nSoilTemperature simulates soil temperature given minimal input information using a numerical scheme. This implementation is largely based on the method described by Campbell (1985) but has some modifications to make it compatible with APSIM. There are also some updates since the version released in APSIM Classic. This model replaces the former method that was based on EPIC (Williams xxxx).\n\n## High-level Description\nSee Campbell (1985) for details on the numerical scheme - the mathematics is not replicated here. The soil thermal properties that are needed for the numerical solution are the specific heat capacity (the quantity of energy needed to raise the soil temperature by 1 C) and the thermal conductivity (the ability of the soil to conduct heat). These properties are estimated from standard APSIM soil properties using methods from Campbell (1985), Tian et al., (2016) and de Vries (1963) taking into account the possibility that the soil has rocks, ice and high organic matter contents. If the particle size information for the soil is not supplied then they are estimated as 30% clay, 65% silt and 5% sand with these values displayed in red in the user interface so that better values may be supplied if available. Initial values of soil temperature may be supplied by the user and if not they are estimated from a standard simple analytical equation.\nSoilTemperature runs 48 timesteps within each day. The upper boundary condition during the day is interpolated using a sine function from the minimum and maximum air temperature for the day. The lower boundary condition is set at 20 m deep as the annual average air temperature. To allow this deep lower boundary condition SoilTemperature includes a number of ‘phantom’ layers below the user-specified soil profile. The properties of these layers are set to equal those in the deepest simulated layer and their only purpose is to facilitate the implementation of the lower boundary condition. These nodes are invisible to the user.\n\n## References\nCampbell, G.S., 1985. Soil Physics with BASIC. Transport Models for Soil - Plant Systems. Elsevier, Amsterdam.\n\nde Vries, D.A., 1963. Thermal properties of soils, in: van Wijk, W.R. (Ed.) Physics of Plant Environment. North-Holland Publishing Corporation, Amsterdam, pp. 210–235.\n\nTian, Z., Lu, Y., Horton, R., Ren, T., 2016. A simplified de Vries‐based model to estimate thermal conductivity of unfrozen and frozen soil. Eur. J. Soil Science. 67(5), 564-572. https://doi.org/10.1111/ejss.12366.\n\n",
+      "Name": "Introduction",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
@@ -18680,7 +18689,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "SoilTemperature’s numerical solution requires initial values of soil temperature by layer. These are not usually available from measurements so a scheme, based on a simplified analytical solution to the heat flow equation, has been implemented. Those estimated values are used by default unless the user adds in their own values.\n\nNumerical solutions can take some time to ‘forget’ the initial conditions and the time to forget increases with depth. Simulations were set up to demonstrate this feature. The soil is a silt loam in a pasture system based at Lincoln, New Zealand. The simulation is set up with default initial conditions as well as two, deliberately bad, sets of initial temperatures – uniformly at 0.0 and 30.0 C.\n\nThe first four plots concentrate on the first two weeks of the simulation and the surface layers. The second four plots show simulated outputs deeper in the soil and over several years. \n\nThe deeper in the soil that the output is examined the longer it takes for the simulation to forget the initial temperatures. While we are not suggesting that initial conditions are routinely guessed as badly as these, it is important to note this effect when comparing against data. As a rough guide, if the depth of interest is in the top 300 mm then the ‘run in’ should be at least two weeks. At about 1 m deep the run in should be greater than six months and deeper than that it may be several years. \n\nNote that these are worst-case scenarios and that other models, particularly SoilWater or SWIM and Nutrient, also require substantial run in times.\n",
+          "Text": "SoilTemperature’s numerical solution requires initial values of soil temperature by layer. These are not usually available from measurements so a scheme, based on a simplified analytical solution to the heat flow equation, has been implemented. Those estimated values are used by default unless the user adds in their own values.\n\nNumerical solutions can take some time to ‘forget’ the initial conditions and the time to forget increases with depth. Simulations were set up to demonstrate this feature. The soil is a silt loam in a pasture system based at Lincoln, New Zealand. The simulation is set up with default initial conditions as well as two, deliberately bad, sets of initial temperatures – uniformly at -20.0 and 30.0 C.\n\nThe first four plots concentrate on the first two weeks of the simulation and the surface layers. The second four plots show simulated outputs deeper in the soil and over several years. \n\nThe deeper in the soil that the output is examined the longer it takes for the simulation to forget the initial temperatures. While we are not suggesting that initial conditions are routinely guessed as badly as these, it is important to note this effect when comparing against data. As a rough guide, if the depth of interest is in the top 300 mm then the ‘run in’ should be at least two weeks. At about 1 m deep the run in should be greater than six months and deeper than that it may be a year. \n\nNote that these are worst-case scenarios and that other models, particularly SoilWater or SWIM and Nutrient, also require substantial run in times.\n",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
@@ -18698,6 +18707,47 @@
               "Name": "Factors",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SoilTemperature]"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "InitTooLow",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "CONSTANT_TEMPdepth": 10.0,
+                      "Thickness": [
+                        100.0,
+                        150.0,
+                        200.0,
+                        150.0,
+                        250.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        -20.0,
+                        -20.0,
+                        -20.0,
+                        -20.0,
+                        -20.0,
+                        -20.0,
+                        -20.0
+                      ],
+                      "Name": "SoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
@@ -18730,48 +18780,7 @@
                   ],
                   "Paths": null,
                   "Values": null,
-                  "Name": "InitAtZero",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
-                      "Thickness": [
-                        100.0,
-                        150.0,
-                        200.0,
-                        150.0,
-                        250.0,
-                        300.0,
-                        300.0
-                      ],
-                      "InitialValues": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "Name": "SoilTemperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.CompositeFactor, Models",
-                  "Specifications": [
-                    "[SoilTemperature]"
-                  ],
-                  "Paths": null,
-                  "Values": null,
-                  "Name": "InitAtThirty",
+                  "Name": "InitTooHigh",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -18818,7 +18827,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "1980-07-01T00:00:00",
-                  "End": "1985-06-30T00:00:00",
+                  "End": "1981-12-31T00:00:00",
                   "Name": "Clock",
                   "ResourceName": null,
                   "Children": [],
@@ -20803,7 +20812,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "The initialisation algorithm is not equally good at all times of the year or at all depths. Needs attention. Until exercise caution, particularlly at depth.\n",
+          "Text": "The initialisation algorithm does a reasonable job of providing initial values but there is a lag once the simulation starts for the model to ‘forget’ the impact of the initial values. The deeper in the soil the longer that memory of the initial conditions is. ",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],

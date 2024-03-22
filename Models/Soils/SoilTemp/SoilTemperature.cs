@@ -1575,14 +1575,17 @@ namespace Models.Soils.SoilTemp
         {
             double[] cumulativeDepth = SoilUtilities.ToCumThickness(thickness);
             double w = 2 * Math.PI / (365.25 * 24 * 3600);
-            double dh = 0.8;
+            double dh = 0.6;   // this needs to be in mm a default value for a loam at field capacity - consider makeing this settable
             double zd = Math.Sqrt( 2 * dh / w);
+            double offset = 0.25;  // moves the "0" and rise in the sin to the spring equinox for southern latitudes 
+            if (weather.Latitude > 0.0)  // to cope with the northern summer
+                offset = -0.25;
 
             double[] soilTemp = new double[numNodes + 1 + 1];
             for (int nodes = 1; nodes <= numNodes; nodes++)
             {
                 soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) * 
-                                                              Math.Sin((clock.Today.DayOfYear / 365 + 0.25) * 2 * Math.PI - cumulativeDepth[nodes] / zd);
+                                                              Math.Sin((clock.Today.DayOfYear / 365.0 + offset) * 2.0 * Math.PI - cumulativeDepth[nodes] / zd);
             }
 
             Array.ConstrainedCopy(soilTemp, 0, soilTempIO, SURFACEnode, numNodes);
