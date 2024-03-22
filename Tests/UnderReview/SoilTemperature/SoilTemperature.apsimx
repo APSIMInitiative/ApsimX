@@ -55,20 +55,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "SoilTemperature-AnalyticalSolution.xlsx"
-          ],
-          "SheetNames": [
-            "AnalyticalDataForAPSIM"
-          ],
-          "Name": "Analytical",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
             "NGObserved.xlsx"
           ],
           "SheetNames": [
