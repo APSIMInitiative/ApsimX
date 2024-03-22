@@ -1,0 +1,140 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 172,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2000-01-01T00:00:00",
+          "End": "2000-01-01T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "Summary",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using Newtonsoft.Json;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Interfaces;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System.Xml.Serialization;",
+            "using System;",
+            "using System.Linq;",
+            "using Models.Soils.Nutrients;",
+            "using Models.Climate;",
+            "using System.Diagnostics;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] Summary summary;",
+            "        ",
+            "        public void Test()",
+            "        {",
+            "    \t\tsummary.WriteMessage(this, \"Wrong Manager Called\", MessageType.All);",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [],
+          "Name": "Manager1",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using Newtonsoft.Json;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Interfaces;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System.Xml.Serialization;",
+            "using System;",
+            "using System.Linq;",
+            "using Models.Soils.Nutrients;",
+            "using Models.Climate;",
+            "using System.Diagnostics;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] Summary summary;",
+            "        ",
+            "        public void Test()",
+            "        {",
+            "    \t\tsummary.WriteMessage(this, \"Correct Manager Called\", MessageType.All);",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [],
+          "Name": "Manager2",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Operations, Models",
+          "Operation": [
+            {
+              "$type": "Models.Operation, Models",
+              "Enabled": true,
+              "Date": "2000-01-01",
+              "Action": "[Manager2].Script.Test();",
+              "Line": "2000-01-01 [Manager2].Script.Test();"
+            }
+          ],
+          "Name": "Operations",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
