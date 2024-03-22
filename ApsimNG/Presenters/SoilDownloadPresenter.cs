@@ -317,7 +317,7 @@ namespace UserInterface.Presenters
                 var values = dataView.GetRow(selectedIndex);
                 var soilName = (string)values[0];
                 Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
-
+                matchingSoil.Name = matchingSoil.Name.Trim();
                 if (!matchingSoil.Children.Any(c => c is INutrient))
                     matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
                 ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);

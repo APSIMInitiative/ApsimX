@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
-using NetMQ;
 using MessagePack;
 
 namespace Models.Core
@@ -26,11 +25,12 @@ namespace Models.Core
         private static object compilingScriptLock = new object();
 
         private const string tempFileNamePrefix = "APSIM";
+        
         [NonSerialized]
-
-
-
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
+
+        [NonSerialized]
+        private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
         /// <summary>Constructor.</summary>
         public ScriptCompiler()
@@ -63,8 +63,9 @@ namespace Models.Core
         /// <param name="code">The c# code to compile.</param>
         /// <param name="model">The model owning the script.</param>
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
+        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null)
+        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
         {
             string errors = null;
 
@@ -79,8 +80,52 @@ namespace Models.Core
                     // See if we have compiled the code already. If so then no need to compile again.
                     compilation = previousCompilations?.Find(c => c.Code == code);
 
+                    string modifiedCode = "";
                     if (compilation == null || compilation.Code != code)
                     {
+                        Regex regex = new Regex("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
+                        Match m = regex.Match(code);
+
+                        modifiedCode = code;
+                        if (m.Success)
+                        {
+                            int position;
+                            string className = m.Groups[2].Value;
+                            string path = model.FullPath;
+                            //only do this if the script class has not been renamed
+                            if (className.CompareTo("Script") == 0) {
+                                //remove existing class name
+                                position = modifiedCode.IndexOf(className);
+                                modifiedCode = modifiedCode.Remove(position, className.Length);
+                                //add unique class name in
+                                string newClassName = $"Script{StringUtilities.CleanStringOfSymbols(path)}";
+                                modifiedCode = modifiedCode.Insert(position, newClassName);
+                            } else {
+                                //we have a custom script name, make sure we haven't compiled with this before
+                                foreach ((string, string) name in runtimeClasses) {
+                                    if (name.Item1.CompareTo(className) == 0)
+                                    {
+                                        //check if the code from the matching class is this code
+                                        if (name.Item2.CompareTo(path) != 0) {
+                                            //check if the model from the other path still exists (model may have moved)
+                                            IModel matchingClass = model.FindAncestor<Simulations>().Locator.Get(name.Item2) as IModel;
+                                            if (matchingClass != null && !allowDuplicateClassName)
+                                                throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
+                                        }
+                                    }
+                                }
+                                runtimeClasses.Remove((className, path));
+                                runtimeClasses.Add((className, path));
+                            }
+                            //Add IScriptBase parent to class so we can type check it
+                            position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
+                            modifiedCode = modifiedCode.Insert(position, ", IScript");
+                        } 
+                        else
+                        {
+                            throw new Exception($"Errors found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
+                        }
+                    
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
 
@@ -88,14 +133,14 @@ namespace Models.Core
 
                         // We haven't compiled the code so do it now.
                         string sourceName;
-                        Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
+                        Compilation compiled = CompileTextToAssembly(modifiedCode, assemblies, out sourceName);
 
                         List<EmbeddedText> embeddedTexts = null;
                         if (withDebug)
                         {
                             System.Text.Encoding encoding = System.Text.Encoding.UTF8;
 
-                            byte[] buffer = encoding.GetBytes(code);
+                            byte[] buffer = encoding.GetBytes(modifiedCode);
                             SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
                             embeddedTexts = new List<EmbeddedText>
                             {
@@ -158,24 +203,33 @@ namespace Models.Core
                                 compilation.Code = code;
                                 compilation.Reference = compiled.ToMetadataReference();
                                 compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
+                                
+                                // We have a compiled assembly so get the class name.
+                                var regEx = new Regex(@"class\s+(\w+)\s");
+                                var match = regEx.Match(modifiedCode);
+                                if (!match.Success)
+                                    throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
+                                compilation.ClassName = match.Groups[1].Value;
+                                compilation.InstanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == compilation.ClassName);
                             }
                         }
                     }
-                    else
+                    else 
+                    {
+                        modifiedCode = compilation.Code;
                         newlyCompiled = false;
+                    }
 
                     if (compilation != null)
                     {
-                        // We have a compiled assembly so get the class name.
+                        // Original Class name for node
                         var regEx = new Regex(@"class\s+(\w+)\s");
                         var match = regEx.Match(code);
                         if (!match.Success)
                             throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
-                        var className = match.Groups[1].Value;
+                        var originalName = match.Groups[1].Value;
 
-                        // Create an instance of the class and give it to the model.
-                        var instanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == className);
-                        return new Results(compilation.CompiledAssembly, instanceType.FullName, newlyCompiled);
+                        return new Results(compilation.CompiledAssembly, compilation.InstanceType.FullName, newlyCompiled);
                     }
                     else
                         return new Results(errors);
@@ -363,6 +417,12 @@ namespace Models.Core
             /// A reference to the compiled assembly
             /// </summary>
             public MetadataReference Reference { get; set; }
+
+            /// <summary>The model full path.</summary>
+            public Type InstanceType { get; set; }
+
+            /// <summary>The model full path.</summary>
+            public string ClassName { get; set; }
         }
     }
 }
