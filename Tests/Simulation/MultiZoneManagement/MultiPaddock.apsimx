@@ -1906,10 +1906,10 @@
             "            while (moreToDo) {",
             "               foreach (var paddock in myPaddockNames) {",
             "                  currentPaddock = paddock;",
-            "                  RotationManager.SetCurrentStateByName(currentState[paddock]);",
+            "                  RotationManager.CurrentState = currentState[paddock];",
             "                  //Summary.WriteMessage(this, $\"Calling DoManagement for {currentPaddock}\", MessageType.Diagnostic);",
             "                  moreToDo = RotationManager.DoManagement();",
-            "                  currentState[paddock] = RotationManager.GetCurrentStateName();",
+            "                  currentState[paddock] = RotationManager.CurrentState;",
             "               }",
             "            }",
             "            currentPaddock = \"\";",
@@ -2501,74 +2501,68 @@
           "$type": "Models.Management.RotationManager, Models",
           "Nodes": [
             {
-              "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+              "$type": "Models.Management.StateNode, Models",
               "Description": null,
-              "Transparent": false,
-              "ID": 1,
               "Name": "summer fallow",
               "Location": "454, 271",
-              "Colour": "143, 89, 2"
+              "Colour": "143, 89, 2",
+              "OutlineColour": "Black",
+              "Transparent": false
             },
             {
-              "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+              "$type": "Models.Management.StateNode, Models",
               "Description": null,
-              "Transparent": false,
-              "ID": 2,
               "Name": "Wheat",
               "Location": "256, 50",
-              "Colour": "Red"
+              "Colour": "Red",
+              "OutlineColour": "Black",
+              "Transparent": false
             },
             {
-              "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+              "$type": "Models.Management.StateNode, Models",
               "Description": null,
-              "Transparent": false,
-              "ID": 3,
               "Name": "Maize",
               "Location": "265, 426",
-              "Colour": "96, 96, 217"
+              "Colour": "96, 96, 217",
+              "OutlineColour": "Black",
+              "Transparent": false
             },
             {
-              "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+              "$type": "Models.Management.StateNode, Models",
               "Description": null,
-              "Transparent": false,
-              "ID": 4,
               "Name": "initial",
               "Location": "78, 276",
-              "Colour": "Lime"
+              "Colour": "Lime",
+              "OutlineColour": "Black",
+              "Transparent": false
             },
             {
-              "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+              "$type": "Models.Management.StateNode, Models",
               "Description": null,
-              "Transparent": false,
-              "ID": 5,
               "Name": "Early Wheat",
               "Location": "256, 193",
-              "Colour": "173, 127, 168"
+              "Colour": "173, 127, 168",
+              "OutlineColour": "Black",
+              "Transparent": false
             }
           ],
           "Arcs": [
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 2,
-              "DestinationID": 1,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanHarvestWheat"
               ],
               "Actions": [
                 "[Manager].Script.HarvestCrop(\"Wheat\");"
               ],
-              "BezierPoints": null,
-              "Source": null,
-              "Destination": null,
-              "ID": 6,
-              "Name": "Arc 1",
+              "SourceName": "Wheat",
+              "DestinationName": "summer fallow",
               "Location": "496, 67",
-              "Colour": "Yellow"
+              "Colour": "Yellow",
+              "Name": "Arc 1"
             },
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 1,
-              "DestinationID": 3,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowMaize",
                 "[Manager].Script.daysSinceLastHarvest_gt_180"
@@ -2576,36 +2570,28 @@
               "Actions": [
                 "[Manager].Script.SowCrop(\"Maize\");"
               ],
-              "BezierPoints": null,
-              "Source": null,
-              "Destination": null,
-              "ID": 7,
-              "Name": "Arc 2",
+              "SourceName": "summer fallow",
+              "DestinationName": "Maize",
               "Location": "448, 409",
-              "Colour": "Yellow"
+              "Colour": "Yellow",
+              "Name": "Arc 2"
             },
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 3,
-              "DestinationID": 4,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanHarvestMaize"
               ],
               "Actions": [
                 "[Manager].Script.HarvestCrop(\"Maize\");"
               ],
-              "BezierPoints": null,
-              "Source": null,
-              "Destination": null,
-              "ID": 8,
-              "Name": "Arc 3",
+              "SourceName": "Maize",
+              "DestinationName": "initial",
               "Location": "55, 405",
-              "Colour": "Yellow"
+              "Colour": "Yellow",
+              "Name": "Arc 3"
             },
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 4,
-              "DestinationID": 2,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowWheat",
                 "[Manager].Script.AreaPlantedOk(\"Wheat\")"
@@ -2613,18 +2599,14 @@
               "Actions": [
                 "[Manager].Script.SowCrop(\"Wheat\");"
               ],
-              "BezierPoints": null,
-              "Source": null,
-              "Destination": null,
-              "ID": 9,
-              "Name": "Arc 4",
+              "SourceName": "initial",
+              "DestinationName": "Wheat",
               "Location": "81, 59",
-              "Colour": "Yellow"
+              "Colour": "Yellow",
+              "Name": "Arc 4"
             },
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 4,
-              "DestinationID": 5,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowEarlyWheat",
                 "[Manager].Script.AreaPlantedOk(\"Early Wheat\")"
@@ -2639,22 +2621,18 @@
               "Name": "Arc 5"
             },
             {
-              "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-              "SourceID": 5,
-              "DestinationID": 1,
+              "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanHarvestEarlyWheat"
               ],
               "Actions": [
                 "[Manager].Script.HarvestCrop(\"Early Wheat\");"
               ],
-              "BezierPoints": null,
-              "Source": null,
-              "Destination": null,
-              "ID": 11,
-              "Name": "Arc 6",
+              "SourceName": "Early Wheat",
+              "DestinationName": "summer fallow",
               "Location": "385, 176",
-              "Colour": "Yellow"
+              "Colour": "Yellow",
+              "Name": "Arc 6"
             }
           ],
           "TopLevel": false,
