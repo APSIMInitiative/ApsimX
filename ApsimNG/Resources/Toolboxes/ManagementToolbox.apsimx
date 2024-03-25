@@ -3734,6 +3734,56 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using APSIM.Shared.Utilities;",
+            "using Models.Utilities;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System;",
+            "using System.Linq;",
+            "using System.Collections.Generic;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model",
+            "    {",
+            "        ",
+            "        [Link] Clock clock;",
+            "        [Link] private IPlant[] plants;",
+            "",
+            "        [Separator(\"This manager removes one or more species from the simulation using an 'EndCrop' command on the first day of the simulation\")]",
+            "",
+            "        [Description(\"Species to remove from the simulation. Comma delimited, case matters, can be blank\")]",
+            "        public string[] TheSpecies { get; set; }        ",
+            "        ",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            if (clock.Today == clock.StartDate)",
+            "\t\t\t\tforeach (var plant in plants)",
+            "              \t\tif (TheSpecies != null && TheSpecies.Length > 0 && TheSpecies.Contains(plant.Name))",
+            "                \t\tplant.EndCrop();",
+            "        }",
+            "    }",
+            "}",
+            "       "
+          ],
+          "Parameters": [
+            {
+              "Key": "TheSpecies",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            }
+          ],
+          "Name": "Manage species present",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
