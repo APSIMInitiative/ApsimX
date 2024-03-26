@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/13 10:39:53</lastsaved>
+  <lastsaved>2024/03/07 12:52:09</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -51,7 +51,7 @@
                   <val>Manager.do_management</val>
                 </field>
                 <field name="order" kind="integer4">
-                  <val>2000</val>
+                  <val>9000</val>
                 </field>
               </element>
               <element>
@@ -279,7 +279,7 @@
               <val>define real padd_nh4[10]</val>
               <val>define real padd_no3[10]</val>
               <val></val>
-              <val>define real avail_soil_water = 0.0             ! soil water level used to trigger irrigation</val>
+              <val>define real soil_water = 0.0             ! soil water level used to trigger irrigation</val>
               <val>define real surface_soil_water = 0.0</val>
               <val>define real total_sw_uptake = 0.0</val>
               <val></val>
@@ -304,7 +304,7 @@
               <val></val>
               <val>   set surface_soil_water = padd_soil_layer[1] * max( 0.0, padd_soil_water[1] - padd_soil_limit[1] )</val>
               <val></val>
-              <val>   set avail_soil_water = 0.0</val>
+              <val>   set soil_water = 0.0</val>
               <val>   set total_sw_uptake = 0.0</val>
               <val>   set total_nh4 = 0.0</val>
               <val>   set total_no3 = 0.0</val>
@@ -313,7 +313,7 @@
               <val></val>
               <val>   for layer = 1 to length(padd_soil_layer)</val>
               <val>   {</val>
-              <val>      set avail_soil_water = avail_soil_water + padd_soil_water[layer]</val>
+              <val>      set soil_water = soil_water + padd_soil_water[layer]</val>
               <val>      set total_sw_uptake = total_sw_uptake + pasture_sw_uptake[layer]</val>
               <val>      set total_nh4 = total_nh4 + padd_nh4[layer]</val>
               <val>      set total_no3 = total_no3 + padd_no3[layer]</val>
@@ -346,7 +346,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>ryegrass_daily.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -629,10 +629,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.soil_water</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>avail_soil_water</val>
+                  <val>total_soil_water</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -918,7 +918,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>ryegrass_daily_mass.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1252,7 +1252,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>ryegrass_monthly.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1334,7 +1334,7 @@
               <val>silo</val>
             </init>
             <init name="filename" kind="string">
-              <val>d:\temp\cbr_70014.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\cbr_70014.txt</val>
             </init>
             <init name="locality" kind="string">
               <val></val>
@@ -1379,10 +1379,10 @@
             <init name="outputs" array="T">
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>farm.pasture01.ryegrass.avail_dm</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>ryegrass.avail_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1393,10 +1393,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.cumul_depth</val>
+                  <val>farm.pasture01.ryegrass.avail_green</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.cumul_depth</val>
+                  <val>ryegrass.avail_green</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1407,10 +1407,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
+                  <val>ryegrass.uptake_nh4</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1459,62 +1459,6 @@
                 </field>
                 <field name="decplaces" kind="integer4">
                   <val>0</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>Manager.total_sw_uptake</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>Manager.total_sw_uptake</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
                 </field>
               </element>
               <element>
@@ -1547,80 +1491,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.phenology</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.phenology</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.seeds</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.seeds</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.cover_green</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.cover_green</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.cover_tot</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.cover_tot</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.residue_cover</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>ryegrass.residue_cover</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.height</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.height</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1649,174 +1523,6 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>ryegrass.litter_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.green_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.green_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.leaf_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.leaf_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.stem_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.stem_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.avail_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.avail_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.avail_green</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.avail_green</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.avail_dry</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>ryegrass.avail_dry</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.root_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.root_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.rtdep</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.rtdep</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.stress_index</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.stress_index</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.sw_uptake</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.sw_uptake</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.npp</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.npp</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.growth</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.growth</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1911,6 +1617,118 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.cover_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_tot</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.cover_tot</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.green_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.green_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.avail_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dead_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.dead_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.litter_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.litter_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.avail_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
@@ -1925,30 +1743,44 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.incorp_rate</val>
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.incorp_rate</val>
+                  <val>ryegrass.uptake_nh4</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>2</val>
+                  <val>4</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.ryegrass.lai</val>
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>farm.pasture01.ryegrass.lai</val>
+                  <val>ryegrass.uptake_nh4</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>2</val>
+                  <val>4</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
                 </field>
               </element>
             </init>

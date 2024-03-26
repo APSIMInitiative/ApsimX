@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/19 17:56:26</lastsaved>
+  <lastsaved>2024/03/07 12:41:56</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -15,7 +15,7 @@
               <val>1990/01/01</val>
             </init>
             <init name="finish" kind="string">
-              <val>2005/02/03</val>
+              <val>2000/02/03</val>
             </init>
             <init name="timestep" kind="integer4">
               <val>1</val>
@@ -51,7 +51,7 @@
                   <val>Manager.do_management</val>
                 </field>
                 <field name="order" kind="integer4">
-                  <val>2000</val>
+                  <val>9000</val>
                 </field>
               </element>
               <element>
@@ -279,7 +279,7 @@
               <val>define real padd_nh4[10]</val>
               <val>define real padd_no3[10]</val>
               <val></val>
-              <val>define real avail_soil_water = 0.0             ! soil water level used to trigger irrigation</val>
+              <val>define real soil_water = 0.0             ! soil water level used to trigger irrigation</val>
               <val>define real surface_soil_water = 0.0</val>
               <val>define real total_sw_uptake = 0.0</val>
               <val></val>
@@ -304,7 +304,7 @@
               <val></val>
               <val>   set surface_soil_water = padd_soil_layer[1] * max( 0.0, padd_soil_water[1] - padd_soil_limit[1] )</val>
               <val></val>
-              <val>   set avail_soil_water = 0.0</val>
+              <val>   set soil_water = 0.0</val>
               <val>   set total_sw_uptake = 0.0</val>
               <val>   set total_nh4 = 0.0</val>
               <val>   set total_no3 = 0.0</val>
@@ -313,7 +313,7 @@
               <val></val>
               <val>   for layer = 1 to length(padd_soil_layer)</val>
               <val>   {</val>
-              <val>      set avail_soil_water = avail_soil_water + padd_soil_water[layer]</val>
+              <val>      set soil_water = soil_water + padd_soil_water[layer]</val>
               <val>      set total_sw_uptake = total_sw_uptake + pasture_sw_uptake[layer]</val>
               <val>      set total_nh4 = total_nh4 + padd_nh4[layer]</val>
               <val>      set total_no3 = total_no3 + padd_no3[layer]</val>
@@ -395,6 +395,23 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_n</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -629,10 +646,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>Manager.soil_water</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>avail_soil_water</val>
+                  <val>total_soil_water</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val></val>
@@ -897,6 +914,57 @@
                 </field>
                 <field name="units" kind="string">
                   <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.n_fixed</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>n_fixed</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>g/g</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_n_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_n_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
                 </field>
               </element>
             </init>
@@ -1301,6 +1369,23 @@
                   <val>kg/ha</val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.Sub_Clover.root_dm_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_dm_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
@@ -1447,10 +1532,10 @@
             <init name="outputs" array="T">
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>farm.pasture01.sub_clover.avail_dm</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.avail_soil_water</val>
+                  <val>sub_clover.avail_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1461,10 +1546,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.cumul_depth</val>
+                  <val>farm.pasture01.sub_clover.avail_green</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.cumul_depth</val>
+                  <val>sub_clover.avail_green</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1475,10 +1560,10 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
+                  <val>farm.pasture01.sub_clover.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>Manager.pasture_sw_uptake</val>
+                  <val>sub_clover.uptake_nh4</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1527,132 +1612,6 @@
                 </field>
                 <field name="decplaces" kind="integer4">
                   <val>0</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>Manager.total_sw_uptake</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>Manager.total_sw_uptake</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>weather.maxt</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>weather.maxt</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>weather.mint</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>weather.mint</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>weather.precip</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>weather.precip</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>weather.radn</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>weather.radn</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>weather.rain</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>weather.rain</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.water.model.sw_dep</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.nh4</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.no3</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
                 </field>
               </element>
               <element>
@@ -1685,49 +1644,7 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.seeds</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.Sub_Clover.seeds</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.cover_green</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>sub_clover.cover_green</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.cover_tot</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>sub_clover.cover_tot</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.residue_cover</val>
+                  <val>farm.pasture01.sub_clover.residue_cover</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>sub_clover.residue_cover</val>
@@ -1741,21 +1658,7 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.shoot_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.Sub_Clover.shoot_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.dead_dm</val>
+                  <val>farm.pasture01.sub_clover.dead_dm</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>sub_clover.dead_dm</val>
@@ -1769,7 +1672,7 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.litter_dm</val>
+                  <val>farm.pasture01.sub_clover.litter_dm</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>sub_clover.litter_dm</val>
@@ -1783,38 +1686,94 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_gai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_gai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_vpd</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_vpd</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_sm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_sm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_tmp</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_tmp</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_wl</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_wl</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.glf_nitr</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.glf_nitr</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.Sub_Clover.green_dm</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>Sub_Clover.green_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.avail_dm</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>sub_clover.avail_dm</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.avail_green</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>sub_clover.avail_green</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1839,91 +1798,119 @@
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_gai</val>
+                  <val>farm.pasture01.sub_clover.cover_green</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_gai</val>
+                  <val>sub_clover.cover_green</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_vpd</val>
+                  <val>farm.pasture01.sub_clover.cover_tot</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_vpd</val>
+                  <val>sub_clover.cover_tot</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_sm</val>
+                  <val>farm.pasture01.sub_clover.green_dm</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_sm</val>
+                  <val>sub_clover.green_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_tmp</val>
+                  <val>farm.pasture01.sub_clover.avail_green</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_tmp</val>
+                  <val>sub_clover.avail_green</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_wl</val>
+                  <val>farm.pasture01.sub_clover.dead_dm</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_wl</val>
+                  <val>sub_clover.dead_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.glf_nitr</val>
+                  <val>farm.pasture01.sub_clover.litter_dm</val>
                 </field>
                 <field name="alias" kind="string">
-                  <val>sub_clover.glf_nitr</val>
+                  <val>sub_clover.litter_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>0</val>
+                  <val>2</val>
                 </field>
               </element>
               <element>
                 <field name="varname" kind="string">
-                  <val>farm.pasture01.Sub_Clover.uptake_nh4</val>
+                  <val>farm.pasture01.sub_clover.avail_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.avail_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.uptake_nh4</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>sub_clover.uptake_nh4</val>
@@ -1932,7 +1919,49 @@
                   <val>none</val>
                 </field>
                 <field name="decplaces" kind="integer4">
-                  <val>2</val>
+                  <val>4</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.sub_clover.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sub_clover.uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
                 </field>
               </element>
             </init>
@@ -2039,26 +2068,26 @@
                 </init>
                 <init name="psd">
                   <field name="sand" kind="double" array="T" unit="g/g">
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
+                    <val>0.58</val>
+                    <val>0.61</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.64</val>
+                    <val>0.64</val>
+                    <val>0.64</val>
                   </field>
                   <field name="clay" kind="double" array="T" unit="g/g">
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
-                    <val>0</val>
+                    <val>0.28</val>
+                    <val>0.19</val>
+                    <val>0.33</val>
+                    <val>0.33</val>
+                    <val>0.47</val>
+                    <val>0.47</val>
+                    <val>0.3</val>
+                    <val>0.3</val>
+                    <val>0.3</val>
                   </field>
                 </init>
                 <init name="excrete_params" kind="single" array="T">
@@ -2605,7 +2634,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231019152934075.html</val>
+  <val>output_240226160738531.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>

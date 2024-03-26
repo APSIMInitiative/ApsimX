@@ -340,7 +340,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set the nutrient value for this herbage part.
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -408,11 +408,11 @@ namespace Models.GrazPlan
         //public void setRootDM(int iAge, int iLayer, double fValue)
 
         /// <summary>
-        ///
+        /// Get the average nutrient content of the roots in a layer
         /// </summary>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
+        /// <param name="layer">Soil layer 1-n</param>
+        /// <param name="elem">N,P,S</param>
         /// <returns></returns>
         public double GetRootNutr(int age, int layer, TPlantElement elem)
         {
@@ -438,12 +438,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set the nutrient value of this root cohort
         /// </summary>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
-        /// <param name="value"></param>
+        /// <param name="layer">1..n</param>
+        /// <param name="elem">N,P,S</param>
+        /// <param name="value">New value</param>
         public void SetRootNutr(int age, int layer, TPlantElement elem, double value)
         {
             this.Roots[age, layer].Nu[(int)elem] = value;
@@ -453,8 +453,8 @@ namespace Models.GrazPlan
         /// Assumes that marginal totals in FCohorts[] are up-to-date
         /// </summary>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
+        /// <param name="layer">1-n</param>
+        /// <param name="elem">N,P,S</param>
         /// <returns></returns>
         private double GetRootConc(int age, int layer, TPlantElement elem)
         {
@@ -1069,9 +1069,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Set the root mass profile within a cohort and root age class to a default
         /// value. Used in initialisation.
-        /// * Assumes that iAge = TOTAL, EFFR or OLDR
         /// </summary>
-        /// <param name="age"></param>
+        /// <param name="age">TOTAL, EFFR or OLDR</param>
         /// <param name="rootDM"></param>
         /// <param name="depth"></param>
         public void SetDefaultRoots(int age, double rootDM, double depth)
@@ -2631,7 +2630,7 @@ namespace Models.GrazPlan
                     {
                         for (layer = 1; layer <= this.FMaxRootLayer; layer++)
                         {
-                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer] / 10; //kg/ha to g/m2
+                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer]; //kg/ha to g/m2
                             uptakeAreaSum += nutrInfo.fUptake[(int)Nutr][area][layer];
                         }
                     }

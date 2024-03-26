@@ -35,6 +35,9 @@ namespace Models.GrazPlan
         /// <summary>Convert from g/m^2 to kg/ha</summary>
         public const double GM2_KGHA = 10.0;
 
+        /// <summary>Convert kg/ha to g/m^2</summary>
+        public const double KGHA_GM2 = 0.1;
+
         /// <summary>Convert from m^2 to cm^2</summary>
         public const double M2_CM2 = 10000.0;
 
@@ -635,11 +638,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Scale the mass value from the units specified to g/m^2
         /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="units"></param>
-        /// <returns></returns>
+        /// <param name="aValue">Value</param>
+        /// <param name="units">Units</param>
+        /// <returns>Scaled value</returns>
         public static double ReadMass(double aValue, string units)
         {
             double result;

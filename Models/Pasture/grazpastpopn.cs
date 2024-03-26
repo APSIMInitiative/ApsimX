@@ -1867,7 +1867,7 @@ namespace Models.GrazPlan
         /// Compute nutrient rates
         /// </summary>
         /// <param name="elem">N, P, S</param>
-        /// <param name="fSupply"></param>
+        /// <param name="fSupply">Nutrient supply in g/m^2</param>
         private void ComputeNutrientRates(TPlantElement elem, double[][][] fSupply)
         {
             int iComp;
@@ -2048,7 +2048,7 @@ namespace Models.GrazPlan
                                 for (iArea = 0; iArea <= nutrDist.NoAreas - 1; iArea++)
                                 {
                                     // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length
-                                    fAvailGM2 = 0.99999 * (nutrDist.AvailKgHa[iArea][iLayer] / GM2_KGHA) * this.FSoilFract[comp][iLayer];
+                                    fAvailGM2 = 0.99999 * (nutrDist.AvailKgHa[iArea][iLayer] * KGHA_GM2) * this.FSoilFract[comp][iLayer];
                                     fSupply[(int)Nutr][iArea][iLayer] = Math.Min(nutrDist.RelAreas[iArea] * fSlope * nutrDist.SolnPPM[iArea][iLayer],
                                                                        fAvailGM2) / fRLD[iLayer];
                                 }
@@ -2071,8 +2071,9 @@ namespace Models.GrazPlan
         /// Compute the nutrient uptake
         /// </summary>
         /// <param name="comp">Herbage component</param>
-        /// <param name="elem"></param>
+        /// <param name="elem">N,P,S</param>
         /// <param name="myZone"></param>
+        /// <returns>The supply for [nutrient][area][layer] in g/m^2</returns>
         public double[][][] ComputeNutrientUptake2(int comp, TPlantElement elem, ZoneWaterAndN myZone)
         {
             int iLastLayer;
@@ -2162,9 +2163,9 @@ namespace Models.GrazPlan
                                 throw new Exception("Invalid element");
                             double amountSolN = amountKgHa * 100.0 / this.FSoilLayers[iLayer] / this.Inputs.Theta[iLayer];
 
-                            fAvailGM2 = 0.99999 * (amountKgHa / GM2_KGHA) * this.FSoilFract[comp][iLayer];
+                            fAvailGM2 = 0.99999 * (amountKgHa * KGHA_GM2) * this.FSoilFract[comp][iLayer];
                             double relArea = 1;
-                            fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountSolN, fAvailGM2) * GM2_KGHA;
+                            fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountSolN, fAvailGM2);
                         }
                     }
                 }
@@ -2176,8 +2177,8 @@ namespace Models.GrazPlan
         /// Compute the nutrient uptake
         /// </summary>
         /// <param name="comp">Herbage component</param>
-        /// <param name="elem"></param>
-        /// <param name="fSupply"></param>
+        /// <param name="elem">N,P,S</param>
+        /// <param name="fSupply">Nutrient supply g/m^2</param>
         private void ComputeNutrientUptake3(int comp, TPlantElement elem, double[][][] fSupply)
         {
             double totalMaxDemandAllCohorts = 0;
@@ -2859,7 +2860,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set the conversion factor. Will scale results.
         /// </summary>
         /// <param name="value"></param>
         private void SetMassUnit(string value)
@@ -3029,8 +3030,8 @@ namespace Models.GrazPlan
         /// Root mass in user units
         /// </summary>
         /// <param name="comp">Herbage component</param>
-        /// <param name="age"></param>
-        /// <param name="layer"></param>
+        /// <param name="age">Root age</param>
+        /// <param name="layer">Soil layer</param>
         /// <returns></returns>
         public double GetRootMass(int comp, int age, int layer)
         {
@@ -3042,8 +3043,8 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
+        /// <param name="layer">1-n</param>
+        /// <param name="elem">N,P,S</param>
         /// <returns></returns>
         public double GetRootNutr(int comp, int age, int layer, TPlantElement elem)
         {
@@ -3064,13 +3065,13 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set the nutrient value for this root cohort
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
-        /// <param name="value"></param>
+        /// <param name="layer">1-n</param>
+        /// <param name="elem">N,P,S</param>
+        /// <param name="value">New value</param>
         public void SetRootNutr(int comp, int age, int layer, TPlantElement elem, double value)
         {
             int iCohort;
@@ -3084,12 +3085,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get root nutrient concentration
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="age"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
+        /// <param name="layer">1-n</param>
+        /// <param name="elem">N,P,S</param>
         /// <returns></returns>
         public double GetRootConc(int comp, int age, int layer, TPlantElement elem)
         {
@@ -3190,8 +3191,8 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="soft"></param>
         /// <param name="ripe"></param>
-        /// <param name="layer"></param>
-        /// <param name="elem"></param>
+        /// <param name="layer">Soil layer 1-n</param>
+        /// <param name="elem">N,P,S</param>
         /// <returns></returns>
         public double GetSeedNutr(int soft, int ripe, int layer, TPlantElement elem)
         {
@@ -3606,7 +3607,7 @@ namespace Models.GrazPlan
             switch (comp)
             {
                 case GrazType.TOTAL:
-                    result = false;
+                    result = true;
                     break;
                 case GrazType.stSEEDL:
                 case GrazType.stESTAB:
@@ -4624,7 +4625,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Compute cation uptake
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Value for each layer 1-n</returns>
         public double[] CationUptake()
         {
             double[] result = new double[this.FSoilLayerCount + 1];
@@ -4914,7 +4915,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the leachate amount
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The leachate value</returns>
         public DM_Pool GetLeachate()
         {
             DM_Pool pool = this.FLeachate;
@@ -5042,6 +5043,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Water uptake logic (for use in monoculture only)
         /// </summary>
+        /// <param name="pastureWaterDemand"></param>
         public void ComputeWaterUptake(double pastureWaterDemand)
         {
             double fDemand;
@@ -5072,7 +5074,9 @@ namespace Models.GrazPlan
         /// Essentially a control routine. The vast majority of equations appear in
         /// the methods which it calls.
         /// </summary>
-        public void ComputeRates(double[][][] fSupply,double pastureWaterDemand)
+        /// <param name="fSupply">Nutrient supply in g/m^2</param>
+        /// <param name="pastureWaterDemand"></param>
+        public void ComputeRates(double[][][] fSupply, double pastureWaterDemand)
         {
             double fMoistureChange;
             double fDormTempFract;
@@ -6323,7 +6327,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
-        /// <returns></returns>
+        /// <returns>Net growth</returns>
         private double NetGrowth(int comp = sgGREEN, int part = TOTAL)
         {
             int cohort, idx;
@@ -6560,7 +6564,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the N fixation over all cohorts
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <returns></returns>
