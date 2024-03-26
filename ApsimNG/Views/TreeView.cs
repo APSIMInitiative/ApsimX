@@ -648,10 +648,12 @@ namespace UserInterface.Views
                     TreePath selPath;
                     TreeViewColumn selCol;
                     treeview1.GetCursor(out selPath, out selCol);
-                    selectionChangedData.NewNodePath = GetFullPath(selPath);
-                    if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
-                        SelectedNodeChanged.Invoke(this, selectionChangedData);
-                    previouslySelectedNodePath = selectionChangedData.NewNodePath;
+                    if (selPath != null) {
+                        selectionChangedData.NewNodePath = GetFullPath(selPath);
+                        if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                            SelectedNodeChanged.Invoke(this, selectionChangedData);
+                        previouslySelectedNodePath = selectionChangedData.NewNodePath;
+                    }
                 }
                 else
                 {
