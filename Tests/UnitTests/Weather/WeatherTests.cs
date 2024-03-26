@@ -289,9 +289,9 @@ namespace UnitTests.Weather
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             // Start with dalby
-            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Dalby.met"));
             // Switch to another
-            string weatherFilePath2 = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Gatton.met"));
+            string weatherFilePath2 = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Gatton.met"));
 
             Simulation baseSim = new Simulation()
             {
