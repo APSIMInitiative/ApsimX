@@ -423,7 +423,7 @@ namespace Models.Core.Run
                 catch (Exception err)
                 {
                     exception = err;
-                    AddException(new Exception("Encountered an error while running test " + testName, err));
+                    AddException(new Exception("Encountered an error while running test " + testName + " (" + FileName + ")", err));
                 }
             }
         }

@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -697,7 +698,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                string currentLine = StringUtilities.GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender;
                 if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
@@ -706,31 +707,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Gets a specific line of text, preserving empty lines.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <param name="lineNo">0-indexed line number.</param>
-        /// <returns>String containing a specific line of text.</returns>
-        private string GetLine(string text, int lineNo)
-        {
-            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
-            // to use unix-style line endings, so every second element from the returned array is an empty string.
-            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
-
-            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
-            string currentLine;
-            using (System.IO.StringReader reader = new System.IO.StringReader(text))
-            {
-                int i = 0;
-                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
-                {
-                    i++;
-                }
-            }
-            return currentLine;
         }
 
         /// <summary>The variable names have changed in the view.</summary>

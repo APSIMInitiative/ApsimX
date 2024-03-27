@@ -20,12 +20,14 @@ namespace UserInterface.Classes
         DropDown,
         Checkbox,
         Colour,
+        ColourPicker,
         File,
         Files,
         Directory,
         //Directories,
         Font,
-        Numeric
+        Numeric,
+        Code
     }
 
     /// <summary>
@@ -238,6 +240,12 @@ namespace UserInterface.Classes
                         DisplayMethod = PropertyType.Colour;
                     else
                         DisplayMethod = PropertyType.SingleLineText;
+                    break;
+                case DisplayType.Code:
+                    DisplayMethod = PropertyType.Code;
+                    break;
+                case DisplayType.ColourPicker:
+                    DisplayMethod = PropertyType.ColourPicker;
                     break;
                 case DisplayType.FileName:
                     DisplayMethod = PropertyType.File;

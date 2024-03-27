@@ -76,9 +76,9 @@ namespace UserInterface.Presenters
                 model.DirectedGraphInfo = new DirectedGraph();
 
             model.DirectedGraphInfo.Begin();
-
+            /*
             bool needAtmosphereNode = false;
-
+            
             IModel nutrient = model as IModel;
             foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
             {
@@ -86,7 +86,7 @@ namespace UserInterface.Presenters
                 Node oldNode;
                 if (oldGraph != null && pool.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == pool.Name)) != null)
                     location = oldNode.Location;
-                model.DirectedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
+                model.DirectedGraphInfo.AddNode(view.DirectedGraph.NextNodeID(), pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
 
                 foreach (OrganicFlow cFlow in pool.FindAllChildren<OrganicFlow>())
                 {
@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
                         if (oldGraph != null && pool.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == pool.Name && f.DestinationName == destName)) != null)
                             location = oldArc.Location;
 
-                        model.DirectedGraphInfo.AddArc(null, pool.Name, destName, Color.Black, location);
+                        model.DirectedGraphInfo.AddArc(view.DirectedGraph.NextArcID(), null, pool.Name, destName, Color.Black, location);
 
                     }
                 }
@@ -116,7 +116,7 @@ namespace UserInterface.Presenters
                 Node oldNode;
                 if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
                     location = oldNode.Location;
-                model.DirectedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
+                model.DirectedGraphInfo.AddNode(view.DirectedGraph.NextNodeID(), solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
                 foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name))
                 {
                     string destName = nitrogenFlow.DestinationName;
@@ -130,15 +130,17 @@ namespace UserInterface.Presenters
                     if (oldGraph != null && solute.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == solute.Name && f.DestinationName == destName)) != null)
                         location = oldArc.Location;
 
-                    model.DirectedGraphInfo.AddArc(null, nitrogenFlow.SourceName, destName, Color.Black, location);
+                    model.DirectedGraphInfo.AddArc(view.DirectedGraph.NextArcID(), null, nitrogenFlow.SourceName, destName, Color.Black, location);
                 }
-            }
+                
+        }
 
             if (needAtmosphereNode)
                 model.DirectedGraphInfo.AddTransparentNode("Atmosphere");
 
 
             model.DirectedGraphInfo.End();
+            */
         }
 
     }

@@ -107,7 +107,17 @@ namespace Models.Core
         /// <summary>
         /// This is a list of SCRUMcrop model harvest stages.
         /// </summary>
-        ScrumHarvestStages
+        ScrumHarvestStages,
+
+        /// <summary>
+        /// Provides a EditorView object for display
+        /// </summary>
+        Code,
+
+         /// <summary>
+        /// Provides a GTK Colour Picker dialog
+        /// </summary>
+        ColourPicker
     }
 
     /// <summary>

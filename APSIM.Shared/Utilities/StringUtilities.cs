@@ -958,5 +958,29 @@ namespace APSIM.Shared.Utilities
                 output = output.Replace(symbols[i].ToString(), "");
             return output;
         }
+        
+        /// <summary>
+        /// Gets a specific line of text from a multiline string, preserving empty lines.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <param name="lineNo">0-indexed line number.</param>
+        /// <returns>String containing a specific line of text.</returns>
+        public static string GetLine(string text, int lineNo)
+        {
+            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
+            // to use unix-style line endings, so every second element from the returned array is an empty string.
+            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
+
+            string currentLine;
+            using (System.IO.StringReader reader = new System.IO.StringReader(text))
+            {
+                int i = 0;
+                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
+                {
+                    i++;
+                }
+            }
+            return currentLine;
+        }
     }
 }
