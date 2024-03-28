@@ -138,7 +138,7 @@ namespace Models.PostSimulationTools
                                         bool isDate = true;
                                         int count = 0;
                                         while(isDate && count < table.Rows.Count) {
-                                            if (DateUtilities.ValidateDateString(table.Rows[count][column.ColumnName].ToString()) == null) {
+                                            if (DateUtilities.ValidateDateStringWithYear(table.Rows[count][column.ColumnName].ToString()) == null) {
                                                 isDate = false;
                                             }
                                             count += 1;
