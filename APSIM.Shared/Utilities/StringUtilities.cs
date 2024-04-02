@@ -946,5 +946,17 @@ namespace APSIM.Shared.Utilities
             else
                 return null;
         }
+
+        /// <summary>Removes all symbols from a string</summary>
+        /// <param name="input">The string.</param>
+        /// <returns>The string without symbols</returns>
+        public static string CleanStringOfSymbols(string input)
+        {
+            string symbols = "`~!@#$%^&*()_+-={}|[]\\:\";'<>?,./' \t\n";
+            string output = input;
+            for (int i = 0; i < symbols.Length; i++)
+                output = output.Replace(symbols[i].ToString(), "");
+            return output;
+        }
     }
 }
