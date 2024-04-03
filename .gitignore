@@ -62,3 +62,4 @@ Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
 /testEnvironments.json
 .mono
+ApsimX.xml
