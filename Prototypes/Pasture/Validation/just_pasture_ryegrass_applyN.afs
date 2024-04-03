@@ -1,0 +1,5112 @@
+<?xml version="1.0"?>
+<fwsimulation name="Pasture_component_test">
+  <fwsversion>1.1</fwsversion>
+  <lastsaved>2023/12/15 17:14:27</lastsaved>
+  <component name="time_server" active="T" class="Time Server">
+    <executable name="timesvr.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="start" kind="string">
+              <val>1990/08/01</val>
+            </init>
+            <init name="finish" kind="string">
+              <val>1992/02/03</val>
+            </init>
+            <init name="timestep" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="timeunit" kind="string">
+              <val>day</val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="sequencer" active="T" class="Sequencer">
+    <executable name="sequencer.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="sequence" array="T">
+              <element>
+                <field name="event" kind="string">
+                  <val>time_server.update_time</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>1</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>FertControl.do_management</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>Manager.do_management</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>daily_results.update_outputs</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9999</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>daily_results_mass.update_outputs</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9999</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>monthly_results.update_outputs</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9999</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>weather.update_weather</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>1000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>Output.update_outputs</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9999</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.do_generic</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.init_step</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.allocate_light</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>3000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.allocate_water</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.water.do_plant_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5500</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.water.translate_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>6100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.water.model.post</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9900</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.water.model.prepare</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>1500</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.water.model.process</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.nitrogen.do_plant_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5500</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.nitrogen.translate_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>6100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.nitrogen.model.process</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5200</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.surfaceom.do_plant_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5500</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.surfaceom.translate_uptakes</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>6100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.surfaceom.model.post</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9910</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.surfaceom.model.process</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.ryegrass.init_step</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>100</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.ryegrass.do_pasture_water</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>4000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.ryegrass.do_pasture_growth</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>6000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>farm.pasture01.ryegrass.end_step</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>9900</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>Config.do_generic</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>5000</val>
+                </field>
+              </element>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="FertControl" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Manager" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define integer layer</val>
+              <val>define real cumul_depth</val>
+              <val>define real padd_soil_layer[10]</val>
+              <val>define real padd_soil_water[10]</val>
+              <val>define real padd_soil_limit[10]</val>
+              <val>define real pasture_sw_uptake[10]</val>
+              <val>define real padd_nh4[10]</val>
+              <val>define real padd_no3[10]</val>
+              <val></val>
+              <val>define real avail_soil_water = 0.0             ! soil water level used to trigger irrigation</val>
+              <val>define real surface_soil_water = 0.0</val>
+              <val>define real total_sw_uptake = 0.0</val>
+              <val></val>
+              <val>define real total_nh4 = 0.0</val>
+              <val>define real total_no3 = 0.0</val>
+              <val>define real total_n = 0.0</val>
+              <val></val>
+              <val>! ----------------------------------------------------------</val>
+              <val>! check the soil moisture level in the paddock</val>
+              <val></val>
+              <val>from start</val>
+              <val>{</val>
+              <val>   set padd_soil_layer = @('farm.pasture01.water.model.dlayer')  ! Calculate  soil water in the profile to a nominated depth</val>
+              <val>   set padd_soil_water = @('farm.pasture01.water.model.sw_dep')</val>
+              <val></val>
+              <val>   set padd_nh4 = @('farm.pasture01.nitrogen.model.nh4')</val>
+              <val>   set padd_no3 = @('farm.pasture01.nitrogen.model.no3')</val>
+              <val></val>
+              <val>   set pasture_sw_uptake = @('farm.pasture01.ryegrass.sw_uptake')</val>
+              <val>   set padd_soil_limit = @('farm.pasture01.ryegrass.ll')</val>
+              <val></val>
+              <val></val>
+              <val>   set surface_soil_water = padd_soil_layer[1] * max( 0.0, padd_soil_water[1] - padd_soil_limit[1] )</val>
+              <val></val>
+              <val>   set avail_soil_water = 0.0</val>
+              <val>   set total_sw_uptake = 0.0</val>
+              <val>   set total_nh4 = 0.0</val>
+              <val>   set total_no3 = 0.0</val>
+              <val>   set total_n = 0.0</val>
+              <val>   set cumul_depth = 0.0</val>
+              <val></val>
+              <val>   for layer = 1 to length(padd_soil_layer)</val>
+              <val>   {</val>
+              <val>      set avail_soil_water = avail_soil_water + padd_soil_water[layer]</val>
+              <val>      set total_sw_uptake = total_sw_uptake + pasture_sw_uptake[layer]</val>
+              <val>      set total_nh4 = total_nh4 + padd_nh4[layer]</val>
+              <val>      set total_no3 = total_no3 + padd_no3[layer]</val>
+              <val>      set total_n = total_nh4 + total_no3</val>
+              <val>      set cumul_depth = cumul_depth + padd_soil_layer[layer]</val>
+              <val>   }</val>
+              <val>}</val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="daily_results" active="T" class="TextOut">
+    <executable name="TextOut.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="filename" kind="string">
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
+            </init>
+            <init name="interval" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="intervalunit" kind="string">
+              <val>day</val>
+            </init>
+            <init name="outputs" array="T">
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.species</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>species</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_cover</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_cover</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>cover_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_tot</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>cover_tot</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.residue_cover</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>residue_cover</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.phenology</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>phenology</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.gai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>gai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>dai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.lai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>lai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.rtdep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>rtdep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.stress_index</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>stress_index</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.npp</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>npp</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha/d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.growth</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>growth</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha/d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.incorp_rate</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>incorp_rate</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.water.model.sw_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sw_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.avail_soil_water</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>avail_soil_water</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.sw_uptake</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>3</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_gai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_gai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_vpd</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_vpd</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_sm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_sm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_tmp</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_tmp</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_wl</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_wl</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_nitr</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>glf_nitr</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha/d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.uptake_no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>uptake_no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha/d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.height</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>height</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+            </init>
+            <init name="summary_file" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="daily_results_mass" active="T" class="TextOut">
+    <executable name="TextOut.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="filename" kind="string">
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
+            </init>
+            <init name="interval" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="intervalunit" kind="string">
+              <val>day</val>
+            </init>
+            <init name="outputs" array="T">
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.species</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>species</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dorm_t</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>dorm_t</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>oC</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seed_dorm_time</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>seed_dorm_time</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.germ_index</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>germ_index</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>d</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.shoot_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>shoot_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seedl_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>seedl_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.estab_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>estab_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.senc_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>senc_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dead_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>dead_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.litter_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>litter_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.green_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>green_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dry_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>dry_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.leaf_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>leaf_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.stem_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>stem_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>avail_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.root_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>root_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seed_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>seed_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>1</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.rlv</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>rlv</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>3</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm/mm^3</val>
+                </field>
+              </element>
+            </init>
+            <init name="summary_file" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="monthly_results" active="T" class="TextOut">
+    <executable name="TextOut.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="filename" kind="string">
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
+            </init>
+            <init name="interval" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="intervalunit" kind="string">
+              <val>month</val>
+            </init>
+            <init name="outputs" array="T">
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.avail_soil_water</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>avail_soil_water</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>mm</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>cover_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_tot</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>cover_tot</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>m^2/m^2</val>
+                </field>
+              </element>
+            </init>
+            <init name="summary_file" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="weather" active="T" class="Weather">
+    <executable name="weather.dll" version="1.3"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="source" kind="string">
+              <val>silo</val>
+            </init>
+            <init name="filename" kind="string">
+              <val>d:\projects\apsimx\prototypes\pasture\validation\cbr_70014.met</val>
+            </init>
+            <init name="locality" kind="string">
+              <val></val>
+            </init>
+            <init name="weather_db" kind="string">
+              <val></val>
+            </init>
+            <init name="weatherpath" kind="string">
+              <val></val>
+            </init>
+            <init name="elevation" kind="double" unit="m">
+              <val>0</val>
+            </init>
+            <init name="wind" kind="double" unit="m/s">
+              <val>0</val>
+            </init>
+            <init name="co2_coeffs" kind="double" array="T">
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Output" active="T" class="Output">
+    <executable name="Output.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="dbname" kind="string">
+              <val>C:\Users\her123\AppData\Local\Temp\dbFolderLabel.db</val>
+            </init>
+            <init name="interval" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="intervalunit" kind="string">
+              <val></val>
+            </init>
+            <init name="outputs" array="T">
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.avail_soil_water</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.avail_soil_water</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.cumul_depth</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.cumul_depth</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.pasture_sw_uptake</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.pasture_sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_sw_uptake</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.water.model.sw_dep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.water.model.sw_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_cover</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_cover</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>surfaceom_wt</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.phenology</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.phenology</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seeds</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.seeds</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.cover_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.cover_tot</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.cover_tot</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.residue_cover</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.residue_cover</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.height</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.height</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.dead_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.dead_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.litter_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.litter_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.green_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.green_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.leaf_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.leaf_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.stem_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.stem_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.avail_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_green</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.avail_green</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.avail_dry</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.avail_dry</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.root_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.root_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.rtdep</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.rtdep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.stress_index</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.stress_index</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.sw_uptake</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.sw_uptake</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.npp</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.npp</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.growth</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.growth</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_gai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_gai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_vpd</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_vpd</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_sm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_sm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_tmp</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_tmp</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_wl</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_wl</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.glf_nitr</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.glf_nitr</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.uptake_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>ryegrass.uptake_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>4</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.incorp_rate</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.incorp_rate</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.lai</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.lai</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+            </init>
+            <init name="title" kind="string">
+              <val>Pasture_component_test</val>
+            </init>
+            <init name="fwsnam" kind="string">
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN.afs</val>
+            </init>
+            <init name="runid" kind="integer4">
+              <val>1</val>
+            </init>
+            <init name="rundescr" kind="string">
+              <val></val>
+            </init>
+            <init name="kind" kind="string">
+              <val>SQLite</val>
+            </init>
+            <init name="tactical" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="hostname" kind="string">
+              <val></val>
+            </init>
+            <init name="username" kind="string">
+              <val>SYSDBA</val>
+            </init>
+            <init name="password" kind="string">
+              <val>masterkey</val>
+            </init>
+            <init name="sdml_gen_time" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <system name="farm" active="T" class="Generic">
+    <executable name="generic.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="state_vars" array="T">
+            </init>
+            <init name="other_vars" array="T">
+            </init>
+            <init name="equations" kind="string" array="T">
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+    <system name="pasture01" active="T" class="Paddock">
+      <executable name="paddock.dll" version="1.3"/>
+      <initdata>
+        <![CDATA[
+            <initsection>
+              <init name="published_events" array="T">
+              </init>
+              <init name="driver_connections" array="T">
+              </init>
+              <init name="allocator" kind="integer4">
+                <val>3</val>
+              </init>
+              <init name="area" kind="double" unit="ha">
+                <val>100</val>
+              </init>
+              <init name="slope" kind="double" unit="deg">
+                <val>4.2</val>
+              </init>
+            </initsection>
+        ]]>
+      </initdata>
+      <system name="water" active="T" class="Translator">
+        <executable name="aptrans.dll" version="1.3"/>
+        <initdata>
+          <![CDATA[
+              <initsection>
+                <init name="published_events" array="T">
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.new_profile</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..nitrogen.model.new_profile</val>
+                    </field>
+                  </element>
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.nitrogenchanged</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..nitrogen.model.nitrogenchanged</val>
+                    </field>
+                  </element>
+                </init>
+                <init name="driver_connections" array="T">
+                </init>
+                <init name="variable_map" array="T">
+                </init>
+                <init name="psd">
+                  <field name="sand" kind="double" array="T" unit="g/g">
+                    <val>0.58</val>
+                    <val>0.61</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.45</val>
+                    <val>0.64</val>
+                    <val>0.64</val>
+                    <val>0.64</val>
+                    <val>0.64</val>
+                  </field>
+                  <field name="clay" kind="double" array="T" unit="g/g">
+                    <val>0.28</val>
+                    <val>0.19</val>
+                    <val>0.33</val>
+                    <val>0.33</val>
+                    <val>0.47</val>
+                    <val>0.47</val>
+                    <val>0.3</val>
+                    <val>0.3</val>
+                    <val>0.3</val>
+                    <val>0.3</val>
+                  </field>
+                </init>
+                <init name="excrete_params" kind="single" array="T">
+                </init>
+                <init name="plant_type" kind="string">
+                  <val></val>
+                </init>
+                <init name="forage_params" kind="string">
+                  <val></val>
+                </init>
+                <init name="kno3" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="knh4" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="start_nstress" kind="single">
+                  <val>0</val>
+                </init>
+                <init name="surfaceom_types" kind="string" array="T">
+                </init>
+              </initsection>
+          ]]>
+        </initdata>
+        <component name="model" active="T" class="SoilWat">
+          <executable name="SoilWat.dll" version="7.10.4158"/>
+<initdata>
+<!--[model]-->
+<!-- APSoil: Red Kandosol (Galong)  -->
+<!-- Air-dry water contents changed and soil made shallower -->
+<!-- Cumul: 100    200    300    450    650    850  mm-->
+<dlayer>    100    100    100    150    200    200 </dlayer>
+<bd>      1.22   1.45   1.45   1.45   1.45   1.50  </bd>
+<sat>     0.510  0.420  0.420  0.420  0.420  0.400 </sat>
+<dul>     0.170  0.190  0.200  0.230  0.270  0.290 </dul>
+<ll15>    0.100  0.130  0.140  0.150  0.190  0.220 </ll15>
+<air_dry> 0.022  0.028  0.030  0.032  0.039  0.044 </air_dry>
+<swcon>   0.40   0.40   0.40   0.40   0.40   0.40  </swcon>
+<sw>      0.170  0.190  0.200  0.230  0.270  0.290 </sw>
+<diffus_const> 88.0     () </diffus_const>
+<diffus_slope> 35.4     () </diffus_slope>
+<cn2_bare>     72       () </cn2_bare>
+<cn_red>       20          </cn_red>
+<cn_cov>        0.80       </cn_cov>
+<salb>          0.13    () </salb>
+<SummerCona>    3.5        </SummerCona>
+<WinterCona>    2.0        </WinterCona>
+<SummerU>       6.0        </SummerU>
+<WinterU>       2.0        </WinterU>
+<SummerDate>1-nov</SummerDate>
+<WinterDate>1-apr</WinterDate>
+<mwcon></mwcon>
+<ks></ks>
+<slope></slope>
+<discharge_width></discharge_width>
+<catchment_area></catchment_area>
+<klat></klat>
+<max_pond></max_pond>
+</initdata>
+        </component>
+
+
+      </system>
+
+      <system name="nitrogen" active="T" class="Translator">
+        <executable name="aptrans.dll" version="1.3"/>
+        <initdata>
+          <![CDATA[
+              <initsection>
+                <init name="published_events" array="T">
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.new_solute</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..water.model.new_solute</val>
+                    </field>
+                  </element>
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.actualresiduedecompositioncalculated</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..surfaceom.model.actualresiduedecompositioncalculated</val>
+                    </field>
+                  </element>
+                </init>
+                <init name="driver_connections" array="T">
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.ph</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                    </field>
+                  </element>
+                </init>
+                <init name="variable_map" array="T">
+                </init>
+                <init name="psd">
+                  <field name="sand" kind="double" array="T" unit="g/g">
+                  </field>
+                  <field name="clay" kind="double" array="T" unit="g/g">
+                  </field>
+                </init>
+                <init name="excrete_params" kind="single" array="T">
+                  <val>0.300000011920929</val>
+                  <val>0.25</val>
+                  <val>0.0350000001490116</val>
+                </init>
+                <init name="plant_type" kind="string">
+                  <val></val>
+                </init>
+                <init name="forage_params" kind="string">
+                  <val></val>
+                </init>
+                <init name="kno3" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="knh4" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="start_nstress" kind="single">
+                  <val>4.30000019073486</val>
+                </init>
+                <init name="surfaceom_types" kind="string" array="T">
+                </init>
+              </initsection>
+          ]]>
+        </initdata>
+        <component name="model" active="T" class="SoilN">
+          <executable name="SoilN.dll" version="7.10.4158"/>
+<initdata>
+<!--[model]-->
+<!-- APSoil: Red Kandosol (Galong)  -->
+<soiltype>standard</soiltype>
+<oc>       1.30   0.60   0.40   0.30   0.30   0.22     </oc>
+<ph>       5.8    5.9    6.6    6.8    7.0    7.1       </ph>
+<fbiom>    0.04   0.02   0.02   0.01   0.01   0.01    </fbiom>
+<finert>   0.50   0.50   0.50   0.60   0.60   0.60     </finert>
+<ureappm>  0.0    0.0    0.0    0.0    0.0    0.0       </ureappm>
+<no3ppm>  30.0   10.0    4.0    2.0    1.5    1.5       </no3ppm>
+<nh4ppm>   0.0    0.0    0.0    0.0    0.0    0.0     </nh4ppm>
+<root_cn>      80    </root_cn>
+<root_wt>    2000    </root_wt>
+<soil_cn>      14.5  </soil_cn>
+<enr_a_coeff>   7.4  </enr_a_coeff>
+<enr_b_coeff>   0.2  </enr_b_coeff>
+<profile_reduction>off</profile_reduction>
+</initdata>
+        </component>
+
+
+      </system>
+
+      <system name="surfaceom" active="T" class="Translator">
+        <executable name="aptrans.dll" version="1.3"/>
+        <initdata>
+          <![CDATA[
+              <initsection>
+                <init name="published_events" array="T">
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.potentialresiduedecompositioncalculated</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..nitrogen.model.potentialresiduedecompositioncalculated</val>
+                    </field>
+                  </element>
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.incorpfompool</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..nitrogen.model.incorpfompool</val>
+                    </field>
+                  </element>
+                  <element>
+                    <field name="name" kind="string">
+                      <val>.model.nitrogenchanged</val>
+                    </field>
+                    <field name="connects" kind="string" array="T">
+                      <val>..nitrogen.model.nitrogenchanged</val>
+                    </field>
+                  </element>
+                </init>
+                <init name="driver_connections" array="T">
+                </init>
+                <init name="variable_map" array="T">
+                </init>
+                <init name="psd">
+                  <field name="sand" kind="double" array="T" unit="g/g">
+                  </field>
+                  <field name="clay" kind="double" array="T" unit="g/g">
+                  </field>
+                </init>
+                <init name="excrete_params" kind="single" array="T">
+                </init>
+                <init name="plant_type" kind="string">
+                  <val></val>
+                </init>
+                <init name="forage_params" kind="string">
+                  <val>C:\Users\her123\Documents\AusFarm\Library Crop Quality.prm</val>
+                </init>
+                <init name="kno3" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="knh4" kind="single" unit="kg/mg/d">
+                  <val>0</val>
+                </init>
+                <init name="start_nstress" kind="single">
+                  <val>4.30000019073486</val>
+                </init>
+                <init name="surfaceom_types" kind="string" array="T">
+                  <val>wheat</val>
+                  <val>barley</val>
+                  <val>canola</val>
+                  <val>pasture</val>
+                </init>
+              </initsection>
+          ]]>
+        </initdata>
+        <component name="model" active="T" class="SurfaceOM">
+          <executable name="SurfaceOM.dll" version="7.10.4158"/>
+<initdata>
+<!--[model]-->
+<name>wheat   barley   canola   pasture</name>
+<type>wheat   barley   canola   pasture</type>
+<mass>0000.0     0.0      0.0       0.0</mass>
+<cnr>   60.0    60.0     80.0      60.0</cnr>
+<standing_fraction>0.0 0.0 0.0 0.0</standing_fraction>
+</initdata>
+        </component>
+
+
+      </system>
+
+      <component name="ryegrass" active="T" class="Pasture">
+        <executable name="pasture.dll" version="1.5"/>
+        <initdata>
+          <![CDATA[
+              <initsection>
+                <init name="published_events" array="T">
+                </init>
+                <init name="driver_connections" array="T">
+                </init>
+                <init name="param_file" kind="string">
+                  <val></val>
+                </init>
+                <init name="species" kind="string">
+                  <val>Perennial Ryegrass</val>
+                </init>
+                <init name="nutrients" kind="string">
+                  <val>N</val>
+                </init>
+                <init name="fertility" kind="double">
+                  <val>0.800000011920929</val>
+                </init>
+                <init name="layers" kind="double" array="T" unit="mm">
+                </init>
+                <init name="max_rtdep" kind="double" unit="mm">
+                  <val>650</val>
+                </init>
+                <init name="lagged_day_t" kind="double" unit="oC">
+                  <val>-999.9</val>
+                </init>
+                <init name="phenology" kind="double">
+                  <val>1.00150001049042</val>
+                </init>
+                <init name="flower_len" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="flower_time" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="senc_index" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="dorm_index" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="dorm_t" kind="double" unit="oC">
+                  <val>-999.9</val>
+                </init>
+                <init name="extinct_coeff" kind="double" array="T">
+                  <val>0</val>
+                  <val>10</val>
+                  <val>0</val>
+                </init>
+                <init name="green" array="T">
+                  <element>
+                    <field name="status" kind="string">
+                      <val>established</val>
+                    </field>
+                    <field name="herbage" array="T">
+                      <element>
+                        <field name="dmd" kind="double" array="T" unit="kg/kg">
+                          <val>0.825</val>
+                        </field>
+                        <field name="weight" kind="double" array="T" unit="kg/ha">
+                          <val>800</val>
+                        </field>
+                        <field name="n_conc" kind="double" array="T" unit="kg/kg">
+                          <val>0.00999999977648258</val>
+                        </field>
+                        <field name="p_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="s_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="spec_area" kind="double" array="T" unit="cm^2/g">
+                          <val>430</val>
+                        </field>
+                      </element>
+                      <element>
+                        <field name="dmd" kind="double" array="T" unit="kg/kg">
+                          <val>0.825</val>
+                        </field>
+                        <field name="weight" kind="double" array="T" unit="kg/ha">
+                          <val>800</val>
+                        </field>
+                        <field name="n_conc" kind="double" array="T" unit="kg/kg">
+                          <val>0.00999999977648258</val>
+                        </field>
+                        <field name="p_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="s_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="spec_area" kind="double" array="T" unit="cm^2/g">
+                          <val>10</val>
+                        </field>
+                      </element>
+                    </field>
+                    <field name="root_wt" array="T">
+                      <element kind="double" array="T" unit="kg/ha">
+                        <val>400</val>
+                      </element>
+                      <element kind="double" array="T" unit="kg/ha">
+                        <val>400</val>
+                      </element>
+                    </field>
+                    <field name="rt_dep" kind="double" unit="mm">
+                      <val>650</val>
+                    </field>
+                    <field name="estab_index" kind="double">
+                      <val>0</val>
+                    </field>
+                    <field name="stress_index" kind="double">
+                      <val>0</val>
+                    </field>
+                    <field name="stem_reloc" kind="double" unit="kg/ha">
+                      <val>0</val>
+                    </field>
+                    <field name="frosts" kind="integer4">
+                      <val>0</val>
+                    </field>
+                  </element>
+                </init>
+                <init name="dry" array="T">
+                  <element>
+                    <field name="status" kind="string">
+                      <val>dead</val>
+                    </field>
+                    <field name="herbage" array="T">
+                      <element>
+                        <field name="dmd" kind="double" array="T" unit="kg/kg">
+                          <val>0.6</val>
+                        </field>
+                        <field name="weight" kind="double" array="T" unit="kg/ha">
+                          <val>500</val>
+                        </field>
+                        <field name="n_conc" kind="double" array="T" unit="kg/kg">
+                          <val>0</val>
+                        </field>
+                        <field name="p_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="s_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="spec_area" kind="double" array="T" unit="cm^2/g">
+                          <val>430</val>
+                        </field>
+                      </element>
+                      <element>
+                        <field name="dmd" kind="double" array="T" unit="kg/kg">
+                          <val>0.35</val>
+                        </field>
+                        <field name="weight" kind="double" array="T" unit="kg/ha">
+                          <val>1500</val>
+                        </field>
+                        <field name="n_conc" kind="double" array="T" unit="kg/kg">
+                          <val>0</val>
+                        </field>
+                        <field name="p_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="s_conc" kind="double" array="T" unit="kg/kg">
+                        </field>
+                        <field name="spec_area" kind="double" array="T" unit="cm^2/g">
+                          <val>80</val>
+                        </field>
+                      </element>
+                    </field>
+                  </element>
+                </init>
+                <init name="seeds">
+                  <field name="soft_unripe" kind="double" array="T" unit="kg/ha">
+                  </field>
+                  <field name="soft_ripe" kind="double" array="T" unit="kg/ha">
+                  </field>
+                  <field name="hard_unripe" kind="double" array="T" unit="kg/ha">
+                  </field>
+                  <field name="hard_ripe" kind="double" array="T" unit="kg/ha">
+                  </field>
+                </init>
+                <init name="seed_dorm_time" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="germ_index" kind="double" unit="d">
+                  <val>0</val>
+                </init>
+                <init name="kl" kind="single" array="T" unit="/d">
+                  <val>0.0700000002980232</val>
+                  <val>0.0700000002980232</val>
+                  <val>0.0700000002980232</val>
+                  <val>0.0599999986588955</val>
+                  <val>0.0399999991059303</val>
+                  <val>0</val>
+                </init>
+                <init name="ll" kind="single" array="T" unit="mm/mm">
+                </init>
+              </initsection>
+          ]]>
+        </initdata>
+      </component>
+
+
+    </system>
+
+
+  </system>
+
+  <component name="Config" active="T" class="Generic">
+    <executable name="generic.dll" version="1.0"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="state_vars" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>cwd</val>
+                </field>
+                <field name="units" kind="string">
+                  <val></val>
+                </field>
+                <field name="value" kind="string">
+                  <val>'D:\Projects\ApsimX\Prototypes\Pasture\Validation\'</val>
+                </field>
+              </element>
+            </init>
+            <init name="other_vars" array="T">
+            </init>
+            <init name="equations" kind="string" array="T">
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+
+  <notes>
+    <line></line>
+    <line>This is a mixed farming simulation that illustrates how to model typical mixed farming management.</line>
+    <line></line>
+    <line>Other features of this simulation include:</line>
+    <line></line>
+    <line>1. Multiple paddocks</line>
+    <line>2. Using APSIM nutrient cycling</line>
+    <line>3. Using APSIM Plant components</line>
+    <line>4. How to configure Text output components for collecting summaries at different intervals</line>
+    <line>5. How to use the Reporting system</line>
+    <line>6. Multiple Manager components that have specific areas of influence</line>
+    <line>7. Using the Cashbook component for financial reporting</line>
+  </notes>
+  <binaries>
+    <module>
+      <file>timesvr.dll</file>
+      <version>1.1</version>
+      <class>Time Server</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>sequencer.dll</file>
+      <version>1.0</version>
+      <class>Sequencer</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>manager.dll</file>
+      <version>1.1</version>
+      <class>Manager</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>TextOut.dll</file>
+      <version>1.0</version>
+      <class>TextOut</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>weather.dll</file>
+      <version>1.3</version>
+      <class>Weather</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>Output.dll</file>
+      <version>1.1</version>
+      <class>Output</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>generic.dll</file>
+      <version>1.0</version>
+      <class>Generic</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>paddock.dll</file>
+      <version>1.3</version>
+      <class>Paddock</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>aptrans.dll</file>
+      <version>1.3</version>
+      <class>Translator</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+    <module>
+      <file>SoilWat.dll</file>
+      <version>7.10.4158</version>
+      <class>SoilWat</class>
+      <author>APSIM Initiative</author>
+      <contextfile>Soil.xml</contextfile>
+    </module>
+    <module>
+      <file>SoilN.dll</file>
+      <version>7.10.4158</version>
+      <class>SoilN</class>
+      <author>APSIM Initiative</author>
+      <contextfile>Soil.xml</contextfile>
+    </module>
+    <module>
+      <file>SurfaceOM.dll</file>
+      <version>7.10.4158</version>
+      <class>SurfaceOM</class>
+      <author>APSIM Initiative</author>
+      <contextfile>SurfaceOM.xml</contextfile>
+    </module>
+    <module>
+      <file>pasture.dll</file>
+      <version>1.5</version>
+      <class>Pasture</class>
+      <author>CSIRO Plant Industry</author>
+    </module>
+  </binaries>
+
+<scenarios>
+  <component name="No_Fert" replaces="FertControl" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="subscribed_events" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>do_management</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>true</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>save_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>restore_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val></val>
+              <val>define text prefix</val>
+              <val></val>
+              <val>on start</val>
+              <val>{</val>
+              <val>   set prefix = Config.cwd</val>
+              <val>   reset daily_results.filename      = prefix &amp; 'ryegrass_daily_no_fert.txt'</val>
+              <val>   reset daily_results_mass.filename = prefix &amp; 'ryegrass_daily_mass_no_fert.txt'</val>
+              <val>   reset monthly_results.filename    = prefix &amp; 'ryegrass_monthly_no_fert.txt'</val>
+              <val>}</val>
+              <val></val>
+              <val></val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Fert" replaces="FertControl" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="subscribed_events" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>do_management</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>true</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>save_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>restore_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val></val>
+              <val>define text prefix</val>
+              <val></val>
+              <val>on start</val>
+              <val>{</val>
+              <val>   set prefix = Config.cwd</val>
+              <val>   reset daily_results.filename      = prefix &amp; 'ryegrass_daily_fert.txt'</val>
+              <val>   reset daily_results_mass.filename = prefix &amp; 'ryegrass_daily_mass_fert.txt'</val>
+              <val>   reset monthly_results.filename    = prefix &amp; 'ryegrass_monthly_fert.txt'</val>
+              <val>}</val>
+              <val></val>
+              <val></val>
+              <val>each 1 Sep</val>
+              <val>{</val>
+              <val>   farm.pasture01.nitrogen.fertilize no3_n=50, nh4_n=0.0, urea_n=0.0</val>
+              <val>}</val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+</scenarios>
+
+<report>
+  <defaultreport>Biomass</defaultreport>
+<node text="Biomass" type="0" empty="False" ver="0.27">
+ <init name="id" kind="string">
+  <val>{7EE72047-A0EC-43A4-9CE5-21D3BB14EB3A}</val>
+ </init>
+ <init name="name" kind="string">
+  <val>Biomass</val>
+ </init>
+ <init name="descr" kind="string">
+  <val></val>
+ </init>
+ <init name="changed" kind="double">
+  <val>0</val>
+ </init>
+ <init name="filename" kind="string">
+  <val>output_231215171339442.html</val>
+ </init>
+ <init name="title" kind="string">
+  <val>New Report</val>
+ </init>
+ <init name="sectionlist" kind="integer4" array="T">
+  <val>7</val>
+  <val>1</val>
+  <val>3</val>
+  <val>13</val>
+  <val>6</val>
+  <val>4</val>
+  <val>10</val>
+  <val>5</val>
+  <val>11</val>
+  <val>2</val>
+  <val>12</val>
+ </init>
+ <init name="controlsections" array="T">
+  <element>
+   <field name="id" kind="integer4">
+    <val>7</val>
+   </field>
+   <field name="name" kind="string">
+    <val>For each treatment</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Biomass and other details</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Biomass</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>loop</val>
+   </field>
+   <field name="columns" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>10</val>
+   </field>
+   <field name="name" kind="string">
+    <val>For each treatment</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Residue</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Residues</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>loop</val>
+   </field>
+   <field name="columns" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>11</val>
+   </field>
+   <field name="name" kind="string">
+    <val>For each treatment</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Limiting factors</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Growth limits</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>loop</val>
+   </field>
+   <field name="columns" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>12</val>
+   </field>
+   <field name="name" kind="string">
+    <val>For each treatment</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Biomass detail</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Biomass</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>loop</val>
+   </field>
+   <field name="columns" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+  </element>
+ </init>
+ <init name="displaysections" array="T">
+  <element>
+   <field name="id" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="name" kind="string">
+    <val>biomass</val>
+   </field>
+   <field name="descr" kind="string">
+    <val></val>
+   </field>
+   <field name="title" kind="string">
+    <val>ryegrass</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>7</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.avail_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.avail_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>avail_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clMaroon</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.avail_green</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.avail_green</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>avail_green</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clGreen</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.uptake_nh4</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.uptake_nh4</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>uptake_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clLime</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha/d</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>true</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>2</val>
+   </field>
+   <field name="name" kind="string">
+    <val>biomass</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Green</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Biomass</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>12</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>table</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.cover_green</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.cover_green</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>cover_green</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>m^2/m^2</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.cover_tot</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.cover_tot</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>cover_tot</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>m^2/m^2</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.green_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.green_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>green_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.avail_green</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.avail_green</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>avail_green</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.dead_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.dead_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>dead_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.litter_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.litter_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>litter_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.avail_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.avail_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>avail_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+     </field>
+     <field name="title" kind="string">
+      <val>surfaceom_wt</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>som_wt</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.uptake_nh4[0]</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.uptake_nh4[0]</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>uptake_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha/d</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>4</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.uptake_nh4[1]</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.uptake_nh4[1]</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>uptake_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha/d</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>4</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.uptake_nh4[2]</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.uptake_nh4[2]</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>uptake_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha/d</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>4</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.uptake_nh4[3]</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.uptake_nh4[3]</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>uptake_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha/d</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>4</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>3</val>
+   </field>
+   <field name="name" kind="string">
+    <val>SOM</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Residue</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Surface OM</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>7</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.surfaceom.model.surfaceom_cover</val>
+     </field>
+     <field name="title" kind="string">
+      <val>surfaceom_cover</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>surfaceom_cover</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clGreen</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>m^2/m^2</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>true</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.surfaceom.model.surfaceom_wt</val>
+     </field>
+     <field name="title" kind="string">
+      <val>surfaceom_wt</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>surfaceom_wt</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clNavy</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>4</val>
+   </field>
+   <field name="name" kind="string">
+    <val>residues</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Residues</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Residue</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>10</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.residue_cover</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.residue_cover</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>residue_cover</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clMaroon</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>m^2/m^2</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>true</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.dead_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.dead_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>dead_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clOlive</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.litter_dm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.litter_dm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>litter_dm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val>kg/ha</val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>2</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>5</val>
+   </field>
+   <field name="name" kind="string">
+    <val>GLF</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Daily limits</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Growth limits</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>11</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_gai</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_gai</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_gai</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clGreen</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_vpd</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_vpd</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_vpd</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clNavy</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_sm</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_sm</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_sm</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlack</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_tmp</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_tmp</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_tmp</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clRed</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_wl</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_wl</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_wl</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clPurple</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>farm.pasture01.ryegrass.glf_nitr</val>
+     </field>
+     <field name="title" kind="string">
+      <val>ryegrass.glf_nitr</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>glf_nitr</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clOlive</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>6</val>
+   </field>
+   <field name="name" kind="string">
+    <val>total_n</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>NO3 and NH4</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Total N</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_n</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_n</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_n</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clNavy</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_nh4</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_nh4</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clSilver</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_no3</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_no3</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_no3</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clMoneyGreen</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>13</val>
+   </field>
+   <field name="name" kind="string">
+    <val>soilwater</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>Total soil water</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Soil water</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.avail_soil_water</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.avail_soil_water</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>avail_soil_water</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clBlue</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+ </init>
+
+</node>
+
+</report>
+  <session>
+    <trace on="False">
+      <file>C:\Users\her123\AppData\Local\Temp\trace.log</file>
+      <start>0</start>
+      <end>0</end>
+      <names>True</names>
+      <connect>True</connect>
+      <times>False</times>
+      <msgdetail>True</msgdetail>
+    </trace>
+    <errors on="True">
+      <file>C:\Users\her123\AppData\Local\Temp\error_temora.log</file>
+    </errors>
+    <layout modelswidth="314"/>
+  </session>
+</fwsimulation>
