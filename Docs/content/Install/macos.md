@@ -14,7 +14,7 @@ draft: false
 
 # Common issues
 ## Unable to open APSIM after install.
-- This usually means that .NET 6.0 is not installed on your system. You can install the .NET 6.0 SDK which should resolve the issue. You can get the .NET 6.0 SDK [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+- This usually means that .NET 6.0 is not installed on your system. You can install the .NET 6.0 Runtime which should resolve the issue. You can get the .NET 6.0 Runtime [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 ## Unable to see the user interface
 - This usually means GTK+3 and/or gtksourceview4 are not installed. These are the libraries that handle the user interface for APSIM and can be downloaded using [homebrew](https://brew.sh/)
