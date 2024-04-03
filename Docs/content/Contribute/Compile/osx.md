@@ -11,7 +11,21 @@ APSIM can be compiled using Microsoft's [Visual Studio Code](https://code.visual
 
 3. Install [git](https://git-scm.com/downloads) and a git client, we recommend [Fork](https://git-fork.com/).
 
-4. Install the .NET 6 SDK. The SDK can be found here for your specific operating system.
+4. Install the .NET 6 SDK. The SDK can be found [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) for your specific operating system.
+
+5. Check that the SDK is installed by opening a terminal and running the command: 
+
+    ```
+    dotnet --list-sdks
+    ```
+    - You should see at least one line that says:
+
+        ```
+        6.X.X
+        ```
+        - `x` is any number. The version numbers of a SDK may change over time.
+        - There may be other lines with differing values. This is normal.
+
 
 5. Install GTK+3 and gtksourceview4
 
