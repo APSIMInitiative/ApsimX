@@ -8408,7 +8408,7 @@
                   "CNRatioDung": 0.0,
                   "DepthUrineIsAdded": 17.5,
                   "SendDungElsewhere": 0.0,
-                  "SendUrineElsewhere": 0.0,
+                  "SendUrineElsewhere": 1.0,
                   "FractionPopulationDecline": 0.0,
                   "TramplingOn": false,
                   "MaximumPropLitterMovedToSoil": 0.1,
