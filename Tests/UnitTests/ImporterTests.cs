@@ -1,7 +1,9 @@
 ﻿namespace UnitTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
     using APSIM.Shared.Utilities;
-    using DocumentFormat.OpenXml.Wordprocessing;
     using Models;
     using Models.Core;
     using Models.Core.Apsim710File;
@@ -12,11 +14,7 @@
     using Models.Storage;
     using Models.Surface;
     using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
     using UserInterface.Presenters;
-    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -81,7 +79,7 @@
             "<folder version=\"36\" creator=\"Apsim 7.5-r3183\" name=\"simulations\">" +
             "  <simulation name=\"Continuous Wheat\">" +
             "    <metfile name=\"met\">" +
-            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/MetFiles/Goond.met</filename>" +
+            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/WeatherFiles/Goond.met</filename>" +
             "    </metfile>" +
             "  </simulation>" +
             "</folder>";
@@ -90,8 +88,8 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var w = sims.Children[0].Children[0] as Models.Climate.Weather;
-            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "Goond.met");
-            Assert.AreEqual(w.FileName, expected);
+            string expected = string.Join("/", new string[] { "/Examples", "WeatherFiles", "AU_Goondiwindi.met" });
+            Assert.AreEqual(expected, w.FileName);
         }
 
         /// <summary>Ensure AREA imports OK</summary>
@@ -146,7 +144,7 @@
             Organic som = s.Children[7] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
-            Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
+            Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01 });
 
             Chemical a = s.Children[8] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
@@ -354,7 +352,7 @@
             Assert.AreEqual(som.InitialCNR, 80);
             Assert.AreEqual(som.InitialResidueName, "wheat");
         }
-        
+
         /// <summary>Ensure MICROMET imports OK</summary>
         [Test]
         public void ImporterTests_MicroMetImports()
