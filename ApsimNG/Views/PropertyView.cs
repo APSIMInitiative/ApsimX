@@ -4,6 +4,7 @@ namespace UserInterface.Views
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
     using Classes;
     using EventArguments;
@@ -197,46 +198,54 @@ namespace UserInterface.Views
         /// <param name="columnOffset">The number of columns to offset for this propertygroup (0 = single. >0 multiply models reported as columns).</param>
         protected void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow, int columnOffset)
         {
+            bool isOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
             foreach (Property property in properties.Properties.Where(p => p.Visible))
             {
-                if (property.Separators != null)
-                    foreach (string separator in property.Separators)
-                    {
-                        Label separatorLabel = new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true };
-                        separatorLabel.StyleContext.AddClass("separator");
-                        propertyTable.Attach(separatorLabel, 0, startRow, 3, 1);
+                // Required to remove dark mode from MacOS systems.
+                // Reasons:
+                //  1) Dark theme does not work on MacOS.
+                //  2) Causes axes, legend names, and axes tick issues with OxyPlot graphs (they won't appear).
+                if (property.Name != "Dark theme enabled" && isOSX)
+                {
+                    if (property.Separators != null)
+                        foreach (string separator in property.Separators)
+                        {
+                            Label separatorLabel = new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true };
+                            separatorLabel.StyleContext.AddClass("separator");
+                            propertyTable.Attach(separatorLabel, 0, startRow, 3, 1);
 
-                        startRow++;
+                            startRow++;
+                        }
+
+                    if (columnOffset == 0) // only perform on first or only entry
+                    {
+                        Label label = new Label(property.Name);
+                        label.TooltipText = property.Tooltip;
+                        label.Xalign = 0;
+
+                        label.MarginEnd = 10;
+                        propertyTable.Attach(label, 0, startRow, 1, 1);
                     }
 
-                if (columnOffset == 0) // only perform on first or only entry
-                {
-                    Label label = new Label(property.Name);
-                    label.TooltipText = property.Tooltip;
-                    label.Xalign = 0;
+                    if (!string.IsNullOrEmpty(property.Tooltip))
+                    {
+                        Button info = new Button(new Image(Stock.Info, IconSize.Button));
+                        info.TooltipText = property.Tooltip;
+                        propertyTable.Attach(info, 1, startRow, 1, 1);
+                        info.Clicked += OnInfoButtonClicked;
+                    }
 
-                    label.MarginEnd = 10;
-                    propertyTable.Attach(label, 0, startRow, 1, 1);
+                    Widget inputWidget = GenerateInputWidget(property);
+                    inputWidget.Name = property.ID.ToString();
+                    inputWidget.TooltipText = property.Tooltip;
+
+                    propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
+                    inputWidget.Hexpand = true;
+
+                    startRow++;
                 }
-
-                if (!string.IsNullOrEmpty(property.Tooltip))
-                {
-                    Button info = new Button(new Image(Stock.Info, IconSize.Button));
-                    info.TooltipText = property.Tooltip;
-                    propertyTable.Attach(info, 1, startRow, 1, 1);
-                    info.Clicked += OnInfoButtonClicked;
-                }
-
-                Widget inputWidget = GenerateInputWidget(property);
-                inputWidget.Name = property.ID.ToString();
-                inputWidget.TooltipText = property.Tooltip;
-
-                propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
-                inputWidget.Hexpand = true;
-
-                startRow++;
             }
 
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
