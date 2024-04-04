@@ -185,7 +185,7 @@ namespace UserInterface.Views
                 string orderBy = "SimulationID, \"Clock.Today\"";
                 if (sortBy.Length > 0)
                     orderBy = "\"" + sortBy + "\"";
-                sql += $"ORDER BY {orderBy}";
+                sql += $"ORDER BY {orderBy}, SimulationID";
                 dataStore.GetDataUsingSql(sql);
             }
             else if (connection is Firebird)
