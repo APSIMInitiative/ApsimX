@@ -94,10 +94,10 @@ brew install gtksourceview4
 8. Run the application again and it will now have an Open option, click that.
 
 # Common issues
-## Unable to open APSIM after install.
+**Unable to open APSIM after install.**
 This usually means that a library is missing from your system that Apsim requires. Check that you have installed the correct version of .NET and that you have both GTK3 and GTKSourceView4 installed.
 
-## Running Apsim from the terminal
+**Running Apsim from the terminal**
 If Apsim is not opening from the Applications folder, open a terminal and type the following with the version number you installed:
 
 ```
@@ -105,3 +105,9 @@ open ../../Applications/APSIM2024.4.7437.0.app
 ```
 
 If Apsim does not open, this will give an error message that could help you work out what is causing it to fail. If you report an issue with running Apsim on MacOS, please provide these error messages to help us solve your problem.
+
+**SQLite Permissions Error**
+There are a number of reasons why the database may have permission problems.
+
+1. If your apsim file is within a Dropbox/OneDrive/Cloud Storage folder, that will cause problems when accessing the database due to the cloud storage trying to sync the file while it's being changed.
+2. It has been reported that running apsim from the terminal can fix this error if it's not related to cloud storage.
