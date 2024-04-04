@@ -55,6 +55,7 @@ namespace UserInterface.Views
         /// <param name="simulationNamesInScope">The names of simulations in scope.</param>
         /// <param name="columnNameFilter">Column name filter (csv). Can be null.</param>
         /// <param name="dataFilter">The data filter to apply.</param>
+        /// <param name="orderBy">Column to sort by</param>
         /// <param name="dataPageSize">The number of rows to load at a time from the datastore table.</param>
         public PagedDataProvider(IStorageReader store, 
                                  string checkpointNameInScope,
@@ -62,6 +63,7 @@ namespace UserInterface.Views
                                  IEnumerable<string> simulationNamesInScope,
                                  string columnNameFilter,
                                  string dataFilter,
+                                 string orderBy = "",
                                  int dataPageSize = 50)
         {
             dataStore = store;
@@ -72,7 +74,7 @@ namespace UserInterface.Views
             simulationNames = simulationNamesInScope;
             rowFilter = dataFilter;
             pageSize = dataPageSize;
-            CreateTemporaryKeyset();
+            CreateTemporaryKeyset(orderBy);
             GetColumnNames(columnNameFilter);
             GetData(0);
             GetUnits();
@@ -152,16 +154,6 @@ namespace UserInterface.Views
                                              simulationNames,
                                              columnNames,
                                              GetRollingCursorRowFilter(startRowIndex, pageSize));
-            /*
-            else
-                newData = dataStore.GetData(tableName,
-                                             checkpointName,
-                                             simulationNames,
-                                             columnNames,
-                                             null,
-                                             startRowIndex,
-                                             pageSize);
-            */
  
             // Remove unwanted columns from data table.
             foreach (string columnName in DataTableUtilities.GetColumnNames(newData))
@@ -178,7 +170,7 @@ namespace UserInterface.Views
 
         /// <summary>Create a temporary keyset of rowids.</summary>
         /// <remarks>This concept of a rolling cursor comes from: https://sqlite.org/forum/forumpost/2cfa137263</remarks>
-        private void CreateTemporaryKeyset()
+        private void CreateTemporaryKeyset(string sortBy = "")
         {
             string filter = GetFilter();
             string sql = String.Empty;
@@ -188,7 +180,12 @@ namespace UserInterface.Views
                 sql = "CREATE TEMPORARY TABLE keyset AS " +
                          $"SELECT rowid FROM \"{tableName}\" ";
                 if (!string.IsNullOrEmpty(filter))
-                    sql += $"WHERE {filter}";
+                    sql += $"WHERE {filter} ";
+                
+                string orderBy = "SimulationID, \"Clock.Today\"";
+                if (sortBy.Length > 0)
+                    orderBy = "\"" + sortBy + "\"";
+                sql += $"ORDER BY {orderBy}";
                 dataStore.GetDataUsingSql(sql);
             }
             else if (connection is Firebird)
@@ -213,7 +210,7 @@ namespace UserInterface.Views
             DataTable data = null;
             if (connection is SQLite)
             {
-                data = dataStore.GetDataUsingSql($"SELECT \"rowid\" FROM \"keyset\" WHERE \"rowid\" >= {from + 1} ORDER BY \"rowid\" LIMIT {count}");
+                data = dataStore.GetDataUsingSql($"SELECT \"rowid\" FROM \"keyset\" LIMIT {count} OFFSET {from}");
             }
             else if (connection is Firebird)
             {

@@ -47,11 +47,7 @@
             CreateTable(database);
             
             var reader = new DataStoreReader(database);
-            var provider = new PagedDataProvider(reader, "Current", "Report", 
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 2);
+            var provider = new PagedDataProvider(reader, "Current", "Report", null, null, null, "", 2);
 
             Assert.AreEqual(3, provider.ColumnCount);
             Assert.AreEqual("SimulationName", provider.GetCellContents(0, 0));
@@ -76,11 +72,7 @@
             CreateTable(database);
 
             var reader = new DataStoreReader(database);
-            var provider = new PagedDataProvider(reader, "Current", "Report",
-                                                 null,
-                                                 "Col2",
-                                                 null,
-                                                 2);
+            var provider = new PagedDataProvider(reader, "Current", "Report", null, "Col2", null, "", 2);
 
             Assert.AreEqual(2, provider.ColumnCount);
             Assert.AreEqual("SimulationName", provider.GetCellContents(0, 0));
@@ -103,11 +95,7 @@
             CreateTable(database);
 
             var reader = new DataStoreReader(database);
-            var provider = new PagedDataProvider(reader, "Current", "Report",
-                                                 new string[] { "Sim1" },
-                                                 "Col1,Col2",
-                                                 "Col1 > 2",
-                                                 2);
+            var provider = new PagedDataProvider(reader, "Current", "Report", new string[] { "Sim1" }, "Col1,Col2", "Col1 > 2", "", 2);
 
             Assert.AreEqual(3, provider.ColumnCount);
             Assert.AreEqual("SimulationName", provider.GetCellContents(0, 0));
