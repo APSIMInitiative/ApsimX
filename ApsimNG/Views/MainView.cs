@@ -227,6 +227,7 @@ namespace UserInterface.Views
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
+                Utility.Configuration.Settings.DarkTheme = false;
                 //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
             }
 
