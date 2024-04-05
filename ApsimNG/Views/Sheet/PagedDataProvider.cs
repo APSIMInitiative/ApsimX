@@ -193,7 +193,7 @@ namespace UserInterface.Views
             if (connection is SQLite)
             {
                 Cleanup();
-                sql = "CREATE TABLE keyset AS " +
+                sql = "CREATE TEMPORARY TABLE keyset AS " +
                          $"SELECT rowid FROM \"{tableName}\" ";
                 if (!string.IsNullOrEmpty(filter))
                     sql += $"WHERE {filter} ";
