@@ -48,6 +48,9 @@ namespace UserInterface.Views
         /// </summary>
         private IDatabaseConnection connection = null;
 
+        /// <summary>Column to order by</summary>
+        private string orderBy;
+
         /// <summary>Constructor.</summary>
         /// <param name="store">The data store.</param>
         /// <param name="dataTableName">Name of table to read.</param>
@@ -55,7 +58,7 @@ namespace UserInterface.Views
         /// <param name="simulationNamesInScope">The names of simulations in scope.</param>
         /// <param name="columnNameFilter">Column name filter (csv). Can be null.</param>
         /// <param name="dataFilter">The data filter to apply.</param>
-        /// <param name="orderBy">Column to sort by</param>
+        /// <param name="sortBy">Column to sort by</param>
         /// <param name="dataPageSize">The number of rows to load at a time from the datastore table.</param>
         public PagedDataProvider(IStorageReader store, 
                                  string checkpointNameInScope,
@@ -63,7 +66,7 @@ namespace UserInterface.Views
                                  IEnumerable<string> simulationNamesInScope,
                                  string columnNameFilter,
                                  string dataFilter,
-                                 string orderBy = "",
+                                 string sortBy = "",
                                  int dataPageSize = 50)
         {
             dataStore = store;
@@ -74,7 +77,8 @@ namespace UserInterface.Views
             simulationNames = simulationNamesInScope;
             rowFilter = dataFilter;
             pageSize = dataPageSize;
-            CreateTemporaryKeyset(orderBy);
+            orderBy = sortBy;
+            CreateTemporaryKeyset();
             GetColumnNames(columnNameFilter);
             GetData(0);
             GetUnits();
@@ -144,16 +148,28 @@ namespace UserInterface.Views
 
         /// <summary>Get data to show in grid.</summary>
         /// <param name="startRowIndex">The row index to start getting data from.</param>
+        /// <param name="orderBy">Column to order by</param>
         private DataPage GetData(int startRowIndex)
         {
             PagingStart?.Invoke(this, new EventArgs());
             DataTable newData = null;
-            //if (connection is SQLite)
-                newData = dataStore.GetData(tableName,
-                                             checkpointName,
-                                             simulationNames,
-                                             columnNames,
-                                             GetRollingCursorRowFilter(startRowIndex, pageSize));
+
+            List<string> sort = new List<string>();
+            if (orderBy.Length > 0) 
+            {
+                sort.Add(orderBy);
+                sort.Add("Clock.Today");
+                sort.Add("SimulationID");
+            }
+
+            newData = dataStore.GetData(tableName,
+                                        checkpointName,
+                                        simulationNames,
+                                        columnNames,
+                                        GetRollingCursorRowFilter(startRowIndex, pageSize),
+                                        0, 
+                                        0,
+                                        sort);
  
             // Remove unwanted columns from data table.
             foreach (string columnName in DataTableUtilities.GetColumnNames(newData))
@@ -170,22 +186,23 @@ namespace UserInterface.Views
 
         /// <summary>Create a temporary keyset of rowids.</summary>
         /// <remarks>This concept of a rolling cursor comes from: https://sqlite.org/forum/forumpost/2cfa137263</remarks>
-        private void CreateTemporaryKeyset(string sortBy = "")
+        private void CreateTemporaryKeyset()
         {
             string filter = GetFilter();
             string sql = String.Empty;
             if (connection is SQLite)
             {
                 Cleanup();
-                sql = "CREATE TEMPORARY TABLE keyset AS " +
+                sql = "CREATE TABLE keyset AS " +
                          $"SELECT rowid FROM \"{tableName}\" ";
                 if (!string.IsNullOrEmpty(filter))
                     sql += $"WHERE {filter} ";
                 
-                string orderBy = "SimulationID, \"Clock.Today\"";
-                if (sortBy.Length > 0)
-                    orderBy = "\"" + sortBy + "\"";
-                sql += $"ORDER BY {orderBy}, SimulationID";
+                string sort = "ORDER BY \"SimulationID\", \"Clock.Today\"";
+                if (orderBy.Length > 0) 
+                    sort = $"ORDER BY \"{orderBy}\", \"SimulationID\"";
+            
+                sql += sort;
                 dataStore.GetDataUsingSql(sql);
             }
             else if (connection is Firebird)
@@ -202,6 +219,7 @@ namespace UserInterface.Views
         /// <summary>Gets a filter that includes rowid to implement data pagination (rolling cursor).</summary>
         /// <param name="from"></param>
         /// <param name="count"></param>
+        /// <param name="orderBy"></param>
         /// <returns></returns>
         private string GetRollingCursorRowFilter(int from, int count)
         {
