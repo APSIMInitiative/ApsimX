@@ -25,7 +25,7 @@ def load_file(fpath: str) -> Union[dict, str]:
         ext = fpath.split(".")[-1];
     except:
         return _load_file_default(fpath);
-    if (ext == "json"):
+    if (ext == "json" || ext == "apsimx"):
         return _load_json(fpath);
     return _load_file_default(fpath);
 
