@@ -25,7 +25,7 @@ def load_file(fpath: str) -> Union[dict, str]:
         ext = fpath.split(".")[-1];
     except:
         return _load_file_default(fpath);
-    if (ext == "json" || ext == "apsimx"):
+    if (ext == "json" or ext == "apsimx"):
         return _load_json(fpath);
     return _load_file_default(fpath);
 
@@ -52,4 +52,3 @@ def write_file(content: Union[dict, str], fpath: str):
 if __name__ == "__main__":
     print("Hi nub.");
     thing = {"welcome": "nub"};
-    write_file(thing, "test.json");

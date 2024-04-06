@@ -4,7 +4,10 @@ app.py - launcher for kabutops apps.
 @usage: ./app.py
 """
 import logging;
-from src.utils import *;
+import sys;
+sys.path.append("src/");    # Sharing is caring.
+from utils import *;
+from apsim import *;
 
 def configure_logger():
     logger = logging.getLogger(__name__);
@@ -18,6 +21,8 @@ def kabutops():
     """
     """
     logging.info("Welcome to kabutops!")
+    sim = APSim();
+    sim.load("./examples/toplevelsync.apsimx");
     return 0;
 
 if __name__ == "__main__":
