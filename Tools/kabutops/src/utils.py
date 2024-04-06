@@ -29,17 +29,17 @@ def load_file(fpath: str) -> Union[dict, str]:
         return _load_json(fpath);
     return _load_file_default(fpath);
 
-def _write_file_default(content: str, fpath: str):
+def _write_file_default(content: str, fpath: str) -> None:
     with open(fpath, "w+") as fp:
         fp.write(content);
     logging.debug("Wrote to {}.".format(fpath));
 
-def _write_json(content: Union[dict, str], fpath: str):
+def _write_json(content: Union[dict, str], fpath: str) -> None:
     if (type(content) == dict):
         content = json.dumps(content);
     _write_file_default(content, fpath);
 
-def write_file(content: Union[dict, str], fpath: str):
+def write_file(content: Union[dict, str], fpath: str) -> None:
     try:
         ext = fpath.split(".")[-1];
     except:
@@ -51,4 +51,3 @@ def write_file(content: Union[dict, str], fpath: str):
 
 if __name__ == "__main__":
     print("Hi nub.");
-    thing = {"welcome": "nub"};
