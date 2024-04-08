@@ -62,9 +62,17 @@ namespace Models
                 var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
-                scriptCompiler = simulations.ScriptCompiler;
+                SetCompiler(simulations.ScriptCompiler);
             }
             return true;
+        }
+
+        /// <summary>
+        /// Set compiler to given script compiler
+        /// </summary>
+        private void SetCompiler(ScriptCompiler compiler)
+        {
+            scriptCompiler = compiler;
         }
 
         /// <summary>The array of code lines that gets stored in file</summary>
@@ -98,8 +106,15 @@ namespace Models
             }
             set
             {
-                cSharpCode = value.Split('\n');
-                RebuildScriptModel();
+                if (value == null)
+                {
+                    throw new Exception("Value 'Null' cannot be stored in Manager.Code");
+                }
+                else
+                {
+                    cSharpCode = value.Split('\n');
+                    RebuildScriptModel();
+                }
             }
         }
 
@@ -111,7 +126,7 @@ namespace Models
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore]
-        public ManagerCursorLocation cursor { get; set; } = new ManagerCursorLocation();
+        public ManagerCursorLocation Cursor { get; set; } = new ManagerCursorLocation();
 
         /// <summary>
         /// Stores the success of the last compile
@@ -183,6 +198,7 @@ namespace Models
                     SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
                 }
+
                 SetParametersInScriptModel();
             }
         }
@@ -193,7 +209,7 @@ namespace Models
             if (Enabled && Children.Count > 0)
             {
                 var script = Children[0];
-                if (Parameters != null)
+                if (Parameters != null)  //GetParametersFromScriptModel must be run first before this can be run.
                 {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
@@ -265,13 +281,16 @@ namespace Models
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Nasty!
-            IModel script = Children[0];
+            if (Children.Count > 0)
+            {
+                // Nasty!
+                IModel script = Children[0];
 
-            Type scriptType = script.GetType();
-            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                foreach (ITag tag in script.Document())
-                    yield return tag;
+                Type scriptType = script.GetType();
+                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                    foreach (ITag tag in script.Document())
+                        yield return tag;
+            }
         }
     }
 }
