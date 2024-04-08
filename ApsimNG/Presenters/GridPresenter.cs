@@ -225,6 +225,7 @@ namespace UserInterface.Presenters
 
                 DataTable data = gridTable.Data;
 
+                // Assemble column units to pass to DataTableProvider constructor.
                 List<string> units = null;
                 if (gridTable.HasUnits())
                 {
@@ -235,8 +236,16 @@ namespace UserInterface.Presenters
                     }
                     data.Rows.Remove(data.Rows[0]);
                 }
-                DataTableProvider dataProvider = new DataTableProvider(data, units);
 
+                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
+                List<List<bool>> isCalculated = new();
+                for (int i = 0; i < data.Columns.Count; i++)
+                   isCalculated.Add(gridTable.GetIsCalculated(i));
+
+                // Create instance of DataTableProvider.
+                DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
+
+                // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
 

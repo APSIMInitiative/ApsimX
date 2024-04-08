@@ -204,6 +204,10 @@ namespace UnitTests.UtilityTests
 
             Assert.Null(DateUtilities.ValidateDateString("FakeMonth 10"));
 
+            //ValidateDateStringWithYear
+            Assert.AreEqual(yyyymmdd, DateUtilities.ValidateDateStringWithYear("10/January/2000"));
+            Assert.Null(DateUtilities.ValidateDateStringWithYear("10 January"));
+
             //GetNextDate
             Assert.AreEqual(DateUtilities.GetDate("2-Jan-2001"), DateUtilities.GetNextDate("2-Jan", date)); //2-Jan is before date
             Assert.AreEqual(DateUtilities.GetDate("20-Jan-2000"), DateUtilities.GetNextDate("20-Jan", date)); //20-Jan is after date

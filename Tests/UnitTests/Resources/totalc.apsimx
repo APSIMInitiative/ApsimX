@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 172,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -32,7 +32,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,

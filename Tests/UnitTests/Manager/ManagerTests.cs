@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using UnitTests.Storage;
 using Shared.Utilities;
+using Models.Logging;
 
 namespace UnitTests.ManagerTests
 {
@@ -49,7 +50,12 @@ namespace UnitTests.ManagerTests
             basicCode += "\tpublic class Script : Model {\n";
             basicCode += "\t\t[Description(\"AProperty\")]\n";
             basicCode += "\t\tpublic string AProperty { get; set; } = \"Hello World\";\n";
-            basicCode += "\t\t\tpublic void Document() { return; }\n";
+            basicCode += "\t\tpublic int AMethod() { return 0; }\n";
+            basicCode += "\t\tpublic int BMethod(int arg1) { return arg1; }\n";
+            basicCode += "\t\tpublic int CMethod(int arg1, int arg2) { return arg1; }\n";
+            basicCode += "\t\tpublic int DMethod(int arg1, int arg2, int arg3) { return arg1; }\n";
+            basicCode += "\t\tpublic int EMethod(int arg1, int arg2, int arg3, int arg4) { return arg1; }\n";
+            basicCode += "\t\tpublic void Document() { return; }\n";
             basicCode += "\t}\n";
             basicCode += "}\n";
 
@@ -66,8 +72,9 @@ namespace UnitTests.ManagerTests
                 {
                     testManager.OnCreated();
                     testManager.GetParametersFromScriptModel();
+                    testManager.RebuildScriptModel();
                 }
-            }
+            } 
                 
 
             return testManager;
@@ -235,6 +242,46 @@ namespace UnitTests.ManagerTests
             double[] actual = storage.Get<double>("[Script2].B");
             double[] expected = new double[] { 2 };
             Assert.AreNotEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Make sure the correct manager script is called and accessed when both script are just class 'Script'
+        /// See issue #8624 where two zones with different scripts had reflection calling the wrong code.
+        /// </summary>
+        [Test]
+        public void CorrectManagerCalledWhenBothHaveSameClassName()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+
+            // Run the file.
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Summary sum = file.FindDescendant<Summary>();
+            bool found = false;
+            foreach (Message message in sum.GetMessages("Simulation"))
+                if (message.Text.Contains("Correct Manager Called"))
+                    found = true;
+
+            Assert.True(found);
+        }
+
+        /// <summary>
+        /// The converter will check that it updates correctly, but this will run the file afterwards to make sure all the 
+        /// connections still connect.
+        /// </summary>
+        [Test]
+        public void TestMultipleScriptsWithSameClassNameConnectStill()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            ConverterReturnType ret = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
+            Simulations file = ret.NewModel as Simulations;
+
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Assert.Pass();
         }
 
         /// <summary>
@@ -568,6 +615,46 @@ namespace UnitTests.ManagerTests
             testManager = new Manager();
             testManager.Cursor = null;
             Assert.IsNull(testManager.Cursor);
+        }
+
+        /// <summary>
+        /// Specific test for GetProperty
+        /// Check that we can get values from the script of a manager
+        /// </summary>
+        [Test]
+        public void GetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.AreEqual("Hello World", testManager.GetProperty("AProperty"));
+            Assert.IsNull(testManager.GetProperty("BProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for SetProperty
+        /// Check that we can change values of the script from a manager
+        /// </summary>
+        [Test]
+        public void SetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.SetProperty("AProperty", "Another World"));
+            Assert.AreEqual("Another World", testManager.GetProperty("AProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for RunMethod
+        /// Check that we can call and run functions in a script from a manager
+        /// </summary>
+        [Test]
+        public void RunMethodTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.RunMethod("AMethod"));
+            Assert.DoesNotThrow(() => testManager.RunMethod("BMethod", 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("DMethod", 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("EMethod", 1, 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", new object[] {1, 1}));
         }
 
         /// <summary>
