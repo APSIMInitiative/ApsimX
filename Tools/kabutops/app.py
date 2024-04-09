@@ -20,9 +20,12 @@ def configure_logger():
 def kabutops():
     """
     """
-    logging.info("Welcome to kabutops!")
-    sim = APSim();
-    sim.load("./examples/toplevelsync.apsimx");
+    logging.info("Welcome to kabutops!");
+    node = CodeArray(name="Test");
+    node.gamma_knife("tmp.cs");
+    print(node);
+    #sim = APSim();
+    #sim.load("./examples/toplevelsync.apsimx");
     return 0;
 
 if __name__ == "__main__":
