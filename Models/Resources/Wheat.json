@@ -4,7 +4,7 @@
   "Version": 173,
   "Name": "Simulations",
   "Children": [
-    {
+    { 
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "Wheat",
       "IsEnding": false,
@@ -2814,7 +2814,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "Maturity",
+                      "End": "StartGrainFill",
                       "Name": "PostEmergence",
                       "ResourceName": null,
                       "Children": [
