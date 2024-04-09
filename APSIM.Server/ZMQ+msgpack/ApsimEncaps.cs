@@ -67,8 +67,39 @@ namespace APSIM.ZMQServer
             synchroniser.Parent = sim_root;
             synchroniser.OnCreated();
 
+            // Get the template field. Expects only a single field to be
+            // defined in the file 
+            Zone template_field = sim_root.FindChild<Zone>();
+            // TODO check for null return
+
+            // send string indicating we are in the setup phase
+            connection.SendFrame("setup");
+            var setup_msg = connection.ReceiveMultipartMessage();
+            string command = setup_msg[0].ConvertToString();
+            if (command == "fields")
+            {
+                int num_fields = MessagePackSerializer.Deserialize<int>(setup_msg[1].Buffer);
+                for (int i = 0; i < num_fields; i++)
+                { 
+                    Zone clone = Apsim.Clone<Zone>(template_field);
+                    clone.Name = $"Field{i}";
+                    // add to simulation tree
+                    sim_root.Children.Add(clone);
+                    // register irrigator with synchroniser
+                    Irrigation irrigation = clone.FindChild<Irrigation>();
+                    synchroniser.IrrigationList.Add(irrigation);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Unknown setup command {0}", command);
+            }
+
             // close socket
             connection.Close();
+
+            // disable template field
+            template_field.Enabled = false;
 
             // configure runners
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);

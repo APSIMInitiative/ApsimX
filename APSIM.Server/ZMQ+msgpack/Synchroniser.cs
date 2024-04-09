@@ -31,15 +31,14 @@ namespace Models
 
         public string Identifier { get; set; }
 
-        // reference irrigation objects
-        [Link(Type = LinkType.Path, Path = "[Field1].Irrigation")] Irrigation Irrigation1;
-        [Link(Type = LinkType.Path, Path = "[Field2].Irrigation")] Irrigation Irrigation2;
+        // public list of irrigation types
+        public List<Irrigation> IrrigationList = new List<Irrigation>();
 
         // class to store irrigation data
         [Serializable]
         public class IrrigationData
         {
-            public int Index { get; set; }
+            public Irrigation irrigation { get; set; }
             public double IrrigationAmount { get; set; }
         }
 
@@ -197,7 +196,12 @@ namespace Models
                     // check for field index 
                     else if (vname == "field")
                     {
-                        irig_data.Index = MessagePackSerializer.Deserialize<int>(msg[i + 1].Buffer);
+                        var irrigation_idx = MessagePackSerializer.Deserialize<int>(msg[i + 1].Buffer);
+                        if (irrigation_idx > IrrigationList.Count())
+                        {
+                            throw new Exception($"Field index is out of range. Idx: {irrigation_idx}");
+                        }
+                        irig_data.irrigation = IrrigationList[irrigation_idx];
                     }
                 }
 
@@ -216,30 +220,14 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            /*
-          if (apply_irrigation) {
-            Irrigation.Apply(irrigation_amount, willRunoff: true);
-            Console.WriteLine("Field 1: Irrigated {0} ", irrigation_amount, "mm");
-            apply_irrigation = false;
-          }
-          */
+            // apply all irrigation
             while (irrigationQueue.Count > 0)
             {
                 IrrigationData data = irrigationQueue.Dequeue();
-                if (data.Index == 1)
-                {
-                    Irrigation1.Apply(data.IrrigationAmount, willRunoff: true);
-                }
-                else if (data.Index == 2)
-                {
-                    Irrigation2.Apply(data.IrrigationAmount, willRunoff: true);
-                }
-                else
-                {
-                    Console.WriteLine($"Field {data.Index} not implemented");
-                }
+                data.irrigation.Apply(data.IrrigationAmount, willRunoff: true);
+
                 // Process the data
-                Console.WriteLine($"Field {data.Index} irrigated with {data.IrrigationAmount} mm");
+                Console.WriteLine($"Field {data.irrigation} irrigated with {data.IrrigationAmount} mm");
             }
         }
 
