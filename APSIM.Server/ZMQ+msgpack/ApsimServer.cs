@@ -11,6 +11,7 @@ using Models.Core.ApsimFile;
 using Models.Core.Run;
 using NetMQ;
 using NetMQ.Sockets;
+using Models;
 
 namespace APSIM.ZMQServer
 {
@@ -28,28 +29,13 @@ namespace APSIM.ZMQServer
 
         protected ApsimEncapsulator apsimBlob;
 
-        private RequestSocket connection = null;
-
-        private string Identifier { get; set; }
-
         /// <summary>
         /// Create an <see cref="ApsimServer" /> instance.
         /// </summary>
         /// <param name="file">.apsimx file to be run.</param>
         public ApsimZMQServer(GlobalServerOptions options)
         {
-            // store copy of options
             this.options = options;
-            
-            // open zmq connections
-            Identifier = string.Format("tcp://{0}:{1}", options.IPAddress, options.Port);
-            connection = new RequestSocket(Identifier);
-            connection.SendFrame("connect");
-            Console.WriteLine("Sent connect");
-            var msg = connection.ReceiveFrameString();
-            if (msg != "ok") { throw new Exception("Expected ok"); }
-
-            // create the encapsulator
             apsimBlob = new ApsimEncapsulator(options);
         }
 

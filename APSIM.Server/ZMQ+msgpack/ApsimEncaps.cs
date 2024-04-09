@@ -15,6 +15,9 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 using Models.Core.Run;
+using NetMQ;
+using NetMQ.Sockets;
+using Models;
 
 /// <summary>
 /// Encapsulate an apsim simulation & runner
@@ -35,10 +38,39 @@ namespace APSIM.ZMQServer
 
         private Thread workerThread = null;
 
+        private string Identifier { get; set; }
+
+        private RequestSocket connection = null;
+
         public ApsimEncapsulator(GlobalServerOptions options)
         {
+            // read from file
             sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+
+            // open zmq connections
+            Identifier = string.Format("tcp://{0}:{1}", options.IPAddress, options.Port);
+            connection = new RequestSocket(Identifier);
+            connection.SendFrame("connect");
+            Console.WriteLine("Sent connect");
+            var msg = connection.ReceiveFrameString();
+            if (msg != "ok") { throw new Exception("Expected ok"); }
+            
+            // Add synchroniser model to tree
+            Synchroniser synchroniser = new Synchroniser();
+            Simulation sim_root = sims.FindChild<Simulation>();
+            sim_root.Children.Add(synchroniser);
+            // "init" synchroniser model by setting parent and calling
+            // OnCreated(). It seems to just toggle a flag and check for
+            // duplicate names
+            synchroniser.Identifier = Identifier;
+            synchroniser.Parent = sim_root;
+            synchroniser.OnCreated();
+
+            // close socket
+            connection.Close();
+
+            // configure runners
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
