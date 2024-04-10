@@ -15,6 +15,9 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 using Models.Core.Run;
+using NetMQ;
+using NetMQ.Sockets;
+using Models;
 
 /// <summary>
 /// Encapsulate an apsim simulation & runner
@@ -35,10 +38,70 @@ namespace APSIM.ZMQServer
 
         private Thread workerThread = null;
 
+        private string Identifier { get; set; }
+
+        private RequestSocket connection = null;
+
         public ApsimEncapsulator(GlobalServerOptions options)
         {
+            // read from file
             sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+
+            // open zmq connections
+            Identifier = string.Format("tcp://{0}:{1}", options.IPAddress, options.Port);
+            connection = new RequestSocket(Identifier);
+            connection.SendFrame("connect");
+            Console.WriteLine("Sent connect");
+            var msg = connection.ReceiveFrameString();
+            if (msg != "ok") { throw new Exception("Expected ok"); }
+            
+            // Add synchroniser model to tree
+            Synchroniser synchroniser = new Synchroniser();
+            Simulation sim_root = sims.FindChild<Simulation>();
+            sim_root.Children.Add(synchroniser);
+            // "init" synchroniser model by setting parent and calling
+            // OnCreated(). It seems to just toggle a flag and check for
+            // duplicate names
+            synchroniser.Identifier = Identifier;
+            synchroniser.Parent = sim_root;
+            synchroniser.OnCreated();
+
+            // Get the template field. Expects only a single field to be
+            // defined in the file 
+            Zone template_field = sim_root.FindChild<Zone>();
+            // TODO check for null return
+
+            // send string indicating we are in the setup phase
+            connection.SendFrame("setup");
+            var setup_msg = connection.ReceiveMultipartMessage();
+            string command = setup_msg[0].ConvertToString();
+            if (command == "fields")
+            {
+                int num_fields = MessagePackSerializer.Deserialize<int>(setup_msg[1].Buffer);
+                for (int i = 0; i < num_fields; i++)
+                { 
+                    Zone clone = Apsim.Clone<Zone>(template_field);
+                    clone.Name = $"Field{i}";
+                    // add to simulation tree
+                    sim_root.Children.Add(clone);
+                    // register irrigator with synchroniser
+                    Irrigation irrigation = clone.FindChild<Irrigation>();
+                    synchroniser.IrrigationList.Add(irrigation);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Unknown setup command {0}", command);
+            }
+
+            // close socket
+            connection.Close();
+
+            // disable template field
+            template_field.Enabled = false;
+
+            // configure runners
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);

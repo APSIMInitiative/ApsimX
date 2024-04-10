@@ -50,7 +50,7 @@
                 "-a", "127.0.0.1", 
                 //"-p", "5555",
                 "-P", "interactive",
-                "-f", "${workspaceRoot}/Tests/Simulation/ZMQ-Sync/fallow_field/fallow.apsimx"
+                "-f", "${workspaceRoot}/Tests/Simulation/ZMQ-Sync/template/template.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
