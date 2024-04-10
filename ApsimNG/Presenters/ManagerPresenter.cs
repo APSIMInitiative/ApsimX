@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+using System;
 using APSIM.Shared.Utilities;
 using UserInterface.EventArguments;
 using Models;
@@ -71,7 +70,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            scriptModel = manager.Children.FirstOrDefault();
+            scriptModel = manager.Script;
 
             // See if manager script has a description attribute on it's class.
             if (scriptModel != null)

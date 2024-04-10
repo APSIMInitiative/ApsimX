@@ -18,6 +18,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulations))]
     public class Playlist : Model
     {
+        [Serializable]
         private class PlaylistPrevSearch
         {
             public string searchString = null;
