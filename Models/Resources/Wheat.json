@@ -2874,6 +2874,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.SoilWaterScale, Models",
+					  "SATModel": "[Physical].SAT",
+                      "DULModel": "[Physical].DUL",
+                      "LLModel": "[Root].SoilCrop.LL",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
