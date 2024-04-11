@@ -42,8 +42,11 @@ namespace Models.Functions
         /// <summary>Gets the value of the function.</summary>
         public double Value(int arrayIndex = -1)
         {
+            //if (arrayIndex == -1) //Red and White Clovers both don't pass a number to this.
+            //    throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}) requires an array index for soil layer");
+
             if (arrayIndex == -1)
-                throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}) requires an array index for soil layer");
+                return 1;
 
             if (arrayIndex >= soilwater.SW.Length)
                 throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is more than SoilWater SW length {soilwater.SW.Length}.");
