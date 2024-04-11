@@ -1238,7 +1238,7 @@ namespace Models.Core.ApsimFile
 
                     if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
                     {
-                        var values = NaNToZero(chemical["ParticleSizeSand"].Values<double>().ToArray(), chemicalThickness);
+                        var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
@@ -1247,7 +1247,7 @@ namespace Models.Core.ApsimFile
 
                     if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
                     {
-                        var values = NaNToZero(chemical["ParticleSizeSilt"].Values<double>().ToArray(), chemicalThickness);
+                        var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
@@ -1256,7 +1256,7 @@ namespace Models.Core.ApsimFile
 
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
-                        var values = NaNToZero(chemical["ParticleSizeClay"].Values<double>().ToArray(), chemicalThickness);
+                        var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
@@ -1265,7 +1265,7 @@ namespace Models.Core.ApsimFile
 
                     if (chemical["Rocks"] != null && chemical["Rocks"].HasValues)
                     {
-                        var values = NaNToZero(chemical["Rocks"].Values<double>().ToArray(), chemicalThickness);
+                        var values = chemical["Rocks"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
@@ -1280,7 +1280,7 @@ namespace Models.Core.ApsimFile
                         if (phUnitsString == "1")
                         {
                             // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                            var ph = NaNToZero(physical["PH"].Values<double>().ToArray(), chemicalThickness);
+                            var ph = physical["PH"].Values<double>().ToArray();
                             ph = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
                             chemical["PH"] = new JArray(ph);
                         }
@@ -1347,18 +1347,6 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
-
-        private static double[] NaNToZero(double[] values, double[] thicknesses)
-        {
-            double[] ret = values;
-            if (thicknesses.Length < ret.Length)
-            {
-                Array.Resize<double>(ref ret, thicknesses.Length);
-            }
-            for (int i=0;i<ret.Length;i++) { if (Double.IsNaN(ret[i])) { ret[i] = 0; } }
-            return ret;
-        }
-
 
         /// <summary>
         /// When a factor is under a factors model, insert a permutation model.
