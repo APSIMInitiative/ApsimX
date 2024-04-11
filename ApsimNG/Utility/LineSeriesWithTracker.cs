@@ -1,6 +1,7 @@
 ﻿namespace Utility
 {
     using System;
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using OxyPlot;
     using OxyPlot.Series;
@@ -8,8 +9,13 @@
     /// <summary>
     /// A line series with a better tracker.
     /// </summary>
-    public class LineSeriesWithTracker : LineSeries
+    public class LineSeriesWithTracker : OxyPlot.Series.LineSeries, INameableSeries
     {
+        /// <summary>
+        /// Name of series.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Name of the tooltip
         /// </summary>
@@ -34,6 +40,16 @@
         /// Type of the y variable
         /// </summary>
         public Type YType { get; set; }
+
+
+        public LineSeriesWithTracker() { }
+
+        public LineSeriesWithTracker(string name/*, string seriesViewName*/)
+        {
+            this.Name = name;
+            //this.SeriesViewName = seriesViewName;
+        }
+
 
         /// <summary>
         /// Tracker is calling to determine the nearest point.
