@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 171; } }
+        public static int LatestVersion { get { return 173; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1239,7 +1239,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
                     {
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length < chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
@@ -1248,7 +1248,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
                     {
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length < chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
@@ -1257,10 +1257,24 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length < chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
+                    }
+
+                    if (chemical["Rocks"] != null && chemical["Rocks"].HasValues)
+                    {
+                        //Some soils from APSoil have NaN in their rock values
+                        var values = chemical["Rocks"].Values<double>().ToArray();
+                        for (int i = 0; i < values.Length; i++) {
+                            if (double.IsNaN(values[i]))
+                                values[i] = 0;
+                        }
+                        if (values.Length < chemicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                        physical["Rocks"] = new JArray(mappedValues);
                     }
 
                     // convert ph units
@@ -5386,6 +5400,69 @@ namespace Models.Core.ApsimFile
                     value.FixedValue = 0.0;
                     JsonUtilities.AddModel(NNP, value);
                 }
+            }
+        }
+
+		/// <summary>
+		/// Changes example met file names in Weather.FileName to conform to new naming.
+		/// </summary>
+		/// <param name="root"></param>
+		/// <param name="fileName"></param>
+		private static void UpgradeToVersion172(JObject root, string fileName)
+		{
+			Dictionary<string, string> newWeatherFileNames = new()
+			{
+				{"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
+				{"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
+				{"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
+				{"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
+				{"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
+				{"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
+				{"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
+				{"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
+				{"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
+				{"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
+				{"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
+				{"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
+				{"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
+				{"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
+				{"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
+				{"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
+				{"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
+				{"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
+				{"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
+			};
+
+			List<string> splits = new List<string>();
+			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
+			{
+				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
+				{
+					if(weather["FileName"] != null)
+					{
+                        string fixedFileNameString = weather["FileName"].ToString();
+                        fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace("\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
+                        weather["FileName"] = fixedFileNameString;
+					}
+				}
+			}
+		}
+
+        /// <summary>
+        /// Change references to ScriptModel to Script in manager scripts
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion173(JObject root, string fileName)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                //rename uses of ScriptModel to Script
+                bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ", true);
+                if (changeMade)
+                    manager.Save();
             }
         }
     }
