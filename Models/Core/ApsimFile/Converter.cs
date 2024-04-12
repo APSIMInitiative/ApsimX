@@ -1271,7 +1271,7 @@ namespace Models.Core.ApsimFile
                             if (double.IsNaN(values[i]))
                                 values[i] = 0;
                         }
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["Rocks"] = new JArray(mappedValues);
