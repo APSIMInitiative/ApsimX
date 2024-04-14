@@ -105,8 +105,7 @@ namespace Models.PMF.SimplePlantModels
         /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
         [Description(" Choose the stage at which the crop is typically harvested:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
-        public string TypicalHarvestStage { get { return _typicalharvestStage; } set { _typicalharvestStage = value; } }
-        private string _typicalharvestStage { get; set; }
+        public string TypicalHarvestStage { get; set; }
 
         /// <summary>Nitrogen concentration of plant at seedling stage (g/g/).</summary>
         [Separator(" Parameters defining crop nitrogen requirements")]
@@ -157,10 +156,10 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
         [Description(" Does the crop respond to water stress?")]
-        public yesNoAnswer ConsiderWaterStress
+        public YesNoAnswer ConsiderWaterStress
         { 
-            get { return consideringWaterStress ? yesNoAnswer.Yes : yesNoAnswer.No; }
-            set { consideringWaterStress = value == yesNoAnswer.Yes; } 
+            get { return consideringWaterStress ? YesNoAnswer.Yes : YesNoAnswer.No; }
+            set { consideringWaterStress = value == YesNoAnswer.Yes; } 
         }
 
         /// <summary>Whether the crop should respond to water stress.</summary>
@@ -170,10 +169,10 @@ namespace Models.PMF.SimplePlantModels
         /// <remarks>Otherwise a manager script is needed in the simulation.</remarks>
         [Separator("Management data for this crop can be specified below.  Alternatively this information can be set from a manager script")]
         [Description(" Should the crop management be set up here?")]
-        public yesNoAnswer SetUpCropManagement { get; set; }
+        public YesNoAnswer SetUpCropManagement { get; set; }
 
         /// <summary>Whether crop management should be set by this instance.</summary>
-        private bool settingUpCropManagement { get { return SetUpCropManagement == yesNoAnswer.Yes; } }
+        private bool settingUpCropManagement { get { return SetUpCropManagement == YesNoAnswer.Yes; } }
 
         /// <summary>Date to establish the crop in the field.</summary>
         [Separator(" Parameters defining the establishment conditions")]
@@ -197,16 +196,26 @@ namespace Models.PMF.SimplePlantModels
         [Display(VisibleCallback = "settingUpCropManagement")]
         public double ExpectedYield { get; set; }
 
+        /// <summary>Flag which option is used to define when harvest should happen.</summary>
+        [Separator(" Parameters defining the harvest conditions")]
+        [Description(" Choose how the harvest timing is defined:")]
+        public HarvestTimingOption HarvestOption { get; set; }
+
+        /// <summary>Whether the time of harvest is defined by a date.</summary>
+        private bool settingHarvestDate {  get { return settingUpCropManagement && HarvestOption == HarvestTimingOption.SettingDate; } }
+
+        /// <summary>Whether the time of harvest is defined by thermal time.</summary>
+        private bool seetingThermalTime { get { return settingUpCropManagement && HarvestOption == HarvestTimingOption.SettingThermalTime; } }
+
         /// <summary>Date to harvest the crop.</summary>
-        [Separator(" Parameters defining the harvest conditions (needs to have a valid harvest date or thermal time specified)")]
         [Description(" Harvest date:")]
-        [Display(VisibleCallback = "settingUpCropManagement")]
+        [Display(VisibleCallback = "settingHarvestDate")]
         public Nullable<DateTime> HarvestDate { get; set; }
         private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [Description(" Thermal time from establishment to harvest (oCd):")]
-        [Display(VisibleCallback = "settingUpCropManagement")]
+        [Display(VisibleCallback = "seetingThermalTime")]
         public double TtEstabToHarv { get; set; }
 
         /// <summary>Stage at which the crop is harvested from the field.</summary>
@@ -660,12 +669,21 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>Answer to a binary or polar question.</summary>
-        public enum yesNoAnswer
+        public enum YesNoAnswer
         {
             /// <summary>Positive answer.</summary>
             Yes,
             /// <summary>Negative answer.</summary>
             No
+        }
+
+        /// <summary>Flag how harvest time is defined.</summary>
+        public enum HarvestTimingOption
+        {
+            /// <summary>A date is to be used.</summary>
+            SettingDate,
+            /// <summary>A given thermal time sum is to be used.</summary>
+            SettingThermalTime
         }
     }
 
