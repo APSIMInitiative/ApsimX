@@ -245,12 +245,24 @@ namespace Models.PMF.SimplePlantModels
         [Display(VisibleCallback = "settingUpCropManagement")]
         public double ResidueIncorporationDepth { get; set; }
 
-        /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
-        public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
+        //-------------------------------------------------------------------------------------------------------------
+        // Outputs from this model
+        //-------------------------------------------------------------------------------------------------------------
 
-        /// <summary>The thermal time from emergence to maturity.</summary>
+        /// <summary>Thermal time from emergence to maturity (oCd).</summary>
         [JsonIgnore]
         public double Tt_EmergtoMat { get; set; }
+
+        /// <summary>Product biomass removed at harvested.</summary>
+        [JsonIgnore]
+        public Biomass ProductHarvested { get; private set; }
+
+        /// <summary>Stover biomass removed at harvested.</summary>
+        [JsonIgnore]
+        public Biomass StoverRemoved { get; private set; }
+
+        /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
+        public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
 
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
         /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
@@ -372,6 +384,9 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Flag whether this crop instance has been established.</summary>
         private bool cropEstablished = false;
 
+        /// <summary>Flag whether this crop instance is being terminated.</summary>
+        private bool cropTerminating = false;
+
         /// <summary>Sets the management for this crop instance.</summary>
         private ScrumManagementInstance setManagementInstance(ScrumManagementInstance management = null)
         {
@@ -446,13 +461,16 @@ namespace Models.PMF.SimplePlantModels
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
             }
 
+            ProductHarvested = new Biomass();
+            StoverRemoved = new Biomass();
+
             cropEstablished = true;
             summary.WriteMessage(this, "Some of the message above is not relevant as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage +
                 " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString() +
                 " t/ha, with a moisture content of " + MoistureContent + " g/g and harvest index of " + HarvestIndex.ToString() +
                 ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + ttEstabToHarv.ToString() +
-                " oCd from now.", MessageType.Information);
+                " oCd from now on.", MessageType.Information);
         }
 
         /// <summary>Data structure that holds the parameters that define the crop/cultivar being simulated.</summary>
@@ -586,6 +604,7 @@ namespace Models.PMF.SimplePlantModels
         {
             if ((myZone != null) && (clock != null))
             {
+                // check whether crop can be established
                 if ((clock.Today == EstablishDate) && (cropEstablished == false))
                 {
                     ScrumManagementInstance management = setManagementInstance();
@@ -598,21 +617,38 @@ namespace Models.PMF.SimplePlantModels
                     Establish(management);
                 }
 
+                // check whether the crop was terminated yesterday (do some clean up)
+                if (cropTerminating)
+                {
+                    ProductHarvested.Clear();
+                    StoverRemoved.Clear();
+                    cropTerminating = false;
+                }
+
+                // check whether the crop can be harvested/terminated
                 if ((clock.Today == HarvestDate) && (cropEstablished == true))
                 {
+                    Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
                     product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                           deadToRemove: 1.0 - FieldLoss,
                                           liveToResidue: FieldLoss,
                                           deadToResidue: FieldLoss);
+                    Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total"); 
+                    ProductHarvested = initialCropBiomass - finalCropBiomass;
+
+                    initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
                     stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                          deadToRemove: ResidueRemoval,
                                          liveToResidue: 1.0 - ResidueRemoval,
                                          deadToResidue: 1.0 - ResidueRemoval);
+                    finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+                    StoverRemoved = initialCropBiomass - finalCropBiomass;
                     scrum.EndCrop();
 
                     // remove this crop instance from SCRUM and reset parameters
                     scrum.Children.Remove(currentCrop);
                     cropEstablished = false;
+                    cropTerminating = true;
                     ScrumManagementInstance management = setManagementInstance();
 
                     // incorporate some of the residue to the soil
