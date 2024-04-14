@@ -155,63 +155,85 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m2):")]
         public double R50 { get; set; }
 
-        /// <summary>"Flag whether the crop responds to water stress."</summary>
+        /// <summary>Flag whether the crop responds to water stress.</summary>
         [Description(" Does the crop respond to water stress?")]
-        public bool WaterStress { get; set; }
+        public yesNoAnswer ConsiderWaterStress
+        { 
+            get { return consideringWaterStress ? yesNoAnswer.Yes : yesNoAnswer.No; }
+            set { consideringWaterStress = value == yesNoAnswer.Yes; } 
+        }
 
+        /// <summary>Whether the crop should respond to water stress.</summary>
+        private bool consideringWaterStress = true;
 
+        /// <summary>Flag whether the crop management is defined in this instance.</summary>
+        /// <remarks>Otherwise a manager script is needed in the simulation.</remarks>
+        [Separator("Management data for this crop can be specified below.  Alternatively this information can be set from a manager script")]
+        [Description(" Should the crop management be set up here?")]
+        public yesNoAnswer SetUpCropManagement { get; set; }
+
+        /// <summary>Whether crop management should be set by this instance.</summary>
+        private bool settingUpCropManagement { get { return SetUpCropManagement == yesNoAnswer.Yes; } }
 
         /// <summary>Date to establish the crop in the field.</summary>
-        [Separator("Management data for this crop can be specified below.  Alternatively this information can be set from a manager script\n" +
-            " Parameter defining the establishment conditions")]
+        [Separator(" Parameters defining the establishment conditions")]
         [Description(" Establishment date:")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public Nullable<DateTime> EstablishDate { get; set; }
 
         /// <summary>Stage at which the crop is established in the field.</summary>
         [Description(" Establishment stage:")]
-        [Display(Type = DisplayType.ScrumEstablishStages)]
+        [Display(Type = DisplayType.ScrumEstablishStages, VisibleCallback = "settingUpCropManagement")]
         public string EstablishStage { get; set; }
 
         /// <summary>Depth at which the crop/seeds are planted (mm).</summary>
         [Description(" Planting depth (mm):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double PlantingDepth { get; set; }
 
         /// <summary>Expected yield for the crop, assumed to be fresh weight (t/ha).</summary>
         /// <remarks>The user is expected to consider genotype, location and growing conditions.</remarks>
         [Description(" Expected crop yield, fresh weight (t/ha)")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double ExpectedYield { get; set; }
 
         /// <summary>Date to harvest the crop.</summary>
         [Separator(" Parameters defining the harvest conditions (needs to have a valid harvest date or thermal time specified)")]
         [Description(" Harvest date:")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public Nullable<DateTime> HarvestDate { get; set; }
         private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [Description(" Thermal time from establishment to harvest (oCd):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double TtEstabToHarv { get; set; }
 
         /// <summary>Stage at which the crop is harvested from the field.</summary>
         [Description(" Harvest stage:")]
-        [Display(Type = DisplayType.ScrumHarvestStages)]
+        [Display(Type = DisplayType.ScrumHarvestStages, VisibleCallback = "settingUpCropManagement")]
         public string HarvestStage { get; set; }
 
         /// <summary>Proportion of expected yield that is left in the field at harvest.</summary>
         /// <remarks>This may be due to disease, poor quality, or lack of market.</remarks>
         [Description(" Proportion of product lost in the field at harvest (0-1):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double FieldLoss { get; set; }
 
         /// <summary>Proportion of stover that is removed from the field at harvest.</summary>
         /// <remarks>This may be used to mimic bailing or some other means of removal.</remarks>
         [Description(" Proportion of stover to remove off field at harvest (0-1):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double ResidueRemoval { get; set; }
 
         /// <summary>Proportion of residues that are incorporated in the soil by cultivation at harvest.</summary>
         [Description(" Proportion of residue incorporated into the soil at harvest (0-1):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double ResidueIncorporation { get; set; }
 
         /// <summary>Depth down to which the residues are incorporated into the soil by cultivation.</summary>
         [Description(" Depth to incorporate residues (mm):")]
+        [Display(VisibleCallback = "settingUpCropManagement")]
         public double ResidueIncorporationDepth { get; set; }
 
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
@@ -430,7 +452,7 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> cropParams = new Dictionary<string, string>(scrumParams);
 
-            if (WaterStress)
+            if (consideringWaterStress)
             {
                 cropParams["WaterStressPhoto"] += "0.0";
                 cropParams["WaterStressCover"] += "0.0";
@@ -635,6 +657,15 @@ namespace Models.PMF.SimplePlantModels
                 d = d.AddDays(1);
             }
             return d;
+        }
+
+        /// <summary>Answer to a binary or polar question.</summary>
+        public enum yesNoAnswer
+        {
+            /// <summary>Positive answer.</summary>
+            Yes,
+            /// <summary>Negative answer.</summary>
+            No
         }
     }
 
