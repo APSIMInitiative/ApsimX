@@ -72,7 +72,7 @@ namespace Models.PMF.SimplePlantModels
         public string CropName { get { return Name; } }
 
         /// <summary>Harvest index for the crop (proportion of the plant biomass that is product, 0-1).</summary>
-        [Separator("Setup to simulate a given crop using SCRUM - Enter parameters defining the crop in the sections below\n" +
+        [Separator("Setup to simulate an instance of a crop using SCRUM - Enter values defining the crop in the sections below\n" +
             " Parameters defining growth pattern and biomass partition")]
         [Description(" Harvest Index (0-1):")]
         public double HarvestIndex { get; set; }
@@ -124,8 +124,8 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Nitrogen concentration of roots (g/g):")]
         public double RootNConc { get; set; }
 
-        /// <summary>Proportion of crop that is legume (FIXME - need more info).</summary>
-        [Description(" Proportion of crop that is legume (0-1):")]
+        /// <summary>Proportion of potential N fixation allowed for this crop (used for simulating legumes).</summary>
+        [Description(" Proportion of potential N fixation for this crop, if a legume (0-1):")]
         public double LegumePropn { get; set; }
 
         /// <summary>Base temperature for the crop (oC).</summary>
@@ -151,7 +151,7 @@ namespace Models.PMF.SimplePlantModels
         public double GSMax { get; set; }
 
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
-        [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m2):")]
+        [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
         public double R50 { get; set; }
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
