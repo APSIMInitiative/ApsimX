@@ -169,57 +169,48 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Depth at which the crop/seeds are planted (mm).</summary>
         [Description("Planting depth (mm):")]
-        public double PlantingDepth { get { return PlantingDepth; } set { PlantingDepth = value; } }
-        private double PlantingDepth { get; set; }
+        public double PlantingDepth { get; set; }
 
         /// <summary>Date to harvest the crop.</summary>
         [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
         [Description("Harvest date:")]
-        public Nullable<DateTime> HarvestDate { get { return _harvestDate; } set { _harvestDate = value; } }
-        private Nullable<DateTime> _harvestDate { get; set; }
-        private DateTime nonNullHarvestDate { get; set; }
+        public Nullable<DateTime> HarvestDate { get; set; }       
+        private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [Description("Thermal time from establishment to harvest (oCd):")]
-        public double TtEstabToHarv { get { return _ttEstabToHarv; } set { _ttEstabToHarv = value; } }
-        private double _ttEstabToHarv { get; set; }
+        public double TtEstabToHarv { get; set; }
 
         /// <summary>Stage at which the crop is harvested from the field.</summary>
         [Description("Harvest stage:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
-        public string HarvestStage { get { return _harvestStage; } set { _harvestStage = value; } }
-        private string _harvestStage { get; set; }
+        public string HarvestStage { get; set; }
 
 
-        /// <summary>Expected yield for the crop (g FW/m2).</summary>
+        /// <summary>Expected yield for the crop, assumed to be fresh weight (t/ha).</summary>
         /// <remarks>The user is expected to consider genotype, location and growing conditions.</remarks>
-        [Separator("Specify an appropriate potential yeild for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
-        [Description("Expected Yield (t/Ha)")]
-        public double ExpectedYield { get { return _expectedYield; } set { _expectedYield = value; } }
-        private double _expectedYield { get; set; }
+        [Separator("Specify an appropriate potential yield for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
+        [Description("Expected crop yield, fresh weight (t/ha)")]
+        public double ExpectedYield { get; set; }
 
         /// <summary>Proportion of expected yield that is left in the field at harvest.</summary>
         /// <remarks>This may be due to disease, poor quality, or lack of market.</remarks>
         [Separator("Specify proportion of field loss and residue removal at harvest")]
         [Description("Proportion of product lost in the field at harvest (0-1):")]
-        public double FieldLoss { get { return _fieldLoss; } set { _fieldLoss = value; } }
-        private double _fieldLoss { get; set; }
+        public double FieldLoss { get; set; }
 
         /// <summary>Proportion of stover that is removed from the field at harvest.</summary>
         /// <remarks>This may be used to mimic bailing or some other means of removal.</remarks>
         [Description("Proportion of stover to remove off field at harvest (0-1):")]
-        public double ResidueRemoval { get { return _residueRemoval; } set { _residueRemoval = value; } }
-        private double _residueRemoval { get; set; }
+        public double ResidueRemoval { get; set; }
 
         /// <summary>Proportion of residues that are incorporated in the soil by cultivation at harvest.</summary>
         [Description("Proportion of residue incorporated into the soil at harvest (0-1):")]
-        public double ResidueIncorporation { get { return _residueIncorporation; } set { _residueIncorporation = value; } }
-        private double _residueIncorporation { get; set; }
+        public double ResidueIncorporation { get; set; }
 
         /// <summary>Depth down to which the residues are incorporated into the soil by cultivation.</summary>
         [Description("Depth to incorporate residues (mm):")]
-        public double ResidueIncorporationDepth { get { return _residueIncorporationDepth; } set { _residueIncorporationDepth = value; } }
-        private double _residueIncorporationDepth { get; set; }
+        public double ResidueIncorporationDepth { get; set; }
 
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
@@ -279,7 +270,7 @@ namespace Models.PMF.SimplePlantModels
             { "EarlyReproductive", 0.7 },
             { "MidReproductive", 0.86 },
             { "LateReproductive", 0.95 },
-            {"Maturity", 0.99325 }, 
+            {"Maturity", 0.99325 },
             {"Ripe", 0.99965 }
         };
 
@@ -356,14 +347,14 @@ namespace Models.PMF.SimplePlantModels
                 EstablishDate = management.EstablishDate;
                 EstablishStage = management.EstablishStage;
                 PlantingDepth = management.PlantingDepth;
-                _harvestStage = management.HarvestStage;
-                _expectedYield = management.ExpectedYield;
-                _harvestDate = management.HarvestDate;
-                _ttEstabToHarv = management.TtEstabToHarv;
-                _fieldLoss = management.FieldLoss;
-                _residueRemoval = management.ResidueRemoval;
-                _residueIncorporation = management.ResidueIncorporation;
-                _residueIncorporationDepth = management.ResidueIncorporationDepth;
+                HarvestStage = management.HarvestStage;
+                ExpectedYield = management.ExpectedYield;
+                HarvestDate = management.HarvestDate;
+                TtEstabToHarv = management.TtEstabToHarv;
+                FieldLoss = management.FieldLoss;
+                ResidueRemoval = management.ResidueRemoval;
+                ResidueIncorporation = management.ResidueIncorporation;
+                ResidueIncorporationDepth = management.ResidueIncorporationDepth;
             }
             else
             {
@@ -371,15 +362,15 @@ namespace Models.PMF.SimplePlantModels
                     cropName: CropName,
                     establishDate: (DateTime)EstablishDate,
                     establishStage: EstablishStage,
-                    harvestStage: _harvestStage,
-                    expectedYield: _expectedYield,
-                    harvestDate: _harvestDate,
-                    ttEstabToHarv: _ttEstabToHarv,
+                    harvestStage: HarvestStage,
+                    expectedYield: ExpectedYield,
+                    harvestDate: HarvestDate,
+                    ttEstabToHarv: TtEstabToHarv,
                     plantingDepth: PlantingDepth,
-                    fieldLoss: _fieldLoss,
-                    residueRemoval: _residueRemoval,
-                    residueIncorporation: _residueIncorporation,
-                    residueIncorporationDepth: _residueIncorporationDepth);
+                    fieldLoss: FieldLoss,
+                    residueRemoval: ResidueRemoval,
+                    residueIncorporation: ResidueIncorporation,
+                    residueIncorporationDepth: ResidueIncorporationDepth);
             }
 
             return management;
@@ -392,7 +383,7 @@ namespace Models.PMF.SimplePlantModels
             currentCrop = SetCropCoefficients(management);
 
             // check some parameters
-            if (_expectedYield == 0.0)
+            if (ExpectedYield == 0.0)
             {
                 throw new Exception(Name + " must have an expected yield greater than zero or SCRUM can't simulate it.");
             }
@@ -478,7 +469,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["StoverNConc"] += ((StoverHarvestNConc - SeedlingNConc * exponent) / (1.0 - exponent)).ToString();
 
             ttEstabToHarv = 0.0;
-           
+
             if (double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
             {
                 ttEstabToHarv = GetThermalTimeSum(management.EstablishDate, (DateTime)management.HarvestDate, BaseT, OptT, MaxT);
@@ -490,12 +481,12 @@ namespace Models.PMF.SimplePlantModels
 
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
-                _harvestDate = GetHarvestDate(management.EstablishDate, ttEstabToHarv, BaseT, OptT, MaxT);
-                nonNullHarvestDate = (DateTime)_harvestDate;
+                HarvestDate = GetHarvestDate(management.EstablishDate, ttEstabToHarv, BaseT, OptT, MaxT);
+                nonNullHarvestDate = (DateTime)HarvestDate;
             }
             else
             {
-                _harvestDate = (DateTime)management.HarvestDate;
+                HarvestDate = (DateTime)management.HarvestDate;
             }
 
             double tt_SowtoEmerg = 0;
@@ -505,8 +496,8 @@ namespace Models.PMF.SimplePlantModels
             }
 
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - Math.Max(PropnTt[management.EstablishStage], PropnTt["Emergence"]);
-            Tt_EmergtoMat = (ttEstabToHarv - tt_SowtoEmerg ) * 1 / PropnTt_EstToHarv ;
-            
+            Tt_EmergtoMat = (ttEstabToHarv - tt_SowtoEmerg) * 1 / PropnTt_EstToHarv;
+
             double Xo_Biomass = Tt_EmergtoMat * 0.5;
             double b_Biomass = Xo_Biomass * 0.2;
             double Xo_cov = Xo_Biomass * 0.4;
@@ -521,13 +512,13 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            double ttPreEstab = Math.Max(PropnTt[management.EstablishStage],PropnTt["Emergence"]) * Tt_EmergtoMat;
+            double ttPreEstab = Math.Max(PropnTt[management.EstablishStage], PropnTt["Emergence"]) * Tt_EmergtoMat;
             if (management.EstablishStage != "Seed")
             {
                 ttPreEstab += tt_SowtoEmerg;
             }
 
-            double irdm = 1.0 / sigmoid.Function(ttEstabToHarv+ttPreEstab-tt_SowtoEmerg, Xo_Biomass, b_Biomass);
+            double irdm = 1.0 / sigmoid.Function(ttEstabToHarv + ttPreEstab - tt_SowtoEmerg, Xo_Biomass, b_Biomass);
             cropParams["InvertedRelativeDM"] += irdm.ToString();
             cropParams["TtSeed"] += tt_SowtoEmerg;
             cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
@@ -539,7 +530,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
             double agDM = yieldExpected * dmc * (1 / HarvestIndex) * irdm;
-            double tDM = agDM + (agDM *  Proot);
+            double tDM = agDM + (agDM * Proot);
             double iDM = tDM * PropnMaxDM[management.EstablishStage];
             cropParams["InitialStoverWt"] += (iDM * (1 - Proot) * (1 - HarvestIndex)).ToString();
             cropParams["InitialProductWt"] += (iDM * (1 - Proot) * HarvestIndex).ToString();
@@ -653,7 +644,7 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>The name of the crop being simulated.</summary>
         public string crop { get; set; }
-        
+
         /// <summary>The amount of N required to grow to expected yield (g/m2).</summary>
         public double TotalNDemand { get; set; }
 
