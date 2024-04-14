@@ -72,144 +72,146 @@ namespace Models.PMF.SimplePlantModels
         public string CropName { get { return Name; } }
 
         /// <summary>Harvest index for the crop (proportion of the plant biomass that is product, 0-1).</summary>
-        [Separator("Setup to simulate a given crop using SCRUM - Enter parameters defining the crop in the sections below")]
-        [Description("Harvest Index (0-1):")]
+        [Separator("Setup to simulate a given crop using SCRUM - Enter parameters defining the crop in the sections below\n" +
+            " Parameters defining growth pattern and biomass partition")]
+        [Description(" Harvest Index (0-1):")]
         public double HarvestIndex { get; set; }
 
         /// <summary>Moisture content of product at harvest (g/g).</summary>
-        [Description("Product moisture content (g/g):")]
+        [Description(" Product moisture content (g/g):")]
         public double MoistureContent { get; set; }
 
         /// <summary>Proportion of biomass allocated to roots (0-1).</summary>
-        [Description("Root biomass proportion (0-1):")]
+        [Description(" Root biomass proportion (0-1):")]
         public double Proot { get; set; }
 
         /// <summary>Root depth at maturity (mm).</summary>
-        [Description("Root depth at maturity (mm):")]
+        [Description(" Root depth at maturity (mm):")]
         public double MaxRD { get; set; }
 
         /// <summary>Crop height at maturity (mm).</summary>
-        [Description("Crop height at maturity (mm):")]
+        [Description(" Crop height at maturity (mm):")]
         public double MaxHeight { get; set; }
 
         /// <summary>Maximum crop green cover (limited between 0 and 0.97).</summary>
-        [Description("Maximum green cover (0-0.97):")]
+        [Description(" Maximum green cover (0-0.97):")]
         public double MaxCover { get; set; }
 
         /// <summary>Crop extinction coefficient (0-1).</summary>
-        [Description("Crop extinction coefficient (0-1):")]
+        [Description(" Crop extinction coefficient (0-1):")]
         public double ExtinctCoeff { get; set; }
-
-        /// <summary>Plant nitrogen concentration at seedling stage (g/g/).</summary>
-        [Description("Plant nitrogen concentration at seedling stage (g/g):")]
-        public double SeedlingNConc { get; set; }
 
         /// <summary>Phenology stage at which the plant is typically harvested.</summary>
         /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
-        [Description("Choose the stage at which the crop is typically harvested:")]
+        [Description(" Choose the stage at which the crop is typically harvested:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
         public string TypicalHarvestStage { get { return _typicalharvestStage; } set { _typicalharvestStage = value; } }
         private string _typicalharvestStage { get; set; }
 
+        /// <summary>Nitrogen concentration of plant at seedling stage (g/g/).</summary>
+        [Separator(" Parameters defining crop nitrogen requirements")]
+        [Description(" Nitrogen concentration of plant at seedling stage (g/g):")]
+        public double SeedlingNConc { get; set; }
+
         /// <summary>Nitrogen concentration of product at maturity (g/g).</summary>
-        [Description("Nitrogen concentration of product at harvest (g/g)")]
+        [Description(" Nitrogen concentration of product at harvest (g/g)")]
         public double ProductHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of stover at maturity (g/g).</summary>
-        [Description("Nitrogen concentration of stover at harvest (g/g).")]
+        [Description(" Nitrogen concentration of stover at harvest (g/g).")]
         public double StoverHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of roots (g/g).</summary>
-        [Description("Nitrogen concentration of roots (g/g):")]
+        [Description(" Nitrogen concentration of roots (g/g):")]
         public double RootNConc { get; set; }
 
+        /// <summary>Proportion of crop that is legume (FIXME - need more info).</summary>
+        [Description(" Proportion of crop that is legume (0-1):")]
+        public double LegumePropn { get; set; }
+
         /// <summary>Base temperature for the crop (oC).</summary>
-        [Description("Crop base temperature (oC):")]
+        [Separator(" Parameters defining crop development as function of temperature")]
+        [Description(" Crop base temperature (oC):")]
         public double BaseT { get; set; }
 
         /// <summary>Optimum temperature for the crop (oC).</summary>
-        [Description("Crop optimum temperature (oC):")]
+        [Description(" Crop optimum temperature (oC):")]
         public double OptT { get; set; }
 
         /// <summary>Maximum temperature for the crop (oC).</summary>
-        [Description("Crop maximum temperature (oC):")]
+        [Description(" Crop maximum temperature (oC):")]
         public double MaxT { get; set; }
 
         /// <summary>Thermal time required from sowing to emergence (oCd).</summary>
-        [Description("Thermal time required from sowing to emergence (oCd):")]
+        [Description(" Thermal time required from sowing to emergence (oCd):")]
         public double Tt_SowtoEmerge { get; set; }
 
-        /// <summary>Proportion of crop that is legume (FIXME - need more info).</summary>
-        [Description("Proportion of crop that is legume (0-1):")]
-        public double LegumePropn { get; set; }
-
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
-        [Description("Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
+        [Separator(" Parameters defining crop water requirements")]
+        [Description(" Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
         public double GSMax { get; set; }
 
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
-        [Description("Net radiation at 50% of maximum conductance (between 50 and 200 W/m2):")]
+        [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m2):")]
         public double R50 { get; set; }
 
         /// <summary>"Flag whether the crop responds to water stress."</summary>
-        [Description("Does the crop respond to water stress?")]
+        [Description(" Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
 
 
         /// <summary>Date to establish the crop in the field.</summary>
-        [Separator("Management data for this crop can be specified below.  Alternatively this information can be sent from a manager script and left blank below")]
-        [Description("Establishment date:")]
+        [Separator("Management data for this crop can be specified below.  Alternatively this information can be set from a manager script\n" +
+            " Parameter defining the establishment conditions")]
+        [Description(" Establishment date:")]
         public Nullable<DateTime> EstablishDate { get; set; }
 
         /// <summary>Stage at which the crop is established in the field.</summary>
-        [Description("Establishment stage:")]
+        [Description(" Establishment stage:")]
         [Display(Type = DisplayType.ScrumEstablishStages)]
         public string EstablishStage { get; set; }
 
         /// <summary>Depth at which the crop/seeds are planted (mm).</summary>
-        [Description("Planting depth (mm):")]
+        [Description(" Planting depth (mm):")]
         public double PlantingDepth { get; set; }
-
-        /// <summary>Date to harvest the crop.</summary>
-        [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
-        [Description("Harvest date:")]
-        public Nullable<DateTime> HarvestDate { get; set; }       
-        private DateTime nonNullHarvestDate;
-
-        /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
-        [Description("Thermal time from establishment to harvest (oCd):")]
-        public double TtEstabToHarv { get; set; }
-
-        /// <summary>Stage at which the crop is harvested from the field.</summary>
-        [Description("Harvest stage:")]
-        [Display(Type = DisplayType.ScrumHarvestStages)]
-        public string HarvestStage { get; set; }
-
 
         /// <summary>Expected yield for the crop, assumed to be fresh weight (t/ha).</summary>
         /// <remarks>The user is expected to consider genotype, location and growing conditions.</remarks>
-        [Separator("Specify an appropriate potential yield for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
-        [Description("Expected crop yield, fresh weight (t/ha)")]
+        [Description(" Expected crop yield, fresh weight (t/ha)")]
         public double ExpectedYield { get; set; }
+
+        /// <summary>Date to harvest the crop.</summary>
+        [Separator(" Parameters defining the harvest conditions (needs to have a valid harvest date or thermal time specified)")]
+        [Description(" Harvest date:")]
+        public Nullable<DateTime> HarvestDate { get; set; }
+        private DateTime nonNullHarvestDate;
+
+        /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
+        [Description(" Thermal time from establishment to harvest (oCd):")]
+        public double TtEstabToHarv { get; set; }
+
+        /// <summary>Stage at which the crop is harvested from the field.</summary>
+        [Description(" Harvest stage:")]
+        [Display(Type = DisplayType.ScrumHarvestStages)]
+        public string HarvestStage { get; set; }
 
         /// <summary>Proportion of expected yield that is left in the field at harvest.</summary>
         /// <remarks>This may be due to disease, poor quality, or lack of market.</remarks>
-        [Separator("Specify proportion of field loss and residue removal at harvest")]
-        [Description("Proportion of product lost in the field at harvest (0-1):")]
+        [Description(" Proportion of product lost in the field at harvest (0-1):")]
         public double FieldLoss { get; set; }
 
         /// <summary>Proportion of stover that is removed from the field at harvest.</summary>
         /// <remarks>This may be used to mimic bailing or some other means of removal.</remarks>
-        [Description("Proportion of stover to remove off field at harvest (0-1):")]
+        [Description(" Proportion of stover to remove off field at harvest (0-1):")]
         public double ResidueRemoval { get; set; }
 
         /// <summary>Proportion of residues that are incorporated in the soil by cultivation at harvest.</summary>
-        [Description("Proportion of residue incorporated into the soil at harvest (0-1):")]
+        [Description(" Proportion of residue incorporated into the soil at harvest (0-1):")]
         public double ResidueIncorporation { get; set; }
 
         /// <summary>Depth down to which the residues are incorporated into the soil by cultivation.</summary>
-        [Description("Depth to incorporate residues (mm):")]
+        [Description(" Depth to incorporate residues (mm):")]
         public double ResidueIncorporationDepth { get; set; }
 
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
@@ -220,12 +222,12 @@ namespace Models.PMF.SimplePlantModels
         public double Tt_EmergtoMat { get; set; }
 
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
-        /// <param name="yieldExpected">Fresh yield expected at harvest (g/m2)</param>
+        /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
         /// <returns>The amount of N required by the crop</returns>
         private double calcTotalNDemand(double yieldExpected)
         {
             double dmc = 1.0 - MoistureContent;
-            yieldExpected = yieldExpected * 100.0;
+            yieldExpected = yieldExpected * 100.0; // convert to g/m2
             double fDM = yieldExpected * dmc * (1.0 / HarvestIndex) * (1.0 / (1.0 - Proot));
             double productDM = fDM * (1.0 - Proot) * HarvestIndex;
             double stoverDM = fDM * (1.0 - Proot) * (1.0 - HarvestIndex);
@@ -448,7 +450,7 @@ namespace Models.PMF.SimplePlantModels
 
             double dmc = 1.0 - MoistureContent;
             cropParams["DryMatterContent"] += dmc.ToString();
-            double yieldExpected = management.ExpectedYield * 100;
+            double yieldExpected = management.ExpectedYield * 100.0; // convert to g/m2
             cropParams["ExpectedYield"] += yieldExpected.ToString();
             cropParams["HarvestIndex"] += HarvestIndex.ToString();
             cropParams["RootNConc"] += RootNConc.ToString();
