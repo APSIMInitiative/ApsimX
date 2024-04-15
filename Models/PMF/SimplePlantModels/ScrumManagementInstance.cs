@@ -74,8 +74,8 @@ namespace Models.PMF.SimplePlantModels
         /// <param name="isFertilised">Flag whether the crop raises an event with fertiliser requirements</param>
         /// <param name="firstFertDate">Date of first fertiliser application, passed on the fertiliser event</param>
         public ScrumManagementInstance(string cropName, DateTime establishDate, string establishStage,
-                                       string harvestStage, double expectedYield, 
-                                       Nullable<DateTime> harvestDate = null, double ttEstabToHarv = Double.NaN,
+                                       string harvestStage, double expectedYield,
+                                       Nullable<DateTime> harvestDate = null, double ttEstabToHarv = double.NaN,
                                        double plantingDepth = 15, double fieldLoss = 0, double residueRemoval = 0,
                                        double residueIncorporation = 1, double residueIncorporationDepth = 150,
                                        bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
