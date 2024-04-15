@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.Classes;
+using UserInterface.EventArguments;
+using Gtk;
+using UserInterface.Interfaces;
+using Utility;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Classes;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using Utility;
-
     /// <summary>
     /// This view will display a list of properties to the user
     /// in a GtkTable, with each row containing a label and an

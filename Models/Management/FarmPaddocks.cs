@@ -96,7 +96,8 @@ namespace Models.Management
 
             var dtFields = new List<string>();
             for (var row = 0; row < dt.Rows.Count; row++) 
-               dtFields.Add(dt.Rows[row]["Paddock"].ToString());
+               if (dt.Rows[row]["Paddock"].ToString() != "")
+                  dtFields.Add(dt.Rows[row]["Paddock"].ToString());
 
             foreach (var f in newFields)
                if ( ! dtFields.Contains(f)) {
