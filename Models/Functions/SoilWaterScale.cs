@@ -16,28 +16,43 @@ namespace Models.Functions
     [Description("A simple scale to convert soil water content into a value between 0 and 2 where 0 = LL/LL15, 1 = DUL and 2 = SAT")]
     public class SoilWaterScale : Model, IFunction
     {
+        /// <summary>Options for lower limit</summary>
+        public enum LowerLimit 
+        {
+            /// <summary>SoilCrop.LL</summary>
+            LL,
+
+            /// <summary>Physical.LL15</summary>
+            LL15
+        }
 
         /// <summary> </summary>
-        [Description("SAT array internal variable: ")]
+        [Description("Lower Limit: ")]
         [Display(Type = DisplayType.None)]
-        public string SATModel { get; set; } = "[Physical].SAT";
-
-        /// <summary> </summary>
-        [Description("DUL array internal variable: ")]
-        [Display(Type = DisplayType.None)]
-        public string DULModel { get; set; } = "[Physical].DUL";
-
-        /// <summary> </summary>
-        [Description("Lower Limit array internal variable: ")]
-        [Display(Type = DisplayType.None)]
-        public string LLModel { get; set; } = "[Physical].LL15";
+        public LowerLimit LLModel { get; set; } = LowerLimit.LL15;
 
         [Link]
         private ISoilWater soilwater = null;
 
+        [Link]
+        private Physical physical = null;
+
+        [Link]
+        private Root root = null;
+
         private double[] sats = null;
         private double[] duls = null;
         private double[] lls = null;
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(int arrayIndex = -1) {
+            sats = physical.SAT;
+            duls = physical.DUL;
+            if (LLModel == LowerLimit.LL)
+                lls = root.SoilCrop.LL;
+            else
+                lls = physical.LL15;
+        }
 
         /// <summary>Gets the value of the function.</summary>
         public double Value(int arrayIndex = -1)
@@ -50,13 +65,6 @@ namespace Models.Functions
 
             if (arrayIndex >= soilwater.SW.Length)
                 throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is more than SoilWater SW length {soilwater.SW.Length}.");
-
-            if (sats == null && duls == null && lls == null) 
-            {
-                sats = Locator.Get(SATModel) as double[];
-                duls = Locator.Get(DULModel) as double[];
-                lls = Locator.Get(LLModel) as double[];
-            }
 
             if (arrayIndex >= sats.Length)
                 throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for SAT array length {sats.Length}.");
