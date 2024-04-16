@@ -1,0 +1,14 @@
+ApsimVersion = 7.6
+Title = Setable Variables - Runoff (OLD)
+SimulationName                     Date       cn2_bare         cn_cov         cn_red
+            ()             (dd/mm/yyyy)             ()          (0-1)             ()
+ Setable_Variables_Runoff    01/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    02/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    03/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    04/01/1940        100.000          0.800         60.000
+ Setable_Variables_Runoff    05/01/1940        100.000          0.800         60.000
+ Setable_Variables_Runoff    06/01/1940        100.000          0.800         60.000
+ Setable_Variables_Runoff    07/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    08/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    09/01/1940         50.000          0.500         30.000
+ Setable_Variables_Runoff    10/01/1940         50.000          0.500         30.000

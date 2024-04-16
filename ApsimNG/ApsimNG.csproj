@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <BaseOutputPath>../bin</BaseOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+    <Platform Condition="'$(Platform)'==''">Any CPU</Platform>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors />
+    <NoWarn>CS1591,CS1572</NoWarn>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Nothing under Resources directory should be included in compilation -->
+    <None Remove="Resources\**\*" />
+    <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Include="../LICENSE.md" />
+
+    <!-- Scripts and other files used for 'run on azure' feature -->
+    <AzureFiles Include="../DeploymentSupport/global/**/*" />
+	
+    <!-- Shared project references -->
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\APSIM.Interop\APSIM.Interop.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\APSIM.Server\V1\APSIM.Server.csproj" />
+	
+    <!-- Shared package references -->
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="Microsoft.Azure.Batch" Version="15.4.0" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.3" />
+    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" />
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="ISO3166" Version="1.0.4" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
+    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="GtkSharp" Version="3.24.24.38" />
+    <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\CommonReportVariables\CommonFrequencyVariables.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\CommonReportVariables\CommonReportingVariables.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Copy ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(AzureFiles)" DestinationFiles="@(AzureFiles->'$(OutputPath)%(RecursiveDir)%(FileName)%(Extension)')" />
+  </Target>
+
+  <ProjectExtensions><VisualStudio><UserProperties resources_4commonreportvariables_4commonfrequencyvariables_1json__JsonSchema="json" /></VisualStudio></ProjectExtensions>
+</Project>

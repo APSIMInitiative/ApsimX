@@ -1,0 +1,128 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 169,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.WaterModel.WaterBalance, Models",
+      "Name": "SoilWater",
+      "Children": [
+        {
+          "$type": "Models.WaterModel.RunoffModel, Models",
+          "Name": "RunoffModel",
+          "Children": [
+            {
+              "$type": "Models.WaterModel.CNReductionForCover, Models",
+              "Name": "CNReductionForCover",
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "EffectiveCoverMultiplier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        600.0,
+                        1800.0,
+                        30000.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.WaterModel.CNReductionForTillage, Models",
+              "tillageCnCumWater": 0.0,
+              "tillageCnRed": 0.0,
+              "Name": "CNReductionForTillage",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.WaterModel.EvaporationModel, Models",
+          "t": 0.0,
+          "Name": "EvaporationModel",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.WaterModel.LateralFlowModel, Models",
+          "Name": "LateralFlowModel",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.WaterModel.SaturatedFlowModel, Models",
+          "Name": "SaturatedFlowModel",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
+          "Name": "UnsaturatedFlowModel",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.WaterModel.WaterTableModel, Models",
+          "Name": "WaterTableModel",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

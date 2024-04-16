@@ -1,0 +1,170 @@
+SimulationName	Clock.Today	Barley.AboveGround.Wt	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Dead.Wt	Barley.Ear.Wt	Barley.Grain.Wt	Barley.Leaf.LAI	Barley.Phenology.Zadok.Stage	Barley.Phenology.CurrentStageName
+()	()	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(m2/m2)	()	
+RS2014_15CultDashIrrLow	2014-11-25	109.9	72.4	37.6	0	0		1.5		
+RS2014_15CultDashIrrMed	2014-11-25	112.2	75.8	36.4	0	0		1.55		
+RS2014_15CultDashIrrHigh	2014-11-25	178.5	119.8	58.7	0	0		2.74		
+RS2014_15CultOmakaIrrLow	2014-11-25	139.6	97.4	42.2	0	0		1.84		
+RS2014_15CultOmakaIrrMed	2014-11-25	125.7	86	39.7	0	0		1.53		
+RS2014_15CultOmakaIrrHigh	2014-11-25	184.4	121.7	62.7	0	0		2.62		
+RS2014_15CultDashIrrLow	2014-12-09	306.6	108.5	198.1	0.1	0		1.98		
+RS2014_15CultDashIrrMed	2014-12-09	280.4	96.4	184	0	0		1.8		
+RS2014_15CultDashIrrHigh	2014-12-09	587.9	219.5	368.4	0	0		5.06		
+RS2014_15CultOmakaIrrLow	2014-12-09	387.3	156.3	231	0	0		2.5		
+RS2014_15CultOmakaIrrMed	2014-12-09	359.4	139	220.4	0	0		2.24		
+RS2014_15CultOmakaIrrHigh	2014-12-09	549.7	217.9	331.7	0.1	0		4.11		
+RS2014_15CultDashIrrLow	2014-12-22	652.7	112.5	366.7	1.3	172.1		2.34		
+RS2014_15CultDashIrrMed	2014-12-22	665.2	113.8	386.9	0.8	163.6		2.49		
+RS2014_15CultDashIrrHigh	2014-12-22	956.8	200.5	565.7	2.5	188.2		5.52		
+RS2014_15CultOmakaIrrLow	2014-12-22	715.7	144.4	391.6	1.8	178		2.56		
+RS2014_15CultOmakaIrrMed	2014-12-22	692.3	126.4	389.5	0	176.4		2.64		
+RS2014_15CultOmakaIrrHigh	2014-12-22	961.1	225.1	559.8	1.7	174.5		5.31		
+RS2014_15CultDashIrrLow	2015-01-15	1159	17.3	297.8	68.7	775.1		0.36		
+RS2014_15CultDashIrrMed	2015-01-15	1399.6	71.1	378.6	35.7	914.1		1.57		
+RS2014_15CultDashIrrHigh	2015-01-15	1899.6	137.1	621.5	59.6	1081.4		3.75		
+RS2014_15CultOmakaIrrLow	2015-01-15	1213.6	20	332.1	97.4	764.1		0.28		
+RS2014_15CultOmakaIrrMed	2015-01-15	1387	64.1	428.3	47.6	847.1		1.14		
+RS2014_15CultOmakaIrrHigh	2015-01-15	1865	124.3	688.3	75.3	977.1		3.14		
+RS2014_15CultDashIrrLow	2015-01-28	1309.4	68.5	333.5	907.4		777.8			HarvestRipe
+RS2014_15CultDashIrrMed	2015-02-11	1368.4	54.1	332.9	981.3		864.2			HarvestRipe
+RS2014_15CultDashIrrHigh	2015-02-11	2384.1	145.3	699.5	1539.3		1386.4			HarvestRipe
+RS2014_15CultDashIrrLow	2015-01-28	1413.1	92	406.5	914.6		738.8			HarvestRipe
+RS2014_15CultDashIrrMed	2015-02-11	1397.7	56.2	369.5	972		833.7			HarvestRipe
+RS2014_15CultDashIrrHigh	2015-02-11	2075.4	131.1	666.8	1277.6		1092.1			HarvestRipe
+RS2014_15CultDashIrrLow	2014-11-04								12	
+RS2014_15CultDashIrrLow	2014-11-07								21	
+RS2014_15CultDashIrrLow	2014-11-13								22	
+RS2014_15CultDashIrrLow	2014-11-17								23	
+RS2014_15CultDashIrrLow	2014-11-21								30	
+RS2014_15CultDashIrrLow	2014-11-24								31	
+RS2014_15CultDashIrrLow	2014-11-27								32	
+RS2014_15CultDashIrrLow	2014-12-05								38	
+RS2014_15CultDashIrrLow	2014-12-08								41	
+RS2014_15CultDashIrrLow	2014-12-12								43	
+RS2014_15CultDashIrrLow	2014-12-16								47	
+RS2014_15CultDashIrrLow	2014-12-18								59	
+RS2014_15CultDashIrrLow	2014-12-23								71	
+RS2014_15CultDashIrrLow	2014-12-30								81	
+RS2014_15CultDashIrrLow	2015-01-06								83	
+RS2014_15CultDashIrrLow	2015-01-14								83	
+RS2014_15CultDashIrrLow	2015-01-16								86	
+RS2014_15CultDashIrrLow	2015-01-19								88	
+RS2014_15CultDashIrrLow	2015-01-22								92	
+RS2014_15CultDashIrrLow	2015-01-26								92	
+RS2014_15CultDashIrrLow	2015-01-29									
+RS2014_15CultDashIrrLow	2015-02-04									
+RS2014_15CultDashIrrLow	2015-02-10									
+RS2014_15CultDashIrrMed	2014-11-04								12	
+RS2014_15CultDashIrrMed	2014-11-07								21	
+RS2014_15CultDashIrrMed	2014-11-13								22	
+RS2014_15CultDashIrrMed	2014-11-17								23	
+RS2014_15CultDashIrrMed	2014-11-21								30	
+RS2014_15CultDashIrrMed	2014-11-24								31	
+RS2014_15CultDashIrrMed	2014-11-27								32	
+RS2014_15CultDashIrrMed	2014-12-05								41	
+RS2014_15CultDashIrrMed	2014-12-08								41	
+RS2014_15CultDashIrrMed	2014-12-12								42	
+RS2014_15CultDashIrrMed	2014-12-16								47	
+RS2014_15CultDashIrrMed	2014-12-18								59	
+RS2014_15CultDashIrrMed	2014-12-23								70.8	
+RS2014_15CultDashIrrMed	2014-12-30								81	
+RS2014_15CultDashIrrMed	2015-01-06								83	
+RS2014_15CultDashIrrMed	2015-01-14								83	
+RS2014_15CultDashIrrMed	2015-01-16								85	
+RS2014_15CultDashIrrMed	2015-01-19								87	
+RS2014_15CultDashIrrMed	2015-01-22								88	
+RS2014_15CultDashIrrMed	2015-01-26								89	
+RS2014_15CultDashIrrMed	2015-01-29								92	
+RS2014_15CultDashIrrMed	2015-02-04								92	
+RS2014_15CultDashIrrMed	2015-02-10								93	
+RS2014_15CultDashIrrHigh	2014-11-04								12	
+RS2014_15CultDashIrrHigh	2014-11-07								21	
+RS2014_15CultDashIrrHigh	2014-11-13								22	
+RS2014_15CultDashIrrHigh	2014-11-17								24	
+RS2014_15CultDashIrrHigh	2014-11-21								30	
+RS2014_15CultDashIrrHigh	2014-11-24								31	
+RS2014_15CultDashIrrHigh	2014-11-27								31	
+RS2014_15CultDashIrrHigh	2014-12-05								38	
+RS2014_15CultDashIrrHigh	2014-12-08								41	
+RS2014_15CultDashIrrHigh	2014-12-12								42	
+RS2014_15CultDashIrrHigh	2014-12-16								43	
+RS2014_15CultDashIrrHigh	2014-12-18								59	
+RS2014_15CultDashIrrHigh	2014-12-23								70.5	
+RS2014_15CultDashIrrHigh	2014-12-30								81	
+RS2014_15CultDashIrrHigh	2015-01-06								82	
+RS2014_15CultDashIrrHigh	2015-01-14								82	
+RS2014_15CultDashIrrHigh	2015-01-16								85	
+RS2014_15CultDashIrrHigh	2015-01-19								85	
+RS2014_15CultDashIrrHigh	2015-01-22								86	
+RS2014_15CultDashIrrHigh	2015-01-26								87	
+RS2014_15CultDashIrrHigh	2015-01-29								91	
+RS2014_15CultDashIrrHigh	2015-02-04								92	
+RS2014_15CultDashIrrHigh	2015-02-10								93	
+RS2014_15CultOmakaIrrLow	2014-11-04								12	
+RS2014_15CultOmakaIrrLow	2014-11-07								21	
+RS2014_15CultOmakaIrrLow	2014-11-13								22	
+RS2014_15CultOmakaIrrLow	2014-11-17								24	
+RS2014_15CultOmakaIrrLow	2014-11-21								30	
+RS2014_15CultOmakaIrrLow	2014-11-24								31	
+RS2014_15CultOmakaIrrLow	2014-11-27								31	
+RS2014_15CultOmakaIrrLow	2014-12-05								38	
+RS2014_15CultOmakaIrrLow	2014-12-08								41	
+RS2014_15CultOmakaIrrLow	2014-12-12								43	
+RS2014_15CultOmakaIrrLow	2014-12-16								45	
+RS2014_15CultOmakaIrrLow	2014-12-18								59	
+RS2014_15CultOmakaIrrLow	2014-12-23								70.5	
+RS2014_15CultOmakaIrrLow	2014-12-30								81	
+RS2014_15CultOmakaIrrLow	2015-01-06								83	
+RS2014_15CultOmakaIrrLow	2015-01-14								85	
+RS2014_15CultOmakaIrrLow	2015-01-16								85	
+RS2014_15CultOmakaIrrLow	2015-01-19								91	
+RS2014_15CultOmakaIrrLow	2015-01-22								92	
+RS2014_15CultOmakaIrrLow	2015-01-26								92	
+RS2014_15CultOmakaIrrLow	2015-01-29									
+RS2014_15CultOmakaIrrLow	2015-02-04									
+RS2014_15CultOmakaIrrLow	2015-02-10									
+RS2014_15CultOmakaIrrMed	2014-11-04								12	
+RS2014_15CultOmakaIrrMed	2014-11-07								21	
+RS2014_15CultOmakaIrrMed	2014-11-13								22	
+RS2014_15CultOmakaIrrMed	2014-11-17								23	
+RS2014_15CultOmakaIrrMed	2014-11-21								30	
+RS2014_15CultOmakaIrrMed	2014-11-24								31	
+RS2014_15CultOmakaIrrMed	2014-11-27								31	
+RS2014_15CultOmakaIrrMed	2014-12-05								38	
+RS2014_15CultOmakaIrrMed	2014-12-08								41	
+RS2014_15CultOmakaIrrMed	2014-12-12								43	
+RS2014_15CultOmakaIrrMed	2014-12-16								45	
+RS2014_15CultOmakaIrrMed	2014-12-18								59	
+RS2014_15CultOmakaIrrMed	2014-12-23								70.5	
+RS2014_15CultOmakaIrrMed	2014-12-30								81	
+RS2014_15CultOmakaIrrMed	2015-01-06								82	
+RS2014_15CultOmakaIrrMed	2015-01-14								84	
+RS2014_15CultOmakaIrrMed	2015-01-16								84	
+RS2014_15CultOmakaIrrMed	2015-01-19								87	
+RS2014_15CultOmakaIrrMed	2015-01-22								88	
+RS2014_15CultOmakaIrrMed	2015-01-26								89	
+RS2014_15CultOmakaIrrMed	2015-01-29								92	
+RS2014_15CultOmakaIrrMed	2015-02-04								92	
+RS2014_15CultOmakaIrrMed	2015-02-10								93	
+RS2014_15CultOmakaIrrHigh	2014-11-04								12	
+RS2014_15CultOmakaIrrHigh	2014-11-07								21	
+RS2014_15CultOmakaIrrHigh	2014-11-13								22	
+RS2014_15CultOmakaIrrHigh	2014-11-17								24	
+RS2014_15CultOmakaIrrHigh	2014-11-21								30	
+RS2014_15CultOmakaIrrHigh	2014-11-24								31	
+RS2014_15CultOmakaIrrHigh	2014-11-27								31	
+RS2014_15CultOmakaIrrHigh	2014-12-05								38	
+RS2014_15CultOmakaIrrHigh	2014-12-08								41	
+RS2014_15CultOmakaIrrHigh	2014-12-12								42	
+RS2014_15CultOmakaIrrHigh	2014-12-16								43	
+RS2014_15CultOmakaIrrHigh	2014-12-18								59	
+RS2014_15CultOmakaIrrHigh	2014-12-23								70.5	
+RS2014_15CultOmakaIrrHigh	2014-12-30								81	
+RS2014_15CultOmakaIrrHigh	2015-01-06								82	
+RS2014_15CultOmakaIrrHigh	2015-01-14								82	
+RS2014_15CultOmakaIrrHigh	2015-01-16								84	
+RS2014_15CultOmakaIrrHigh	2015-01-19								85	
+RS2014_15CultOmakaIrrHigh	2015-01-22								86	
+RS2014_15CultOmakaIrrHigh	2015-01-26								87	
+RS2014_15CultOmakaIrrHigh	2015-01-29								91	
+RS2014_15CultOmakaIrrHigh	2015-02-04								92	
+RS2014_15CultOmakaIrrHigh	2015-02-10								93	

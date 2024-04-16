@@ -1,0 +1,167 @@
+SimulationName	Clock.Today	Barley.Phenology.Zadok.Stage	Barley.Phenology.FlagLeafDAS.Value()	Barley.Phenology.FloweringDAS.Value()	Barley.Structure.LeafTipsAppeared
+()	()	()	()	()	()
+Boss_May03	2003-10-21	90	153		
+Boss_May04	2004-10-26	90	151		
+Boss_Sep03	2003-11-22	90	81		
+Boss_Sep04	2004-11-21	90	76		
+Cellar_May04	2004-10-15	90	140		
+Cellar_May05	2005-10-14	90	140		
+Cellar_May06	2006-10-06	90	149		
+Cellar_Sep04	2004-11-12	90	67		
+Cellar_Oct06	2006-12-07	90	57		
+County_May03	2003-10-14	90	146		
+County_May04	2004-10-16	90	141		
+County_May05	2005-10-16	90	142		
+County_Sep03	2003-11-14	90	73		
+County_Sep05	2005-11-15	90	71		
+Dash_May03	2003-10-13	90	145		
+Dash_May04	2004-10-17	90	142		
+Dash_May05	2005-10-16	90	142		
+Dash_Sep03	2003-11-12	90	71		
+Dash_Sep04	2004-11-13	90	68		
+Dash_Sep05	2005-11-12	90	68		
+Doyen_May04	2004-10-16	90	141		
+Doyen_May05	2005-10-16	90	142		
+Doyen_May06	2006-10-06	90	149		
+Doyen_Sep04	2004-11-13	90	68		
+Doyen_Oct06	2006-12-08	90	58		
+Omaka_May03	2003-10-11	90	143		
+Omaka_May04	2004-10-21	90	146		
+Omaka_Sep03	2003-11-16	90	75		
+Omaka_Sep04	2004-11-13	90	68		
+Optic_May03	2003-10-14	90	146		
+Optic_May04	2004-10-23	90	148		
+Optic_May05	2005-10-18	90	144		
+Optic_Sep03	2003-11-18	90	77		
+Optic_Sep04	2004-11-15	90	70		
+Optic_Sep05	2005-11-15	90	71		
+Pyramid_May05	2005-10-15	90	141		
+Pyramid_May06	2006-10-08	90	151		
+Pyramid_Oct06	2006-12-07	90	57		
+Sherwood_May03	2003-10-14	90	146		
+Sherwood_May04	2004-10-23	90	148		
+Sherwood_May05	2005-10-17	90	143		
+Sherwood_Sep03	2003-11-18	90	77		
+Sherwood_Sep04	2004-11-15	90	70		
+Sherwood_Sep05	2005-11-16	90	72		
+Tavern_May03	2003-10-10	90	142		
+Tavern_May04	2004-10-15	90	140		
+Tavern_May05	2005-10-12	90	138		
+Tavern_Sep03	2003-11-13	90	72		
+Tavern_Sep04	2004-11-12	90	67		
+Tavern_Sep05	2005-11-11	90	67		
+Vortex_May03	2003-10-14	90	146		
+Vortex_May04	2004-10-23	90	148		
+Vortex_May05	2005-10-17	90	143		
+Vortex_Sep03	2003-11-16	90	75		
+Vortex_Sep04	2004-11-13	90	68		
+Boss_May03	2003-11-06	90		169	
+Boss_May04	2004-11-07	90		163	
+Boss_Sep03	2003-12-05	90		94	
+Boss_Sep04	2004-12-03	90		88	
+Cellar_May04	2004-10-29	90		154	
+Cellar_May05	2005-10-27	90		153	
+Cellar_May06	2006-10-17	90		160	
+Cellar_Sep04	2004-11-23	90		78	
+Cellar_Oct06	2006-12-18	90		68	
+County_May03	2003-10-29	90		161	
+County_May04	2004-10-31	90		156	
+County_May05	2005-10-28	90		154	
+County_Sep03	2003-11-28	90		87	
+County_Sep05	2005-11-28	90		84	
+Dash_May03	2003-10-27	90		159	
+Dash_May04	2004-10-31	90		156	
+Dash_May05	2005-10-28	90		154	
+Dash_Sep03	2003-11-24	90		83	
+Dash_Sep04	2004-11-23	90		78	
+Dash_Sep05	2005-11-25	90		81	
+Doyen_May04	2004-10-30	90		155	
+Doyen_May05	2005-10-28	90		154	
+Doyen_May06	2006-10-17	90		160	
+Doyen_Sep04	2004-11-24	90		79	
+Doyen_Oct06	2006-12-19	90		69	
+Omaka_May03	2003-10-28	90		160	
+Omaka_May04	2004-11-02	90		158	
+Omaka_Sep03	2003-11-29	90		88	
+Omaka_Sep04	2004-11-24	90		79	
+Optic_May03	2003-10-29	90		161	
+Optic_May04	2004-11-03	90		159	
+Optic_May05	2005-10-30	90		156	
+Optic_Sep03	2003-11-30	90		89	
+Optic_Sep04	2004-11-26	90		81	
+Optic_Sep05	2005-11-28	90		84	
+Pyramid_May05	2005-10-27	90		153	
+Pyramid_May06	2006-10-19	90		162	
+Pyramid_Oct06	2006-12-18	90		68	
+Sherwood_May03	2003-10-30	90		162	
+Sherwood_May04	2004-11-04	90		160	
+Sherwood_May05	2005-10-29	90		155	
+Sherwood_Sep03	2003-11-30	90		89	
+Sherwood_Sep04	2004-11-26	90		81	
+Sherwood_Sep05	2005-11-29	90		85	
+Tavern_May03	2003-10-24	90		156	
+Tavern_May04	2004-10-29	90		154	
+Tavern_May05	2005-10-25	90		151	
+Tavern_Sep03	2003-11-26	90		85	
+Tavern_Sep04	2004-11-22	90		77	
+Tavern_Sep05	2005-11-24	90		80	
+Vortex_May03	2003-10-29	90		161	
+Vortex_May04	2004-11-03	90		159	
+Vortex_May05	2005-10-29	90		155	
+Vortex_Sep03	2003-11-29	90		88	
+Vortex_Sep04	2004-11-23	90		78	
+Boss_May03	2003-09-03				6.2
+Boss_May04	2004-09-09				6
+Boss_Sep03	2003-11-03				7.4
+Boss_Sep04	2004-11-04				6.8
+Cellar_May04	2004-09-09				5.8
+Cellar_May05	2005-09-13				7.5
+Cellar_May06	2006-09-14				7.3
+Cellar_Sep04	2004-11-04				6.6
+Cellar_Oct06					
+County_May03	2003-09-03				6.4
+County_May04	2004-09-09				6
+County_May05	2005-09-13				7.5
+County_Sep03	2003-11-03				7.6
+County_Sep05	2005-11-08				7.6
+Dash_May03	2003-09-03				6.3
+Dash_May04	2004-09-09				5.7
+Dash_May05	2005-09-13				7.3
+Dash_Sep03	2003-11-03				7.3
+Dash_Sep04	2004-11-04				6.7
+Dash_Sep05	2005-11-08				8.2
+Doyen_May04	2004-09-09				5.9
+Doyen_May05	2005-09-13				7.7
+Doyen_May06	2006-09-14				7.5
+Doyen_Sep04	2004-11-04				7.1
+Doyen_Oct06					
+Omaka_May03	2003-09-03				6
+Omaka_May04	2004-09-09				6
+Omaka_Sep03	2003-11-03				7.1
+Omaka_Sep04	2004-11-04				6.9
+Optic_May03	2003-09-03				6.3
+Optic_May04	2004-09-09				5.7
+Optic_May05	2005-09-13				7.3
+Optic_Sep03	2003-11-03				7.3
+Optic_Sep04	2004-11-04				7.1
+Optic_Sep05	2005-11-08				7.9
+Pyramid_May05	2005-09-13				7.6
+Pyramid_May06	2006-09-14				7.6
+Pyramid_Oct06					
+Sherwood_May03	2003-09-03				6.8
+Sherwood_May04	2004-09-09				6.4
+Sherwood_May05	2005-09-13				8.1
+Sherwood_Sep03	2003-11-03				8
+Sherwood_Sep04	2004-11-04				7.7
+Sherwood_Sep05	2005-11-08				8.4
+Tavern_May03	2003-09-03				6.2
+Tavern_May04	2004-09-09				6.2
+Tavern_May05	2005-09-13				7.5
+Tavern_Sep03	2003-11-03				7.7
+Tavern_Sep04	2004-11-04				7.4
+Tavern_Sep05	2005-11-08				8.2
+Vortex_May03	2003-09-03				6.6
+Vortex_May04	2004-09-09				6
+Vortex_May05	2005-09-13				7.7
+Vortex_Sep03	2003-11-03				8
+Vortex_Sep04	2004-11-04				7.5

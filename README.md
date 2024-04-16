@@ -1,92 +1,57 @@
-# OASIS_sim
+# ApsimX
+
+ApsimX is the next generation of [APSIM](https://www.apsim.info)
+
+* APSIM is an agricultural modelling framework used extensively worldwide.
+* It can simulate a wide range of agricultural systems.
+* It begins its third decade evolving into an agro-ecosystem framework.
+
+## Licencing Conditions
+
+Use of APSIM source code is provided under the terms and conditions provided by either the General Use Licence or the Special Use Licence.  Use in any way is not permitted unless previously agreed to and currently bound by a licence agreement which can be reviewed on http://www.apsim.info/. The General Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_General_Use_Licence.pdf). The Special Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_Special_Use_Licence.pdf)
+Any questions, please email apsim@csiro.au.
+
+## Getting Started
+
+**Hardware required**: 
+
+Any recent PC with a minimum of 8Gb of RAM.
+
+**Software required**:
+
+64-bit version of Microsoft Windows 10, Windows 11, Linux or macOS.
+
+### Installation
+
+Binary releases are available via our [registration system](https://registration.apsim.info).
+
+## OASIS Modifications
+
+OASIS is a UCSC project, funded by a USDA NIFA seed grant, to extend APSIM to a voxelized 3D representation interfaced through a server/Python client pair. This step is preparatory work, before using APSIM as a physics engine for procedural generation of realistic test environments.
 
 
+### World Representation
 
-## Getting started
+We use a ENU-oriented world coordinate system (x-East, y-North, z-Up) to index the voxels of our representation, locating the front, left, bottom voxel at origin. Columns are currently strictly of uniform depth, but taller columns will be implemented through variations of the number of layers in the column.
+Boundary voxels, those which touch atmosphere or the edge of the simulated region, will be partitioned from the voxels with full neighbor sets, so that they can be treated as (literal) edge cases when implementing fluid dynamics models on the voxel set.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The generated fields are required to have a rectangular cross-section when viewed from a top-down perspective.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+The size of a field and the height of each voxel column will be specifed by the Python client before the APSIM server is launched. Subsequent adjustments of the properties of each voxel, as well as specifications of weather patterns, can be executed via the Python client at runtime.
 
-## Add your files
+### Coupled Column Physics Implementation
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.ucsc.edu/hare_lab_group/oasis_sim.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.ucsc.edu/hare_lab_group/oasis_sim/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Our physics model couples soil columns at the surface, only. Subsurface water transport is currently modeled as laterally independent of neighboring voxels (all transport is strictly vertical).
+Surface water transport is implemented by passing runoff equally among neighboring surface voxels of equal or lower height (if column heights are nonuniform).
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Any individual or organisation (a 3rd party outside of the AI) who uses APSIM must be licensed do so by the AI. On download of APSIM, the terms and conditions of a General Use Licence are agreed to and binds the user.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Intellectual property rights in APSIM are retained by the AI. If a licensee makes any improvements to APSIM, the intellectual property rights to those improvements belong to the AI. This means that the AI can choose to make the improvements - including source code - and these improvements would then be made available to all licensed users. As part of the submission process, you are complying with this term as well as making it available to all licensed users. Any Improvements to APSIM are required to be unencumbered and the contributing party warrants that the IP being contributed does not and will not infringe any third party IPR rights.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
-## License
-For open source projects, say how it is licensed.
+## Publications 
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+* [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)

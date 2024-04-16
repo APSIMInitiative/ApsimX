@@ -1,0 +1,919 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 150,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Factorial.Experiment, Models",
+      "DisabledSimNames": null,
+      "Name": "IrrigationEffect",
+      "Children": [
+        {
+          "$type": "Models.Factorial.Factors, Models",
+          "Name": "Factors",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Factor, Models",
+              "Specification": "[AutomaticIrrigation].Script.triggerDeficit=25,50,75,90",
+              "Name": "IrrigTrigger",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
+          "Descriptors": null,
+          "Name": "Base",
+          "Children": [
+            {
+              "$type": "Models.Clock, Models",
+              "Start": "1990-10-01T00:00:00",
+              "End": "1991-04-30T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+              "ExcelWorkSheetName": null,
+              "Name": "Weather",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "Verbosity": 100,
+              "Name": "Summary",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+              "Name": "SoilArbitrator",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Zone, Models",
+              "Area": 1.0,
+              "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
+              "Name": "Field",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
+                  "Name": "Managers",
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "// Defoliates AgPasture on a regular rotation or one-off via a schedule\r\n// currenty defoliates the amount specified by spreading evenly over the specified period\r\n\r\nusing Newtonsoft.Json;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone myZone;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link(ByName = true)] private ISolute no3;\r\n        [Link] private Soil mySoil;\r\n        [Link] private ISummary summary;\r\n        private double existingDM;\r\n        private double herbageToRemove;\r\n        private string amountType;\r\n        private int nLayers;\r\n        public  event BiomassRemovedDelegate BiomassRemoved;\r\n        private double atZ0;\r\n        private double atZ1;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        // - Links to APSIM models\r\n        \r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n        \r\n        // - Paramters for this manager\r\n        [Description(\"Allow this manager to control defoliation? \")]\r\n        public yesnoType AllowControl { get; set; }\r\n        [Description(\"Date to begin the rotation: \")]\r\n        public DateTime CutRotationStartDate { get; set; }\r\n        [Description(\"Date to finish the rotation: \")]\r\n        public DateTime CutRotationEndDate { get; set; }\r\n        [Description(\"How the interval is defined: \")]\r\n        public rotationIntervalTypes IntervalType { get; set; }\r\n        [Description(\"Rotation interval (days): \")]\r\n        public int CutInterval { get; set; }\r\n        [Description(\"Duration of each event (days): \")]\r\n        public int DurationOfCut { get; set; }\r\n        [Description(\"What amount is being defined: \")]\r\n        public removeAmountTypes RemoveAmountType { get; set; }\r\n        [Description(\"Amount to use (kg/ha): \")]\r\n        public double AmountGiven { get; set; }\r\n        [Description(\"How much of DM is removed from the field: \")]\r\n        public removeDMTypes DMRemoveType { get; set; }\r\n        [Description(\"Fraction of N that is removed from the field (0-1): \")]\r\n        public double FractionN2Remove { get; set; }\r\n        [Description(\"How defoliated material is returned to the field? \")]\r\n        public returnTypes ReturnType { get; set; }\r\n        [Description(\"How the partition of N to dung and urine are defined:\")]\r\n        public dungNContentTypes NDungType { get; set; }\r\n        [Description(\"Proportion of returned N that goes to dung (0-1): \")]\r\n        public double ProportionN2Dung { get; set; }\r\n        [Description(\"The C:N of dung (typically around 20): \")]\r\n        public double CNRatioDung { get; set; }\r\n        [Description(\"Depth down to which urine is applied (mm): \")]\r\n        public double UrineDepth { get; set; }\r\n\r\n        // - Outputs from this manager\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture DM defoliated today\r\n        public double DefoliatedWt { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture N defoliate today\r\n        public double DefoliatedN { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture DM harvested today\r\n        public double HarvestedWt { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture N harvested today\r\n        public double HarvestedN { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture DM removed from the field\r\n        public double RemovedWt { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Pasture N removed from the field\r\n        public double RemovedN { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Residue DM returned to the field\r\n        public double ReturnedWt { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Residue N returned to the field\r\n        public double ReturnedN { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Harvested N returned as dung (SurfaceOM)\r\n        public double NReturnedInDung { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Harvested N returned as urine (urea)\r\n        public double NReturnedInUrine { get; set; }\r\n        [JsonIgnore][Units(\"day\")]// Description: Number of days after last defoliation\r\n        public int DaysAfterCut { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut\r\n        public double PreHarvestDM { get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut\r\n        public double PostHarvestDM { get; set; }\r\n        \r\n        // - Internal variables\r\n        // fraction of harvested Dm to actually remove from field\r\n        private double fractionDM2Remove = 1.0;\r\n        // number of days for each defoliation event\r\n        private int cuttingDuration = 0;\r\n        // counter for day within each defoliation\r\n        private int daysCutting = 0;\r\n        // total existing DM harvestable\r\n        // total herbage to remove in g/m2 per day\r\n        // type of DM amount (ResidualDM or DMToRemove)\r\n        // auxiliary flag for defoliation\r\n        private bool aCutHasHappened = false;\r\n        // fraction of urine that is applied to each layer\r\n        private double[] fractionUrine;\r\n        // number of layer in the soil\r\n\r\n        // - Event to add residue or dung to surface OM\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())\r\n                Pasture.Add(species);\r\n\r\n            // reset variables\r\n            DaysAfterCut = 0;\r\n            resetVariables();\r\n            cuttingDuration = DurationOfCut;\r\n            \r\n            // get the type of amount given\r\n            if (RemoveAmountType == removeAmountTypes.ResidualDM)\r\n                amountType = \"SetResidueAmount\";\r\n            else\r\n                amountType = \"SetRemoveAmount\";\r\n\r\n            // make sure that rotation start when startDate < simulationStartDay\r\n            if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))\r\n                CutRotationStartDate = Clock.Today;\r\n                \r\n            // set the fraction of urine for each layer\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            fractionUrine = new double[nLayers];\r\n            double soilDepth = 0.0;\r\n            double distFactor = 1.5;\r\n            if (ReturnType == returnTypes.AsDungUrine)\r\n            {\r\n                double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\r\n                \r\n                atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);\r\n                for (int z = 0; z < nLayers; z++)\r\n                {\r\n                    atZ0 = atZ1;\r\n                    soilDepth += soilPhysical.Thickness[z];\r\n                    atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);\r\n                    if (1.0 - (soilDepth / UrineDepth) < 0.0)\r\n                        atZ1 = 0;\r\n                    fractionUrine[z] = (atZ0 - atZ1) / totalProp;\r\n                }\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check whether defoliation is allowed at all\r\n            if (AllowControl == yesnoType.yes)\r\n            {\r\n                // Check whether defoliation can start\r\n                if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))\r\n                {\r\n                    if (Clock.Today == CutRotationStartDate)\r\n                        DaysAfterCut = CutInterval;\r\n    \r\n                    // Check whether we should start a defoliation\r\n                    if ((Pasture[0].IsAlive) && (DaysAfterCut >= (CutInterval - 1)))\r\n                        StartDefoliation(AmountGiven, amountType, DurationOfCut);\r\n                }\r\n            }\r\n            //// Note: Only the code above should be limited by 'AllowControl'. So the rest of the code\r\n            ////  can be used by being called from another manager or a schedulle thingy\r\n\r\n\r\n            // Check whether we need to continue cutting\r\n            if ((daysCutting > 0) && (daysCutting < cuttingDuration))\r\n            {\r\n                // reset outputs\r\n                resetVariables();\r\n\r\n                defoliatePasture(herbageToRemove);\r\n                if (ReturnType == returnTypes.AsResidue)\r\n                    returnResidues();\r\n                else\r\n                    returnExcreta();\r\n                daysCutting += 1;\r\n                if (daysCutting == cuttingDuration)\r\n                {\r\n                    PostHarvestDM = 0.0;\r\n                    foreach (AgPasture.PastureSpecies species in Pasture)\r\n                        PostHarvestDM += species.Standing.Wt;\r\n                }\r\n            }\r\n\r\n            // reset outputs\r\n            if (daysCutting < 0)\r\n            {\r\n                resetVariables();\r\n                daysCutting = 0;\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            // Check whether a cutting has finished\r\n            if (daysCutting == cuttingDuration)\r\n            {\r\n                aCutHasHappened = true;\r\n                daysCutting = -1;\r\n            }\r\n\r\n            // Increase the counter for days after cutting\r\n            if (aCutHasHappened && (daysCutting == 0))\r\n                DaysAfterCut += 1;\r\n        }\r\n\r\n        // Resets the values of all outputs\r\n        private void resetVariables()\r\n        {\r\n            DefoliatedWt = 0.0;\r\n            DefoliatedN = 0.0;\r\n            HarvestedWt = 0.0;\r\n            HarvestedN = 0.0;\r\n            RemovedWt = 0.0;\r\n            RemovedN = 0.0;\r\n            ReturnedWt = 0.0;\r\n            ReturnedN = 0.0;\r\n            NReturnedInDung = 0.0;\r\n            NReturnedInUrine = 0.0;\r\n        }\r\n\r\n        // Description: Perform the basic calculations for defoliation\r\n        public void StartDefoliation(double amountDM, string amountType, int duration)\r\n        {\r\n            // Get the existing plant amount\r\n            existingDM = 0.0;\r\n            PreHarvestDM = 0.0;\r\n            foreach (AgPasture.PastureSpecies species in Pasture)\r\n            {\r\n                PreHarvestDM += species.Standing.Wt;\r\n                existingDM += species.Harvestable.Wt;\r\n            }\r\n            \r\n            // Check the amount to remove and print some info\r\n            if ((amountType == \"SetRemoveAmount\") && (existingDM >= amountDM / duration))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating \" + (10 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\", MessageType.Diagnostic);\r\n                herbageToRemove = amountDM / duration;\r\n            }\r\n            else if ((amountType == \"SetResidueAmount\") && (existingDM >= amountDM))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating down to approximately \" + (10 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\", MessageType.Diagnostic);\r\n                herbageToRemove = (PreHarvestDM - amountDM) / duration;\r\n            }\r\n            else\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\", MessageType.Diagnostic);\r\n                if (IntervalType == rotationIntervalTypes.FixedInterval)\r\n                    DaysAfterCut = -duration;\r\n                return;\r\n            }\r\n\r\n            // Start defoliation\r\n            cuttingDuration = duration;\r\n            defoliatePasture(herbageToRemove);\r\n            if (ReturnType == returnTypes.AsResidue)\r\n                returnResidues();\r\n            else\r\n                returnExcreta();\r\n                \r\n            daysCutting = 1;\r\n            DaysAfterCut = 0;\r\n            if (daysCutting == cuttingDuration)\r\n            {\r\n                PostHarvestDM = 0.0;\r\n                foreach (AgPasture.PastureSpecies species in Pasture)\r\n                    PostHarvestDM += species.Standing.Wt;\r\n            }\r\n        }\r\n\r\n        // Do the DM removal\r\n        private void defoliatePasture(double removeAmount)\r\n        {\r\n            // Remove a proportion of required DM from each species\r\n            DefoliatedWt = 0.0;\r\n            DefoliatedN = 0.0;\r\n            foreach (AgPasture.PastureSpecies species in Pasture)\r\n            {\r\n                double amountToRemove = removeAmount * species.Harvestable.Wt / existingDM;\r\n                species.RemoveBiomass(amount: amountToRemove, type: \"SetRemoveAmount\");\r\n                DefoliatedWt += species.HarvestedWt;\r\n                DefoliatedN += species.HarvestedN;\r\n            }\r\n            \r\n            // total harvested is equal total defoliated, for now\r\n            HarvestedWt = DefoliatedWt;\r\n            HarvestedN = DefoliatedN;\r\n\r\n            // get amounts actually removed from field and that to be returned (dung/urine)\r\n            if (DMRemoveType == removeDMTypes.RemoveAll)\r\n                fractionDM2Remove = 1.0;\r\n            else if (DMRemoveType == removeDMTypes.RemoveNone)\r\n                fractionDM2Remove = 0.0;\r\n            else\r\n            {\r\n                fractionDM2Remove = 0.0;\r\n                foreach (AgPasture.PastureSpecies species in Pasture)\r\n                    fractionDM2Remove += species.HarvestedDigestibility * species.HarvestedWt;\r\n                fractionDM2Remove /= removeAmount;\r\n            }\r\n            \r\n            RemovedWt = HarvestedWt * fractionDM2Remove;\r\n            RemovedN = HarvestedN * FractionN2Remove;\r\n            ReturnedWt = HarvestedWt - RemovedWt;\r\n            ReturnedN = HarvestedN - RemovedN;\r\n\r\n            if (ReturnType == returnTypes.AsDungUrine)\r\n            {\r\n                if (NDungType == dungNContentTypes.DefineProportion)\r\n                    NReturnedInDung = ReturnedN * ProportionN2Dung;\r\n                else\r\n                    NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);\r\n                NReturnedInUrine = ReturnedN - NReturnedInDung;\r\n            }\r\n            else\r\n            {\r\n                NReturnedInDung = 0.0;\r\n                NReturnedInUrine = 0.0;\r\n            }\r\n        }\r\n        \r\n        // Return dung and urine\r\n        private void returnExcreta()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedWt };\r\n                float[] dltn = new float[] { (Single)NReturnedInDung };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n\r\n            if (NReturnedInUrine > 0.0)\r\n            {\r\n                double[] myUrineDeposition = new double[nLayers];\r\n                for (int z = 0; z < nLayers; z++)\r\n                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];\r\n\r\n                no3.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\r\n                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);\r\n            }\r\n        }\r\n\r\n        // Return pasture residues\r\n        private void returnResidues()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"Grass\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedWt };\r\n                float[] dltn = new float[] { (Single)ReturnedN };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"Grass\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n        }\r\n        \r\n        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -\r\n\r\n        public enum yesnoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        public enum removeAmountTypes\r\n        {\r\n            /// <summary>Setting DM amount to remove</summary>\r\n            DMToRemove,\r\n            /// <summary>Setting residual DM amount</summary>\r\n            ResidualDM\r\n        }\r\n\r\n        public enum rotationIntervalTypes\r\n        {\r\n            /// <summary>Setting a fixed interval</summary>\r\n            FixedInterval,\r\n            /// <summary>Setting a target (minimum) inteval</summary>\r\n            TargetInterval\r\n        }\r\n\r\n        public enum removeDMTypes\r\n        {\r\n            /// <summary>Remove all DM</summary>\r\n            RemoveAll,\r\n            /// <summary>Remove no DM</summary>\r\n            RemoveNone,\r\n            /// <summary>Remove a fraction based on digestibility</summary>\r\n            BasedOnDigestibility\r\n        }\r\n        \r\n        public enum returnTypes\r\n        {\r\n            /// <summary>Return plant material as residue</summary>\r\n            AsResidue,\r\n            /// <summary>Return meterial as dung and urine</summary>\r\n            AsDungUrine\r\n        }\r\n\r\n        public enum dungNContentTypes\r\n        {\r\n            /// <summary>Define the proportion of N returned as dung</summary>\r\n            DefineProportion,\r\n            /// <summary>Define the C:N of dung</summary>\r\n            DefineCNratio,\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "AllowControl",
+                          "Value": "yes"
+                        },
+                        {
+                          "Key": "CutRotationStartDate",
+                          "Value": "01/01/1900 00:00:00"
+                        },
+                        {
+                          "Key": "CutRotationEndDate",
+                          "Value": "12/31/2100 00:00:00"
+                        },
+                        {
+                          "Key": "IntervalType",
+                          "Value": "FixedInterval"
+                        },
+                        {
+                          "Key": "CutInterval",
+                          "Value": "21"
+                        },
+                        {
+                          "Key": "DurationOfCut",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "RemoveAmountType",
+                          "Value": "ResidualDM"
+                        },
+                        {
+                          "Key": "AmountGiven",
+                          "Value": "1000"
+                        },
+                        {
+                          "Key": "DMRemoveType",
+                          "Value": "BasedOnDigestibility"
+                        },
+                        {
+                          "Key": "FractionN2Remove",
+                          "Value": "0.75"
+                        },
+                        {
+                          "Key": "ReturnType",
+                          "Value": "AsDungUrine"
+                        },
+                        {
+                          "Key": "NDungType",
+                          "Value": "DefineProportion"
+                        },
+                        {
+                          "Key": "ProportionN2Dung",
+                          "Value": "0.4"
+                        },
+                        {
+                          "Key": "CNRatioDung",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "UrineDepth",
+                          "Value": "250"
+                        },
+                        {
+                          "Key": "DefoliatedWt",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "DefoliatedN",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "HarvestedWt",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "HarvestedN",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "RemovedWt",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "RemovedN",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ReturnedWt",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "ReturnedN",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "NReturnedInDung",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "NReturnedInUrine",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "DaysAfterCut",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "PreHarvestDM",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "PostHarvestDM",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "CutRotation",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Newtonsoft.Json;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private ISummary summary;\r\n        [Link] private Soil Soil;\r\n        private DateTime lastApplicationDate;\r\n        private bool fertiliserIsAllowed;\r\n        private int nLayers;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        //User inputs from properties tab\r\n        [Description(\"Turn ferliser applications on? \")]\r\n        public yesnoType AllowFertiliser { get; set; }\r\n        \r\n        [Description(\"Depth to calculate available soil N (mm): \")]\r\n        public double Depth2SoilN { get; set; }\r\n\r\n        [Description(\"Minimum available N, triggers an application (kgN/ha): \")]\r\n        public double CriticalSoilN { get; set; }\r\n\r\n        [Description(\"Amount of N fertiliser for each application (kgN/ha): \")]\r\n        public double FertNAmount { get; set; }\r\n\r\n        [Description(\"Type of N fertiliser to apply: \")]\r\n        public Fertiliser.Types FertType { get; set; }\r\n\r\n        [Description(\"Depth at which to apply the fertiliser (mm): \")]\r\n        public double FertApplicationDepth { get; set; }\r\n       \r\n        [Description(\"Minimum period between applications (days): \")]\r\n        public double FertMinimumDays { get; set; }\r\n       \r\n        public enum yesnoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        [JsonIgnore] public double TopMineralN { get; set; }\r\n        \r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            fertiliserIsAllowed = (AllowFertiliser == yesnoType.yes);\r\n            nLayers = soilPhysical.Thickness.Length;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double daysSinceLastApplication = (Clock.Today - lastApplicationDate).TotalDays;\r\n            \r\n            // get the N stored in the soil\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopMineralN = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (Depth2SoilN - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopMineralN += (NO3.kgha[layer]\r\n                + NH4.kgha[layer]\r\n                + Urea.kgha[layer])\r\n                * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= Depth2SoilN)\r\n                    layer = nLayers;\r\n            }\r\n\r\n            if (fertiliserIsAllowed && (daysSinceLastApplication >= FertMinimumDays) && (TopMineralN <= CriticalSoilN))\r\n            {\r\n                fertiliser.Apply(FertNAmount, FertType, FertApplicationDepth);\r\n                lastApplicationDate = Clock.Today;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "AllowFertiliser",
+                          "Value": "no"
+                        },
+                        {
+                          "Key": "Depth2SoilN",
+                          "Value": "500"
+                        },
+                        {
+                          "Key": "CriticalSoilN",
+                          "Value": "5"
+                        },
+                        {
+                          "Key": "FertNAmount",
+                          "Value": "25"
+                        },
+                        {
+                          "Key": "FertType",
+                          "Value": "UreaN"
+                        },
+                        {
+                          "Key": "FertApplicationDepth",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "FertMinimumDays",
+                          "Value": "15"
+                        },
+                        {
+                          "Key": "TopMineralN",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "AutomaticFertiliser",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Newtonsoft.Json;\r\nusing Models.Soils.Nutrients;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "allowIrrigation",
+                          "Value": "True"
+                        },
+                        {
+                          "Key": "seasonStart",
+                          "Value": "15-Aug"
+                        },
+                        {
+                          "Key": "seasonEnd",
+                          "Value": "30-May"
+                        },
+                        {
+                          "Key": "seasonsAllocation",
+                          "Value": "10000"
+                        },
+                        {
+                          "Key": "triggerDeficit",
+                          "Value": "75"
+                        },
+                        {
+                          "Key": "targetDeficit",
+                          "Value": "99"
+                        },
+                        {
+                          "Key": "returndays",
+                          "Value": "7"
+                        },
+                        {
+                          "Key": "maximumAmount",
+                          "Value": "100"
+                        },
+                        {
+                          "Key": "depthPAWC",
+                          "Value": "300"
+                        },
+                        {
+                          "Key": "TopSWdeficit",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "TopSWC",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "DaysSinceIrrigation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "AmountToApply",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "SeasonAppliedAmount",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "AutomaticIrrigation",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 0.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
+                  "NightInterceptionFraction": 0.5,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Irrigation, Models",
+                  "Name": "Irrigation",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Fertiliser, Models",
+                  "ResourceName": "Fertiliser",
+                  "Name": "Fertiliser",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "InitialResidueName": "Sward",
+                  "InitialResidueType": "grass",
+                  "InitialResidueMass": 1000.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 15.0,
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Name": "SurfaceOrganicMatter",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Soil, Models",
+                  "RecordNumber": 0,
+                  "ASCOrder": null,
+                  "ASCSubOrder": null,
+                  "SoilType": "NZ_Sedimentary",
+                  "LocalName": "Lismore",
+                  "Site": "Winchmore",
+                  "NearestTown": "Ashburton",
+                  "Region": "Canterbury",
+                  "State": null,
+                  "Country": "New Zealand",
+                  "NaturalVegetation": null,
+                  "ApsoilNumber": null,
+                  "Latitude": -48.48,
+                  "Longitude": 0.0,
+                  "LocationAccuracy": null,
+                  "YearOfSampling": null,
+                  "DataSource": null,
+                  "Comments": null,
+                  "Name": "LismoreSoil",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        200.0,
+                        150.0,
+                        250.0,
+                        300.0,
+                        300.0
+                      ],
+                      "NO3N": [
+                        5.0,
+                        2.5,
+                        1.0,
+                        0.75,
+                        0.5,
+                        0.5,
+                        0.5
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
+                      "PH": [
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0
+                      ],
+                      "CL": null,
+                      "EC": null,
+                      "ESP": null,
+                      "LabileP": null,
+                      "UnavailableP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
+                      "Name": "Chemical",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Physical, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        200.0,
+                        150.0,
+                        250.0,
+                        300.0,
+                        300.0
+                      ],
+                      "ParticleSizeClay": [
+                        20.0,
+                        15.0,
+                        12.0,
+                        8.0,
+                        6.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
+                      "BD": [
+                        1.3,
+                        1.35,
+                        1.0,
+                        0.53,
+                        0.31,
+                        0.3,
+                        0.3
+                      ],
+                      "AirDry": [
+                        0.05,
+                        0.12,
+                        0.055,
+                        0.015,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "LL15": [
+                        0.15,
+                        0.14,
+                        0.055,
+                        0.015,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "DUL": [
+                        0.36,
+                        0.34,
+                        0.19,
+                        0.065,
+                        0.04,
+                        0.03,
+                        0.03
+                      ],
+                      "SAT": [
+                        0.45,
+                        0.43,
+                        0.25,
+                        0.15,
+                        0.11,
+                        0.11,
+                        0.11
+                      ],
+                      "KS": [
+                        5000.0,
+                        2500.0,
+                        3000.0,
+                        10000.0,
+                        17500.0,
+                        20000.0,
+                        20000.0
+                      ],
+                      "BDMetadata": null,
+                      "AirDryMetadata": null,
+                      "LL15Metadata": null,
+                      "DULMetadata": null,
+                      "SATMetadata": null,
+                      "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
+                      "Name": "Physical",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.15,
+                            0.14,
+                            0.06,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.08,
+                            0.04,
+                            0.01,
+                            0.0,
+                            0.0
+                          ],
+                          "XF": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            0.0,
+                            0.0
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "AGPRyegrassSoil",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.15,
+                            0.14,
+                            0.06,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.08,
+                            0.04,
+                            0.01,
+                            0.0,
+                            0.0
+                          ],
+                          "XF": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            0.0,
+                            0.0
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "AGPWhiteCloverSoil",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.WaterModel.WaterBalance, Models",
+                      "SummerDate": "1-Nov",
+                      "SummerU": 6.0,
+                      "SummerCona": 3.5,
+                      "WinterDate": "1-apr",
+                      "WinterU": 2.0,
+                      "WinterCona": 2.0,
+                      "DiffusConst": 88.0,
+                      "DiffusSlope": 35.0,
+                      "Salb": 0.13,
+                      "CN2Bare": 73.0,
+                      "CNRed": 20.0,
+                      "CNCov": 0.8,
+                      "DischargeWidth": 0.0,
+                      "CatchmentArea": 0.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        200.0,
+                        150.0,
+                        250.0,
+                        300.0,
+                        300.0
+                      ],
+                      "SWCON": [
+                        0.5,
+                        0.52,
+                        0.55,
+                        0.6,
+                        0.65,
+                        0.65,
+                        0.65
+                      ],
+                      "KLAT": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ResourceName": "WaterBalance",
+                      "Name": "SoilWater",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        200.0,
+                        150.0,
+                        250.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
+                        3.0,
+                        1.0,
+                        0.6,
+                        0.4,
+                        0.25,
+                        0.15,
+                        0.1
+                      ],
+                      "SoilCNRatio": [
+                        12.0,
+                        12.0,
+                        12.0,
+                        12.0,
+                        12.0,
+                        12.0,
+                        12.0
+                      ],
+                      "FBiom": [
+                        0.04,
+                        0.02,
+                        0.02,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                      ],
+                      "FInert": [
+                        0.5,
+                        0.7,
+                        0.83,
+                        0.9,
+                        0.95,
+                        0.99,
+                        0.99
+                      ],
+                      "FOM": [
+                        331.337020409173,
+                        245.4605019055056,
+                        164.53709493722965,
+                        121.89207790753734,
+                        73.93128242700234,
+                        40.57434806729268,
+                        22.267674346259405
+                      ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
+                      "Name": "Organic",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.InitialWater, Models",
+                      "PercentMethod": 1,
+                      "FractionFull": 0.95,
+                      "DepthWetSoil": "NaN",
+                      "RelativeTo": null,
+                      "Name": "Initial water",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "Temperature",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "ResourceName": "Nutrient",
+                      "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today as Date",
+                    "[AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt as HarvestedWt",
+                    "[Irrigation].IrrigationApplied as Irrigation"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Results",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "InitialShootDM": 1500.0,
+                  "InitialRootDM": 450.0,
+                  "InitialRootDepth": 750.0,
+                  "ResourceName": "AGPRyegrass",
+                  "Name": "AGPRyegrass",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "InitialShootDM": 500.0,
+                  "InitialRootDM": 150.0,
+                  "InitialRootDepth": 350.0,
+                  "ResourceName": "AGPWhiteClover",
+                  "Name": "AGPWhiteClover",
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System.Linq;\r\nusing System.Diagnostics;\r\nusing System.Data;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing System;\r\nusing Models.Utilities;\r\nusing Models.Storage;\r\nusing Models.Factorial;\r\nusing Models.Core;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link]\r\n        IDataStore store = null;\r\n\r\n        public void Run()\r\n        {\r\n            Experiment experiment = this.FindAncestor<Experiment>() as Experiment;\r\n            Clock clock = this.FindInScope<Clock>() as Clock;\r\n            List<double> harvestedWtSums = new List<double>();\r\n            List<double> irrigationSums = new List<double>();\r\n            foreach (string simulationName in store.Reader.SimulationNames)\r\n            {\r\n                DataTable data = GetDataForSimulation(simulationName, \"HarvestedWt\", \"Irrigation\", \"Date\");\r\n                IEnumerable<double> harvestedWt = new List<double>();\r\n                IEnumerable<double> irrigation = new List<double>();\r\n                IEnumerable<double> date = new List<double>();\r\n                double sumHarvestedWt = 0.0;\r\n                double sumIrrigation = 0.0;\r\n                for (int i = 0; i < data.Rows.Count; i++)\r\n                {\r\n                    if (data.Rows[i][\"HarvestedWt\"] != DBNull.Value && data.Rows[i][0] != DBNull.Value)\r\n                    {\r\n                        harvestedWt = harvestedWt.Append((double)data.Rows[i][\"HarvestedWt\"]);\r\n                        irrigation = irrigation.Append((double)data.Rows[i][\"Irrigation\"]);\r\n                        date = date.Append(DateToNumber((DateTime)data.Rows[i][\"Date\"]));\r\n                        sumHarvestedWt += (double)data.Rows[i][\"HarvestedWt\"];\r\n                        sumIrrigation += (double)data.Rows[i][\"Irrigation\"];\r\n                    }\r\n                }\r\n                harvestedWtSums = harvestedWtSums.Append(sumHarvestedWt).ToList();\r\n                irrigationSums = irrigationSums.Append(sumIrrigation).ToList();\r\n                //var expFitStats = RegressionUtilities.ExponentialFitStats(date.ToArray(), harvestedWt.ToArray());\r\n                //var polyFitStats = RegressionUtilities.PolyFitStats(date.ToArray(), swUptake.ToArray(), 2);\r\n\r\n                // Can inspect the stats here in the debugger, e.g. stats.R2\r\n            }\r\n            var stats = MathUtilities.CalcRegressionStats(\"test\", harvestedWtSums, irrigationSums);\r\n            //if (stats.Slope < 0)\r\n            //    throw new Exception(\"Fail. Slope=\" + stats.Slope);\r\n            //Debugger.Break();\r\n        }\r\n\r\n        private DataTable GetDataForSimulation(string simulationName, params string[] fieldNames)\r\n        {\r\n            IDataStore storage = this.FindInScope<IDataStore>() as IDataStore;\r\n            if (storage == null)\r\n                throw new Exception(string.Format(\"Error when fetching data in script {0}. Storage is null - does this simulation have a datastore?\", Parent.Name));\r\n            return storage.Reader.GetData(\"Results\", \"Current\", new string[] { simulationName }, fieldNames, null);\r\n        }\r\n\r\n        private double DateToNumber(DateTime date)\r\n        {\r\n            Clock clock = this.FindInScope<Clock>() as Clock;\r\n            return (double)(date - clock.StartDate).Ticks / (clock.EndDate - clock.StartDate).Ticks;\r\n        }\r\n\r\n        private MathUtilities.RegrStats ExponentialFitStats(double[] x, double[] y)\r\n        {\r\n            double[] yHat = y.Select(i => Math.Log(i)).ToArray();\r\n            return MathUtilities.CalcRegressionStats(\"test\", y, yHat);\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "SensibilityTest",
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
+          "Name": "PlantWt",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "DM (kg/ha)",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 1,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "SwardPlantWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": "IrrigTrigger",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Results",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedWt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Harvested",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": "IrrigTrigger",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Results",
+                  "XFieldName": "Date",
+                  "YFieldName": "Irrigation",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Irrigation",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

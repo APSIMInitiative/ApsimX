@@ -1,0 +1,45 @@
+﻿[
+  {
+    "description": "Harvesting",
+    "node": "Plant",
+    "code": "[Plant].Harvesting",
+    "type": "",
+    "units": ""
+  },
+  {
+    "description": "Sowing",
+    "node": "Plant",
+    "code": "[Plant].Sowing",
+    "type": "",
+    "units": ""
+  },
+  {
+    "description": "End of Day",
+    "node": "Clock",
+    "code": "[Clock].EndOfDay",
+    "type": "",
+    "units": ""
+  },
+  {
+    "description": "End of Year",
+    "node": "Clock",
+    "code": "[Clock].EndOfYear",
+    "type": "",
+    "units": ""
+  },
+  {
+    "description": "On a date",
+    "node": "Clock",
+    "code": "1-jul",
+    "type": "",
+    "units": ""
+  },
+  {
+    "description": "Between 2 dates",
+    "node": "Clock",
+    "code": "Clock.Today >= new DateTime(2011, 7, 1) && Clock.Today <= new DateTime(2011, 12, 31)",
+    "type": "",
+    "units": ""
+  }
+]
+
