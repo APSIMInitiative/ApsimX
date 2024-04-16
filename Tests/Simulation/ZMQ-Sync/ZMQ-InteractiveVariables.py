@@ -14,7 +14,7 @@ rain_day_ts = 0
 class ApsimController:
     """Controller for apsim server"""
     
-    def __init__(self, addr="0.0.0.0", port=27746):
+    def __init__(self, addr="0.0.0.0", port=27746, fields=1):
         """Initializes a ZMQ connection to the Apsim synchronizer
        
         Starts the command sequence by checking connect was received and sending
@@ -23,7 +23,10 @@ class ApsimController:
         Args:
             addr: Server address
             port: Server port number
+            fields: Number of fields to instantiate
         """
+        
+        self.fields = fields
 
         # connection string
         self.conn_str = f"tcp://{addr}:{port}"
@@ -32,8 +35,23 @@ class ApsimController:
         # initialize the connection protocol
         msg = self.socket.recv_string()
         print(f"recv msg: {msg}")
-        if msg == "connect":
-            self.send_command("ok", unpack=False)
+        
+        if msg != "connect":
+            # TODO error handling
+            pass
+            
+        msg = self.send_command("ok", unpack=False)
+        
+        if msg != "setup":
+            # TODO error handling
+            pass
+       
+        # create fields
+        msg = self.send_command("fields", [self.fields], unpack=False)
+       
+        if msg != "ok":
+            # TODO error handling
+            pass  
     
     def __del__(self):
         """Handles cleanup of protocol"""
@@ -59,7 +77,7 @@ class ApsimController:
         """Closes connection to apsim server"""
         
         self.socket.disconnect(self.conn_str)
-        self.context.destroy() 
+        self.context.destroy()
 
     def send_command(self, command : str, args = None, unpack : bool = True):
         """Sends a string command and optional arguments to the server
@@ -164,7 +182,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
         sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([Field22].HeavyClay.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -174,7 +192,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
             print("Applying irrigation")
             controller.send_command(
                 "do",
-                ["applyIrrigation", "amount", 204200.0, "field", 1],
+                ["applyIrrigation", "amount", 204200.0, "field", 22],
                 unpack=False
                 )
             global rain_day_ts
@@ -193,7 +211,7 @@ if __name__ == '__main__':
     # initialize connection
     
     
-    apsim = ApsimController() 
+    apsim = ApsimController(fields=50) 
 
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
 
