@@ -4083,7 +4083,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Soil.SoilNitrogen.mineral_n(1)",
+                          "YFieldName": "Soil.Nutrient.MineralN(1)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -32241,16 +32241,16 @@
                               ],
                               "Parameters": [
                                 {
-                                  "Key": "SowingDate",
-                                  "Value": "05/28/1999 00:00:00"
+                                  "Key": "SowDepth",
+                                  "Value": "20"
                                 },
                                 {
                                   "Key": "Popn",
                                   "Value": "300"
                                 },
                                 {
-                                  "Key": "SowDepth",
-                                  "Value": "20"
+                                  "Key": "SowingDate",
+                                  "Value": "05/28/1999 00:00:00"
                                 },
                                 {
                                   "Key": "CultivarName",
