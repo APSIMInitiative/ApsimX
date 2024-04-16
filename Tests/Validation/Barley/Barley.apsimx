@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 173,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -202,6 +202,7 @@
                 "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 18000, 20000, 25000, 25000, 25000, 20000",
                 "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 12000, 15000",
                 "[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y=0.1, 0.5, 1.0, 0.5",
+                "[Leaf].KDead = 0.5",
                 "",
                 "//[Leaf].InitialLeaves[1].Area=10",
                 "",
@@ -982,7 +983,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 6",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
@@ -1050,7 +1051,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 6",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
@@ -1101,7 +1102,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                    "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 6",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
@@ -16685,7 +16686,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2011-07-01T00:00:00",
-                      "End": "2012-06-30T00:00:00",
+                      "End": "2012-03-30T00:00:00",
                       "Name": "Clock",
                       "ResourceName": null,
                       "Children": [],
@@ -32866,8 +32867,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Structure.LeafTipsAppeared",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -32895,8 +32896,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Structure.LeafTipsAppeared",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -47625,8 +47626,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Barley.Leaf.LAI",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -47654,8 +47655,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Barley.Leaf.LAI",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -59191,7 +59192,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": null,
+                          "FileName": "",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "ResourceName": null,
