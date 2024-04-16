@@ -16786,10 +16786,46 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "Rocks": null,
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0
+                              ],
+                              "ParticleSizeSand": [
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.21394141638857989,
+                                0.2532443455691509,
+                                0.2728958101594364,
+                                0.292547274749722,
+                                0.2532443455691509,
+                                0.2532443455691509
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.23,
@@ -16857,11 +16893,47 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -16897,9 +16969,36 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "BarleySoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -17075,12 +17174,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                4.5528455284552845,
-                                6.287262872628727,
-                                2.754820936639118,
-                                3.055555555555555,
+                                4.553,
+                                6.287,
+                                2.755,
+                                3.056,
                                 2.5,
-                                0.8333333333333334
+                                0.833
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -17108,12 +17207,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                1.084010840108401,
-                                0.3252032520325203,
-                                0.22038567493112945,
-                                0.08333333333333333,
-                                0.05555555555555562,
-                                0.11111111111111105
+                                1.084,
+                                0.325,
+                                0.22,
+                                0.083,
+                                0.056,
+                                0.111
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -18485,6 +18584,142 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Phenology.Photoperiod",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LAI",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SD",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Leaf.LAI",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": 0.0,
+                          "Maximum": 1.0,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Stress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SD",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Arbitrator.FN",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -46324,8 +46559,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Leaf.LAI",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -46333,7 +46568,18 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Barley.Phenology.CurrentStageName",
+                              "SimulationName": "Wellcamp1993Operations",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -62600,7 +62846,7 @@
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
                       "Minimum": null,
-                      "Maximum": 500.0,
+                      "Maximum": "NaN",
                       "Interval": null
                     }
                   ],
