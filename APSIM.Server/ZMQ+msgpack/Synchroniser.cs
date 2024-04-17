@@ -122,7 +122,10 @@ namespace Models
                             }
 
                             //Type myElementType = myType.GetElementType();
-                            //var simVarValues = Array.ConvertAll((object[])simVarValue, (e) => Convert.ChangeType(e, myElementType)) as System.Array;
+                            //var simVarValues = Array.ConvertAll
+                            //(
+                            //  (object[])simVarValue, (e) => Convert.ChangeType(e, myElementType)
+                            //) as System.Array;
                             //Console.WriteLine("Doing set {0} of type {1} ({2}) = ", simVarName, 
                             //                  simVarValues.GetType(), simVarValues.GetType().GetElementType(),  
                             //                  simVarValues.GetValue(0).ToString());
@@ -149,7 +152,12 @@ namespace Models
                                 }
                                 catch (Exception err)
                                 {
-                                    throw new Exception($"Cannot report variable \"{simVarName}\": Variable is a non-reportable type: \"{simVarValue?.GetType()?.Name}\".", err);
+                                    throw new Exception
+                                        (
+                                         $@"Cannot report variable {simVarName}:
+                                            Variable is a non-reportable type:
+                                            {simVarValue?.GetType()?.Name}.", err
+                                        );
                                 }
                             }
                             //Console.WriteLine("Got get '{0}' of type '{1}'", simVarName, simVarValue?.GetType()); 
