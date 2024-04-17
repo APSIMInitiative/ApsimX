@@ -37,7 +37,6 @@ namespace Models.Functions
         [Link]
         private Physical physical = null;
 
-        [Link]
         private Root root = null;
 
         private double[] sats = null;
@@ -45,13 +44,21 @@ namespace Models.Functions
         private double[] lls = null;
 
         [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(int arrayIndex = -1) {
+        private void OnStartOfSimulation(object sender, EventArgs e) {
             sats = physical.SAT;
             duls = physical.DUL;
+            root = FindAncestor<Root>();
             if (LLModel == LowerLimit.LL)
-                lls = root.SoilCrop.LL;
+            {
+                if (root == null)
+                    throw new Exception($"SoilWaterScale ({Name}) cannot use LL for lower limit as it does not have a root as an ancestor.");
+                else
+                    lls = root.SoilCrop.LL;
+            }
             else
+            {
                 lls = physical.LL15;
+            }
         }
 
         /// <summary>Gets the value of the function.</summary>
