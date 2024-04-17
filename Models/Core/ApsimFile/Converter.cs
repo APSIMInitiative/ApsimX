@@ -105,145 +105,159 @@ namespace Models.Core.ApsimFile
         /// <returns>True if model was changed.</returns>
         private static bool EnsureSoilHasInitWaterAndSample(JObject root)
         {
+            bool didConvert = false;
             string rootType = JsonUtilities.Type(root, true);
-
             if (rootType != null && rootType == "Models.Soils.Soil")
+                didConvert = SanitiseSoil(root);
+
+            foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+                didConvert = SanitiseSoil(soil) || didConvert;
+
+            return didConvert;
+        }
+
+        private static bool SanitiseSoil(JObject root)
+        {
+            bool didConvert = false;
+            JArray soilChildren = root["Children"] as JArray;
+            if (soilChildren != null && soilChildren.Count > 0)
             {
-                JArray soilChildren = root["Children"] as JArray;
-                if (soilChildren != null && soilChildren.Count > 0)
+                var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                if (initWater == null)
                 {
-                    var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
-                    if (initWater == null)
+                    initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
+                    if (initWater != null)
                     {
-                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
-                        if (initWater != null)
-                        {
-                            // Models.Soils.InitialWater doesn't exist anymore
-                            initWater["$type"] = "Models.Soils.Water, Models";
-                            JsonUtilities.RenameModel(initWater as JObject, "Water");
-                        }
-                    }
-                    if (initWater == null)
-                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample") && string.Equals("Initial Water", c["Name"].Value<string>(), StringComparison.InvariantCultureIgnoreCase));
-                    if (initWater == null)
-                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
-                    var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
-
-                    if (sample == null)
-                        sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
-
-                    var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
-
-                    bool res = false;
-                    if (initWater == null)
-                    {
-                        // Add in an initial water and initial conditions models.
-                        initWater = new JObject();
+                        // Models.Soils.InitialWater doesn't exist anymore
                         initWater["$type"] = "Models.Soils.Water, Models";
                         JsonUtilities.RenameModel(initWater as JObject, "Water");
-                        initWater["FilledFromTop"] = true;
-                        initWater["FractionFull"] = 1;
-                        soilChildren.Add(initWater);
-                        res = true;
                     }
+                }
+                if (initWater == null)
+                    initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample") && string.Equals("Initial Water", c["Name"].Value<string>(), StringComparison.InvariantCultureIgnoreCase));
+                if (initWater == null)
+                    initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
+                var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    var physical = JsonUtilities.ChildWithName(root, "Physical");
-                    bool hasPhysical = false;
-                    int nLayers = 1;
+                if (sample == null)
+                    sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
-                    if (physical != null)
+                var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
+
+                if (initWater == null)
+                {
+                    // Add in an initial water and initial conditions models.
+                    initWater = new JObject();
+                    initWater["$type"] = "Models.Soils.Water, Models";
+                    JsonUtilities.RenameModel(initWater as JObject, "Water");
+                    initWater["FilledFromTop"] = true;
+                    initWater["FractionFull"] = 1;
+                    soilChildren.Add(initWater);
+                    didConvert = true;
+                }
+
+                var physical = JsonUtilities.ChildWithName(root, "Physical");
+                bool hasPhysical = false;
+                int nLayers = 1;
+
+                if (physical != null)
+                {
+                    nLayers = physical["Thickness"].Count();
+                    hasPhysical = true;
+                }
+
+                if (initWater["Thickness"] == null && hasPhysical)
+                {
+                    initWater["Thickness"] = physical["Thickness"];
+                    initWater["InitialValues"] = physical["DUL"];
+                }
+
+                if (sample == null && soilNitrogenSample == null)
+                {
+                    soilChildren.Add(new JObject
                     {
-                        nLayers = physical["Thickness"].Count();
-                        hasPhysical = true;
-                    }
+                        ["$type"] = "Models.Soils.Solute, Models",
+                        ["Name"] = "NO3",
+                        ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                        ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
+                    });
 
-                    if (initWater["Thickness"] == null && hasPhysical)
+                    soilChildren.Add(new JObject
                     {
-                        initWater["Thickness"] = physical["Thickness"];
-                        initWater["InitialValues"] = physical["DUL"];
-                    }
+                        ["$type"] = "Models.Soils.Solute, Models",
+                        ["Name"] = "NH4",
+                        ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                        ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
+                    });
 
-                    if (sample == null && soilNitrogenSample == null)
+                    soilChildren.Add(new JObject
+                    {
+                        ["$type"] = "Models.Soils.Solute, Models",
+                        ["Name"] = "Urea",
+                        ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                        ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
+                    });
+                    didConvert = true;
+                }
+
+                var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
+                var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
+                var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+
+                if (soilNitrogenSample != null)
+                {
+                    if (soilNitrogenNO3Sample == null)
                     {
                         soilChildren.Add(new JObject
                         {
-                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
                             ["Name"] = "NO3",
                             ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
                             ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
-
+                        didConvert = true;
+                    }
+                    if (soilNitrogenNO3Sample == null)
+                    {
                         soilChildren.Add(new JObject
                         {
-                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
                             ["Name"] = "NH4",
                             ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
                             ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
-
+                        didConvert = true;
+                    }
+                    if (soilNitrogenNO3Sample == null)
+                    {
                         soilChildren.Add(new JObject
                         {
-                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
                             ["Name"] = "Urea",
                             ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
                             ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
-                        res = true;
+                        didConvert = true;
                     }
+                }
 
-                    var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
-                    var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
-                    var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+                // Add a soil temperature model.
+                var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                if (soilTemperature == null)
+                {
+                    JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
+                    didConvert = true;
+                }
 
-                    if (soilNitrogenSample != null)
-                    {
-                        if (soilNitrogenNO3Sample == null)
-                        {
-                            soilChildren.Add(new JObject
-                            {
-                                ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
-                                ["Name"] = "NO3",
-                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
-                            });
-                        }
-                        if (soilNitrogenNO3Sample == null)
-                        {
-                            soilChildren.Add(new JObject
-                            {
-                                ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
-                                ["Name"] = "NH4",
-                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
-                            });
-                        }
-                        if (soilNitrogenNO3Sample == null)
-                        {
-                            soilChildren.Add(new JObject
-                            {
-                                ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
-                                ["Name"] = "Urea",
-                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
-                            });
-                        }
-                    }
-
-                    // Add a soil temperature model.
-                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
-                    if (soilTemperature == null)
-                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
-
-                    // Add a nutrient model.
-                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
-                    if (nutrient == null)
-                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
-
-                    return res;
+                // Add a nutrient model.
+                var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                if (nutrient == null)
+                {
+                    JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                    didConvert = true;
                 }
             }
-
-            return false;
+            return didConvert;
         }
 
         /// <summary>Upgrades to version 47 - the first JSON version.</summary>
