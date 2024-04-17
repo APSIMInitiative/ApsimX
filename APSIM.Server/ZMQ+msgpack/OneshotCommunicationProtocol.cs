@@ -61,35 +61,33 @@ namespace APSIM.ZMQServer.IO
                     if (msg.FrameCount <= 0) { continue; }
                     var command = msg[0].ConvertToString();
                     if (verbose) { Console.WriteLine($"Command from client: {command}"); }
-                    if (command == commandState)
+                    switch (command)
                     {
-                        conn.SendFrame("idle");
-                    }
-                    else if (command == commandRun)
-                    {
-                        var args = msg.FrameCount > 1 ? msg[1].ConvertToString().Split("\n") : null;
-                        apsim.Run(args);
-                        apsim.WaitForStateChange();
-                        if (apsim.getErrors()?.Count > 0)
-                        {
-                            throw new AggregateException("Simulation Error", apsim.getErrors());
-                        }
-                        conn.SendFrame("ok");
-                    }
-                    else if (command == commandGetDataStore)
-                    {
-                        if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
-                        if (verbose) { Console.WriteLine("get from DS=" + msg[1].ConvertToString()); }
-                        byte[] result = apsim.getVariableFromDS(msg[1].ConvertToString());
-                        conn.SendFrame(result);
-                    }
-                    else if (command == commandVersion)
-                    {
-                        conn.SendFrame(protocolVersionMajor.ToString() + "." + protocolVersionMinor.ToString());
-                    }
-                    else
-                    {
-                        throw new Exception($"Unknown command from client: '{command}'");
+                        case commandState:
+                            conn.SendFrame("idle");
+                            break;
+                        case commandRun:
+                            var args = msg.FrameCount > 1 ? msg[1].ConvertToString().Split("\n") : null;
+                            apsim.Run(args);
+                            apsim.WaitForStateChange();
+                            if (apsim.getErrors()?.Count > 0)
+                            {
+                                throw new AggregateException("Simulation Error", apsim.getErrors());
+                            }
+                            conn.SendFrame("ok");
+                            break;
+                        case commandGetDataStore:
+                            if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
+                            if (verbose) { Console.WriteLine("get from DS=" + msg[1].ConvertToString()); }
+                            byte[] result = apsim.getVariableFromDS(msg[1].ConvertToString());
+                            conn.SendFrame(result);
+                            break;
+                        case commandVersion:
+                            conn.SendFrame(protocolVersionMajor.ToString() + "." + protocolVersionMinor.ToString());
+                            break;
+                        default:
+                            throw new Exception($"Unknown command from client: '{command}'");
+                            break;
                     }
                 }
                 catch (Exception e)
