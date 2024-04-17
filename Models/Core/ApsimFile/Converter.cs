@@ -229,7 +229,15 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
+                    // Add a soil temperature model.
+                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                    if (soilTemperature == null)
+                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
 
+                    // Add a nutrient model.
+                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                    if (nutrient == null)
+                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
 
                     return res;
                 }
