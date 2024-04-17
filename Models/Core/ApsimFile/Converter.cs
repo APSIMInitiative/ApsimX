@@ -1239,7 +1239,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
                     {
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
@@ -1248,7 +1248,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
                     {
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
@@ -1257,7 +1257,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
@@ -1271,7 +1271,7 @@ namespace Models.Core.ApsimFile
                             if (double.IsNaN(values[i]))
                                 values[i] = 0;
                         }
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["Rocks"] = new JArray(mappedValues);

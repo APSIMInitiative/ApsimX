@@ -15,17 +15,7 @@
             "stopAtEntry": false,
         },
         {
-            "name": ".NET Core Launch (GUI)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
-            "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopAtEntry": false,
-        },
-        {
-            "name": ".NET Core Launch (APSIM.Cli)",
+            "name": "APSIM.Cli: Debug",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -39,15 +29,15 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Launch (APSIM Server)",
+            "name": "APSIM Server: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
                 "-p", "57220", "-P", "interactive",
-                "-f", "/home/uqpdevo1/src/ApsimX-ZMQ/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
+                "-f", "${workspaceFolder}/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
@@ -63,7 +53,7 @@
             "name": "Mono Launch",
             "type": "mono",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "debug",
             "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
@@ -78,7 +68,7 @@
             "name": "Autodocs",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
