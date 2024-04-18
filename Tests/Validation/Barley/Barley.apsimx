@@ -46975,10 +46975,104 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[SowingRule].Script.SowDate = 26-apr, 5-jun, 7-aug",
+                          "Specification": "[CropManagement]",
                           "Name": "TOS",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-04-26",
+                                  "Action": "[Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);",
+                                  "Line": "1990-04-26 [Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-10-24",
+                                  "Action": "[Barley].Harvest();",
+                                  "Line": "1990-10-24 [Barley].Harvest();"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-10-24",
+                                  "Action": "[Barley].EndCrop();",
+                                  "Line": "1990-10-24 [Barley].EndCrop();"
+                                }
+                              ],
+                              "Name": "26-Apr",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-06-05",
+                                  "Action": "[Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);",
+                                  "Line": "1990-06-05 [Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-11-15",
+                                  "Action": "[Barley].Harvest();",
+                                  "Line": "1990-11-15 [Barley].Harvest();"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-11-15",
+                                  "Action": "[Barley].EndCrop();",
+                                  "Line": "1990-11-15 [Barley].EndCrop();"
+                                }
+                              ],
+                              "Name": "5-Jun",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-08-07",
+                                  "Action": "[Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);",
+                                  "Line": "1990-08-07 [Barley].Sow(population:120, cultivar:\"Grimmett\", depth:30, rowSpacing:250);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-12-03",
+                                  "Action": "[Barley].Harvest();",
+                                  "Line": "1990-12-03 [Barley].Harvest();"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-12-03",
+                                  "Action": "[Barley].EndCrop();",
+                                  "Line": "1990-12-03 [Barley].EndCrop();"
+                                }
+                              ],
+                              "Name": "7-Aug",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -47733,6 +47827,15 @@
                               "ReadOnly": false
                             },
                             {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [],
+                              "Name": "CropManagement",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": true,
                               "GraphsPerPage": 6,
@@ -47786,119 +47889,6 @@
                                   ],
                                   "Parameters": null,
                                   "Name": "ApplyN_at_sowing",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Manager, Models",
-                                  "CodeArray": [
-                                    "using APSIM.Shared.Utilities;",
-                                    "using Models.Utilities;",
-                                    "using Models.Soils;",
-                                    "using Models.PMF;",
-                                    "using Models.Core;",
-                                    "using System;",
-                                    "",
-                                    "namespace Models",
-                                    "{",
-                                    "    [Serializable]",
-                                    "    public class Script : Model",
-                                    "    {",
-                                    "        [Link] Clock Clock;",
-                                    "        [Link] Fertiliser Fertiliser;",
-                                    "        [Link] Summary Summary;",
-                                    "        [Link] Plant Barley;",
-                                    "        [Link] Soil Soil; ",
-                                    "",
-                                    "        [Description(\"Sowing Date (d-mmm)\")]",
-                                    "        public string SowDate { get; set;}",
-                                    "        [Description(\"Cultivar to be sown\")]",
-                                    "        public string CultivarName { get; set;}",
-                                    "        [Description(\"Sowing depth (mm)\")]",
-                                    "        public double SowingDepth { get; set;}        ",
-                                    "        [Description(\"Row spacing (mm)\")]",
-                                    "        public double RowSpacing { get; set;}    ",
-                                    "        [Description(\"Plant population (/m2)\")]",
-                                    "        public double Population { get; set;}    ",
-                                    "        ",
-                                    "        ",
-                                    "        [EventSubscribe(\"DoManagement\")]",
-                                    "        private void OnDoManagement(object sender, EventArgs e)",
-                                    "        {",
-                                    "            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate))",
-                                    "               Barley.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    ",
-                                    "        }",
-                                    "        ",
-                                    "    }",
-                                    "}"
-                                  ],
-                                  "Parameters": [
-                                    {
-                                      "Key": "SowDate",
-                                      "Value": ""
-                                    },
-                                    {
-                                      "Key": "CultivarName",
-                                      "Value": "Grimmett"
-                                    },
-                                    {
-                                      "Key": "SowingDepth",
-                                      "Value": "30"
-                                    },
-                                    {
-                                      "Key": "RowSpacing",
-                                      "Value": "250"
-                                    },
-                                    {
-                                      "Key": "Population",
-                                      "Value": "120"
-                                    }
-                                  ],
-                                  "Name": "SowingRule",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Manager, Models",
-                                  "CodeArray": [
-                                    "using Models.PMF.Phen;",
-                                    "using System;",
-                                    "using Models.Core;",
-                                    "using System.Collections.Generic;",
-                                    "using System.Text;",
-                                    "using Models.Soils;",
-                                    "using Models.PMF;",
-                                    "using Models;",
-                                    "using System.Xml.Serialization;",
-                                    "using APSIM.Shared.Utilities;",
-                                    "",
-                                    "namespace Models",
-                                    "{",
-                                    "    [Serializable] ",
-                                    "    public class Script : Model",
-                                    "    {",
-                                    "        [Link] private Plant Barley;",
-                                    "        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]",
-                                    "        private Phenology phenology;",
-                                    "        [EventSubscribe(\"DoManagement\")]",
-                                    "        private void OnDoManagement(object sender, EventArgs e)",
-                                    "        {",
-                                    "            if (phenology.CurrentPhase.Name == \"Ripening\")",
-                                    "            {",
-                                    "                Barley.Harvest();",
-                                    "                Barley.EndCrop();",
-                                    "            }",
-                                    "        }",
-                                    "    }",
-                                    "}",
-                                    "       "
-                                  ],
-                                  "Parameters": null,
-                                  "Name": "Harvesting",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
