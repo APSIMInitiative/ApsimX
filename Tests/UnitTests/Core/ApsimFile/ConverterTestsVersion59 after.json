@@ -94,7 +94,7 @@
               "$type": "Models.Soils.Nutrients.Nutrient, Models",
               "DirectedGraphInfo": null,
               "Name": "Nutrient",
-              "ResourceName": null,
+              "ResourceName": "Nutrient",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false

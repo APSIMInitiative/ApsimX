@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 173,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -196,7 +196,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "WeatherFiles\\ForestHill.met",
+                      "FileName": "WeatherFiles/ForestHill.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -813,6 +813,14 @@
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2279,6 +2287,14 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "SoilTemperature",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -2887,6 +2903,14 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "SoilTemperature",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -2928,7 +2952,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "WeatherFiles\\ForestHill.met",
+                          "FileName": "WeatherFiles/ForestHill.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "ResourceName": null,
@@ -3626,6 +3650,14 @@
                                     15.5
                                   ],
                                   "Name": "Temperature",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "SoilTemperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -6559,7 +6591,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%\\Tests\\Validation\\Eucalyptus\\wwepp.met",
+                  "FileName": "%root%/Tests/Validation/Eucalyptus/wwepp.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -7989,7 +8021,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "WeatherFiles\\Kurrowah_Norwin comp.met",
+                  "FileName": "WeatherFiles/Kurrowah_Norwin comp.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -8480,6 +8512,14 @@
                             300.0
                           ],
                           "Name": "LayerStructure",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "SoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -9553,6 +9593,14 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "Name": "Temperature",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -11322,6 +11370,14 @@
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "SoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -14295,7 +14351,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "%root%\\Tests\\Validation\\System\\LincolnRotation2017\\lincoln.met",
+                      "FileName": "%root%/Tests/Validation/System/LincolnRotation2017/lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -17257,6 +17313,14 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -17283,6 +17347,22 @@
                   "GroupByVariableName": null,
                   "Name": "ReportLayering",
                   "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "wheat",
+                  "InitialResidueType": "wheat",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 0.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -17884,6 +17964,14 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -17910,6 +17998,22 @@
                   "GroupByVariableName": null,
                   "Name": "ReportLayering",
                   "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "wheat",
+                  "InitialResidueType": "wheat",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 0.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -18823,7 +18927,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -20848,7 +20952,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -22617,7 +22721,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -24947,6 +25051,14 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -25009,6 +25121,22 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
+                      "Canopies": [],
+                      "InitialResidueName": "wheat",
+                      "InitialResidueType": "wheat",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 0.0,
+                      "Name": "SurfaceOrganicMatter",
+                      "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -26187,6 +26315,14 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -26233,6 +26369,22 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
+                      "Canopies": [],
+                      "InitialResidueName": "wheat",
+                      "InitialResidueType": "wheat",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 0.0,
+                      "Name": "SurfaceOrganicMatter",
+                      "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -26934,7 +27086,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
+                  "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -27666,6 +27818,14 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "SoilTemperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -27734,7 +27894,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
+                  "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -28935,7 +29095,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -30291,6 +30451,14 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "SoilTemperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -30342,7 +30510,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -33119,6 +33287,14 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "CERESSoilTemperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "SoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
