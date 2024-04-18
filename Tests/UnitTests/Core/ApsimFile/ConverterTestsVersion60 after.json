@@ -97,6 +97,23 @@
               "SWUnits": 0,
               "NO3N": null,
               "NH4N": null
+            },
+            {
+              "$type": "Models.Soils.CERESSoilTemperature, Models",
+              "Name": "SoilTemperature",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+              "DirectedGraphInfo": null,
+              "Name": "Nutrient",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ]
         }

@@ -35,7 +35,7 @@ namespace Models.Core.ApsimFile
             {
                 JProperty nameProperty = (node as JObject).Property("Name");
                 if (nameProperty == null)
-                    throw new Exception(string.Format("Attempted to fetch the name property of json node {0}.", node.ToString()));
+                    return string.Empty;
                 return (string)nameProperty.Value;
             }
 

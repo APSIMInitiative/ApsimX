@@ -134,7 +134,7 @@ namespace Models.Core.ApsimFile
                     }
                 }
                 if (initWater == null)
-                    initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample") && string.Equals("Initial Water", c["Name"].Value<string>(), StringComparison.InvariantCultureIgnoreCase));
+                    initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample") && string.Equals("Initial Water", c["Name"]?.Value<string>(), StringComparison.InvariantCultureIgnoreCase));
                 if (initWater == null)
                     initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
                 var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));

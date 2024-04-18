@@ -50,6 +50,105 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Water, Models",
+              "Name": "Water",
+              "FilledFromTop": true,
+              "FractionFull": 1,
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ],
+              "InitialValues": null
+            },
+            {
+              "$type": "Models.Soils.Solute, Models",
+              "Name": "NO3",
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ],
+              "InitialValues": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "$type": "Models.Soils.Solute, Models",
+              "Name": "NH4",
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ],
+              "InitialValues": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "$type": "Models.Soils.Solute, Models",
+              "Name": "Urea",
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ],
+              "InitialValues": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "$type": "Models.Soils.CERESSoilTemperature, Models",
+              "Name": "SoilTemperature",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+              "DirectedGraphInfo": null,
+              "Name": "Nutrient",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ]
         }
