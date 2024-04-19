@@ -12919,6 +12919,10 @@
               ],
               "Parameters": [
                 {
+                  "Key": "Fertilise",
+                  "Value": "True"
+                },
+                {
                   "Key": "Season_Start",
                   "Value": "1-Aug"
                 },
@@ -12945,10 +12949,6 @@
                 {
                   "Key": "Top_Depth",
                   "Value": "300"
-                },
-                {
-                  "Key": "Fertilise",
-                  "Value": "True"
                 }
               ],
               "Name": "AutomaticFertiliser",
@@ -22765,6 +22765,7 @@
                         "[Oat].ProductHarvestNConc = 0.015",
                         "[CropManagement].Script.EstablishDate = 1998-05-14",
                         "[CropManagement].Script.HarvestDate = 1999-01-01",
+                        "[CropManagement].Script.HarvestStage = Ripe",
                         "[CropManagement].Script.ExpectedYield = 10.0"
                       ],
                       "Paths": null,
@@ -22784,6 +22785,7 @@
                         "[Oat].ProductHarvestNConc = 0.017",
                         "[CropManagement].Script.EstablishDate = 1998-05-14",
                         "[CropManagement].Script.HarvestDate = 1998-10-08",
+                        "[CropManagement].Script.HarvestStage = Vegetative",
                         "[CropManagement].Script.ExpectedYield = 10.6"
                       ],
                       "Paths": null,
