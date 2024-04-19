@@ -28066,7 +28066,7 @@
                     },
                     {
                       "Key": "HarvestStage",
-                      "Value": "Ripe"
+                      "Value": "Maturity"
                     },
                     {
                       "Key": "ExpectedYield",
@@ -28517,9 +28517,9 @@
                         0.113
                       ],
                       "DUL": [
-                        0.317,
-                        0.29,
-                        0.287,
+                        0.285,
+                        0.278,
+                        0.273,
                         0.255,
                         0.217,
                         0.205,
@@ -28772,11 +28772,11 @@
                         0.6,
                         0.55,
                         0.4,
-                        0.6,
-                        0.66,
-                        0.68,
-                        0.66,
-                        0.7
+                        0.65,
+                        0.72,
+                        0.76,
+                        0.74,
+                        0.8
                       ],
                       "KLAT": null,
                       "Name": "SoilWater",
@@ -29055,15 +29055,15 @@
                   "MaxCover": 0.97,
                   "ExtinctCoeff": 0.55,
                   "TypicalHarvestStage": "Ripe",
-                  "SeedlingNConc": 0.03,
+                  "SeedlingNConc": 0.04,
                   "ProductHarvestNConc": 0.012,
-                  "StoverHarvestNConc": 0.009,
+                  "StoverHarvestNConc": 0.008,
                   "RootNConc": 0.01,
                   "LegumePropn": 0.0,
                   "BaseT": 10.0,
                   "OptT": 30.0,
                   "MaxT": 40.0,
-                  "Tt_SowtoEmerge": 100.0,
+                  "Tt_SowtoEmerge": 50.0,
                   "GSMax": 0.008,
                   "R50": 150.0,
                   "ConsiderWaterStress": 0,
@@ -36673,8 +36673,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -36886,8 +36886,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -37099,8 +37099,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -37312,8 +37312,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -37525,8 +37525,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -37738,8 +37738,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -37951,8 +37951,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -38164,8 +38164,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -38377,8 +38377,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -38590,8 +38590,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -38803,8 +38803,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -39016,8 +39016,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
+                  "Minimum": 0.0,
+                  "Maximum": 400.0,
                   "Interval": null
                 },
                 {
@@ -40159,74 +40159,6 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "ExtraVariables.Script.AccumES",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[NitTreat] = 'N2'",
-              "Name": "ES",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 2,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Cover",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16747854,
-              "FactorToVaryColours": "Rot",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "W",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "SurfaceOrganicMatter.Cover",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
