@@ -237,7 +237,11 @@ namespace Models.Core.ApsimFile
                     // Add a nutrient model.
                     var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
                     if (nutrient == null)
+                    {
                         JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                        nutrient["ResourceName"] = "Nutrient";
+                    }
 
                     return res;
                 }
