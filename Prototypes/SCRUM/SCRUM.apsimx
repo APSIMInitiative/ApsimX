@@ -40396,8 +40396,35 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "2019-09-05\tPloughed (early September)\n\n2019-09-15\tCambridge rolled (mid-September)\n\n2019-10-14\tPower-harrowed\n\n2019-10-18\tColumn deep grubbed\n\n2019-10-21\tColumn maxitilled, harrowed and rolled and then bed formed\n\n2020-05-15\ttrashed removed\n\n2020-05-18\tPower-harrowed, ploughed (was variable in depth), grubbed\n\n2020-05-19\tGrubbed, light power-harrow\n\n2021-02-09\tPloughed and rolled\n\n2021-02-22\tWheel tracks grubbed and rolled\n\n2021-02-24\tPower harrowed column\n\n2021-03-01\tMaxitilled fertiliser and pre-emergent in.\n\n2021-08-27\tPloughed to a depth of 15-20 cm\n\n2021-09-02\tCambridge rolled x2\n\n2021-09-03\tPowerharrowed and then Cambridge rolled x2 \n\n2021-09-07\tPowerharrowed\n\n2022-04-19\tGrubbed\n\n2022-04-22\tMaxitilled \n\n2022-05-05\tGrubbed\n\n2022-05-06\tCambridge rolled x3\n\t",
+              "Text": "### Rotation 1 - Planting and harvesting\n\n21-22/10/2019\t-\tPlanting potatoes, 31 cm seed spacing and 18-20 cm deep. Row 0.82 m wide. Used 4 tonnes of seed potatoes (40-55 mm, 70-150 g/piece)  \n1-6/05/2020\t-\tHarvesting tubers done, graded tubers in plot: <60 mm = reject, >60 mm marketable  \n15/05/2020\t-\tHarvesting tubers finished  \n\n19/05/2020\t-\tPlanting 'Catherine' bread wheat, sown at 130 kg/ha  \n21-22/01/2021\t-\tFinal harvest done  \n3/02/2021\t-\tHarvesting, local contractor baled and removed straw from site  \n\n3-4/03/2021\t-\tPlanting broccoli, variety 'Nobel'. Transplants from Quick Start Seedlings, at ~30 cm spacing. Checked and replaced on second day as required  \n28/06/2021\t-\tFinal harvest conducted. Total, Marketable (>125 mm tight head), and unmarketable determined. Produce from N4 discarded, the rest going to the City Mission  \n\n7/09/2021\t-\tPlanting onions, drilled in variety 'Tilbury'. 10 rows per bed with a target population of 750,000 seeds/ha. 2-3 mm seed coating size  \n15/04/2022\t-\tHarvesting - Contractor commercially harvested  \n\n6/05/2022\t-\tPlanting ryegrass, 25 kg/ha of variety 'Nui' drilled in  \n7/01/2023\t-\tHarvesting ...  \n",
+              "Name": "SowHarvestEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Rotation 1 - Cultivation\n\n01/09/2019\t-\tPloughed (early September)  \n01/09/2019\t-\tCambridge rolled (mid-September)  \n14/10/2019\t-\tPower-harrowed  \n18/10/2019\t-\tColumn deep grubbed  \n21/10/2019\t-\tColumn maxitilled, harrowed and rolled and then bed formed  \n15/05/2020\t-\tTrashed removed  \n18/05/2020\t-\tPower-harrowed, ploughed (was variable in depth), grubbed  \n19/05/2020\t-\tGrubbed, ligt power-harrow  \n09/02/2021\t-\tPloughed and rolled  \n22/02/2021\t-\tWheel tracks grubbed and rolled  \n24/02/2021\t-\tPower harrowed column  \n01/03/2021\t-\tMaxitilled fertiliser and pre-emergent in  \n27/08/2021\t-\tPloughed to a depth of 15-20cm  \n02/09/2021\t-\tCambridge rolled x2  \n03/09/2021\t-\tPowerharrowed and then Cambridge rolled x2  \n07/09/2021\t-\tPowerharrowed  \n19/04/2022\t-\tGrubbed  \n22/04/2022\t-\tMaxitilled  \n05/05/2022\t-\tGrubbed  \n06/05/2022\t-\tCambridge rolled x3  \n",
               "Name": "CultivationEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Rotation 1 - Fertiliser\n\n15/10/2019\t-\tUrea (46 kg/ha)  \n26/11/2019\t-\tN applied to treatments. N rates = 0, 100, 200 and 400 kg/ha, split into four applications  \n09/12/2019\t-\tN applied to treatments. N rates = 0, 100, 200 and 400 kg/ha, split into four applications  \n23/12/2019\t-\tN applied to treatments. N rates = 0, 100, 200 and 400 kg/ha, split into four applications  \n06/01/2020\t-\tN applied to treatments. N rates = 0, 100, 200 and 400 kg/ha, split into four applications  \n24/08/2020\t-\t75 kg N/ha applied to whole trial in the form of AMMO31@245kg/ha (ammonium sulphate)  \n17/09/2020\t-\tFertiliser applied to the whole trial, 75 kg N/ha in the form of Sustain N  \n07/04/2021\t-\tFirst side dressing of CAN applied. N2 = 15 kg N/ha, N3 = 30 kg N/ha and N4 = 60 kg N/ha  \n04/05/2021\t-\tSecond side dressing of CAN applied. N2 = 15 kg N/ha, N3 = 30 kg N/ha and N4 = 60 kg N/ha  \n08/09/2021\t-\t1st side dressing of N applied. N1=Control, N2=15, N3=30 and N4=60 kg N/ha applied as CAN  \n10/11/2021\t-\t2nd side dressing of N applied. N1=Control, N2=15, N3=30 and N4=60 kg N/ha applied as CAN  \n03/12/2021\t-\t3rd side dressing of N applied. N1=Control, N2=15, N3=30 and N4=60 kg N/ha applied as CAN  \n22/12/2021\t-\t4th side dressing of N applied. N1=Control, N2=15, N3=30 and N4=60 kg N/ha applied as CAN  \n05/05/2022\t-\tAbout 180 kg/ha of Cropmaster 16 high K applied, which means N went on to all treatments = 29 kg N/ha - Error, wrong fertiliser applied  \n12/05/2022\t-\tDecided NOT to apply 30 kg N/ha as CAN as starter N to the GMP due to accidental N application in the base fert application  \n01/09/2022\t-\tApplied first side dressing of N (CAN) 40 kg N/ha to GMP with subsequent changes for N2 and N4  \n29/09/2022\t-\tApplied 30 kg N/ha (CAN) to GMP and relative rates to other treatments  \n04/11/2022\t-\tApplied 20 kg N/ha to GMP and respective rates to other treatments, CAN used  \n",
+              "Name": "FertiliserEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Rotation 1 - Irrigation\n\n11/10/2019\t-\t25 mm applied to entire column  \n26/11/2019\t-\t10 mm applied to water in Urea  \n03/12/2019\t-\t30 mm applied to all plots. Irrig 1 = 30 mm total. Wind an absolute shit! NE rain gauge = 15 mm, SW = 26 mm  \n04/12/2019\t-\t30 mm applied to Irrig 2 = 60 mm total. Issue with surface flow contaminating treatments. NE rain gauge = 15 mm, Centre = 24 mm SE = 28 mm  \n09/12/2019\t-\t15 mm applied to all treatments  \n10/12/2019\t-\t24mm applied to treatment 1 and 26mm applied to treamtent 2  \n11/12/2019\t-\t15mm applied to treatment 2  \n23/12/2019\t-\t15 mm applied to all treatments  \n30/12/2019\t-\t25 mm applied to whole trial area based on ET  \n06/01/2020\t-\t15 mm applied to all treatments  \n07/01/2020\t-\t10 mm applied to all treatments  \n13/01/2020\t-\t25 mm applied to Trt 1 and 30 mm applied to Trt 2  \n14/01/2020\t-\t20 mm applied to Trt 2  \n20/01/2020\t-\t35 mm across both treatments  \n21/01/2020\t-\t25 mm applied to treatment 2  \n27/01/2020\t-\t30mm applied over whole trial  \n28/01/2020\t-\t20mm applied to all treatment 2 plots only  \n04/02/2020\t-\tIrrigation applied to both treatments today, Treatment 1 received 30mm and Treatment 2 received 20mm  \n10/02/2020\t-\t15 mm applied to all treatments  \n11/02/2020\t-\t35 mm applied to Treatment 2  \n17/02/2020\t-\tApplied 30 mm across all plots today  \n24/02/2020\t-\t20 mm applied to all treatments  \n25/02/2020\t-\t20 mm applied to Trt 2   \n02/03/2020\t-\t15 mm applied to all treatments  \n03/03/2020\t-\t30 mm applied to Treatment 2 only  \n01/10/2020\t-\t30 mm applied to whole trial  \n07/10/2020\t-\t30 mm applied to whole trial. Started at east end on 6th, did block 4 and half of block 3 but had to stop due to strong wind. Finished on 7th  \n09/10/2020\t-\t20 mm applied to whole trial  \n17/10/2020\t-\t25 mm applied to whole trial  \n21/10/2020\t-\t35 mm applied to Trt 2  \n28/10/2020\t-\t25 mm applied to whole trial  \n06/11/2020\t-\t25 mm applied to whole trial  \n17/11/2020\t-\t25 mm applied to whole trial  \n24/11/2020\t-\t15 mm applied to Irrig 1 and 25 mm to Irrig 2  \n04/12/2020\t-\t25 mm across both treatments  \n08/12/2020\t-\t25 mm applied to all treatments  \n15/12/2020\t-\t30 mm  applied to all treatments  \n22/12/2020\t-\t20 and 10 mm (30 mm in total) applied to all treatments  \n05/01/2021\t-\t25 mm applied to all treatments  \n22/02/2021\t-\t30 mm applied to column  \n23/02/2021\t-\t20 mm applied to column  \n04/03/2021\t-\tIrrigation 15 mm  \n09/03/2021\t-\tIrrigation 15 mm in light but increasing NE winds. Irrigator ground speed 67 m/h  \n15/03/2021\t-\t10 mm applied to whole column  \n22/03/2021\t-\t15 mm applied to broccoli. Irrigator gave grief running offline often after covering eastern 2/3 of column  \n01/04/2021\t-\t15 mm applied to whole column  \n07/04/2021\t-\t15 mm applied to whole column  \n10/11/2021\t-\t15 mm applied to whole column  \n19/11/2021\t-\t20 mm applied to whole trial  \n03/12/2021\t-\t10 mm applied to whole trial  \n06/12/2021\t-\t10 mm applied to Irrig 1 and 20 mm to Irrig 2  \n23/12/2021\t-\t15 mm applied to whole trial  \n06/01/2022\t-\t25 mm applied to whole trial  \n13/01/2022\t-\t15mm to treat 1 and 25mm to treat 2  \n18/01/2022\t-\t15mm to treat 1 and 25mm to treat 2  \n26/01/2022\t-\t15mm to treat 1 and 25mm to treat 2  \n02/02/2022\t-\t15mm to treat 1 and 25mm to treat 2  \n13/10/2022\t-\t30 mm applied  \n19/10/2022\t-\t20 mm applied to Irrig 1 and 30 mm applied to Irrig 2  \n03/11/2022\t-\t20 mm applied to whole column  \n04/11/2022\t-\t10 mm applied to Irrig 1 and 20 mm applied to Irrig 2  \n11/11/2022\t-\t30 mm applied to whole column  \n14/11/2022\t-\t15 mm applied to Trt 1 and 25 mm applied to Trt 2  \n07/12/2022\t-\t20 mm applied to Trt 1 and 30 mm applied to Trt 2  \n15/12/2022\t-\t20 mm applied to Trt 1 and 30 mm applied to Trt 2  \n",
+              "Name": "IrrigationEvents",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -40423,7 +40450,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "Text": "*\tBroccoli - actual trasplanting date was 03/03/2021\n \n*\tFor the final harvest (01/07/21), the total aboveground yield = (Marketable_fresh_yield + Component_residue_FW). \n\n*\tAlex advised that the Component_residue_FW (30-38 t FW/ha) was returned as mulch. ",
+              "Text": "### Notes\n\n*\tBroccoli - actual trasplanting date was 03/03/2021, established a few days later in the simulation as the model 'grows' them too well at the start\n \n*\tFor the final harvest (01/07/21), the total aboveground yield = (Marketable_fresh_yield + Component_residue_FW). \n\n*\tAlex advised that the Component_residue_FW (30-38 t FW/ha) was returned as mulch. ",
               "Name": "ReadBroccoli",
               "ResourceName": null,
               "Children": [],
@@ -40481,43 +40508,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-10-15",
-                                  "Action": "[Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-10-15 [Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2019-11-26",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-11-26 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2019-12-09",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-09 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2019-12-23",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-23 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2020-01-06",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-01-06 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-10-15 [Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-08-24",
-                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -40530,8 +40529,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-05",
-                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -40561,43 +40560,43 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-10-15",
-                                  "Action": "[Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-10-15 [Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-10-15 [Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-11-26",
-                                  "Action": "[Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-11-26 [Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-11-26 [Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-09",
-                                  "Action": "[Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-09 [Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-09 [Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-23",
-                                  "Action": "[Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-23 [Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-23 [Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-01-06",
-                                  "Action": "[Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-01-06 [Fertiliser].Apply(25, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2020-01-06 [Fertiliser].Apply(11, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-08-24",
-                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -40610,71 +40609,78 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-04-07",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-04-07 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-04-07 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-05-04",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-05-04 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-05-04 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-09-08",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-09-08 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-09-08 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-11-10",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-11-10 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-11-10 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-03",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-03 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-03 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-05",
-                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2022-05-12",
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(20, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(15, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(10, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(10, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -40704,43 +40710,43 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-10-15",
-                                  "Action": "[Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-10-15 [Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-10-15 [Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-11-26",
-                                  "Action": "[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-11-26 [Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-11-26 [Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-09",
-                                  "Action": "[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-09 [Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-09 [Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-23",
-                                  "Action": "[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-23 [Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-23 [Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-01-06",
-                                  "Action": "[Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-01-06 [Fertiliser].Apply(50, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2020-01-06 [Fertiliser].Apply(22, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-08-24",
-                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -40753,71 +40759,78 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-04-07",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-04-07 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-04-07 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-05-04",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-05-04 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-05-04 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-09-08",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-09-08 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-09-08 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-11-10",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-11-10 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-11-10 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-03",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-03 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-03 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-05",
-                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2022-05-12",
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(30, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(20, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -40847,43 +40860,43 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-10-15",
-                                  "Action": "[Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-10-15 [Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-10-15 [Fertiliser].Apply(21, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-11-26",
-                                  "Action": "[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-11-26 [Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-11-26 [Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-09",
-                                  "Action": "[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-09 [Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-09 [Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-23",
-                                  "Action": "[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2019-12-23 [Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2019-12-23 [Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-01-06",
-                                  "Action": "[Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-01-06 [Fertiliser].Apply(100, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);",
+                                  "Line": "2020-01-06 [Fertiliser].Apply(44, [Fertiliser].Types.UreaN, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-08-24",
-                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.NH4N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -40896,71 +40909,78 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-04-07",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-04-07 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-04-07 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-05-04",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-05-04 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-05-04 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-09-08",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-09-08 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-09-08 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-11-10",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-11-10 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-11-10 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-03",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-03 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-03 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-05",
-                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);",
+                                  "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.NH4N, 10);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2022-05-12",
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(80, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(60, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);"
+                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -41258,9 +41278,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2020-01-05",
+                                  "Date": "2021-01-05",
                                   "Action": "[Irrigation].Apply(25);",
-                                  "Line": "2020-01-05 [Irrigation].Apply(25);"
+                                  "Line": "2021-01-05 [Irrigation].Apply(25);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -41730,9 +41750,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2020-01-05",
+                                  "Date": "2021-01-05",
                                   "Action": "[Irrigation].Apply(25);",
-                                  "Line": "2020-01-05 [Irrigation].Apply(25);"
+                                  "Line": "2021-01-05 [Irrigation].Apply(25);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -42332,7 +42352,7 @@
                             },
                             {
                               "Key": "EstablishDate",
-                              "Value": "03/03/2021"
+                              "Value": "10/03/2021"
                             },
                             {
                               "Key": "EstablishStage",
@@ -42364,7 +42384,7 @@
                             },
                             {
                               "Key": "FieldLoss",
-                              "Value": "0"
+                              "Value": "0.2"
                             },
                             {
                               "Key": "ResidueRemoval",
@@ -42541,7 +42561,7 @@
                             },
                             {
                               "Key": "HarvestDate",
-                              "Value": "03/03/2022 00:00:00"
+                              "Value": "04/15/2022 00:00:00"
                             },
                             {
                               "Key": "Tt_EstablishToHarvest",
@@ -42553,7 +42573,7 @@
                             },
                             {
                               "Key": "ExpectedYield",
-                              "Value": "75"
+                              "Value": "80"
                             },
                             {
                               "Key": "FieldLoss",
@@ -43059,7 +43079,7 @@
                             },
                             {
                               "Key": "Cultivate2",
-                              "Value": "01/23/2021 00:00:00"
+                              "Value": "02/03/2021 00:00:00"
                             },
                             {
                               "Key": "RemoveProp2",
@@ -43127,7 +43147,7 @@
                             },
                             {
                               "Key": "IncorporateProp5",
-                              "Value": "0.7"
+                              "Value": "0.8"
                             },
                             {
                               "Key": "DepthIncorporate5",
@@ -43147,7 +43167,7 @@
                             },
                             {
                               "Key": "IncorporateProp6",
-                              "Value": "0.9"
+                              "Value": "0.7"
                             },
                             {
                               "Key": "DepthIncorporate6",
@@ -43159,7 +43179,7 @@
                             },
                             {
                               "Key": "Cultivate7",
-                              "Value": "03/04/2022 00:00:00"
+                              "Value": "04/22/2022 00:00:00"
                             },
                             {
                               "Key": "RemoveProp7",
@@ -43187,11 +43207,11 @@
                             },
                             {
                               "Key": "IncorporateProp8",
-                              "Value": "0.7"
+                              "Value": "0.5"
                             },
                             {
                               "Key": "DepthIncorporate8",
-                              "Value": "100"
+                              "Value": "50"
                             },
                             {
                               "Key": "DoCultivation9",
@@ -43257,14 +43277,14 @@
                             "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
                             "    public class Script : Model",
                             "    {",
-                            "        [Link] Clock clock;",
-                            "        [Link] Zone myZone;",
-                            "        [Link] Simulation thisSimulation;",
-                            "        [Link] ISummary summary;",
+                            "        [Link] private Clock clock;",
+                            "        [Link] private Zone myZone;",
+                            "        [Link] private ISummary summary;",
+                            "        [Link] private Simulation thisSimulation;",
                             "        [Link] private IPhysical soilPhysical; ",
                             "        [Link] private Chemical soilChemical;",
-                            "        [Link(ByName=true)] Solute NH4;",
-                            "        [Link(ByName=true)] Solute NO3;",
+                            "        [Link(ByName=true)] private Solute NH4;",
+                            "        [Link(ByName=true)] private Solute NO3;",
                             "        ",
                             "        [Separator(\"A component to modify soil parameters during a simulation\")]",
                             "        [Description(\"- Name of treament 1:\")]",
@@ -43330,7 +43350,6 @@
                             "        private void OnStartOfSimulation(object sender, EventArgs e)",
                             "        {",
                             "            nLayers = soilPhysical.Thickness.Length;",
-                            "            ",
                             "            summary.WriteMessage(this, \"Initialise\", MessageType.Diagnostic);",
                             "        }",
                             "",
@@ -43393,10 +43412,12 @@
                             "                if(newNO3Values != null)",
                             "                {",
                             "                    NO3.kgha = newNO3Values;",
+                            "                    summary.WriteMessage(this, \"Initial values for soil NO3 modified\", MessageType.Diagnostic);",
                             "                }",
                             "                if(newNH4Values != null)",
                             "                {",
                             "                    NH4.kgha = newNH4Values;",
+                            "                    summary.WriteMessage(this, \"Initial values for soil NH4 modified\", MessageType.Diagnostic);",
                             "                }",
                             "            }",
                             "        }",
@@ -43535,64 +43556,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2019-10-15",
-                              "Action": "[Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2019-10-15 [Fertiliser].Apply(21.2, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2019-11-26",
-                              "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2019-11-26 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2019-12-09",
-                              "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2019-12-09 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2019-12-23",
-                              "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2019-12-23 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-01-06",
-                              "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2020-01-06 [Fertiliser].Apply(0, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-08-24",
-                              "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2020-08-24 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-09-17",
-                              "Action": "[Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2020-09-17 [Fertiliser].Apply(75, [Fertiliser].Types.UreaN, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2022-05-05",
-                              "Action": "[Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 50);",
-                              "Line": "2022-05-05 [Fertiliser].Apply(29, [Fertiliser].Types.UreaN, 50);"
-                            }
-                          ],
+                          "Operation": [],
                           "Name": "NitrogenOperations",
                           "ResourceName": null,
                           "Children": [],
@@ -43601,57 +43565,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-11-17",
-                              "Action": "[Irrigation].Apply(25);",
-                              "Line": "2020-11-17 [Irrigation].Apply(25);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-11-24",
-                              "Action": "[Irrigation].Apply(15);",
-                              "Line": "2020-11-24 [Irrigation].Apply(15);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-12-04",
-                              "Action": "[Irrigation].Apply(25);",
-                              "Line": "2020-12-04 [Irrigation].Apply(25);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-12-08",
-                              "Action": "[Irrigation].Apply(25);",
-                              "Line": "2020-12-08 [Irrigation].Apply(25);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-12-15",
-                              "Action": "[Irrigation].Apply(30);",
-                              "Line": "2020-12-15 [Irrigation].Apply(30);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2020-12-22",
-                              "Action": "[Irrigation].Apply(30);",
-                              "Line": "2020-12-22 [Irrigation].Apply(30);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "2021-01-05",
-                              "Action": "[Irrigation].Apply(25);",
-                              "Line": "2021-01-05 [Irrigation].Apply(25);"
-                            }
-                          ],
+                          "Operation": [],
                           "Name": "IrrigationOperations",
                           "ResourceName": null,
                           "Children": [],
@@ -43735,7 +43649,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "# Notes\n\nValues for physical properties, particularly LL15 and DUL, were re-adjused after comparison against field-measured data.  \nValues for FOM and ...",
+                          "Text": "# Notes\n\nValues for physical properties, particularly water storage limits and SWCon, were adjused after comparison against field-measured data.  \nValues for FOM were based on expert opinion and adjusted after comparison with measured soil N data.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -43818,9 +43732,9 @@
                             1.35
                           ],
                           "AirDry": [
-                            0.063,
+                            0.05,
                             0.065,
-                            0.074,
+                            0.07,
                             0.06,
                             0.074,
                             0.04,
@@ -43830,28 +43744,28 @@
                             0.032
                           ],
                           "LL15": [
-                            0.14,
-                            0.16,
-                            0.185,
+                            0.145,
+                            0.17,
+                            0.18,
                             0.15,
-                            0.185,
+                            0.175,
                             0.1,
                             0.12,
-                            0.2,
-                            0.2,
-                            0.2
+                            0.07,
+                            0.08,
+                            0.08
                           ],
                           "DUL": [
                             0.3,
                             0.325,
                             0.35,
-                            0.315,
+                            0.313,
                             0.325,
+                            0.318,
                             0.315,
-                            0.325,
-                            0.28,
-                            0.345,
-                            0.28
+                            0.275,
+                            0.33,
+                            0.3
                           ],
                           "SAT": [
                             0.535,
@@ -43861,61 +43775,171 @@
                             0.4,
                             0.45,
                             0.425,
-                            0.475,
+                            0.45,
                             0.46,
-                            0.46
+                            0.455
                           ],
                           "KS": [
                             480.0,
                             420.0,
                             240.0,
-                            24.0,
-                            24.0,
+                            48.0,
+                            144.0,
                             1200.0,
                             480.0,
                             720.0,
                             1200.0,
                             1140.0
                           ],
-                          "BDMetadata": null,
-                          "AirDryMetadata": null,
-                          "LL15Metadata": null,
-                          "DULMetadata": null,
-                          "SATMetadata": null,
-                          "KSMetadata": null,
-                          "RocksMetadata": null,
+                          "BDMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "AirDryMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "LL15Metadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "DULMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "SATMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KSMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "RocksMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "TextureMetadata": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClayMetadata": null,
+                          "ParticleSizeSandMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "ParticleSizeSiltMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "ParticleSizeClayMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "Physical",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.155,
+                                0.145,
                                 0.17,
-                                0.185,
+                                0.18,
                                 0.15,
-                                0.185,
+                                0.175,
                                 0.1,
                                 0.12,
                                 0.07,
-                                0.1,
+                                0.08,
                                 0.08
                               ],
                               "KL": [
                                 0.1,
                                 0.1,
-                                0.035,
-                                0.035,
-                                0.02,
-                                0.01,
-                                0.007,
-                                0.003,
-                                0.001,
-                                0.0
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
                               ],
                               "XF": [
                                 1.0,
@@ -43929,9 +43953,42 @@
                                 1.0,
                                 1.0
                               ],
-                              "LLMetadata": null,
-                              "KLMetadata": null,
-                              "XFMetadata": null,
+                              "LLMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "KLMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "XFMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "SCRUMSoil",
                               "ResourceName": null,
                               "Children": [],
@@ -43944,12 +44001,12 @@
                         },
                         {
                           "$type": "Models.WaterModel.WaterBalance, Models",
-                          "SummerDate": "1-Nov",
-                          "SummerU": 6.0,
-                          "SummerCona": 3.0,
-                          "WinterDate": "1-Apr",
-                          "WinterU": 3.0,
-                          "WinterCona": 1.5,
+                          "SummerDate": "15-Oct",
+                          "SummerU": 12.0,
+                          "SummerCona": 8.0,
+                          "WinterDate": "15-Apr",
+                          "WinterU": 9.0,
+                          "WinterCona": 6.0,
                           "DiffusConst": 88.0,
                           "DiffusSlope": 35.4,
                           "Salb": 0.2,
@@ -43974,11 +44031,11 @@
                           "SWCON": [
                             0.563,
                             0.56,
-                            0.481,
-                            0.423,
-                            0.437,
+                            0.485,
+                            0.489,
+                            0.585,
                             0.545,
-                            0.53,
+                            0.534,
                             0.508,
                             0.534,
                             0.533
@@ -44150,18 +44207,18 @@
                             200.0
                           ],
                           "InitialValues": [
-                            0.268,
-                            0.292,
+                            0.25,
+                            0.27,
                             0.317,
-                            0.282,
-                            0.297,
-                            0.272,
-                            0.284,
-                            0.264,
-                            0.316,
-                            0.264
+                            0.3,
+                            0.315,
+                            0.315,
+                            0.315,
+                            0.275,
+                            0.33,
+                            0.3
                           ],
-                          "InitialPAWmm": 217.2,
+                          "InitialPAWmm": 322.9,
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
@@ -44328,9 +44385,9 @@
                       "HarvestIndex": 0.42,
                       "MoistureContent": 0.14,
                       "Proot": 0.1,
-                      "MaxRD": 1500.0,
+                      "MaxRD": 1650.0,
                       "MaxHeight": 1000.0,
-                      "MaxCover": 0.86,
+                      "MaxCover": 0.84,
                       "ExtinctCoeff": 0.7,
                       "TypicalHarvestStage": "Maturity",
                       "SeedlingNConc": 0.0496,
@@ -44341,7 +44398,7 @@
                       "BaseT": 0.0,
                       "OptT": 25.0,
                       "MaxT": 35.0,
-                      "Tt_SowtoEmerge": 150.0,
+                      "Tt_SowtoEmerge": 125.0,
                       "GSMax": 0.008,
                       "R50": 150.0,
                       "ConsiderWaterStress": 0,
@@ -44368,12 +44425,12 @@
                       "HarvestIndex": 0.28,
                       "MoistureContent": 0.894,
                       "Proot": 0.1,
-                      "MaxRD": 1000.0,
+                      "MaxRD": 1500.0,
                       "MaxHeight": 350.0,
-                      "MaxCover": 0.92,
+                      "MaxCover": 0.88,
                       "ExtinctCoeff": 0.99,
                       "TypicalHarvestStage": "MidReproductive",
-                      "SeedlingNConc": 0.054,
+                      "SeedlingNConc": 0.057,
                       "ProductHarvestNConc": 0.046,
                       "StoverHarvestNConc": 0.0282,
                       "RootNConc": 0.018,
@@ -44410,7 +44467,7 @@
                       "Proot": 0.2,
                       "MaxRD": 500.0,
                       "MaxHeight": 380.0,
-                      "MaxCover": 0.84,
+                      "MaxCover": 0.76,
                       "ExtinctCoeff": 0.4,
                       "TypicalHarvestStage": "Maturity",
                       "SeedlingNConc": 0.05,
@@ -44421,7 +44478,7 @@
                       "BaseT": 5.0,
                       "OptT": 30.0,
                       "MaxT": 40.0,
-                      "Tt_SowtoEmerge": 500.0,
+                      "Tt_SowtoEmerge": 400.0,
                       "GSMax": 0.008,
                       "R50": 150.0,
                       "ConsiderWaterStress": 0,
@@ -44450,18 +44507,18 @@
                       "Proot": 0.1,
                       "MaxRD": 1500.0,
                       "MaxHeight": 500.0,
-                      "MaxCover": 0.99,
+                      "MaxCover": 0.97,
                       "ExtinctCoeff": 0.86,
                       "TypicalHarvestStage": "Maturity",
                       "SeedlingNConc": 0.06,
                       "ProductHarvestNConc": 0.0205,
-                      "StoverHarvestNConc": 0.0107,
+                      "StoverHarvestNConc": 0.015,
                       "RootNConc": 0.01,
                       "LegumePropn": 0.0,
                       "BaseT": 0.0,
                       "OptT": 20.0,
                       "MaxT": 35.0,
-                      "Tt_SowtoEmerge": 500.0,
+                      "Tt_SowtoEmerge": 350.0,
                       "GSMax": 0.008,
                       "R50": 150.0,
                       "ConsiderWaterStress": 0,
@@ -46142,6 +46199,17 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "FertiliserNApplied",
+                      "Position": 2,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 9,
@@ -46205,6 +46273,35 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "FertiliserNApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Fertiliser",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -46832,6 +46929,17 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "IrrigationApplied",
+                      "Position": 2,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 11,
@@ -46895,6 +47003,35 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "IrrigationApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -47724,7 +47861,7 @@
                       "Name": "Cover",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
