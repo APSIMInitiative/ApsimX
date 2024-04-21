@@ -43408,11 +43408,11 @@
                             },
                             {
                               "Key": "Treatment1NO3",
-                              "Value": "15, 5, 3.8, 1.7, 0.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "9.9, 9.9, 5.7, 1.5, 1.1, 1.15, 1.2, 0.5, 0.42, 0.33"
                             },
                             {
                               "Key": "Treatment1NH4",
-                              "Value": "2, 3.4, 1.2, 0.6, 0.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "3.4, 3.4, 1.9, 0.4, 0.4, 0.45, 0.5, 0.4, 0.42, 0.43"
                             },
                             {
                               "Key": "Treatment2Name",
@@ -43420,11 +43420,11 @@
                             },
                             {
                               "Key": "Treatment2NO3",
-                              "Value": "15, 5, 3.8, 1.7, 0.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "9.6, 9.6, 5.9, 2.2, 2.2, 2, 1.8, 3.3, 3.42, 3.53"
                             },
                             {
                               "Key": "Treatment2NH4",
-                              "Value": "2, 3.4, 2.2, 1.6, 0.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "0.5, 0.5, 0.45, 0.4, 0.1, 0.1, 0.1, 0.2, 0.22, 0.23"
                             },
                             {
                               "Key": "Treatment3Name",
@@ -43432,11 +43432,11 @@
                             },
                             {
                               "Key": "Treatment3NO3",
-                              "Value": "15, 5, 5.8, 2.7, 3.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "9, 9, 6.5, 4, 4.5, 3.9, 3.3, 1.6, 0.92, 0.23"
                             },
                             {
                               "Key": "Treatment3NH4",
-                              "Value": "2, 3.4, 2.2, 1.6, 1.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "0.5, 0.5, 0.45, 0.4, 0.2, 0.25, 0.3, 0.2, 0.22, 0.23"
                             },
                             {
                               "Key": "Treatment4Name",
@@ -43444,11 +43444,11 @@
                             },
                             {
                               "Key": "Treatment4NO3",
-                              "Value": "18, 15, 8.8, 2.7, 4.2, 5.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "27, 27, 18.35, 9.7, 7.2, 5.15, 3.1, 2.2, 1.1, 0"
                             },
                             {
                               "Key": "Treatment4NH4",
-                              "Value": "12, 6.4, 12.2, 2.6, 2.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "0.8, 0.8, 0.55, 0.3, 0.4, 0.3, 0.2, 0.1, 0.05, 0"
                             },
                             {
                               "Key": "Treatment5Name",
@@ -43456,11 +43456,11 @@
                             },
                             {
                               "Key": "Treatment5NO3",
-                              "Value": "15, 5, 3.8, 1.7, 0.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "7.4, 7.4, 4.3, 1.2, 0.8, 1.1, 1.4, 0.9, 1.02, 1.13"
                             },
                             {
                               "Key": "Treatment5NH4",
-                              "Value": "2, 3.4, 1.2, 0.6, 0.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "1.2, 1.2, 0.95, 0.7, 0.2, 0.2, 0.2, 0, 0, 0"
                             },
                             {
                               "Key": "Treatment6Name",
@@ -43468,11 +43468,11 @@
                             },
                             {
                               "Key": "Treatment6NO3",
-                              "Value": "15, 5, 3.8, 1.7, 0.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "8.2, 8.2, 4.75, 1.3, 0.9, 1, 1.1, 0.7, 0.7, 0.7"
                             },
                             {
                               "Key": "Treatment6NH4",
-                              "Value": "2, 3.4, 2.2, 1.6, 0.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "1.1, 1.1, 0.85, 0.6, 0.6, 0.4, 0.2, 0.1, 0.05, 0"
                             },
                             {
                               "Key": "Treatment7Name",
@@ -43480,11 +43480,11 @@
                             },
                             {
                               "Key": "Treatment7NO3",
-                              "Value": "15, 5, 8.8, 2.7, 0.8, 0.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "9.5, 9.5, 5.75, 2, 2.5, 2.9, 3.3, 2.1, 2.17, 2.23"
                             },
                             {
                               "Key": "Treatment7NH4",
-                              "Value": "2, 3.4, 2.2, 1.6, 0.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "1.7, 1.7, 1.45, 1.2, 0.4, 0.4, 0.4, 0.5, 0.52, 0.53"
                             },
                             {
                               "Key": "Treatment8Name",
@@ -43492,11 +43492,11 @@
                             },
                             {
                               "Key": "Treatment8NO3",
-                              "Value": "10, 8, 5.4, 4.7, 4.2, 5.7, 0.5, 1.2, 1.1, 1"
+                              "Value": "11.3, 11.3, 8.7, 6.1, 7.5, 7.2, 6.9, 5, 4.49, 3.97"
                             },
                             {
                               "Key": "Treatment8NH4",
-                              "Value": "4, 3.4, 1.2, 1.8, 2.9, 1.4, 1.9, 1.9, 1.1, 0.2"
+                              "Value": "0.8, 0.8, 0.6, 0.4, 0.4, 0.25, 0.1, 0.2, 0.12, 0.03"
                             }
                           ],
                           "Name": "SetupInitialSoilN",
@@ -50731,7 +50731,7 @@
                           "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
+                          "Cumulative": true,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
@@ -53269,8 +53269,8 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\n*\tShanghai Pak choi: (sown 7 Dec 2020, harvested 22 Jan 2021)\r\n\r\n*\tMilton oats: (sown 02 Mar 2021, final harvest 26 Jul 2021) - harvested crop was baled\n\n*\tPotatoes (Agria) : (sown 22/10/2021, final harvest 08/03/2022)\n\n*\tRyegrass (Nui) : (sown 06/05/2022, final harvest 04/01/2023)\r\n\n*\tSurface flooding in December (Consider when checking model response to N and water balance components)\t\r\n",
-              "Name": "Rotation details",
+              "Text": "### Rotation 2 - Planting and harvesting\n\n19/05/2020\t-\tPlanting - Oats sown at 110 kg/ha (variety 'Milton')  \n\n7/12/2020\t-\tPlanting - Pak Choi sown (variety 'Shanghai'), 4 pairs (8 rows) to a 1.64 m bed, and approximately 10-15 mm deep  \n20/01/2021\t-\tHarvesting - Final harvest done. Marketable and residue (unmarketable and trimmings) weighed, residue returned to plots  \n22/01/2021\t-\tHarvesting - Decided to remove the bulk with the Cibus forage harvester. Took residual measurements from every plot  \n\n2/03/2021\t-\tPlanting - Oats drilled @ 120 kg/ha, variety 'Milton'  \n30/07/2021\t-\tHarvesting - Oats mown and baled about 5 days later  \n\n22/10/2021\t-\tPlanting - Planting of Agria seed tubers. Targeted a population between 45-50000 tubers/ha around 27.5cm in row spacing. And depth around 17cm. Tuber size is around 45-55mm  \n15/04/2022\t-\tHarvesting - Potatoes commercially harvested  \n\n6/05/2022\t-\tPlanting - Drilled 25 kg/ha of 'Nui' ryegrass  \n7/01/2023\t-\tHarvesting - ...  \n",
+              "Name": "SowHarvestEvents",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -53278,11 +53278,38 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "Text": "2020-05-11\tSite Power-harrowed\n\n2020-05-12\tPloughed and rolled\n\n2020-05-19\tGrubbed, power-harrowed \n\n2020-09-15\tPloughed and rolled\n\n2020-11-03\tDeep power harrow\n\n2020-12-03\tWheel rutts lifted with maxitill and PZ used\n\n2020-12-07\tPower harrow\n\n2021-02-19\tGrub, disc and roll\n\n2021-03-01\tMaxitilled three times. First pass was did not do anything as crumbler was out of the ground.\n\n2021-09-24\tPloughed to 25cm then cambridged rolled twice.\n\n2021-10-11\tPower harrowed whole column\n\n2021-10-12\tPz whole site then cambridged rolled site\n\n2021-10-20\tpotato site moulded ready for planting\n\n2022-04-19\tGrubbed\n\n2022-04-22\tMaxitilled \n\n2022-05-05\tGrubbed\n\n2022-05-06\tCambridge rolled x3\n\n\n\n\t",
+              "Text": "### Rotation 2 - Cultivation\n\n11/05/2020\t-\tSite Power-harrowed  \n12/05/2020\t-\tPloughed and rolled  \n19/05/2020\t-\tGrubbed, power-harrowed  \n15/09/2020\t-\tPloughed and rolled  \n3/11/2020\t-\tDeep power harrow  \n3/12/2020\t-\tWheel rutts lifted with maxitill and PZ used  \n7/12/2020\t-\tPower harrow  \n19/02/2021\t-\tGrub, disc and roll  \n1/03/2021\t-\tMaxitilled three times. First pass was did not do anything as crumbler was out of the ground  \n24/09/2021\t-\tPloughed to 25cm then cambridged rolled twice  \n11/10/2021\t-\tPower harrowed whole column  \n12/10/2021\t-\tPz whole site then cambridged rolled site  \n20/10/2021\t-\tPotato site moulded ready for planting  \n19/04/2022\t-\tGrubbed  \n22/04/2022\t-\tMaxitilled   \n5/05/2022\t-\tGrubbed  \n6/05/2022\t-\tCambridge rolled x3  \n",
               "Name": "CultivationEvents",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Rotation 2 - Fertiliser\n\n05/08/2020\t-\t40 kg N in the form of Urea applied  \n21/12/2020\t-\tFirst side dressing of CAN applied. N1 = 0, N2 = 15, N3 = 30 and N4 = 60 kg N/ha  \n12/01/2021\t-\tSecond side dressing of CAN applied. N1 = 0, N2 = 15, N3 = 30 and N4 = 60 kg N/ha. Plot 21, 27 and 32 (N4) received 80 kg N/ha accidentally  \n15/01/2021\t-\tApplied 20 kg N/ha (CAN) to Plots 2, 8, 12, 15, and 19 to make up for the over application to Plots 21, 27 and 32. Total N applied to N4 = 140 kg N/ha  \n13/12/2021\t-\tFirst side dressing of N applied. N1 = 0, N2 = 31, N3 = 62 and N4 = 124 kg N/ha as CAN. Plot 25 (N1) accidentally received 124 kg N/ha  \n22/12/2021\t-\t2nd side dressing of N applied. N1 = 0, N2 = 31, N3 = 62 and N4 = 124 kg N/ha as CAN  \n07/01/2022\t-\t3rd side dressing of N applied. N1 = 0, N2 = 41, N3 = 82 and N4 = 164 kg N/ha as CAN  \n12/05/2022\t-\tApplied 30 kg N/ha as CAN to GMP and respective rates to other treatments as starter N  \n01/09/2022\t-\tApplied first side dressing of N (CAN) 40 kg N/ha to GMP with subsequent changes for N2 and N4  \n29/09/2022\t-\tApplied 30 kg N/ha (CAN) to GMP and relative rates to other treatments  \n04/11/2022\t-\tApplied 20 kg N/ha to GMP and respective rates to other treatments. CAN used  \n",
+              "Name": "FertiliserEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Rotation 2 - Irrigation\n\n.../10/2020\t-\tApprox. 80 mm applied over the month to wet up profile  \n06/12/2020\t-\t15 mm applied to moisten clods  \n14/12/2020\t-\t10 mm applied  \n16/12/2020\t-\t10 mm applied  \n17/12/2020\t-\t10 mm applied  \n08/01/2020\t-\t10 mm applied to Irrig 1, 15 mm applied to Irrig 2  \n12/01/2021\t-\t15 mm applied to Trt 1 and 20 mm applied to Trt 2  \n15/01/2021\t-\t10 mm applied to all treatments  \n19/01/2021\t-\t15 mm applied to whole trial  \n25/02/2021\t-\t30 mm applied to column  \n16/03/2021\t-\t25 mm applied to whole column  \n27/03/2021\t-\t25 mm applied to whole column  \n18/11/2021\t-\t20 mm applied to whole trial  \n23/12/2021\t-\t20 mm applied to whole trial  \n28/12/2021\t-\t25 mm applied to whole trial  \n07/01/2022\t-\t25 mm applied to whole trial  \n12/01/2022\t-\tIrrig 1 = 20 mm and Irrig 2 = 30 mm  \n19/01/2022\t-\tIrrig 1 = 25 mm and Irrig 2 = 35 mm  \n01/02/2022\t-\tIrrig 1 = 10 mm and Irrig 2 = 20 mm  \n13/10/2022\t-\t30 mm applied to column  \n19/10/2022\t-\t20 mm applied to Irrig 1 and 30 mm applied to Irrig 2  \n03/11/2022\t-\t20 mm applied to whole column  \n04/11/2022\t-\t10 mm applied to Irrig 1 and 20 mm applied to Irrig 2  \n11/11/2022\t-\t30 mm applied to whole column  \n14/11/2022\t-\t15 mm applied to Trt 1 and 25 mm applied to Trt 2  \n07/12/2022\t-\t20 mm applied to Trt 1 and 30 mm applied to Trt 2  \n15/12/2022\t-\t20 mm applied to Trt 1 and 30 mm applied to Trt 2  \n",
+              "Name": "IrrigationEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "\n*\tShanghai Pak choi: (sown 7 Dec 2020, harvested 22 Jan 2021)\r\n\r\n*\tMilton oats: (sown 02 Mar 2021, final harvest 26 Jul 2021) - harvested crop was baled\n\n*\tPotatoes (Agria) : (sown 22/10/2021, final harvest 08/03/2022)\n\n*\tRyegrass (Nui) : (sown 06/05/2022, final harvest 04/01/2023)\r\n\n*\tSurface flooding in December (Consider when checking model response to N and water balance components)\t\r\n",
+              "Name": "Rotation details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -53356,34 +53383,6 @@
                                   "Date": "2020-08-05",
                                   "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);",
                                   "Line": "2020-08-05 [Fertiliser].Apply(40, [Fertiliser].Types.UreaN, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2022-05-12",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-05-12 [Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(0, [Fertiliser].Types.NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -53420,64 +53419,64 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-12-21",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2020-12-21 [Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2020-12-21 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-01-12",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-01-12 [Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-01-12 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-13",
-                                  "Action": "[Fertiliser].Apply(31, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-13 [Fertiliser].Apply(31, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(31, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-13 [Fertiliser].Apply(31, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(31, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(31, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(31, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(31, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-01-07",
-                                  "Action": "[Fertiliser].Apply(41, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-01-07 [Fertiliser].Apply(41, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(41, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-01-07 [Fertiliser].Apply(41, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-12",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-05-12 [Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(20, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(15, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(15, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(10, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(10, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -53514,64 +53513,64 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-12-21",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2020-12-21 [Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2020-12-21 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-01-12",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-01-12 [Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-01-12 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-13",
-                                  "Action": "[Fertiliser].Apply(62, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-13 [Fertiliser].Apply(62, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(62, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-13 [Fertiliser].Apply(62, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(62, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(62, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(62, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(62, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-01-07",
-                                  "Action": "[Fertiliser].Apply(82, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-01-07 [Fertiliser].Apply(82, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(82, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-01-07 [Fertiliser].Apply(82, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-12",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-05-12 [Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(40, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(30, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(20, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -53608,64 +53607,64 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-12-21",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2020-12-21 [Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2020-12-21 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-01-12",
-                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-01-12 [Fertiliser].Apply(80, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-01-12 [Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-13",
-                                  "Action": "[Fertiliser].Apply(124, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-13 [Fertiliser].Apply(124, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(124, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-13 [Fertiliser].Apply(124, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-12-22",
-                                  "Action": "[Fertiliser].Apply(124, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2021-12-22 [Fertiliser].Apply(124, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(124, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2021-12-22 [Fertiliser].Apply(124, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-01-07",
-                                  "Action": "[Fertiliser].Apply(164, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-01-07 [Fertiliser].Apply(164, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(164, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-01-07 [Fertiliser].Apply(164, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-05-12",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-05-12 [Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-05-12 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-01",
-                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-01 [Fertiliser].Apply(80, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-01 [Fertiliser].Apply(80, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-09-29",
-                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-09-29 [Fertiliser].Apply(60, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-09-29 [Fertiliser].Apply(60, [Fertiliser].Types.NH4NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2022-11-04",
-                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NO3N, 10);",
-                                  "Line": "2022-11-04 [Fertiliser].Apply(40, [Fertiliser].Types.NO3N, 10);"
+                                  "Action": "[Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);",
+                                  "Line": "2022-11-04 [Fertiliser].Apply(40, [Fertiliser].Types.NH4NO3N, 10);"
                                 }
                               ],
                               "Name": "NitrogenOperations",
@@ -54191,7 +54190,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2020-12-01T00:00:00",
-                  "End": "2023-03-14T00:00:00",
+                  "End": "2023-01-31T00:00:00",
                   "Name": "Clock",
                   "ResourceName": null,
                   "Children": [],
@@ -54398,7 +54397,7 @@
                             },
                             {
                               "Key": "HarvestDate",
-                              "Value": "01/23/2021 00:00:00"
+                              "Value": "01/22/2021 00:00:00"
                             },
                             {
                               "Key": "Tt_EstablishToHarvest",
@@ -54607,7 +54606,7 @@
                             },
                             {
                               "Key": "FieldLoss",
-                              "Value": "0"
+                              "Value": "0.05"
                             },
                             {
                               "Key": "ResidueRemoval",
@@ -54768,7 +54767,7 @@
                             },
                             {
                               "Key": "EstablishDate",
-                              "Value": "22/10/2021"
+                              "Value": "20/10/2021"
                             },
                             {
                               "Key": "EstablishStage",
@@ -54784,7 +54783,7 @@
                             },
                             {
                               "Key": "HarvestDate",
-                              "Value": "03/09/2022 00:00:00"
+                              "Value": "04/15/2022 00:00:00"
                             },
                             {
                               "Key": "Tt_EstablishToHarvest",
@@ -54792,7 +54791,7 @@
                             },
                             {
                               "Key": "HarvestStage",
-                              "Value": "Maturity"
+                              "Value": "Ripe"
                             },
                             {
                               "Key": "ExpectedYield",
@@ -55282,7 +55281,7 @@
                             },
                             {
                               "Key": "Cultivate1",
-                              "Value": "05/18/2020 00:00:00"
+                              "Value": "12/03/2020 00:00:00"
                             },
                             {
                               "Key": "RemoveProp1",
@@ -55290,7 +55289,7 @@
                             },
                             {
                               "Key": "IncorporateProp1",
-                              "Value": "0.8"
+                              "Value": "0.7"
                             },
                             {
                               "Key": "DepthIncorporate1",
@@ -55298,15 +55297,15 @@
                             },
                             {
                               "Key": "DoCultivation2",
-                              "Value": "True"
+                              "Value": "False"
                             },
                             {
                               "Key": "Cultivate2",
-                              "Value": "02/03/2021 00:00:00"
+                              "Value": "01/22/2021 00:00:00"
                             },
                             {
                               "Key": "RemoveProp2",
-                              "Value": "0.9"
+                              "Value": "0.8"
                             },
                             {
                               "Key": "IncorporateProp2",
@@ -55362,7 +55361,7 @@
                             },
                             {
                               "Key": "Cultivate5",
-                              "Value": "08/27/2021 00:00:00"
+                              "Value": "09/24/2021 00:00:00"
                             },
                             {
                               "Key": "RemoveProp5",
@@ -55374,7 +55373,7 @@
                             },
                             {
                               "Key": "DepthIncorporate5",
-                              "Value": "150"
+                              "Value": "200"
                             },
                             {
                               "Key": "DoCultivation6",
@@ -55382,7 +55381,7 @@
                             },
                             {
                               "Key": "Cultivate6",
-                              "Value": "09/07/2021 00:00:00"
+                              "Value": "10/20/2021 00:00:00"
                             },
                             {
                               "Key": "RemoveProp6",
@@ -55402,7 +55401,7 @@
                             },
                             {
                               "Key": "Cultivate7",
-                              "Value": "04/22/2022 00:00:00"
+                              "Value": "04/16/2022 00:00:00"
                             },
                             {
                               "Key": "RemoveProp7",
@@ -55430,11 +55429,11 @@
                             },
                             {
                               "Key": "IncorporateProp8",
-                              "Value": "0.5"
+                              "Value": "0.7"
                             },
                             {
                               "Key": "DepthIncorporate8",
-                              "Value": "50"
+                              "Value": "100"
                             },
                             {
                               "Key": "DoCultivation9",
@@ -55484,6 +55483,300 @@
                           "ReadOnly": false
                         },
                         {
+                          "$type": "Models.Manager, Models",
+                          "CodeArray": [
+                            "using System;",
+                            "using System.Collections.Generic;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models;",
+                            "using Models.Core;",
+                            "using Models.Soils;",
+                            "using Models.Soils.Nutrients;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] private Clock clock;",
+                            "        [Link] private Zone myZone;",
+                            "        [Link] private ISummary summary;",
+                            "        [Link] private Simulation thisSimulation;",
+                            "        [Link] private IPhysical soilPhysical; ",
+                            "        [Link] private Chemical soilChemical;",
+                            "        [Link(ByName=true)] private Solute NH4;",
+                            "        [Link(ByName=true)] private Solute NO3;",
+                            "        ",
+                            "        [Separator(\"A component to modify soil parameters during a simulation\")]",
+                            "        [Description(\"- Name of treament 1:\")]",
+                            "        public string Treatment1Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment1NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment1NH4 { get; set; }",
+                            "        ",
+                            "        [Description(\"- Name of treament 2:\")]",
+                            "        public string Treatment2Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment2NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment2NH4 { get; set; }",
+                            "",
+                            "        [Description(\"- Name of treament 3:\")]",
+                            "        public string Treatment3Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment3NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment3NH4 { get; set; }",
+                            "",
+                            "        [Description(\"- Name of treament 4:\")]",
+                            "        public string Treatment4Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment4NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment4NH4 { get; set; }",
+                            "",
+                            "        [Description(\"- Name of treament 5:\")]",
+                            "        public string Treatment5Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment5NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment5NH4 { get; set; }",
+                            "",
+                            "        [Description(\"- Name of treament 6:\")]",
+                            "        public string Treatment6Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment6NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment6NH4 { get; set; }",
+                            "        ",
+                            "        [Description(\"- Name of treament 7:\")]",
+                            "        public string Treatment7Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment7NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment7NH4 { get; set; }",
+                            "        ",
+                            "        [Description(\"- Name of treament 8:\")]",
+                            "        public string Treatment8Name { get; set; }",
+                            "        [Description(\"   NO3 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment8NO3 { get; set; }",
+                            "        [Description(\"   NH4 values (ppm), per layer (comma separated):\")]",
+                            "        public double[] Treatment8NH4 { get; set; }",
+                            "        ",
+                            "        private int nLayers;",
+                            "",
+                            "        ",
+                            "        [EventSubscribe(\"StartOfSimulation\")]",
+                            "        private void OnStartOfSimulation(object sender, EventArgs e)",
+                            "        {",
+                            "            nLayers = soilPhysical.Thickness.Length;",
+                            "            summary.WriteMessage(this, \"Initialise\", MessageType.Diagnostic);",
+                            "        }",
+                            "",
+                            "        [EventSubscribe(\"StartOfDay\")]",
+                            "        private void OnStartOfDay(object sender, EventArgs e)",
+                            "        {",
+                            "            double[] newNO3Values = null;",
+                            "            double[] newNH4Values = null;",
+                            "            ",
+                            "            if (clock.Today.Date == clock.StartDate)",
+                            "            {",
+                            "                // check the values given, per treatment",
+                            "                if (thisSimulation.Name == Treatment1Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment1NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment1NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment2Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment2NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment2NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment3Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment3NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment3NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment4Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment4NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment4NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment5Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment5NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment5NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment6Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment6NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment6NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment7Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment7NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment7NH4);",
+                            "                }",
+                            "                else if (thisSimulation.Name == Treatment8Name)",
+                            "                {",
+                            "                    newNO3Values = setupNewValues(NO3.ppm, Treatment8NO3);",
+                            "                    newNH4Values = setupNewValues(NH4.ppm, Treatment8NH4);",
+                            "                }",
+                            "                else",
+                            "                {",
+                            "                    summary.WriteMessage(this, \"No changes made because the simulation name \\\"\" + thisSimulation.Name ",
+                            "                                           + \"\\\" did not correspond to any given treatment\", MessageType.Warning);",
+                            "                }",
+                            "",
+                            "                //do the actual changes",
+                            "                if(newNO3Values != null)",
+                            "                {",
+                            "                    NO3.kgha = newNO3Values;",
+                            "                    summary.WriteMessage(this, \"Initial values for soil NO3 modified\", MessageType.Diagnostic);",
+                            "                }",
+                            "                if(newNH4Values != null)",
+                            "                {",
+                            "                    NH4.kgha = newNH4Values;",
+                            "                    summary.WriteMessage(this, \"Initial values for soil NH4 modified\", MessageType.Diagnostic);",
+                            "                }",
+                            "            }",
+                            "        }",
+                            "",
+                            "",
+                            "        private double[] setupNewValues(double[] currentValues, double[] givenValues)",
+                            "        {",
+                            "            double[] newValues = null;",
+                            "            if (givenValues[0] >=0)",
+                            "            {",
+                            "                newValues = new double[nLayers];",
+                            "                for (int z = 0; z < nLayers; z++)",
+                            "                {",
+                            "                    if (z < givenValues.Length)",
+                            "                    {",
+                            "                        newValues[z] = givenValues[z];",
+                            "                    }",
+                            "                    else",
+                            "                    {",
+                            "                        newValues[z] = currentValues[z];",
+                            "                    }",
+                            "                    ",
+                            "                    //convert to kg/ha",
+                            "                    newValues[z] *= soilPhysical.BD[z]*soilPhysical.Thickness[z]/100.0;",
+                            "                }",
+                            "            }",
+                            "            ",
+                            "            return newValues;",
+                            "        }",
+                            "    }",
+                            "}"
+                          ],
+                          "Parameters": [
+                            {
+                              "Key": "Treatment1Name",
+                              "Value": "LincolnRot2_N1_Irr1"
+                            },
+                            {
+                              "Key": "Treatment1NO3",
+                              "Value": "12.2, 12.74, 8.06, 2.85, 2.9, 3.16, 3.42, 2.75, 2.81, 2.87"
+                            },
+                            {
+                              "Key": "Treatment1NH4",
+                              "Value": "0.16, 0.21, 0.15, 0.03, 0, 0, 0, 0, 0, 0"
+                            },
+                            {
+                              "Key": "Treatment2Name",
+                              "Value": "LincolnRot2_N2_Irr1"
+                            },
+                            {
+                              "Key": "Treatment2NO3",
+                              "Value": "11.75, 12.47, 7.87, 2.56, 2.42, 2.84, 3.25, 2.21, 2.32, 2.42"
+                            },
+                            {
+                              "Key": "Treatment2NH4",
+                              "Value": "0.15, 0.34, 0.31, 0.1, 0, 0, 0, 0.03, 0.04, 0.04"
+                            },
+                            {
+                              "Key": "Treatment3Name",
+                              "Value": "LincolnRot2_N3_Irr1"
+                            },
+                            {
+                              "Key": "Treatment3NO3",
+                              "Value": "11.81, 12.57, 7.97, 2.61, 2.23, 2.64, 3.04, 2.03, 2.13, 2.23"
+                            },
+                            {
+                              "Key": "Treatment3NH4",
+                              "Value": "0.22, 0.24, 0.14, 0.01, 0, 0, 0, 0, 0, 0"
+                            },
+                            {
+                              "Key": "Treatment4Name",
+                              "Value": "LincolnRot2_N4_Irr1"
+                            },
+                            {
+                              "Key": "Treatment4NO3",
+                              "Value": "11.13, 12, 7.83, 2.78, 2.39, 2.68, 2.96, 2.08, 2.13, 2.17"
+                            },
+                            {
+                              "Key": "Treatment4NH4",
+                              "Value": "0.37, 0.39, 0.22, 0.02, 0, 0, 0, 0, 0, 0"
+                            },
+                            {
+                              "Key": "Treatment5Name",
+                              "Value": "LincolnRot2_N1_Irr2"
+                            },
+                            {
+                              "Key": "Treatment5NO3",
+                              "Value": "11.28, 11, 6.63, 2.54, 2.19, 2.46, 2.72, 1.85, 1.88, 1.91"
+                            },
+                            {
+                              "Key": "Treatment5NH4",
+                              "Value": "0.17, 0.22, 0.19, 0.1, 0, 0.01, 0.02, 0, 0.01, 0.01"
+                            },
+                            {
+                              "Key": "Treatment6Name",
+                              "Value": "LincolnRot2_N2_Irr2"
+                            },
+                            {
+                              "Key": "Treatment6NO3",
+                              "Value": "11.59, 11.66, 7.11, 2.48, 2.37, 2.55, 2.72, 2.08, 2.09, 2.1"
+                            },
+                            {
+                              "Key": "Treatment6NH4",
+                              "Value": "0.43, 0.46, 0.36, 0.22, 0, 0.02, 0.03, 0.05, 0.07, 0.08"
+                            },
+                            {
+                              "Key": "Treatment7Name",
+                              "Value": "LincolnRot2_N3_Irr2"
+                            },
+                            {
+                              "Key": "Treatment7NO3",
+                              "Value": "9.45, 10, 6.17, 1.79, 1.96, 2.2, 2.44, 2.21, 2.33, 2.45"
+                            },
+                            {
+                              "Key": "Treatment7NH4",
+                              "Value": "0.68, 0.39, 0.08, 0.05, 0, 0, 0, 0.01, 0.01, 0.01"
+                            },
+                            {
+                              "Key": "Treatment8Name",
+                              "Value": "LincolnRot2_N4_Irr2"
+                            },
+                            {
+                              "Key": "Treatment8NO3",
+                              "Value": "10.58, 11.03, 7.07, 2.65, 2.26, 2.47, 2.68, 1.85, 1.85, 1.85"
+                            },
+                            {
+                              "Key": "Treatment8NH4",
+                              "Value": "0.43, 0.35, 0.21, 0.15, 0.09, 0.11, 0.12, 0, 0, 0"
+                            }
+                          ],
+                          "Name": "SetupInitialSoilN",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Operations, Models",
                           "Operation": [],
                           "Name": "NitrogenOperations",
@@ -55507,43 +55800,64 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2021-01-20",
-                              "Action": "[SurfaceOrganicMatter].Add(mass:100, N:80, P:0,type:\"kale\", name: \"kale\") ",
-                              "Line": "2021-01-20 [SurfaceOrganicMatter].Add(mass:100, N:80, P:0,type:\"kale\", name: \"kale\") "
+                              "Date": "2021-09-13",
+                              "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                              "Line": "2021-09-13 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2021-08-20",
-                              "Action": "[SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"pasture\", name: \"pasture\") ",
-                              "Line": "2021-08-20 [SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"pasture\", name: \"pasture\") "
+                              "Date": "2021-10-25",
+                              "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);",
+                              "Line": "2021-10-25 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2021-10-06",
-                              "Action": "[SurfaceOrganicMatter].Add(mass:500, N:50, P:0,type:\"pasture\", name: \"pasture\") ",
-                              "Line": "2021-10-06 [SurfaceOrganicMatter].Add(mass:500, N:50, P:0,type:\"pasture\", name: \"pasture\") "
+                              "Date": "2021-10-25",
+                              "Action": "[Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 350);",
+                              "Line": "2021-10-25 [Fertiliser].Apply(10, [Fertiliser].Types.NH4NO3N, 350);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2021-10-15",
-                              "Action": "[SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"kale\", name: \"kale\") ",
-                              "Line": "2021-10-15 [SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"kale\", name: \"kale\") "
+                              "Date": "2021-11-22",
+                              "Action": "[Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);",
+                              "Line": "2021-11-22 [Fertiliser].Apply(30, [Fertiliser].Types.NH4NO3N, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "2022-03-10",
-                              "Action": "[SurfaceOrganicMatter].Add(mass:0, N:80, P:0,type:\"wheat\", name: \"wheat\") ",
-                              "Line": "2022-03-10 [SurfaceOrganicMatter].Add(mass:0, N:80, P:0,type:\"wheat\", name: \"wheat\") "
+                              "Date": "2021-11-22",
+                              "Action": "[Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 350);",
+                              "Line": "2021-11-22 [Fertiliser].Apply(20, [Fertiliser].Types.NH4NO3N, 350);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//2021-08-20 [SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"pasture\", name: \"pasture\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//2021-10-06 [SurfaceOrganicMatter].Add(mass:500, N:50, P:0,type:\"pasture\", name: \"pasture\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//2021-10-15 [SurfaceOrganicMatter].Add(mass:500, N:80, P:0,type:\"kale\", name: \"pasture\")"
                             }
                           ],
-                          "Name": "StagedSOMOperations",
+                          "Name": "ExtraNitrogen",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
@@ -55586,12 +55900,12 @@
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
                       "Canopies": [],
-                      "InitialResidueName": "pasture",
-                      "InitialResidueType": "pasture",
+                      "InitialResidueName": "greenManure",
+                      "InitialResidueType": "oats",
                       "InitialResidueMass": 2500.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
-                      "InitialCNR": 40.0,
+                      "InitialCNR": 30.0,
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
@@ -55725,9 +56039,9 @@
                             0.175,
                             0.1,
                             0.12,
-                            0.07,
-                            0.08,
-                            0.08
+                            0.09,
+                            0.11,
+                            0.1
                           ],
                           "DUL": [
                             0.3,
@@ -55737,9 +56051,9 @@
                             0.325,
                             0.318,
                             0.315,
-                            0.275,
-                            0.33,
-                            0.3
+                            0.325,
+                            0.34,
+                            0.325
                           ],
                           "SAT": [
                             0.535,
@@ -55899,9 +56213,9 @@
                                 0.175,
                                 0.1,
                                 0.12,
-                                0.07,
-                                0.08,
-                                0.08
+                                0.09,
+                                0.11,
+                                0.1
                               ],
                               "KL": [
                                 0.1,
@@ -56034,7 +56348,7 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "FOMCNRatio": 40.0,
+                          "FOMCNRatio": 35.0,
                           "Thickness": [
                             100.0,
                             100.0,
@@ -56097,8 +56411,8 @@
                             0.988
                           ],
                           "FOM": [
-                            850.0,
-                            500.0,
+                            950.0,
+                            600.0,
                             450.0,
                             175.0,
                             75.0,
@@ -56181,18 +56495,18 @@
                             200.0
                           ],
                           "InitialValues": [
-                            0.25,
+                            0.23,
                             0.27,
-                            0.317,
-                            0.3,
+                            0.35,
+                            0.313,
+                            0.325,
+                            0.318,
                             0.315,
-                            0.315,
-                            0.315,
-                            0.275,
-                            0.33,
-                            0.3
+                            0.325,
+                            0.34,
+                            0.325
                           ],
-                          "InitialPAWmm": 322.9,
+                          "InitialPAWmm": 335.7,
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
@@ -56356,7 +56670,7 @@
                     },
                     {
                       "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                      "HarvestIndex": 0.9,
+                      "HarvestIndex": 0.7,
                       "MoistureContent": 0.94,
                       "Proot": 0.1,
                       "MaxRD": 1500.0,
@@ -56365,8 +56679,8 @@
                       "ExtinctCoeff": 0.7,
                       "TypicalHarvestStage": "Vegetative",
                       "SeedlingNConc": 0.055,
-                      "ProductHarvestNConc": 0.045,
-                      "StoverHarvestNConc": 0.045,
+                      "ProductHarvestNConc": 0.0365,
+                      "StoverHarvestNConc": 0.0365,
                       "RootNConc": 0.0209,
                       "LegumePropn": 0.0,
                       "BaseT": 0.0,
@@ -56396,7 +56710,7 @@
                     },
                     {
                       "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                      "HarvestIndex": 0.95,
+                      "HarvestIndex": 0.9,
                       "MoistureContent": 0.81,
                       "Proot": 0.1,
                       "MaxRD": 1500.0,
@@ -56404,7 +56718,7 @@
                       "MaxCover": 0.92,
                       "ExtinctCoeff": 0.7,
                       "TypicalHarvestStage": "EarlyReproductive",
-                      "SeedlingNConc": 0.0581,
+                      "SeedlingNConc": 0.065,
                       "ProductHarvestNConc": 0.016,
                       "StoverHarvestNConc": 0.025,
                       "RootNConc": 0.01,
@@ -56444,9 +56758,9 @@
                       "MaxCover": 0.935,
                       "ExtinctCoeff": 0.8,
                       "TypicalHarvestStage": "Maturity",
-                      "SeedlingNConc": 0.046,
-                      "ProductHarvestNConc": 0.022,
-                      "StoverHarvestNConc": 0.0205,
+                      "SeedlingNConc": 0.055,
+                      "ProductHarvestNConc": 0.021,
+                      "StoverHarvestNConc": 0.025,
                       "RootNConc": 0.01,
                       "LegumePropn": 0.0,
                       "BaseT": 0.0,
@@ -56861,8 +57175,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": "_N",
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -62877,7 +63191,7 @@
                           "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
+                          "Cumulative": true,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
