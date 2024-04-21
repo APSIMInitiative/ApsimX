@@ -18,82 +18,99 @@
   <title>Sorghum_Gatton_Tiller_x_Density_1</title>
   <system name="paddock" executable="%apsim%/Model/ProtocolManager.dll" class="ProtocolManager">
     <executable name="%apsim%/Model/ProtocolManager.dll" version="1.0" />
-    <component name="outputfile_daily" executable="%apsim%\Model\Report.dll" class="Report.Outputfile">
-      <executable name="%apsim%\Model\Report.dll" version="1.0" />
-      <initdata>
-        <outputfile>Sorghum_Gatton_Tiller_x_Density_1 outputfile_daily.out</outputfile>
-        <title>Sorghum_Gatton_Tiller_x_Density_1 outputfile_daily</title>
-        <variable>dd/mm/yyyy as date</variable>
-        <variable>DaysAfterSowing</variable>
-        <variable>Leafno</variable>
-        <variable>lai</variable>
-        <variable>tillers</variable>
-        <variable>tillersAdded</variable>
-        <variable>linearLAI</variable>
-        <variable>calculatedTillers</variable>
-        <variable>Supply</variable>
-        <variable>Demand</variable>
-        <variable>sw_dep()</variable>
-        <variable>SLA</variable>
-        <variable>maxSLA</variable>
-        <variable>ll15_dep()</variable>
-        <variable>dul_dep()</variable>
-        <variable>WaterSD</variable>
-        <variable>Biomass</variable>
-        <variable>yield</variable>
-        <variable>GrainNo</variable>
-        <variable>stage</variable>
-        <variable>biomass_wt</variable>
-        <variable>GrainGreenWt</variable>
-        <variable>RachisGreenWt</variable>
-        <variable>StemGreenWt</variable>
-        <variable>GrainSize</variable>
-        <variable>LeafSenescedWt</variable>
-        <variable>TillerNoFertile</variable>
-        <variable>TPLA</variable>
-        <variable>SPLA</variable>
-        <variable>DeltaTT</variable>
-        <variable>LeafGreenWt</variable>
-        <variable>DeltaLAI</variable>
-        <variable>DeltaGreenN()</variable>
-        <variable>lai</variable>
-        <variable>slai</variable>
-        <variable>GPLA</variable>
-        <variable>reeves </variable>
-      </initdata>
-    </component>
     <component name="outputfile" executable="%apsim%\Model\Report.dll" class="Report.Outputfile">
       <executable name="%apsim%\Model\Report.dll" version="1.0" />
       <initdata>
         <outputfile>Sorghum_Gatton_Tiller_x_Density_1.out</outputfile>
         <title>Sorghum_Gatton_Tiller_x_Density_1</title>
-        <variable>LeafSizesMain as Main</variable>
-        <variable>LeafSizesTiller1 as T1</variable>
-        <variable>LeafSizesTiller2 as T2</variable>
-        <variable>LeafSizesTiller3 as T3</variable>
-        <variable>LeafSizesTiller4 as T4</variable>
-        <variable>LeafSizesTiller5 as T5</variable>
+        <variable>today format dd/mm/yyyy as Date</variable>
+        <variable>daysAfterSowing as Das</variable>
+        <variable>day_of_year</variable>
+        <variable>StageName as stage</variable>
+        <variable>Stage as stage_no</variable>
+        <variable>Biomass</variable>
+        <variable>GreenWt</variable>
+        <variable>Biomass units g/m^2 as BiomassWt</variable>
+        <variable>RootGreenWt</variable>
+        <variable>LeafGreenWt</variable>
+        <variable>StemGreenWt</variable>
+        <variable>RachisGreenWt</variable>
+        <variable>GrainGreenWt</variable>
+        <variable>biomass_n</variable>
+        <variable>GreenN</variable>
+        <variable>RootGreenN</variable>
+        <variable>LeafGreenN</variable>
+        <variable>StemGreenN</variable>
+        <variable>RachisGreenN</variable>
+        <variable>GrainGreenN</variable>
+        <variable>GrainGreenNConc</variable>
+        <variable>GrainNo</variable>
+        <variable>GrainSize</variable>
+        <variable>HI</variable>
+        <variable>LeafNo</variable>
+        <variable>LAI</variable>
+        <variable>SLAI</variable>
+        <variable>MaxLAI as LaiAnth</variable>
+        <variable>ESW</variable>
+        <variable>no3() as NO3</variable>
+        <variable>SLN</variable>
+        <variable>WaterSD</variable>
+        <variable>sw()</variable>
+        <variable>TPLA</variable>
+        <variable>SPLA</variable>
+        <variable>dlt_dm_green</variable>
+        <variable>sw_supply</variable>
+        <variable>radn_int</variable>
+        <variable>DeltaGreenWt</variable>
+        <variable>DeltaLAI</variable>
+        <variable>DeltaGreenN</variable>
+        <variable>DeltaLeafGreenN</variable>
+        <variable>DeltaSLAI</variable>
+        <variable>DeltaTT</variable>
+        <variable>SenescedWt</variable>
+        <variable>SenescedN</variable>
+        <variable>RootSenescedN</variable>
+        <variable>RootSenescedWt</variable>
+        <variable>LeafSenescedWt</variable>
+        <variable>LeafSenescedN</variable>
+        <variable>RLV</variable>
+        <variable>RootDepth</variable>
+        <variable>RootProportion</variable>
+        <variable>sum(sw_uptake)</variable>
+        <variable>n_total_uptake</variable>
+        <variable>n_supply_soil</variable>
+        <variable>n_cum_uptake</variable>
+        <variable>sw_demand</variable>
+        <variable>sw_deficit</variable>
+        <variable>root_depth</variable>
+        <variable>no3</variable>
+        <variable>sw</variable>
+        <variable>sw_uptake</variable>
+        <variable>n_sd_ratio</variable>
+        <variable>no3_demand</variable>
+        <variable>esw</variable>
+        <variable>swdef_pheno</variable>
+        <variable>swdef_photo</variable>
+        <variable>swdef_expan</variable>
+        <variable>nfact_pheno</variable>
+        <variable>nfact_expan</variable>
+        <variable>sw_dep</variable>
+        <variable>n_diffusion_uptake</variable>
+        <variable>n_massflow_uptake</variable>
+        <variable>cover_green</variable>
+        <variable>cover_tot</variable>
+        <variable>DeltaTTFM</variable>
+        <variable>st</variable>
+        <variable>GrainTempFactor</variable>
+        <variable>tillers</variable>
+        <variable>tillersAdded</variable>
+        <variable>calculatedTillers</variable>
+        <variable>TillerNoFertile</variable>
+        <variable>SLA</variable>
+        <variable>reeves </variable>
+        <constant name="precision">8</constant>
         <constant name="format">csv</constant>
-      </initdata>
-    </component>
-    <component name="outputfileLeaf" executable="%apsim%\Model\Report.dll" class="Report.Outputfile">
-      <executable name="%apsim%\Model\Report.dll" version="1.0" />
-      <initdata>
-        <outputfile>Sorghum_Gatton_Tiller_x_Density_1 outputfileLeaf.out</outputfile>
-        <title>Sorghum_Gatton_Tiller_x_Density_1 outputfileLeaf</title>
-        <variable>DaysAfterSowing</variable>
-        <variable>Proportions</variable>
-        <constant name="format">csv</constant>
-      </initdata>
-    </component>
-    <component name="outputfileArea" executable="%apsim%\Model\Report.dll" class="Report.Outputfile">
-      <executable name="%apsim%\Model\Report.dll" version="1.0" />
-      <initdata>
-        <outputfile>Sorghum_Gatton_Tiller_x_Density_1 outputfileArea.out</outputfile>
-        <title>Sorghum_Gatton_Tiller_x_Density_1 outputfileArea</title>
-        <variable>DaysAfterSowing</variable>
-        <variable>CulmLAI</variable>
-        <constant name="format">csv</constant>
+        <outputfrequency>post</outputfrequency>
       </initdata>
     </component>
     <component name="accum" executable="%apsim%/Model/Accum.dll" class="Accum">
@@ -307,7 +324,7 @@
           <class type="classes" description="Enter crop growth class : ">plant</class>
           <row_spacing type="text" description="Enter row spacing (mm) : ">500</row_spacing>
           <skiprow type="list" listvalues="solid, single, double" description="Skip row : ">solid</skiprow>
-          <ftn type="text" description="Enter Fertile Tiller Number :">4.7</ftn>
+          <ftn type="text" description="Enter Fertile Tiller Number :">4.5</ftn>
         </ui>
         <script>
           <text>if (today = date('[date]') then
@@ -389,9 +406,9 @@ endif
         <script>
           <text> 
 if (paddock_is_fallow() = 0) then 
-   outputfile_daily do_output
-   outputfileLeaf do_output
-   outputfileArea do_output
+!   outputfile_daily do_output
+!   outputfileLeaf do_output
+!   outputfileArea do_output
 endif                
 cumRain=cumRain + rain                  ! definition of  cum rain, radn...
 cumRadn=cumRadn + radn

@@ -241,7 +241,6 @@
             "",
             "",
             "",
-            "",
             "[Phenology].TTEmergToFlagLeaf",
             "[Weather].Radn",
             "[Arbitrator].DM.TotalFixationSupply",
@@ -276,7 +275,6 @@
             "[Leaf].DMDemands.Structural.DMDemandFunction",
             "[Leaf].Photosynthesis",
             "[Leaf].LAI",
-            "[SorghumLeaf].LAI",
             "[Leaf].SenescedLai",
             "[Leaf].LAI as LAI",
             "[Leaf].SenescedLai as SLAI",
@@ -400,11 +398,10 @@
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
-            "[Sorghum].DaysAfterSowing as Das",
-            "[Sorghum].Leaf.TillerLAI"
+            "[Sorghum].DaysAfterSowing as Das"
           ],
           "EventNames": [
-            "[Clock].DoReport"
+            "[Sorghum].Harvesting"
           ],
           "GroupByVariableName": null,
           "Name": "LeafReport",
@@ -1051,7 +1048,7 @@
                       "Specifications": [
                         "[SowingRule].Script.Cultivar = Buster",
                         "[SowingRule].Script.Density = 4",
-                        "[SowingRule].Script.Ftn = 3.4"
+                        "[SowingRule].Script.Ftn = 3.5"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1266,7 +1263,7 @@
                                 },
                                 {
                                   "Key": "Ftn",
-                                  "Value": "0"
+                                  "Value": "5.1"
                                 },
                                 {
                                   "Key": "Date",
@@ -35199,7 +35196,7 @@
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
           "GraphsPerPage": 6,
-          "Name": "SLAComponents",
+          "Name": "Leaf1",
           "ResourceName": null,
           "Children": [
             {
@@ -35813,211 +35810,6 @@
                   "CumulativeX": false,
                   "Filter": "[SimulationName]=\"LE20Density_4\" and Das > 1",
                   "Name": "SLAI_Classic",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
-          "GraphsPerPage": 6,
-          "Name": "Leaf1",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Leaf Popn 2",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "DailyReport",
-                  "XFieldName": "Das",
-                  "YFieldName": "LeafNo",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]=\"LE20Density_1\" and Das > 1",
-                  "Name": "LNo_NG",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "TableName": "OldApsimDynamic",
-                  "XFieldName": "Das",
-                  "YFieldName": "LeafNo",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]=\"LE20Density_1\" and Das > 1 and Das > 1",
-                  "Name": "LNo_Classic",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Leaf Popn 4",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "DailyReport",
-                  "XFieldName": "Das",
-                  "YFieldName": "LeafNo",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]=\"LE20Density_2\" and Das > 1",
-                  "Name": "LNo_NG",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "TableName": "OldApsimDynamic",
-                  "XFieldName": "Das",
-                  "YFieldName": "LeafNo",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]=\"LE20Density_2\" and Das > 1",
-                  "Name": "LNo_Classic",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
