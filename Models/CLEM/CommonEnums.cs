@@ -1007,7 +1007,7 @@ namespace Models.CLEM
         /// </summary>
         BodyConditionScore,
         /// <summary>
-        /// Ignore condtion-based calculation.
+        /// No condition based calulation
         /// </summary>
         None
     }

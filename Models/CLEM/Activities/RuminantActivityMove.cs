@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(" moving sucklings with mother");
             htmlWriter.Write(".</div>");
             if (PerformAtStartOfSimulation)
-                htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at start-up</div>");
             return htmlWriter.ToString();
         } 
         #endregion
