@@ -77396,7 +77396,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2021-04-01T00:00:00",
-                  "End": "2023-04-30T00:00:00",
+                  "End": "2023-06-30T00:00:00",
                   "Name": "Clock",
                   "ResourceName": null,
                   "Children": [],
@@ -82478,9 +82478,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryColours": "_N",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "_Irr",
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
@@ -82507,8 +82507,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -82540,24 +82540,24 @@
                   "Axis": [
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
+                      "Title": "Clock.Today",
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
+                      "Minimum": null,
+                      "Maximum": null,
                       "Interval": null
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
+                      "Minimum": null,
+                      "Maximum": null,
                       "Interval": null
                     }
                   ],
@@ -82575,9 +82575,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryColours": "_N",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "_Irr",
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
@@ -82604,8 +82604,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -89186,7 +89186,7 @@
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
               "GraphsPerPage": 6,
-              "Name": "AbovegroundNconc",
+              "Name": "N concentration",
               "ResourceName": null,
               "Children": [
                 {
@@ -89221,7 +89221,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Nconc",
+                  "Name": "AbovegroundNconc",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -89280,6 +89280,326 @@
               "Name": "SoilMinN",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_0_30",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_0_30",
+                      "YFieldName": "Predicted.SoilN_0_30",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_30_60",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_30_60",
+                      "YFieldName": "Predicted.SoilN_30_60",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_60_90",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_60_90",
+                      "YFieldName": "Predicted.SoilN_60_90",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_90_120",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_90_120",
+                      "YFieldName": "Predicted.SoilN_90_120",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Graph, Models",
                   "Caption": null,
@@ -89411,6 +89731,246 @@
                       "TableName": "PredictedObservedSVS",
                       "XFieldName": "Observed.SoilN_0_90",
                       "YFieldName": "Predicted.SoilN_0_90",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_120_150",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_120_150",
+                      "YFieldName": "Predicted.SoilN_120_150",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_0_120",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_0_120",
+                      "YFieldName": "Predicted.SoilN_0_120",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Soil_MinN_0_150",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.SoilN_0_150",
+                      "YFieldName": "Predicted.SoilN_0_150",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -89684,6 +90244,657 @@
                       "TableName": "PredictedObservedSVS",
                       "XFieldName": "Observed.SWCmm_0_60",
                       "YFieldName": "Predicted.SWCmm_0_60",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "SoilWater_Volumetric",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_0_20",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_0_20",
+                      "YFieldName": "Predicted.VWC_0_20",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_20_40",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_20_40",
+                      "YFieldName": "Predicted.VWC_20_40",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_40_60",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_40_60",
+                      "YFieldName": "Predicted.VWC_40_60",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_60_80",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_60_80",
+                      "YFieldName": "Predicted.VWC_60_80",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_80_100",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_80_100",
+                      "YFieldName": "Predicted.VWC_80_100",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_100_120",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_100_120",
+                      "YFieldName": "Predicted.VWC_100_120",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_120_140",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_120_140",
+                      "YFieldName": "Predicted.VWC_120_140",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "VWC_140_160",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "_N",
+                      "FactorToVaryMarkers": "_Irr",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedSVS",
+                      "XFieldName": "Observed.VWC_140_160",
+                      "YFieldName": "Predicted.VWC_140_160",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
