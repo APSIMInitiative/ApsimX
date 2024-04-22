@@ -20,32 +20,6 @@ namespace Models.CLEM.Resources
         #region Mortality
 
         /// <summary>
-        /// Style of calculating condition-based mortality
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Style of calculating additional condition-based mortality")]
-        [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
-        [Required]
-        public ConditionBasedCalculationStyle ConditionBasedMortalityStyle { get; set; }
-
-        /// <summary>
-        /// Cut-off for condition-based mortality
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Cut-off for condition-based mortality")]
-        [Required]
-        public double ConditionBasedMortalityCutOff { get; set; }
-
-        /// <summary>
-        /// Probability of dying if less than condition-based mortality cut-off
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Probability of death below condition-based cut-off")]
-        [System.ComponentModel.DefaultValue(1)]
-        [Required, GreaterThanValue(0), Proportion]
-        public double ConditionBasedMortalityProbability { get; set; }
-
-        /// <summary>
         /// Base mortality rate (annual)
         /// </summary>
         [Category("Farm", "Survival")]
@@ -53,6 +27,11 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         [System.ComponentModel.DefaultValue(0.03)]
         public double MortalityBase { get; set; }
+
+        /// <summary>
+        /// Daily base mortality rate
+        /// </summary>
+        public double MortalityBaseDaily { get { return MortalityBase / 365.0; } }
 
         #endregion
 
@@ -342,6 +321,7 @@ namespace Models.CLEM.Resources
         [Description("Juvenile mortality rate maximum")]
         [Required, Proportion]
         public double JuvenileMortalityMaximum { get; set; }
+
         /// <summary>
         /// Juvenile mortality rate exponent
         /// </summary>

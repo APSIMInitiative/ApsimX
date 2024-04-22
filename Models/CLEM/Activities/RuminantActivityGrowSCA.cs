@@ -680,59 +680,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to determine which animals have died and remove from the population.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalDeath")]
-        private void OnCLEMAnimalDeath(object sender, EventArgs e)
-        {
-            //foreach (Ruminant ind in CurrentHerd())
-            //{
-            //    double mr = ind.Parameters.GrowSCA.BasalMortalityRate_CD1;
-            //    // work out weaner proportion age.. x weaned to y 12 months.
-            //    if (ind.IsWeaner)
-            //        mr += (ind.Parameters.GrowSCA.UpperLimitForMortalityInWeaners_CD13 - ind.Parameters.GrowSCA.BasalMortalityRate_CD1) * (ind.DaysSinceWeaned / (365 - (ind.AgeInDays - ind.DaysSinceWeaned)));
-                
-            //    // ToDo: Check that the normalised weight difference is in fact the normalised weight calculated at the end of the time step - current normalised weight (last calculated start of time step)
-            //    if (0.1 * ind.EmptyBodyMassChange < 0.2 * (ind.CalculateNormalisedWeight(ind.AgeInDays + events.Interval) - ind.NormalisedAnimalWeight) / events.Interval)
-            //        mr += ind.Parameters.GrowSCA.EffectBCOnMortality1_CD2 * Math.Max(0, (ind.Parameters.GrowSCA.EffectBCOnMortality2_CD3 * ind.BodyCondition));
-
-            //    ind.Died = (RandomNumberGenerator.Generator.NextDouble() <= mr*events.Interval);
-            //}
-
-            //List<Ruminant> died = HerdResource.Herd.Where(a => a.Died).ToList();
-            //foreach (Ruminant ind in died)
-            //    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
-
-            //// TODO: separate foster from real mother for genetics
-            //// to be placed before individuals are removed and will need a rethink of whole section.
-            ////// check for death of mother with sucklings and try foster sucklings
-            ////IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            ////List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
-            ////int wetMothersAssigned = 0;
-            ////if (wetMothersAvailable.Any())
-            ////{
-            ////    if(mothersWithSuckling.Any())
-            ////    {
-            ////        foreach (var deadMother in mothersWithSuckling)
-            ////        {
-            ////            foreach (var suckling in deadMother.SucklingOffspringList)
-            ////            {
-            ////                if(wetMothersAssigned < wetMothersAvailable.Count)
-            ////                {
-            ////                    suckling.Mother = wetMothersAvailable[wetMothersAssigned];
-            ////                    wetMothersAssigned++;
-            ////                }
-            ////                else
-            ////                    break;
-            ////            }
-            ////        }
-            ////    }
-            ////}
-
-            //HerdResource.RemoveRuminant(died, this);
-        }
-
         private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
         {
             // alert user to unfed animals in the month as this should not happen
