@@ -36,6 +36,22 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem Conceptus { get; set; } = new();
 
         /// <summary>
+        /// Track fetus weight (kg)
+        /// </summary>
+        public RuminantTrackingItem Fetus { get; set; } = new();
+
+        /// <summary>
+        /// Track fetus protein weight (kg)
+        /// </summary>
+        public double FetusProtein { get { return (Fetus.Amount - FetusFat.Amount) * 0.22; } }
+
+        /// <summary>
+        /// Track fetus fat weight (kg)
+        /// </summary>
+        public RuminantTrackingItem FetusFat { get; set; } = new();
+
+
+        /// <summary>
         /// Track wool weight (kg)
         /// </summary>
         public RuminantTrackingItem Wool { get; set; } = new();

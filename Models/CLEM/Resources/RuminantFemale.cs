@@ -159,6 +159,11 @@ namespace Models.CLEM.Resources
         public double BodyConditionParturition { get; set; }
 
         /// <summary>
+        /// Live weight at parturition
+        /// </summary>
+        public double WeightAtParturition { get; set; }
+
+        /// <summary>
         /// Highest weight achieved when not pregnant
         /// </summary>
         public double HighWeightWhenNotPregnant { get; set; }
@@ -275,15 +280,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion of pregnancy achieved
         /// </summary>
-        public double ProportionOfPregnancy
+        public double ProportionOfPregnancy(double offset = 0)
         {
-            get
-            {
-                if (IsPregnant)
-                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays/ Parameters.General.GestationLength.InDays;
-                else
-                    return 0;
-            }
+            if (IsPregnant)
+                return Math.Min(1.0, (TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays + offset)/ Parameters.General.GestationLength.InDays);
+            else
+                return 0;
         }
 
         /// <summary>
@@ -474,9 +476,12 @@ namespace Models.CLEM.Resources
             }
             base.Weight.Conceptus.Reset();
             BodyConditionParturition = Weight.BodyCondition;
+            WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
             ProportionMilkProductionAchieved = 1;
             MilkLag = 1;
+            MilkProduction2 = 0;
+            MilkProductionMax = 0;
             Fetuses.Clear();
             MilkingPerformed = false;
             RelativeConditionAtParturition = Weight.RelativeCondition;
@@ -542,6 +547,16 @@ namespace Models.CLEM.Resources
         /// Tracks the nutrition after peak lactation for milk production.
         /// </summary>
         public double NutritionAfterPeakLactationFactor { get; set; }
+
+        /// <summary>
+        /// Milk production 2 (MP2)
+        /// </summary>
+        public double MilkProduction2 { get; set; }
+
+        /// <summary>
+        /// Milk production max
+        /// </summary>
+        public double MilkProductionMax { get; set; }
 
         /// <summary>
         /// Determines if milking has been performed on individual to increase milk production
