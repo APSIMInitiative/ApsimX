@@ -2,6 +2,7 @@
 
 import zmq
 import msgpack
+import time
 
 import matplotlib.pyplot as plt
     
@@ -25,7 +26,6 @@ class ApsimController:
             port: Server port number
             fields: Number of fields to instantiate
         """
-        
         self.fields = fields
 
         # connection string
@@ -45,19 +45,33 @@ class ApsimController:
         if msg != "setup":
             # TODO error handling
             pass
-       
-        # create fields
-        msg = self.send_command("fields", [self.fields], unpack=False)
-       
+        
+        '''
+        field = {
+                "x": 1.0,
+                "y": 2.0,
+                "z": 3.0
+                }
         if msg != "ok":
             # TODO error handling
-            pass  
+            pass
+        '''
     
+        msg = self.send_command("field", [5], unpack=False)
+        time.sleep(1)
+        print(msg)
+        # create fields
+        msg = self.send_command("fields", [self.fields], unpack=False)
+        time.sleep(1)
+        print(msg)
+        # Begin the simulation.
+        msg = self.send_command("energize", [], unpack=False)
+        time.sleep(1)
+        print(msg)
+
     def __del__(self):
         """Handles cleanup of protocol"""
-        
         # TODO implement cleanup of protocol, something to restart sim
-        
         self.close_socket()
     
     def open_socket(self):
@@ -65,7 +79,6 @@ class ApsimController:
        
         Should not be called externally. Uses self.conn_str 
         """
-        
         # connect to server
         self.context = zmq.Context.instance()
         print(f"Connecting to server @ {self.conn_str}...")
@@ -75,11 +88,15 @@ class ApsimController:
     
     def close_socket(self):
         """Closes connection to apsim server"""
-        
         self.socket.disconnect(self.conn_str)
         self.context.destroy()
 
-    def send_command(self, command : str, args = None, unpack : bool = True):
+    def send_command(
+            self,
+            command : str,
+            args : tuple = None,
+            unpack : bool = True
+        ):
         """Sends a string command and optional arguments to the server
 
         The objects in args can be any serializable type. Internally uses
@@ -100,16 +117,10 @@ class ApsimController:
         # check for arguments, otherwise just send string
         if args:
             self.socket.send_string(command, flags=zmq.SNDMORE)
-            
             # list of data to send
             msg = []
-
-            # loop over them
-            for arg in args:
-                # serialize using msgpack
-                ser = msgpack.packb(arg)
-                msg.append(ser)
-
+            # loop over them; serialize using msgpack.
+            [msg.append(msgpack.packb(arg)) for arg in args]
             self.socket.send_multipart(msg)
         else:
             self.socket.send_string(command)
