@@ -1,11 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BoundsAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
+
 
     /// <summary>
     /// Specifies the lower and upper bounds for the related field or property.

@@ -1,57 +1,58 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ExcelInput.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using ExcelDataReader;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
 namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Data;
-    using System.IO;
-    using ExcelDataReader;
-    using Models.Core;
-    using System.Xml.Serialization;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using System.Collections.Generic;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
-        private string _filename;
+        private string[] filenames;
+
+        /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
 
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        [Description("EXCEL file name (must be .xlsx)")]
-        [Display(Type=DisplayType.FileName)]
-        public string FileName
+        [Description("EXCEL file names")]
+        [Tooltip("Can contain more than one file name, separated by commas.")]
+        [Display(Type = DisplayType.FileNames)]
+        public string[] FileNames
         {
             get
             {
-                return this._filename;
+                return this.filenames;
             }
-
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null)
-                    this._filename = PathUtilities.GetRelativePath(value, simulations.FileName);
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null && simulations.FileName != null && value != null)
+                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
-                    this._filename = value;
+                    this.filenames = value;
             }
         }
-
-        /// <summary>Gets or sets the texture metadata.</summary>
-        /// <value>The texture metadata.</value>
-        public string[] FileNameMetadata { get; set; }
 
         /// <summary>
         /// List of Excel sheet names to read from.
@@ -70,93 +71,109 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                string[] formattedSheetNames = new string[value.Length];
-                for (int i = 0; i < value.Length; i++)
-                {
-                    if (Char.IsNumber(value[i][0]))
-                        formattedSheetNames[i] = "\"" + value[i] + "\"";
-                    else
-                        formattedSheetNames[i] = value[i];
-                }
-
-                sheetNames = formattedSheetNames;
+                if (value == null)
+                    sheetNames = Array.Empty<string>();
+                else
+                    sheetNames = value;
             }
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return FileNames.Select(f => f.Trim());
         }
 
-        /// <summary>
-        /// Gets the parent simulation or null if not found
-        /// </summary>
-        private Simulation Simulation
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
         {
-            get
-            {
-                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            }
-        }
-
-        /// <summary>Gets the absolute file name.</summary>
-        private string AbsoluteFileName
-        {
-            get
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-            }
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
         }
 
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="dataStore">The data store to store the data</param>
-        public void Run(IStorageReader dataStore)
+        public void Run()
         {
-            string fullFileName = AbsoluteFileName;
-            if (fullFileName != null && File.Exists(fullFileName))
-            {
-                // Open the file
-                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            foreach (string sheet in SheetNames)
+                if (storage.Reader.TableNames.Contains(sheet))
+                    storage.Writer.DeleteTable(sheet);
 
-                // Create a reader.
-                IExcelDataReader excelReader;
-                if (Path.GetExtension(fullFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
-                    throw new Exception("EXCEL file must be in .xlsx format. Filename: " + fullFileName);
-                else
+            foreach (string fileName in FileNames)
+            {
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
+                if (!File.Exists(absoluteFileName))
+                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
+
+                if (Path.GetExtension(absoluteFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
+                    throw new Exception($"EXCEL file '{absoluteFileName}' must be in .xlsx format.");
+
+                // Open the file
+                using (FileStream stream = File.Open(absoluteFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
-                    excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-
-                // Read all sheets from the EXCEL file as a data set
-                // excelReader.IsFirstRowAsColumnNames = true;
-                DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
-                {
-                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    using (IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream))
                     {
-                        UseHeaderRow = true
-                    }
-                });
+                        // Read all sheets from the EXCEL file as a data set.
+                        DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            UseColumnDataType = true,
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                            {
+                                UseHeaderRow = true
+                            }
+                        });
 
-                // Write all sheets that are specified in 'SheetNames' to the data store
-                foreach (DataTable table in dataSet.Tables)
-                {
-                    bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
-                    if (keep)
-                    {
-                        TruncateDates(table);
+                        // Write all sheets that are specified in 'SheetNames' to the data store
+                        foreach (DataTable table in dataSet.Tables)
+                        {
+                            if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
+                            {
+                                //Check if any columns that only contain dates are being read in as strings (and won't graph properly because of it)
+                                List<string> replaceColumns = new List<string>();
+                                foreach (DataColumn column in table.Columns) 
+                                {
+                                    if (column.DataType == typeof(string)) {
+                                        bool isDate = true;
+                                        int count = 0;
+                                        while(isDate && count < table.Rows.Count) {
+                                            if (DateUtilities.ValidateDateStringWithYear(table.Rows[count][column.ColumnName].ToString()) == null) {
+                                                isDate = false;
+                                            }
+                                            count += 1;
+                                        }
+                                        if (isDate) {
+                                            replaceColumns.Add(column.ColumnName);
+                                        }
+                                    }
+                                }
+                                foreach (string name in replaceColumns) 
+                                {
+                                    DataColumn column = table.Columns[name];
+                                    int ordinal = column.Ordinal;
 
-                        dataStore.DeleteDataInTable(table.TableName);
-                        dataStore.WriteTable(table);
+                                    DataColumn newColumn = new DataColumn("NewColumn"+name, typeof(DateTime));
+                                    table.Columns.Add(newColumn);
+                                    newColumn.SetOrdinal(ordinal);
+
+                                    foreach (DataRow row in table.Rows)
+                                        row[newColumn.ColumnName] = DateUtilities.GetDate(row[name].ToString());
+
+                                    table.Columns.Remove(name);
+                                    newColumn.ColumnName = name;
+                                }
+
+                                TruncateDates(table);
+
+                                // Don't delete previous data existing in this table. Doing so would
+                                // cause problems when merging sheets from multiple excel files.
+                                storage.Writer.WriteTable(table, false);
+                                storage.Writer.WaitForIdle();
+                            }
+                        }
                     }
                 }
-
-                // Close the reader and free resources.
-                excelReader.Close();
             }
         }
 
@@ -170,15 +187,16 @@ namespace Models.PostSimulationTools
         /// if we begin to make use of sub-day model steps.
         /// </summary>
         /// <param name="table">Table to be adjusted</param>
-        private void TruncateDates(DataTable table)
+        public static void TruncateDates(DataTable table)
         {
             for (int icol = 0; icol < table.Columns.Count; icol++)
                 if (table.Columns[icol].DataType == typeof(DateTime))
                 {
                     foreach (DataRow row in table.Rows)
                         if (!DBNull.Value.Equals(row[icol]))
-                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                            row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
+
     }
 }

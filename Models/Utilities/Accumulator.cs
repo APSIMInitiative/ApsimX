@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Utilities
 {
@@ -16,7 +14,7 @@ namespace Models.Utilities
         private IModel parentModel;
         private string variableName;
         private int numberOfDays;
-        private List<double> values = new List<double>();
+
 
         /// <summary>
         /// Constructor
@@ -31,22 +29,33 @@ namespace Models.Utilities
             this.numberOfDays = numberOfDays;
         }
 
+        /// <summary>The values collected.</summary>
+        public List<double> Values { get; set; } = new List<double>();
+
         /// <summary>
         /// Perform update
         /// </summary>
         public void Update()
         {
-            if (values.Count > numberOfDays)
-                values.RemoveAt(0);
+            if (Values.Count > 0 && Values.Count >= numberOfDays)
+                Values.RemoveAt(0);
 
-            double value = (double) Apsim.Get(parentModel, variableName);
-
-            values.Add(value);
+            try
+            {
+                double value = (double)parentModel.FindByPath(variableName)?.Value;
+                Values.Add(value);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Accumulator is unable to update variable '{variableName}'", err);
+            }
         }
 
         /// <summary>
         /// Return the sum 
         /// </summary>
-        public double Sum { get { return MathUtilities.Sum(values); } }
+        public double Sum { get { return MathUtilities.Sum(Values); } }
+
+
     }
 }

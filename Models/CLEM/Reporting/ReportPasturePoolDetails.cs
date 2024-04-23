@@ -1,14 +1,10 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Report;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -17,49 +13,114 @@ namespace Models.CLEM.Reporting
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
-    [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Zones.CircularZone))]
-    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
-    public class ReportPasturePoolDetails: Models.Report.Report
+    [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
+    [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
+    public class ReportPasturePoolDetails : Models.Report
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-//        [Link]
-//        ISummary Summary = null;
+        /// <summary>
+        /// Per ha
+        /// </summary>
+        [Category("Style", "Units")]
+        [Description("Report per hectare")]
+        public bool ReportPerHectare { get; set; }
 
-        /// <summary>The columns to write to the data store.</summary>
-        private List<IReportColumn> columns = null;
+        /// <summary>
+        /// Report in tonnes
+        /// </summary>
+        [Category("Style", "Units")]
+        [Description("Report in tonnes")]
+        public bool ReportInTonnes { get; set; }
 
-        /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
+        /// <summary>
+        /// Amount (kg)
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Total")]
+        public bool ReportTotal { get; set; }
 
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        /// <summary>
+        /// Pasture growth in timestep (kg)
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("New growth")]
+        public bool ReportGrowth { get; set; }
 
-        /// <summary>Link to a simulation</summary>
-        [Link]
-        private Simulation simulation = null;
+        /// <summary>
+        /// Pasture consumed in timestep
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Consumed")]
+        public bool ReportConsumed { get; set; }
 
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
+        /// <summary>
+        /// Pasture detached in timestep
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Detached")]
+        public bool ReportDetached { get; set; }
 
-        /// <summary>Link to a storage service.</summary>
-        [Link]
-        private IStorageWriter storage = null;
+        /// <summary>
+        /// Pasture Nitrogen (%)
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Nitrogen (%)")]
+        public bool ReportNitrogen { get; set; }
 
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
+        /// <summary>
+        /// Dry Matter Digestibility (DMD, %)
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Dry matter digestibility (%, DMD)")]
+        public bool ReportDMD { get; set; }
 
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        private IEvent events = null;
+        /// <summary>
+        /// Average age in timestep
+        /// </summary>
+        [Category("By pasture", "Output")]
+        [Description("Average pasture age")]
+        public bool ReportAge { get; set; }
 
-        private GrazeFoodStoreType grazeStore;
+
+        /// <summary>
+        /// Pools Amount (kg)
+        /// </summary>
+        [Category("By pools", "Output")]
+        [Description("Total in each pool")]
+        public bool ReportPoolsTotal { get; set; }
+
+        /// <summary>
+        /// Pools consumed in timestep (kg)
+        /// </summary>
+        [Category("By pools", "Output")]
+        [Description("Consumed from each pool")]
+        public bool ReportPoolsConsumed { get; set; }
+
+        /// <summary>
+        /// Pools detached in timestep (kg)
+        /// </summary>
+        [Category("By pools", "Output")]
+        [Description("Detached from each pool")]
+        public bool ReportPoolsDetached { get; set; }
+
+        /// <summary>
+        /// Pools nitrogen content (%)
+        /// </summary>
+        [Category("By pools", "Output")]
+        [Description("Nitrogen (%) of each pool")]
+        public bool ReportPoolsNitrogen { get; set; }
+
+        /// <summary>
+        /// Pools dry matter digestibility (%)
+        /// </summary>
+        [Category("By pools", "Output")]
+        [Description("Dry matter digestibility (DMD) of each pool")]
+        public bool ReportPoolsDMD { get; set; }
+
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -67,163 +128,55 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
-            if (VariableNames != null)
-            {
-                for (int i = 0; i < this.VariableNames.Length; i++)
-                {
-                    // each variable name is now a GrazeFoodStoreType
-                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-                    if (!isDuplicate && this.VariableNames[i] != string.Empty)
-                    {
-                        if (this.VariableNames[i].StartsWith("["))
-                        {
-                            variableNames.Add(this.VariableNames[i]);
-                        }
-                        else
-                        {
-                            string[] splitName = this.VariableNames[i].Split('.');
-                            if (splitName.Count() == 2)
-                            {
-                                // get specified grazeFoodStoreType
-                                grazeStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), splitName[0], OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
-                                // make each pool entry
-                                for (int j = 0; j <= 12; j++)
-                                {
-                                    variableNames.Add(splitName[0]+"-"+j.ToString()+"-"+splitName[1]);
-                                }
-                                if (splitName[1] == "Amount")
-                                {
-                                    // add amounts
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KgPerHa as Total kgPerHa");
-                                }
-                            }
-                            else
-                            {
-                                throw new ApsimXException(this, "Invalid report property. Expecting full property link or GrazeFoodStoreTypeName.Property");
-                            }
-                        }
+            // for each grazefoodstore
+
+            ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+            if (resHolder is null)
+                return;
+
+            List<string> pastureEntries = new List<string>();
+            if (ReportTotal) pastureEntries.Add("Amount");
+            if (ReportGrowth) pastureEntries.Add("Growth");
+            if (ReportConsumed) pastureEntries.Add("Consumed");
+            if (ReportDetached) pastureEntries.Add("Detached");
+            if (ReportNitrogen) pastureEntries.Add("Nitrogen");
+            if (ReportDMD) pastureEntries.Add("DMD");
+            if (ReportAge) pastureEntries.Add("Age");
+
+            List<string> poolEntries = new List<string>();
+            if (ReportPoolsTotal) poolEntries.Add("Amount");
+            if (ReportPoolsConsumed) poolEntries.Add("Consumed");
+            if (ReportPoolsDetached) poolEntries.Add("Detached");
+            if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
+            if (ReportPoolsDMD) poolEntries.Add("DMD");
+
+            foreach (GrazeFoodStoreType pasture in FindAllInScope<GrazeFoodStoreType>())
+            {
+                // pasture based measures
+                foreach (string pastureVariable in pastureEntries)
+                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
+
+                // by pool measures
+                foreach (string poolVariable in poolEntries)
+                {
+                    for (int j = 0; j <= 12; j++)
+                    {
+                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j})) as {pasture.Name}.{poolVariable}.{j}");
                     }
                 }
             }
-            base.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
 
-            // Subscribe to events.
-            if (EventNames == null)
-            {
-                events.Subscribe("[Clock].CLEMHerdSummary", DoOutputEvent);
-            }
-            else
-            {
-                foreach (string eventName in EventNames)
-                {
-                    if (eventName != string.Empty)
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
-        }
+            // sort
+            variableNames = variableNames.OrderBy(a => a).ToList();
+            variableNames.Insert(0, "[Clock].Today as Date");
+            VariableNames = variableNames.ToArray();
 
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
-        {
-            object[] valuesToWrite = new object[columns.Count];
-            for (int i = 0; i < columns.Count; i++)
-            {
-                // if contains Pools[ then get the value
-                if (columns[i].Name.Contains("-"))
-                {
-                    string[] values = columns[i].Name.Split('-');
-                    double value = grazeStore.GetValueByPoolAge(Convert.ToInt32(values[1]), values[2]);
-                    if (value != 0)
-                    {
-                        valuesToWrite[i] = Math.Round(value, 2);
-                    }
-                }
-                else
-                {
-                    // otherwise normal approach
-                    valuesToWrite[i] = columns[i].GetValue();
-                }
-            }
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
-        }
+            if (EventNames == null || EventNames.Count() == 0)
+                EventNames = new string[] { "[Clock].CLEMHerdSummary" };
 
-        /// <summary>Create a text report from tables in this data store.</summary>
-        /// <param name="storage">The data store.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IStorageReader storage, string fileName)
-        {
-            // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
-            {
-                DataTable data = storage.GetData(tableName);
-                if (data != null && data.Rows.Count > 0)
-                {
-                    SortColumnsOfDataTable(data);
-                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                    report.Close();
-                }
-            }
-        }
-
-        /// <summary>Sort the columns alphabetically</summary>
-        /// <param name="table">The table to sort</param>
-        private static void SortColumnsOfDataTable(DataTable table)
-        {
-            var columnArray = new DataColumn[table.Columns.Count];
-            table.Columns.CopyTo(columnArray, 0);
-            var ordinal = -1;
-            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
-                orderedColumn.SetOrdinal(++ordinal);
-
-            ordinal = -1;
-            int i = table.Columns.IndexOf("SimulationName");
-            if (i != -1)
-                table.Columns[i].SetOrdinal(++ordinal);
-
-            i = table.Columns.IndexOf("SimulationID");
-            if (i != -1)
-                table.Columns[i].SetOrdinal(++ordinal);
-        }
-
-
-        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public new void DoOutputEvent(object sender, EventArgs e)
-        {
-            DoOutput();
-        }
-
-        /// <summary>
-        /// Fill the Members list with VariableMember objects for each variable.
-        /// </summary>
-        private void FindVariableMembers()
-        {
-            this.columns = new List<IReportColumn>();
-
-            AddExperimentFactorLevels();
-
-            foreach (string fullVariableName in this.VariableNames)
-            {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
-            }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
-        }
-
-        /// <summary>Add the experiment factor levels as columns.</summary>
-        private void AddExperimentFactorLevels()
-        {
-            if (ExperimentFactorValues != null)
-            {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
-            }
+            SubscribeToEvents();
         }
 
     }

@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Models.Core;
 using Models.Agroforestry;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.Zones
 {
     /// <summary>A circular zone.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
@@ -43,12 +40,12 @@ namespace Models.Zones
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public override double Area
         {
             get
             {
-                return (Math.PI * (Math.Pow(Radius,2) - Math.Pow(Radius-Width,2))) / 10000;
+                return (Math.PI * (Math.Pow(Radius, 2) - Math.Pow(Radius - Width, 2))) / 10000;
             }
             set
             {

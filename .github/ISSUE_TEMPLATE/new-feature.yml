@@ -1,0 +1,11 @@
+name: "\U0001f195 New Feature"
+description: Add or improve a feature
+labels: ["Improvement"]
+body:
+  - type: textarea
+    id: new-feature
+    attributes:
+      label: Describe the new feature
+      placeholder: Write new feature details here
+    validations:
+      required: true

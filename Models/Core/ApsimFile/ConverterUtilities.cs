@@ -1,19 +1,16 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ConverterUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
+
 namespace Models.Core.ApsimFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using System.Reflection;
-    using System.IO;
-    using System.Text.RegularExpressions;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -97,6 +94,34 @@ namespace Models.Core.ApsimFile
             return writer.ToString();
         }
 
+
+        /// <summary>
+        /// Add the specified 'using' statement to the specified code.
+        /// </summary>
+        /// <param name="manager">The manager to modifiy</param>
+        /// <param name="linkStatement">The link statement to insert at the correct location</param>
+        internal static void InsertLink(XmlNode manager, string linkStatement)
+        {
+            XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
+            string code = codeNode.InnerText;
+
+            string returnCode = code;
+            if (!code.Contains(linkStatement))
+            {
+
+                int curlyIndex = code.IndexOf('{');
+                curlyIndex = code.IndexOf('{', curlyIndex + 1); // look for second curly bracket.
+                if (curlyIndex >= 0)
+                {
+                    returnCode = code.Substring(0, curlyIndex + 1);
+                    returnCode += Environment.NewLine + "        " + linkStatement;
+                    returnCode += code.Substring(curlyIndex + 2);
+                }
+            }
+            codeNode.InnerText = returnCode;
+        }
+
+
         /// <summary>
         /// Find a PMF node, as a direct child under the specified node, that has the specified name element.
         /// </summary>
@@ -158,7 +183,7 @@ namespace Models.Core.ApsimFile
         /// <param name="cultivar">Cultivar node</param>
         /// <param name="searchFor">The pattern to search for</param>
         /// <param name="replaceWith">The string to replace</param>
-        private static void SearchReplaceCultivarOverrides(XmlNode cultivar, string searchFor, string replaceWith)
+        public static void SearchReplaceCultivarOverrides(XmlNode cultivar, string searchFor, string replaceWith)
         {
             List<string> commands = XmlUtilities.Values(cultivar, "Command");
             for (int i = 0; i < commands.Count; i++)
@@ -172,10 +197,11 @@ namespace Models.Core.ApsimFile
         /// <param name="manager">The manager model.</param>
         /// <param name="searchFor">The pattern to search for</param>
         /// <param name="replaceWith">The string to replace</param>
-        internal static void SearchReplaceManagerCode(XmlNode manager, string searchFor, string replaceWith)
+        internal static bool SearchReplaceManagerCode(XmlNode manager, string searchFor, string replaceWith)
         {
             XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
             string newCode = codeNode.InnerText.Replace(searchFor, replaceWith);
+            bool wasChanged = newCode != codeNode.InnerText;
             codeNode.InnerText = newCode;
 
             // Now look under the script node.
@@ -183,6 +209,7 @@ namespace Models.Core.ApsimFile
             if (script != null)
                 foreach (XmlNode scriptChild in script.ChildNodes)
                     scriptChild.InnerText = scriptChild.InnerText.Replace(searchFor, replaceWith);
+            return wasChanged;
         }
 
         /// <summary>
@@ -278,13 +305,44 @@ namespace Models.Core.ApsimFile
         {
             SortedSet<string> childNames = new SortedSet<string>();
 
-            foreach (XmlNode child in XmlUtilities.ChildNodesRecursively(node, typeFilter:null))
+            foreach (XmlNode child in XmlUtilities.ChildNodesRecursively(node, typeFilter: null))
             {
                 string name = XmlUtilities.Value(child, "Name");
                 if (name != string.Empty)
                     childNames.Add(name);
             }
             return childNames.ToList();
+        }
+
+        /// <summary></summary>
+        /// <param name="node1">Node1</param>
+        /// <param name="node2">Node2</param>
+        internal static bool NodesInSameSimulation(JContainer node1, JContainer node2)
+        {
+            JContainer sim1 = node1;
+            while(sim1 != null && sim1["$type"].ToString() != "Models.Core.Simulation, Models")
+            {
+                sim1 = sim1.Parent;
+                if (sim1 != null)
+                    sim1 = sim1.Parent;
+                if (sim1 != null)
+                    sim1 = sim1.Parent;
+            }
+
+            JContainer sim2 = node2;
+            while(sim2 != null && sim2["$type"].ToString() != "Models.Core.Simulation, Models")
+            {
+                sim2 = sim2.Parent;
+                if (sim2 != null)
+                    sim2 = sim2.Parent;
+                if (sim2 != null)
+                    sim2 = sim2.Parent;
+            }
+
+            if (sim1.Path.CompareTo(sim2.Path) == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

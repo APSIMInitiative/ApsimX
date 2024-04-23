@@ -1,15 +1,33 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LinkAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using PMF;
-    using PMF.Functions;
-    using System;
-    using System.Reflection;
-    using System.Xml.Serialization;
+
+    /// <summary>
+    /// Enumeration of all possible types of links.
+    /// </summary>
+    public enum LinkType
+    {
+        /// <summary>
+        /// A link to the first matching model in scope.
+        /// </summary>
+        Scoped,
+
+        /// <summary>
+        /// A link to a model via an absolute path.
+        /// </summary>
+        Path,
+
+        /// <summary>
+        /// A link to a child model.
+        /// </summary>
+        Child,
+
+        /// <summary>
+        /// A link to an ancestor model.
+        /// </summary>
+        Ancestor
+    }
 
     /// <summary>
     /// When applied to a field, the infrastructure will locate an object that matches the 
@@ -17,125 +35,19 @@ namespace Models.Core
     /// If no matching model is found (and IsOptional is not specified or is false), then an 
     /// exception will be thrown. 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class LinkAttribute : XmlIgnoreAttribute
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class LinkAttribute : Attribute
     {
-        /// <summary>Stores the value of IsOptional if specified.</summary>
-        private bool isOptional = false;
+        /// <summary>Iff true, an exception will not be thrown if an object cannot be found.</summary>
+        public bool IsOptional { get; set; }
 
-        /// <summary>When true, the infrastructure will not throw an exception when an object cannot be found.</summary>
-        public bool IsOptional { get { return this.isOptional; } set { this.isOptional = value; } }
-
-        /// <summary>Is this link a scoped link</summary>
-        public virtual bool IsScoped(FieldInfo field)
-        {
-            if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
-                typeof(Biomass).IsAssignableFrom(field.FieldType) ||
-                field.FieldType.Name == "Object")
-                return false;
-            else
-                return true;
-        }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public virtual bool UseNameToMatch(FieldInfo field)
-        {
-            if (IsScoped(field))
-                return false;
-            else
-                return true;
-        }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate an object that matches the 
-    /// related field and path and store a reference to it in the field (dependency injection). 
-    /// If no matching model is found then an will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class LinkByPathAttribute : LinkAttribute
-    {
-        /// <summary>The path to use to find a link match.</summary>
+        /// <summary>Absolute path to the link target. Only used if Type is set to LinkType.Path.</summary>
         public string Path { get; set; }
-    }
 
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate an object in scope of the 
-    /// related field and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ScopedLinkByNameAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return true; }
+        /// <summary>Controls how the link will be resolved. The values are mutually exclusive. Default value is <see cref="LinkType.Scoped"/>.</summary>
+        public LinkType Type { get; set; } = LinkType.Scoped;
 
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return true; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate an object in scope of the 
-    /// related field and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ScopedLinkAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return true; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a child object of the 
-    /// related fields type and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ChildLinkAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a child object of the 
-    /// related fields type and name and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ChildLinkByNameAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return true; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a parent object of the 
-    /// related fields type and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ParentLinkAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(FieldInfo fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(FieldInfo field) { return false; }
+        /// <summary>Iff true, target model must have the same name as the field/property to which this link is applied. Defaults to false.</summary>
+        public bool ByName { get; set; }
     }
 }

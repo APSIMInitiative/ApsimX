@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+authors:
+- family-names: Holzworth
+  given-names: Dean
+- family-names: Huth
+  given-names: N.I.
+- family-names: Fainges
+  given-names: J.
+- family-names: Brown
+  given-names: H.
+- family-names: Zurcher
+  given-names: E.
+- family-names: Cichota
+  given-names: R.
+- family-names: Verrall
+  given-names: S.
+- family-names: Herrmann
+  given-names: N.I.
+- family-names: Zheng
+  given-names: B.
+- family-names: Snow
+  given-names: V.
+title: APSIM Next Generation: Overcoming challenges in modernising a farming systems model
+doi: 10.1016/j.envsoft.2018.02.002
+date-released: 2018-05-01

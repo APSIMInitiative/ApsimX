@@ -42,7 +42,7 @@
       <FileName>Manager.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Report" Collapsed="true">
+  <Class Name="Models" Collapsed="true">
     <Position X="41.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAABiAAAAAAAAQEBAAAAAc=</HashCode>
@@ -194,21 +194,21 @@
       <FileName>Core\Zone.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Graph.Axis" Collapsed="true">
+  <Class Name="Models.Axis" Collapsed="true">
     <Position X="18.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAIAEAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>Graph\Axis.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Graph.Graph" Collapsed="true">
+  <Class Name="Models.Graph" Collapsed="true">
     <Position X="25.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAAUAAAAAQAQAAAAAAAAAAAgAAAAAAAAE=</HashCode>
       <FileName>Graph\Graph.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Graph.Series" Collapsed="true">
+  <Class Name="Models.Series" Collapsed="true">
     <Position X="27.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAABAAAAAEAAAAAjAQAAAAAAAAAAAQAAABAB4AA=</HashCode>

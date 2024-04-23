@@ -1,0 +1,7 @@
+
+table th, table td {
+    padding: 5px 5px;
+}
+table tr:nth-child(odd) {
+    background-color: #eee;
+}

@@ -1,0 +1,50 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.GrazPlan.Supplement, Models",
+      "Name": "Supplement",
+      "IncludeInDocumentation": true,
+      "SpoilageTime": 0,
+      "Stores": [
+        {
+          "$type": "Models.GrazPlan.StoreType, Models",
+          "IsRoughage": true,
+          "DMContent": 0.85,
+          "DMD": 0,
+          "MEContent": 0,
+          "CPConc": 0,
+          "ProtDg": 0,
+          "PConc": 0,
+          "SConc": 0,
+          "EEConc": 0,
+          "ADIP2CP": 0,
+          "AshAlk": 0,
+          "MaxPassage": 0,
+          "Name": "fodder",
+          "Stored": 0
+        },
+        {
+          "$type": "Models.GrazPlan.StoreType, Models",
+          "IsRoughage": false,
+          "DMContent": 0.89,
+          "DMD": 0.9,
+          "MEContent": 13.8,
+          "CPConc": 0.14,
+          "ProtDg": 0.92,
+          "PConc": 0.0038,
+          "SConc": 0.0014000000000000002,
+          "EEConc": 0.02,
+          "ADIP2CP": 0.02,
+          "AshAlk": 0.18,
+          "MaxPassage": 0,
+          "Name": "wheat, crushed",
+          "Stored": 500000
+        }
+      ],
+      "PaddockList": null
+    }
+  ]
+}

@@ -1,652 +1,256 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using UserInterface.Classes;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
-
-    /// <summary>
-    /// <para>
-    /// This presenter displays properties of a Model in an IGridView.
-    /// The properties must be public, read/write and have a [Description]
-    /// attribute. Array properties are supported if they are integer, double
-    /// or string arrays.
-    /// </para>
-    /// <para>
-    /// There is also a method (RemoveProperties) for excluding properties from 
-    /// the PropertyGrid. This is important when a PropertyGrid is embedded on
-    /// a ProfileGrid and the ProfileGrid is displaying some properties as well.
-    /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
-    /// </para>
-    /// </summary>
     public class PropertyPresenter : IPresenter
     {
         /// <summary>
-        /// Linked storage reader
+        /// The model whose properties are being displayed.
         /// </summary>
-        [Link]
-        private IStorageReader storage = null;
+        protected IModel model;
 
         /// <summary>
-        /// The underlying grid control to work with.
+        /// The view.
         /// </summary>
-        private IGridView grid;
+        protected IPropertyView view;
 
         /// <summary>
-        /// The model we're going to examine for properties.
+        /// The explorer presenter instance.
         /// </summary>
-        private Model model;
+        protected ExplorerPresenter presenter;
 
         /// <summary>
-        /// The parent ExplorerPresenter.
+        /// A filter function which can be used to filter which properties
+        /// can be displayed.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        public Func<PropertyInfo, bool> Filter { get; set; }
 
         /// <summary>
-        /// A list of all properties found in the Model.
+        /// This associates an ID with each property being displayed in
+        /// the view, and the object to which that property belongs.
         /// </summary>
-        private List<IVariable> properties = new List<IVariable>();
-
-        /// <summary>
-        /// The completion form.
-        /// </summary>
-        private IntellisensePresenter intellisense;
-
-        /// <summary>
-        /// Gets a value indicating whether the grid is empty (i.e. no rows).
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return this.grid.RowCount == 0;
-            }
-        }
+        private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        /// <param name="model">The model to connect to</param>
-        /// <param name="view">The view to connect to</param>
-        /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">An <see cref="ExplorerPresenter" /> instance.</param>
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.grid = view as IGridView;
-            this.grid.ContextItemsNeeded += GetContextItems;
-            this.model = model as Model;
-            this.explorerPresenter = explorerPresenter;
-            this.intellisense = new IntellisensePresenter(grid as ViewBase);
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+            if (explorerPresenter == null)
+                throw new ArgumentNullException(nameof(explorerPresenter));
 
-            // The grid does not have control-space intellisense (for now).
-            intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
-            // if the model is Testable, run the test method.
-            ITestable testModel = model as ITestable;
-            if (testModel != null)
-            {
-                testModel.Test(false, true);
-                this.grid.ReadOnly = true;
-            }
+            this.model = model as IModel;
+            this.view = view as IPropertyView;
+            this.presenter = explorerPresenter;
 
-            string[] split;
+            if (this.model != null && !(this.model is IModel))
+                throw new ArgumentException($"The model must be an IModel instance");
+            if (this.view == null)
+                throw new ArgumentException($"The view must be an IPropertyView instance");
 
-            this.grid.NumericFormat = "G6"; 
-            this.FindAllProperties(this.model);
-            if (this.grid.DataSource == null)
-            {
-                this.PopulateGrid(this.model);
-            }
-            else
-            {
-                this.grid.ResizeControls();
-                this.FormatTestGrid();
-            }
+            RefreshView(this.model);
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.PropertyChanged += OnViewChanged;
+        }
 
-            this.grid.CellsChanged += this.OnCellValueChanged;
-            this.grid.ButtonClick += this.OnFileBrowseClick;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+        /// <summary>
+        /// Refresh the view with the model's current state.
+        /// </summary>
+        public virtual void RefreshView(IModel model)
+        {
             if (model != null)
             {
-                split = this.model.GetType().ToString().Split('.');
-                this.grid.ModelName = split[split.Length - 1];
-                this.grid.LoadImage();
+                this.model = model;
+                view.DisplayProperties(GetProperties(this.model));
             }
         }
 
         /// <summary>
-        /// Detach the model from the view.
+        /// Get a list of properties from the model.
         /// </summary>
-        public void Detach()
+        /// <param name="obj">The object whose properties will be queried.</param>
+        protected virtual PropertyGroup GetProperties(object obj)
         {
-            this.grid.EndEdit();
-            this.grid.CellsChanged -= this.OnCellValueChanged;
-            this.grid.ButtonClick -= this.OnFileBrowseClick;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            intellisense.Cleanup();
-        }
+            IEnumerable<PropertyInfo> allProperties = GetAllProperties(obj)
+                    // Only show properties with a DescriptionAttribute
+                    .Where(p => Attribute.IsDefined(p, typeof(DescriptionAttribute)))
+                    // Only show properties which have a getter and a setter.
+                    .Where(p => p.CanRead && p.CanWrite)
+                    // Order by line number of the description attribute.
+                    .OrderBy(p => p.GetCustomAttribute<DisplayAttribute>()?.Order??0)
+                    // Then order by line number of the description attribute.
+                    .ThenBy(p => p.GetCustomAttribute<DescriptionAttribute>().LineNumber);
 
-        /// <summary>
-        /// Populate the grid
-        /// </summary>
-        /// <param name="model">The model to examine for properties</param>
-        public void PopulateGrid(Model model)
-        {
-            IGridCell selectedCell = this.grid.GetCurrentCell;
-            this.model = model;
-            DataTable table = new DataTable();
-            table.Columns.Add("Description", typeof(string));
-            table.Columns.Add("Value", typeof(object));
+            // Filter out properties which don't fit the user's custom filter.
+            if (Filter != null)
+                allProperties = allProperties.Where(Filter);
 
-            this.grid.PropertyMode = true;
-            this.FillTable(table);
-            this.FormatGrid();
-            if (selectedCell != null)
+            // Due to DisplayType.SubModel, each PropertyInfo can potentially
+            // yield multiple properties to be displayed in the view.
+            List<Property> properties = new List<Property>();
+            List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
+            foreach (PropertyInfo property in allProperties)
             {
-                this.grid.GetCurrentCell = selectedCell;
-            }
-
-            this.grid.ResizeControls();
-        }
-
-        /// <summary>
-        /// Remove the specified properties from the grid.
-        /// </summary>
-        /// <param name="propertysToRemove">The names of all properties to remove</param>
-        public void RemoveProperties(IEnumerable<VariableProperty> propertysToRemove)
-        {
-            foreach (VariableProperty property in propertysToRemove)
-            {
-                // Try and find the description in our list of properties.
-                int i = this.properties.FindIndex(p => p.Description == property.Description);
-
-                // If found then remove the property.
-                if (i != -1)
+                DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
+                if (display != null && display.Type == DisplayType.SubModel)
                 {
-                    this.properties.RemoveAt(i);
-                }
-            }
-
-            this.PopulateGrid(this.model);
-        }
-        
-        /// <summary>
-        /// Find all properties from the model and fill this.properties.
-        /// </summary>
-        /// <param name="model">The mode object</param>
-        public void FindAllProperties(Model model)
-        {
-            this.model = model;
-            this.properties.Clear();
-            if (this.model != null)
-            {
-                var members = from member in this.model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public)
-                                 where Attribute.IsDefined(member, typeof(DescriptionAttribute)) &&
-                                       (member is PropertyInfo || member is FieldInfo)
-                                 orderby ((DescriptionAttribute)member
-                                           .GetCustomAttributes(typeof(DescriptionAttribute), false)
-                                           .Single()).LineNumber
-                                 select member;
-
-                foreach (MemberInfo member in members)
-                {
-                    IVariable property = null;
-                    if (member is PropertyInfo)
-                        property = new VariableProperty(this.model, member as PropertyInfo);
-                    else if (member is FieldInfo)
-                        property = new VariableField(this.model, member as FieldInfo);
-
-                    if (property != null && property.Description != null && property.Writable)
+                    object subObject = property.GetValue(obj);
+                    if (subObject == null)
+                        subObject = Activator.CreateInstance(property.PropertyType);
+                    PropertyGroup group = GetProperties(subObject);
+                    group.Name = property.GetCustomAttribute<DescriptionAttribute>()?.ToString() ?? property.Name;
+                    string units = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
+                    if (!string.IsNullOrEmpty(units))
                     {
-                        // Only allow lists that are double[], int[] or string[]
-                        bool includeProperty = true;
-                        if (property.DataType.GetInterface("IList") != null)
-                        {
-                            includeProperty = property.DataType == typeof(double[]) ||
-                                              property.DataType == typeof(int[]) ||
-                                              property.DataType == typeof(string[]);
-                        }
-
-                        if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
-                            properties.Add(new VariableObject(property.Description));  // use a VariableObject for separators
-
-                        if (includeProperty)
-                            this.properties.Add(property);
-
-                        if (property.DataType == typeof(DataTable))
-                            this.grid.DataSource = property.Value as DataTable;
+                        units = "(" + units + ")";
+                        if (!group.Name.Contains(units))
+                            group.Name += " " + units;
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the lists of Cultivar and Field names in the model.
-        /// This is used when the model has been changed. For example, when a 
-        /// new crop has been selecled.
-        /// </summary>
-        /// <param name="model">The new model</param>
-        public void UpdateModel(Model model)
-        {
-            this.model = model;
-            if (this.model != null)
-            {
-                IGridCell curCell = this.grid.GetCurrentCell;
-                for (int i = 0; i < this.properties.Count; i++)
-                {
-                    IGridCell cell = this.grid.GetCell(1, i);
-                    if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
-                    {
-                        continue;
-                    }
-
-                    if (this.properties[i].Display != null &&
-                        this.properties[i].Display.Type == DisplayType.CultivarName)
-                    {
-                        IPlant crop = this.GetCrop(this.properties);
-                        if (crop != null)
-                        {
-                            cell.DropDownStrings = this.GetCultivarNames(crop);
-                        }
-                    }
-                    else if (this.properties[i].Display != null &&
-                             this.properties[i].Display.Type == DisplayType.FieldName)
-                    {
-                        string[] fieldNames = this.GetFieldNames();
-                        if (fieldNames != null)
-                        {
-                            cell.DropDownStrings = fieldNames;
-                        }
-                    }
-                }
-            }
-        }
-        
-        private void GetContextItems(object o, NeedContextItemsArgs e)
-        {
-            try
-            {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-            
-        }
-
-        /// <summary>
-        /// Fill the specified table with columns and rows based on this.Properties
-        /// </summary>
-        /// <param name="table">The table that needs to be filled</param>
-        private void FillTable(DataTable table)
-        {
-            foreach (IVariable property in this.properties)
-            {
-                if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null });
-                else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
-                else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
-            }
-
-            this.grid.DataSource = table;
-        }
-
-        /// <summary>
-        /// Format the grid when displaying Tests.
-        /// </summary>
-        private void FormatTestGrid()
-        {
-            int numCols = this.grid.DataSource.Columns.Count;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                this.grid.GetColumn(i).Format = "F4";
-            }
-        }
-
-        /// <summary>
-        /// Format the grid.
-        /// </summary>
-        private void FormatGrid()
-        {
-            for (int i = 0; i < this.properties.Count; i++)
-            {
-                IGridCell cell = this.grid.GetCell(1, i);
-                    
-                if (this.properties[i] is VariableObject)
-                {
-                    cell.EditorType = EditorTypeEnum.TextBox;
-
-                    grid.SetRowAsSeparator(i, true);
-                }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.TableName)
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = this.storage.TableNames.ToArray();
-                }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.CultivarName)
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    IPlant crop = this.GetCrop(this.properties);
-                    if (crop != null)
-                    {
-                        cell.DropDownStrings = this.GetCultivarNames(crop);
-                    }
-                }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.FileName)
-                {
-                    cell.EditorType = EditorTypeEnum.Button;
-                }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.FieldName)
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = this.GetFieldNames();
-                    if (fieldNames != null)
-                    {
-                        cell.DropDownStrings = fieldNames;
-                    }
-                }
-                else if (this.properties[i].Display != null && 
-                         this.properties[i].Display.Type == DisplayType.ResidueName &&
-                         this.model is Models.SurfaceOM.SurfaceOrganicMatter)
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = GetResidueNames();
-                    if (fieldNames != null)
-                    {
-                        cell.DropDownStrings = fieldNames;
-                    }
-                }
-                else if (this.properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayType.Model)
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-
-                    string[] modelNames = GetModelNames(properties[i].Display.ModelType);
-                    if (modelNames != null)
-                        cell.DropDownStrings = modelNames;
+                    subModelProperties.Add(group);
                 }
                 else
                 {
-                    object cellValue = this.properties[i].ValueWithArrayHandling;
-                    if (cellValue is DateTime)
+                    // determine where to link to the property or use a substitute sub-property for a class-based property.
+                    Property result;
+                    string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
+                    if (subPropertyName.Any())
                     {
-                        cell.EditorType = EditorTypeEnum.DateTime;
-                    }
-                    else if (cellValue is bool)
-                    {
-                        cell.EditorType = EditorTypeEnum.Boolean;
-                    }
-                    else if (cellValue.GetType().IsEnum)
-                    {
-                        cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
-                    }
-                    else if (cellValue.GetType() == typeof(IPlant))
-                    {
-                        cell.EditorType = EditorTypeEnum.DropDown;
-                        List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
-                        {
-                            cropNames.Add(crop.Name);
-                        }
+                        object subObject = property.GetValue(obj);
+                        subObject ??= Activator.CreateInstance(property.PropertyType);
+                        PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
 
-                        cell.DropDownStrings = cropNames.ToArray();
-                    }
-                    else if (this.properties[i].DataType == typeof(IPlant))
-                    {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
-                        cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = plantNames.ToArray();
+                        result = new Property(subObject, subProperty);
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
                     }
                     else
                     {
-                        cell.EditorType = EditorTypeEnum.TextBox;
+                        result = new Property(obj, property);
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
                     }
+                    properties.Add(result);
                 }
             }
-
-            IGridColumn descriptionColumn = this.grid.GetColumn(0);
-            descriptionColumn.Width = -1;
-            descriptionColumn.ReadOnly = true;
-
-            IGridColumn valueColumn = this.grid.GetColumn(1);
-            valueColumn.Width = -1;
-        }
-
-        public void SetCellReadOnly(IGridCell cell)
-        {
-
-        }
-
-        /// <summary>Get a list of cultivars for crop.</summary>
-        /// <param name="crop">The crop.</param>
-        /// <returns>A list of cultivars.</returns>
-        private string[] GetCultivarNames(IPlant crop)
-        {
-            if (crop.CultivarNames.Length == 0)
-            {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
-                if (replacements != null)
-                {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
-                    if (replacementCrop != null)
-                    {
-                        return replacementCrop.CultivarNames;
-                    }
-                }
-            }
-            else
-            {
-                return crop.CultivarNames;
-            }
-
-            return new string[0];
-        }
-
-        /// <summary>Get a list of database fieldnames. 
-        /// Returns the names associated with the first table name in the property list
-        /// </summary>
-        /// <returns>A list of fieldnames.</returns>
-        private string[] GetFieldNames()
-        {
-            string[] fieldNames = null;
-            for (int i = 0; i < this.properties.Count; i++)
-            {
-                if (this.properties[i].Display.Type == DisplayType.TableName)
-                {
-                    IGridCell cell = this.grid.GetCell(1, i);
-                    if (cell.Value != null && cell.Value.ToString() != string.Empty)
-                    {
-                        string tableName = cell.Value.ToString();
-                        DataTable data = null;
-                        if (storage.TableNames.Contains(tableName))
-                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
-                        if (data != null)
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
-                    }
-                }
-            }
-
-            return fieldNames;
+            string name = obj is IModel model ? model.Name : obj.GetType().Name;
+            return new PropertyGroup(name, properties, subModelProperties);
         }
 
         /// <summary>
-        /// Go find a crop property in the specified list of properties or if not
-        /// found, find the first crop in scope.
+        /// Gets all public instance members of a given type.
         /// </summary>
-        /// <param name="properties">The list of properties to look through.</param>
-        /// <returns>The found crop or null if none found.</returns>
-        private IPlant GetCrop(List<IVariable> properties)
+        /// <param name="obj">Object whose members will be retrieved.</param>
+        private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
-            foreach (IVariable property in properties)
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+            return obj.GetType().GetProperties(flags);
+        }
+
+        /// <summary>
+        /// Detach the presenter from the view. Perform misc cleanup.
+        /// </summary>
+        public virtual void Detach()
+        {
+            view.SaveChanges();
+            view.PropertyChanged -= OnViewChanged;
+            (view as ViewBase).Dispose();
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+    
+        /// <summary>
+        /// Called when a model is changed. Refreshes the view.
+        /// </summary>
+        /// <param name="changedModel">The model which was changed.</param>
+        protected virtual void OnModelChanged(object changedModel)
+        {
+            if (propertyMap.Values.Any(p => p.Model == changedModel))
+                RefreshView(this.model);
+        }
+    
+        /// <summary>
+        /// Called when the view is changed. Updates the model's state.
+        /// </summary>
+        /// <param name="sender">Sending object.</param>
+        /// <param name="args">Event data.</param>
+        protected void OnViewChanged(object sender, PropertyChangedEventArgs args)
+        {
+            // We don't want to refresh the entire view after applying the change
+            // to the model, so we need to temporarily detach the ModelChanged handler.
+            //presenter.CommandHistory.ModelChanged -= OnModelChanged;
+
+            // Figure out which property of which object is being changed.
+            PropertyInfo property = propertyMap[args.ID].Property;
+            object changedObject = propertyMap[args.ID].Model;
+
+            object newValue = args.NewValue;
+
+            // When using a multi-line text editor for an IEnumerable property, the
+            // new value returned from the view will contain the enumerable with one
+            // element per line. The 'canonical' form of an enumerable as recognised by
+            // the StringToObject function is csv. Therefore we need to convert from
+            // lf-separated elements to comma-separated elements. This should probably
+            // occur somewhere else.
+            DisplayAttribute attrib;
+            if (newValue is string str && property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && (attrib = property.GetCustomAttribute<DisplayAttribute>()) != null && attrib.Type == DisplayType.MultiLineText)
+                newValue = string.Join(",", str.Split(Environment.NewLine.ToCharArray()));
+
+            if (property.PropertyType.IsEnum && newValue is string enumDescription)
             {
-                if (property.DataType == typeof(IPlant))
+                foreach (Enum value in Enum.GetValues(property.PropertyType))
                 {
-                    IPlant plant = property.Value as IPlant;
-                    if (plant != null)
+                    if (VariableProperty.GetEnumDescription(value) == enumDescription)
                     {
-                        return plant;
+                        newValue = Enum.GetName(property.PropertyType, value);
+                        break;
                     }
                 }
             }
 
-            // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
-        }
-
-        private string[] GetResidueNames()
-        {
-            if (this.model is Models.SurfaceOM.SurfaceOrganicMatter)
+            // In some cases, the new value passed back from the view may be
+            // already of the correct type. For example a boolean property
+            // is editable via a checkbutton, so the view will return a bool.
+            // However, most numbers are just rendered using an entry widget,
+            // so the value from the view will be a string (e.g. 1e-6).
+            if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
             {
-                List<Models.SurfaceOM.SurfaceOrganicMatter.ResidueType> types = (this.model as Models.SurfaceOM.SurfaceOrganicMatter).ResidueTypes.residues;
-                string[] result = new string[types.Count];
-                for (int i = 0; i < types.Count; i++)
-                    result[i] = types[i].fom_type;
-                Array.Sort(result, StringComparer.InvariantCultureIgnoreCase);
-
-                return result;
-            }
-            return null;
-        }
-
-        private string[] GetModelNames(Type t)
-        {
-            List<IModel> models;
-            if (t == null)
-                models = Apsim.FindAll(this.model);
-            else
-                models = Apsim.FindAll(this.model, t);
-
-            List<string> modelNames = new List<string>();
-            foreach (IModel model in models)
-                modelNames.Add(Apsim.FullPath(model));
-            return modelNames.ToArray();
-        }
-
-        /// <summary>
-        /// User has changed the value of a cell.
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Event parameters</param>
-        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
-        {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            foreach (IGridCell cell in e.ChangedCells)
-            {
-                if (e.invalidValue)
-                {
-                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
-                try
-                {
-                    this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
-                }
-                catch (Exception ex)
-                {
-                    explorerPresenter.MainPresenter.ShowError(ex);
-                }
-            }
-            
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-        }
-
-        /// <summary>
-        /// Set the value of the specified property
-        /// </summary>
-        /// <param name="property">The property to set the value of</param>
-        /// <param name="value">The value to set the property to</param>
-        private void SetPropertyValue(IVariable property, object value)
-        {
-            if (property.DataType.IsArray && value != null)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(int[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(string[]))
-                {
-                    value = stringValues;
-                }
+                if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
+                    newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
                 else
-                {
-                    throw new ApsimXException(this.model, "Invalid property type: " + property.DataType.ToString());
-                }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(this.model, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = Enum.Parse(property.DataType, value.ToString());
-            }
-            else if (property.Display != null &&
-                     property.Display.Type == DisplayType.Model)
-            {
-                value = Apsim.Get(this.model, value.ToString());
+                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)newValue, CultureInfo.CurrentCulture);
             }
 
-            Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);
-            this.explorerPresenter.CommandHistory.Add(cmd, true);
+            // Update the model.
+            ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
+            presenter.CommandHistory.Add(updateModel);
+
+            // Re-attach the model changed handler, so we can continue to trap
+            // changes to the model from other sources (e.g. undo/redo).
+            //presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
-        /// The model has changed, update the grid.
+        /// Stores a property and the object to which it belongs.
         /// </summary>
-        /// <param name="changedModel">The model that has changed</param>
-        private void OnModelChanged(object changedModel)
+        private struct PropertyObjectPair
         {
-            if (changedModel == this.model)
-            {
-                this.PopulateGrid(this.model);
-            }
-        }
-
-        /// <summary>
-        /// Called when user clicks on a file name.
-        /// Does creation of the dialog belong here, or in the view?
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
-        {
-            string fileName = ViewBase.AskUserForFileName("Select file path", string.Empty, Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
-            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
-            {
-                e.ChangedCells[0].Value = fileName;
-                this.OnCellValueChanged(sender, e);
-                this.PopulateGrid(this.model);
-            }
+            public object Model { get; set; }
+            public PropertyInfo Property { get; set; }
         }
     }
 }

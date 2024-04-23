@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LegendClickArgs.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
 
@@ -12,7 +7,7 @@ namespace UserInterface.EventArguments
     /// </summary>
     public class LegendClickArgs : EventArgs
     {
-        public int seriesIndex { get; set; }
-        public bool controlKeyPressed { get; set; }
+        public int SeriesIndex { get; set; }
+        public bool ControlKeyPressed { get; set; }
     }
 }

@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-// -----------------------------------------------------------------------
-// <copyright file="HelpLinkAttribute.cs" company="CSIRO">
-//     Copyright (c) CSIRO CLEM Model
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies a Uri for the help link in ModelDetailsWrapperView

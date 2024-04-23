@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ContextMenuAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
 
@@ -25,6 +20,11 @@ namespace Models.Core
         public Type[] AppliesTo { get; set; }
 
         /// <summary>
+        /// Gets or sets the model types that this menu DOES NOT apply to.
+        /// </summary>
+        public Type[] Excluding { get; set; }
+
+        /// <summary>
         /// Key to be treated as a shortcut for the menu item.
         /// </summary>
         public string ShortcutKey { get; set; }
@@ -33,5 +33,10 @@ namespace Models.Core
         /// Indicates whether this item can toggle between "on" and "off" states
         /// </summary>
         public bool IsToggle { get; set;  }
+
+        /// <summary>
+        /// A separator is placed before this item.
+        /// </summary>
+        public bool FollowsSeparator { get; set; }
     } 
 }

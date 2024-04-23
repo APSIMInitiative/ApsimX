@@ -1,50 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra.Double;
+using Newtonsoft.Json;
 using Models.Core;
-using System.Xml.Serialization;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.Soils.Arbitrator;
 using Models.Zones;
-
+using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Models.Utilities;
+using System.Data;
 
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// # [Name]
     /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
-    /// 
+    ///
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
-    /// 
+    ///
     /// * Tree height (m)
-    /// * Tree canopy width (m)
-    /// * Tree leaf area (m<sup>2</sup>/tree)
+    /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
-    /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
-    /// * Tree daily nitrogen demand (g/tree/day)
-    /// 
+    /// * Tree root length density at various depths and distances from the trees (cm/cm^3^)
+    /// * Tree daily nitrogen demand (g/m2/day for tree zone area)
+    ///
     /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
-    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
-    /// 
+    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm^3^ and spatial water uptake is scales using this value and the user-input of tree root length density.
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.TreeProxyView")]
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class TreeProxy : Model, IUptake
+    public class TreeProxy : Model, IUptake, IGridModel
     {
         [Link]
         IWeather weather = null;
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
-        /// <summary>Gets or sets the table data.</summary>
+        /// <summary>
+        /// Gets or sets the table data.
+        /// Be careful when working with this property!
+        /// The first list contains the column headers (e.g. 1 row of data).
+        /// The subsequent lists all contain columns of data(?!).
+        /// </summary>
         /// <value>The table.</value>
         public List<List<string>> Table { get; set; }
 
@@ -56,59 +60,50 @@ namespace Models.Agroforestry
         /// <summary>
         /// Distance from zone in tree heights
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("TreeHeights")]
         public double H { get; set; }
 
         /// <summary>
         /// Height of the tree.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m")]
-        public double heightToday { get { return GetHeightToday();}}
-
-        /// <summary>
-        /// CanopyWidth
-        /// </summary>
-        [XmlIgnore]
-        [Units("m")]
-        public double CanopyWidthToday { 
-            get
-            { return GetCanopyWidthToday();}
-            }
+        public double heightToday { get { return GetHeightToday(); } }
 
         /// <summary>
         /// Leaf Area
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m2")]
-        public double LeafAreaToday { get { return GetTreeLeafAreaToday();} }
+        public double ShadeModiferToday { get { return GetShadeModifierToday(); } }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] WaterUptake { get; set; }
 
         /// <summary>
         /// The trees N uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m2")]
         public double[] NUptake { get; set; }
 
         /// <summary>
         /// The trees water demand across all zones.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("L")]
-        public double SWDemand {get; set; }  // Tree water demand (L)
+        public double SWDemand { get; set; }  // Tree water demand (L)
 
         /// <summary>The root radius.</summary>
         /// <value>The root radius.</value>
         [Summary]
         [Description("Root Radius (cm)")]
+        [Units("cm")]
         public double RootRadius { get; set; }
 
         /// <summary>Number of Trees in the System</summary>
@@ -121,12 +116,14 @@ namespace Models.Agroforestry
         /// <value>Adsoption Cofficient for NO3</value>
         [Summary]
         [Description("Adsoption Cofficient for NO3 (m3/g)")]
+        [Units("m3/g")]
         public double Kd { get; set; }
 
         /// <summary>The uptake coefficient.</summary>
         /// <value>KL Value at RLD of 1 cm/cm3.</value>
         [Summary]
         [Description("Base KL (KL at RLD of 1) (/d/cm/cm3)")]
+        [Units("/d/cm/cm3")]
         public double BaseKL { get; set; }
 
         /// <summary>Extinction Coefficient.</summary>
@@ -138,14 +135,14 @@ namespace Models.Agroforestry
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double WaterStress { get; set; }
 
         /// <summary>
         /// N stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double NStress { get; set; }
 
@@ -153,51 +150,232 @@ namespace Models.Agroforestry
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
-        public List<IModel> ZoneList;
+        [JsonIgnore]
+        public IEnumerable<Zone> ZoneList;
 
         /// <summary>
         /// Return an array of shade values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Summary]
+        [Units("%")]
         public double[] Shade { get { return shade.Values.ToArray(); } }
 
         /// <summary>
         /// Date list for tree heights over lime
         /// </summary>
         [Summary]
-        public DateTime[] dates { get; set; }
+        public DateTime[] Dates { get; set; }
 
         /// <summary>
         /// Tree heights
         /// </summary>
         [Summary]
-        public double[] heights { get; set; }
+        [Units("mm")]
+        public double[] Heights { get; set; }
 
         /// <summary>
         /// Tree N demands
         /// </summary>
         [Summary]
+        [Units("g/m2")]
         public double[] NDemands { get; set; }
 
         /// <summary>
-        /// Tree canopy widths
+        /// Shade Modifiers
         /// </summary>
         [Summary]
-        public double[] CanopyWidths { get; set; }
+        public double[] ShadeModifiers { get; set; }
 
         /// <summary>
-        /// Tree leaf areas
+        /// Tables
         /// </summary>
-        [Summary]
-        public double[] TreeLeafAreas { get; set; }
+        public List<GridTable> Tables
+        {
+            get {
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Date", new VariableProperty(this, GetType().GetProperty("Dates"))));
+                columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
+                columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
+                columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
+                GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
+                grid1.SetUnits(1, "m");
+                grid1.SetUnits(3, "(>=0)");
+
+                columns = new List<GridTableColumn>();
+                GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
+
+                List<GridTable> list = new List<GridTable>() { grid1, grid2 };
+                return list;
+            }
+        }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
-        private List<IModel> forestryZones;
+        private IEnumerable<Zone> forestryZones;
         private Zone treeZone;
-        private Soils.SoilWater treeZoneWater;
+        private ISoilWater treeZoneWater;
+
+        /// <summary>
+        /// Combines the live and dead forages into a single row for display and renames columns
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            if (dt.TableName.Equals("TreeProxyTemporal"))
+            {
+                //convert height in mm to height in metres
+                //first row is units, so skip
+                for(int i = 1; i < dt.Rows.Count; i++)
+                    if (!String.IsNullOrEmpty(dt.Rows[i]["Height"].ToString()))
+                        dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) / 1000;
+                return dt;
+            }
+            //this is a special case, we need to manually handle the changes to Table
+            else if (dt.TableName.Equals("TreeProxySpatial"))
+            {
+                var data = new DataTable();
+                data.TableName = dt.TableName;
+                data.Columns.Add("Parameter");
+                data.Columns.Add("0");
+                data.Columns.Add("0.5h");
+                data.Columns.Add("1h");
+                data.Columns.Add("1.5h");
+                data.Columns.Add("2h");
+                data.Columns.Add("2.5h");
+                data.Columns.Add("3h");
+                data.Columns.Add("4h");
+                data.Columns.Add("5h");
+                data.Columns.Add("6h");
+
+                if (!(this.Parent is AgroforestrySystem))
+                    throw new ApsimXException(this, "Error: TreeProxy must be a child of ForestrySystem.");
+
+                IEnumerable<Zone> zones = this.Parent.FindAllDescendants<Zone>();
+
+                // Get the first soil. For now we're assuming all soils have the same structure.
+                var physical = zones.First().FindInScope<Physical>();
+
+                if (this.Table.Count == 0)
+                {
+                    DataRow row = data.NewRow();
+                    row["Parameter"] = "Shade (%)";
+                    //fill in with 0s
+                    for (int i = 1; i < row.ItemArray.Length; i++)
+                        row[i] = 0;
+                    data.Rows.Add(row);
+
+                    //these are left empty
+                    row = data.NewRow();
+                    row["Parameter"] = "Root Length Density (cm/cm3)";
+                    data.Rows.Add(row);
+
+                    //these are left empty
+                    row = data.NewRow();
+                    row["Parameter"] = "Depth (cm)";
+                    data.Rows.Add(row);
+
+                    foreach (string s in SoilUtilities.ToDepthStringsCM(physical.Thickness))
+                    {
+                        row = data.NewRow();
+                        row["Parameter"] = s;
+                        //fill in with 0s
+                        for (int i = 1; i < row.ItemArray.Length; i++)
+                            row[i] = 0;
+                        data.Rows.Add(row);
+                    }
+                }
+                else
+                {
+                    for (int y = 0; y < this.Table.Count-1; y++)
+                    {
+                        for (int x = 0; x < this.Table[y+1].Count; x++)
+                        {
+                            if (y == 0)
+                                data.Rows.Add(data.NewRow());
+                            data.Rows[x][y] = this.Table[y+1][x];
+                        }
+                    }
+                    /*
+                    // add Zones not in the table
+                    IEnumerable<string> except = colNames.Except(forestryModel.Table[0]);
+                    foreach (string s in except)
+                        forestryModel.Table.Add(Enumerable.Range(1, forestryModel.Table[1].Count).Select(x => "0").ToList());
+
+                    forestryModel.Table[0].AddRange(except);
+                    for (int i = 2; i < forestryModel.Table.Count; i++)
+                    {
+                        // Set Depth and RLD rows to empty strings.
+                        forestryModel.Table[i][2] = string.Empty;
+                    }
+
+                    // Remove Zones from table that don't exist in simulation.
+                    except = forestryModel.Table[0].Except(colNames);
+                    List<int> indexes = new List<int>();
+                    foreach (string s in except.ToArray())
+                        indexes.Add(forestryModel.Table[0].FindIndex(x => s == x));
+
+                    indexes.Sort();
+                    indexes.Reverse();
+
+                    foreach (int i in indexes)
+                    {
+                        forestryModel.Table[0].RemoveAt(i);
+                        forestryModel.Table.RemoveAt(i + 1);
+                    }
+                    */
+                }
+                return data;
+            }
+            else
+            {
+                return dt;
+            }
+        }
+
+        /// <summary>
+        /// Breaks the lines into the live and dead parts and changes headers to match class
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            if (dt.TableName.Equals("TreeProxyTemporal"))
+            {
+                //convert height in m to height in mm
+                //first row is units, so skip
+                for (int i = 1; i < dt.Rows.Count; i++)
+                    if (!String.IsNullOrEmpty(dt.Rows[i]["Height"].ToString()))
+                        dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) * 1000;
+                return dt;
+            }
+            else if (dt.TableName.Equals("TreeProxySpatial"))
+            {
+                //add all datas
+                List<List<string>> newTable = new List<List<string>>();
+                for (int x = 0; x < dt.Rows.Count; x++)
+                {
+                    for (int y = 0; y < dt.Columns.Count; y++)
+                    {
+                        if (x == 0)
+                            newTable.Add(new List<string>());
+                        newTable[y].Add(dt.Rows[x][y].ToString());
+                    }
+                }
+
+                //add headers - Yes, this is how it's supposed to be
+                newTable.Insert(0, new List<string>());
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    newTable[0].Add(dt.Columns[i].ColumnName);
+                }
+                this.Table = newTable;
+
+                //since we don't want the gridtable to edit anything in the model, we just return an empty datatable here.
+                return new DataTable();
+            }
+            else
+            {
+                return dt;
+            }
+        }
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -211,10 +389,10 @@ namespace Models.Agroforestry
             {
                 if (zone is RectangularZone)
                 {
-                    if (zone == ZoneList[0])
+                    if (zone == ZoneList.FirstOrDefault())
                         D += 0; // the tree is at distance 0
                     else
-                        D += (zone as RectangularZone).Width; 
+                        D += (zone as RectangularZone).Width;
                 }
                 else if (zone is CircularZone)
                     D += (zone as CircularZone).Width;
@@ -224,7 +402,7 @@ namespace Models.Agroforestry
                 if (zone == z)
                     return D;
             }
-        
+
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
 
@@ -246,7 +424,7 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
@@ -266,11 +444,11 @@ namespace Models.Agroforestry
         {
             double distInTH = ZoneDistanceInTreeHeights(z);
             bool didInterp = false;
-            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp);
+            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp) * GetShadeModifierToday();
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
@@ -285,7 +463,7 @@ namespace Models.Agroforestry
             {
                 rldInterp[i] = MathUtilities.LinearInterpReal(distInTH, rld.Keys.ToArray(), rldM.Row(i).ToArray(), out didInterp);
             }
-                       
+
             return rldInterp;
         }
 
@@ -299,57 +477,49 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0], 
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0],
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
-                    getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
+                    if (!string.IsNullOrEmpty(Table[i][j]))
+                        getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
                 rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
             }
         }
 
         private double GetHeightToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, heights, out didInterp) / 1000;
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, Heights, out didInterp) / 1000;
         }
         private double GetNDemandToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
         }
 
-        private double GetCanopyWidthToday()
+        private double GetShadeModifierToday()
         {
-            double[] OADates = new double[dates.Count()];
+            double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
-        }
-
-        private double GetTreeLeafAreaToday()
-        {
-            double[] OADates = new double[dates.Count()];
-            bool didInterp;
-
-            for (int i = 0; i < dates.Count(); i++)
-                OADates[i] = dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
+            for (int i = 0; i < Dates.Count(); i++)
+                OADates[i] = Dates[i].ToOADate();
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, ShadeModifiers, out didInterp);
         }
 
         /// <summary>
         /// Calculate the total intercepted radiation by the tree canopy (MJ)
         /// </summary>
+        [Units("mm")]
         public double InterceptedRadiation
         {
             get
@@ -365,14 +535,14 @@ namespace Models.Agroforestry
         /// Calculate water use from each zone (mm)
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] TreeWaterUptake { get; private set; }
 
         /// <summary>
         /// Calculate water use on a per tree basis (L)
         /// </summary>
         [Units("L")]
-        public double IndividualTreeWaterUptake { 
+        public double IndividualTreeWaterUptake {
             get
             {
                 double TWU = 0;
@@ -391,28 +561,28 @@ namespace Models.Agroforestry
         /// Calculate water use on a per tree basis (L)
         /// </summary>
         [Units("L")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double IndividualTreeWaterDemand
         {
             get;
             private set;
         }
-        
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Apsim.Children(this.Parent, typeof(Zone));
+            ZoneList = Parent.FindAllChildren<Zone>().ToList();
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
-            treeZone = ZoneList[0] as Zone;
-            treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+            forestryZones = Parent.FindAllDescendants<Zone>().ToList();
+            treeZone = ZoneList.FirstOrDefault();
+            treeZoneWater = treeZone.FindInScope<ISoilWater>();
 
-            TreeWaterUptake = new double[ZoneList.Count];
+            TreeWaterUptake = new double[ZoneList.Count()];
 
         }
 
@@ -421,19 +591,19 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetWaterUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
             double Etz = treeZoneWater.Eo; //Eo of Tree Zone
 
             SWDemand = 0;
             foreach (Zone ZI in ZoneList)
-                SWDemand += Etz*GetShade(ZI) / 100 * ZI.Area * 10000;
+                SWDemand += Etz * (GetShade(ZI) / 100) * (ZI.Area * 10000);    // 100 converts from %, 10000 converts from ha to m2
 
             IndividualTreeWaterDemand = SWDemand / NumberOfTrees;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotSWSupply = 0; // Total water supply (L)
-            
+
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
                 foreach (Zone ZI in ZoneList)
@@ -443,11 +613,13 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
@@ -455,12 +627,12 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i]; 
+                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i];
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -497,14 +669,14 @@ namespace Models.Agroforestry
         /// </summary>
         /// <param name="soilstate"></param>
         /// <returns></returns>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(Soils.Arbitrator.SoilState soilstate)
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
-            Zone treeZone = ZoneList[0] as Zone;
+            Zone treeZone = ZoneList.FirstOrDefault() as Zone;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
-            
-            double NDemandkg = GetNDemandToday()*10 * treeZone.Area * 10000;
+
+            double NDemandkg = GetNDemandToday()*10 * treeZone.Area;
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
@@ -515,34 +687,37 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
                         double[] SW = Z.Water;
-                        
+
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
-                        double[] BD = ThisSoil.BD;
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
+                        double[] BD = soilPhysical.BD;
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
-                            PotNO3Supply += Uptake.NO3N[i] * ZI.Area * 10000;
+                            Uptake.NO3N[i] = PotentialNO3Uptake(soilPhysical.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
+                            Uptake.NO3N[i] *= 10; // convert from g/m2 to kg/ha
+                            PotNO3Supply += Uptake.NO3N[i] * ZI.Area;
                         }
                         Uptakes.Add(Uptake);
                         break;
                     }
                 }
             }
-            // Now scale back uptakes if supply > demand
+            // Now scale back uptakes if demand > supply
             double F = 0;  // Uptake scaling factor
             if (PotNO3Supply > 0)
             {
@@ -552,16 +727,10 @@ namespace Models.Agroforestry
             }
             else
                 F = 1;
-            NStress = Math.Min(1, Math.Max(0, PotNO3Supply / NDemandkg));
 
-            List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN Z in Uptakes)
-            {
                 Z.NO3N = MathUtilities.Multiply_Value(Z.NO3N, F);
-                uptakeList.Add(Z.TotalNO3N);
-            }
 
-            NUptake = uptakeList.ToArray();
             return Uptakes;
         }
         double PotentialNO3Uptake(double thickness, double NO3N, double SWmm, double RLD, double RootRadius, double BD, double Kd)
@@ -577,10 +746,11 @@ namespace Models.Agroforestry
             double BD_gm3 = BD * 1000000.0;
 
             //Potential Uptake (g/m2)
-            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))))*10; // 10 converts g/m2 to kg/ha
+            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))));
 
-            if (U > NO3N)
-                U = NO3N;
+            // Now check that U is less than NO3 in soil (which is in kg/ha)
+            if (U > (NO3N/10))
+                U = (NO3N/10);
             return U;
         }
 
@@ -592,18 +762,17 @@ namespace Models.Agroforestry
         ///  Accepts the actual soil water uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
             int i = 0;
             foreach (Zone SearchZ in forestryZones)
             {
                 foreach (ZoneWaterAndN ZI in info)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
-                        ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
+                        var thisSoil = SearchZ.FindInScope<ISoilWater>();
+                        thisSoil.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
                         { }
@@ -611,30 +780,36 @@ namespace Models.Agroforestry
                     }
                 }
             }
-            
+
         }
 
         /// <summary>
         /// Accepts the actual soil Nitrogen uptake from the soil arbitrator.
         /// </summary>
         /// <param name="info"></param>
-        public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<Soils.Arbitrator.ZoneWaterAndN> info)
         {
+            double NO3Supply = 0; // Total N supply (kg)
+            List<double> uptakeList = new List<double>();
             foreach (ZoneWaterAndN ZI in info)
             {
                 foreach (Zone SearchZ in forestryZones)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        var NO3Solute = SearchZ.FindInScope("NO3") as ISolute;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
-                            NewNO3[i] = ThisSoil.NO3N[i] - ZI.NO3N[i];
-                        ThisSoil.NO3N = NewNO3;
+                            NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
+                        NO3Solute.SetKgHa(SoluteSetterType.Plant, NewNO3);
+                        NO3Supply += NewNO3.Sum() * SearchZ.Area;
+                        uptakeList.Add(ZI.TotalNO3N);
                     }
                 }
             }
+            double NDemandkg = GetNDemandToday() * 10 * treeZone.Area;
+            NUptake = uptakeList.ToArray();
+            NStress = Math.Min(1, Math.Max(0, NO3Supply / NDemandkg));
         }
 
     }

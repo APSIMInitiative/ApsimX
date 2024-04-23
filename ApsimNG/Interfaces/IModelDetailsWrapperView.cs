@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="CSIRO">
-//     Copyright (c) CSIRO, CLEM model
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
-    using Gtk;
-
     public interface IModelDetailsWrapperView
     {
         /// <summary>
@@ -20,9 +13,19 @@ namespace UserInterface.Interfaces
         string ModelDescriptionText { get; set; }
 
         /// <summary>
+        /// Property to provide access to the model version text label.
+        /// </summary>
+        string ModelVersionText { get; set; }
+
+        /// <summary>
         /// Property to provide the text color for model type label.
         /// </summary>
         string ModelTypeTextColour { get; set; }
+
+        /// <summary>
+        /// Property to provide the text color for model based on class type given.
+        /// </summary>
+        string ModelTypeTextStyle { get; set; }
 
         /// <summary>
         /// Property to provide access to the model help URL.
@@ -37,6 +40,6 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>
-        void AddLowerView(object Control);
+        void AddLowerView(object control);
     }
 }

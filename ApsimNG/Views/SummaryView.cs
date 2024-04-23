@@ -1,113 +1,145 @@
-﻿using Gtk;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using Gtk;
+using Utility;
+using MessageType = Models.Core.MessageType;
 
 namespace UserInterface.Views
 {
-    /// <summary>
-    /// A view for a summary file.
-    /// </summary>
+
+    /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
     {
-        private VBox vbox1 = null;
-        private ComboBox combobox1 = null;
-        private ListStore comboModel = new ListStore(typeof(string));
-        private CellRendererText comboRender = new CellRendererText();
-        private HTMLView htmlview;
+        private Widget captureRules;
+        private Widget simulationFilter;
+        private VBox mainControl;
+        private HBox settingsControl;
+
+        /// <summary>Drop down box which displays the simulation names.</summary>
+        public DropDownView SimulationDropDown { get; private set; }
+
+        /// <summary>View which displays the summary data.</summary>
+        public IMarkdownView SummaryDisplay { get; }
+
+        private Button btnJumpToSimLog;
+
+        public EnumDropDownView<Models.Core.MessageType> VerbosityDropDown { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SummaryView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
-            combobox1 = (ComboBox)builder.GetObject("combobox1");
-            _mainWidget = vbox1;
-            combobox1.PackStart(comboRender, false);
-            combobox1.AddAttribute(comboRender, "text", 0);
-            combobox1.Model = comboModel;
-            combobox1.Changed += comboBox1_TextChanged;
-            htmlview = new HTMLView(this);
-            vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            captureRules = CreateCaptureRules();
+            simulationFilter = CreateSimulationFilter();
+
+            Widget jumpToLogContainer = CreateJumpToLogContainer();
+
+            mainControl = new VBox();
+            settingsControl = new HBox();
+            mainWidget = mainControl;
+            settingsControl.PackStart(captureRules, false, false, 0);
+            settingsControl.PackStart(simulationFilter, false, false, 0);
+            SummaryDisplay = new MarkdownView(this);
+            ScrolledWindow scroller = new ScrolledWindow();
+            scroller.Add(((ViewBase)SummaryDisplay).MainWidget);
+            mainControl.PackStart(settingsControl, false, false, 0);
+            mainControl.PackStart(jumpToLogContainer, false, false, 0);
+            mainControl.PackEnd(scroller, true, true, 0);
+            VerbosityDropDown.Changed += OnVerbosityDropDownChange;
+            mainWidget.Destroyed += MainWidgetDestroyed;
+            mainWidget.ShowAll();
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private Widget CreateJumpToLogContainer()
         {
-            comboModel.Dispose();
-            comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            btnJumpToSimLog = new Button("Jump to simulation log");
+            btnJumpToSimLog.Clicked += OnJumpToSimulationLog;
+            HBox box = new HBox();
+            box.PackStart(btnJumpToSimLog, false, false, 0);
+            box.Margin = 5;
+            return box;
         }
 
-        /// <summary>Occurs when the name of the simulation is changed by the user</summary>
-        public event EventHandler SimulationNameChanged;
-
-        /// <summary>Gets or sets the currently selected simulation name.</summary>
-        public string SimulationName
+        private Widget CreateSimulationFilter()
         {
-            get
-            {
-                TreeIter iter;
-                if (combobox1.GetActiveIter(out iter))
-                    return (string)combobox1.Model.GetValue(iter, 0);
-                else
-                    return "";
-            }
+            VBox box = new VBox();
+            HBox hBox = new HBox();
+            SimulationDropDown = new DropDownView(this);
+            hBox.PackStart(new Label("Simulation:"), false, false, 5);
+            hBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
+            box.PackStart(hBox, false, false, 5);
+            box.MarginBottom = 5;
+            Frame frame = new Frame("Simulation Filter");
+            frame.Add(box);
+            frame.Margin = 5;
+            return frame;
+        }
 
-            set
+        private Widget CreateCaptureRules()
+        {
+            VerbosityDropDown = new EnumDropDownView<MessageType>(this);
+            Label verbosity = new Label("Messages which should be saved when the simulation is run:");
+            VBox box = new VBox();
+            box.PackStart(verbosity, false, false, 5);
+            box.PackStart(VerbosityDropDown.MainWidget, false, false, 5);
+            box.Margin = 5;
+            Frame frame = new Frame("Capture Rules");
+            frame.Add(box);
+            frame.Margin = 5;
+            return frame;
+        }
+
+        private void OnJumpToSimulationLog(object sender, EventArgs e)
+        {
+            try
             {
-                TreeIter iter;
-                if (comboModel.GetIterFirst(out iter))
+                TextView target = mainWidget.Descendants().OfType<TextView>().FirstOrDefault(l => l.Buffer.Text.Contains("Simulation log"));
+                if (target != null)
                 {
-                    string entry = (string)comboModel.GetValue(iter, 0);
-                    while (!entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
-                        entry = (string)comboModel.GetValue(iter, 0);
-                    if (entry == value)
-                        combobox1.SetActiveIter(iter);
-                    else // Could not find a matching entry
-                        combobox1.Active = -1;
+                    TextIter iter = target.Buffer.GetIterAtOffset(target.Buffer.Text.IndexOf("Simulation log", StringComparison.CurrentCultureIgnoreCase));
+                    target.ScrollToIter(iter, 0, true, 0, 0);
                 }
             }
-        }
-
-        /// <summary>Gets or sets the simulation names.</summary>
-        public IEnumerable<string> SimulationNames
-        {
-            get
+            catch (Exception error)
             {
-                int nNames = comboModel.IterNChildren();
-                string[] result = new string[nNames];
-                TreeIter iter;
-                int i = 0;
-                if (combobox1.GetActiveIter(out iter))
-                    do
-                        result[i++] = (string)comboModel.GetValue(iter, 0);
-                    while (comboModel.IterNext(ref iter) && i < nNames);
-                return result;
-            }
-            set
-            {
-                comboModel.Clear();
-                foreach (string text in value)
-                    comboModel.AppendValues(text);
-                if (comboModel.IterNChildren() > 0)
-                    combobox1.Active = 0;
-                else
-                    combobox1.Active = -1;
+                ShowError(error);
             }
         }
 
-        /// <summary>Sets the content of the summary window.</summary>
-        /// <param name="content">The html content</param>
-        public void SetSummaryContent(string content)
+        private void OnVerbosityDropDownChange(object sender, EventArgs args)
         {
-            this.htmlview.SetContents(content, false);
+            try
+            {
+                if (VerbosityDropDown.SelectedEnumValue >= MessageType.Information)
+                    btnJumpToSimLog.Visible = true;
+                else btnJumpToSimLog.Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
-        private void comboBox1_TextChanged(object sender, EventArgs e)
+        /// <summary>Main widget destroyed handler</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            if (this.SimulationNameChanged != null)
-                this.SimulationNameChanged(this, e);
+            try
+            {
+                btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
+                captureRules.Dispose();
+                VerbosityDropDown.Dispose();
+                simulationFilter.Dispose();
+                SimulationDropDown.Dispose();
+                mainControl.Dispose();
+                ((ViewBase)SummaryDisplay).Dispose();
+                mainWidget.Destroyed -= MainWidgetDestroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

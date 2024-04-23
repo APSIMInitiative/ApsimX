@@ -1,0 +1,25 @@
+name: "\U0001F527 Refactor Feature"
+description: Existing code requires rewriting or improvement
+labels: ["Improvement", "Refactor"]
+body:
+  - type: textarea
+    id: location-textarea
+    attributes: 
+      label: "Where is the code located?"
+      placeholder: Describe what project/directory the code is located within here
+    validations:
+      required: true
+  - type: textarea
+    id: change-required-textarea
+    attributes:
+      label: What needs to be changed?
+      placeholder: Describe changes required to the code here
+    validations:
+      required: true
+  - type: textarea
+    id: code-name
+    attributes:
+      label: Why does the code need changing?
+      placeholder: Describe why the code needs to change here
+    validations:
+      required: true

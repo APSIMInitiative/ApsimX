@@ -1,12 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Excel.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using ClosedXML.Excel;
+using System.Data;
+
 namespace Utility
 {
-    using ClosedXML.Excel;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -22,7 +18,17 @@ namespace Utility
             XLWorkbook workbook = new XLWorkbook();
             foreach (System.Data.DataTable table in tables)
             {
-                workbook.Worksheets.Add(table);
+                DataTable sortedTable = table;
+                //Sort Rows by SimulationNatableme in alphabetical order
+                if (table.Columns.Contains("SimulationName"))
+                {
+                    DataView dv = table.DefaultView;
+                    dv.Sort = "SimulationName ASC";
+                    if (table.Columns.Contains("Clock.Today"))
+                        dv.Sort += ", Clock.Today ASC";
+                    sortedTable = dv.ToTable();
+                }
+                workbook.Worksheets.Add(sortedTable);
             }
 
             workbook.SaveAs(fileName);

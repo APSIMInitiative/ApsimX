@@ -1,23 +1,23 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Other animals grow activity</summary>
     /// <summary>This activity grows other animals and includes aging</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the growth and aging of a specified type of other animal.")]
+    [Description("Performs the growth and aging of a specified type of other animal")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityGrow.htm")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
     {
         /// <summary>
@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of Other Animal Type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string OtherAnimalType { get; set; }
 
         private OtherAnimalsType animalType { get; set; }
@@ -36,11 +37,11 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate OtherAnimalsType resource
-            animalType = Resources.GetResourceItem(this, typeof(OtherAnimals), OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
+            animalType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
-        /// Function to age other animals
+        /// Method to age other animals
         /// This needs to be undertaken prior to herd management
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -49,72 +50,13 @@ namespace Models.CLEM.Activities
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
             // grow all individuals
-            foreach (OtherAnimalsTypeCohort cohort in animalType.Cohorts.Where(a => a.GetType() == typeof(OtherAnimalsTypeCohort)))
-            {
+            foreach (OtherAnimalsTypeCohort cohort in animalType.Cohorts.OfType<OtherAnimalsTypeCohort>())
                 cohort.Age++;
-            }
 
             // death from old age
             while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).Count() > 0)
-            {
-                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this.Name, "Died");
-            }
-        }
+                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this, "Died");
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
         }
 
     }

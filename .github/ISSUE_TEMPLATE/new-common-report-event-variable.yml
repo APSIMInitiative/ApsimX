@@ -1,0 +1,24 @@
+name: "📄 Add a Report Event/Variable"
+description: Create a new common report event or variable that appears in the Reporting list
+labels: ["Report Variable/Event"]
+body:
+  - type: markdown
+    attributes:
+      value: "Provide all your events or varibles below. An example of an event is: [Clock].EndOfDay. An example of a report variable is: [Wheat].AboveGround.Wt"
+  - type: textarea
+    id: description-area
+    attributes:
+      label: "For each event or variable write a short description followed by the code. An example: End of day: [Clock].EndOfDay"
+      placeholder: Put your descriptions and code here
+    validations:
+      required: true
+  - type: textarea
+    id: notes-area
+    attributes:
+      label: "Notes"
+      placeholder: Put notes/comments here
+    validations:
+      required: false
+
+
+

@@ -1,5 +1,0 @@
-/*!\page tutorial Tutorials
-Here we will show how to use APSIM to create a model through drag and drop.
-- \subpage phenology "Create a simple phenology model"
-- \subpage parameter "Modification of parameters in APSIM"
-*/

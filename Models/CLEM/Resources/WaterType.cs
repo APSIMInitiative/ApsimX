@@ -1,11 +1,9 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -13,12 +11,20 @@ namespace Models.CLEM.Resources
     /// Store for water type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WaterStore))]
-    [Description("This resource represents a water store type (e.g. dam, bore, tank).")]
-    public class WaterType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a water store (e.g. dam, bore, tank)")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Water/WaterStoreType.htm")]
+    public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -26,11 +32,10 @@ namespace Models.CLEM.Resources
         [Required]
         public double StartingAmount { get; set; }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public double Amount { get { return amount; } }
+        public double Amount { get; private set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -38,110 +43,78 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
+            if (StartingAmount > 0)
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         /// <summary>
-        /// Initialise resource type
+        /// Total value of resource
         /// </summary>
-        public void Initialise()
+        public double? Value
         {
-            this.amount = 0;
-            if (StartingAmount > 0)
+            get
             {
-                Add(StartingAmount, this.Name, "Starting value");
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
 
         #region transactions
 
         /// <summary>
-        /// Back account transaction occured
+        /// Add water to water store
         /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            var h = TransactionOccurred; if (h != null) h(this, e);
-        }
+            if (resourceAmount.GetType().ToString() != "System.Double")
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [XmlIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
-        /// <summary>
-        /// Add money to account
-        /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
-        {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
+            double amountAdded = (double)resourceAmount;
+            if (amountAdded > 0)
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
-            }
-            double addAmount = (double)ResourceAmount;
-            if (addAmount > 0)
-            {
-                amount += addAmount;
+                Amount += amountAdded;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
-                details.Reason = Reason;
-                details.ResourceType = this.Name;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
 
         /// <summary>
-        /// Remove money (object) from account
+        /// Remove from water type store
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            throw new NotImplementedException();
-        }
+            if (request.Required == 0)
+                return;
 
-        /// <summary>
-        /// Remove from finance type store
-        /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
-        {
-            if (Request.Required == 0) return;
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+                FindEquivalentMarketStore();
+
             // avoid taking too much
-            double amountRemoved = Request.Required;
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
-            this.amount -= amountRemoved;
+            double amountRemoved = request.Required;
+            amountRemoved = Math.Min(Amount, amountRemoved);
+            Amount -= amountRemoved;
 
-            Request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                (EquivalentMarketStore as WaterType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+
+            request.Provided = amountRemoved;
+
+            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <summary>
-        /// Set the amount in an account.
+        /// Set the amount in an a water type.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
-            amount = NewAmount;
+            Amount = newAmount;
         }
 
         #endregion

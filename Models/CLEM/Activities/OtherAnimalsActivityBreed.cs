@@ -1,32 +1,32 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Other animals breed activity</summary>
     /// <summary>This activity handles breeding in other animals types</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of a specified type of other animal.")]
-    public class OtherAnimalsActivityBreed : CLEMActivityBase, IValidatableObject
+    [Description("Manages the breeding of a specified type of other animal")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
+    public class OtherAnimalsActivityBreed : CLEMActivityBase
     {
         /// <summary>
         /// name of other animal type
         /// </summary>
-        [Description("Name of other animal type")]
+        [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string AnimalType { get; set; }
 
         /// <summary>
@@ -63,15 +63,10 @@ namespace Models.CLEM.Activities
         public OtherAnimalsType SelectedOtherAnimalsType;
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this timer is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime NextDueDate { get; set; }
-
-        /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
 
         /// <summary>
         /// Constructor
@@ -81,32 +76,14 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Object validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if (SelectedOtherAnimalsType == null)
-            {
-                string[] memberNames = new string[] { "AnimalType" };
-                results.Add(new ValidationResult("Unknown other animal type: " + AnimalType, memberNames));
-            }
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            // get other animal type model
+            SelectedOtherAnimalsType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, AnimalType, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
         /// <summary>An event handler to perform herd breeding </summary>
@@ -117,11 +94,11 @@ namespace Models.CLEM.Activities
         {
             if(this.TimingOK)
             {
-                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
+                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
                 if (!UseLocalMales || malebreeders > 0)
                 {
                     // get number of females
-                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);
+                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {
@@ -130,118 +107,23 @@ namespace Models.CLEM.Activities
                         {
                             Age = 0,
                             Weight = 0,
-                            Gender = Sex.Male,
+                            Sex = Sex.Male,
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                         OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
                         {
                             Age = 0,
                             Weight = 0,
-                            Gender = Sex.Female,
+                            Sex = Sex.Female,
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                     }
                 }
             }
         }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            // this activity is performed in CLEMAnimalBreeding event
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            ResourceRequestList = null;
-            if (this.TimingOK)
-            {
-                double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-                if (breeders == 0) return null;
-
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHead:
-                            daysNeeded = Math.Ceiling(breeders / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
-            }
-            return ResourceRequestList;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
-        }
-
     }
 }

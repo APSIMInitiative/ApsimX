@@ -1,0 +1,13 @@
+name: "\U0001F454 Jenkins Issue"
+description: There is an issue with Jenkins
+labels: ["Jenkins"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      placeholder: Write Message and Upload Picture and/or Files Here
+    validations:
+      required: true
+
+

@@ -1,24 +1,22 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MetDataPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using Models.Climate;
+using Models.Core;
+using UserInterface.Views;
+using System.Linq;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.IO;
-    using System.Text;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Graph;
-    using Views;
-
     /// <summary>A presenter for displaying weather data</summary>
-    public class MetDataPresenter : IPresenter
+    public sealed class MetDataPresenter : IPresenter, IDisposable
     {
         /// <summary>The met data</summary>
         private Weather weatherData;
@@ -26,7 +24,8 @@ namespace UserInterface.Presenters
         /// <summary>The met data view</summary>
         private IMetDataView weatherDataView;
 
-        // these are used to display the graphs, and refresh graphs as required
+        /// <summary>The sheet widget.</summary>
+        private GridPresenter gridPresenter;
 
         /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
@@ -50,7 +49,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Hold an array of months for the graph,  by default, is set to will Jan yyyy to Dec yyyy, except where
         /// data being displays is not for full year</summary>
-        private string[] monthsToDisplay = DateUtilities.LowerCaseMonths;
+        private string[] monthsToDisplay = DateUtilities.MONTHS_3_LETTERS;
 
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
@@ -65,10 +64,18 @@ namespace UserInterface.Presenters
             this.weatherData = model as Weather;
             this.weatherDataView = view as IMetDataView;
 
+            ContainerView sheetContainer = this.weatherDataView.container;
+
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
+
             this.weatherDataView.BrowseClicked += this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            this.weatherDataView.ConstantsFileSelected += OnConstantsFileSelected;
             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
+            this.weatherDataView.ShowConstantsFile(Path.GetExtension(weatherData.FullFileName) == ".csv");
             this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
             this.weatherDataView.TabIndex = this.weatherData.ActiveTabIndex;
             if (this.weatherData.StartYear >= 0)
@@ -85,27 +92,31 @@ namespace UserInterface.Presenters
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
             this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+            this.weatherDataView.ConstantsFileSelected -= OnConstantsFileSelected;
         }
 
-        /// <summary>Called when [browse].</summary>
+        /// <summary>Called after the user has selected a new met file.</summary>
         /// <param name="fileName">Name of the file.</param>
         public void OnBrowse(string fileName)
         {
+            bool isCsv = Path.GetExtension(fileName) == ".csv";
+            this.weatherDataView.ShowConstantsFile(isCsv);
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
-                if (Path.GetExtension(fileName) == ExcelUtilities.ExcelExtension)
+                if (ExcelUtilities.IsExcelFile(fileName))
                 {
-                    //// Extend height of Browse Panel to show Drop Down for Sheet names
+                    // Extend height of Browse Panel to show Drop Down for Sheet names
                     this.weatherDataView.ShowExcelSheets(true);
                     this.sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(this.sheetNames);
 
-                    // the following is not required here as it happens when the sheet name is changed
-                    // this.WriteTableAndSummary(fileName);
+                    // We want to attempt to update the table/summary now. This may fail if the
+                    // sheet name is incorrect/not set.
+                    this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
-                    //// Shrink Browse Panel so that the sheet name dropdown doesn't show
+                    // Shrink Browse Panel so that the sheet name dropdown doesn't show
                     this.weatherDataView.ShowExcelSheets(false);
 
                     // as a precaution, set this to nothing
@@ -113,6 +124,13 @@ namespace UserInterface.Presenters
                     this.WriteTableAndSummary(fileName);
                 }
             }
+        }
+
+        private void OnConstantsFileSelected(string fileName)
+        {
+            ICommand changeConstantsFile = new ChangeProperty(weatherData, nameof(weatherData.ConstantsFile), fileName);
+            explorerPresenter.CommandHistory.Add(changeConstantsFile);
+            WriteTableAndSummary(weatherData.FileName);
         }
 
         /// <summary>
@@ -128,11 +146,11 @@ namespace UserInterface.Presenters
             {
                 using (DataTable data = this.graphMetData)
                 {
-                    DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
-                    DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
+                    DateTime startDate = new DateTime(Convert.ToInt16(startYear, CultureInfo.InvariantCulture), 1, 1);
+                    DateTime endDate = new DateTime(Convert.ToInt16(startYear, CultureInfo.InvariantCulture), 12, 31);
                     if (showYears > 1)
                     {
-                        endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
+                        endDate = endDate.AddYears(Convert.ToInt16(showYears, CultureInfo.InvariantCulture) - 1);
                     }
 
                     this.DisplayDetailedGraphs(data, tabIndex, startDate, endDate, false);
@@ -188,7 +206,7 @@ namespace UserInterface.Presenters
                 this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
-                    if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
+                    if (ExcelUtilities.IsExcelFile(filename))
                     {
                         // Extend height of Browse Panel to show Drop Down for Sheet names
                         this.weatherDataView.ShowExcelSheets(true);
@@ -206,12 +224,22 @@ namespace UserInterface.Presenters
                         this.weatherDataView.ShowExcelSheets(false);
                     }
 
-                    (this.weatherDataView as TabbedMetDataView).WaitCursor = true;
+                    ViewBase.MasterView.WaitCursor = true;
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(weatherData, "FullFileName", PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName)));
-
+                        string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        var changes = new List<ChangeProperty.Property>();
+                        if (weatherData.FullFileName != newFileName)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        // Set constants file name to null iff the new file name is not a csv file.
+                        if (Path.GetExtension(newFileName) != ".csv" && weatherData.ConstantsFile != null)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));
+                        if (changes.Count > 0)
+                        {
+                            ICommand changeFileName = new ChangeProperty(changes);
+                            explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
+                        }
                         using (DataTable data = this.weatherData.GetAllData())
                         {
                             this.dataStartDate = this.weatherData.StartDate;
@@ -222,9 +250,13 @@ namespace UserInterface.Presenters
                         }
 
                     }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowError(err);
+                    }
                     finally
                     {
-                        (this.weatherDataView as TabbedMetDataView).WaitCursor = false;
+                        ViewBase.MasterView.WaitCursor = false;
                         this.weatherData.CloseDataFile();
                     }
                 }
@@ -239,6 +271,7 @@ namespace UserInterface.Presenters
 
             // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.ConstantsFileName = weatherData.ConstantsFile;
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
 
@@ -266,7 +299,7 @@ namespace UserInterface.Presenters
                 if ((yearCol >= 0) && (dayCol >= 0))
                 {
                     // add a new column for the date string
-                    DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
+                    DataColumn dateCol = data.Columns.Add("Date", typeof(DateTime));
                     dateCol.SetOrdinal(0);
                     yearCol++;    // moved along
                     dayCol++;
@@ -276,11 +309,23 @@ namespace UserInterface.Presenters
                     // for each row in the grid
                     for (int r = 0; r < data.Rows.Count; r++)
                     {
-                        yr = Convert.ToInt32(data.Rows[r][yearCol]);
-                        day = Convert.ToInt32(data.Rows[r][dayCol]);
-                        DateTime rowDate = new DateTime(yr, 1, 1);
-                        rowDate = rowDate.AddDays(day - 1);                 // calc date
-                        data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
+                        DateTime rowDate;
+                        try
+                        {
+                            yr = Convert.ToInt32(data.Rows[r][yearCol], CultureInfo.InvariantCulture);
+                            day = Convert.ToInt32(data.Rows[r][dayCol], CultureInfo.InvariantCulture);
+                            rowDate = new DateTime(yr, 1, 1);
+                        }
+                        catch (Exception err)
+                        {
+                            DateTime previousRowDate;
+                            if (r > 0 && DateTime.TryParse((string)data.Rows[r - 1][0], out previousRowDate))
+                                throw new Exception("Invalid date detected in file: " + this.weatherData.FileName + ". Previous row: " + previousRowDate.ToShortDateString() + " (day of year = " + previousRowDate.DayOfYear + ")");
+                            else
+                                throw new Exception("Encountered an error while parsing date: " + err.Message);
+                        }
+                        rowDate = rowDate.AddDays(day - 1);   // calc date
+                        data.Rows[r][0] = rowDate;
                     }
 
                     if (dayCol > yearCol)
@@ -296,7 +341,7 @@ namespace UserInterface.Presenters
                 }
 
                 this.graphMetData = data;
-                this.weatherDataView.PopulateData(data);
+                this.PopulateData(data);
             }
         }
 
@@ -311,7 +356,11 @@ namespace UserInterface.Presenters
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
 
+            foreach (string validationMessage in weatherData.Validate())
+                summary.AppendLine($"WARNING: {validationMessage}");
+
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP       : " + string.Format("{0, 2:f2}", this.weatherData.Amp));
             summary.AppendLine("Start     : " + this.dataStartDate.ToShortDateString());
@@ -343,10 +392,10 @@ namespace UserInterface.Presenters
                     }
                 }
 
-                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
+                double[] yearlyRainfall = DataTableUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMaxT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMinT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
 
                 // what do we do if the date range is less than 1 year.
                 // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
@@ -455,10 +504,19 @@ namespace UserInterface.Presenters
                     string rainMessage = string.Empty;
                     if (dailyRain.Length != 0)
                     {
-                        double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
-                        rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
-                                    + " is " + totalYearlyRainfall.ToString() + "mm.";
-
+                        if (startDate.Year == endDate.Year)
+                        {
+                            double totalRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
+                            rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
+                                        + " is " + totalRainfall.ToString() + " mm.";
+                        }
+                        else
+                        {
+                            double meanRainfall = Math.Round(MathUtilities.Sum(dailyRain) / ((endDate - startDate).TotalDays + 1) * 365.25, 1);
+                            rainMessage = "Mean rainfall for the years " + startDate.Year.ToString()
+                                        + " to " + endDate.Year.ToString()
+                                        + " is " + meanRainfall.ToString() + " mm/yr.";
+                        }
                         this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
                     }
                 }
@@ -480,11 +538,11 @@ namespace UserInterface.Presenters
             {
                 if (table != null && table.Rows.Count > 0)
                 {
-                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
+                    double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
 
                     if (monthlyRainfall.Length != 0)
                     {
-                        double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                        double[] avgMonthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
                         this.PopulateMonthlyRainfallGraph(
                                                        "Monthly Rainfall",
                                                         this.monthsToDisplay, 
@@ -592,6 +650,11 @@ namespace UserInterface.Presenters
 
                 this.weatherDataView.GraphStartYearMaxValue = this.dataEndDate.Year;
             }
+            int oldValue = this.weatherDataView.GraphShowYearsValue;
+            this.weatherDataView.GraphShowYearsValue = 1;
+            int maxNYears = this.dataEndDate.Year - this.dataStartDate.Year + 1;
+            this.weatherDataView.GraphShowYearsMaxValue = maxNYears;
+            this.weatherDataView.GraphShowYearsValue = Math.Min(oldValue, maxNYears);
         }
 
         /// <summary>Create the monthly Summary chart</summary>
@@ -604,11 +667,11 @@ namespace UserInterface.Presenters
         {
             this.weatherDataView.GraphSummary.Clear();
             this.weatherDataView.GraphSummary.DrawBar(
-                                      title,
+                                      "Rainfall",
                                       months,
                                       monthlyRain,
-                                      Axis.AxisType.Bottom,
-                                      Axis.AxisType.Left,
+                                      AxisPosition.Bottom,
+                                      AxisPosition.Left,
                                       Color.LightSkyBlue,
                                       true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers(
@@ -616,30 +679,46 @@ namespace UserInterface.Presenters
                                                      months,
                                                      monthlyMaxT,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Red,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers(
                                                      "Minimum Temperature",
                                                      months,
                                                      monthlyMinT,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+
+            double startDate = 0;
+            double endDate = months.Length;
+            double minTemp = MathUtilities.Min(monthlyMinT);
+            double maxTemp = MathUtilities.Max(monthlyMaxT);
+            double minRain = 0;
+            double maxRain = MathUtilities.Max(monthlyRain);
+
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Bottom, "Month", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minRain, maxRain, double.NaN, false, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Right, "Temperature (oC)", false, minTemp, maxTemp, double.NaN, false, false);
             this.weatherDataView.GraphSummary.FormatTitle(title);
             this.weatherDataView.GraphSummary.Refresh();
         }
@@ -655,13 +734,18 @@ namespace UserInterface.Presenters
                                                        title,
                                                        dates,
                                                        rain,
-                                                       Axis.AxisType.Bottom,
-                                                       Axis.AxisType.Left,
+                                                       AxisPosition.Bottom,
+                                                       AxisPosition.Left,
                                                        Color.LightSkyBlue,
                                                        false);
 
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minVal = 0;
+            double maxVal = MathUtilities.Max(rain);
+
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphRainfall.FormatTitle(title);
             this.weatherDataView.GraphRainfall.Refresh();
         }
@@ -683,8 +767,8 @@ namespace UserInterface.Presenters
                                                            title,
                                                            months,
                                                            monthlyRain,
-                                                           Axis.AxisType.Bottom,
-                                                           Axis.AxisType.Left,
+                                                           AxisPosition.Bottom,
+                                                           AxisPosition.Left,
                                                            Color.LightSkyBlue,
                                                            true);
             }
@@ -696,18 +780,27 @@ namespace UserInterface.Presenters
                                                  months,
                                                  avgMonthlyRain,
                                                  null,
-                                                 Axis.AxisType.Bottom,
-                                                 Axis.AxisType.Left,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 AxisPosition.Bottom,
+                                                 AxisPosition.Left,
                                                  Color.Blue,
                                                  LineType.Solid,
                                                  MarkerType.None,
-                                                 LineThicknessType.Normal,
-                                                 MarkerSizeType.Normal,
+                                                 LineThickness.Normal,
+                                                 MarkerSize.Normal,
+                                                 1,
                                                  true);
             }
 
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            double startDate = 0;
+            double endDate = months.Length;
+            double minVal = 0;
+            double maxVal = MathUtilities.Max(avgMonthlyRain);
+
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatTitle(title);
             this.weatherDataView.GraphMonthlyRainfall.Refresh();
         }
@@ -724,14 +817,18 @@ namespace UserInterface.Presenters
                                                      "Maximum Temperature",
                                                      dates,
                                                      maxTemps,
-                                                     null, 
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Left,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Left,
                                                      Color.Blue,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
 
             this.weatherDataView.GraphTemperature.DrawLineAndMarkers(
@@ -739,17 +836,26 @@ namespace UserInterface.Presenters
                                                      dates,
                                                      minTemps,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Left,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Left,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
 
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minVal = MathUtilities.Min(minTemps);
+            double maxVal = MathUtilities.Max(maxTemps);
+
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Left, "Temperature (oC)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphTemperature.FormatTitle(title);
             this.weatherDataView.GraphTemperature.Refresh();
         }
@@ -767,8 +873,8 @@ namespace UserInterface.Presenters
                                                        "Rainfall",
                                                        dates,
                                                        rain,
-                                                       Axis.AxisType.Bottom,
-                                                       Axis.AxisType.Left,
+                                                       AxisPosition.Bottom,
+                                                       AxisPosition.Left,
                                                        Color.LightSkyBlue,
                                                        true);
             this.weatherDataView.GraphRadiation.DrawLineAndMarkers(
@@ -776,33 +882,63 @@ namespace UserInterface.Presenters
                                                      dates,
                                                      radn,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Blue,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
             this.weatherDataView.GraphRadiation.DrawLineAndMarkers(
                                                      "Maximum Radiation",
                                                      dates,
                                                      maxRadn,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     null,
+                                                     null,
+                                                     null,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
+                                                     1,
                                                      true);
 
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minRad = MathUtilities.Min(radn);
+            double maxRad = MathUtilities.Max(radn);
+            double minRain = 0;
+            double maxRain = MathUtilities.Max(rain);
+
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minRain, maxRain, double.NaN, false, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Right, "Radiation (mJ/m2)", false, minRad, maxRad, double.NaN, false, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
+        }
+
+        /// <summary>Populates the data.</summary>
+        /// <param name="data">The data.</param>
+        public void PopulateData(DataTable data)
+        {
+            //fill the grid with data
+            DataTableProvider provider = new DataTableProvider(data);
+            gridPresenter.PopulateWithDataProvider(provider, 0, 1);
+        }
+
+        public void Dispose()
+        {
+            if (graphMetData != null)
+                graphMetData.Dispose();
         }
     }
 }

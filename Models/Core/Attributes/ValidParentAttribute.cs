@@ -1,20 +1,32 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ValidParentAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>Specifies the models that this class can sit under in the user interface./// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
-    public class ValidParentAttribute : System.Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
+    public class ValidParentAttribute : Attribute
     {
         /// <summary>Allowable parent type.</summary>
-        public Type ParentType { get;  set; }
+        public Type ParentType { get; set; }
 
         /// <summary>Allow the model to be dropped anywhere?</summary>
         public bool DropAnywhere { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public ValidParentAttribute()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="type"></param>
+        public ValidParentAttribute(Type type)
+        {
+            ParentType = type;
+        }
     }
 }

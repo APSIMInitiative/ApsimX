@@ -1,0 +1,1094 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 156,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "SWIMExample",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "To create a simulation using SWIM as the water mode:\n-\tReplace the SoilWater model with SWIM (right-click on the Soil node, Add model)\n-\tAdd (if it is not already there) a LayerStructure model that gives thin layers near the soil surface and also around slowly permeable layers and other structures such as tile drains\n-\tIf a special (potential/water table or seepage) lower boundary condition is wanted then add the “SWIMSetLowerBC” Manager (go to the Management toolbox and expand the Soil folder) to the simulation – otherwise it will default to a unit gradient boundary condition\n-\tIf your soil has tile drains then add the sub-surface drainage component by right-clicking on the Swim3 node, Add model and select SwimSubsurfaceDrain (in the Soils folder) and then fill out the fields describing the drainage system – note that the units are in mm rather than m\n",
+          "Name": "Memo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2000-01-01T00:00:00",
+          "End": "2005-01-31T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 0.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.0,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.0,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 0.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 0.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            }
+          ],
+          "Name": "Forages",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "paddock",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n        \r\n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\r\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\r\n                else\r\n                    throw new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "LowerBCType",
+                  "Value": "gradient"
+                },
+                {
+                  "Key": "LowerBCValue",
+                  "Value": "-500"
+                }
+              ],
+              "Name": "SWIMSetLowerBC",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "allowIrrigation",
+                  "Value": "True"
+                },
+                {
+                  "Key": "seasonStart",
+                  "Value": "1-sep"
+                },
+                {
+                  "Key": "seasonEnd",
+                  "Value": "30-mar"
+                },
+                {
+                  "Key": "seasonsAllocation",
+                  "Value": "10000"
+                },
+                {
+                  "Key": "triggerDeficit",
+                  "Value": "80"
+                },
+                {
+                  "Key": "targetDeficit",
+                  "Value": "100"
+                },
+                {
+                  "Key": "returndays",
+                  "Value": "3"
+                },
+                {
+                  "Key": "maximumAmount",
+                  "Value": "30"
+                },
+                {
+                  "Key": "depthPAWC",
+                  "Value": "300"
+                }
+              ],
+              "Name": "AutomaticIrrigation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
+              "InitialResidueName": "grass",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 20.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 17.0,
+              "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": null,
+              "LocalName": null,
+              "Site": null,
+              "NearestTown": null,
+              "Region": null,
+              "State": null,
+              "Country": null,
+              "NaturalVegetation": null,
+              "ApsoilNumber": null,
+              "Latitude": 0.0,
+              "Longitude": 0.0,
+              "LocationAccuracy": null,
+              "YearOfSampling": null,
+              "DataSource": null,
+              "Comments": null,
+              "Name": "Soil",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "ParticleSizeClay": [
+                    17.61,
+                    17.61,
+                    17.61,
+                    17.61,
+                    17.61
+                  ],
+                  "ParticleSizeSand": [
+                    33.77,
+                    33.77,
+                    33.77,
+                    33.77,
+                    33.77
+                  ],
+                  "ParticleSizeSilt": [
+                    48.62,
+                    48.62,
+                    48.62,
+                    48.62,
+                    48.62
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "Texture": null,
+                  "BD": [
+                    0.865,
+                    0.865,
+                    0.865,
+                    0.865,
+                    0.865
+                  ],
+                  "AirDry": [
+                    0.077,
+                    0.077,
+                    0.077,
+                    0.077,
+                    0.077
+                  ],
+                  "LL15": [
+                    0.231,
+                    0.231,
+                    0.231,
+                    0.231,
+                    0.231
+                  ],
+                  "DUL": [
+                    0.565,
+                    0.565,
+                    0.565,
+                    0.565,
+                    0.565
+                  ],
+                  "SAT": [
+                    0.58,
+                    0.58,
+                    0.58,
+                    0.58,
+                    0.58
+                  ],
+                  "KS": [
+                    216.0,
+                    216.0,
+                    216.0,
+                    216.0,
+                    216.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.231,
+                        0.231,
+                        0.231,
+                        0.231,
+                        0.231
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "AgPRyegrassSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.231,
+                        0.231,
+                        0.231,
+                        0.0,
+                        0.0
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "AgPWhiteCloverSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "Carbon": [
+                    8.2,
+                    5.5,
+                    3.3,
+                    1.7,
+                    1.7
+                  ],
+                  "CarbonUnits": 0,
+                  "SoilCNRatio": [
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5
+                  ],
+                  "FBiom": [
+                    0.08,
+                    0.02,
+                    0.015,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.58,
+                    0.7,
+                    0.77,
+                    0.9,
+                    0.99
+                  ],
+                  "FOM": [
+                    92.873,
+                    57.963,
+                    31.811,
+                    11.373,
+                    0.0
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "PH": [
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5
+                  ],
+                  "PHUnits": 0,
+                  "EC": null,
+                  "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "InitialValues": [
+                    0.565,
+                    0.565,
+                    0.565,
+                    0.565,
+                    0.565
+                  ],
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Swim3, Models",
+                  "Salb": 0.13,
+                  "CN2Bare": 50.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "KDul": 1.0,
+                  "PSIDul": -100.0,
+                  "VC": true,
+                  "DTMin": 0.0,
+                  "DTMax": 60.0,
+                  "MaxWaterIncrement": 5.0,
+                  "SpaceWeightingFactor": 0.0,
+                  "SoluteSpaceWeightingFactor": 1.0,
+                  "Dis": 0.0,
+                  "Disp": 1.0,
+                  "A": 2.0,
+                  "DTHC": 0.1,
+                  "DTHP": 2.0,
+                  "Diagnostics": false,
+                  "Name": "Swim3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.LayerStructure, Models",
+                  "Thickness": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                    50.0,
+                    50.0,
+                    50.0,
+                    100.0,
+                    100.0,
+                    50.0,
+                    50.0,
+                    50.0,
+                    50.0
+                  ],
+                  "Name": "LayerStructure",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Name": "SoilTemperature",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.05,
+                  "Exco": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "FIP": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Cl",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "InitialValues": [
+                    6.503,
+                    2.101,
+                    2.101,
+                    1.701,
+                    1.701
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.05,
+                  "Exco": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "FIP": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "InitialValues": [
+                    0.599,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.05,
+                  "Exco": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FIP": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    150.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.05,
+                  "Exco": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "FIP": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
+              "GrazingRotationType": 0,
+              "SimpleGrazingFrequencyString": "end of month",
+              "SimpleMinGrazable": 0.0,
+              "SimpleGrazingResidual": 1200.0,
+              "PreGrazeDMArray": null,
+              "PostGrazeDMArray": null,
+              "FlexibleExpressionForTimingOfGrazing": null,
+              "FlexibleGrazePostDM": 0.0,
+              "MaximumRotationLengthArray": null,
+              "MinimumRotationLengthArray": null,
+              "NoGrazingStartString": null,
+              "NoGrazingEndString": null,
+              "FractionDefoliatedNToSoil": [
+                90.0
+              ],
+              "FractionExcretedNToDung": [
+                0.4
+              ],
+              "CNRatioDung": 0.0,
+              "DepthUrineIsAdded": 150.0,
+              "FractionPopulationDecline": 0.0,
+              "TramplingOn": false,
+              "MaximumPropLitterMovedToSoil": 0.1,
+              "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+              "SpeciesCutProportions": null,
+              "Name": "SimpleGrazing",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
+              "InitialShootDM": 2500.0,
+              "InitialRootDM": 500.0,
+              "InitialRootDepth": 350.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPRyegrass",
+              "ResourceName": "AGPRyegrass",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 250.0,
+              "InitialRootDepth": 300.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPWhiteClover",
+              "ResourceName": "AGPWhiteClover",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[Soil].Swim3.Drainage as Drainage",
+                "[Soil].Swim3.Runoff as Runoff",
+                "[Soil].Swim3.Pond as PondDepth",
+                "sum([Soil].Water.MM) as WaterStored",
+                "[Soil].Swim3.Runoff as Runoff[Soil].Water.Volumetric as SW"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
