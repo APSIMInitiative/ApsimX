@@ -28834,7 +28834,14 @@
                         46.9,
                         59.3
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.11106515945225626,
+                        0.1037981269510927
+                      ],
                       "Texture": null,
                       "BD": [
                         1.35,
@@ -28890,11 +28897,39 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -28924,9 +28959,30 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -29046,7 +29102,7 @@
                         0.01
                       ],
                       "FInert": [
-                        0.375,
+                        0.255,
                         0.795,
                         0.895,
                         0.94,
@@ -29054,10 +29110,10 @@
                         0.99
                       ],
                       "FOM": [
-                        200.0,
-                        150.0,
                         100.0,
-                        50.0,
+                        80.0,
+                        60.0,
+                        20.0,
                         10.0,
                         5.0
                       ],
@@ -29123,11 +29179,11 @@
                         500.0
                       ],
                       "InitialValues": [
-                        30.0,
-                        50.0,
-                        50.0,
                         5.0,
-                        5.0,
+                        4.0,
+                        3.0,
+                        2.0,
+                        1.0,
                         5.0
                       ],
                       "InitialValuesUnits": 1,
@@ -29648,7 +29704,7 @@
                         },
                         {
                           "Key": "HarvestStage",
-                          "Value": "Maturity"
+                          "Value": "LateReproductive"
                         },
                         {
                           "Key": "FieldLoss",
@@ -29668,7 +29724,7 @@
                         },
                         {
                           "Key": "ExpectedYield",
-                          "Value": "11"
+                          "Value": "35"
                         }
                       ],
                       "Name": "Sowing",
@@ -29895,15 +29951,15 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                  "HarvestIndex": 0.5,
+                  "HarvestIndex": 0.6,
                   "MoistureContent": 0.14,
                   "Proot": 0.1,
                   "MaxRD": 1500.0,
                   "MaxHeight": 1000.0,
-                  "MaxCover": 0.97,
-                  "ExtinctCoeff": 0.9,
+                  "MaxCover": 0.99,
+                  "ExtinctCoeff": 0.5,
                   "SeedlingNConc": 0.05,
-                  "TypicalHarvestStage": "Ripe",
+                  "TypicalHarvestStage": "LateReproductive",
                   "ProductHarvestNConc": 0.02,
                   "StoverHarvestNConc": 0.01,
                   "RootNConc": 0.01,
@@ -35380,7 +35436,14 @@
                         46.9,
                         59.3
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.11106515945225626,
+                        0.1037981269510927
+                      ],
                       "Texture": null,
                       "BD": [
                         1.35,
@@ -35436,11 +35499,39 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -35470,9 +35561,30 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -35600,11 +35712,11 @@
                         0.99
                       ],
                       "FOM": [
-                        300.0,
-                        1000.0,
-                        200.0,
-                        150.0,
+                        80.0,
+                        50.0,
                         20.0,
+                        15.0,
+                        10.0,
                         5.0
                       ],
                       "CarbonMetadata": null,
@@ -35669,10 +35781,10 @@
                         500.0
                       ],
                       "InitialValues": [
-                        1000.0,
-                        100.0,
-                        50.0,
-                        15.0,
+                        10.0,
+                        10.0,
+                        5.0,
+                        5.0,
                         3.0,
                         3.0
                       ],
@@ -36211,7 +36323,7 @@
                         },
                         {
                           "Key": "HarvestStage",
-                          "Value": "Maturity"
+                          "Value": "LateReproductive"
                         },
                         {
                           "Key": "FieldLoss",
@@ -36231,7 +36343,7 @@
                         },
                         {
                           "Key": "ExpectedYield",
-                          "Value": "10"
+                          "Value": "50"
                         }
                       ],
                       "Name": "Sowing",
@@ -36450,7 +36562,7 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                  "HarvestIndex": 0.5,
+                  "HarvestIndex": 0.45,
                   "MoistureContent": 0.14,
                   "Proot": 0.1,
                   "MaxRD": 1500.0,
@@ -36458,9 +36570,9 @@
                   "MaxCover": 0.97,
                   "ExtinctCoeff": 0.7,
                   "SeedlingNConc": 0.05,
-                  "TypicalHarvestStage": "Maturity",
+                  "TypicalHarvestStage": "LateReproductive",
                   "ProductHarvestNConc": 0.02,
-                  "StoverHarvestNConc": 0.01,
+                  "StoverHarvestNConc": 0.006,
                   "RootNConc": 0.01,
                   "BaseT": 0.0,
                   "OptT": 30.0,
@@ -72104,7 +72216,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2023-03-20T00:00:00",
+              "Start": "2023-01-01T00:00:00",
               "End": "2024-01-20T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -72233,9 +72345,9 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2018-12-28",
+                      "Date": "2023-12-28",
                       "Action": "[Irrigation].Apply(25);",
-                      "Line": "2018-12-28 [Irrigation].Apply(25);"
+                      "Line": "2023-12-28 [Irrigation].Apply(25);"
                     }
                   ],
                   "Name": "Irrig",
@@ -72882,16 +72994,16 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                  "HarvestIndex": 0.14,
+                  "HarvestIndex": 0.18,
                   "MoistureContent": 0.14,
                   "Proot": 0.1,
                   "MaxRD": 1500.0,
                   "MaxHeight": 500.0,
-                  "MaxCover": 0.6,
-                  "ExtinctCoeff": 0.6,
+                  "MaxCover": 0.4,
+                  "ExtinctCoeff": 0.4,
                   "SeedlingNConc": 0.06,
                   "TypicalHarvestStage": "Maturity",
-                  "ProductHarvestNConc": 0.0205,
+                  "ProductHarvestNConc": 0.02,
                   "StoverHarvestNConc": 0.0107,
                   "RootNConc": 0.01,
                   "BaseT": 0.0,
@@ -73278,26 +73390,26 @@
                         11.3
                       ],
                       "FBiom": [
-                        0.045,
-                        0.025,
-                        0.022,
                         0.02,
+                        0.02,
+                        0.01,
+                        0.01,
                         0.01,
                         0.01
                       ],
                       "FInert": [
-                        0.35,
-                        0.5,
-                        0.6,
+                        0.8,
+                        0.8,
+                        0.8,
                         0.89,
                         0.96,
                         0.99
                       ],
                       "FOM": [
-                        300.0,
-                        1000.0,
-                        200.0,
-                        150.0,
+                        50.0,
+                        40.0,
+                        30.0,
+                        20.0,
                         20.0,
                         5.0
                       ],
@@ -73324,10 +73436,10 @@
                         0.325,
                         0.327,
                         0.251,
-                        0.24,
-                        0.269
+                        0.183,
+                        0.138
                       ],
-                      "InitialPAWmm": 202.65,
+                      "InitialPAWmm": 122.9,
                       "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
@@ -73363,10 +73475,10 @@
                         500.0
                       ],
                       "InitialValues": [
-                        1000.0,
-                        100.0,
-                        50.0,
-                        15.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        3.0,
                         3.0,
                         3.0
                       ],
