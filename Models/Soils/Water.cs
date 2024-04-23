@@ -209,17 +209,20 @@ namespace Models.Soils
             get => relativeToCheck;
             set
             {
+                string newValue = value;
+                if (newValue == null)
+                    newValue = "LL15";
                 // This structure is required to create a 'source of truth' to ensure
                 // a stack overflow does not occurs.
-                if (relativeToCheck != value)
+                if (relativeToCheck != newValue)
                 {
                     double percent = FractionFull;
-                    relativeToCheck = value;
+                    relativeToCheck = newValue;
                     UpdateInitialValuesFromFractionFull(percent);
                 }
                 else
                 {
-                    relativeToCheck = value;
+                    relativeToCheck = newValue;
                 }
             }
         }
