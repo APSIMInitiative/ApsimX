@@ -1,5 +1,8 @@
 ﻿namespace UnitTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -11,10 +14,7 @@
     using Models.Storage;
     using Models.Surface;
     using NUnit.Framework;
-    using System;
-    using System.IO;
     using UserInterface.Presenters;
-    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -35,7 +35,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Assert.IsTrue(sims.Children[0] is Simulation);
             Assert.IsTrue(sims.Children[1] is DataStore);
@@ -64,7 +64,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Clock c = sims.Children[1].Children[0] as Clock;
             Assert.AreEqual(c.StartDate, new DateTime(1940, 1, 1));
@@ -79,17 +79,17 @@
             "<folder version=\"36\" creator=\"Apsim 7.5-r3183\" name=\"simulations\">" +
             "  <simulation name=\"Continuous Wheat\">" +
             "    <metfile name=\"met\">" +
-            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/MetFiles/Goond.met</filename>" +
+            "      <filename name=\"filename\" input=\"yes\">%apsim%/Examples/WeatherFiles/Goond.met</filename>" +
             "    </metfile>" +
             "  </simulation>" +
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var w = sims.Children[0].Children[0] as Models.Climate.Weather;
-            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "Goond.met");
-            Assert.AreEqual(w.FileName, expected);
+            string expected = string.Join("/", new string[] { "/Examples", "WeatherFiles", "AU_Goondiwindi.met" });
+            Assert.AreEqual(expected, w.FileName);
         }
 
         /// <summary>Ensure AREA imports OK</summary>
@@ -106,7 +106,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Zone z = sims.Children[0].Children[0] as Zone;
             Assert.AreEqual(z.Area, 100);
@@ -119,7 +119,7 @@
             string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Soil s = sims.Children[0].Children[0] as Soil;
             Assert.AreEqual(s.Name, "Soil");
@@ -144,7 +144,7 @@
             Organic som = s.Children[7] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
-            Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
+            Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01 });
 
             Chemical a = s.Children[8] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
@@ -169,7 +169,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var f = sims.Children[0].Children[0] as Plant;
             Assert.IsNotNull(f);
@@ -203,7 +203,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as Manager;
             Assert.IsNotNull(m);
@@ -240,13 +240,50 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as Manager;
             Assert.IsNotNull(m);
             Assert.IsTrue(m.Code != string.Empty);
             Assert.IsNotNull(m.Code);
             Assert.AreEqual(m.Children.Count, 1);
+        }
+
+        /// <summary>Ensure MANAGER2 with compile errors still imports but returns compile messages.</summary>
+        [Test]
+        public void ImporterTests_Manager2ImportsAndShowsCompileMessages()
+        {
+            string oldXml =
+            "<folder version=\"36\" creator=\"Apsim 7.5-r3183\" name=\"simulations\">" +
+            "  <simulation name=\"Continuous Wheat\">" +
+            "    <manager2 name=\"DCAPS\">" +
+            "      <ui>" +
+            "        <category type=\"category\" description=\"Dummy module\" />" +
+            "        <labourCost type=\"text\" description=\"Cost of labour($/ hr)\">0.0</labourCost>" +
+            "      </ui>" +
+            "      <text>" +
+            "      using System;" + Environment.NewLine +
+            "      using System.IO;" + Environment.NewLine +
+            "      using ModelFramework;" + Environment.NewLine +
+            "      using Models.Soils;" + Environment.NewLine +
+            "      using System;" + Environment.NewLine +
+            "      using System.IO;" + Environment.NewLine +
+            "      using DCAPST;" + Environment.NewLine +
+            "      using Models.Core;" + Environment.NewLine +
+            "      public class Script" + Environment.NewLine +
+            "      {" + Environment.NewLine +
+            "      }" + Environment.NewLine +
+            "</text>" +
+            "    </manager2>" +
+            "  </simulation>" +
+            "</folder>";
+
+            List<Exception> importExceptions = new();
+            var importer = new Importer();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => { importExceptions.Add(e); });
+
+            Assert.IsNotNull(sims);
+            Assert.True(importExceptions[0].Message.Contains("Errors found in manager model DCAPS"));
         }
 
         /// <summary>Ensure OUTPUTFILE imports OK</summary>
@@ -275,7 +312,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var r = sims.Children[0].Children[0] as Models.Report;
             Assert.IsNotNull(r);
@@ -307,7 +344,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var som = sims.Children[0].Children[0] as SurfaceOrganicMatter;
             Assert.IsNotNull(som);
@@ -315,7 +352,7 @@
             Assert.AreEqual(som.InitialCNR, 80);
             Assert.AreEqual(som.InitialResidueName, "wheat");
         }
-        
+
         /// <summary>Ensure MICROMET imports OK</summary>
         [Test]
         public void ImporterTests_MicroMetImports()
@@ -334,7 +371,7 @@
             "</folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as MicroClimate;
             Assert.IsNotNull(m);
@@ -367,7 +404,7 @@
             string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Assert.IsNotNull(sims);
         }
@@ -378,7 +415,7 @@
             string oldXml = "<folder><simulation><memo>hello there</memo></simulation></folder>";
 
             var importer = new Importer();
-            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
             Memo memo = sims.Children[0].Children[0] as Memo;
             Assert.NotNull(memo);
             Assert.AreEqual("hello there", memo.Text, "Failed to import memo message from .apsim file");

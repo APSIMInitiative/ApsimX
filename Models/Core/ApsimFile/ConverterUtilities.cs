@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
 using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace Models.Core.ApsimFile
 {
@@ -310,6 +312,37 @@ namespace Models.Core.ApsimFile
                     childNames.Add(name);
             }
             return childNames.ToList();
+        }
+
+        /// <summary></summary>
+        /// <param name="node1">Node1</param>
+        /// <param name="node2">Node2</param>
+        internal static bool NodesInSameSimulation(JContainer node1, JContainer node2)
+        {
+            JContainer sim1 = node1;
+            while(sim1 != null && sim1["$type"].ToString() != "Models.Core.Simulation, Models")
+            {
+                sim1 = sim1.Parent;
+                if (sim1 != null)
+                    sim1 = sim1.Parent;
+                if (sim1 != null)
+                    sim1 = sim1.Parent;
+            }
+
+            JContainer sim2 = node2;
+            while(sim2 != null && sim2["$type"].ToString() != "Models.Core.Simulation, Models")
+            {
+                sim2 = sim2.Parent;
+                if (sim2 != null)
+                    sim2 = sim2.Parent;
+                if (sim2 != null)
+                    sim2 = sim2.Parent;
+            }
+
+            if (sim1.Path.CompareTo(sim2.Path) == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

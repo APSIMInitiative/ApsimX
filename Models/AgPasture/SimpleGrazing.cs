@@ -757,7 +757,7 @@ namespace Models.AgPasture
                     }
 
                     double dungNReturned;
-                    if (CNRatioDung == 0 || double.IsNaN(CNRatioDung))
+                    if (fractionExcretedNToDung != null)
                         dungNReturned = GetValueFromMonthArray(fractionExcretedNToDung, month) * returnedToSoilN;
                     else
                     {

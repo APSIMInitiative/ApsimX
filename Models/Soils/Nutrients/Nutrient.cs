@@ -1,3 +1,4 @@
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -11,20 +12,20 @@ namespace Models.Soils.Nutrients
 {
 
     /// <summary>
-    /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
+    /// The soil nutrient model includes functionality for simulating pools of organic matter and mineral nitrogen.  The processes for each are described below.
     /// </summary>
     /// <structure>
-    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients. These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
+    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients. These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independently specified, and are described in each case in the documentation for each organic matter pool below.
     /// 
     /// Mineral nutrient pools (e.g. Nitrate, Ammonium, Urea) are described as solutes within the model.  Each pool captures the mass of the nutrient (e.g. N,P) and they may also contain nutrient flows to describe losses or transformations for that particular compound (e.g. denitrification of nitrate, hydrolysis of urea).
     /// </structure>
     /// <pools>
     /// A nutrient pool class is used to encapsulate the carbon and nitrogen within each soil organic matter pool.  Child functions within these classes provide information for initialisation and flows of C and N to other pools, or losses from the system.
     ///
-    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occuring from them.
+    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occurring from them.
     /// </pools>
     /// <solutes>
-    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occuring from them.
+    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occurring from them.
     /// </solutes>
     [Serializable]
     [ScopedModel]
@@ -274,12 +275,12 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
+        /// Perform initialisation so that instance is valid.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
         {
             fomCNRFactor = new double[soilPhysical.Thickness.Length];
             cnrf = new double[soilPhysical.Thickness.Length];
@@ -312,6 +313,17 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
+        /// Give all variables an initial value.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        { 
+            CalculateVariables();
+        }
+
+        /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -334,7 +346,12 @@ namespace Models.Soils.Nutrients
             foreach (var flow in nutrientFlows)
                 flow.DoFlow();
 
-            // Calculate variables.
+            CalculateVariables();
+        }
+
+        /// <summary>Calculate all variables.</summary>
+        private void CalculateVariables()
+        {
             Array.Clear(totalOrganicN);
             Array.Clear(catm);
             Array.Clear(totalC);
@@ -342,8 +359,12 @@ namespace Models.Soils.Nutrients
             Array.Clear(n2oatm);
             Array.Clear(mineralisedN);
 
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                catm[i] = surfaceResidue.Catm[i];
+            // In some simulations (e.g. when NutrientPatchManager adds instances of Nutrient at 'OnCommencing') surfaceResidue
+            // may not have initialised itself yet, hence the if statement below. This is a design fault in APSIM that
+            // needs to be fixed at some point.
+            if (surfaceResidue.Catm != null)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                    catm[i] = surfaceResidue.Catm[i];
 
             foreach (OrganicPool pool in nutrientPools)
             {
@@ -380,6 +401,27 @@ namespace Models.Soils.Nutrients
 
             organic.Calculate();
             (FOM as CompositeNutrientPool).Calculate();
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, GetModelDescription());
+        }
+
+        /// <summary>
+        /// Get a description of the model from the summary, structure, pools, and solute
+        /// xml documentation comments in the source code.
+        /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are inside sections.
+        /// </remarks>
+        public new IEnumerable<ITag> GetModelDescription()
+        {
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+            yield return new Section("Structure", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"structure")));
+            yield return new Section("Pools", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"pools")));
+            yield return new Section("Solutes", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"solutes")));
         }
     }
 }
