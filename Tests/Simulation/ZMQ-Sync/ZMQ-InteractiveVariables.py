@@ -57,17 +57,11 @@ class ApsimController:
             pass
         '''
     
-        msg = self.send_command("field", [5], unpack=False)
-        time.sleep(1)
-        print(msg)
+        msg = self.send_command("field", ["X,0", "Y,0", "Z,0"], unpack=False)
         # create fields
         msg = self.send_command("fields", [self.fields], unpack=False)
-        time.sleep(1)
-        print(msg)
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
-        time.sleep(1)
-        print(msg)
 
     def __del__(self):
         """Handles cleanup of protocol"""
