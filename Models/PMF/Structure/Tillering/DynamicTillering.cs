@@ -206,6 +206,7 @@ namespace Models.PMF.Struct
 
             // Up to L5 FE store PTQ. At L5 FE calculate tiller number (endThermalQuotientLeafNo).
             // At L5 FE newLeaf = 6 and currentLeaf = 5
+            if (newLeafNo < startThermalQuotientLeafNo) initialTillersAdded = false;
             if (newLeafNo >= startThermalQuotientLeafNo && existingLeafNo < endThermalQuotientLeafNo)
             {
                 radiationValues += metData.Radn;
