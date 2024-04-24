@@ -30,7 +30,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
-    public class RuminantActivityGrow : CLEMActivityBase
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject
     {
         [Link]
         private readonly CLEMEvents events = null;
@@ -1372,6 +1373,29 @@ namespace Models.CLEM.Activities
 
         //    ruminantHerd.RemoveRuminant(died, this);
         //}
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // check parameters are available for all ruminants.
+            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow is null))
+            {
+                string[] memberNames = new string[] { "RuminantParametersGrow" };
+                results.Add(new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
 
         #region descriptive summary
 
