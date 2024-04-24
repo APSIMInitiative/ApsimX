@@ -1,17 +1,22 @@
-﻿namespace UserInterface.Views
+﻿using APSIM.Interop.Mapping;
+using APSIM.Shared.Utilities;
+using Gtk;
+using GLib;
+using UserInterface.Interfaces;
+using Mapsui;
+using Mapsui.Layers;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using Utility;
+using ApsimCoordinate = Models.Mapping.Coordinate;
+using MapTag = Models.Mapping.MapTag;
+
+namespace UserInterface.Views
 {
-    using APSIM.Interop.Mapping;
-    using APSIM.Shared.Utilities;
-    using Gtk;
-    using Interfaces;
-    using Mapsui;
-    using Mapsui.Layers;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using ApsimCoordinate = Models.Mapping.Coordinate;
-    using MapTag = Models.Mapping.MapTag;
+    
 
     /// <remarks>
     /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
@@ -38,7 +43,7 @@
         /// <remarks>
         /// todo: should really check the default page size dynamically.
         /// </remarks>
-        private const int defaultWidth = 718;
+        private int defaultWidth = 718;
 
         /// <summary>
         /// Height of the map as shown in the GUI. I'm setting
@@ -48,7 +53,7 @@
         /// <remarks>
         /// todo: should really check the default page size dynamically.
         /// </remarks>
-        private const int defaultHeight = 718;
+        private int defaultHeight = 718;
 
         private Mapsui.Map map;
         private Mapsui.Viewport viewport = new Mapsui.Viewport();
@@ -148,13 +153,16 @@
 
             VPaned box = new VPaned();
             PropertiesView = new PropertyView(this);
-            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
+            box.Add1(((ViewBase)PropertiesView).MainWidget);
 
             if ( ((ViewBase)PropertiesView).MainWidget is ScrolledWindow scroller)
                 scroller.VscrollbarPolicy = PolicyType.Never;
 
-            box.Pack2(container, true, true);
-            
+            box.Add2(container);
+            box.AddNotification(OnPanePropertyNotified);
+            (owner as ExplorerView).DividerChanged += OnOtherDividersChanged;
+            (owner.Owner as MainView).DividerChanged += OnOtherDividersChanged;
+
             container.AddEvents(
               (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask
@@ -218,6 +226,7 @@
         {
             if (map != null)
             {
+                UpdateMapSize();
                 TileLayer osmLayer = map.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as TileLayer; 
                 if (osmLayer != null) 
                 {
@@ -228,6 +237,16 @@
                     osmLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
                 }
             }
+        }
+
+        /// <summary>
+        /// Set the width and height that the map should be drawn to
+        /// </summary>
+        private void UpdateMapSize() {
+            Rectangle rect = GtkUtilities.GetBorderOfRightHandView(this);
+            Point pos = GtkUtilities.GetPositionOfWidget(mainWidget);
+            viewport.Width = rect.Width;
+            viewport.Height = rect.Height - (mainWidget as VPaned).Position + pos.Y;
         }
 
         private void OsmLayer_DataChanged(object sender, Mapsui.Fetcher.DataChangedEventArgs e)
@@ -391,6 +410,23 @@
             }
         }
 
+        /// <summary>Refresh the map when the divider changes</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnPanePropertyNotified(object sender, NotifyArgs args)
+        {
+            if (args.Property == "position")
+                RefreshMap();
+        }
+
+        /// <summary>Refresh the map when the divider changes</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnOtherDividersChanged(object sender, EventArgs args)
+        {
+            RefreshMap();
+        }
+
         /// <summary>
         /// Called when the main widget is destroyed.
         /// Detaches event handlers.
@@ -411,6 +447,9 @@
                 container.ButtonReleaseEvent -= OnButtonRelease;
                 container.ScrollEvent -= OnMouseScroll;
                 container.Destroyed -= OnMainWidgetDestroyed;
+                (owner as ExplorerView).DividerChanged -= OnOtherDividersChanged;
+                (owner.Owner as MainView).DividerChanged -= OnOtherDividersChanged;
+                mainWidget.RemoveNotification(OnPanePropertyNotified);
             }
             catch (Exception err)
             {
