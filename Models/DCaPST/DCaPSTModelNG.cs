@@ -96,7 +96,7 @@ namespace Models.DCAPST
                 if (cropName != value)
                 {
                     cropName = value;
-                    HandleCropChange();
+                    Reset();
                 }
             }
         }
@@ -193,6 +193,14 @@ namespace Models.DCAPST
                 canopyAttributes, 
                 transpiration
             );
+        }
+
+        /// <summary>
+        /// Reset the default DCaPST parameters according to the type of crop.
+        /// </summary>
+        public void Reset()
+        {
+            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
         }
 
         /// <summary>
@@ -417,13 +425,5 @@ namespace Models.DCAPST
         /// Get the names of all plants in scope.
         /// </summary>
         private IEnumerable<string> GetPlantNames() => FindAllInScope<IPlant>().Select(p => p.Name);
-
-        /// <summary>
-        /// Reset the default DCaPST parameters according to the type of crop.
-        /// </summary>
-        private void HandleCropChange()
-        {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
-        }
     }
 }
