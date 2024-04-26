@@ -42632,205 +42632,355 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[IrrigationSchedule]",
+                          "Specification": "",
                           "Name": "Irr",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "DD",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.44,
+                                    0.45,
+                                    0.41,
+                                    0.37,
+                                    0.339,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 148.3,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-19",
-                                  "Action": "[Irrigation].Apply(96)",
-                                  "Line": "1991-09-19 [Irrigation].Apply(96)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-01",
-                                  "Action": "[Irrigation].Apply(62)",
-                                  "Line": "1991-10-01 [Irrigation].Apply(62)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-10",
-                                  "Action": "[Irrigation].Apply(48)",
-                                  "Line": "1991-10-10 [Irrigation].Apply(48)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-19",
-                                  "Action": "[Irrigation].Apply(63)",
-                                  "Line": "1991-10-19 [Irrigation].Apply(63)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-30",
-                                  "Action": "[Irrigation].Apply(135)",
-                                  "Line": "1991-10-30 [Irrigation].Apply(135)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-08",
-                                  "Action": "[Irrigation].Apply(40)",
-                                  "Line": "1991-11-08 [Irrigation].Apply(40)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-21",
-                                  "Action": "[Irrigation].Apply(32)",
-                                  "Line": "1991-11-21 [Irrigation].Apply(32)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "DI",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-19",
+                                      "Action": "[Irrigation].Apply(96)",
+                                      "Line": "1991-09-19 [Irrigation].Apply(96)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-01",
+                                      "Action": "[Irrigation].Apply(62)",
+                                      "Line": "1991-10-01 [Irrigation].Apply(62)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-10",
+                                      "Action": "[Irrigation].Apply(48)",
+                                      "Line": "1991-10-10 [Irrigation].Apply(48)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-19",
+                                      "Action": "[Irrigation].Apply(63)",
+                                      "Line": "1991-10-19 [Irrigation].Apply(63)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-30",
+                                      "Action": "[Irrigation].Apply(135)",
+                                      "Line": "1991-10-30 [Irrigation].Apply(135)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-08",
+                                      "Action": "[Irrigation].Apply(40)",
+                                      "Line": "1991-11-08 [Irrigation].Apply(40)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-21",
+                                      "Action": "[Irrigation].Apply(32)",
+                                      "Line": "1991-11-21 [Irrigation].Apply(32)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.44,
+                                    0.4,
+                                    0.35,
+                                    0.35,
+                                    0.339,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 122.30000000000001,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-08",
-                                  "Action": "[Irrigation].Apply(19)",
-                                  "Line": "1991-08-08 [Irrigation].Apply(19)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-12",
-                                  "Action": "[Irrigation].Apply(56)",
-                                  "Line": "1991-08-12 [Irrigation].Apply(56)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-26",
-                                  "Action": "[Irrigation].Apply(40)",
-                                  "Line": "1991-08-26 [Irrigation].Apply(40)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-09",
-                                  "Action": "[Irrigation].Apply(50)",
-                                  "Line": "1991-09-09 [Irrigation].Apply(50)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-19",
-                                  "Action": "[Irrigation].Apply(50)",
-                                  "Line": "1991-09-19 [Irrigation].Apply(50)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-01",
-                                  "Action": "[Irrigation].Apply(54)",
-                                  "Line": "1991-10-01 [Irrigation].Apply(54)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-10",
-                                  "Action": "[Irrigation].Apply(35)",
-                                  "Line": "1991-10-10 [Irrigation].Apply(35)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-18",
-                                  "Action": "[Irrigation].Apply(1)",
-                                  "Line": "1991-10-18 [Irrigation].Apply(1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-19",
-                                  "Action": "[Irrigation].Apply(60)",
-                                  "Line": "1991-10-19 [Irrigation].Apply(60)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-30",
-                                  "Action": "[Irrigation].Apply(60)",
-                                  "Line": "1991-10-30 [Irrigation].Apply(60)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-08",
-                                  "Action": "[Irrigation].Apply(37)",
-                                  "Line": "1991-11-08 [Irrigation].Apply(37)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "II",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-08",
+                                      "Action": "[Irrigation].Apply(19)",
+                                      "Line": "1991-08-08 [Irrigation].Apply(19)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-12",
+                                      "Action": "[Irrigation].Apply(56)",
+                                      "Line": "1991-08-12 [Irrigation].Apply(56)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-26",
+                                      "Action": "[Irrigation].Apply(40)",
+                                      "Line": "1991-08-26 [Irrigation].Apply(40)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-09",
+                                      "Action": "[Irrigation].Apply(50)",
+                                      "Line": "1991-09-09 [Irrigation].Apply(50)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-19",
+                                      "Action": "[Irrigation].Apply(50)",
+                                      "Line": "1991-09-19 [Irrigation].Apply(50)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-01",
+                                      "Action": "[Irrigation].Apply(54)",
+                                      "Line": "1991-10-01 [Irrigation].Apply(54)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-10",
+                                      "Action": "[Irrigation].Apply(35)",
+                                      "Line": "1991-10-10 [Irrigation].Apply(35)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-18",
+                                      "Action": "[Irrigation].Apply(1)",
+                                      "Line": "1991-10-18 [Irrigation].Apply(1)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-19",
+                                      "Action": "[Irrigation].Apply(60)",
+                                      "Line": "1991-10-19 [Irrigation].Apply(60)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-30",
+                                      "Action": "[Irrigation].Apply(60)",
+                                      "Line": "1991-10-30 [Irrigation].Apply(60)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-08",
+                                      "Action": "[Irrigation].Apply(37)",
+                                      "Line": "1991-11-08 [Irrigation].Apply(37)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.44,
+                                    0.43,
+                                    0.35,
+                                    0.34,
+                                    0.3,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 118.5,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
