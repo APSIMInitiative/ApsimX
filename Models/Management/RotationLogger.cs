@@ -285,7 +285,7 @@ namespace Models.Management
          storage = this.FindInScope<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
-         if (SimulationName == "") 
+         if (! GetSimulationNames().Contains(SimulationName) )
              SimulationName = GetSimulationNames()[0];
 
          _RVPs = new List<RVPair>();
