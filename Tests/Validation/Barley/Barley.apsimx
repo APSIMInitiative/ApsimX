@@ -46,6 +46,7 @@
             "[Barley].Leaf.SpecificArea",
             "[Barley].Phenology.AccumulatedEmergedTT",
             "[Barley].Phenology.CurrentStageName",
+            "[Barley].Phenology.EmergenceDAS",
             "[Barley].Phenology.FlagLeafDAS",
             "[Barley].Phenology.FloweringDAS",
             "[Barley].Phenology.MaturityDAS",
@@ -94,6 +95,7 @@
             "[Barley].Phenology.CurrentStageName",
             "[Barley].Phenology.EmergenceDAS",
             "[Barley].Phenology.FlagLeafDAS",
+            "[Barley].Phenology.HeadingDAS",
             "[Barley].Phenology.FloweringDAS",
             "[Barley].Phenology.MaturityDAS",
             "[Barley].Grain.Wt",
@@ -587,6 +589,7 @@
                     "[Phenology].CAMP.FLNparams.PpLN = 5",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "//[Phenology].Phyllochron.BasePhyllochron.FixedValue = 60",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 60",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
@@ -47887,7 +47890,7 @@
                                     "    ",
                                     "}"
                                   ],
-                                  "Parameters": null,
+                                  "Parameters": [],
                                   "Name": "ApplyN_at_sowing",
                                   "ResourceName": null,
                                   "Children": [],
@@ -51471,10 +51474,42 @@
                                     300.0,
                                     300.0
                                   ],
-                                  "ParticleSizeClay": null,
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
-                                  "Rocks": null,
+                                  "ParticleSizeClay": [
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0
+                                  ],
+                                  "ParticleSizeSand": [
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0
+                                  ],
+                                  "ParticleSizeSilt": [
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0
+                                  ],
+                                  "Rocks": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
                                   "Texture": null,
                                   "BD": [
                                     1.32,
@@ -51522,17 +51557,89 @@
                                     0.46
                                   ],
                                   "KS": null,
-                                  "BDMetadata": null,
-                                  "AirDryMetadata": null,
-                                  "LL15Metadata": null,
-                                  "DULMetadata": null,
-                                  "SATMetadata": null,
+                                  "BDMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "AirDryMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "LL15Metadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "DULMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "SATMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "KSMetadata": null,
-                                  "RocksMetadata": null,
+                                  "RocksMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "TextureMetadata": null,
-                                  "ParticleSizeSandMetadata": null,
-                                  "ParticleSizeSiltMetadata": null,
-                                  "ParticleSizeClayMetadata": null,
+                                  "ParticleSizeSandMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeSiltMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeClayMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "Name": "Physical",
                                   "ResourceName": null,
                                   "Children": [
@@ -51565,10 +51672,220 @@
                                         1.0,
                                         1.0
                                       ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
+                                      "LLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "KLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "XFMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
                                       "Name": "BarleySoil",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.26,
+                                        0.26,
+                                        0.26,
+                                        0.26,
+                                        0.25,
+                                        0.296,
+                                        0.322
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.04,
+                                        0.04,
+                                        0.02,
+                                        0.01
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "LLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "KLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "XFMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "Name": "WheatSoil",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.26,
+                                        0.26,
+                                        0.26,
+                                        0.326,
+                                        0.321,
+                                        0.347,
+                                        0.338
+                                      ],
+                                      "KL": [
+                                        0.07,
+                                        0.07,
+                                        0.07,
+                                        0.05,
+                                        0.05,
+                                        0.04,
+                                        0.03
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "LLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "KLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "XFMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "Name": "SorghumSoil",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.26,
+                                        0.26,
+                                        0.26,
+                                        0.299,
+                                        0.305,
+                                        0.331,
+                                        0.336
+                                      ],
+                                      "KL": [
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.09,
+                                        0.07,
+                                        0.05
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "LLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "KLMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "XFMetadata": [
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated",
+                                        "Estimated"
+                                      ],
+                                      "Name": "CottonSoil",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -51878,9 +52195,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -51896,11 +52213,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -52037,13 +52354,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -52879,9 +53196,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -52897,11 +53214,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -53038,13 +53355,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -53880,9 +54197,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -53898,11 +54215,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -54039,13 +54356,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -54881,9 +55198,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -54899,11 +55216,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -55040,13 +55357,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -55260,86 +55577,6 @@
                   "Axis": [
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Observed",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Predicted",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FlagLeaf Date",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
-                      "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
                       "Position": 3,
                       "Inverted": false,
@@ -55374,8 +55611,8 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -55391,7 +55628,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": null,
+                      "Filter": "[SimulationName] <> \"WaggaWagga2019TOS8CvUrambie\"",
                       "Name": "Series",
                       "ResourceName": null,
                       "Children": [
@@ -55441,11 +55678,91 @@
                       "Interval": null
                     }
                   ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
+                  "LegendPosition": 0,
+                  "LegendOrientation": 1,
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
+                  "LegendOutsideGraph": true,
+                  "Name": "FlagLeaf Date",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[SimulationName]<>\"WaggaWagga2019TOS8CvUrambie\"",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Observed",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Predicted",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 1,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": true,
                   "Name": "HeadingDAS",
                   "ResourceName": null,
                   "Children": [
@@ -55455,7 +55772,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -55464,14 +55781,14 @@
                       "LineThickness": 0,
                       "TableName": "HarvestObsPred",
                       "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.HeadingDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.HeadingDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": null,
+                      "Filter": "[SimulationName] <> \"WaggaWagga2019TOS8CvUrambie\"",
                       "Name": "Predicted",
                       "ResourceName": null,
                       "Children": [
@@ -56212,9 +56529,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -56230,11 +56547,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -56371,13 +56688,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -57263,9 +57580,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -57281,11 +57598,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -57422,13 +57739,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -58314,9 +58631,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -58332,11 +58649,11 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -58473,13 +58790,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -59365,9 +59682,9 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Wheat].Harvesting"
@@ -59383,11 +59700,12 @@
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
-                                "[Wheat].Phenology.Stage",
-                                "[Wheat].Phenology.Zadok.Stage",
-                                "[Wheat].Phenology.FloweringDAS",
-                                "[Wheat].Phenology.FlagLeafDAS",
-                                "[Wheat].Phenology.TerminalSpikeletDAS"
+                                "[Barley].Phenology.Stage",
+                                "[Barley].Phenology.Zadok.Stage",
+                                "[Barley].Phenology.EmergenceDAS",
+                                "[Barley].Phenology.FloweringDAS",
+                                "[Barley].Phenology.FlagLeafDAS",
+                                "[Barley].Phenology.TerminalSpikeletDAS"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -59524,13 +59842,13 @@
                                 "                    string Env = Convert.ToString(row[\"TOS\"]);",
                                 "                    if (Env == Treat)",
                                 "                    {",
-                                "                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
-                                "                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
+                                "                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);",
+                                "                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);",
                                 "                    }",
                                 "                }",
                                 "",
                                 "                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                                "                //Barley.Phenology.SetEmergenceDate(EmergenceString);",
+                                "                Barley.Phenology.SetEmergenceDate(EmergenceString);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -59744,6 +60062,86 @@
                   "Axis": [
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "EmergenceDAS",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Barley.Phenology.EmergenceDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.EmergenceDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Observed",
                       "Position": 3,
                       "Inverted": false,
@@ -59789,13 +60187,93 @@
                       "TableName": "HarvestObsPred",
                       "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
                       "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Observed",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Predicted",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 1,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": true,
+                  "Name": "HeadingDAS",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.HeadingDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
                       "Name": "Predicted",
                       "ResourceName": null,
                       "Children": [
@@ -60758,10 +61236,6 @@
                                   "Value": ""
                                 },
                                 {
-                                  "Key": "TransitionWeek",
-                                  "Value": "0"
-                                },
-                                {
                                   "Key": "SowingDepth",
                                   "Value": "25"
                                 },
@@ -60772,6 +61246,10 @@
                                 {
                                   "Key": "Population",
                                   "Value": "6"
+                                },
+                                {
+                                  "Key": "TransitionWeek",
+                                  "Value": "0"
                                 },
                                 {
                                   "Key": "FilePath",
