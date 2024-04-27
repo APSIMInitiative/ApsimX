@@ -75,7 +75,9 @@
             "[Barley].Stem.Allocated.Wt",
             "[Barley].Root.DMDemand.Total",
             "[Barley].Spike.DMDemand.Total",
-            "[Barley].Grain.DMDemand.Total"
+            "[Barley].Grain.DMDemand.Total",
+            "[Barley].Leaf.CohortParameters.SpecificLeafAreaMax",
+            "[Barley].Leaf.CohortParameters.SpecificLeafAreaMin"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -203,8 +205,28 @@
                 "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.StemFraction.FixedValue=0.24",
                 "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.StemFraction.FixedValue=0.64",
                 "",
-                "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 18000, 20000, 25000, 25000, 25000, 20000",
-                "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 12000, 15000",
+                "",
+                "[Leaf].CohortParameters.StructuralFraction.FixedValue = 0.99",
+                "[Leaf].CohortParameters.StorageFraction.FixedValue = 0.01",
+                "",
+                "[Leaf].CohortParameters.SpecificLeafAreaMax.XValue.VariableName=[Barley].Leaf.LAI",
+                "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.X=     3,     9",
+                "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 18000, 35000",
+                "",
+                "[Leaf].CohortParameters.SpecificLeafAreaMin.XValue.VariableName=[Barley].Leaf.LAI",
+                "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.X=     3,     9",
+                "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 15000, 25000",
+                "",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMax.XValue.VariableName=[Barley].Phenology.Stage",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.X=     3,     5,     6,     8,     9,    10",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 18000, 20000, 35000, 35000, 25000, 20000",
+                "",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMin.XValue.VariableName=[Barley].Phenology.Stage",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.X=     3,     5,     6,     8,     9,    10",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 15000, 15000, 20000, 20000, 15000, 15000",
+                "",
+                "//[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 12000, 15000",
+                "",
                 "[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y=0.1, 0.5, 1.0, 0.5",
                 "[Leaf].KDead = 0.5",
                 "",
@@ -2572,7 +2594,7 @@
                   "Interval": null
                 }
               ],
-              "LegendPosition": 3,
+              "LegendPosition": 2,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
               "DisabledSeries": [],
@@ -42613,205 +42635,355 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[IrrigationSchedule]",
+                          "Specification": "",
                           "Name": "Irr",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "DD",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.45,
+                                    0.45,
+                                    0.41,
+                                    0.37,
+                                    0.339,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 150.3,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-19",
-                                  "Action": "[Irrigation].Apply(96)",
-                                  "Line": "1991-09-19 [Irrigation].Apply(96)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-01",
-                                  "Action": "[Irrigation].Apply(62)",
-                                  "Line": "1991-10-01 [Irrigation].Apply(62)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-10",
-                                  "Action": "[Irrigation].Apply(48)",
-                                  "Line": "1991-10-10 [Irrigation].Apply(48)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-19",
-                                  "Action": "[Irrigation].Apply(63)",
-                                  "Line": "1991-10-19 [Irrigation].Apply(63)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-30",
-                                  "Action": "[Irrigation].Apply(135)",
-                                  "Line": "1991-10-30 [Irrigation].Apply(135)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-08",
-                                  "Action": "[Irrigation].Apply(40)",
-                                  "Line": "1991-11-08 [Irrigation].Apply(40)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-21",
-                                  "Action": "[Irrigation].Apply(32)",
-                                  "Line": "1991-11-21 [Irrigation].Apply(32)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "DI",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-19",
+                                      "Action": "[Irrigation].Apply(96)",
+                                      "Line": "1991-09-19 [Irrigation].Apply(96)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-01",
+                                      "Action": "[Irrigation].Apply(62)",
+                                      "Line": "1991-10-01 [Irrigation].Apply(62)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-10",
+                                      "Action": "[Irrigation].Apply(48)",
+                                      "Line": "1991-10-10 [Irrigation].Apply(48)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-19",
+                                      "Action": "[Irrigation].Apply(63)",
+                                      "Line": "1991-10-19 [Irrigation].Apply(63)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-30",
+                                      "Action": "[Irrigation].Apply(135)",
+                                      "Line": "1991-10-30 [Irrigation].Apply(135)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-08",
+                                      "Action": "[Irrigation].Apply(40)",
+                                      "Line": "1991-11-08 [Irrigation].Apply(40)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-21",
+                                      "Action": "[Irrigation].Apply(32)",
+                                      "Line": "1991-11-21 [Irrigation].Apply(32)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.44,
+                                    0.4,
+                                    0.35,
+                                    0.35,
+                                    0.339,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 122.30000000000001,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-07",
-                                  "Action": "[Irrigation].Apply(22)",
-                                  "Line": "1991-07-07 [Irrigation].Apply(22)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-07-10",
-                                  "Action": "[Irrigation].Apply(10)",
-                                  "Line": "1991-07-10 [Irrigation].Apply(10)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-08",
-                                  "Action": "[Irrigation].Apply(19)",
-                                  "Line": "1991-08-08 [Irrigation].Apply(19)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-12",
-                                  "Action": "[Irrigation].Apply(56)",
-                                  "Line": "1991-08-12 [Irrigation].Apply(56)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-08-26",
-                                  "Action": "[Irrigation].Apply(40)",
-                                  "Line": "1991-08-26 [Irrigation].Apply(40)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-09",
-                                  "Action": "[Irrigation].Apply(50)",
-                                  "Line": "1991-09-09 [Irrigation].Apply(50)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-09-19",
-                                  "Action": "[Irrigation].Apply(50)",
-                                  "Line": "1991-09-19 [Irrigation].Apply(50)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-01",
-                                  "Action": "[Irrigation].Apply(54)",
-                                  "Line": "1991-10-01 [Irrigation].Apply(54)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-10",
-                                  "Action": "[Irrigation].Apply(35)",
-                                  "Line": "1991-10-10 [Irrigation].Apply(35)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-18",
-                                  "Action": "[Irrigation].Apply(1)",
-                                  "Line": "1991-10-18 [Irrigation].Apply(1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-19",
-                                  "Action": "[Irrigation].Apply(60)",
-                                  "Line": "1991-10-19 [Irrigation].Apply(60)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-10-30",
-                                  "Action": "[Irrigation].Apply(60)",
-                                  "Line": "1991-10-30 [Irrigation].Apply(60)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1991-11-08",
-                                  "Action": "[Irrigation].Apply(37)",
-                                  "Line": "1991-11-08 [Irrigation].Apply(37)"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[IrrigationSchedule]",
+                                "[Water]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "II",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-07",
+                                      "Action": "[Irrigation].Apply(22)",
+                                      "Line": "1991-07-07 [Irrigation].Apply(22)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-07-10",
+                                      "Action": "[Irrigation].Apply(10)",
+                                      "Line": "1991-07-10 [Irrigation].Apply(10)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-08",
+                                      "Action": "[Irrigation].Apply(19)",
+                                      "Line": "1991-08-08 [Irrigation].Apply(19)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-12",
+                                      "Action": "[Irrigation].Apply(56)",
+                                      "Line": "1991-08-12 [Irrigation].Apply(56)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-08-26",
+                                      "Action": "[Irrigation].Apply(40)",
+                                      "Line": "1991-08-26 [Irrigation].Apply(40)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-09",
+                                      "Action": "[Irrigation].Apply(50)",
+                                      "Line": "1991-09-09 [Irrigation].Apply(50)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-09-19",
+                                      "Action": "[Irrigation].Apply(50)",
+                                      "Line": "1991-09-19 [Irrigation].Apply(50)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-01",
+                                      "Action": "[Irrigation].Apply(54)",
+                                      "Line": "1991-10-01 [Irrigation].Apply(54)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-10",
+                                      "Action": "[Irrigation].Apply(35)",
+                                      "Line": "1991-10-10 [Irrigation].Apply(35)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-18",
+                                      "Action": "[Irrigation].Apply(1)",
+                                      "Line": "1991-10-18 [Irrigation].Apply(1)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-19",
+                                      "Action": "[Irrigation].Apply(60)",
+                                      "Line": "1991-10-19 [Irrigation].Apply(60)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-10-30",
+                                      "Action": "[Irrigation].Apply(60)",
+                                      "Line": "1991-10-30 [Irrigation].Apply(60)"
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1991-11-08",
+                                      "Action": "[Irrigation].Apply(37)",
+                                      "Line": "1991-11-08 [Irrigation].Apply(37)"
+                                    }
+                                  ],
+                                  "Name": "IrrigationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Water, Models",
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0
+                                  ],
+                                  "InitialValues": [
+                                    0.32,
+                                    0.405,
+                                    0.44,
+                                    0.43,
+                                    0.35,
+                                    0.34,
+                                    0.3,
+                                    0.31,
+                                    0.28,
+                                    0.23
+                                  ],
+                                  "InitialPAWmm": 118.5,
+                                  "RelativeTo": "LL15",
+                                  "FilledFromTop": false,
+                                  "Name": "Water",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -42913,10 +43085,54 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "ParticleSizeClay": null,
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
-                                  "Rocks": null,
+                                  "ParticleSizeClay": [
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0
+                                  ],
+                                  "ParticleSizeSand": [
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0
+                                  ],
+                                  "ParticleSizeSilt": [
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0
+                                  ],
+                                  "Rocks": [
+                                    0.205,
+                                    0.186,
+                                    0.171,
+                                    0.166,
+                                    0.208,
+                                    0.265,
+                                    0.297,
+                                    0.297,
+                                    0.273,
+                                    0.247
+                                  ],
                                   "Texture": null,
                                   "BD": [
                                     0.93,
@@ -42979,17 +43195,116 @@
                                     0.37
                                   ],
                                   "KS": null,
-                                  "BDMetadata": null,
-                                  "AirDryMetadata": null,
-                                  "LL15Metadata": null,
-                                  "DULMetadata": null,
-                                  "SATMetadata": null,
+                                  "BDMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "AirDryMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "LL15Metadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "DULMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "SATMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "KSMetadata": null,
-                                  "RocksMetadata": null,
+                                  "RocksMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "TextureMetadata": null,
-                                  "ParticleSizeSandMetadata": null,
-                                  "ParticleSizeSiltMetadata": null,
-                                  "ParticleSizeClayMetadata": null,
+                                  "ParticleSizeSandMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeSiltMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeClayMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "Name": "Physical",
                                   "ResourceName": null,
                                   "Children": [
@@ -43031,9 +43346,42 @@
                                         1.0,
                                         1.0
                                       ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
+                                      "LLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "KLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "XFMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
                                       "Name": "BarleySoil",
                                       "ResourceName": null,
                                       "Children": [],
@@ -43052,8 +43400,8 @@
                                   "WinterDate": "1-Apr",
                                   "WinterU": 6.0,
                                   "WinterCona": 2.5,
-                                  "DiffusConst": 20.0,
-                                  "DiffusSlope": 10.0,
+                                  "DiffusConst": 40.0,
+                                  "DiffusSlope": 16.0,
                                   "Salb": 0.2,
                                   "CN2Bare": 75.0,
                                   "CNRed": 20.0,
@@ -43284,14 +43632,14 @@
                                   "InitialValues": [
                                     1.717,
                                     1.717,
-                                    0.6870000000000002,
-                                    0.34300000000000014,
-                                    0.34300000000000014,
-                                    0.34300000000000014,
-                                    0.34300000000000014,
-                                    0.34300000000000014,
-                                    0.34300000000000014,
-                                    0.34300000000000014
+                                    0.687,
+                                    0.343,
+                                    0.343,
+                                    0.343,
+                                    0.343,
+                                    0.343,
+                                    0.343,
+                                    0.343
                                   ],
                                   "InitialValuesUnits": 0,
                                   "WaterTableConcentration": 0.0,
@@ -43324,15 +43672,15 @@
                                   ],
                                   "InitialValues": [
                                     0.745,
-                                    0.12400000000000005,
-                                    0.12399999999999999,
-                                    0.12399999999999999,
-                                    0.12400000000000005,
-                                    0.12400000000000005,
-                                    0.12400000000000005,
-                                    0.12400000000000005,
-                                    0.12400000000000005,
-                                    0.12400000000000005
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124,
+                                    0.124
                                   ],
                                   "InitialValuesUnits": 0,
                                   "WaterTableConcentration": 0.0,
@@ -45710,16 +46058,16 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "1993-12-20",
+                                  "Date": "1993-12-21",
                                   "Action": "[Barley].Harvest();",
-                                  "Line": "1993-12-20 [Barley].Harvest();"
+                                  "Line": "1993-12-21 [Barley].Harvest();"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "1993-12-20",
+                                  "Date": "1993-12-21",
                                   "Action": "[Barley].EndCrop();",
-                                  "Line": "1993-12-20 [Barley].EndCrop();"
+                                  "Line": "1993-12-21 [Barley].EndCrop();"
                                 }
                               ],
                               "Name": "Operations",
@@ -64159,6 +64507,143 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Allocation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "SpecificLeafAreas",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Leaf.CohortParameters.SpecificLeafAreaMax",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Max",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Barley.Phenology.CurrentStageName",
+                          "SimulationName": null,
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Leaf.CohortParameters.SpecificLeafAreaMin",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Min",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Leaf.SpecificArea",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Actual",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
