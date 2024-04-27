@@ -284,17 +284,19 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
-            double[] values = new double[numValues-startRow];
+            double[] values;
+            values = new double[numValues - startRow];
+
             int index = 0;
-            for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
+            for (int row = startRow; row != table.Rows.Count && index != numValues; row++)
             {
-                if (table.Rows[Row][columnName].ToString() == string.Empty)
+                if (table.Rows[row][columnName].ToString() == string.Empty)
                     values[index] = double.NaN;
                 else
                 {
                     try
                     {
-                        values[index] = Convert.ToDouble(table.Rows[Row][columnName], culture);
+                        values[index] = Convert.ToDouble(table.Rows[row][columnName], culture);
                     }
                     catch (Exception)
                     {
@@ -1392,6 +1394,16 @@ namespace APSIM.Shared.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if table has a double as its very first value.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns>a <see cref="bool">bool</see></returns>
+        public static bool IsTablesFirstValueDouble(DataTable table)
+        {
+            return Double.TryParse(table.Rows[0][0] as string, out double firstValue);
         }
     }
 }
