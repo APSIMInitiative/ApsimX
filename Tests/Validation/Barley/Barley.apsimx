@@ -56040,7 +56040,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -60512,10 +60512,10 @@
                     }
                   ],
                   "LegendPosition": 0,
-                  "LegendOrientation": 0,
+                  "LegendOrientation": 1,
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
+                  "LegendOutsideGraph": true,
                   "Name": "FlagLeaf Date",
                   "ResourceName": null,
                   "Children": [
