@@ -369,7 +369,7 @@ namespace Models.PMF.Organs
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
                     uptake += MathUtilities.Sum(zone.NitUptake);
-                return uptake;
+                return (-uptake); // convert to positive values.
             }
         }
 

@@ -233,7 +233,7 @@ namespace Models.PMF
                 double uptake = 0;
                 foreach (NetworkZoneState zone in Zones)
                     uptake += MathUtilities.Sum(zone.NitUptake);
-                return uptake;
+                return (-uptake); // convert to positive values.
             }
         }
 
