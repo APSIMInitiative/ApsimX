@@ -128,7 +128,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Weaned)
-                    return Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Weaned).TotalDays);
+                    return Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.Weaned, 0.0));
                 else
                     return 0;
             }
@@ -237,11 +237,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The time-span since the birth of the individual
+        /// The time-span since the various occasions in individual's life
         /// </summary>
         /// <param name="spanType">The measure to provide</param>
         /// <param name="toDate">Date to calculate to or omit to use date known by individual</param>
-        /// <returns>A TimeSpan representing the age of the individual</returns>
+        /// <returns>A TimeSpan representing the days since age of the individual</returns>
         public TimeSpan TimeSince(RuminantTimeSpanTypes spanType, DateTime toDate = default)
         {
             DateTime fromDate = default;
@@ -267,10 +267,48 @@ namespace Models.CLEM.Resources
             }
 
             toDate = toDate == default ? lastKnownDate : toDate;
-            if (toDate == default || fromDate == default  || toDate < fromDate)
+            if (toDate == default || fromDate == default || toDate < fromDate)
                 return TimeSpan.Zero;
             else
                 return toDate - fromDate;
+        }
+
+        /// <summary>
+        /// The number of days since a specified occasion in individual's life
+        /// </summary>
+        /// <param name="spanType">The measure to provide</param>
+        /// <param name="defaultValue">Value to provide when time span cannot be determined</param>
+        /// <param name="toDate">Date to calculate to or omit to use date known by individual</param>
+        /// <returns>The number of days in the time span</returns>
+        public double DaysSince(RuminantTimeSpanTypes spanType, double defaultValue, DateTime toDate = default)
+        {
+            DateTime fromDate = default;
+            switch (spanType)
+            {
+                case RuminantTimeSpanTypes.Birth:
+                    fromDate = DateOfBirth;
+                    break;
+                case RuminantTimeSpanTypes.Weaned:
+                    if (Weaned)
+                        fromDate = dateOfWeaning;
+                    break;
+                case RuminantTimeSpanTypes.Conceived:
+                    if (this is RuminantFemale female)
+                        fromDate = female.DateLastConceived;
+                    break;
+                case RuminantTimeSpanTypes.GaveBirth:
+                    if (this is RuminantFemale femalebirth)
+                        fromDate = femalebirth.DateOfLastBirth;
+                    break;
+                default:
+                    break;
+            }
+
+            toDate = toDate == default ? lastKnownDate : toDate;
+            if (toDate == default || fromDate == default || toDate < fromDate)
+                return defaultValue;
+            else
+                return (toDate - fromDate).TotalDays;
         }
 
         /// <summary>
@@ -337,7 +375,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return TimeSince(RuminantTimeSpanTypes.EnteredSimulation).TotalDays;
+                return DaysSince(RuminantTimeSpanTypes.Birth, double.NaN, DateEnteredSimulation);
             }
         }
 
@@ -351,27 +389,29 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(DateOfPurchase == default) return double.PositiveInfinity;
-                return TimeSince(RuminantTimeSpanTypes.Purchased).TotalDays;
+                if(DateOfPurchase == default) return double.NaN;
+                return DaysSince(RuminantTimeSpanTypes.Birth, double.NaN, DateOfPurchase);
             }
         }
 
-        /// <summary>
-        /// Purchase age (Months)
-        /// </summary>
-        /// <units>Months</units>
-        [FilterByProperty]
-        public double PurchaseAge { get; set; }
+        ///// <summary>
+        ///// Purchase age (Months)
+        ///// </summary>
+        ///// <units>Months</units>
+        //[FilterByProperty]
+        //public double PurchaseAge { get; set; }
 
         /// <summary>
         /// Number of months since purchased
         /// </summary>
         [FilterByProperty]
-        public int DaysSincePurchase
+        public double DaysSincePurchase
         {
             get
             {
-                return Convert.ToInt32(Math.Round(AgeInDays - AgeAtPurchase, 4));
+                if (DateOfPurchase == default) return double.NaN;
+                return DaysSince(RuminantTimeSpanTypes.Purchased, double.NaN);
+                //return Convert.ToInt32(Math.Round(AgeInDays - AgeAtPurchase, 4));
             }
         }
 
@@ -654,7 +694,11 @@ namespace Models.CLEM.Resources
             BreedDetails = setParams;
             Parameters = setParams.Parameters;
 
-            Weight = new(birthScalar * Parameters.General.SRWFemale);
+            if (setAge == 0 && setWeight > 0)
+                Weight = new(setWeight);
+            else
+                Weight = new(birthScalar * Parameters.General.SRWFemale);
+
             if (Sex == Sex.Female)
                 Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale);
             else
@@ -663,15 +707,20 @@ namespace Models.CLEM.Resources
             // if setweight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
             {
-                // need to double calculate so we have a normalised weight to assign
-                CalculateNormalisedWeight(setAge, true);
+                if (setAge == 0)
+                    setWeight = Weight.AtBirth;
+                else
+                    // need to double calculate so we have a normalised weight to assign
+                    setWeight = CalculateNormalisedWeight(setAge, true);
             }
-            else
-                Weight.Adjust(setWeight, this);
+
+            Weight.Adjust(setWeight, this);
 
             AgeInDays = setAge;
-            DateOfBirth = date.AddDays(-1*setAge);
+            DateOfBirth = date.AddDays(-1 * setAge);
             DateEnteredSimulation = date;
+
+            //double aa = AgeEnteredSimulation;
 
             //ToDo: setup protein mass and fat mass for new individual
 
@@ -682,7 +731,9 @@ namespace Models.CLEM.Resources
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
-            
+
+            int dsw = DaysSinceWeaned;
+
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();
             Energy = new RuminantInfoEnergy(Intake);

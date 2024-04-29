@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (IsBreeder && !IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= Parameters.Breeding.MinimumDaysBirthToConception);
+                return (IsBreeder && !IsPregnant && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) >= Parameters.Breeding.MinimumDaysBirthToConception);
             }
         }
 
@@ -120,11 +120,19 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public int NumberOfBirths { get; set; }
+
         /// <summary>
         /// Number of fetuses conceived in last conception
         /// </summary>
         [FilterByProperty]
         public int NumberOfFetuses { get; set; }
+
+        /// <summary>
+        /// Number of current sucklings
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfSucklings { get { return SucklingOffspringList.Count; }  }
+
         /// <summary>
         /// Number of offspring for the female
         /// </summary>
@@ -187,6 +195,7 @@ namespace Models.CLEM.Resources
         { 
             get
             {
+                // 0.33 is CP4
                 if(NumberOfFetuses > 0)
                     return (1 - 0.33 + 0.33 * Weight.RelativeSize) * CurrentBirthScalar * Weight.StandardReferenceWeight;
                 return 0;
@@ -220,7 +229,10 @@ namespace Models.CLEM.Resources
                     birthCount++;
                     birthProb += i;
                     if (rnd <= birthProb)
+                    {
+                        NumberOfFetuses = birthCount;
                         return birthCount;
+                    }
                 }
                 birthCount = 1;
             }
@@ -256,7 +268,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays;
+                    return DaysSince(RuminantTimeSpanTypes.Conceived, 0.0);
                 else
                     return 0;
             }
@@ -271,7 +283,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays >= Parameters.General.GestationLength.InDays;
+                    return DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) >= Parameters.General.GestationLength.InDays;
                 else
                     return false;
             }
@@ -283,9 +295,31 @@ namespace Models.CLEM.Resources
         public double ProportionOfPregnancy(double offset = 0)
         {
             if (IsPregnant)
-                return Math.Min(1.0, (TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays + offset)/ Parameters.General.GestationLength.InDays);
+                return Math.Min(1.0, (DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) + offset)/ Parameters.General.GestationLength.InDays);
             else
                 return 0;
+        }
+
+        /// <summary>
+        /// Days since last birth
+        /// </summary>
+        public double? DaysSinceLastBirth
+        {
+            get
+            {
+                return DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity);
+            }
+        }
+
+        /// <summary>
+        /// Days since last birth
+        /// </summary>
+        public double DaysSinceLastConceived
+        {
+            get
+            {
+                return DaysSince(RuminantTimeSpanTypes.Conceived, double.NegativeInfinity);
+            }
         }
 
         /// <summary>
@@ -355,7 +389,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Number of breeding months in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// Was the last pregnancy successful
         /// </summary>
         public bool SuccessfulPregnancy
         {
@@ -385,7 +419,7 @@ namespace Models.CLEM.Resources
             //ToDo: Check this is correct
             DateLastConceived = date.AddDays(ageOffset);
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true, false) : this.Weight.Live;
+            WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true, false) : this.Weight.Base.Amount;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -429,8 +463,15 @@ namespace Models.CLEM.Resources
             
             for (int i = 0; i < CarryingCount; i++)
             {
-                //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
-                double weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                // Previous suckling/calf weight from Freer
+                // Grow
+                //   calculate birth weigth Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                // GrowSCA
+                //   use the weight of fetus at birth
+
+                double weight = Weight.Fetus.Amount;
+                if (Weight.Fetus.Amount == 0)
+                    weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
 
                 Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], BreedDetails, events.TimeStepStart, 0, CurrentBirthScalar, weight);
                 newSucklingRuminant.HerdName = HerdName;
@@ -439,8 +480,9 @@ namespace Models.CLEM.Resources
                 newSucklingRuminant.Location = Location;
                 newSucklingRuminant.Mother = this;
                 newSucklingRuminant.Number = 1;
-                // suckling/calf weight from Freer
                 newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
+                if (Weight.FetusFat.Amount > 0)
+                    newSucklingRuminant.Weight.Fat.Set(Weight.FetusFat.Amount);
 
                 // add attributes inherited from mother
                 foreach (var attribute in Attributes.Items.Where(a => a.Value is not null))
@@ -475,6 +517,8 @@ namespace Models.CLEM.Resources
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
             base.Weight.Conceptus.Reset();
+            base.Weight.Fetus.Reset();
+            base.Weight.FetusFat.Reset();
             BodyConditionParturition = Weight.BodyCondition;
             WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
@@ -501,7 +545,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= Parameters.General.MilkingDays);
+                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.General.MilkingDays);
             }
         }
 
@@ -529,7 +573,8 @@ namespace Models.CLEM.Resources
         {
             if(SucklingOffspringList.Any() || MilkingPerformed)
             {
-                double milkdays = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays + halfIntervalOffset;
+                // must be at least 1 to get milk production on day of birth. 
+                double milkdays = Math.Max(0.0, TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays) + halfIntervalOffset;
                 if (milkdays <= Parameters.General.MilkingDays)
                 {
                     return milkdays;

@@ -15,10 +15,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant growth activity</summary>
     /// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
-    /// <summary>This activity includes deaths</summary>
     /// <summary>See Breed activity for births, suckling mortality etc</summary>
-    /// <version>1.1</version>
-    /// <updates>First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -26,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Performs growth and aging of all ruminants. Only one instance of this activity is permitted")]
+    [Version(1, 0, 4, "Mortality moved from all grow activities")]
     [Version(1, 0, 3, "Allows selection of methane store for emissions")]
     [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
@@ -229,7 +227,8 @@ namespace Models.CLEM.Activities
             }
             // get monthly intake
             potentialIntake *= events.Interval;
-            ind.Intake.MilkDaily.Expected = potentialIntake;
+            ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
+            ind.Intake.SolidsDaily.Expected = potentialIntake;
         }
 
         /// <summary>
@@ -286,7 +285,7 @@ namespace Models.CLEM.Activities
 
             // grow individuals
 
-            IEnumerable<string> breeds = herd.Select(a => a.Parameters.Grow.Name).Distinct();
+            IEnumerable<string> breeds = herd.Select(a => a.Breed).Distinct();
             Status = ActivityStatus.NotNeeded;
 
             foreach (string breed in breeds)
@@ -294,7 +293,7 @@ namespace Models.CLEM.Activities
                 int unfed = 0;
                 int unfedcalves = 0;
                 double totalMethane = 0;
-                foreach (Ruminant ind in herd.Where(a => a.Parameters.Grow.Name == breed).OrderByDescending(a => a.AgeInDays))
+                foreach (Ruminant ind in herd.Where(a => a.Breed == breed).OrderByDescending(a => a.AgeInDays))
                 {
                     ind.MetabolicIntake = ind.Intake.SolidsDaily.Actual;
                     Status = ActivityStatus.Success;
@@ -510,7 +509,7 @@ namespace Models.CLEM.Activities
                         // Potential birth weight
                         // Reference: Freer
                         double potentialBirthWeight = femaleind.CurrentBirthScalar * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight.Live / standardReferenceWeight));
-                        double fetusAge = femaleind.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays;
+                        double fetusAge = femaleind.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0);
 
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;

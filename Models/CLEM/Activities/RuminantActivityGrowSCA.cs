@@ -13,6 +13,8 @@ using Models.PMF.Interfaces;
 using Models.Interfaces;
 using MathNet.Numerics.Integration;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using CommandLine;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -92,6 +94,10 @@ namespace Models.CLEM.Activities
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
                 ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedDetails, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
             }
+
+            //var female = CurrentHerd().FirstOrDefault().Cast<RuminantFemale>();
+            //if(!female.IsPregnant)
+            //    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), 1.0, 0, events.Clock.Today);
         }
 
         /// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother.</summary>
@@ -107,6 +113,8 @@ namespace Models.CLEM.Activities
                 foreach (var ind in groupInd)
                 {
                     // reset actual expected containers as expected determined during CalculatePotentialIntake
+                    int aa = ind.DaysSinceWeaned;
+
                     ind.Intake.SolidsDaily.Received = 0;
                     ind.Intake.MilkDaily.Received = 0;
                     ind.Intake.SolidsDaily.Unneeded = 0;
@@ -144,7 +152,7 @@ namespace Models.CLEM.Activities
             {
                 // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
                 ind.Intake.MilkDaily.Expected = ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays, 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkCurveSuckling_CL3 * ind.AgeInDays));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
-                double milkactual = ind.Mother.MilkProductionPotential / ind.Mother.SucklingOffspringList.Count();
+                double milkactual = ind.Mother.Milk.Potential / ind.Mother.SucklingOffspringList.Count();
                 // calculate YF
                 // ToDo check that this is the potential milk calculation needed.
                 yf = (1 - (milkactual / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowSCA.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays - ind.Parameters.GrowSCA.RumenDevelopmentAge_CI4))); 
@@ -161,11 +169,11 @@ namespace Models.CLEM.Activities
                 if (female.IsLactating)
                 {
                     // age of young (Ay) is the same as female DaysLactating
-                    double mi = female.DaysLactating() / ind.Parameters.GrowSCA.PeakLactationIntakeDay_CI8; // SCA Eq.9
-                    lf = 1 + ind.Parameters.GrowSCA.PeakLactationIntakeLevel_CI19[female.SucklingOffspringList.Count()] * Math.Pow(mi, ind.Parameters.GrowSCA.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowSCA.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
+                    double mi = female.DaysLactating(events.Interval / 2.0) / ind.Parameters.GrowSCA.PeakLactationIntakeDay_CI8; // SCA Eq.9
+                    lf = 1 + ind.Parameters.GrowSCA.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings-1] * Math.Pow(mi, ind.Parameters.GrowSCA.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowSCA.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
-                    double wl = ind.Weight.RelativeSize * ((female.BodyConditionParturition - ind.Weight.BodyCondition) / female.DaysLactating()); // SCA Eq.12
-                    if (female.DaysLactating() >= ind.Parameters.GrowSCA.MilkPeakDay_CL2 && wl > ind.Parameters.GrowSCA.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.GrowSCA.LactationConditionLossThreshold_CI13 * female.DaysLactating(), 2.0)))
+                    double wl = ind.Weight.RelativeSize * ((female.BodyConditionParturition - ind.Weight.BodyCondition) / female.DaysLactating(events.Interval / 2.0)); // SCA Eq.12
+                    if (female.DaysLactating(events.Interval / 2.0) >= ind.Parameters.GrowSCA.MilkPeakDay_CL2 && wl > ind.Parameters.GrowSCA.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.GrowSCA.LactationConditionLossThreshold_CI13 * female.DaysLactating(events.Interval / 2.0), 2.0)))
                     {
                         lb = 1 - ((ind.Parameters.GrowSCA.LactationConditionLossAdjustment_CI12 * wl) / ind.Parameters.GrowSCA.LactationConditionLossThreshold_CI13); // (Eq.11)
                     }
@@ -555,7 +563,7 @@ namespace Models.CLEM.Activities
         /// <returns>Daily energy required for lactation this time step.</returns>
         private double CalculateLactationEnergy(RuminantFemale ind, bool updateValues, ref double milkProtein)
         {
-            if (ind.IsLactating | MathUtilities.IsPositive(ind.MilkProductionPotential))
+            if (ind.IsLactating | MathUtilities.IsPositive(ind.Milk.Potential))
             {
                 ind.Milk.Milked = 0;
                 ind.Milk.Suckled = 0;
@@ -592,7 +600,7 @@ namespace Models.CLEM.Activities
 
                 double Mm = (milkTime + ind.Parameters.GrowSCA.MilkOffsetDay_CL1) / ind.Parameters.GrowSCA.MilkPeakDay_CL2;
 
-                double milkProductionMax = ind.Parameters.GrowSCA.PeakYieldScalar_CL0[ind.NumberOfFetuses-1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
+                double milkProductionMax = ind.Parameters.GrowSCA.PeakYieldScalar_CL0[ind.NumberOfSucklings - 1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
                     Math.Pow(Mm, milkCurve) * Math.Exp(milkCurve * (1 - Mm));
 
                 //if(updateValues)
@@ -611,7 +619,7 @@ namespace Models.CLEM.Activities
                     ratioMilkProductionME + ind.Parameters.GrowSCA.PotentialYieldLactationEffect_CL21 * ad * (ratioMilkProductionME - ind.Parameters.GrowSCA.PotentialYieldLactationEffect2_CL22 * ad) - ind.Parameters.GrowSCA.PotentialYieldConditionEffect_CL23
                     * ind.Weight.RelativeCondition * (ratioMilkProductionME - ind.Parameters.GrowSCA.PotentialYieldConditionEffect2_CL24 * ind.Weight.RelativeCondition))));
 
-                double MP2 = Math.Min(MP1, ind.SucklingOffspringList.Count * ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkConsumptionLimit3_CL14 * milkTime)));
+                double MP2 = Math.Min(MP1, ind.NumberOfSucklings * ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkConsumptionLimit3_CL14 * milkTime)));
 
                 if (updateValues)
                 {
@@ -625,6 +633,7 @@ namespace Models.CLEM.Activities
                 // 0.032
                 ind.Milk.Protein = ind.Parameters.GrowSCA.ProteinContentMilk_CL15 * MP2 / ind.Parameters.GrowSCA.EnergyContentMilk_CL6;
 
+                ind.Milk.Potential = MP2;
                 ind.Milk.Available = MP2 * events.Interval;
                 ind.MilkProducedThisTimeStep = ind.MilkCurrentlyAvailable;
 
@@ -649,8 +658,17 @@ namespace Models.CLEM.Activities
             // ToDo: maybe age of conceptus should be calculated half way, or 2/3 etc through large time-steps.
 
             double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy()))));
+            if (ind.ProportionOfPregnancy() == 0)
+                ind.Weight.Fetus.Set(normalWeightFetus);
+
             // double change in normal fetus weight across time-step
             double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(events.Interval))))) - normalWeightFetus;
+
+            // calculated after growth in time-step to avoild issue of 0 in first step especially for larger time-steps
+            double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
+
+            //double deltaChangeNormFetusWeight2 = ind.ScaledBirthWeight * ((ind.Parameters.GrowSCA.FetalNormWeightParameter_CP2 * ind.Parameters.GrowSCA.FetalNormWeightParameter2_CP3) / ind.Parameters.General.GestationLength.InDays)
+            //    * Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy()) + ind.Parameters.GrowSCA.FetalNormWeightParameter_CP2 * (1 - ind.ProportionOfPregnancy()));
 
             // get stunting factor
             double stunt = 1;
@@ -660,10 +678,12 @@ namespace Models.CLEM.Activities
             }
             double CFPreg = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
 
-            double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
-            ind.Weight.Fetus.Adjust(deltaChangeNormFetusWeight * (1 + stunt + CFPreg));
-            
-            double conceptusWeight = ind.NumberOfFetuses * (ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy()))))) + (ind.Weight.Fetus.Amount - normalWeightFetus);
+            if(MathUtilities.IsGreaterThanOrEqual(ind.Weight.RelativeCondition, 1.0))
+                ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * (CFPreg+1)));
+            else
+                ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((stunt * CFPreg) + 1)));
+
+            ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy()))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
 
             // MJ per day
             double conceptusME = (ind.Parameters.GrowSCA.ConceptusEnergyContent_CP8 * (ind.NumberOfFetuses * ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
@@ -674,7 +694,7 @@ namespace Models.CLEM.Activities
             double conceptusProteinReq = ind.Parameters.GrowSCA.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus * 
                 (ind.Parameters.GrowSCA.ConceptusProteinParameter_CP12 * ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()) + ind.Parameters.GrowSCA.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()))));
 
-            conceptusProtein = conceptusProteinReq * conceptusWeight;
+            conceptusProtein = conceptusProteinReq * ind.Weight.Conceptus.Amount;
             // fat (kg)
             conceptusFat = ((conceptusME * 0.13) - (conceptusProtein * 23.6)) / 39.3;
 

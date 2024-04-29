@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,24 @@ namespace Models.CLEM.Resources
         public void Adjust(double change)
         {
             Change = change;
-            if (MathUtilities.IsGreaterThanOrEqual(change, 0) || MathUtilities.IsGreaterThan(Amount, Math.Abs(change)))
-                Amount += change;
-            else
-                Amount = 0;
+            if (Amount + change < 0)
+                Change = -Amount;
+            Amount += Change;
+
+            //if (MathUtilities.IsGreaterThanOrEqual(change, 0) || MathUtilities.IsGreaterThan(Amount, Math.Abs(change)))
+            //    Amount += change;
+            //else
+            //    Amount = 0;
+        }
+
+        /// <summary>
+        /// Set this tracking item.
+        /// </summary>
+        /// <param name="amount">Amount to set.</param>
+        public void Set(double amount)
+        {
+            Change = 0; // amount-Amount;
+            Amount = amount;
         }
 
         /// <summary>
@@ -45,7 +60,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            Change = Amount;
+            Change = 0-Amount;
             Amount = 0;
         }
     }
