@@ -129,11 +129,9 @@ namespace UserInterface.Presenters
                         if (model is SoilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
-                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
-                            llsoilName = llsoilName + " LL";
-
+                            string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = cropName + " LL";
                             llsoil = (model as SoilCrop).LL;
-
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
