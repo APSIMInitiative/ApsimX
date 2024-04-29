@@ -68,7 +68,6 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             bool error = false;
-            Parameters.Initialise(this);
             parentHerd = this.Parent as RuminantHerd;
 
             // check parameters are available for all ruminants.
@@ -118,15 +117,13 @@ namespace Models.CLEM.Resources
                 {
                     Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
                     return;
-                    //string[] memberNames = new string[] { "RuminantParametersBreeding" };
-                    //throw new ApsimXException(this, $"Missing [RuminantParametersBreeding] parameters for [{NameWithParent}]");
                 }
             }
 
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.HighestAttained >= (a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight) && a.Weight.Live >= (a.Parameters.Breeding.CriticalCowWeight * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays > a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.HighestAttained >= (a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight) && a.Weight.Live >= (a.Parameters.Breeding.CriticalCowWeight * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
 
                 // assign calves to cows
                 int sucklingCount = 0;
@@ -195,7 +192,7 @@ namespace Models.CLEM.Resources
 
             }
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight));
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight));
             if (remainingFemales.Any())
             {
                 var firstFemale = remainingFemales.First();

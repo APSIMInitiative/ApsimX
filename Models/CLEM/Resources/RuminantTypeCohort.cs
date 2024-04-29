@@ -197,8 +197,6 @@ namespace Models.CLEM.Resources
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                     }
-                    else
-                        ruminant.Wean(false, "Initial state", date);
 
                     if (Sire)
                     {

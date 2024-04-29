@@ -75,7 +75,7 @@ namespace Models.CLEM.Reporting
                 case ConceptionStatus.Failed:
                 case ConceptionStatus.Birth:
                     if(calculateFromAge)
-                        ConceptionDate = date.AddDays(-1 * Convert.ToInt32(Female.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays, CultureInfo.InvariantCulture));
+                        ConceptionDate = date.AddDays(-1 * Convert.ToInt32(Female.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0), CultureInfo.InvariantCulture));
                     else ConceptionDate = date;
 
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));

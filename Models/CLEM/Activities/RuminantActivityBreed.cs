@@ -19,8 +19,6 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant breeding activity</summary>
     /// <summary>This activity provides all functionality for ruminant breeding up until natural weaning</summary>
     /// <summary>It will be applied to the supplied herd if males and females are located together</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -28,6 +26,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages the breeding of ruminants based on the current herd filtering")]
+    [Version(1, 1, 0, "Allows daily time-step and tested for GrowSCA")]
     [Version(1, 0, 8, "Include passing inherited attributes from mating to newborn")]
     [Version(1, 0, 7, "Removed UseAI to a new ControlledMating add-on activity")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
@@ -37,6 +36,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                                 DateTime checkMortality = conceiveDate;
                                 while (checkMortality < events.Clock.Today)
                                 {
-                                    female.FetusNewBornMortality(events, conceptionArgs);
+                                    //female.FetusNewBornMortality(events, conceptionArgs);
 
                                     if (events.TimeStep == TimeStepTypes.Monthly)
                                     {
@@ -238,8 +238,8 @@ namespace Models.CLEM.Activities
                 // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
                 // needs to be calculated for each offspring carried.
 
-                if (female.FetusNewBornMortality(events, conceptionArgs))
-                    preglost = true;
+                //if (female.FetusNewBornMortality(events, conceptionArgs))
+                //    preglost = true;
 
                 // give birth if needed.
                 if (female.GiveBirth(HerdResource, events, conceptionArgs, this))
@@ -502,7 +502,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     // add one to age to ensure that conception is due this timestep
-                    if (MathUtilities.IsGreaterThan(female.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays, female.Parameters.Breeding.MinimumDaysBirthToConception))
+                    if (MathUtilities.IsGreaterThan(female.DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity), female.Parameters.Breeding.MinimumDaysBirthToConception))
                     {
                         // only based upon period since birth
                         isConceptionReady = true;
