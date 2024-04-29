@@ -210,6 +210,7 @@ namespace Models.CLEM
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
 
             // not all errors will be reported in validation so perform in two steps
+            Validate(FindInScope<CLEMEvents>(), "", this, summary, FindInScope<CLEMEvents>());
             Validate(this, "", this, summary, FindInScope<CLEMEvents>());
             ReportInvalidParameters(this);
         }
@@ -285,8 +286,6 @@ namespace Models.CLEM
             if (model.GetType().Name.Contains("Filter"))
                 starter = "[f=";
 
-            //if (model is CLEMModel clemModel)
-            //    clemModel.CLEMParentName = parentZone.Name;
             modelPath += starter + model.Name + "]";
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
