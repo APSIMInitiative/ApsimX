@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Specify ruminant conception based on individual's condition")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
     {
         /// <summary>

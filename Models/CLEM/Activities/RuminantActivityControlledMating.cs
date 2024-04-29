@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private List<ISetAttribute> attributeList;

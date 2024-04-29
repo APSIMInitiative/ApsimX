@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrow: CLEMModel, ISubParameters
     {
         #region Mortality
@@ -41,14 +42,14 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #1")]
         [Required, GreaterThanValue(0)]
-        public double GrowthEnergyIntercept1 { get; set; }
+        public double GrowthEnergyIntercept1 { get; set; } = 6.7;
         /// <summary>
         /// Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2")]
         [Required, GreaterThanValue(0)]
-        public double GrowthEnergyIntercept2 { get; set; }
+        public double GrowthEnergyIntercept2 { get; set; } = 20.3;
 
         /// <summary>
         /// Milk curve shape suckling
@@ -56,28 +57,28 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk curve shape suckling")]
         [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling { get; set; }
+        public double MilkCurveSuckling { get; set; } = 0.6;
         /// <summary>
         /// Milk curve shape non suckling
         /// </summary>
         [Category("Breed", "Lactation")]
         [Description("Milk curve shape non suckling")]
         [Required, GreaterThanValue(0)]
-        public double MilkCurveNonSuckling { get; set; }
+        public double MilkCurveNonSuckling { get; set; } = 0.11;
         /// <summary>
         /// Milk offset day
         /// </summary>
         [Category("Breed", "Lactation")]
         [Description("Milk offset day")]
         [Required, GreaterThanValue(0)]
-        public double MilkOffsetDay { get; set; }
+        public double MilkOffsetDay { get; set; } = 4;
         /// <summary>
         /// Milk peak day
         /// </summary>
         [Category("Farm", "Lactation")]
         [Description("Milk peak day")]
         [Required, GreaterThanValue(0)]
-        public double MilkPeakDay { get; set; }
+        public double MilkPeakDay { get; set; } = 45;
 
         /// <summary>
         /// Energy maintenance efficiency coefficient
@@ -85,63 +86,63 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy maintenance efficiency coefficient")]
         [Required, GreaterThanValue(0)]
-        public double EMaintEfficiencyCoefficient { get; set; }
+        public double EMaintEfficiencyCoefficient { get; set; } = 0.368;
         /// <summary>
         /// Energy maintenance efficiency intercept
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy maintenance efficiency intercept")]
         [Required, GreaterThanValue(0)]
-        public double EMaintEfficiencyIntercept { get; set; }
+        public double EMaintEfficiencyIntercept { get; set; } = 0.503;
         /// <summary>
         /// Energy growth efficiency coefficient
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy growth efficiency coefficient")]
         [Required, GreaterThanValue(0)]
-        public double EGrowthEfficiencyCoefficient { get; set; }
+        public double EGrowthEfficiencyCoefficient { get; set; } = 1.16;
         /// <summary>
         /// Energy growth efficiency intercept
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy growth efficiency intercept")]
         [Required]
-        public double EGrowthEfficiencyIntercept { get; set; }
+        public double EGrowthEfficiencyIntercept { get; set; } = -0.308;
         /// <summary>
         /// Energy lactation efficiency coefficient
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy lactation efficiency coefficient")]
         [Required, GreaterThanValue(0)]
-        public double ELactationEfficiencyCoefficient { get; set; }
+        public double ELactationEfficiencyCoefficient { get; set; } = 0.35;
         /// <summary>
         /// Energy lactation efficiency intercept
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy lactation efficiency intercept")]
         [Required, GreaterThanValue(0)]
-        public double ELactationEfficiencyIntercept { get; set; }
+        public double ELactationEfficiencyIntercept { get; set; } = 0.42;
         /// <summary>
         /// Energy maintenance exponent
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy maintenance exponent")]
         [Required, GreaterThanValue(0)]
-        public double EMaintExponent { get; set; }
+        public double EMaintExponent { get; set; } = 8.2E-05;
         /// <summary>
         /// Energy maintenance intercept
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy maintenance intercept")]
         [Required, GreaterThanValue(0)]
-        public double EMaintIntercept { get; set; }
+        public double EMaintIntercept { get; set; } = 0.09;
         /// <summary>
         /// Energy maintenance coefficient
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy maintenance coefficient")]
         [Required, GreaterThanValue(0)]
-        public double EMaintCoefficient { get; set; }
+        public double EMaintCoefficient { get; set; } = 0.26;
         /// <summary>
         /// Maximum age for energy maintenance calculation
         /// </summary>
@@ -157,7 +158,7 @@ namespace Models.CLEM.Resources
         [Category("Basic", "Growth")]
         [Description("Breed factor for maintenence energy")]
         [Required, GreaterThanValue(0)]
-        public double Kme { get; set; }
+        public double Kme { get; set; } = 1.2;
 
         /// <summary>
         /// Growth efficiency
@@ -165,7 +166,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Growth efficiency")]
         [Required, GreaterThanValue(0)]
-        public double GrowthEfficiency { get; set; }
+        public double GrowthEfficiency { get; set; } = 1.0;
 
         /// <summary>
         /// Intake coefficient in relation to live weight
@@ -173,14 +174,14 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Diet")]
         [Description("Intake coefficient in relation to Live Weight")]
         [Required, GreaterThanValue(0)]
-        public double IntakeCoefficient { get; set; }
+        public double IntakeCoefficient { get; set; } = 0.02425;
         /// <summary>
         /// Intake intercept in relation to live weight
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Intake intercept in relation to SRW")]
         [Required, GreaterThanValue(0)]
-        public double IntakeIntercept { get; set; }
+        public double IntakeIntercept { get; set; } = 1.7;
 
         /// <summary>
         /// Protein requirement coeff (g/kg feed)
@@ -188,57 +189,57 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Diet")]
         [Description("Protein requirement coeff (g/kg feed)")]
         [Required, GreaterThanValue(0)]
-        public double ProteinCoefficient { get; set; }
+        public double ProteinCoefficient { get; set; } = 130;
         /// <summary>
         /// Protein degradability
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Protein degradability")]
         [Required, GreaterThanValue(0)]
-        public double ProteinDegradability { get; set; }
+        public double ProteinDegradability { get; set; } = 0.9;
 
-                /// <summary>
+        /// <summary>
         /// Coefficient of juvenile milk intake
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Coefficient of juvenile milk intake")]
         [Required, GreaterThanValue(0)]
-        public double MilkIntakeCoefficient { get; set; }
+        public double MilkIntakeCoefficient { get; set; } = 0.1206;
         /// <summary>
         /// Intercept of juvenile milk intake
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Intercept of juvenile milk intake")]
         [Required, GreaterThanValue(0)]
-        public double MilkIntakeIntercept { get; set; }
+        public double MilkIntakeIntercept { get; set; } = 3.8146;
         /// <summary>
         /// Maximum juvenile milk intake
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Maximum juvenile milk intake")]
         [Required, GreaterThanValue(0)]
-        public double MilkIntakeMaximum { get; set; }
+        public double MilkIntakeMaximum { get; set; } = 20;
         /// <summary>
         /// Milk as proportion of LWT for fodder substitution
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Milk as proportion of LWT for fodder substitution")]
         [Required, Proportion]
-        public double MilkLWTFodderSubstitutionProportion { get; set; }
+        public double MilkLWTFodderSubstitutionProportion { get; set; } = 0.2;
         /// <summary>
         /// Max juvenile (suckling) intake as proportion of LWT
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Max juvenile (suckling) intake as proportion of LWT")]
         [Required, GreaterThanValue(0)]
-        public double MaxJuvenileIntake { get; set; }
+        public double MaxJuvenileIntake { get; set; } = 0.03;
         /// <summary>
         /// Proportional discount to intake due to milk intake
         /// </summary>
         [Category("Breed", "Diet")]
         [Description("Proportional discount to intake due to milk intake")]
         [Required, Proportion]
-        public double ProportionalDiscountDueToMilk { get; set; }
+        public double ProportionalDiscountDueToMilk { get; set; } = 0.3;
 
         /// <summary>
         /// Maximum size of individual relative to SRW
@@ -246,7 +247,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "General")]
         [Description("Maximum size of individual relative to SRW")]
         [Required, GreaterThanValue(0)]
-        public double MaximumSizeOfIndividual { get; set; }
+        public double MaximumSizeOfIndividual { get; set; } = 1.1;
 
         /// <summary>
         /// Wool coefficient
@@ -270,21 +271,21 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Lactating potential intake modifier coefficient A")]
         [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantA { get; set; }
+        public double LactatingPotentialModifierConstantA { get; set; } = 0.32;
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
         [Category("Breed", "Lactation")]
         [Description("Lactating potential intake modifier coefficient B")]
         [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantB { get; set; }
+        public double LactatingPotentialModifierConstantB { get; set; } = 61;
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
         [Category("Breed", "Lactation")]
         [Description("Lactating potential intake modifier coefficient C")]
         [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantC { get; set; }
+        public double LactatingPotentialModifierConstantC { get; set; } = 1.7;
 
         /// <summary>
         /// Mortality rate coefficient
@@ -292,35 +293,35 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Survival")]
         [Description("Mortality rate coefficient")]
         [Required, GreaterThanValue(0)]
-        public double MortalityCoefficient { get; set; }
+        public double MortalityCoefficient { get; set; } = 2.5;
         /// <summary>
         /// Mortality rate intercept
         /// </summary>
         [Category("Breed", "Survival")]
         [Description("Mortality rate intercept")]
         [Required, GreaterThanValue(0)]
-        public double MortalityIntercept { get; set; }
+        public double MortalityIntercept { get; set; } = 0.05;
         /// <summary>
         /// Mortality rate exponent
         /// </summary>
         [Category("Breed", "Survival")]
         [Description("Mortality rate exponent")]
         [Required, GreaterThanValue(0)]
-        public double MortalityExponent { get; set; }
+        public double MortalityExponent { get; set; } = 3.0;
         /// <summary>
         /// Juvenile mortality rate coefficient
         /// </summary>
         [Category("Breed", "Survival")]
         [Description("Juvenile mortality rate coefficient")]
         [Required, GreaterThanValue(0)]
-        public double JuvenileMortalityCoefficient { get; set; }
+        public double JuvenileMortalityCoefficient { get; set; } = 3.0;
         /// <summary>
         /// Juvenile mortality rate maximum
         /// </summary>
         [Category("Breed", "Survival")]
         [Description("Juvenile mortality rate maximum")]
         [Required, Proportion]
-        public double JuvenileMortalityMaximum { get; set; }
+        public double JuvenileMortalityMaximum { get; set; } = 0.2;
 
         /// <summary>
         /// Juvenile mortality rate exponent
@@ -328,7 +329,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Survival")]
         [Description("Juvenile mortality rate exponent")]
         [Required]
-        public double JuvenileMortalityExponent { get; set; }
+        public double JuvenileMortalityExponent { get; set; } = 1.8;
 
         /// <summary>
         /// Constructor
