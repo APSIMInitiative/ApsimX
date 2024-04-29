@@ -18,11 +18,24 @@
             "name": "APSIM.Cli: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Models: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "debug",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/Models.exe",
+            "args": [
+                "--help"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
