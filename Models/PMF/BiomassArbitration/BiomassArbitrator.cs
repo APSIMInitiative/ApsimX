@@ -287,6 +287,13 @@ namespace Models.PMF
                     }
                 }
                 double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
+                if (RemainingDemand < 0)
+                {
+                    if (RemainingDemand < -tolerence)
+                        throw new Exception("Over allocation of biomass in first pass of allocaiton");
+                    else //Throw away negative if floating point error
+                        RemainingDemand = 0;
+                }
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {
