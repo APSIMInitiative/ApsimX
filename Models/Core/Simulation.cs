@@ -381,7 +381,10 @@ namespace Models.Core
         /// <summary>Store descriptors in DataStore.</summary>
         private void StoreFactorsInDataStore()
         {
-            IDataStore storage = Services.OfType<IDataStore>().First();
+            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IDataStore storage = null;
+            if (ss != null && ss.Count() > 0)
+                storage = ss.First();
 
             if (storage != null && Descriptors != null)
             {
