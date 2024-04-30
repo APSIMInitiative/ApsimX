@@ -230,7 +230,7 @@ namespace Models.Core
                 // look for an array specifier e.g. sw[2]
                 //need to do this first as the [ ] will screw up matching to a property
                 string arraySpecifier = null;
-                if (namePathBits[j].Contains("["))
+                if (!onlyModelChildren && namePathBits[j].Contains("["))
                     arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
                 object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);

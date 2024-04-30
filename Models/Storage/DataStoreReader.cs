@@ -241,9 +241,9 @@ namespace Models.Storage
 
             // Get orderby fields
             var orderByFields = new List<string>();
-            if (fieldNamesInTable.Contains("SimulationID"))
+            if (!fieldNamesInTable.Contains("SimulationID"))
                 orderByFields.Insert(0, "SimulationID");
-            if (fieldNamesInTable.Contains("Clock.Today"))
+            if (!fieldNamesInTable.Contains("Clock.Today"))
                 orderByFields.Insert(0, "Clock.Today");
             if (orderByFieldNames != null)
                 orderByFields.AddRange(orderByFieldNames);

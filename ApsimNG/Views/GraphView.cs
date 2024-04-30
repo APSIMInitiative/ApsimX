@@ -189,19 +189,23 @@ namespace UserInterface.Views
                     // Get the series with false 'isVisible' property.
                     List<string> reselectedSeriesNames = new();
                     List<string> newUnselectedSeriesNames = new();
-                    foreach (INameableSeries series in (sender as PlotModel).Series)
+                    foreach (OxyPlot.Series.Series series in (sender as PlotModel).Series)
                     {
-                        bool seriesNamePreviouslyUnselected = false;
-                        List<string> matchingNames = new();
+                        if (series is INameableSeries seriesNameable) 
+                        {
+                            bool seriesNamePreviouslyUnselected = false;
+                            List<string> matchingNames = new();
 
-                        if (UnselectedSeriesNames.Any())
-                            matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(series.Name)).ToList();
-                        if (matchingNames.Any())
-                            seriesNamePreviouslyUnselected = true;
-                        if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
-                            newUnselectedSeriesNames.Add(series.Name);
-                        else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
-                            reselectedSeriesNames.Add(series.Name);
+                            if (UnselectedSeriesNames.Any())
+                                matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(seriesNameable.Name)).ToList();
+                            if (matchingNames.Any())
+                                seriesNamePreviouslyUnselected = true;
+                            if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
+                                newUnselectedSeriesNames.Add(seriesNameable.Name);
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                                reselectedSeriesNames.Add(seriesNameable.Name);
+                        }
+                        
                     }
                     UnselectedSeriesNames = newUnselectedSeriesNames;
                     LegendPosition legendPosition;
