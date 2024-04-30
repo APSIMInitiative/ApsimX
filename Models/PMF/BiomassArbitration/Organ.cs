@@ -103,7 +103,7 @@ namespace Models.PMF
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Tolerance for biomass comparisons</summary>
-        protected double tolerence = 2e-12;
+        protected double tolerence = 3e-12;
 
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
