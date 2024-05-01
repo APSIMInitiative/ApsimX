@@ -169,7 +169,7 @@ namespace Models.Climate
             get
             {
                 Simulation simulation = FindAncestor<Simulation>();
-                if (simulation != null)
+                if (simulation != null && simulation.FileName != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
                 {
@@ -177,7 +177,7 @@ namespace Models.Climate
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
                     else
-                        return this.FileName;
+                        return PathUtilities.GetAbsolutePath(this.FileName, "");
                 }
             }
             set
