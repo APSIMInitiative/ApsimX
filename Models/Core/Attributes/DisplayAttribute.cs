@@ -110,6 +110,11 @@ namespace Models.Core
         ScrumHarvestStages,
 
         /// <summary>
+        /// List of plant organs that have damagable organs returned in plant.organ format.
+        /// </summary>
+        PlantOrganList,
+
+		/// <summary>
         /// Provides a EditorView object for display
         /// </summary>
         Code,
