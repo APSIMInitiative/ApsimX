@@ -137,7 +137,7 @@ namespace UserInterface.Presenters
             orderByDropDown.Changed += this.OnOrderBySelected;
             columnFilterEditBox.Leave += OnColumnFilterChanged;
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
-            rowFilterEditBox.Changed += OnColumnFilterChanged;
+            rowFilterEditBox.Leave += OnColumnFilterChanged;
             checkpointDropDown.Changed += OnCheckpointDropDownChanged;
 
             // Add the filter strings back in the text field.
@@ -154,6 +154,8 @@ namespace UserInterface.Presenters
         {
             //base.Detach();
             // Keep the column and row filters
+            temporaryColumnFilters = columnFilterEditBox.Text;
+            temporaryRowFilters = rowFilterEditBox.Text;
             explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters);
             temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
