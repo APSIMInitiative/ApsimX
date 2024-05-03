@@ -107,6 +107,16 @@ namespace Models.DCAPST
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
+        /// The biological transpiration limit of a plant
+        /// </summary>
+        public double Biolimit { get; set; } = 0;
+
+        /// <summary>
+        /// Excess water reduction fraction
+        /// </summary>
+        public double Reduction { get; set; } = 0;
+
+        /// <summary>
         /// A static crop parameter generation object.
         /// </summary>
         /// TODO - This has been made static because otherwise it will be serialized,
@@ -125,6 +135,8 @@ namespace Models.DCAPST
         /// <param name="minT"></param>
         /// <param name="radn"></param>
         /// <param name="rpar"></param>
+        /// <param name="biolimit"></param>
+        /// <param name="reduction"></param>
         /// <returns>The model</returns>
         public static DCAPSTModel SetUpModel(
             ICanopyParameters canopyParameters,
@@ -134,7 +146,9 @@ namespace Models.DCAPST
             double maxT,
             double minT,
             double radn,
-            double rpar
+            double rpar,
+            double biolimit,
+            double reduction
         )
         {
             // Model the solar geometry
@@ -186,13 +200,20 @@ namespace Models.DCAPST
 
             // Model the photosynthesis
             return new DCAPSTModel(
-                solarGeometry, 
-                solarRadiation, 
-                temperature, 
-                pathwayParameters, 
-                canopyAttributes, 
+                solarGeometry,
+                solarRadiation,
+                temperature,
+                pathwayParameters,
+                canopyAttributes,
                 transpiration
-            );
+            )
+            {
+                // From here, we can set additional options,
+                // such as verbosity, BioLimit, Reduction, etc.
+                PrintIntervalValues = false,
+                Biolimit = biolimit,
+                Reduction = reduction,
+            };
         }
 
         /// <summary>
@@ -251,14 +272,10 @@ namespace Models.DCAPST
                 weather.MaxT,
                 weather.MinT,
                 weather.Radn,
-                Parameters.Rpar
+                Parameters.Rpar,
+                Biolimit,
+                Reduction
             );
-
-            // From here, we can set additional options,
-            // such as verbosity, BioLimit, Reduction, etc.
-            dcapstModel.PrintIntervalValues = false;
-            dcapstModel.Biolimit = 0.0;
-            dcapstModel.Reduction = 0.0;
 
             double sln = GetSln(leaf);
             double soilWaterValue = GetSoilWater(leaf);

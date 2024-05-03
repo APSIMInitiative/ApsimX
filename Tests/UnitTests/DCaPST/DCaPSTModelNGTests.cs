@@ -117,6 +117,8 @@ namespace UnitTests.DCaPST
             var minT = -10.0;
             var radn = 1.0;
             var rpar = 2.0;
+            var biolimit = 0.0;
+            var reduction = 0.0;
 
             // Act
             var model = DCaPSTModelNG.SetUpModel(
@@ -127,7 +129,9 @@ namespace UnitTests.DCaPST
                 maxT, 
                 minT, 
                 radn, 
-                rpar
+                rpar,
+                biolimit,
+                reduction
             );
 
             // Assert - Nothing else can be tested :-(
