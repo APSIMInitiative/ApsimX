@@ -152,9 +152,7 @@ namespace Models
         {
             base.OnCreated();
             afterCreation = true;
-
-            //if (TryGetCompiler())
-            //    RebuildScriptModel(true);
+            afterCreation = true;
         }
 
         /// <summary>
