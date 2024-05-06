@@ -140,7 +140,6 @@ namespace APSIM.ZMQServer
                                     newField.Z = Convert.ToDouble(fieldConfigs[key]);
                                     break;
                             }
-                            Console.WriteLine($"{key} = {fieldConfigs[key]}");
                         }
                         // add to simulation tree
                         sim_root.Children.Add(newField);

@@ -46,20 +46,26 @@ class ApsimController:
             # TODO error handling
             pass
         
-        '''
-        field = {
-                "x": 1.0,
-                "y": 2.0,
-                "z": 3.0
-                }
-        if msg != "ok":
-            # TODO error handling
-            pass
-        '''
-    
-        msg = self.send_command("field", ["X,0", "Y,0", "Z,0"], unpack=False)
+        msg = self.send_command(
+            "field", [
+                "Name,CoolField",
+                "X,1.0",
+                "Y,2.0",
+                "Z,3.0"
+            ],
+            unpack=False
+        )
+        msg = self.send_command(
+            "field", [
+                "Name,FreshField",
+                "X,4.0",
+                "Y,5.0",
+                "Z,6.0"
+            ],
+            unpack=False
+        )
         # create fields
-        msg = self.send_command("fields", [self.fields], unpack=False)
+        #msg = self.send_command("fields", [self.fields], unpack=False)
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
 
@@ -151,7 +157,6 @@ class ApsimController:
             rc = True
         else:
             raise ValueError
-            
         return rc
 
 
@@ -184,10 +189,10 @@ def poll_zmq(controller : ApsimController) -> tuple:
         ts = controller.send_command("get", ["[Clock].Today"])
         ts_arr.append(ts.to_unix())
         
-        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
+        sw1 = controller.send_command("get", ["sum([CoolField].HeavyClay.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([Field22].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([FreshField].HeavyClay.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -197,7 +202,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
             print("Applying irrigation")
             controller.send_command(
                 "do",
-                ["applyIrrigation", "amount", 204200.0, "field", 22],
+                ["applyIrrigation", "amount", 204200.0, "field", 0],
                 unpack=False
                 )
             global rain_day_ts
