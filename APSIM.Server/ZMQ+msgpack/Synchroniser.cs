@@ -207,7 +207,6 @@ namespace Models
                     else if (vname == "field")
                     {
                         var irrigation_idx = MessagePackSerializer.Deserialize<int>(msg[i + 1].Buffer);
-                        Console.WriteLine($"{irrigation_idx} of {IrrigationList.Count()}");
                         if (irrigation_idx >= IrrigationList.Count())
                         {
                             throw new Exception($"Field index is out of range. Idx: {irrigation_idx}");
