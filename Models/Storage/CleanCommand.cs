@@ -10,9 +10,10 @@ namespace Models.Storage
 {
     internal class CleanCommand : IRunnable
     {
-        private static readonly string[] otherTablesToClean = new string[2]
+        private static readonly string[] otherTablesToClean = new string[3]
         {
             "_Messages",
+            "_Factors",
             "_InitialConditions"
         };
 

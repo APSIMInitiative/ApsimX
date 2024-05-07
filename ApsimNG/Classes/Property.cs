@@ -315,6 +315,13 @@ namespace UserInterface.Classes
                     if (plantyy != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
                     break;
+                case DisplayType.PlantOrganList:
+                    DisplayMethod = PropertyType.DropDown;
+                    Zone zone1 = model.FindAncestor<Zone>();
+                    List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
+                    if (plants != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
+                    break;  
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;

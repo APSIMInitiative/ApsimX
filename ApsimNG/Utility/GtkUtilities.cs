@@ -208,18 +208,25 @@ namespace Utility
         public static System.Drawing.Rectangle GetBorderOfRightHandView(ViewBase view)
         {
             ViewBase mainView = view;
+            ViewBase explorerView = null;
             while (mainView as MainView == null)
             {
                 if (mainView == null) //return a box if this could not compute correctly.
                     return new Rectangle(0, 0, 100, 100);
                 else
                     mainView = mainView.Owner;
-            }                
+
+                if (mainView as ExplorerView != null)
+                    explorerView = mainView;
+            }          
+
+            if (explorerView == null)
+                explorerView = mainView;
 
             int top = GtkUtilities.GetPositionOfWidget(view.MainWidget).Y;
             int bottom = (mainView as MainView).StatusPanelPosition;
             int left = GtkUtilities.GetPositionOfWidget(view.MainWidget).X;
-            int right = view.MainWidget.AllocatedWidth + left;
+            int right = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).X + explorerView.MainWidget.AllocatedWidth;
 
             int width = right - left;
             int height = bottom - top;

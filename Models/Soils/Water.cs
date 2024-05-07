@@ -201,7 +201,7 @@ namespace Models.Soils
         }
 
         [JsonIgnore]
-        private string relativeToCheck;
+        private string relativeToCheck = "LL15";
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
         public string RelativeTo
@@ -209,16 +209,20 @@ namespace Models.Soils
             get => relativeToCheck;
             set
             {
+                string newValue = value;
+                if (newValue == null)
+                    newValue = "LL15";
                 // This structure is required to create a 'source of truth' to ensure
                 // a stack overflow does not occurs.
-                if (relativeToCheck != value)
+                if (relativeToCheck != newValue)
                 {
-                    relativeToCheck = value;
-                    UpdateInitialValuesFromFractionFull(FractionFull);
+                    double percent = FractionFull;
+                    relativeToCheck = newValue;
+                    UpdateInitialValuesFromFractionFull(percent);
                 }
                 else
                 {
-                    relativeToCheck = value;
+                    relativeToCheck = newValue;
                 }
             }
         }
@@ -227,7 +231,7 @@ namespace Models.Soils
         public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
 
         [JsonIgnore]
-        private bool filledFromTop;
+        private bool filledFromTop = false;
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
         public bool FilledFromTop
@@ -235,9 +239,10 @@ namespace Models.Soils
             get => filledFromTop;
             set
             {
+                double percent = FractionFull;
                 filledFromTop = value;
                 if(Physical != null)
-                    UpdateInitialValuesFromFractionFull(FractionFull);
+                    UpdateInitialValuesFromFractionFull(percent);
             }
         }
 
@@ -256,7 +261,7 @@ namespace Models.Soils
                         return 0;
                     else
                     {
-                        if (RelativeTo != null && RelativeTo != "LL15")
+                        if (RelativeTo != "LL15")
                         {
                             //Get layer indices that have a XF as 0.
                             var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
@@ -320,7 +325,9 @@ namespace Models.Soils
                 double depthSoFar = 0;
                 for (int layer = 0; layer < Thickness.Length; layer++)
                 {
-                    var prop = (InitialValues[layer] - ll[layer]) / (dul[layer] - ll[layer]);
+                    double prop = 0;
+                    if (dul[layer] - ll[layer] != 0)
+                        prop = (InitialValues[layer] - ll[layer]) / (dul[layer] - ll[layer]);
 
                     if (MathUtilities.IsGreaterThanOrEqual(prop, 1.0))
                         depthSoFar += Thickness[layer];

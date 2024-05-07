@@ -392,22 +392,30 @@
                 VariableNames = new string[0],
                 EventNames = new string[0]
             };
-            var storage = new MockStorage();
-            Utilities.InjectLink(report, "simulation", sim);
-            Utilities.InjectLink(report, "storage", storage);
-            Utilities.InjectLink(report, "clock", new MockClock());
 
-            var events = new Events(report);
-            events.Publish("SubscribeToEvents", new object[] { report, new EventArgs() });
-            Assert.AreEqual(1, storage.tables.Count);
-            Assert.AreEqual(storage.tables[0].TableName, "_Factors");
+            SQLite database = new SQLite();
+            database.OpenDatabase(":memory:", readOnly: false);
+            DataStore storage = new DataStore(database);
 
+            Simulations sims = new Simulations();
+            sims.Children.Add(sim);
+            sims.Children.Add(new Summary());
+            sims.Children.Add(storage);
+            sims.ParentAllDescendants();
 
-            Assert.IsTrue(
-                    Utilities.CreateTable(new string[]                      { "ExperimentName", "SimulationName", "FolderName", "FactorName", "FactorValue" },
-                                          new List<object[]> { new object[] {           "exp1",           "sim1",          "F",   "Cultivar",       "cult1" },
-                                                               new object[] {           "exp1",           "sim1",          "F",          "N",            0 } })
-                   .IsSame(storage.tables[0]));
+            sim.Prepare();
+
+            storage.Writer.WaitForIdle();
+            storage.Reader.Refresh();
+            
+            Assert.IsNotNull(storage.Reader.GetData("_Factors"));
+
+            DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
+                                                    new List<object[]> { new object[] {        "Current",             1,        "",          1,          "exp1",          "F",         "Cultivar",      "cult1"   },
+                                                                         new object[] {        "Current",             1,        "",          1,          "exp1",          "F",             "N",            0      } });
+            DataTable dtActual = storage.Reader.GetData("_Factors");
+
+            Assert.IsTrue(dtExpected.IsSame(dtActual));
         }
 
         /// <summary>

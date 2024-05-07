@@ -127,12 +127,9 @@ namespace Models
         public string Apply { get; set; }
 
         /// <summary>
-        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.
         /// </summary>
-        /// <remarks>
-        /// Intended to provide a overall approach to simulation handling.
-        /// </remarks>
-        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        [Option('p', "playlist", HelpText = "Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.")]
         public string Playlist { get; set; }
 
         /// <summary>

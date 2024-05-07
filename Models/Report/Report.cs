@@ -365,50 +365,6 @@ namespace Models
                 foreach (var descriptor in simulation.Descriptors)
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
                         this.Columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
-                StoreFactorsInDataStore();
-            }
-        }
-
-        /// <summary>Store descriptors in DataStore.</summary>
-        private void StoreFactorsInDataStore()
-        {
-            if (storage != null && simulation != null && simulation.Descriptors != null)
-            {
-                var table = new DataTable("_Factors");
-                table.Columns.Add("ExperimentName", typeof(string));
-                table.Columns.Add("SimulationName", typeof(string));
-                table.Columns.Add("FolderName", typeof(string));
-                table.Columns.Add("FactorName", typeof(string));
-                table.Columns.Add("FactorValue", typeof(string));
-
-                var experimentDescriptor = simulation.Descriptors.Find(d => d.Name == "Experiment");
-                var simulationDescriptor = simulation.Descriptors.Find(d => d.Name == "SimulationName");
-                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
-
-                foreach (var descriptor in simulation.Descriptors)
-                {
-                    if (descriptor.Name != "Experiment" &&
-                        descriptor.Name != "SimulationName" &&
-                        descriptor.Name != "FolderName" &&
-                        descriptor.Name != "Zone")
-                    {
-                        var row = table.NewRow();
-                        if (experimentDescriptor != null)
-                            row[0] = experimentDescriptor.Value;
-                        if (simulationDescriptor != null)
-                            row[1] = simulationDescriptor.Value;
-                        if (folderDescriptor != null)
-                            row[2] = folderDescriptor.Value;
-                        row[3] = descriptor.Name;
-                        row[4] = descriptor.Value;
-                        table.Rows.Add(row);
-                    }
-                }
-
-                // Report tables are automatically cleaned before the simulation is run,
-                // as an optimisation specifically designed for this call to WriteTable().
-                // Therefore, we do not need to delete existing data here.
-                storage.Writer.WriteTable(table, false);
             }
         }
     }
