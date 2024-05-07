@@ -64,7 +64,7 @@ namespace UserInterface.Views
             EndEdit();
             
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
-            if (!sheet.DataProvider.IsColumnReadonly(selectedColumnIndex))
+            if (sheet.DataProvider.GetCellState(selectedColumnIndex, selectedRowIndex) != SheetDataProviderCellState.ReadOnly)
             {
                 var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 

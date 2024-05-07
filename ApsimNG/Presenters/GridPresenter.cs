@@ -1,14 +1,12 @@
-﻿using UserInterface.Interfaces;
-using Models.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UserInterface.Views;
 using System.Data;
-using Models.Interfaces;
-using UserInterface.EventArguments;
 using Models.Core;
-using Gtk;
-using DocumentFormat.OpenXml.Wordprocessing;
+using Models.Interfaces;
+using Models.Utilities;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -95,7 +93,7 @@ namespace UserInterface.Presenters
                 gridTable = m.Tables[0];
             }
             //else we are receiving a GridTable that was created by another presenter
-            else if(model as GridTable != null)
+            else if (model as GridTable != null)
             {
                 gridTable = (model as GridTable);
             }
@@ -162,7 +160,7 @@ namespace UserInterface.Presenters
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
                 intellisense.ContextItemsNeeded -= OnIntellisenseNeedContextItems;
             }
-            
+
         }
 
         public void SetupSheet(ISheetDataProvider dataProvider)
@@ -227,6 +225,7 @@ namespace UserInterface.Presenters
 
                 DataTable data = gridTable.Data;
 
+                // Assemble column units to pass to DataTableProvider constructor.
                 List<string> units = null;
                 if (gridTable.HasUnits())
                 {
@@ -237,8 +236,16 @@ namespace UserInterface.Presenters
                     }
                     data.Rows.Remove(data.Rows[0]);
                 }
-                DataTableProvider dataProvider = new DataTableProvider(data, units);
 
+                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
+                List<List<bool>> isCalculated = new();
+                for (int i = 0; i < data.Columns.Count; i++)
+                   isCalculated.Add(gridTable.GetIsCalculated(i));
+
+                // Create instance of DataTableProvider.
+                DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
+
+                // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
 
@@ -508,6 +515,14 @@ namespace UserInterface.Presenters
                 if (grid.Sheet.DataProvider != null)
                 {
                     var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
+                    List<string> unitsRow = new List<string>();
+                    for (int i = 0; i < data.Columns.Count; i++)
+                        unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
+
+                    DataRow row = data.NewRow();
+                    row.ItemArray = unitsRow.ToArray();
+
+                    data.Rows.InsertAt(row, 0);
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
             }
@@ -526,7 +541,7 @@ namespace UserInterface.Presenters
                     sheetContainer.SetScrollbarVisible(false, true);
                 else
                     sheetContainer.SetScrollbarVisible(false, false);
-            } 
+            }
             else
             {
                 sheetContainer.SetScrollbarVisible(false, false);
@@ -540,7 +555,7 @@ namespace UserInterface.Presenters
                     sheetContainer.SetScrollbarVisible(true, true);
                 else
                     sheetContainer.SetScrollbarVisible(true, false);
-            } 
+            }
             else
             {
                 sheetContainer.SetScrollbarVisible(true, false);

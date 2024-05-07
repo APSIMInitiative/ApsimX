@@ -107,7 +107,13 @@ namespace Models.Core
         /// <summary>
         /// This is a list of SCRUMcrop model harvest stages.
         /// </summary>
-        ScrumHarvestStages
+        ScrumHarvestStages,
+
+        /// <summary>
+        /// List of plant organs that have damagable organs returned in plant.organ format.
+        /// </summary>
+        PlantOrganList
+
     }
 
     /// <summary>

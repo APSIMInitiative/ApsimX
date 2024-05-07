@@ -58,8 +58,8 @@ ActivitiesPerformedSummary.html
 LabourAllocationSummary.html
 CurrentDescriptiveSummary.html
 /Docs/.hugo_build.lock
-/.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
 /testEnvironments.json
-Tests/UnderReview/SoilTemperature/NameVars.xlsx
+.mono
+ApsimX.xml
