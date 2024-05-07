@@ -65,7 +65,7 @@ namespace Models
         /// This property holds the path to the config file.
         /// This is identical to --edit switch. 
         /// </remarks>
-        [Option("run-use-config", HelpText = "Edit the .apsimx file(s) before running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
+        [Option("run-use-config", HelpText = "Deprecated. Use --apply switch with config file workflow instead.")]
         public string RunUseConfig { get; set; }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Models
         /// <remarks>
         /// This property holds the path to the config file and optionally a path to a .apsimx to save the modified .apsimx file (white-space separated).
         /// </remarks>
-        [Option("edit-use-config", HelpText = "Edit the .apsimx file and save without running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
+        [Option("edit-use-config", HelpText = "Deprecated. Use --apply switch with config file workflow instead.")]
         public string EditUseConfig { get; set; }
 
         /// <summary>
@@ -127,12 +127,9 @@ namespace Models
         public string Apply { get; set; }
 
         /// <summary>
-        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.
         /// </summary>
-        /// <remarks>
-        /// Intended to provide a overall approach to simulation handling.
-        /// </remarks>
-        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        [Option('p', "playlist", HelpText = "Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.")]
         public string Playlist { get; set; }
 
         /// <summary>

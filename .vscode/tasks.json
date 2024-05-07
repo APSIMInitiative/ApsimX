@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "debug clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "clean"
+            ]
+        },
+        {
+            "label": "debug build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/ApsimX.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label":"debug",
+            "dependsOrder": "sequence",
+            "dependsOn":[
+                "debug clean",
+                "debug build"
+            ]
+        }
+    ]
+}
