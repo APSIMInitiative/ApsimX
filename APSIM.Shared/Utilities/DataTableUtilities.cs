@@ -284,17 +284,19 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
-            double[] values = new double[numValues-startRow];
+            double[] values;
+            values = new double[numValues - startRow];
+
             int index = 0;
-            for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
+            for (int row = startRow; row != table.Rows.Count && index != numValues; row++)
             {
-                if (table.Rows[Row][columnName].ToString() == string.Empty)
+                if (table.Rows[row][columnName].ToString() == string.Empty)
                     values[index] = double.NaN;
                 else
                 {
                     try
                     {
-                        values[index] = Convert.ToDouble(table.Rows[Row][columnName], culture);
+                        values[index] = Convert.ToDouble(table.Rows[row][columnName], culture);
                     }
                     catch (Exception)
                     {
@@ -399,16 +401,41 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="table">The data table that contains the data required</param>
         /// <param name="columnName">The name of the Date Column</param>
+        /// <param name="numValues"></param>
+        /// <param name="startRow"></param>
+        /// <returns>An array of dates</returns>
+        static public DateTime[] GetColumnAsDates(DataTable table, string columnName, int numValues, int startRow)
+        {
+            DateTime[] values = new DateTime[numValues];
+            int index = 0;
+            for (int row = startRow; row < table.Rows.Count && index < numValues; row++)
+            {
+                string date = DateUtilities.ValidateDateString(table.Rows[row][columnName].ToString());
+                if (date == null)
+                    values[index] = DateTime.MinValue;
+                else
+                    values[index] = DateUtilities.GetDate(date);
+                index++;
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Get a column as dates.
+        /// </summary>
+        /// <param name="table">The data table that contains the data required</param>
+        /// <param name="columnName">The name of the Date Column</param>
         /// <returns>An array of dates</returns>
         static public DateTime[] GetColumnAsDates(DataTable table, string columnName)
         {
             DateTime[] values = new DateTime[table.Rows.Count];
             for (int row = 0; row != table.Rows.Count; row++)
             {
-                if (Convert.IsDBNull(table.Rows[row][columnName]))
+                string date = DateUtilities.ValidateDateString(table.Rows[row][columnName].ToString());
+                if (date == null)
                     values[row] = DateTime.MinValue;
                 else
-                    values[row] = Convert.ToDateTime(table.Rows[row][columnName], CultureInfo.InvariantCulture);
+                    values[row] = DateUtilities.GetDate(date);
             }
             return values;
         }
@@ -1392,6 +1419,16 @@ namespace APSIM.Shared.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if table has a double as its very first value.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns>a <see cref="bool">bool</see></returns>
+        public static bool IsTablesFirstValueDouble(DataTable table)
+        {
+            return Double.TryParse(table.Rows[0][0] as string, out double firstValue);
         }
     }
 }
