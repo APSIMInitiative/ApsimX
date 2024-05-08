@@ -68,15 +68,16 @@ namespace Models
         {
             // Find a parent that heads the scope that we're going to graph
             IModel parent = FindParent(model);
+            if (parent is Simulation && parent.Parent is Experiment)
+                throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
 
-            List<SimulationDescription> simulationDescriptions = null;
-            do
-            {
+            List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
+            while (simulationDescriptions.Count == 0 && parent != null) {
                 // Create a list of all simulation/zone objects that we're going to graph.
                 simulationDescriptions = GetSimulationDescriptionsUnderModel(parent);
                 parent = parent.Parent;
             }
-            while (simulationDescriptions.Count == 0 && parent != null);
+
             return simulationDescriptions;
         }
 

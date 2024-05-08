@@ -278,7 +278,7 @@ namespace Models
                 GetDataFromModels();
             else
             {
-                var fieldsThatExist = DataTableUtilities.GetColumnNames(data).ToList();
+                List<string> fieldsThatExist = DataTableUtilities.GetColumnNames(data).ToList();
 
                 // If we have descriptors, then use them to filter the data for this series.
                 List<string> simulationNameFilter = new List<string>(); ;
@@ -287,13 +287,13 @@ namespace Models
                 {
                     foreach (var descriptor in Descriptors)
                     {
-                        if (!fieldsThatExist.Contains(descriptor.Name))
-                        {
-                            if (simulationNamesWithDescriptors.Any())
-                                simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
-                            else
-                                simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
-                        }
+                        if (simulationNamesWithDescriptors.Any())
+                            simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
+                        else
+                            simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
+
+                        if (fieldsThatExist.Contains(descriptor.Name))
+                            fieldsThatExist.Remove(descriptor.Name);
                     }
                     if (simulationNamesWithDescriptors.Any())
                         simulationNameFilter = simulationNamesWithDescriptors.Select(s => s.Name).ToList();
