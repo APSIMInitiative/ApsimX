@@ -168,6 +168,9 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
+        /// <summary>Link to the soilCrop</summary>
+        public SoilCrop SoilCrop {get; private set;} = null;
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -179,8 +182,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        private SoilCrop soilCrop;
 
         /// <summary>Constructor</summary>
         public Root()
@@ -540,23 +541,6 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
 
-        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
-        private bool IsKLModiferDueToDamageActive { get; set; } = false;
-
-        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
-        private double KLModiferDueToDamage(int layerIndex)
-        {
-            var threshold = 0.01;
-            if (!IsKLModiferDueToDamageActive)
-                return 1;
-            else if (LengthDensity[layerIndex] < 0)
-                return 0;
-            else if (LengthDensity[layerIndex] >= threshold)
-                return 1;
-            else
-                return (1 / threshold) * LengthDensity[layerIndex];
-        }
-
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
@@ -852,8 +836,7 @@ namespace Models.PMF.Organs
                 {
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                    available * myZone.RootProportions[layer]);
+                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * available * myZone.RootProportions[layer]);
                 }
             }
             return supply;
@@ -976,8 +959,8 @@ namespace Models.PMF.Organs
         public double TotalExtractableWater()
         {
 
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
+            double[] LL = SoilCrop.LL;
+            double[] KL = SoilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
@@ -988,8 +971,7 @@ namespace Models.PMF.Organs
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * PlantZone.RootProportions[layer]);
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * available * PlantZone.RootProportions[layer]);
                 }
             }
             return supply;
@@ -1100,8 +1082,8 @@ namespace Models.PMF.Organs
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
-            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
+            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             Zones = new List<ZoneState>();

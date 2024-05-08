@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -42,6 +43,22 @@ namespace Models.PMF.SimplePlantModels
         /// by bailing or some other means)</summary>
         public double ResidueRemoval { get; set; }
 
+        /// <summary>Residue incorporation (i.e the proportion of residues that are incorporated by cultivation  
+        /// at or soon after harvest)</summary>
+        public double ResidueIncorporation { get; set; }
+
+        /// <summary>Residue incorporation depth (i.e the depth residues are incorporated to by cultivation  
+        /// at or soon after harvest)</summary>
+        public double ResidueIncorporationDepth { get; set; }
+
+        /// <summary>Can fertiliser be applied to this crop.  
+        /// Note, this is a flag for managers to use, Scrum does not calculate its own fertliser applications</summary>
+        public bool IsFertilised { get; set; }
+
+        /// <summary>First Date for Fert application to this crop.  
+        /// Note, this is a flag for managers to use, Scrum does not calculate its own fertliser applications</summary>
+        public Nullable<DateTime> FirstFertDate { get; set; }
+
         /// <summary>
         /// Parameterless constructor
         /// </summary>
@@ -50,19 +67,27 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Management class constructor
         /// </summary>
-        public ScrumManagementInstance(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
-             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, double fieldLoss = 0, double residueRemoval = 0)
+        public ScrumManagementInstance(string cropName, DateTime establishDate, string establishStage, string harvestStage, double expectedYield, 
+                                       Nullable<DateTime> harvestDate = null, double ttEstabToHarv = Double.NaN, double plantingDepth = 15, 
+                                       double fieldLoss = 0, double residueRemoval = 0, double residueIncorporation = 1, double residueIncorporationDepth = 150,
+                                       bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
+            if (((harvestDate == null)||(harvestDate < establishDate)) && (Double.IsNaN(ttEstabToHarv) || (ttEstabToHarv == 0)))
+                throw new Exception("A valid harvestDate OR a non-zero ttEstabToHarv must be provided when inititialising a ScrumManagementInstance");
             CropName = cropName;
-            EstablishDate = establishmentDate;
+            EstablishDate = establishDate;
             EstablishStage = establishStage;
             PlantingDepth = plantingDepth;
             HarvestStage = harvestStage;
             ExpectedYield = expectedYield;
-            HarvestDate = harvestDate;
-            TtEstabToHarv = harvestTt;
             FieldLoss = fieldLoss;
-            ResidueRemoval = residueRemoval;    
+            ResidueRemoval = residueRemoval;
+            ResidueIncorporation = residueIncorporation;
+            ResidueIncorporationDepth = residueIncorporationDepth;
+            HarvestDate = harvestDate;
+            TtEstabToHarv = ttEstabToHarv;
+            IsFertilised = isFertilised;
+            FirstFertDate = (FirstFertDate == null) ? establishDate : firstFertDate;
         }
 
         /// <summary>
@@ -73,7 +98,15 @@ namespace Models.PMF.SimplePlantModels
         public ScrumManagementInstance(Dictionary<string, string> cropParams, DateTime today)
         {
             CropName = cropParams["CropName"];
-            EstablishDate = DateTime.Parse(cropParams["EstablishDate"]+"-"+today.Year) ;
+            DateTime testEstablishDate = DateTime.Parse(cropParams["EstablishDate"]+"-"+today.Year) ;
+            if (testEstablishDate > today)
+            {
+                EstablishDate = testEstablishDate;
+            }
+            else
+            {
+                EstablishDate = DateTime.Parse(cropParams["EstablishDate"] + "-" + (today.Year + 1));
+            }
             EstablishStage = cropParams["EstablishStage"];
             PlantingDepth = Double.Parse(cropParams["PlantingDepth"]);
             HarvestStage = cropParams["HarvestStage"];
@@ -88,14 +121,40 @@ namespace Models.PMF.SimplePlantModels
                 else
                 {
                     HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 1));
+                    if (HarvestDate <= EstablishDate)
+                        HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 2));
                 }
             }
-            if (cropParams["TtEstabToHarv"] != "")
+            else if (cropParams["TtEstabToHarv"] != "")
             {
                 TtEstabToHarv = Double.Parse(cropParams["TtEstabToHarv"]);
             }
-            FieldLoss = Double.Parse(cropParams["FieldLoss"]);
-            ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]);
+            else 
+            { throw new Exception("A valid harvest date OR Tt from establish to harvest must be provided when inititialising a ScrumManagementInstance"); }
+            try
+            { FieldLoss = Double.Parse(cropParams["FieldLoss"]); }
+            catch 
+            { FieldLoss = 0; }
+            try
+            { ResidueRemoval = Double.Parse(cropParams["ResidueRemoval"]); }
+            catch 
+            { ResidueRemoval = 0; }
+            try
+            { ResidueIncorporation = Double.Parse(cropParams["ResidueIncorporation"]); }
+            catch
+            { ResidueIncorporation= 1; }
+            try
+            { ResidueIncorporationDepth = Double.Parse(cropParams["ResidueIncorporationDepth"]); }
+            catch
+            { ResidueIncorporationDepth = 150; }
+            try
+            { IsFertilised = bool.Parse(cropParams["IsFertilised"]); }
+            catch 
+            { IsFertilised = true; }
+            try
+            { FirstFertDate = DateTime.Parse(cropParams["FirstFertDate"] + "-" + today.Year); }
+            catch
+            { FirstFertDate = EstablishDate; }
         }
     }
 }

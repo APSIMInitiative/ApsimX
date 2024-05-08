@@ -143,7 +143,7 @@ namespace Models
 
                         foreach (Experiment exp in allExperiments)
                         {
-                            List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
+                            List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions(false).ToList();
                             //match experiment name
                             if (regex.IsMatch(exp.Name.ToLower()))
                             {
