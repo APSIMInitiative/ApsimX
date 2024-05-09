@@ -39,7 +39,7 @@ namespace Models.Functions
             if (depth <= 300)
                 return 1.0;
             else if (depth < maxRootDepth)
-                return Math.Exp(-0.004*(1500/(maxRootDepth - 300)*(depth-300)));
+                return Math.Exp(-0.0015*(1500/(maxRootDepth - 300)*(depth-300)));
             else
                 return 0;
         }

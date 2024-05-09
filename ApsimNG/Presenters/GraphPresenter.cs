@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using APSIM.Shared.Documentation.Extensions;
@@ -177,8 +176,11 @@
                         double xDouble = 0;
                         if (x is DateTime)
                             xDouble = ((DateTime)x).ToOADate();
+                        else if (x is string)
+                            xDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             xDouble = Convert.ToDouble(x);
+
                         valuesX.Add(xDouble);
                     }
                     foreach (var y in definition.Y)
@@ -186,8 +188,11 @@
                         double yDouble = 0;
                         if (y is DateTime)
                             yDouble = ((DateTime)y).ToOADate();
+                        else if (y is string) 
+                            yDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             yDouble = Convert.ToDouble(y);
+
                         valuesY.Add(yDouble);
                     }
 
@@ -199,10 +204,12 @@
                         if (double.IsNaN(x) && !double.IsNaN(y))
                         {
                             xNaNCount += 1;
-                        } else if (!double.IsNaN(x) && double.IsNaN(y))
+                        }
+                        else if (!double.IsNaN(x) && double.IsNaN(y))
                         {
                             yNaNCount += 1;
-                        } else if (double.IsNaN(x) && double.IsNaN(y))
+                        }
+                        else if (double.IsNaN(x) && double.IsNaN(y))
                         {
                             bothNaNCount += 1;
                         }
@@ -223,7 +230,7 @@
                                 pointsInsideAxis += 1;
                         }
                     }
-                    if (xNaNCount > 0 || yNaNCount > 0 || bothNaNCount > 0)
+                    if (xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
                     {
                         explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: NaN Values found in points. These may be empty cells in the datastore.", Simulation.MessageType.Information, false);
                         if (xNaNCount > 0)
@@ -284,7 +291,7 @@
         {
             // The rectange numbers below are optimised for generation of PDF document
             // on a computer that has its display settings at 100%.
-            Rectangle r = new Rectangle(0, 0, 600, 450);
+            System.Drawing.Rectangle r = new System.Drawing.Rectangle(0, 0, 600, 450);
             Gdk.Pixbuf img;
             graphView.Export(out img, r, true);
 
@@ -331,7 +338,7 @@
             {
                 try
                 {
-                    Color colour = GetColour(definition.Colour);
+                    System.Drawing.Color colour = GetColour(definition.Colour);
 
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
@@ -421,12 +428,12 @@
             }
         }
 
-        private Color GetColour(Color colour)
+        private System.Drawing.Color GetColour(System.Drawing.Color colour)
         {
             // If dark theme is active, and colour is black, use white instead.
             // This won't help at all if the colour is a dark grey.
             if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                return Color.White;
+                return System.Drawing.Color.White;
 
             return colour;
         }
@@ -516,9 +523,6 @@
             }
         }
 
-        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
-        {
-        }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
@@ -593,7 +597,30 @@
                 CurrentPresenter.Detach();
             }
 
+            bool isXAxis = true;
+            if (axisType == AxisPosition.Left || axisType == AxisPosition.Right)
+                isXAxis = false;
+
+            bool isDateAxis = false;
+            foreach (SeriesDefinition definition in SeriesDefinitions)
+            {
+                
+                if (isXAxis)
+                {
+                    foreach (var x in definition.X)
+                        if (x is DateTime)
+                            isDateAxis = true;
+                } 
+                else
+                {
+                    foreach (var y in definition.Y)
+                        if (y is DateTime)
+                            isDateAxis = true;
+                }
+            }
+
             AxisPresenter axisPresenter = new AxisPresenter();
+            axisPresenter.SetAsDateAxis(isDateAxis);
             CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == AxisPosition.Left || axisType == AxisPosition.Right) ? "Y" : "X";

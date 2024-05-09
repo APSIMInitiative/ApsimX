@@ -201,7 +201,7 @@ namespace Models.GrazPlan
             public double DM;
 
             /// <summary>
-            /// Nutrients in kg element/ha
+            /// Nutrients in kg element/ha [0, N...
             /// </summary>
             public double[] Nu = new double[4];
 

@@ -58,9 +58,9 @@ ActivitiesPerformedSummary.html
 LabourAllocationSummary.html
 CurrentDescriptiveSummary.html
 /Docs/.hugo_build.lock
-/.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
 /testEnvironments.json
-/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.out
+.mono
+ApsimX.xml/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.out
 /Tests/Validation/Sorghum/old/classic_apsim_file/**/*.sim

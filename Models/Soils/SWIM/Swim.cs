@@ -1867,7 +1867,7 @@ namespace Models.Soils
 
                 var plant = model as IPlant;
                 if (plant == null)
-                    plant = model.Parent as IPlant; // the canopy might be a leaf and it's parent is a plant.
+                    plant = model.FindAncestor<IPlant>(); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
                 if (plant != null)
                 {
                     if (plant.IsAlive)
@@ -1885,7 +1885,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    throw new Exception($"A canopy was found that isn't a plant. Name: {(canopies[vegnum] as IModel).Name}");
+                    throw new Exception($"A canopy was found that isn't on a plant. Name: {(canopies[vegnum] as IModel).Name}");
             }
             crop_cover = 1.0 - bare;
         }

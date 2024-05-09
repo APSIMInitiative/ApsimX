@@ -1,31 +1,28 @@
-﻿using APSIM.Interop.Graphing.CustomSeries;
-using APSIM.Interop.Graphing.Extensions;
-using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
-using APSIM.Shared.Utilities;
-using UserInterface.EventArguments;
-using Gtk;
-using UserInterface.Interfaces;
-using MathNet.Numerics.Statistics;
-using OxyPlot;
-using OxyPlot.Annotations;
-using OxyPlot.Axes;
-using OxyPlot.GtkSharp;
-using OxyPlot.Series;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Interop.Graphing.CustomSeries;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Gtk;
+using MathNet.Numerics.Statistics;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 using Utility;
 using LegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-
-using static Gdk.Cursor;
-using static Gdk.CursorType;
 
 namespace UserInterface.Views
 {
@@ -108,6 +105,8 @@ namespace UserInterface.Views
         private EventBox captionEventBox = null;
         private Label label2 = null;
         private Menu popup = new Menu();
+        private List<string> unselectedSeriesNames = new List<string>();
+        private List<string> UnselectedSeriesNames { get { return unselectedSeriesNames; } set { unselectedSeriesNames = value; } }
 
         /// <summary>Default constructor.</summary>
         public GraphView() { }
@@ -129,6 +128,7 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
+            this.owner = ownerView;
             vbox1 = gtkControl as Box;
             mainWidget = vbox1;
 
@@ -155,6 +155,7 @@ namespace UserInterface.Views
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
             plot1.Model.MouseLeave += OnChartMouseMove;
+            plot1.Model.Updated += OnModelUpdated;
 #pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
@@ -178,6 +179,45 @@ namespace UserInterface.Views
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
+        private void OnModelUpdated(object sender, EventArgs e)
+        {
+            if ((sender as PlotModel).Series.Count > 0)
+            {
+                if ((sender as PlotModel).Legends.Count() > 0 && (sender as PlotModel).Series.First() is INameableSeries)
+                {
+                    // Get the series in the changed model.
+                    // Get the series with false 'isVisible' property.
+                    List<string> reselectedSeriesNames = new();
+                    List<string> newUnselectedSeriesNames = new();
+                    foreach (OxyPlot.Series.Series series in (sender as PlotModel).Series)
+                    {
+                        if (series is INameableSeries seriesNameable) 
+                        {
+                            bool seriesNamePreviouslyUnselected = false;
+                            List<string> matchingNames = new();
+
+                            if (UnselectedSeriesNames.Any())
+                                matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(seriesNameable.Name)).ToList();
+                            if (matchingNames.Any())
+                                seriesNamePreviouslyUnselected = true;
+                            if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
+                                newUnselectedSeriesNames.Add(seriesNameable.Name);
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                                reselectedSeriesNames.Add(seriesNameable.Name);
+                        }
+                        
+                    }
+                    UnselectedSeriesNames = newUnselectedSeriesNames;
+                    LegendPosition legendPosition;
+                    LegendOrientation legendOrientation;
+                    Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
+                    Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                    // Reformat the legend without the matching unselectedSeries.
+                    FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
+                }
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
@@ -187,6 +227,7 @@ namespace UserInterface.Views
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
                 plot1.Model.MouseLeave -= OnChartMouseMove;
+                plot1.Model.Updated -= OnModelUpdated;
 #pragma warning restore CS0618
                 if (captionEventBox != null)
                     captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
@@ -439,7 +480,7 @@ namespace UserInterface.Views
             Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                series = new Utility.LineSeriesWithTracker();
+                series = new Utility.LineSeriesWithTracker(title);
                 if (x.Count() > 0)
                     series.XType = x.Cast<object>().ToArray()[0].GetType();
                 else
@@ -837,7 +878,7 @@ namespace UserInterface.Views
                     else
                         series.Title = title;
                 }
-                    
+
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -1173,7 +1214,9 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
+        /// <param name="namesOfSeriesToRemove">Names of Series to remove.</param>
+        /// <param name="reselectedSeriesNames">Names of series to reenable.</param>
+        public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, List<string> namesOfSeriesToRemove=null, List<string> reselectedSeriesNames=null)
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
@@ -1188,48 +1231,35 @@ namespace UserInterface.Views
             }
 
             this.plot1.Model.SetLegendSymbolLength(30);
+            // Sort the list of series by this view's line or marker type.
 
-            // If 2 series have the same title then remove their titles (this will
-            // remove them from the legend) and create a new series solely for the
-            // legend that has line type and marker type combined.
-            var newSeriesToAdd = new List<OxyPlot.Series.LineSeries>();
             foreach (var series in plot1.Model.Series)
             {
-                if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
+                if (series is INameableSeries)
                 {
-                    var matchingSeries = FindMatchingSeries(series);
-                    if (matchingSeries != null)
-                    {
-                        var newFakeSeries = new OxyPlot.Series.LineSeries();
-                        newFakeSeries.Title = series.Title;
-                        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
-                        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
-                        if (newFakeSeries.LineStyle == LineStyle.None)
-                            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
-                        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                    // Reenable legend items if previously unselected but reselected.
+                    if (reselectedSeriesNames != null)
+                        if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
-                        }
-                        else
-                        {
-                            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
+                            series.Title = (series as INameableSeries).Name;
+                            series.IsVisible = true;
                         }
 
-                        newSeriesToAdd.Add(newFakeSeries);
 
-                        series.Title = null;          // remove from legend.
-                        matchingSeries.Title = null;  // remove from legend.
-                    }
+                    // Remove series that match list of names to remove.
+                    if (namesOfSeriesToRemove != null)
+                        foreach (var nameToRemove in namesOfSeriesToRemove)
+                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                                series.IsVisible = false;
                 }
+                // Tidy up duplicate names.
+                var matchingSeries = FindMatchingSeries(series);
+                if (matchingSeries != null)
+                    // Make it so it doesn't show in legend.
+                    matchingSeries.Title = null;
             }
-            newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
         }
+
 
         /// <summary>
         /// Format the title.
@@ -1383,6 +1413,22 @@ namespace UserInterface.Views
             {
                 if (s != series && s.Title == series.Title)
                     return s;
+
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Find a graph series that has the same title as the specified series.
+        /// </summary>
+        /// <param name="series">The series to match.</param>
+        /// <returns>The series or null if not found.</returns>
+        private INameableSeries FindMatchingSeries(INameableSeries series)
+        {
+            foreach (INameableSeries s in plot1.Model.Series)
+            {
+                if (s != series && s.Name == series.Name)
+                    return s;
             }
             return null;
         }
@@ -1456,16 +1502,6 @@ namespace UserInterface.Views
                 {
                     int numDecimalPlaces = st.Length - pos - 1;
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
-                }
-
-                if (axis.PlotModel.Series[0] is BoxPlotSeries &&
-                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
-                    axis.PlotModel.Series?.Count > 0)
-                {
-                    // Need to put a bit of extra space on the x axis.
-                    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-                    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-
                 }
             }
         }
@@ -1579,12 +1615,16 @@ namespace UserInterface.Views
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                DateTime defaultDate = new DateTime();
                 smallestDate = DateTime.MaxValue;
                 largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
+                    if (d != defaultDate)
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
                     if (d < smallestDate)
                         smallestDate = d;
                     if (d > largestDate)
@@ -2015,44 +2055,6 @@ namespace UserInterface.Views
             {
                 e.Handled = false;
                 inRightClick = false;
-
-                //Change the cursor when hovering over an axis so users know to zoom
-                //The axis don't have events, so we need to measure them manually to do this.
-                bool showV = false;
-                bool showH = false;
-                double x = e.Position.X;
-                double y = e.Position.Y;
-                foreach (OxyPlot.Axes.Axis ax in plot1.Model.Axes)
-                {
-                    if (ax.Position == OxyPlot.Axes.AxisPosition.Top)
-                    {
-                        if (y > plot1.Model.TitleArea.Height && y < plot1.Model.Height - plot1.Model.PlotArea.Height - plot1.Model.ActualPlotMargins.Bottom)
-                            showH = true;
-                    }
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Bottom)
-                    {
-                        if (y > (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height) - plot1.Model.ActualPlotMargins.Bottom &&
-                            y < (plot1.Model.TitleArea.Height + plot1.Model.PlotAndAxisArea.Height))
-                            showH = true;
-                    } 
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Left)
-                    {
-                        if (x < plot1.Model.ActualPlotMargins.Left)
-                            showV = true;
-                    }
-                    else if (ax.Position == OxyPlot.Axes.AxisPosition.Right)
-                    {
-                        if (x > plot1.Model.PlotAndAxisArea.Width - plot1.Model.ActualPlotMargins.Right &&
-                            x < plot1.Model.PlotAndAxisArea.Width)
-                            showV = true;
-                    }
-                }
-                if (showV && !showH)
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.SbVDoubleArrow);
-                else if (!showV && showH)
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.SbHDoubleArrow);
-                else
-                    mainWidget.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Arrow);
             }
             catch (Exception err)
             {

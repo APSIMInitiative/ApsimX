@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.PMF;
@@ -31,6 +32,7 @@ namespace Models.LifeCycle
 
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may consume")]
+        [Display(Type = DisplayType.PlantOrganList)]
         public string HostOrganName { get; set; }
 
         [EventSubscribe("DoPestDiseaseDamage")]
@@ -49,13 +51,13 @@ namespace Models.LifeCycle
                     ParentPhase.CurrentCohort = c;
                     organWtConsumed += c.Population * OrganWtConsumptionPerIndividual.Value();
                     DamageableBiomass live = hostOrgan.Material.FirstOrDefault(m => m.IsLive);
-                    fractionLiveToConsume += Math.Min(1, organWtConsumed / live.Total.Wt);
+                    fractionLiveToConsume += Math.Min(1, MathUtilities.Divide(organWtConsumed, live.Total.Wt,0));
                 }
                 // Commented out the line below. The simulation: PotatoPsyllidDamageTest
                 // in file Prototypes/Lifecycle/PotatoPests.apsimx has never worked correctly
                 // because it was talking to a leaf instance that wasn't attached to a plant.
                 // That has been fixed but now the line below throws inside of leaf.
-                //hostOrgan.RemoveBiomass(fractionLiveToConsume);
+                hostOrgan.RemoveBiomass(Math.Min(1,fractionLiveToConsume));
             }
 
         }
