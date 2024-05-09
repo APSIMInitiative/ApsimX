@@ -138,10 +138,9 @@ namespace Models.PMF.Organs
         private double nDeadLeaves;
         private double dltDeadLeaves;
         private int leafIndex;
+        private bool flag = true;
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
-
-        //private bool dcapstLowLAI = false;
 
         /// <summary>Constructor</summary>
         public SorghumLeaf()
@@ -159,7 +158,7 @@ namespace Models.PMF.Organs
                 yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
             }
         }
-        bool flag = true;
+
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
@@ -1195,6 +1194,7 @@ namespace Models.PMF.Organs
             nDeadLeaves = 0;
             var organNames = Arbitrator.OrganNames;
             leafIndex = organNames.IndexOf(Name);
+            flag = true;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -1204,14 +1204,15 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (plant.IsEmerged)
+            {
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
+            }
 
-            if(leafInitialised && flag == true)
+            if (leafInitialised && flag)
             {
                 flag = false;
             }
-            else
-            if (leafInitialised && !flag)
+            else if (leafInitialised && !flag)
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
@@ -1248,9 +1249,9 @@ namespace Models.PMF.Organs
             LAI += DltLAI - DltSenescedLai;
 
             // TODO Revisit.
-            int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+            int flagLeafStage = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
 
-            if (phenology.Stage >= flag)
+            if (phenology.Stage >= flagLeafStage)
             {
                 if (LAI - DltSenescedLai < 0.1)
                 {
