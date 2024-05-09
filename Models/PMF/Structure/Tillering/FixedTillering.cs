@@ -248,7 +248,6 @@ namespace Models.PMF.Struct
         {
 			FertileTillerNumber = 0.0;
 			CurrentTillerNumber = 0.0;
-			//dayOfClassicsEmergence = -1;
         }
 
         /// <summary>Called when crop is sowed</summary>
@@ -264,8 +263,9 @@ namespace Models.PMF.Struct
 				else
 					FertileTillerNumber = data.FTN;
                 CurrentTillerNumber = 0.0;
-			}
-		}
+                dayOfClassicsEmergence = -1;
+            }
+        }
 
 		private double CalculateFtn()
 		{
