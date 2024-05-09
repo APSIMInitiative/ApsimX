@@ -1,4 +1,15 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""OASIS Apsim Python client.
+
+Welcome to the Python client for the OASIS project!! This module communicates
+with a corresponding Apsim client via a ZMQ server. 
+
+Example:
+    $ python3 ZMQ-InteractiveVariables.py
+
+Todo:
+    * Unify Field nodes in Apsim and this client.
+"""
 
 import zmq
 import msgpack
@@ -12,6 +23,111 @@ import pdb
 RAIN_DAY = 90
 rain_day_ts = 0
 
+
+class ZMQServer(object):
+    """Object for interacting with the OASIS 0MQ server.
+    
+    Attributes:
+        port (str):
+
+    """
+
+    def __init__(
+            self,
+            port: str
+        ):
+        """
+        """
+        pass
+
+    def __del__(self):
+        """Handles cleanup of protocol"""
+        # TODO implement cleanup of protocol, something to restart sim
+        self.close_socket()
+    
+    def open_socket(self):
+        """Opens socket to apsim ZQM synchronizer
+       
+        Should not be called externally. Uses self.conn_str 
+        """
+        # connect to server
+        self.context = zmq.Context.instance()
+        print(f"Connecting to server @ {self.conn_str}...")
+        self.socket = self.context.socket(zmq.REP)
+        self.socket.bind(self.conn_str)
+        print('    ...connected.')    
+    
+    def close_socket(self):
+        """Closes connection to apsim server"""
+        self.socket.disconnect(self.conn_str)
+        self.context.destroy()
+
+
+
+class FieldNode(object):
+    """A single Field, corresponding to a node in the OASIS sim.
+    
+    Create a new Field that is linked to its instance in APSIM.
+    
+    Attributes:
+        ap_id (int): Location within Apsim list.
+        configs (dict):
+        
+    """
+
+    def __init__(
+            self,
+            socket,
+            configs: dict = {}
+        ):
+        """
+        Args:
+            configs (:obj: `dict`, optional): Pre-formatted field configs; see
+                [example_url.com] for supported configurations.
+        """
+        self.ap_id = None
+        self.configs = configs
+        self.socket = socket
+        self.create()
+
+    def _digest_configs(
+            self,
+            configs: dict
+        ):
+        pass
+
+    def _format_configs(self):
+        """Prepare FieldNode configs for creating a new Field in Apsim.
+        Returns:
+            csv_configs (:obj:`list` of :obj:`str`): List of comma-separated
+                key-value pairs for each configuration.
+        """
+        return ["{},{}".format(key, val) for key, val in self.configs.items()]
+
+    def create(self):
+        """Create a new field and link with ID reference returned by Apsim."""
+        csv_configs = self._format_configs()
+        self.id = self.send("")
+
+    def send(
+            self,
+            command : str,
+            args : tuple = None,
+            unpack : bool = True
+        ):
+        """
+        Args:
+            command (str):
+            args (:obj:`list` of :obj:`str`):
+            unpack (bool):
+
+        Returns:
+            ap_id (int): Corresponds to the index of the node in Apsim.
+        """
+        pass
+
+
+
 class ApsimController:
     """Controller for apsim server"""
     
@@ -22,9 +138,9 @@ class ApsimController:
         "ok" back.
         
         Args:
-            addr: Server address
-            port: Server port number
-            fields: Number of fields to instantiate
+            addr (str): Server address
+            port (str): Server port number
+            fields (int): Number of fields to instantiate
         """
         self.fields = fields
 
@@ -219,8 +335,6 @@ def poll_zmq(controller : ApsimController) -> tuple:
 
 if __name__ == '__main__':
     # initialize connection
-    
-    
     apsim = ApsimController(fields=50) 
 
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
@@ -252,3 +366,11 @@ if __name__ == '__main__':
     plt.legend()
     plt.grid(True)
     plt.show()
+    """
+    Test for FieldNode setup.
+    patonfigs = {
+            "Name": "pato",
+            "Bird": "duck"
+        }
+    pato = FieldNode(configs=patonfigs)
+    """
