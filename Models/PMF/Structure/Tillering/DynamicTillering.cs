@@ -535,6 +535,8 @@ namespace Models.PMF.Struct
             // Changing to Reeves + 10%
             double nLeaves = mainCulm.CurrentLeafNo;
             MaxSLA = 429.72 - 18.158 * (nLeaves);
+            MaxSLA *= ((100 + 20) / 100.0);     // sla bound vary 20%
+
             MaxSLA = Math.Min(400, MaxSLA);
             MaxSLA = Math.Max(150, MaxSLA);
             var dltLaiPossible = dltDmGreen * MaxSLA / 10000.0;
