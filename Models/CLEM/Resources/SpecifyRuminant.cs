@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -27,8 +28,8 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private readonly ResourcesHolder resources = null;
-        [Link]
-        private readonly Clock clock = null;
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
 
         private RuminantType ruminantType;
 
@@ -88,9 +89,12 @@ namespace Models.CLEM.Resources
             Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
             ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // create example ruminant
-            Details.Number = 1;
-            ExampleIndividual = Details.CreateIndividuals(null, clock.Today, BreedParams).FirstOrDefault();
+            if (Details is not null && ruminantType.Parameters.General is not null)
+            {
+                // create example ruminant
+                Details.Number = 1;
+                ExampleIndividual = Details.CreateIndividuals(null, events.Clock.Today, BreedParams).FirstOrDefault();
+            }
         }
 
         #region validation

@@ -166,7 +166,7 @@ namespace Models.CLEM.Resources
                 for (int i = 1; i <= number; i++)
                 {
                     double weight = 0;
-                    if (Weight > 0)
+                    if (MathUtilities.IsPositive(Weight))
                     {
                         // avoid accidental small weight if SD provided but weight is 0
                         // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
@@ -177,8 +177,8 @@ namespace Models.CLEM.Resources
                         weight = Weight + WeightSD * randStdNormal;
                     }
 
-                    // estimate birth scalar based on probability of multiple births.
-                    double birthScalar = parent.Parameters.General.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual(parent.Parameters.General.MultipleBirthRate)-1];
+                    // estimate birth scalar based on probability of multiple births. Uses 0.07 if parameters are not provided (but validation error will also be thrown)
+                    double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
                            
                     Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, birthScalar, weight);
 
@@ -192,7 +192,7 @@ namespace Models.CLEM.Resources
                     {
                         if (Age >= ((parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? parent.Parameters.General.GestationLength.InDays : parent.Parameters.General.NaturalWeaningAge.InDays))
                         {
-                            string limitstring = (parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.Parameters.General.GestationLength}]" : $"natural weaning age [{parent.Parameters.General.NaturalWeaningAge.InDays}]";
+                            string limitstring = (parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.Parameters.General?.GestationLength ?? "Unknown"}]" : $"natural weaning age [{parent.Parameters.General.NaturalWeaningAge.InDays}]";
                             string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }

@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Resources
 {
@@ -67,25 +65,34 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            bool error = false;
+            //bool error = false;
             parentHerd = this.Parent as RuminantHerd;
 
+            //var missingParameters = CLEMRuminantActivityBase.CheckRuminantParametersExist(this, new() { typeof(RuminantParametersGeneral) });
+            //foreach (var error in missingParameters)
+            //{
+            //    Summary.WriteMessage(this, error, MessageType.Error);
+            //}
+            //if (missingParameters.Any())
+            //    return;
+
+            bool error = false;
             // check parameters are available for all ruminants.
-            if(Parameters.GrowSCA is null)
+            if (Parameters.General is null)
             {
-                Summary.WriteMessage(this, $"Missing [RuminantParametersGeneral] parameters for [{NameWithParent}]", MessageType.Error);
+                Summary.WriteMessage(this, $"Missing [RuminantParameters].[RuminantParametersGeneral] parameters for [{NameWithParent}]", MessageType.Error);
                 error = true;
             }
 
             // check parameters are available for all ruminants.
             if (Parameters.Feeding is null && FindAllInScope<RuminantActivityFeed>().Any())
             {
-                Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
+                Summary.WriteMessage(this, $"No [RuminantParameters].[RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParameters].[RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
                 error = true;
             }
 
             if (error)
-                return;
+                throw new ApsimXException(this, "Missing [RuminantParameter] components! See CLEM Component for details.");
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (FindAllChildren<AnimalPricing>().Any())

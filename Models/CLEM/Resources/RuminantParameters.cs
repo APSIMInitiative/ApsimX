@@ -31,6 +31,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Find base mortality rate across possible locations
+        /// </summary>
+        public  double FindBaseMortalityRate 
+        {
+            get
+            {
+                return Grow?.MortalityBase ?? (GrowSCA?.BasalMortalityRate_CD1 ?? 0 * 365);
+            }
+        }
+
+        /// <summary>
         /// Feed parameters defining the RuminantType
         /// </summary>
         [JsonIgnore]

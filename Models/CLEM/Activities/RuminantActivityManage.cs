@@ -685,7 +685,7 @@ namespace Models.CLEM.Activities
 
             // get the mortality rate for the herd if available or assume zero
             // try get Grow, then try GrowSCA parameters.
-            mortalityRate = breedParams.Parameters.Grow?.MortalityBase ?? (breedParams.Parameters.GrowSCA?.BasalMortalityRate_CD1 ?? 0 * 365);
+            mortalityRate = breedParams.Parameters.FindBaseMortalityRate;
 
             // check GrazeFoodStoreExists for breeders
             grazeStoreBreeders = "";
