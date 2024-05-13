@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>
@@ -47,6 +47,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            bool usingSCA2012Grow = FindInScope<RuminantActivityGrowSCA>() is not null;
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)
@@ -83,7 +84,7 @@ namespace Models.CLEM.Activities
                     Guid currentHerdUid = currentUid;
                     foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
                     {
-                        RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
+                        RuminantActivityGrazePastureHerd grazePastureHerd = new(usingSCA2012Grow)
                         {
                             GrazeFoodStoreTypeName = pastureType.NameWithParent,
                             RuminantTypeName = herdType.NameWithParent,

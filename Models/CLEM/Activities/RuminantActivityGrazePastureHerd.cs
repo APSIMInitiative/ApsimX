@@ -43,6 +43,7 @@ namespace Models.CLEM.Activities
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = false;
+        private bool usingSCA2012Grow = false;
 
         /// <summary>
         /// Number of hours grazed
@@ -138,6 +139,11 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
+        public RuminantActivityGrazePastureHerd(bool usingSCA2012Growth)
+        {
+            usingSCA2012Grow = usingSCA2012Growth;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -157,6 +163,8 @@ namespace Models.CLEM.Activities
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+
+            usingSCA2012Grow = FindInScope<RuminantActivityGrowSCA>() is not null;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -195,6 +203,9 @@ namespace Models.CLEM.Activities
         /// <returns>Limiter as proportion</returns>
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
+            // Grow SCA v2012 willdo the feed quality adjustment in greater detail.
+            if (usingSCA2012Grow) return 1;
+
             // determine pasture quality from all pools (DMD) at start of grazing
             double pastureDMD = GrazeFoodStoreModel.SwardDryMatterDigestibility;
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
