@@ -27,7 +27,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 173; } }
+        public static int LatestVersion { get { return 174; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5487,44 +5487,43 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion999(JObject root, string _)
+        private static void UpgradeToVersion174(JObject root, string _)
         {
-            var propertyDeletes = new Tuple<string, string>[]
-            {
-                        new Tuple<string, string>("GrazeFoodStoreType", "DryMatterDigestibility"),
-                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                        new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
-                        new Tuple<string, string>("AnimalFoodStoreType", "DryMatterDigestibility"),
-                        new Tuple<string, string>("AnimalFoodStoreType", "NitrogenContent"),
+            //var propertyDeletes = new Tuple<string, string>[]
+            //{
+            //            new("GrazeFoodStoreType", "DryMatterDigestibility"),
+            //            new("GrazeFoodStoreType", "NitrogenContent"),
+            //            new("GrazeFoodStoreType", "NitrogenContent"),
+            //            new("GrazeFoodStoreType", "NitrogenContent"),
+            //            new("GrazeFoodStoreType", "NitrogenContent"),
+            //            new("AnimalFoodStoreType", "DryMatterDigestibility"),
+            //            new("AnimalFoodStoreType", "NitrogenContent"),
 
-                        new Tuple<string, string>("RuminantType", "GestationLength"),
-                        new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
-                        new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
-                        new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
-                        new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
-                        new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
-            };
-
+            //            new("RuminantType", "GestationLength"),
+            //            new("RuminantType", "MinimumAge1stMating"),
+            //            new("RuminantType", "EnergyMaintenanceMaximumAge"),
+            //            new("RuminantActivityControlledMating", "MaximumAgeMating"),
+            //            new("RuminantActivityWean", "WeaningAge"),
+            //            new("RuminantActivityManage", "MaximumBreederAge"),
+            //            new("RuminantActivityManage", "MaximumSireAge"),
+            //            new("RuminantActivityManage", "MaleSellingAge"),
+            //            new("RuminantActivityManage", "FemaleSellingAge"),
+            //            new("ProductStoreTypeManure", "MaximumAge")
+            //};
 
             var propertyUpdates = new Tuple<string, string>[]
             {
-                        new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
-                        new Tuple<string, string>("RuminantType", "GestationLength"),
-                        new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
-                        new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
-                        new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
-                        new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
-                        new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
-                        new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
+                        new("RuminantType", "NaturalWeaningAge"),
+                        new("RuminantType", "GestationLength"),
+                        new("RuminantType", "MinimumAge1stMating"),
+                        new("RuminantType", "EnergyMaintenanceMaximumAge"),
+                        new("RuminantActivityControlledMating", "MaximumAgeMating"),
+                        new("RuminantActivityWean", "WeaningAge"),
+                        new("RuminantActivityManage", "MaximumBreederAge"),
+                        new("RuminantActivityManage", "MaximumSireAge"),
+                        new("RuminantActivityManage", "MaleSellingAge"),
+                        new("RuminantActivityManage", "FemaleSellingAge"),
+                        new("ProductStoreTypeManure", "MaximumAge")
             };
 
             foreach (var item in propertyUpdates)
@@ -5536,10 +5535,18 @@ namespace Models.Core.ApsimFile
 
             foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
             {
-                node["PropertyOfIndividual"] = "AgeObject";
-                node["Value"] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Value")));
+                node["PropertyOfIndividual"] = "AgeInYears";
+                node["Value"] = JContainer.FromObject(node.Value<decimal>("Value")/12.0m);
             }
 
+            foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                //check if child already has a MinSoilTemperature
+                if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+                {
+                    JsonUtilities.AddModel(clk, new CLEMEvents());
+                }
+            }
         }
     }
 }
