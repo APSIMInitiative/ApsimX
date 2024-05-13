@@ -123,7 +123,12 @@ namespace Models.CLEM
         public int Interval { get; set; }
 
         /// <summary>
-        /// Month this cecological indicators calculation is next due.
+        /// The index of the current interval
+        /// </summary>
+        public int IntervalIndex { get; private set; } = 0;
+
+        /// <summary>
+        /// Month this ecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
@@ -253,6 +258,8 @@ namespace Models.CLEM
         {
             if (Clock.Today == timeStepEnd)
             {
+                IntervalIndex++;
+
                 // CLEM events performed at the EndOfDay of specificed date
                 CLEMStartOfTimeStep?.Invoke(this, args);
                 CLEMUpdateLabourAvailability?.Invoke(this, args);
