@@ -21377,8 +21377,7 @@
                     "[SCRUM].Arbitrator.N.TotalPlantSupply",
                     "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                     "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                    "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                    "[SCRUM].TotalDMAtMaturity"
+                    "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
