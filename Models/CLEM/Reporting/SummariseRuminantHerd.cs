@@ -31,7 +31,7 @@ namespace Models.CLEM
     {
         [Link]
         private ResourcesHolder resources = null;
-        [Link]
+        [Link(IsOptional = true)]
         private CLEMEvents events = null;
         private int timestep = 0;
         private RuminantHerd ruminantHerd;

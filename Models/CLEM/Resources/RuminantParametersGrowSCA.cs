@@ -27,6 +27,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradability intercept (SCA CRD1) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradability intercept [CRD1]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.3)]
         public double RumenDegradabilityIntercept_CRD1 { get; set; }
 
@@ -34,6 +35,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradability slope (SCA CRD2) (SCA CRD1) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradability slope [CRD2]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.25)]
         public double RumenDegradabilitySlope_CRD2 { get; set; }
 
@@ -41,6 +43,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradability slope for concentrates/supplements (SCA CRD3) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradability slope for concentrates [CRD3]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.1)]
         public double RumenDegradabilityConcentrateSlope_CRD3 { get; set; }
 
@@ -48,6 +51,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradable protein intercept (SCA CRD4) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein intercept [CRD4]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.007)]
         public double RumenDegradableProteinIntercept_CRD4 { get; set; }
 
@@ -55,6 +59,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradable protein slope (SCA CRD5) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein slope [CRD5]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.005)]
         public double RumenDegradableProteinSlope_CRD5 { get; set; }
 
@@ -62,6 +67,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradable protein exponent (SCA CRD6) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein exponent [CRD6]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.35)]
         public double RumenDegradableProteinExponent_CRD6 { get; set; }
 
@@ -87,6 +93,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Milk protein digestability [CA5]")]
         [System.ComponentModel.DefaultValue(0.92)]
+        [Category("Breed", "Growth")]
         [Required, Proportion]
         public double MilkProteinDigestability_CA5 { get; set; }
 
@@ -94,6 +101,7 @@ namespace Models.CLEM.Resources
         /// Digestability of microbial protein (SCA CA7) [Core] - gorwth 
         /// </summary>
         [Description("Digestability of microbial protein [CA7]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.6)]
         [Required, Proportion]
         public double MicrobialProteinDigestibility_CA7 { get; set; }
@@ -102,6 +110,7 @@ namespace Models.CLEM.Resources
         /// Faecal protein from MCP (SCA CA8) [Core] - growth
         /// </summary>
         [Description("Faecal protein from MCP [CA8]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.25)]
         [Required, Proportion]
         public double FaecalProteinFromMCP_CA8 { get; set; }
@@ -117,6 +126,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use for wool [CG1]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.6)]
         [Required, Proportion]
         public double EfficiencyOfDPLSUseForWool_CG1 { get; set; }
@@ -126,6 +136,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use from feed [CG2]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.7)]
         [Required, Proportion]
         public double EfficiencyOfDPLSUseFromFeed_CG2 { get; set; }
@@ -135,6 +146,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use from milk [CG3]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.8)]
         [Required, Proportion]
         public double EfficiencyOfDPLSUseFromMilk_CG3 { get; set; }
@@ -144,6 +156,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Gain curvature [CG4]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(6.0)]
         [Required]
         public double GainCurvature_CG4 { get; set; }
@@ -153,6 +166,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Gain midpoint [CG5]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.4)]
         [Required]
         public double GainMidpoint_CG5 { get; set; }
@@ -162,6 +176,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Condition no effect [CG6]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.9)]
         [Required]
         public double ConditionNoEffect_CG6 { get; set; }
@@ -171,6 +186,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default is for cattle</value>
         [Description("Condition max effect [CG7]")]
+        [Category("Breed", "Growth")]
         [System.ComponentModel.DefaultValue(0.97)]
         [Required]
         public double ConditionMaxEffect_CG7 { get; set; }
@@ -216,6 +232,7 @@ namespace Models.CLEM.Resources
         /// First intercept of equation to determine energy protein mass (kg kg-1, SCA CG12)
         /// </summary>
         [Description("Protein gain intercept #1 [CG12]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.072)] // B.indicus 0.092 // [breed] - Growth
         public double ProteinGainIntercept1_CG12 { get; set; }
@@ -224,6 +241,7 @@ namespace Models.CLEM.Resources
         /// Second intercept of equation to determine energy protein mass (kg kg-1, SCA CG13)
         /// </summary>
         [Description("Protein gain intercept #2 [CG13]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.140)] // B.indicus 0.120 [breed] - Growth
         public double ProteinGainIntercept2_CG13 { get; set; }
@@ -233,6 +251,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <values>Default is for cattle</values>
         [Description("Protein gain slope #1 [CG14]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.008)]// [breed] - Growth
         public double ProteinGainSlope1_CG14 { get; set; }
@@ -242,6 +261,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <values>Default is for cattle</values>
         [Description("Protein gain slope #2 [CG15]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.115)]// [breed] - Growth
         public double ProteinGainSlope2_CG15 { get; set; }
@@ -315,6 +335,7 @@ namespace Models.CLEM.Resources
         /// Relative size scalar (SCA CI1) [Breed] - Growth
         /// </summary>
         [Description("Relative size scalar [CI1]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.025)]
         public double RelativeSizeScalar_CI1 { get; set; }
@@ -323,6 +344,7 @@ namespace Models.CLEM.Resources
         /// Relative size quadratic (SCA CI2) [Breed] - Growth
         /// </summary>
         [Description("Relative size quadratic [CI2]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1.7)]
         public double RelativeSizeQuadratic_CI2 { get; set; }
@@ -331,6 +353,7 @@ namespace Models.CLEM.Resources
         /// Rumen Development Curvature (SCA CI3) [Breed] - Growth
         /// </summary>
         [Description("Rumen Development Curvature [CI3]")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.22)]
         public double RumenDevelopmentCurvature_CI3 { get; set; }

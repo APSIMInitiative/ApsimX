@@ -31,7 +31,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         private int numberToSkip = 0;

@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
+    [Description("This model provides all parameters specific to RuminantActivityGrow (V1 CLEM)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrow: CLEMModel, ISubParameters

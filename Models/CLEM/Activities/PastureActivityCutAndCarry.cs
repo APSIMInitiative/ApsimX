@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private GrazeFoodStoreType pasture;
         private AnimalFoodStoreType foodstore;

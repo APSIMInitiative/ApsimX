@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>

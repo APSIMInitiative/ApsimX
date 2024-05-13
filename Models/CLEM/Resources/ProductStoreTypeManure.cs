@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>

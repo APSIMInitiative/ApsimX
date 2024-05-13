@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     {
         [Link]
         private Summary summary = null;
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         private RuminantActivityFeed feedActivityParent;

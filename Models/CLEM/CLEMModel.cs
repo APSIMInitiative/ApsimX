@@ -147,7 +147,7 @@ namespace Models.CLEM
         /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
-            List<string> results = new List<string>();
+            List<string> results = new();
             Zone zone = FindAncestor<Zone>();
             if (zone is not null)
             {

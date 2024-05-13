@@ -121,6 +121,10 @@ namespace Models.CLEM
             wholeSimulationSummaryFile = $"{filebits.First()}.html";
             if (File.Exists(wholeSimulationSummaryFile))
                 File.Delete(wholeSimulationSummaryFile);
+
+            // before anything starts check that a CLEMEvents model is in scope
+            if (FindInScope<CLEMEvents>() is null)
+                throw new ApsimXException(this, $"Cannot find [x=CLEMEvents] component required for all CLEM simulations.{Environment.NewLine}Add a [x=CLEMEvents] component to the simulation. It is suggested this is placed as a child of the [x=APSIM Clock] component.");
         }
 
         [EventSubscribe("Completed")]

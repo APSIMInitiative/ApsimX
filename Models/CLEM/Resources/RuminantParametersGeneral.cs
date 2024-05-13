@@ -199,7 +199,7 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
         [System.ComponentModel.DefaultValue(0.0115)]
-        [Category("Farm", "Survival")]
+        [Category("Farm", "Growth")]
         [Required, GreaterThanValue(0)]
         public double AgeGrowthRateCoefficient_CN1 { get; set; }
 
@@ -209,7 +209,7 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Standard Reference Weight growth scalar [CN2]")]
         [System.ComponentModel.DefaultValue(0.27)]
-        [Category("Breed", "Survival")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar_CN2 { get; set; }
 
@@ -219,7 +219,7 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Slow growth factor [CN3]")]
         [System.ComponentModel.DefaultValue(0.4)]
-        [Category("Farm", "Survival")]
+        [Category("Farm", "Growth")]
         [Required, GreaterThanValue(0)]
         public double SlowGrowthFactor_CN3 { get; set; }
 

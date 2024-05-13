@@ -26,8 +26,6 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantHerd : ResourceBaseWithTransactions
     {
-        //[Link]
-        //private readonly CLEMEvents events = null;
         private int id = 1;
 
         /// <summary>

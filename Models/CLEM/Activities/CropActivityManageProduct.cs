@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         [Link]
         private readonly Simulation simulation = null;

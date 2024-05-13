@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityTag : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;

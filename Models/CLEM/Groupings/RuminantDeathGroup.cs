@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
     public class RuminantDeathGroup : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>

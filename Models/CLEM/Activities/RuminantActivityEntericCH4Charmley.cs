@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityEntericCH4Charmley: CLEMRuminantActivityBase
     {
-        [Link]
+        [Link(IsOptional = true)]
         private CLEMEvents events = null;
 
         private GreenhouseGasesType methaneEmissions;

@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityFeed.htm")]
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>

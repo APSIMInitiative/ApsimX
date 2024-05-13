@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private int numberToDo;
         private int numberToSkip;

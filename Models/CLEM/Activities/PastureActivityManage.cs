@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         [Link]
         private readonly ZoneCLEM zoneCLEM = null;

@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantDeathGroupRate : RuminantGroup, IRuminantDeathGroup, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>

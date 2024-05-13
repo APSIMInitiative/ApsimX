@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;

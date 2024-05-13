@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
     [Version(1, 1, 1, "Release of trucking")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantTrucking : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
         private int numberToDo;

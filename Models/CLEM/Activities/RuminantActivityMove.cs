@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be moved")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityMove: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;

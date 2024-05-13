@@ -24,7 +24,7 @@ namespace Models.CLEM.Groupings
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantDeathGroupCondition : RuminantGroup, IRuminantDeathGroup
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
         /// <summary>
