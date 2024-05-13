@@ -174,7 +174,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Highest weight achieved when not pregnant
         /// </summary>
-        public double HighWeightWhenNotPregnant { get; set; }
+        public double HighWeightWhenNotPregnant { get; private set; }
 
         /// <summary>
         /// Track the highest weight of a female when not pregnant
@@ -283,9 +283,8 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) >= Parameters.General.GestationLength.InDays;
-                else
-                    return false;
+                    return MathUtilities.IsGreaterThanOrEqual(DaysSince(RuminantTimeSpanTypes.Conceived, 0.0), Parameters.General.GestationLength.InDays);
+                return false;
             }
         }
 
@@ -296,8 +295,7 @@ namespace Models.CLEM.Resources
         {
             if (IsPregnant)
                 return Math.Min(1.0, (DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) + offset)/ Parameters.General.GestationLength.InDays);
-            else
-                return 0;
+            return 0;
         }
 
         /// <summary>
@@ -381,7 +379,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to remove one offspring that dies between conception and death
         /// </summary>
-        public void OneOffspringDies(DateTime date)
+        public void OneFetusDies(DateTime date)
         {
             Fetuses.RemoveAt(0);
             if (!Fetuses.Any())
@@ -436,7 +434,7 @@ namespace Models.CLEM.Resources
             {
                 if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), Parameters.Breeding.PrenatalMortality / Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
                 {
-                    OneOffspringDies(events.Clock.Today);
+                    OneFetusDies(events.Clock.Today);
                     if (CarryingCount == 0)
                     {
                         // report conception status changed when last multiple birth dies.
@@ -482,14 +480,17 @@ namespace Models.CLEM.Resources
                 newSucklingRuminant.Number = 1;
                 newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
                 if (Weight.FetusFat.Amount > 0)
+                {
                     newSucklingRuminant.Weight.Fat.Set(Weight.FetusFat.Amount);
+                    newSucklingRuminant.Weight.Protein.Set(Weight.FetusProtein);
+                }
 
                 // add attributes inherited from mother
                 foreach (var attribute in Attributes.Items.Where(a => a.Value is not null))
                     newSucklingRuminant.AddInheritedAttribute(attribute);
 
-                // create freemartin if needed
-                if (newSucklingRuminant.Sex == Sex.Female && Parameters.Breeding.AllowFreemartins && MixedSexMultipleFetuses)
+                // create freemartin if needed (not allowed if no breeding params provided)
+                if (newSucklingRuminant.Sex == Sex.Female && (Parameters.Breeding?.AllowFreemartins ?? false) && MixedSexMultipleFetuses)
                     newSucklingRuminant.AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
 
                 herd.AddRuminant(newSucklingRuminant, activity);
@@ -522,15 +523,14 @@ namespace Models.CLEM.Resources
             BodyConditionParturition = Weight.BodyCondition;
             WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
-            ProportionMilkProductionAchieved = 1;
-            MilkLag = 1;
-            MilkProduction2 = 0;
-            MilkProductionMax = 0;
+            Milk.Lag = 1;
+            Milk.PotentialRate = 0;
+            Milk.PotentialRate2 = 0;
+            Milk.MaximumRate = 0;
             Fetuses.Clear();
             MilkingPerformed = false;
             RelativeConditionAtParturition = Weight.RelativeCondition;
         }
-
 
         /// <summary>
         /// Indicates if the individual is lactating
@@ -556,11 +556,6 @@ namespace Models.CLEM.Resources
         public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
 
         /// <summary>
-        /// The proportion of the potential milk production achieved in timestep
-        /// </summary>
-        public double ProportionMilkProductionAchieved { get; set; }
-
-        /// <summary>
         /// The body condition score at birth.
         /// </summary>
         public double RelativeConditionAtParturition { get; set; }
@@ -584,82 +579,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Lag term for milk production
-        /// </summary>
-        public double MilkLag { get; set; }
-
-        /// <summary>
-        /// Tracks the nutrition after peak lactation for milk production.
-        /// </summary>
-        public double NutritionAfterPeakLactationFactor { get; set; }
-
-        /// <summary>
-        /// Milk production 2 (MP2)
-        /// </summary>
-        public double MilkProduction2 { get; set; }
-
-        /// <summary>
-        /// Milk production max
-        /// </summary>
-        public double MilkProductionMax { get; set; }
-
-        /// <summary>
         /// Determines if milking has been performed on individual to increase milk production
         /// </summary>
         [FilterByProperty]
         public bool MilkingPerformed { get; set; }
-
-        /// <summary>
-        /// Amount of milk available in the month (L)
-        /// </summary>
-        public double MilkCurrentlyAvailable { get; set; }
-
-        /// <summary>
-        /// Potential amount of milk produced (L/day)
-        /// </summary>
-        public double MilkProductionPotential { get; set; }
-
-        /// <summary>
-        /// Amount of milk produced (L/day)
-        /// </summary>
-        public double MilkProduction { get; set; }
-
-        /// <summary>
-        /// Amount of milk produced this time step
-        /// </summary>
-        public double MilkProducedThisTimeStep { get; set; }
-
-        /// <summary>
-        /// Amount of milk suckled this time step
-        /// </summary>
-        public double MilkSuckledThisTimeStep { get; set; }
-
-        /// <summary>
-        /// Amount of milk milked this time step
-        /// </summary>
-        public double MilkMilkedThisTimeStep { get; set; }
-
-        /// <summary>
-        /// Method to remove milk from female
-        /// </summary>
-        /// <param name="amount">Amount to take</param>
-        /// <param name="reason">Reason for taking milk</param>
-        public void TakeMilk(double amount, MilkUseReason reason)
-        {
-            amount = Math.Min(amount, MilkCurrentlyAvailable);
-            MilkCurrentlyAvailable -= amount;
-            switch (reason)
-            {
-                case MilkUseReason.Suckling:
-                    MilkSuckledThisTimeStep += amount;
-                    break;
-                case MilkUseReason.Milked:
-                    MilkMilkedThisTimeStep += amount;
-                    break;
-                default:
-                    throw new ApplicationException($"Unknown MilkUseReason [{reason}] in TakeMilk method of [r=RuminantFemale]");
-            }
-        }
 
         /// <summary>
         /// A list of individuals currently suckling this female
@@ -674,7 +597,7 @@ namespace Models.CLEM.Resources
         {
             SucklingOffspringList = new List<Ruminant>();
 
-            //ToDo: Set conceptus weight if needed
+            //ToDo: Set conceptus weight if pregnant. Do this where fetus are added
         }
     }
 

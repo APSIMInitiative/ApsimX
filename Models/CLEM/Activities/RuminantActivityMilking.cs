@@ -12,7 +12,7 @@ using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to undertake milking of particular herd</summary>
+    /// <summary>Activity to undertake milking of specified herd</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityMilking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
@@ -131,7 +132,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per L milked":
-                                amountToDo = uniqueIndividuals.Sum(a => a.MilkCurrentlyAvailable);
+                                amountToDo = uniqueIndividuals.Sum(a => a.Milk.Available);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -186,9 +187,9 @@ namespace Models.CLEM.Activities
                 int number = 0;
                 foreach (RuminantFemale ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    amountDone += ruminant.MilkCurrentlyAvailable;
-                    amountToDo -= ruminant.MilkCurrentlyAvailable;
-                    ruminant.TakeMilk(ruminant.MilkCurrentlyAvailable, MilkUseReason.Milked);
+                    amountDone += ruminant.Milk.Available;
+                    amountToDo -= ruminant.Milk.Available;
+                    ruminant.Milk.Take(ruminant.Milk.Available, MilkUseReason.Milked);
                     number++;
                     if (amountToDo <= 0)
                         break;

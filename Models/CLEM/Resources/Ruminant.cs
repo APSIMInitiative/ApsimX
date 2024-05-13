@@ -351,7 +351,7 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                if (age <= 0) age = 1; 
+                //if (age <= 0) age = 1; 
                 CalculateNormalisedWeight(age);
             }
         }
@@ -443,7 +443,7 @@ namespace Models.CLEM.Resources
             // ToDo: ensure this is appropriate for intervals greater than 1 day as cummulative effect should be considered.
             // ToDo: check that this needs to use Previous weight and not weight before modified
             double normWeight = normMax;
-            if (!forceNormMax && Weight.Previous < normMax)
+            if (!forceNormMax && Weight.HighestAttained < normMax) // was weight previous but zero at start
                 normWeight = Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * Weight.HighestAttained;
             if (setForIndividual)
                 Weight.SetNormalWeightForAge(normWeight, normMax);
@@ -674,7 +674,7 @@ namespace Models.CLEM.Resources
                     {
                         // distribute milk between offspring
                         int offspring = (this.Mother.SucklingOffspringList.Count <= 1) ? 1 : this.Mother.SucklingOffspringList.Count;
-                        milk = this.Mother.MilkProduction / offspring;
+                        milk = this.Mother.Milk.ProductionRate / offspring;
                     }
                 }
                 return milk;
@@ -714,7 +714,7 @@ namespace Models.CLEM.Resources
                     setWeight = CalculateNormalisedWeight(setAge, true);
             }
 
-            Weight.Adjust(setWeight, this);
+            Weight.Adjust(setWeight / this.Parameters.General.EBW2LW_CG18, setWeight, this);
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1 * setAge);

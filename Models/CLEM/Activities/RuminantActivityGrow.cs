@@ -31,7 +31,7 @@ namespace Models.CLEM.Activities
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -129,10 +129,6 @@ namespace Models.CLEM.Activities
                 foreach (var indi in ind)
                 {
                     // reset tallies at start of the month
-                    //indi.DietDryMatterDigestibility = 0;
-                    //indi.PercentNOfIntake = 0;
-                    //indi.Intake = 0;
-                    //indi.MilkIntake = 0;
                     indi.Intake.Reset();
                     indi.Energy.Reset();
                     CalculatePotentialIntake(indi);
@@ -209,16 +205,16 @@ namespace Models.CLEM.Activities
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
                         CalculateMilkProduction(femaleind);
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
+                        femaleind.Milk.Produced = femaleind.Milk.Available;
                     }
                     else
                     {
-                        femaleind.MilkProduction = 0;
-                        femaleind.MilkProductionPotential = 0;
-                        femaleind.MilkCurrentlyAvailable = 0;
-                        femaleind.MilkMilkedThisTimeStep = 0;
-                        femaleind.MilkSuckledThisTimeStep = 0;
-                        femaleind.MilkProducedThisTimeStep = 0;
+                        femaleind.Milk.ProductionRate = 0;
+                        femaleind.Milk.PotentialRate = 0;
+                        femaleind.Milk.Available = 0;
+                        femaleind.Milk.Milked = 0;
+                        femaleind.Milk.Suckled = 0;
+                        femaleind.Milk.Produced = 0;
                     }
                 }
 
@@ -238,8 +234,8 @@ namespace Models.CLEM.Activities
         /// <returns>energy of milk</returns>
         private double CalculateMilkProduction(RuminantFemale ind)
         {
-            ind.MilkMilkedThisTimeStep = 0;
-            ind.MilkSuckledThisTimeStep = 0;
+            ind.Milk.Milked = 0;
+            ind.Milk.Suckled = 0;
 
             double energyMetabolic = EnergyGross * (((ind.Intake.DMD == 0) ? 50 : ind.Intake.DMD) / 100.0) * 0.81;
             // Reference: SCA p.
@@ -253,10 +249,10 @@ namespace Models.CLEM.Activities
                 milkCurve = ind.Parameters.Grow.MilkCurveNonSuckling;
             else // no milking
                 milkCurve = ind.Parameters.Grow.MilkCurveSuckling;
-            ind.MilkProductionPotential = ind.Parameters.General.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay));
-            ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
+            ind.Milk.PotentialRate = ind.Parameters.General.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay));
+            ind.Milk.PotentialRate = Math.Max(ind.Milk.PotentialRate, 0.0);
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-            double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
+            double energyMilk = ind.Milk.PotentialRate * 3.2 / kl;
             // adjust last time step's energy balance
             double adjustedEnergyBalance = ind.Energy.AfterLactation;
             if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
@@ -265,12 +261,12 @@ namespace Models.CLEM.Activities
             // set milk production in lactating females for consumption.
             // ToDo: can th adjustment be >1 or doe this need to be constrained to the previouisl cal of milk production.
             // Math.Min(ind.MilkProductionPotential, Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
-            ind.MilkProduction = Math.Min(ind.MilkProductionPotential, Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
-            ind.MilkCurrentlyAvailable = ind.MilkProduction * events.Interval;
+            ind.Milk.ProductionRate = Math.Min(ind.Milk.PotentialRate, Math.Max(0.0, ind.Milk.PotentialRate * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
+            ind.Milk.Available = ind.Milk.ProductionRate * events.Interval;
 
             // returns the energy required for milk production
 
-            return ind.MilkProduction * 3.2 / kl;
+            return ind.Milk.ProductionRate * 3.2 / kl;
         }
 
         /// <summary>Function to calculate growth of herd for the monthly timestep</summary>
@@ -316,7 +312,10 @@ namespace Models.CLEM.Activities
                         // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
                         // Crude protein required generally 130g per kg of digestable feed.
-                        double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient * ind.Intake.DMD / 100;
+                        
+                        double crudeProteinRequired = 0.0;
+                        //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient / 100.0 * ind.Intake.DMD / 100 * ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
+                        //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient * ind.Intake.DMD / 100;
 
                         // adjust for efficiency of use of protein, (default 90%) degradable. now user param.
                         double crudeProteinSupply = (ind.Intake.CrudeProtein) * ind.Parameters.Grow.ProteinDegradability; //  PercentNOfIntake * 62.5
@@ -436,8 +435,10 @@ namespace Models.CLEM.Activities
             double energyMetabolicFromIntake = energyMetabolic * intakeDaily;
 
             double km = ind.Parameters.Grow.EMaintEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.Parameters.Grow.EMaintEfficiencyIntercept;
+            ind.Energy.Km = km;
             // Reference: SCA p.49
             double kg = ind.Parameters.Grow.EGrowthEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.Parameters.Grow.EGrowthEfficiencyIntercept;
+            ind.Energy.Kg = kg;
             double energyPredictedBodyMassChange;
             double energyMaintenance;
             if (!ind.Weaned)
@@ -449,7 +450,7 @@ namespace Models.CLEM.Activities
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable * events.Interval);
 
-                ind.Mother?.TakeMilk(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
+                ind.Mother?.Milk.Take(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
@@ -519,13 +520,13 @@ namespace Models.CLEM.Activities
                     // calculate energy for lactation
                     // look for milk production calculated before offspring may have been weaned
 
-                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
+                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.Milk.PotentialRate))
                     {
                         // recalculate milk production based on DMD of food provided
                         energyMilk = CalculateMilkProduction(femaleind);
                         energyBalance -= energyMilk;
                         // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
+                        femaleind.Milk.Produced = femaleind.Milk.Available;
                     }
                 }
 
@@ -567,7 +568,7 @@ namespace Models.CLEM.Activities
             //    ind.Weight.StandardReferenceWeight * ind.Parameters.Grow.MaximumSizeOfIndividual
             //    );
 
-            ind.Weight.Adjust(energyPredictedBodyMassChange, ind);
+            ind.Weight.Adjust(energyPredictedBodyMassChange / ind.Parameters.Grow.GrowthEfficiency, energyPredictedBodyMassChange, ind);
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
