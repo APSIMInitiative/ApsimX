@@ -16,10 +16,10 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
+    [Description("This model provides all parameters specific to RuminantActivityGrow24")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrowSCA : CLEMModel, ISubParameters
+    public class RuminantParametersGrow24 : CLEMModel, ISubParameters
     {
         #region Rumen Degradability CRD#
 
@@ -1035,7 +1035,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantParametersGrowSCA()
+        public RuminantParametersGrow24()
         {
             this.SetDefaults();
         }

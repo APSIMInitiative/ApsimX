@@ -37,15 +37,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Grow?.MortalityBase ?? (GrowSCA?.BasalMortalityRate_CD1 ?? 0 * 365);
+                return Grow?.MortalityBase ?? (Grow24?.BasalMortalityRate_CD1 ?? 0 * 365);
             }
         }
-
-        /// <summary>
-        /// Feed parameters defining the RuminantType
-        /// </summary>
-        [JsonIgnore]
-        public RuminantParametersFeed Feeding { get; set; }
 
         /// <summary>
         /// General parameters defining the RuminantType
@@ -66,10 +60,10 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow Grow { get; set; }
 
         /// <summary>
-        /// Parameters for the GrowSCA activity
+        /// Parameters for the Grow24 activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrowSCA GrowSCA { get; set; }
+        public RuminantParametersGrow24 Grow24 { get; set; }
 
         /// <summary>
         /// Initialise by finding available RuminantParameters
@@ -78,11 +72,10 @@ namespace Models.CLEM.Resources
         public void Initialise(RuminantType ruminantType)
         {
             breeding = ruminantType.FindChild<RuminantParametersBreed>();
-            Feeding = ruminantType.FindChild<RuminantParametersFeed>();
             General = ruminantType.FindChild<RuminantParametersGeneral>();
             Grazing = ruminantType.FindChild<RuminantParametersGrazing>();
             Grow = ruminantType.FindChild<RuminantParametersGrow>();
-            GrowSCA = ruminantType.FindChild<RuminantParametersGrowSCA>();
+            Grow24 = ruminantType.FindChild<RuminantParametersGrow24>();
         }
     }
 }

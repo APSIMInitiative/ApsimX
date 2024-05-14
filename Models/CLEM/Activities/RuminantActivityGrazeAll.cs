@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
-            bool usingSCA2012Grow = FindInScope<RuminantActivityGrowSCA>() is not null;
+            bool usingSCA2012Grow = FindInScope<RuminantActivityGrow24>() is not null;
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)

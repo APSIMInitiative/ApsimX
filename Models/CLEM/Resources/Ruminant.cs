@@ -419,7 +419,6 @@ namespace Models.CLEM.Resources
 
         #region Weight properties
 
-
         /// <summary>
         /// Calculate normalised weight from age of individual (in days)
         /// </summary>
@@ -541,7 +540,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
 
         /// <summary>
         /// Return intake as a proportion of the potential intake.
@@ -732,7 +730,7 @@ namespace Models.CLEM.Resources
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
 
-            int dsw = DaysSinceWeaned;
+            //int dsw = DaysSinceWeaned;
 
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();

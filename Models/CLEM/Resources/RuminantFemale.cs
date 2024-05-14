@@ -464,7 +464,7 @@ namespace Models.CLEM.Resources
                 // Previous suckling/calf weight from Freer
                 // Grow
                 //   calculate birth weigth Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
-                // GrowSCA
+                // Grow24
                 //   use the weight of fetus at birth
 
                 double weight = Weight.Fetus.Amount;

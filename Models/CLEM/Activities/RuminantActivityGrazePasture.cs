@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            bool usingSCA2012Grow = FindInScope<RuminantActivityGrowSCA>() is not null;
+            bool usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
 
             //Create list of children by breed
             Guid currentUid = UniqueID;
@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
 
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                RuminantActivityGrazePastureHerd grazePastureHerd = new(usingSCA2012Grow)
+                RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrow24)
                 {
                     RuminantTypeName = herdType.NameWithParent,
                     GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,

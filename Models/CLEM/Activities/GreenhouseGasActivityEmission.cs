@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityGrowSCA))]
+    [ValidParent(ParentType = typeof(RuminantActivityGrow24))]
     [ValidParent(ParentType = typeof(RuminantTrucking))]
     [ValidParent(ParentType = typeof(PastureActivityBurn))]
     [Description("Define an emission based on parent activity details")]

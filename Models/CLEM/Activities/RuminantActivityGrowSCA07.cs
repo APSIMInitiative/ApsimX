@@ -21,11 +21,9 @@ namespace Models.CLEM.Activities
     /// <summary>This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
     /// <remarks>Rumiant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
     /// <authors>Animal physiology and SCA 2007 equations for this methodology, James Dougherty, CSIRO</authors>
-    /// <authors>Code and implementation Adam Liedloff, CSIRO</authors>
+    /// <authors>Implementation of R script based equations, Adam Liedloff, CSIRO</authors>
     /// <authors>Quality control, Thomas Keogh, CSIRO</authors>
     /// <acknowledgements>This animal production is based upon the equations developed for SCA, Feeding Standards and published in 2007</acknowledgements>
-    /// <version>1.0</version>
-    /// <updates>Version 1.0 is consistent with SCA Feeding Standards of Domesticated Ruminants 2007.</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,10 +31,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Performs growth and aging of all ruminants based on Australian Feeding Standard (2007).")]
-    [Version(1, 0, 0, "Includes SCA 2007 equations")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA2007.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA07.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantActivityGrowSCA2007 : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrowSCA07 : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -114,12 +111,12 @@ namespace Models.CLEM.Activities
         {
             // CF - Condition factor SCA Eq.3
             double cf = 1.0;
-            if (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
+            if (ind.Parameters.Grow24.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
             {
-                if (ind.Weight.BodyCondition >= ind.Parameters.GrowSCA.RelativeConditionEffect_CI20)
+                if (ind.Weight.BodyCondition >= ind.Parameters.Grow24.RelativeConditionEffect_CI20)
                     cf = 0;
                 else
-                    cf = Math.Min(1.0, ind.Weight.BodyCondition * (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - ind.Weight.BodyCondition) / (ind.Parameters.GrowSCA.RelativeConditionEffect_CI20 - 1));
+                    cf = Math.Min(1.0, ind.Weight.BodyCondition * (ind.Parameters.Grow24.RelativeConditionEffect_CI20 - ind.Weight.BodyCondition) / (ind.Parameters.Grow24.RelativeConditionEffect_CI20 - 1));
             }
 
             // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
@@ -127,11 +124,11 @@ namespace Models.CLEM.Activities
             if (!ind.Weaned)
             {
                 // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
-                ind.Intake.MilkDaily.Expected = ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays + (events.Interval / 2.0), 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
+                ind.Intake.MilkDaily.Expected = ind.Parameters.Grow24.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays + (events.Interval / 2.0), 0.75) * (ind.Parameters.Grow24.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
                 double milkactual = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate / ind.Mother.SucklingOffspringList.Count());
                 // calculate YF
                 // ToDo check that this is the potential milk calculation needed.
-                yf = (1 - (milkactual / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowSCA.RumenDevelopmentCurvature_CI3 * (ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.GrowSCA.RumenDevelopmentAge_CI4)));
+                yf = (1 - (milkactual / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24.RumenDevelopmentCurvature_CI3 * (ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24.RumenDevelopmentAge_CI4)));
             }
 
             // TF - Temperature factor. SCA Eq.5
@@ -144,7 +141,7 @@ namespace Models.CLEM.Activities
 
             // Intake max SCA Eq.2
             // Restricted here to Expected (potential) time OverFeedPotentialIntakeModifier
-            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.GrowSCA.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowSCA.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
+            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.Grow24.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.Grow24.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
             ind.Intake.SolidsDaily.Expected = ind.Intake.SolidsDaily.MaximumExpected * cf * yf * tf * lf;
         }
 
@@ -316,7 +313,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowSCA is null))
+            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow24 is null))
             {
                 string[] memberNames = new string[] { "RuminantParametersGrowSCA" };
                 results.Add(new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", memberNames));

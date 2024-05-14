@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityGrowSCA))]
+    [ValidParent(ParentType = typeof(RuminantActivityGrow24))]
     [Description("Produces enteric methane emissions based on Charmley et al equations")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantEntericCH4Charmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
