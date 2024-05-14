@@ -869,5 +869,32 @@ run";
             var modifiedPair = KeyValuePair.Create("StartDate", "2-May");
             Assert.IsTrue(manager.Parameters.Contains(modifiedPair));
         }
+          
+        /// <summary>
+        /// Test log switch works as expected.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ChangesVerbosity_ToError()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Utilities.RunModels($"{simName} --log error");
+            Simulations simAfterVerbosityChange = FileFormat.ReadFromFile<Simulations>(simName, e => throw e, true).NewModel as Simulations;
+            Summary summary = simAfterVerbosityChange.FindDescendant<Summary>();
+            Assert.True(summary.Verbosity == MessageType.Error);
+        }
+
+        /// <summary>
+        /// Test log switch throws an exception when a bad string is included.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ThrowsException_When_NonMatchingVerbosityType_IsUsed()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Assert.Throws<Exception>(() => Utilities.RunModels($"{simName} --log xyz"));
+        }
     }
 }
