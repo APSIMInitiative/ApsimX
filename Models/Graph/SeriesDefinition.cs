@@ -278,41 +278,37 @@ namespace Models
                 GetDataFromModels();
             else
             {
-                List<string> fieldsThatExist = DataTableUtilities.GetColumnNames(data).ToList();
+                List<string> columnNames = DataTableUtilities.GetColumnNames(data).ToList();
+                List<string> simulationNames = new List<string>();
 
-                // If we have descriptors, then use them to filter the data for this series.
-                List<string> simulationNameFilter = new List<string>(); ;
-                IEnumerable<SimulationDescription> simulationNamesWithDescriptors = new List<SimulationDescription>();
                 if (Descriptors != null)
                 {
-                    foreach (var descriptor in Descriptors)
+                    foreach (SimulationDescription.Descriptor descriptor in Descriptors) 
                     {
-                        if (simulationNamesWithDescriptors.Any())
-                            simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
-                        else
-                            simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
-
-                        if (fieldsThatExist.Contains(descriptor.Name))
-                            fieldsThatExist.Remove(descriptor.Name);
+                        bool matched = false;
+                        foreach (SimulationDescription sim in simulationDescriptions) {
+                            if (sim.HasDescriptor(descriptor))
+                            {
+                                simulationNames.Add(sim.Name);
+                                matched = true;
+                            }
+                        }
+                        if (matched)
+                            columnNames.Remove(descriptor.Name);
                     }
-                    if (simulationNamesWithDescriptors.Any())
-                        simulationNameFilter = simulationNamesWithDescriptors.Select(s => s.Name).ToList();
-                    // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (!simulationNameFilter.Any() && InScopeSimulationNames != null)
-                        simulationNameFilter = new List<string>(InScopeSimulationNames);
                 }
                 else if (InScopeSimulationNames != null)
-                    simulationNameFilter = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
+                    simulationNames = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
 
-                string filter = GetFilter(fieldsThatExist);
+                string filter = GetFilter(columnNames);
 
-                if (simulationNameFilter.Any())
+                if (simulationNames.Any())
                 {
-                    var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
+                    var simulationIds = reader.ToSimulationIDs(simulationNames);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
                     if (string.IsNullOrEmpty(simulationIdsCSV))
                         return;
-                    if (fieldsThatExist.Contains("SimulationID"))
+                    if (columnNames.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
@@ -326,8 +322,6 @@ namespace Models
                 }
                 catch (Exception ex)
                 {
-                    //this will still cause a pause when running in debug mode, that is due to how visual studio
-                    //works when an exception thrown by external code but is not handled by that external code.
                     throw new Exception("Filter cannot be parsed: " + ex.Message);
                 }
 
