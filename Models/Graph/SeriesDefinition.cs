@@ -283,20 +283,25 @@ namespace Models
 
                 if (Descriptors != null)
                 {
-                    foreach (SimulationDescription.Descriptor descriptor in Descriptors) 
-                    {
-                        //Get the name of each sim that has a matching descriptor to this graph
-                        bool matched = false;
-                        foreach (SimulationDescription sim in simulationDescriptions) {
-                            if (sim.HasDescriptor(descriptor))
+                    //Get the name of each sim that has a matching descriptor to this graph
+                    foreach (SimulationDescription sim in simulationDescriptions) {
+                        bool matched = true;
+                        foreach (SimulationDescription.Descriptor descriptor in Descriptors)
+                        {
+                            if (!sim.HasDescriptor(descriptor))
                             {
-                                simulationNames.Add(sim.Name);
-                                matched = true;
+                                matched = false;
+                            }
+                            else 
+                            {
+                                //Remove this descriptor from column name so that it isn't used to filter again
+                                if (descriptor.Name.CompareTo("Zone") != 0) 
+                                    columnNames.Remove(descriptor.Name); 
                             }
                         }
-                        //Remove this descriptor from column name so that it isn't used to filter again
-                        if (matched)
-                            columnNames.Remove(descriptor.Name);
+                        if (matched) {
+                            simulationNames.Add(sim.Name);
+                        }
                     }
                 }
                 //if we don't have descriptors, get all sim names in scope instead
