@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -840,6 +841,33 @@ run";
             Simulations secondModdedSims = FileFormat.ReadFromFile<Simulations>(Path.GetTempPath() + firstApsimxFileNameWithoutExtension + "2" + ".apsimx", e => throw e, false).NewModel as Simulations;
 
 
+        }
+
+        [Test]
+        public void TestApplySwitch_WithConfigFileWithManagerOverride_ModifiesManager()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.test-wheat.apsimx");
+            Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
+            var originalPair = KeyValuePair.Create("StartDate", "1-may");
+            Assert.True(sims.FindDescendant<Manager>("Sowing").Parameters.Contains(originalPair));
+            sims.FileName = "test-wheat.apsimx";
+            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), "test-wheat.apsimx");
+            File.WriteAllText(tempSimsFilePath, json);
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newFileString =
+                $"load test-wheat.apsimx{Environment.NewLine}" +
+                $"[Sowing].Script.StartDate = 2-May{Environment.NewLine}" +
+                $"save test-wheat1.apsimx{Environment.NewLine}";
+
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+
+            //Check that StartDateParameter got modified to 2-May.
+            Simulations moddedSim = FileFormat.ReadFromFile<Simulations>($"{Path.Combine(Path.GetTempPath(), "test-wheat1.apsimx")}", e => throw e, false).NewModel as Simulations;
+            Manager manager = moddedSim.FindDescendant<Manager>("Sowing");
+            var modifiedPair = KeyValuePair.Create("StartDate", "2-May");
+            Assert.IsTrue(manager.Parameters.Contains(modifiedPair));
         }
     }
 }

@@ -109,6 +109,11 @@ namespace Models.Core
                 undos.Add(new Override(undoPath, oldValue, Override.MatchTypeEnum.NameAndType));
             }
 
+            // Rebuilds a manager (if it exists) to bring in any changes (if any).
+            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            if (pathObject is Manager manager)
+                manager.RebuildScriptModel();
+
             // Reverse the order of the undos so that get applied in the correct order.
             undos.Reverse();
             return undos;
