@@ -285,6 +285,7 @@ namespace Models
                 {
                     foreach (SimulationDescription.Descriptor descriptor in Descriptors) 
                     {
+                        //Get the name of each sim that has a matching descriptor to this graph
                         bool matched = false;
                         foreach (SimulationDescription sim in simulationDescriptions) {
                             if (sim.HasDescriptor(descriptor))
@@ -293,15 +294,19 @@ namespace Models
                                 matched = true;
                             }
                         }
+                        //Remove this descriptor from column name so that it isn't used to filter again
                         if (matched)
                             columnNames.Remove(descriptor.Name);
                     }
                 }
+                //if we don't have descriptors, get all sim names in scope instead
                 else if (InScopeSimulationNames != null)
                     simulationNames = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
 
+                //Make a filter on matching columns that were sim descriptors (factors)
                 string filter = GetFilter(columnNames);
 
+                //Add our matching sim ids to the filter
                 if (simulationNames.Any())
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNames);
@@ -312,9 +317,11 @@ namespace Models
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
+                //cleanup filter
                 filter = filter?.Replace('\"', '\'');
                 filter = RemoveMiddleWildcards(filter);
 
+                //apply our filter to the data
                 View = new DataView(data);
                 try
                 {
