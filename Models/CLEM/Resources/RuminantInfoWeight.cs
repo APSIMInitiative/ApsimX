@@ -175,14 +175,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adjust weight
         /// </summary>
-        /// <param name="change">The amount to change</param>
+        /// <param name="eBMChange">Change in empty body mass (kg)</param>
+        /// <param name="wtChange">Change in weight (kg)</param>
         /// <param name="individual">THe individual to change</param>
-        public void Adjust(double change, Ruminant individual)
+        public void Adjust(double eBMChange, double wtChange, Ruminant individual)
         {
-            EmptyBodyMassChange = change / individual.Parameters.General.EBW2LW_CG18;
+            EmptyBodyMassChange = eBMChange;
             EmptyBodyMass += EmptyBodyMassChange;
 
-            Base.Adjust(change);
+            Base.Adjust(wtChange);
 
             UpdateLiveWeight();
             

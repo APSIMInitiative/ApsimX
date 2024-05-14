@@ -84,13 +84,6 @@ namespace Models.CLEM.Resources
                 error = true;
             }
 
-            // check parameters are available for all ruminants.
-            if (Parameters.Feeding is null && FindAllInScope<RuminantActivityFeed>().Any())
-            {
-                Summary.WriteMessage(this, $"No [RuminantParameters].[RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParameters].[RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
-                error = true;
-            }
-
             if (error)
                 throw new ApsimXException(this, "Missing [RuminantParameter] components! See CLEM Component for details.");
 

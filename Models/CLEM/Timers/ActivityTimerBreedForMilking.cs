@@ -33,7 +33,7 @@ namespace Models.CLEM.Timers
         private int minConceiveInterval;
         private int startBreedCycleGestationOffsett;
         private int pregnancyDuration;
-        private RuminantType breedParams;
+        private RuminantParameters parameters;
         private RuminantActivityBreed breedParent = null;
         private RuminantActivityControlledMating controlledMatingParent = null;
 
@@ -87,12 +87,12 @@ namespace Models.CLEM.Timers
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
             }
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
-            breedParams = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            parameters = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop).Parameters;
 
-            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.Parameters.General.MilkingDays / 30.4), CultureInfo.InvariantCulture);
+            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(parameters.General.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
 
-            pregnancyDuration = Convert.ToInt32(breedParams.Parameters.General.GestationLength, CultureInfo.InvariantCulture);
+            pregnancyDuration = Convert.ToInt32(parameters.General.GestationLength, CultureInfo.InvariantCulture);
 
             // determine min time between conceptions with full milk production minus cut short and resting
             minConceiveInterval = Math.Max(0, pregnancyDuration + shortenLactationMonths + RestMonths);

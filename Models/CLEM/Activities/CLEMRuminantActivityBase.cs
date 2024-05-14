@@ -6,6 +6,7 @@ using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
+using APSIM.Shared.Graphing;
 
 namespace Models.CLEM.Activities
 {
@@ -215,7 +216,7 @@ namespace Models.CLEM.Activities
                 // try use the only herd in the model
                 else if (ruminantTypeChildren.Count() == 1)
                 {
-                    PredictedHerdBreed = ruminantTypeChildren.FirstOrDefault().Parameters.General.Breed;
+                    PredictedHerdBreed = ruminantTypeChildren.FirstOrDefault().Parameters.General?.Breed ?? "N/A";
                     PredictedHerdName = ruminantTypeChildren.FirstOrDefault().Name;
                 }
                 else
@@ -288,5 +289,33 @@ namespace Models.CLEM.Activities
             };
         }
 
+        /// <summary>
+        /// Method to check if required sub-parameters have been supplied.
+        /// </summary>
+        /// <param name="type">The Ruminant type to check</param>
+        /// <param name="subParametersList">List of required SubParameters</param>
+        /// <returns>A list of error messages for missing sub-parameters</returns>
+        public static List<string> CheckRuminantParametersExist(RuminantType type, List<ISubParameters> subParametersList) 
+        {
+            List<string> errors = new();
+            foreach (var subParameter in subParametersList)
+            {
+                bool ok = true;
+                switch (subParameter)
+                {
+                    case RuminantParametersBreed:
+                        ok = type.Parameters.Breeding is not null;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (!ok)
+                {
+                    errors.Add($"The [RuminantParametersBreed] components is required by this simulation for [{type.Name}]");
+                }
+            }
+            return errors;
+        }
     }
 }
