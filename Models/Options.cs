@@ -139,6 +139,12 @@ namespace Models
         public string Log { get; set; }
 
         /// <summary>
+        /// Sets Simulations to use in memory database rather than database files.
+        /// </summary>
+        [Option("in-memory-db", HelpText = "Sets datastore to use memory instead of database." )]
+        public bool InMemoryDB {get; set;}
+
+        /// <summary>
         /// Type of runner used to run the simulations.
         /// </summary>
         public Models.Core.Run.Runner.RunTypeEnum RunType

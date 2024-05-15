@@ -183,11 +183,16 @@ namespace Models
                         }
                         else
                         {
-                            runner = new Runner(files,
-                                            options.RunTests,
-                                            runType: options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                            if(options.InMemoryDB)
+                                runner = CreateRunnerForInMemoryDBOption(options, files);
+                            else
+                            {
+                                runner = new Runner(files,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            }
                         }
                         RunSimulations(runner, options);
                     }
@@ -373,9 +378,16 @@ namespace Models
             {
                 if (!File.Exists(filePath))
                     sim.Write(filePath);
-                File.Copy(filePath, lastSaveFilePath, true);
+
+                if(string.IsNullOrWhiteSpace(lastSaveFilePath))
+                {
+                    File.Copy(filePath, originalFilePath, true);
+                    lastSaveFilePath = originalFilePath;
+                }
+                else File.Copy(filePath, lastSaveFilePath, true);
 
                 sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath, e => throw e, false).NewModel as Simulations;
+                ChangeSimToUseInMemoryDB(sim);
             }
             if (!string.IsNullOrEmpty(options.Playlist))
             {
@@ -742,6 +754,49 @@ namespace Models
 
             //file is not locked
             return false;
+        }
+
+        /// <summary>
+        /// Changes the files DataStore to use in memory DB.
+        /// </summary>
+        /// <param name="sims"></param>
+        private static void ChangeSimToUseInMemoryDB(Simulations sims)
+        {
+            sims.FindChild<DataStore>().UseInMemoryDB = true;
+        }
+
+        /// <summary>
+        /// Takes file strings and returns a list of Simulations
+        /// </summary>
+        /// <param name="files">a list of file names</param>
+        /// <returns>A list of Simulations</returns>
+        private static List<Simulations> CreateSimsList(IEnumerable<string> files)
+        {
+            List<Simulations> sims = new();
+            foreach(string file in files)
+                sims.Add(FileFormat.ReadFromFile<Simulations>(file,e => throw e, true).NewModel as Simulations);
+            return sims;
+        }
+
+        /// <summary>
+        /// Creates a Runner specifically for use when the InMemoryDB option is used.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public static Runner CreateRunnerForInMemoryDBOption(Options options, IEnumerable<string> files)
+        {
+            List<Simulations> sims = new();
+            Runner runner;
+            sims = CreateSimsList(files);
+            foreach(Simulations sim in sims)
+                ChangeSimToUseInMemoryDB(sim);
+            runner = new Runner(sims,
+                        options.RunTests,
+                        runType: options.RunType,
+                        numberOfProcessors: options.NumProcessors,
+                        simulationNamePatternMatch: options.SimulationNameRegex);
+            return runner;
         }
     }
 }

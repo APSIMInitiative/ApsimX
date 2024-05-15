@@ -759,7 +759,7 @@ save {apsimxFileName}
         public void TestPlaylistCaseInsensitivity()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = sims.FindChild<Simulation>().Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -867,6 +867,18 @@ run";
             string simName = sims.FileName;
             string tempFilePath = Path.GetTempPath();
             Assert.Throws<Exception>(() => Utilities.RunModels($"{simName} --log xyz"));
+        }
+
+
+        //TODO: Create tests for InMemoryDB option.
+        public void InMemoryDBSwitch_DoesNotFillDB()
+        {
+
+        }
+
+        public void InMemoryDBSwitch_WorksWithApplySwitch()
+        {
+            
         }
     }
 }
