@@ -606,8 +606,10 @@ namespace UnitTests.ManagerTests
         public void GetErrorsTests()
         {
             Manager testManager = createManager(true, true, true, true);
-            Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
-            Assert.AreEqual(5313, testManager.Errors.Length);
+            Assert.Throws<Exception>(() => testManager.Code = "public class Script : Model {}");
+            Assert.Throws<Exception>(() => testManager.OnCreated());
+            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
+            Assert.AreEqual(3, testManager.Errors.Split('\n').Length);
         }
 
         /// <summary>
