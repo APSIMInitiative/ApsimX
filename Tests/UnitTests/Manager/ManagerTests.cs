@@ -150,11 +150,9 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false);
-
-            Assert.NotNull(errors);
-            Assert.AreEqual(1, errors.Count, "Encountered the wrong number of errors when opening OnCreatedError.apsimx.");
-            Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
+            IModel sims = FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false).NewModel;
+            Manager manager = sims.FindDescendant<Manager>();
+            Assert.Throws<Exception>(() => manager.RebuildScriptModel());
         }
 
         /// <summary>

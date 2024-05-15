@@ -34,9 +34,6 @@ namespace Models
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
-        /// <summary>Is the model after creation.</summary>
-        private bool afterCreation = false;
-
         /// <summary>
         /// At design time the [Link] above will be null. In that case search for a 
         /// Simulations object and get its compiler.
@@ -62,17 +59,9 @@ namespace Models
                 var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
-                SetCompiler(simulations.ScriptCompiler);
+                scriptCompiler = simulations.ScriptCompiler;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Set compiler to given script compiler
-        /// </summary>
-        private void SetCompiler(ScriptCompiler compiler)
-        {
-            scriptCompiler = compiler;
         }
 
         /// <summary>Which child is the compiled script model.</summary>
@@ -151,16 +140,6 @@ namespace Models
         public string Errors { get; private set; } = null;
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
-        /// cloning or deserialisation.
-        /// </summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-            afterCreation = true;
-        }
-
-        /// <summary>
         /// Invoked at start of simulation.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -182,7 +161,7 @@ namespace Models
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
-            if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
+            if (Enabled && !string.IsNullOrEmpty(Code) && Parent != null)
             {
                 // If the script child model exists. Then get its parameter values.
                 if (ScriptModel != null)
