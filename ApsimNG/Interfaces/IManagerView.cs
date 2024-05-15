@@ -9,7 +9,7 @@ namespace UserInterface.Views
         /// Provides access to the properties grid.
         /// </summary>
         /// <remarks>
-        /// Change type to IProeprtyView when ready to release new property view.
+        /// Change type to IPropertyView when ready to release new property view.
         /// </remarks>
         IPropertyView PropertyEditor { get; }
 
