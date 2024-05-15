@@ -145,6 +145,12 @@ namespace Models
         private bool SuccessfullyCompiledLast { get; set; } = false;
 
         /// <summary>
+        /// Stores errors that were generated the last time the script was compiled.
+        /// </summary>
+        [JsonIgnore]
+        public string Errors { get; private set; } = null;
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
@@ -183,7 +189,8 @@ namespace Models
                     GetParametersFromScriptModel();
 
                 var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
-                if (results.ErrorMessages == null)
+                this.Errors = results.ErrorMessages;
+                if (this.Errors == null)
                 {
                     //remove all old script children
                     for(int i = this.Children.Count - 1; i >= 0; i--)
@@ -207,7 +214,7 @@ namespace Models
                 else
                 {
                     SuccessfullyCompiledLast = false;
-                    throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
+                    throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
                 }
 
                 SetParametersInScriptModel();
