@@ -66,14 +66,14 @@ namespace UserInterface.Views
         /// </summary>
         public void OnDrawn(object sender, EventArgs e)
         {
-            //Wait either 20 frames or until the scrollbars match in size
+            //Wait either 40 frames or until the scrollbars match in size
             //This is required because the text is loaded in over time from a buffer, so big files
             //can take a while to completely load in. If we set the scrollbar too early, it scrolls
             //to the wrong position as more text is loaded.
             if (cursor == null)
                 cursor = CursorLocation;
 
-            if (drawCount < 20 && !(scriptEditor.Location.ScrollV.Upper == cursor.ScrollV.Upper && scriptEditor.Location.ScrollH.Upper == cursor.ScrollH.Upper))
+            if (drawCount < 40 && !(scriptEditor.Location.ScrollV.Upper == cursor.ScrollV.Upper && scriptEditor.Location.ScrollH.Upper == cursor.ScrollH.Upper))
             {
                 drawCount += 1;
             } 
