@@ -140,6 +140,16 @@ namespace Models
         public string Errors { get; private set; } = null;
 
         /// <summary>
+        /// Called when the model has been newly created in memory whether from 
+        /// cloning or deserialisation.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            RebuildScriptModel(true);
+        }
+
+        /// <summary>
         /// Invoked at start of simulation.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -147,7 +157,7 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Enabled && ScriptModel != null && Parameters != null)
+            if (Enabled && ScriptModel != null)
             {
                 // throw an exception to stop simulations from running with an old binary
                 if (ScriptModel != null && SuccessfullyCompiledLast == false)
@@ -157,11 +167,22 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// Set compiler to given script compiler
+        /// </summary>
+        public void SetCompiler(ScriptCompiler compiler)
+        {
+            scriptCompiler = compiler;
+        }
+
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
-            if (Enabled && !string.IsNullOrEmpty(Code) && Parent != null)
+            if (!TryGetCompiler())
+                return;
+
+            if (Enabled && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
                 if (ScriptModel != null)
@@ -193,6 +214,7 @@ namespace Models
                 else
                 {
                     SuccessfullyCompiledLast = false;
+                    Parameters = null;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
                 }
 
@@ -242,7 +264,7 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (Enabled && ScriptModel != null && Parameters != null)
+            if (Enabled && ScriptModel != null)
             {
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
