@@ -102,7 +102,10 @@ namespace Models.PMF.Arbitrator
                 waterDemand += WD.CalculateWaterDemand() * zone.Area;
 
             double waterUsed = 0;
-
+            double fractionUsed = 0;
+            if (waterSupply > 0)
+                fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+                
             // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
             // to return to caller.
             List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
