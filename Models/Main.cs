@@ -84,7 +84,7 @@ namespace Models
             foreach (var error in errors)
             {
                 //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
-                if (error as VersionRequestedError == null && error as HelpRequestedError == null) 
+                if (error as VersionRequestedError == null && error as HelpRequestedError == null)
                 {
                     Console.WriteLine("Console error output: " + error.ToString());
                     Trace.WriteLine("Trace error output: " + error.ToString());
@@ -143,6 +143,25 @@ namespace Models
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
                     string outFile = Path.Combine(Path.GetDirectoryName(dbFiles[0]), "merged.db");
                     DBMerger.MergeFiles(dbFiles, outFile);
+                }
+                else if (!string.IsNullOrWhiteSpace(options.Log))
+                {
+                    bool result = MessageType.TryParse(options.Log, true, out MessageType msgType);
+                    if (!result)
+                        throw new ArgumentException("log option was not set to one of the following: error, warning, information, diagnostic or all.");
+                    int verbosityFileChangeCount = 0;
+                    foreach (string file in files)
+                    {
+                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                        List<Summary> summaryModels = sims.FindAllDescendants<Summary>().ToList();
+                        foreach (Summary summaryModel in summaryModels)
+                        {
+                            summaryModel.Verbosity = msgType;
+                            verbosityFileChangeCount++;
+                        }
+                        sims.Write(sims.FileName);
+                    }
+                    Console.WriteLine($"{verbosityFileChangeCount} summary nodes changed to {options.Log} level.");
                 }
                 // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
