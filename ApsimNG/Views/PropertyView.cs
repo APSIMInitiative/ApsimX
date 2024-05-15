@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Shared.Utilities;
 using UserInterface.Classes;
 using UserInterface.EventArguments;
 using Gtk;
@@ -69,6 +70,11 @@ namespace UserInterface.Views
         /// Flag to prevent double disposal.
         /// </summary>
         private bool isDisposed;
+
+        /// <summary>
+        /// The values for the vertical scrollbar
+        /// </summary>
+        private ScrollerAdjustmentValues scrollV { get; set; } = null;
 
         /// <summary>Constructor.</summary>
         public PropertyView() { }
@@ -158,6 +164,17 @@ namespace UserInterface.Views
                 Widget widget = propertyTable.GetChildAt(col, row);
                 if (widget is Entry entry)
                     entry.GrabFocus();
+            }
+
+            if (scrollV != null)
+            {
+                ScrolledWindow scroller = mainWidget as ScrolledWindow;
+                scroller.Vadjustment.Configure(scrollV.Value, 
+                                                scrollV.Lower, 
+                                                scrollV.Upper, 
+                                                scrollV.StepIncrement, 
+                                                scrollV.PageIncrement, 
+                                                scrollV.PageSize);
             }
         }
 
@@ -365,6 +382,7 @@ namespace UserInterface.Views
             {
                 if (sender is FontButton btnFont)
                 {
+                    StoreScrollerPosition();
                     Guid id = Guid.Parse(btnFont.Name);
                     PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, btnFont.FontName);
                     PropertyChanged?.Invoke(this, args);
@@ -387,6 +405,7 @@ namespace UserInterface.Views
             {
                 if (sender is SpinButton spinner)
                 {
+                    StoreScrollerPosition();
                     double newValue = spinner.Value;
                     Guid id = Guid.Parse(spinner.Name);
                     var args = new PropertyChangedEventArgs(id, newValue);
@@ -410,6 +429,7 @@ namespace UserInterface.Views
             {
                 if (sender is TextView editor && propertyTable != null)
                 {
+                    StoreScrollerPosition();
                     Widget allocatedEntry = propertyTable.Children.FirstOrDefault(w => w is Entry && w.Allocation.Height > 0);
                     if (allocatedEntry != null)
                         editor.HeightRequest = Math.Max(editor.Allocation.Height, allocatedEntry.Allocation.Height);
@@ -434,6 +454,7 @@ namespace UserInterface.Views
             {
                 if (sender is Widget widget)
                 {
+                    StoreScrollerPosition();
                     Guid id = Guid.Parse(widget.Name);
                     string text;
                     if (widget is Entry entry)
@@ -467,6 +488,7 @@ namespace UserInterface.Views
             {
                 if (sender is DropDownView dropdown)
                 {
+                    StoreScrollerPosition();
                     ComboBox combo = (ComboBox)dropdown.MainWidget;
                     if (combo.GetActiveIter(out TreeIter iter))
                     {
@@ -478,6 +500,7 @@ namespace UserInterface.Views
                 }
                 else if (sender is ColourDropDownView colourChooser)
                 {
+                    StoreScrollerPosition();
                     var colour = (System.Drawing.Color)colourChooser.SelectedValue;
                     Guid id = Guid.Parse(colourChooser.MainWidget.Name);
                     var args = new PropertyChangedEventArgs(id, colour);
@@ -501,6 +524,7 @@ namespace UserInterface.Views
             {
                 if (sender is CheckButton checkButton)
                 {
+                    StoreScrollerPosition();
                     Guid id = Guid.Parse(checkButton.Name);
                     var args = new PropertyChangedEventArgs(id, checkButton.Active);
                     PropertyChanged?.Invoke(this, args);
@@ -550,6 +574,7 @@ namespace UserInterface.Views
         {
             try
             {
+                StoreScrollerPosition();
                 IFileDialog fileChooser = new FileDialog()
                 {
                     FileType = "All files (*.*)|*.*",
@@ -603,6 +628,17 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        private void StoreScrollerPosition()
+        {
+            ScrolledWindow scroller = mainWidget as ScrolledWindow;
+            this.scrollV = new ScrollerAdjustmentValues(scroller.Vadjustment.Value,
+                                                        scroller.Vadjustment.Lower,
+                                                        scroller.Vadjustment.Upper,
+                                                        scroller.Vadjustment.StepIncrement,
+                                                        scroller.Vadjustment.PageIncrement,
+                                                        scroller.Vadjustment.PageSize);
         }
 
         /// <summary>

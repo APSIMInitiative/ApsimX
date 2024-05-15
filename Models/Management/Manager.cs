@@ -152,9 +152,6 @@ namespace Models
         {
             base.OnCreated();
             afterCreation = true;
-
-            if (TryGetCompiler())
-                RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -165,11 +162,14 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            // throw an exception to stop simulations from running with an old binary
-            if (ScriptModel != null && SuccessfullyCompiledLast == false)
-                throw new Exception("Errors found in manager model " + Name);
-            GetParametersFromScriptModel();
-            SetParametersInScriptModel();
+            if (Enabled && ScriptModel != null && Parameters != null)
+            {
+                // throw an exception to stop simulations from running with an old binary
+                if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                    throw new Exception("Errors found in manager model " + Name);
+                GetParametersFromScriptModel();
+                SetParametersInScriptModel();
+            }
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -256,7 +256,7 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (ScriptModel != null)
+            if (Enabled && ScriptModel != null && Parameters != null)
             {
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
