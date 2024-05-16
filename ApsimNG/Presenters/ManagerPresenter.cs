@@ -92,6 +92,9 @@ namespace UserInterface.Presenters
             managerView.CursorLocation = manager.Cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+
+            if (manager.Errors != null)
+                explorerPresenter.MainPresenter.ShowError($"Errors found in manager model {manager.Name}{Environment.NewLine}{manager.Errors}");
         }
 
         /// <summary>
