@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
@@ -185,8 +186,7 @@ namespace Models.CLEM.Resources
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
-                    ruminant.Breed = parent.Parameters.General.Breed;
-                    ruminant.HerdName = parent.Name;
+                    ruminant.Parameters = new RuminantParameters(parent.Parameters);
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
@@ -197,6 +197,12 @@ namespace Models.CLEM.Resources
                             string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
+                    }
+                    else
+                    {
+                        // the user has specified that this individual is not suckling, but it is younger than the weaning age, so wean today with no reporting.
+                        if(!ruminant.Weaned)
+                            ruminant.Wean(false, string.Empty, date);
                     }
 
                     if (Sire)
@@ -214,7 +220,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // if weight not provided use normalised weight
-                    //ruminant.PreviousWeight = ruminant.Weight;
+                    // ruminant.PreviousWeight = ruminant.Weight;
 
                     if (this.Sex == Sex.Female)
                     {

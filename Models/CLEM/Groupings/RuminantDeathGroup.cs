@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("Manages the death of specified ruminants based on their condition.")]
     [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantDeathGroup : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
+    public class RuminantDeathGroup : CLEMRuminantActivityBase, IRuminantDeathGroup, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;

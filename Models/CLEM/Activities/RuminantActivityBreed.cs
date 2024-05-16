@@ -512,7 +512,7 @@ namespace Models.CLEM.Activities
                         // The following IPI calculation and check present in NABSA has been removed for testing
                         // It is assumed that the individual based model with weight influences will handle the old IPI calculation
                         // These parameters can now be removed form the RuminantType list
-                        //double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow(female.ProportionOfNormalisedWeight, female.BreedParams.InterParturitionIntervalCoefficient) * 30.4;
+                        //double currentIPI = female.Paramaters.Grow.InterParturitionIntervalIntercept * Math.Pow(female.ProportionOfNormalisedWeight, female.Paramaters.Grow.InterParturitionIntervalCoefficient) * 30.4;
                         //double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
                         //isConceptionReady = (female.Age+1 >= ageNextConception);
                     }

@@ -226,13 +226,13 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double ProportionalDiscountDueToMilk { get; set; } = 0.3;
 
-        /// <summary>
-        /// Maximum size of individual relative to SRW
-        /// </summary>
-        [Category("Farm", "General")]
-        [Description("Maximum size of individual relative to SRW")]
-        [Required, GreaterThanValue(0)]
-        public double MaximumSizeOfIndividual { get; set; } = 1.1;
+        ///// <summary>
+        ///// Maximum size of individual relative to SRW
+        ///// </summary>
+        //[Category("Farm", "General")]
+        //[Description("Maximum size of individual relative to SRW")]
+        //[Required, GreaterThanValue(0)]
+        //public double MaximumSizeOfIndividual { get; set; } = 1.1;
 
         /// <summary>
         /// Wool coefficient
@@ -309,7 +309,7 @@ namespace Models.CLEM.Resources
                 GrowthEnergyIntercept2 = GrowthEnergyIntercept2,
                 IntakeCoefficient = IntakeCoefficient,
                 IntakeIntercept = IntakeIntercept,
-                MaximumSizeOfIndividual = MaximumSizeOfIndividual,
+                //MaximumSizeOfIndividual = MaximumSizeOfIndividual,
                 MaxJuvenileIntake = MaxJuvenileIntake,
                 MilkIntakeCoefficient = MilkIntakeCoefficient,
                 MilkIntakeIntercept = MilkIntakeIntercept,

@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Reference to the RuminantType.
         /// </summary>
-        public RuminantType BreedDetails;
+        public RuminantType BreedDetails { get { return Parameters.Details ?? new RuminantType(); } }
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -70,13 +70,13 @@ namespace Models.CLEM.Resources
         /// Breed of individual
         /// </summary>
         [FilterByProperty]
-        public string Breed { get; set; }
+        public string Breed { get { return Parameters.General?.Breed ?? "Unknown"; } }
 
         /// <summary>
         /// Herd individual belongs to
         /// </summary>
         [FilterByProperty]
-        public string HerdName { get; set; }
+        public string HerdName { get { return Parameters.Details?.Name ?? "Unknown"; } }
 
         /// <summary>
         /// Unique ID of individual
@@ -431,7 +431,7 @@ namespace Models.CLEM.Resources
             // Original CLEM assumes 
             // * single births
             // * normalised weight always equals normalised max of new equations.
-            // return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            // return StandardReferenceWeight - ((1 - Parameters.General.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar)));
 
             // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
             double normMax = Weight.StandardReferenceWeight - (Weight.StandardReferenceWeight - Weight.AtBirth) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(Weight.StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));

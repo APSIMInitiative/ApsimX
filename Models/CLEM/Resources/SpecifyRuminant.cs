@@ -64,7 +64,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
-        public RuminantType BreedParams { get { return ruminantType; } }
+        public RuminantType BreedType { get { return ruminantType; } }
 
         /// <summary>
         /// Records if a warning about set weight occurred
@@ -93,7 +93,7 @@ namespace Models.CLEM.Resources
             {
                 // create example ruminant
                 Details.Number = 1;
-                ExampleIndividual = Details.CreateIndividuals(null, events.Clock.Today, BreedParams).FirstOrDefault();
+                ExampleIndividual = Details.CreateIndividuals(null, events.Clock.Today, BreedType).FirstOrDefault();
             }
         }
 

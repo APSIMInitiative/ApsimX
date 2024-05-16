@@ -26,6 +26,8 @@ namespace Models.CLEM.Resources
             // is only used by class property
             get
             {
+                if (!Weaned)
+                    return "NotBreeder";
                 if (!IsSterilised)
                 {
                     if (IsPreBreeder)
@@ -83,7 +85,7 @@ namespace Models.CLEM.Resources
             get
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
                 return (Weaned && NumberOfBirths == 0);
             }
@@ -98,9 +100,9 @@ namespace Models.CLEM.Resources
             get
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
-                //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                //return (Weaned && Age < MinimumAge1stMating); need to include size restriction as well
                 return (Weaned && ((Weight.HighestAttained >= Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
             }
         }
@@ -472,8 +474,7 @@ namespace Models.CLEM.Resources
                     weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
 
                 Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
-                newSucklingRuminant.HerdName = HerdName;
-                newSucklingRuminant.Breed = Parameters.General.Breed;
+                newSucklingRuminant.Parameters = new RuminantParameters(Parameters);
                 newSucklingRuminant.ID = herd.NextUniqueID;
                 newSucklingRuminant.Location = Location;
                 newSucklingRuminant.Mother = this;

@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
             {
                 Events events = new(FindAncestor<Simulation>());
                 //events.DisconnectEvents();
-                events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
+                events.ReconnectEvents("Models.CLEM.CLEMEvents", "CLEMGetResourcesRequired");
             }
         }
 

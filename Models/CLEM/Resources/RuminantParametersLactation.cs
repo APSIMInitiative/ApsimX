@@ -29,8 +29,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Number of days for milking")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(300)]
-        public double MilkingDays { get; set; }
+        public double MilkingDays { get; set; } = 300;
 
         /// <summary>
         /// Peak milk yield(kg/day)
@@ -38,8 +37,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Peak milk yield (kg/day)")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(4.0)]
-        public double MilkPeakYield { get; set; }
+        public double MilkPeakYield { get; set; } = 4.0;
 
         /// <summary>
         /// Milk curve shape suckling

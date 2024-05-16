@@ -121,6 +121,8 @@ namespace Models.CLEM.Resources
         /// <param name="ruminantType"></param>
         public void Initialise(RuminantType ruminantType)
         {
+            Details = ruminantType;
+
             // create loop over all properties of this class and find corresponding item in tree
             foreach (var property in GetType().GetProperties())
             {
@@ -167,7 +169,7 @@ namespace Models.CLEM.Resources
             Details = parent.Details;
 
             // loop over all properties of this class and set to parent is not null
-            foreach (var property in GetType().GetProperties())
+            foreach (var property in GetType().GetProperties().Where(a => a.CanWrite))
             {
                 var parentValue = property.GetValue(parent);
                 if (parentValue is not null)

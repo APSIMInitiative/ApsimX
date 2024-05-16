@@ -441,7 +441,7 @@ namespace Models.CLEM.Activities
             ind.Energy.ToGraze /= km;
 
             double rdpReq;
-            // todo: check ind.BreedParams.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
+            // todo: check ind.Params.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
             ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
             ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
             ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
@@ -524,8 +524,8 @@ namespace Models.CLEM.Activities
             // TODO: include wool production here.
 
             // grow wool and cashmere from CLEM based on IAT/NABSA
-            //ind.Wool += ind.BreedParams.WoolCoefficient * ind.MetabolicIntake;
-            //ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.MetabolicIntake;
+            //ind.Wool += ind.Parameters.General.WoolCoefficient * ind.MetabolicIntake;
+            //ind.Cashmere += ind.Parameters.General.CashmereCoefficient * ind.MetabolicIntake;
 
             return 0;
         }

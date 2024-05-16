@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         private string grazeStoreGrowOutMales = "";
         private GrazeFoodStoreType foodStoreSires;
         private GrazeFoodStoreType foodStoreBreeders;
-        private RuminantType breedParams;
+        private RuminantParameters breedParameters;
         private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
         private double mortalityRate = 0;
         private IEnumerable<Ruminant> selectHerdAvailable = null;
@@ -677,7 +677,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParameters = (Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop))?.Parameters;
 
             if (FindAllChildren<RuminantActivityGroup>().Any())
             {
@@ -686,7 +686,7 @@ namespace Models.CLEM.Activities
 
             // get the mortality rate for the herd if available or assume zero
             // try get Grow, then try Grow24 parameters.
-            mortalityRate = breedParams.Parameters.FindBaseMortalityRate;
+            mortalityRate = breedParameters.FindBaseMortalityRate;
 
             // check GrazeFoodStoreExists for breeders
             grazeStoreBreeders = "";
@@ -1202,7 +1202,7 @@ namespace Models.CLEM.Activities
                                     RuminantTypeCohort cohort = selectedPurchaseDetails[i].SpecifyRuminantComponent.Details;
                                     cohort.Number = totals[i];
                                     Status = ActivityStatus.Success;
-                                    var newindividuals = cohort.CreateIndividuals(null, clock.Today, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedParams);
+                                    var newindividuals = cohort.CreateIndividuals(null, clock.Today, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedType);
                                     foreach (var ind in newindividuals)
                                     {
                                         ind.Location = grazeStoreSires;
@@ -1298,7 +1298,7 @@ namespace Models.CLEM.Activities
                     }
                     else if (excessBreeders < 0) // shortfall breeders to buy
                     {
-                        double minBreedAge = breedParams.Parameters.General.MinimumAge1stMating.InDays;
+                        double minBreedAge = breedParameters.General.MinimumAge1stMating.InDays;
                         femaleBreedersRequired = excessBreeders * -1;
 
                         // leave purchase alone as they will be added and already accounted for
@@ -1386,7 +1386,7 @@ namespace Models.CLEM.Activities
                                         RuminantTypeCohort cohort = purchaseBreederDetails[i].SpecifyRuminantComponent.Details;
                                         cohort.Number = totals[i];
                                         Status = ActivityStatus.Success;
-                                        var newindividuals = cohort.CreateIndividuals(null, clock.Today, purchaseBreederDetails[i].SpecifyRuminantComponent.BreedParams);
+                                        var newindividuals = cohort.CreateIndividuals(null, clock.Today, purchaseBreederDetails[i].SpecifyRuminantComponent.BreedType);
                                         foreach (var ind in newindividuals)
                                         {
                                             ind.Location = grazeStoreBreeders;

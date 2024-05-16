@@ -31,6 +31,8 @@ namespace Models.CLEM.Resources
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersBreed), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
         private RuminantHerd parentHerd = null;
         private List<AnimalPriceGroup> priceGroups = new();
         private readonly List<string> mandatoryAttributes = new();
@@ -80,7 +82,7 @@ namespace Models.CLEM.Resources
             // get conception parameters and rate calculation method
             ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
 
-            CLEMEvents events = FindInScope<CLEMEvents>();
+            //CLEMEvents events = FindInScope<CLEMEvents>();
 
             foreach (RuminantInitialCohorts ruminantCohorts in FindAllChildren<RuminantInitialCohorts>())
                 foreach (var ind in ruminantCohorts.CreateIndividuals(events?.Clock.Start ?? default))
@@ -92,16 +94,6 @@ namespace Models.CLEM.Resources
             // get list of all sucking individuals
             var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.Weaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
 
-            if(sucklingGroups.Any())
-            {
-                // check parameters are available for all ruminants.
-                if (Parameters.Breeding is null)
-                {
-                    Summary.WriteMessage(this, $"No [RuminantParametersFeed] parameters for [{NameWithParent}]{Environment.NewLine}All [RuminantType] require a [RuminantParametersFeed] component when a [RuminantActivityFeed] is used.", MessageType.Error);
-                    return;
-                }
-            }
-
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
@@ -109,7 +101,7 @@ namespace Models.CLEM.Resources
 
                 // assign calves to cows
                 int sucklingCount = 0;
-                int numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                int numberThisPregnancy = breedFemales.First()?.CalulateNumberOfOffspringThisPregnancy() ?? 1;
                 int previousRuminantID = -1;
                 foreach (var suckling in sucklingList)
                 {
@@ -127,15 +119,15 @@ namespace Models.CLEM.Resources
                             //double milkTime = (suckling.AgeInDays) + events.Interval/2.0; // +15 equivalent to mid month production
 
                             //// need to calculate normalised animal weight here for milk production
-                            //double milkProduction = breedFemales[0].Parameters.Breeding.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
+                            //double milkProduction = breedFemales[0].Parameters.Breeding.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].Parameters.Lactation.MilkOffsetDay) / breedFemales[0].ParametersLactation.MilkPeakDay), breedFemales[0].Paramseters.Lactation.MilkCurveSuckling)) * Math.Exp(breedFemales[0].Paramaters.Lactation.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].Paramaters.Lactation.MilkOffsetDay) / breedFemales[0].Paramaters.Lactation.MilkPeakDay));
                             //breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
                             //breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
 
                             // generalised curve
                             // previously * 30.64
-                            double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight.Live / breedFemales[0].Weight.StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
+                            // double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight.Live / breedFemales[0].Weight.StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
                             // restrict minimum period between births
-                            currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
+                            //currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
 
                             breedFemales[0].DateOfLastBirth = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start;
                             breedFemales[0].DateLastConceived = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start;

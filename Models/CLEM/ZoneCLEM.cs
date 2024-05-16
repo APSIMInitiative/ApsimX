@@ -31,7 +31,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
     [ScopedModel]
-    public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
+    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
         private readonly Summary summary = null;
@@ -170,52 +170,52 @@ namespace Models.CLEM
 
         #region validation
 
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
+        ///// <summary>
+        ///// Validate object
+        ///// </summary>
+        ///// <param name="validationContext"></param>
+        ///// <returns></returns>
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    var results = new List<ValidationResult>();
 
-            // Check that CLEMEvents component is present under Clock
-            var clemEvents = this.FindAllInScope<CLEMEvents>();
-            if (!clemEvents.Any())
-            {
-                string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A simulation using CLEM must contain a [CLEMEvents] component usually placed as a child of [Clock]", memberNames));
-            }
-            if (clemEvents.Count() > 1)
-            {
-                string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("CLEM simulations must contain only one (1) [CLEMEvents] component usually as a child of the single APSIM [Clock]", memberNames));
-            }
-            // check that one resources and on activities are present.
-            int componentCount = this.FindAllChildren<ResourcesHolder>().Count();
-            if (componentCount == 0)
-            {
-                string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
-            }
-            if (componentCount > 1)
-            {
-                string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
-            }
-            componentCount = this.FindAllChildren<ActivitiesHolder>().Count();
-            if (componentCount == 0)
-            {
-                string[] memberNames = new string[] { "CLEM.Activities" };
-                results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
-            }
-            if (componentCount > 1)
-            {
-                string[] memberNames = new string[] { "CLEM.Activities" };
-                results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
-            }
-            return results;
-        }
+        //    // Check that CLEMEvents component is present under Clock
+        //    var clemEvents = this.FindAllInScope<CLEMEvents>();
+        //    if (!clemEvents.Any())
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Resources" };
+        //        results.Add(new ValidationResult("A simulation using CLEM must contain a [CLEMEvents] component usually placed as a child of [Clock]", memberNames));
+        //    }
+        //    if (clemEvents.Count() > 1)
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Resources" };
+        //        results.Add(new ValidationResult("CLEM simulations must contain only one (1) [CLEMEvents] component usually as a child of the single APSIM [Clock]", memberNames));
+        //    }
+        //    // check that one resources and on activities are present.
+        //    int componentCount = this.FindAllChildren<ResourcesHolder>().Count();
+        //    if (componentCount == 0)
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Resources" };
+        //        results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
+        //    }
+        //    if (componentCount > 1)
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Resources" };
+        //        results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
+        //    }
+        //    componentCount = this.FindAllChildren<ActivitiesHolder>().Count();
+        //    if (componentCount == 0)
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Activities" };
+        //        results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
+        //    }
+        //    if (componentCount > 1)
+        //    {
+        //        string[] memberNames = new string[] { "CLEM.Activities" };
+        //        results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
+        //    }
+        //    return results;
+        //}
 
         /// <summary>An event handler to allow us to validate properties and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -229,6 +229,7 @@ namespace Models.CLEM
             // Some values assigned in commencing will not be checked before processing, but will be caught here
             // Each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            // The tests of model associations (Attribute) now fire in Commencing and will break on error before any validation.
 
             // not all errors will be reported in validation so perform in two steps
             Validate(FindInScope<CLEMEvents>(), "", this, summary, FindInScope<CLEMEvents>());

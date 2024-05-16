@@ -102,8 +102,8 @@ namespace Models.CLEM.Activities
                         grazePastureHerd.UniqueID = currentHerdUid;
                         grazePastureHerd.SetLinkedModels(Resources);
 
-                        if (grazePastureHerd.events.Clock == null)
-                            grazePastureHerd.events.Clock = events.Clock;
+                        if (grazePastureHerd.events == null)
+                            grazePastureHerd.events = events;
 
                         grazePastureHerd.InitialiseHerd(true, true);
                         grazePasture.Children.Add(grazePastureHerd);

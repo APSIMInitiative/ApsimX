@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
             // if any individuals not checked
             if (individuals.Any())
             {
-                string warn = $"Some pecified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
+                string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
         }

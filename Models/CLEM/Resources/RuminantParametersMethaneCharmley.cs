@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         [Description("Methane production from intake coefficient")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(20.7)]
-        public double MethaneProductionCoefficient { get; set; }
+        public double MethaneProductionCoefficient { get; set; } = 20.7;
 
         /// <summary>
         /// Create clone of this class

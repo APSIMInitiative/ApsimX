@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
 
             // Blaxter and Claperton 1965
-            //ind.Output.Methane = ind.BreedParams.CH1 * (ind.Intake.Feed.Actual) * ((ind.BreedParams.CH2 + ind.BreedParams.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.BreedParams.CH4 + ind.BreedParams.CH5 * ind.Intake.MDSolid));
+            //ind.Output.Methane = ind.Paramaters.Grow24_CH.CH1 * (ind.Intake.Feed.Actual) * ((ind.Grow24_CH.CH2 + ind.Grow24_CH.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.Grow24_CH.CH4 + ind.Grow24_CH.CH5 * ind.Intake.MDSolid));
 
             // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
             // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
