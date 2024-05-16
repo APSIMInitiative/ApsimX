@@ -102,15 +102,7 @@ namespace Models
         {
             get
             {
-                string output = "";
-                for (int i = 0; i < cSharpCode.Length; i++)
-                {
-                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
-                    output += line;
-                    if (i < cSharpCode.Length-1)
-                        output += "\n";
-                }
-                return output;
+                return CodeFormatting.Combine(cSharpCode);
             }
             set
             {
@@ -120,7 +112,7 @@ namespace Models
                 }
                 else
                 {
-                    cSharpCode = value.Split('\n');
+                    cSharpCode = CodeFormatting.Split(value);
                     RebuildScriptModel();
                 }
             }
@@ -362,6 +354,14 @@ namespace Models
                 index += 1;
             }
             return RunMethod(name, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Reformat()
+        {
+            this.CodeArray = CodeFormatting.Reformat(this.CodeArray);
         }
 
         /// <summary>
