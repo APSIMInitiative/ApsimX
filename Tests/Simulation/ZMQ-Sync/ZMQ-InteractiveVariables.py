@@ -9,6 +9,7 @@ Example:
 
 Todo:
     * Unify Field nodes in Apsim and this client.
+    * Create a 3D visual.
 """
 
 import zmq
@@ -28,41 +29,97 @@ class ZMQServer(object):
     """Object for interacting with the OASIS 0MQ server.
     
     Attributes:
-        port (str):
-
+        context (:obj: `zmq.Context`)
+        info (:obj: `dict`): { address: str, port: str } 
+        socket
     """
 
     def __init__(
             self,
+            addr: str,
             port: str
         ):
+        """Initialize ZMQ server.
+        Initialize connection by default.
+
+        Args:
+            addr: str
+            port: str
+            connect: bool = True
         """
-        """
-        pass
+        self.info = {
+            "address": addr,
+            "port": port
+        }
+        self.context = zmq.Context.instance()
+        self.socket = None
+        self.conn_str = f"tcp://{addr}:{port}"
+        self._open_socket();
 
     def __del__(self):
         """Handles cleanup of protocol"""
         # TODO implement cleanup of protocol, something to restart sim
         self.close_socket()
     
-    def open_socket(self):
-        """Opens socket to apsim ZQM synchronizer
-       
-        Should not be called externally. Uses self.conn_str 
-        """
+    def _open_socket(self):
+        """Opens socket to Apsim ZMQ Synchroniser."""
         # connect to server
-        self.context = zmq.Context.instance()
         print(f"Connecting to server @ {self.conn_str}...")
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind(self.conn_str)
         print('    ...connected.')    
     
     def close_socket(self):
-        """Closes connection to apsim server"""
+        """Closes connection to Apsim server."""
         self.socket.disconnect(self.conn_str)
-        self.context.destroy()
+        self.context.destroy()  # NOTE: this method is not threadsafe!! Make 
+                                #   sure that there are not currently active
+                                #   threads when you call this.
+                                
+    def send_command(
+            self,
+            command : str,
+            args : tuple = None,
+            unpack : bool = True
+        ):
+        """Sends a string command and optional arguments to the server.
 
+        The objects in args can be any serializable type. Internally uses
+        msgpack.packb for serialization.
 
+        Args:
+            command: Command string
+            args: List of arguments
+            unpack: Unpack the resulting bytes
+            
+        Returns:
+            Bytes received from the server. If unpack is True, then the data is
+            decoded in a python object. Else if unpack is False the raw bytes is
+            returned.
+        """
+        
+        # check for arguments, otherwise just send string
+        if args:
+            self.socket.send_string(command, flags=zmq.SNDMORE)
+            # list of data to send
+            msg = []
+            # loop over them; serialize using msgpack.
+            [msg.append(msgpack.packb(arg)) for arg in args]
+            self.socket.send_multipart(msg)
+        else:
+            self.socket.send_string(command)
+            
+        # get the response
+        recv_bytes = self.socket.recv()
+        # process based on arg
+        if unpack:
+            recv_data = msgpack.unpackb(recv_bytes)
+        else:
+            recv_data = recv_bytes
+
+        # return data
+        return recv_data
+    
 
 class FieldNode(object):
     """A single Field, corresponding to a node in the OASIS sim.
@@ -77,7 +134,7 @@ class FieldNode(object):
 
     def __init__(
             self,
-            socket,
+            server,
             configs: dict = {}
         ):
         """
@@ -87,7 +144,9 @@ class FieldNode(object):
         """
         self.ap_id = None
         self.configs = configs
-        self.socket = socket
+        # Aliases.
+        self.socket = server.socket
+        self.send_command = server.send_command
         self.create()
 
     def _digest_configs(
@@ -107,7 +166,7 @@ class FieldNode(object):
     def create(self):
         """Create a new field and link with ID reference returned by Apsim."""
         csv_configs = self._format_configs()
-        self.id = self.send("")
+        self.id = self.send()
 
     def send(
             self,
@@ -124,8 +183,27 @@ class FieldNode(object):
         Returns:
             ap_id (int): Corresponds to the index of the node in Apsim.
         """
-        pass
+        # check for arguments, otherwise just send string
+        if args:
+            self.send_string(command, flags=zmq.SNDMORE)
+            # list of data to send
+            msg = []
+            # loop over them; serialize using msgpack.
+            [msg.append(msgpack.packb(arg)) for arg in args]
+            self.send_multipart(msg)
+        else:
+            self.send_string(command)
+            
+        # get the response
+        recv_bytes = self.socket.recv()
+        # process based on arg
+        if unpack:
+            recv_data = msgpack.unpackb(recv_bytes)
+        else:
+            recv_data = recv_bytes
 
+        # return data
+        return recv_data
 
 
 class ApsimController:
@@ -143,10 +221,10 @@ class ApsimController:
             fields (int): Number of fields to instantiate
         """
         self.fields = fields
-
-        # connection string
-        self.conn_str = f"tcp://{addr}:{port}"
-        self.open_socket()
+        self.server = ZMQServer(addr, port)
+        # Aliases.
+        self.send_command = self.server.send_command
+        self.socket = self.server.socket
         
         # initialize the connection protocol
         msg = self.socket.recv_string()
@@ -185,73 +263,6 @@ class ApsimController:
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
 
-    def __del__(self):
-        """Handles cleanup of protocol"""
-        # TODO implement cleanup of protocol, something to restart sim
-        self.close_socket()
-    
-    def open_socket(self):
-        """Opens socket to apsim ZQM synchronizer
-       
-        Should not be called externally. Uses self.conn_str 
-        """
-        # connect to server
-        self.context = zmq.Context.instance()
-        print(f"Connecting to server @ {self.conn_str}...")
-        self.socket = self.context.socket(zmq.REP)
-        self.socket.bind(self.conn_str)
-        print('    ...connected.')    
-    
-    def close_socket(self):
-        """Closes connection to apsim server"""
-        self.socket.disconnect(self.conn_str)
-        self.context.destroy()
-
-    def send_command(
-            self,
-            command : str,
-            args : tuple = None,
-            unpack : bool = True
-        ):
-        """Sends a string command and optional arguments to the server
-
-        The objects in args can be any serializable type. Internally uses
-        msgpack.packb for serialization.
-
-        Args:
-            socket: Opened ZMQ created socket
-            command: Command string
-            args: List of arguments
-            unpack: Unpack the resulting bytes
-            
-        Returns:
-            Bytes received from the server. If unpack is True, then the data is
-            decoded in a python object. Else if unpack is False the raw bytes is
-            returned.
-        """
-        
-        # check for arguments, otherwise just send string
-        if args:
-            self.socket.send_string(command, flags=zmq.SNDMORE)
-            # list of data to send
-            msg = []
-            # loop over them; serialize using msgpack.
-            [msg.append(msgpack.packb(arg)) for arg in args]
-            self.socket.send_multipart(msg)
-        else:
-            self.socket.send_string(command)
-            
-        # get the response
-        recv_bytes = self.socket.recv()
-        # process based on arg
-        if unpack:
-            recv_data = msgpack.unpackb(recv_bytes)
-        else:
-            recv_data = recv_bytes
-
-        # return data
-        return recv_data
-    
     def step(self) -> bool:
         """Steps the simulation to the next timestep
         
@@ -367,7 +378,7 @@ if __name__ == '__main__':
     plt.grid(True)
     plt.show()
     """
-    Test for FieldNode setup.
+    # Test for FieldNode setup.
     patonfigs = {
             "Name": "pato",
             "Bird": "duck"
