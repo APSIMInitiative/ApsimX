@@ -157,6 +157,21 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Gets or Sets the script as read only (editable)
+        /// </summary>
+        public bool ReadOnly
+        {
+            get
+            {
+                return !textEditor.Editable;
+            }
+            set
+            {
+                textEditor.Editable = !value;
+            }
+        }
+
         private EditorType editorMode;
 
         private Menu popupMenu = new Menu();
