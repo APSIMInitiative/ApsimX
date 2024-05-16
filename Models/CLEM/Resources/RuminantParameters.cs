@@ -1,6 +1,10 @@
-﻿using System;
+﻿using CommandLine;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -13,33 +17,18 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantParameters
     {
-        private RuminantParametersBreed breeding;
+        private readonly Dictionary<string, bool> modified = new();
+
+        /// <summary>
+        /// Link to the ruminant type details of the individual.
+        /// </summary>
+        public RuminantType Details { get; set; }
 
         /// <summary>
         /// Parameters for the Breed activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersBreed Breeding 
-        { 
-            get
-            {
-                if (breeding is null)
-                    throw new Exception("Unable to find any Breed parameters");
-                return breeding;
-            }
-            set { breeding = value; }
-        }
-
-        /// <summary>
-        /// Find base mortality rate across possible locations
-        /// </summary>
-        public  double FindBaseMortalityRate 
-        {
-            get
-            {
-                return Grow?.MortalityBase ?? (Grow24?.BasalMortalityRate_CD1 ?? 0 * 365);
-            }
-        }
+        public RuminantParametersBreed Breeding { get; set; }
 
         /// <summary>
         /// General parameters defining the RuminantType
@@ -66,16 +55,266 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow24 Grow24 { get; set; }
 
         /// <summary>
+        /// Intake parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CI Grow24_CI { get; set; }
+
+        /// <summary>
+        /// Growth parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CG Grow24_CG { get; set; }
+
+        /// <summary>
+        /// Death parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CD Grow24_CD { get; set; }
+
+        /// <summary>
+        /// Pregnancy parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CP Grow24_CP { get; set; }
+
+        /// <summary>
+        /// Metabolism parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CM Grow24_CM { get; set; }
+
+        /// <summary>
+        /// Rumen digestability and efficiency parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CACRD Grow24_CACRD { get; set; }
+
+        /// <summary>
+        /// Efficiency and lactation parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CKCL Grow24_CKCL { get; set; }
+
+        /// <summary>
+        /// Parameters for the RuminantParametersMethaneCharmley activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersMethaneCharmley EntericMethaneCharmley { get; set; }
+
+        /// <summary>
+        /// Parameters for the Ruminant Lactation
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersLactation Lactation { get; set; }
+
+        /// <summary>
+        /// Parameters for the Ruminant Mortality based on original Grow
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrowMortality GrowMortality { get; set; }
+
+
+        /// <summary>
         /// Initialise by finding available RuminantParameters
         /// </summary>
         /// <param name="ruminantType"></param>
         public void Initialise(RuminantType ruminantType)
         {
-            breeding = ruminantType.FindChild<RuminantParametersBreed>();
-            General = ruminantType.FindChild<RuminantParametersGeneral>();
-            Grazing = ruminantType.FindChild<RuminantParametersGrazing>();
-            Grow = ruminantType.FindChild<RuminantParametersGrow>();
-            Grow24 = ruminantType.FindChild<RuminantParametersGrow24>();
+            // create loop over all properties of this class and find corresponding item in tree
+            foreach (var property in GetType().GetProperties())
+            {
+                if (property.PropertyType.GetInterfaces().Contains(typeof(ISubParameters)))
+                {
+                    var subParameterModel = ruminantType.FindAllDescendants().Where(a => a.GetType() == property.PropertyType).FirstOrDefault();
+                    property.SetValue(this, subParameterModel);
+                }
+            }
+
+            //Breeding = ruminantType.FindChild<RuminantParametersBreed>();
+            //General = ruminantType.FindChild<RuminantParametersGeneral>();
+            //Grazing = ruminantType.FindChild<RuminantParametersGrazing>();
+            //Grow = ruminantType.FindChild<RuminantParametersGrow>();
+            //Grow24 = ruminantType.FindChild<RuminantParametersGrow24>();
+            //Grow24_CACRD = ruminantType.FindChild<RuminantParametersGrow24CACRD>();
+            //Grow24_CD = ruminantType.FindChild<RuminantParametersGrow24CD>();
+            //Grow24_CG = ruminantType.FindChild<RuminantParametersGrow24CG>();
+            //Grow24_CI = ruminantType.FindChild<RuminantParametersGrow24CI>();
+            //Grow24_CKCL = ruminantType.FindChild<RuminantParametersGrow24CKCL>();
+            //Grow24_CM = ruminantType.FindChild<RuminantParametersGrow24CM>();
+            //Grow24_CP = ruminantType.FindChild<RuminantParametersGrow24CP>();
+            //EntericMethaneCharmley = ruminantType.FindChild<RuminantParametersMethaneCharmley>();
+            //Lactation = ruminantType.FindChild<RuminantParametersLactation>();
+            //GrowMortality = ruminantType.FindChild<RuminantParametersGrowMortality>();
+        }
+
+        /// <summary>
+        /// Defult constructor for null initialise
+        /// </summary>
+        public RuminantParameters()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor for shallow reference based copy or full deep copy from parent details
+        /// Non modifed parameter sets will be shared across the entire herd of individuals
+        /// </summary>
+        /// <param name="parent">A RuminantParameters object from parent.</param>
+        /// <param name="createCopy">Perform a deep copy of structure as values provided.</param>
+        public RuminantParameters(RuminantParameters parent, bool createCopy = false)
+        {
+            Details = parent.Details;
+
+            // loop over all properties of this class and set to parent is not null
+            foreach (var property in GetType().GetProperties())
+            {
+                var parentValue = property.GetValue(parent);
+                if (parentValue is not null)
+                {
+                    if(createCopy)
+                    {
+                        // Check if the property value is not null and implements ICloneable
+                        if (parentValue is ICloneable cloneable)
+                        {
+                            var clonedValue = cloneable.Clone();
+                            property.SetValue(this, clonedValue);
+                        }
+                    }
+                    else
+                    {
+                        property.SetValue(this, parentValue);
+                    }
+                }
+                modified.Add(property.Name, false);
+            }
+
+            //if (createCopy)
+            //{
+            //    if(parent.General is not null)
+            //        General = parent.General.Clone() as RuminantParametersGeneral;
+            //    if (parent.Grow is not null)
+            //        Grow = parent.Grow.Clone() as RuminantParametersGrow;
+            //    if (parent.Grow24 is not null)
+            //        Grow24 = parent.Grow24.Clone() as RuminantParametersGrow24;
+            //    if (parent.Grow24 is not null)
+            //        Grow24 = parent.Grow24.Clone() as RuminantParametersGrow24;
+            //    if (parent.Breeding is not null)
+            //        Breeding = parent.Breeding.Clone() as RuminantParametersBreed;
+            //    if (parent.Lactation is not null)
+            //        Lactation = parent.Lactation.Clone() as RuminantParametersLactation;
+            //    if (parent.EntericMethaneCharmley is not null)
+            //        EntericMethaneCharmley = parent.EntericMethaneCharmley.Clone() as RuminantParametersMethaneCharmley;
+            //    if (parent.GrowMortality is not null)
+            //        GrowMortality = parent.GrowMortality.Clone() as RuminantParametersGrowMortality;
+            //}
+            //else
+            //{
+            //    General = parent.General;
+            //    Grow = parent.Grow;
+            //    Grow24 = parent.Grow24;
+            //    Breeding = parent.Breeding;
+            //    Lactation = parent.Lactation;
+            //    EntericMethaneCharmley = parent.EntericMethaneCharmley;
+            //    GrowMortality = parent.GrowMortality;
+            //}
+
+            //foreach (var item in new string[] { "Details", "General", "Grow", "Grow24",
+            //    "Grow24_CACRD", "Grow24_CD", "Grow24_CG", "Grow24_CI", "Grow24_CKCL", "Grow24_CM", "Grow24_CP", 
+            //    "Breeding", "Lactation", "EntericMethaneCharmley", "GrowMortality" })
+            //    modified.Add(item, false);
+        }
+
+        /// <summary>
+        /// Update a property in Ruminant parameters and create deep copy to separate from shared parent values if needed.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="propertyInfo"></param>
+        /// <param name="value"></param>
+        public void Update(string key, PropertyInfo propertyInfo, object value)
+        {
+            // find local property with the same type as PropertyInfo
+            var localPropertyInfo = GetType().GetProperties().Where(a => a.PropertyType == propertyInfo.DeclaringType).FirstOrDefault();
+            var localProperty = localPropertyInfo?.GetValue(this);
+            if (localPropertyInfo is not null && localProperty is not null)
+            {
+                if (!modified.GetValueOrDefault(localPropertyInfo.Name) && localProperty is ICloneable cloneable)
+                {
+                    var clonedValue = cloneable.Clone();
+                    localPropertyInfo.SetValue(localProperty, clonedValue);
+                    modified[localPropertyInfo.Name] = true;
+                }
+                else
+                {
+                    throw new Exception($"Unable to update property {key} in RuminantParameters. ");
+                }
+                propertyInfo.SetValue(localProperty, value);
+            }
+
+            //if (!modified.GetValueOrDefault(key))
+            //{
+            //    switch (key)
+            //    {
+            //        case "General":
+            //            if (propertyInfo.GetValue(General) != value)
+            //            {
+            //                if (!modified.GetValueOrDefault(key))
+            //                {
+            //                    General = new RuminantParametersGeneral(General);
+            //                    modified[key] = true;
+            //                }
+            //                propertyInfo.SetValue(General, value);
+            //            }
+            //            break;
+            //        case "Growth":
+            //            if (propertyInfo.GetValue(Growth) != value)
+            //            {
+            //                if (!modified.GetValueOrDefault(key))
+            //                {
+            //                    Growth = new RuminantParametersGrowth(Growth);
+            //                    modified[key] = true;
+            //                }
+            //                propertyInfo.SetValue(Growth, value);
+            //            }
+            //            break;
+            //        case "Breeding":
+            //            if (propertyInfo.GetValue(Breeding) != value)
+            //            {
+            //                if (!modified.GetValueOrDefault(key))
+            //                {
+            //                    Breeding = new RuminantParametersBreeding(Breeding);
+            //                    modified[key] = true;
+            //                }
+            //                propertyInfo.SetValue(Breeding, value);
+            //            }
+            //            break;
+            //        case "Lactation":
+            //            if (propertyInfo.GetValue(Lactation) != value)
+            //            {
+            //                if (!modified.GetValueOrDefault(key))
+            //                {
+            //                    Lactation = new RuminantParametersLactation(Lactation);
+            //                    modified[key] = true;
+            //                }
+            //                propertyInfo.SetValue(Lactation, value);
+            //            }
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //    modified[key] = true;
+            //}
+        }
+
+        /// <summary>
+        /// Find base mortality rate across possible locations
+        /// </summary>
+        public double FindBaseMortalityRate
+        {
+            get
+            {
+                return Grow?.MortalityBase ?? (Grow24_CD?.BasalMortalityRate_CD1 ?? 0 * 365);
+            }
         }
     }
 }

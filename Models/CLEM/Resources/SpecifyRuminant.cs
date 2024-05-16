@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private readonly ResourcesHolder resources = null;
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;

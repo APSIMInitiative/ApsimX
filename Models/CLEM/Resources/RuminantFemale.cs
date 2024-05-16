@@ -471,7 +471,7 @@ namespace Models.CLEM.Resources
                 if (Weight.Fetus.Amount == 0)
                     weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
 
-                Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], BreedDetails, events.TimeStepStart, 0, CurrentBirthScalar, weight);
+                Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
                 newSucklingRuminant.HerdName = HerdName;
                 newSucklingRuminant.Breed = Parameters.General.Breed;
                 newSucklingRuminant.ID = herd.NextUniqueID;
@@ -545,7 +545,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.General.MilkingDays);
+                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.Lactation.MilkingDays);
             }
         }
 
@@ -570,7 +570,7 @@ namespace Models.CLEM.Resources
             {
                 // must be at least 1 to get milk production on day of birth. 
                 double milkdays = Math.Max(0.0, TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays) + halfIntervalOffset;
-                if (milkdays <= Parameters.General.MilkingDays)
+                if (milkdays <= Parameters.Lactation.MilkingDays)
                 {
                     return milkdays;
                 }
@@ -592,7 +592,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(RuminantType setParams, DateTime date, int setAge, double birthScalar, double setWeight)
+        public RuminantFemale(RuminantParameters setParams, DateTime date, int setAge, double birthScalar, double setWeight)
             : base(setParams, setAge, birthScalar, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();

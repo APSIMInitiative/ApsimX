@@ -36,6 +36,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersBreed), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType } )]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {

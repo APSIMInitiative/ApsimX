@@ -16,6 +16,7 @@ namespace Models.CLEM.Resources
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantAdvancedConception.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersBreed) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantConceptionAdvanced : CLEMModel, IConceptionModel
     {
 

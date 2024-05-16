@@ -6,6 +6,7 @@ using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using DocumentFormat.OpenXml.Drawing;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -18,6 +19,7 @@ namespace Models.CLEM.Activities
     [Description("Produces enteric methane emissions based on Charmley et al equations")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantEntericCH4Charmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersMethaneCharmley) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantActivityEntericCH4Charmley: CLEMRuminantActivityBase
     {
         [Link(IsOptional = true)]
@@ -71,7 +73,7 @@ namespace Models.CLEM.Activities
             foreach (var ruminant in herd)
             {
                 // Charmley et al 2016 can be substituted by MethaneProductionIntercept = 0 and MethaneProductionCoefficient = 20.7
-                ruminant.Output.Methane = ruminant.Parameters.General.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
+                ruminant.Output.Methane = ruminant.Parameters.EntericMethaneCharmley.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
             }
 
             // determine grouping style to report emissions

@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// A protected link to the CLEM resource holder
         /// </summary>
-        [Link(ByName = true)]
+        [Link(ByName = true, IsOptional = true)]
         protected ResourcesHolder Resources = null;
 
         /// <summary>

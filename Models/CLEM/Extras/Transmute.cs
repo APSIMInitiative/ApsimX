@@ -27,7 +27,7 @@ namespace Models.CLEM
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;

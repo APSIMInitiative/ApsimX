@@ -29,7 +29,7 @@ namespace Models.CLEM
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SummariseRuminantHerd : CLEMModel
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         [Link(IsOptional = true)]
         private CLEMEvents events = null;
@@ -91,6 +91,7 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            if (resources is null) return;
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
 
             // determine any herd filtering

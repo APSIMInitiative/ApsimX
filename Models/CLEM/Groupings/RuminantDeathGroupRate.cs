@@ -72,7 +72,7 @@ namespace Models.CLEM.Groupings
             foreach (var ind in individuals)
             {
                 if (Style == ParameterStyle.GetFromParameters)
-                    mortalityRate = (ind.Parameters.Grow24?.BasalMortalityRate_CD1 ?? ind.Parameters.Grow?.MortalityBaseDaily ?? 0) * events.Interval; 
+                    mortalityRate = ind.Parameters.FindBaseMortalityRate  * events.Interval; 
                 //ToDo: fix so this is calculated to daily once elsewhere.
                 //ToDo: check CD1 is daily rate
 
@@ -124,7 +124,7 @@ namespace Models.CLEM.Groupings
                     {
                         htmlWriter.Write(rumtype.Name);
                         if (rumtype.Parameters.Grow24 is not null)
-                            htmlWriter.Write($".Parameters.Grow24.BasalMortalityRate_CD1 = {rumtype.Parameters.Grow24.BasalMortalityRate_CD1}");
+                            htmlWriter.Write($".Parameters.Grow24.BasalMortalityRate_CD1 = {rumtype.Parameters.Grow24_CD.BasalMortalityRate_CD1}");
                         else if (rumtype.Parameters.Grow is not null)
                             htmlWriter.Write($".Parameters.Grow.MortalityBase = {rumtype.Parameters.Grow.MortalityBase}");
                         else

@@ -24,7 +24,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantActivityBreed) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
+    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
@@ -281,24 +282,24 @@ namespace Models.CLEM.Activities
             return uniqueIndividuals;
         }
 
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
+        //#region validation
+        ///// <summary>
+        ///// Validate model
+        ///// </summary>
+        ///// <param name="validationContext"></param>
+        ///// <returns></returns>
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    var results = new List<ValidationResult>();
 
-            if (breedingParent is null)
-            {
-                string[] memberNames = new string[] { "Controlled mating parent" };
-                results.Add(new ValidationResult($"Invalid parent component of [a={Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
-            }
-            return results;
-        }
-        #endregion
+        //    if (breedingParent is null)
+        //    {
+        //        string[] memberNames = new string[] { "Controlled mating parent" };
+        //        results.Add(new ValidationResult($"Invalid parent component of [a={Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
+        //    }
+        //    return results;
+        //}
+        //#endregion
 
         #region descriptive summary
 

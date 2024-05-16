@@ -29,7 +29,7 @@ namespace Models.CLEM.Reporting
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportResourceLedger : Report, ICLEMUI
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         [Link]
         private ISummary summary = null;

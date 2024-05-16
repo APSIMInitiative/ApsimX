@@ -24,7 +24,7 @@ namespace Models.CLEM
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         private double shortfallPacketSize = 1;

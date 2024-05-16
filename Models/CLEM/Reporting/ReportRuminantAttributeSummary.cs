@@ -24,7 +24,7 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/RuminantAttributeSummary.htm")]
     public class ReportRuminantAttributeSummary : CLEMModel, ICLEMUI, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 

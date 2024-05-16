@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGeneral: CLEMModel, ISubParameters
+    public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Name of breed where name of herd defined by the name of the RuminantType
@@ -80,24 +80,6 @@ namespace Models.CLEM.Resources
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier GestationLength { get; set; } = new int[] { 0, 9, 0 };
-
-        /// <summary>
-        /// Number of days for milking
-        /// </summary>
-        [Category("Farm", "Lactation")]
-        [Description("Number of days for milking")]
-        [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(300)]
-        public double MilkingDays { get; set; }
-
-        /// <summary>
-        /// Peak milk yield(kg/day)
-        /// </summary>
-        [Category("Farm", "Lactation")]
-        [Description("Peak milk yield (kg/day)")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(4.0)]
-        public double MilkPeakYield { get; set; }
 
         #endregion
 
@@ -185,15 +167,6 @@ namespace Models.CLEM.Resources
         #region Normalised Weight CN
 
         /// <summary>
-        /// Conversion from empty body weigh to live weight
-        /// </summary>
-        [Description("Conversion from empty body weigh to live weight")]
-        [Category("Farm", "Growth")]
-        [Required, GreaterThanValue(1.0)]
-        [System.ComponentModel.DefaultValue(1.09)]
-        public double EBW2LW_CG18 { get; set; }
-
-        /// <summary>
         /// Age growth rate coefficient (CN1 in SCA)
         /// </summary>
         /// <value>Default value for cattle</value>
@@ -225,25 +198,40 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region Other
-
-        /// <summary>
-        /// Methane production from intake coefficient
-        /// </summary>
-        [Category("Farm", "Products")]
-        [Description("Methane production from intake coefficient")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(20.7)]
-        public double MethaneProductionCoefficient { get; set; }
-
-        #endregion
-
         /// <summary>
         /// Constructor to set defaults when needed
         /// </summary>
         public RuminantParametersGeneral()
         {
             base.SetDefaults();
+        }
+
+        /// <summary>
+        /// Create a clone of this class
+        /// </summary>
+        /// <returns>A copy of the class</returns>
+        public object Clone()
+        {
+            RuminantParametersGeneral clonedParameters = new()
+            {
+                NaturalWeaningAge = NaturalWeaningAge.Clone() as AgeSpecifier,
+                MinimumAge1stMating = MinimumAge1stMating.Clone() as AgeSpecifier,
+                MaleMinimumAge1stMating = MaleMinimumAge1stMating.Clone() as AgeSpecifier,
+                MinimumSize1stMating = MinimumSize1stMating,
+                GestationLength = GestationLength.Clone() as AgeSpecifier,
+                SRWFemale = SRWFemale,
+                SRWCastrateMaleMultiplier = SRWCastrateMaleMultiplier,
+                SRWMaleMultiplier = SRWMaleMultiplier,
+                BirthScalar = BirthScalar.Clone() as double[],
+                MultipleBirthRate = MultipleBirthRate.Clone() as double[],
+                BaseAnimalEquivalent = BaseAnimalEquivalent,
+                RelBCToScoreRate = RelBCToScoreRate,
+                BCScoreRange = BCScoreRange.Clone() as double[],
+                AgeGrowthRateCoefficient_CN1 = AgeGrowthRateCoefficient_CN1,
+                SRWGrowthScalar_CN2 = SRWGrowthScalar_CN2,
+                SlowGrowthFactor_CN3 = SlowGrowthFactor_CN3,
+            };
+            return clonedParameters;
         }
 
         #region validation

@@ -25,7 +25,7 @@ namespace Models.CLEM.Timers
     [Version(1, 0, 1, "")]
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         private int shortenLactationMonths;
@@ -89,7 +89,7 @@ namespace Models.CLEM.Timers
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
             parameters = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop).Parameters;
 
-            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(parameters.General.MilkingDays / 30.4), CultureInfo.InvariantCulture);
+            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(parameters.Lactation.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
 
             pregnancyDuration = Convert.ToInt32(parameters.General.GestationLength, CultureInfo.InvariantCulture);

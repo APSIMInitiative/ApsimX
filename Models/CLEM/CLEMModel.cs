@@ -1,8 +1,10 @@
 ﻿using APSIM.Shared.Utilities;
+//using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary
+    public abstract class CLEMModel : Core.Model, ICLEMUI, ICLEMDescriptiveSummary
     {
         /// <summary>
         /// Link to summary
@@ -87,6 +89,75 @@ namespace Models.CLEM
         protected private void SetDefaults()
         {
             SetPropertyDefaults(this);
+        }
+
+        /// <summary>An event handler to allow us to do preliminary checks for model relationships and availability.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected virtual void OnCLEMInitialise(object sender, EventArgs e)
+        {
+            CheckModelAssociciations(this);
+        }
+
+        /// <summary>
+        /// Method to check model associations based on attribute values.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void CheckModelAssociciations(Core.Model model)
+        {
+            ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
+            if (requiredAttribte is not null)
+            {
+                List<string> errors = new();
+                for (int i = 0; i < (requiredAttribte.AssociatedModels?.Length ?? 0); i++)
+                {
+                    switch (requiredAttribte.AssociationStyles[i])
+                    {
+                        case ModelAssociationStyle.InScope:
+                            if (model.FindAllInScope().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.Name}]");
+                            break;
+                        case ModelAssociationStyle.Descendent:
+                            if (model.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [x={model.Name}]");
+                            break;
+                        case ModelAssociationStyle.Child:
+                            if (model.FindAllChildren().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [x={model.Name}]");
+                            break;
+                        case ModelAssociationStyle.DescendentOfRuminantType:
+                            // find Ruminant Types
+                            var rumTypes = model.FindAncestor<Zone>().FindAllDescendants<RuminantType>();
+
+                            foreach (var rumType in rumTypes)
+                            {
+                                if (rumType.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                    errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [r={rumType.Name}] as required by [x={model.Name}]");
+                            }
+                            break;
+                        case ModelAssociationStyle.Parent:
+                            if (model.Parent.GetType() != requiredAttribte.AssociatedModels[i])
+                                errors.Add($"Only a component of type [x={requiredAttribte.AssociatedModels[i].Name}] is permitted as a parent of [x={model.Name}]");
+                            break;
+                    }
+                }
+
+                if (requiredAttribte.SingleInstance)
+                {
+                    var allfound = model.FindAllInScope().Where(a => a.GetType() == model.GetType());
+                    if (allfound.Count() > 1 && allfound.FirstOrDefault() == model)
+                        errors.Add($"Only one instance of [x={model.GetType().Name}] is allowed in scope of [CLEM].");
+                }
+
+                if (errors.Any())
+                {
+                    Summary summary = model.FindAncestor<Simulation>().FindChild<Summary>();
+                    foreach (var error in errors)
+                        summary.WriteMessage(model.FindAncestor<Zone>(), error, MessageType.Error);
+                }
+            }
+
         }
 
         /// <summary>

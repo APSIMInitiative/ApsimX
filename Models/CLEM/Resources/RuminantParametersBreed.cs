@@ -18,9 +18,9 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersBreed.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersBreed: CLEMModel, ISubParameters
+    public class RuminantParametersBreed: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Advanced conception parameters if present
@@ -116,5 +116,23 @@ namespace Models.CLEM.Resources
             this.SetDefaults();
         }
 
+        /// <summary>
+        /// Create a clone of this class
+        /// </summary>
+        /// <returns>A copy of the class</returns>
+        public object Clone()
+        {
+            RuminantParametersBreed clonedParameters = new()
+            {
+                AllowFreemartins = AllowFreemartins,
+                CriticalCowWeight = CriticalCowWeight,
+                InterParturitionIntervalCoefficient = InterParturitionIntervalCoefficient,
+                InterParturitionIntervalIntercept = InterParturitionIntervalIntercept,
+                MinimumDaysBirthToConception = MinimumDaysBirthToConception,
+                MaximumMaleMatingsPerDay = MaximumMaleMatingsPerDay, 
+                PrenatalMortality = PrenatalMortality,
+            };
+            return clonedParameters;
+        }
     }
 }

@@ -3,6 +3,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityDeath))]
     [Description("Manages the death of specified ruminants based on their condition.")]
     [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantDeathGroup : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link(IsOptional = true)]
@@ -48,16 +50,16 @@ namespace Models.CLEM.Groupings
                     // ToDo: see if we can remove the breed parameter from grow below
                     if (ind.Mother == null || MathUtilities.IsLessThan(ind.Mother.Weight.Live, (ind.Parameters?.Breeding?.CriticalCowWeight ?? 0) * ind.Weight.StandardReferenceWeight))
                         // if no mother assigned or mother's weight is < CriticalCowWeight * SFR
-                        mortalityRate = ind.Parameters.Grow.JuvenileMortalityMaximum;
+                        mortalityRate = ind.Parameters.GrowMortality.JuvenileMortalityMaximum;
                     else
                         // if mother's weight >= criticalCowWeight * SFR
-                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.Grow.JuvenileMortalityCoefficient * (ind.Mother.Weight.Live / ind.Mother.Weight.NormalisedForAge), ind.Parameters.Grow.JuvenileMortalityExponent));
+                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowMortality.JuvenileMortalityCoefficient * (ind.Mother.Weight.Live / ind.Mother.Weight.NormalisedForAge), ind.Parameters.GrowMortality.JuvenileMortalityExponent));
 
                     mortalityRate += ind.Parameters.Grow.MortalityBase;
-                    mortalityRate = Math.Min(mortalityRate, ind.Parameters.Grow.JuvenileMortalityMaximum);
+                    mortalityRate = Math.Min(mortalityRate, ind.Parameters.GrowMortality.JuvenileMortalityMaximum);
                 }
                 else
-                    mortalityRate = 1 - (1 - ind.Parameters.Grow.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.Grow.MortalityCoefficient * (ind.Weight.Live / ind.Weight.NormalisedForAge - ind.Parameters.Grow.MortalityIntercept)), ind.Parameters.Grow.MortalityExponent)));
+                    mortalityRate = 1 - (1 - ind.Parameters.Grow.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.GrowMortality.MortalityCoefficient * (ind.Weight.Live / ind.Weight.NormalisedForAge - ind.Parameters.GrowMortality.MortalityIntercept)), ind.Parameters.GrowMortality.MortalityExponent)));
 
                 // convert mortality from annual (calculated) to time-step (applied).
                 mortalityRate /= (DateTime.IsLeapYear(events.Clock.Today.Year) ? 366 : 365) / events.Interval;

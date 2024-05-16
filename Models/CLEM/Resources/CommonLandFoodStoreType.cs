@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         [NonSerialized]

@@ -25,7 +25,7 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
     public class TransmuteLabour : CLEMModel, ITransmute, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         private double shortfallPacketSize = 1;

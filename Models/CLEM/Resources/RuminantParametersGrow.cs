@@ -14,9 +14,9 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrow (V1 CLEM)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow: CLEMModel, ISubParameters
+    public class RuminantParametersGrow: CLEMModel, ISubParameters, ICloneable
     {
         #region Mortality
 
@@ -52,41 +52,13 @@ namespace Models.CLEM.Resources
         public double GrowthEnergyIntercept2 { get; set; } = 20.3;
 
         /// <summary>
-        /// Milk curve shape suckling
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk curve shape suckling")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling { get; set; } = 0.6;
-        /// <summary>
-        /// Milk curve shape non suckling
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk curve shape non suckling")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveNonSuckling { get; set; } = 0.11;
-        /// <summary>
-        /// Milk offset day
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk offset day")]
-        [Required, GreaterThanValue(0)]
-        public double MilkOffsetDay { get; set; } = 4;
-        /// <summary>
-        /// Milk peak day
-        /// </summary>
-        [Category("Farm", "Lactation")]
-        [Description("Milk peak day")]
-        [Required, GreaterThanValue(0)]
-        public double MilkPeakDay { get; set; } = 45;
-
-        /// <summary>
         /// Energy maintenance efficiency coefficient
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy maintenance efficiency coefficient")]
         [Required, GreaterThanValue(0)]
         public double EMaintEfficiencyCoefficient { get; set; } = 0.368;
+        
         /// <summary>
         /// Energy maintenance efficiency intercept
         /// </summary>
@@ -94,6 +66,7 @@ namespace Models.CLEM.Resources
         [Description("Energy maintenance efficiency intercept")]
         [Required, GreaterThanValue(0)]
         public double EMaintEfficiencyIntercept { get; set; } = 0.503;
+        
         /// <summary>
         /// Energy growth efficiency coefficient
         /// </summary>
@@ -101,6 +74,7 @@ namespace Models.CLEM.Resources
         [Description("Energy growth efficiency coefficient")]
         [Required, GreaterThanValue(0)]
         public double EGrowthEfficiencyCoefficient { get; set; } = 1.16;
+        
         /// <summary>
         /// Energy growth efficiency intercept
         /// </summary>
@@ -108,6 +82,7 @@ namespace Models.CLEM.Resources
         [Description("Energy growth efficiency intercept")]
         [Required]
         public double EGrowthEfficiencyIntercept { get; set; } = -0.308;
+        
         /// <summary>
         /// Energy lactation efficiency coefficient
         /// </summary>
@@ -115,6 +90,7 @@ namespace Models.CLEM.Resources
         [Description("Energy lactation efficiency coefficient")]
         [Required, GreaterThanValue(0)]
         public double ELactationEfficiencyCoefficient { get; set; } = 0.35;
+        
         /// <summary>
         /// Energy lactation efficiency intercept
         /// </summary>
@@ -122,6 +98,7 @@ namespace Models.CLEM.Resources
         [Description("Energy lactation efficiency intercept")]
         [Required, GreaterThanValue(0)]
         public double ELactationEfficiencyIntercept { get; set; } = 0.42;
+        
         /// <summary>
         /// Energy maintenance exponent
         /// </summary>
@@ -129,6 +106,7 @@ namespace Models.CLEM.Resources
         [Description("Energy maintenance exponent")]
         [Required, GreaterThanValue(0)]
         public double EMaintExponent { get; set; } = 8.2E-05;
+        
         /// <summary>
         /// Energy maintenance intercept
         /// </summary>
@@ -136,6 +114,7 @@ namespace Models.CLEM.Resources
         [Description("Energy maintenance intercept")]
         [Required, GreaterThanValue(0)]
         public double EMaintIntercept { get; set; } = 0.09;
+        
         /// <summary>
         /// Energy maintenance coefficient
         /// </summary>
@@ -143,6 +122,7 @@ namespace Models.CLEM.Resources
         [Description("Energy maintenance coefficient")]
         [Required, GreaterThanValue(0)]
         public double EMaintCoefficient { get; set; } = 0.26;
+        
         /// <summary>
         /// Maximum age for energy maintenance calculation
         /// </summary>
@@ -205,6 +185,7 @@ namespace Models.CLEM.Resources
         [Description("Coefficient of juvenile milk intake")]
         [Required, GreaterThanValue(0)]
         public double MilkIntakeCoefficient { get; set; } = 0.1206;
+        
         /// <summary>
         /// Intercept of juvenile milk intake
         /// </summary>
@@ -212,6 +193,7 @@ namespace Models.CLEM.Resources
         [Description("Intercept of juvenile milk intake")]
         [Required, GreaterThanValue(0)]
         public double MilkIntakeIntercept { get; set; } = 3.8146;
+        
         /// <summary>
         /// Maximum juvenile milk intake
         /// </summary>
@@ -219,6 +201,7 @@ namespace Models.CLEM.Resources
         [Description("Maximum juvenile milk intake")]
         [Required, GreaterThanValue(0)]
         public double MilkIntakeMaximum { get; set; } = 20;
+        
         /// <summary>
         /// Milk as proportion of LWT for fodder substitution
         /// </summary>
@@ -226,6 +209,7 @@ namespace Models.CLEM.Resources
         [Description("Milk as proportion of LWT for fodder substitution")]
         [Required, Proportion]
         public double MilkLWTFodderSubstitutionProportion { get; set; } = 0.2;
+        
         /// <summary>
         /// Max juvenile (suckling) intake as proportion of LWT
         /// </summary>
@@ -233,6 +217,7 @@ namespace Models.CLEM.Resources
         [Description("Max juvenile (suckling) intake as proportion of LWT")]
         [Required, GreaterThanValue(0)]
         public double MaxJuvenileIntake { get; set; } = 0.03;
+        
         /// <summary>
         /// Proportional discount to intake due to milk intake
         /// </summary>
@@ -272,6 +257,7 @@ namespace Models.CLEM.Resources
         [Description("Lactating potential intake modifier coefficient A")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantA { get; set; } = 0.32;
+        
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
@@ -279,6 +265,7 @@ namespace Models.CLEM.Resources
         [Description("Lactating potential intake modifier coefficient B")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantB { get; set; } = 61;
+        
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
@@ -287,49 +274,7 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; } = 1.7;
 
-        /// <summary>
-        /// Mortality rate coefficient
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Mortality rate coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityCoefficient { get; set; } = 2.5;
-        /// <summary>
-        /// Mortality rate intercept
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Mortality rate intercept")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityIntercept { get; set; } = 0.05;
-        /// <summary>
-        /// Mortality rate exponent
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Mortality rate exponent")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityExponent { get; set; } = 3.0;
-        /// <summary>
-        /// Juvenile mortality rate coefficient
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Juvenile mortality rate coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double JuvenileMortalityCoefficient { get; set; } = 3.0;
-        /// <summary>
-        /// Juvenile mortality rate maximum
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Juvenile mortality rate maximum")]
-        [Required, Proportion]
-        public double JuvenileMortalityMaximum { get; set; } = 0.2;
 
-        /// <summary>
-        /// Juvenile mortality rate exponent
-        /// </summary>
-        [Category("Breed", "Survival")]
-        [Description("Juvenile mortality rate exponent")]
-        [Required]
-        public double JuvenileMortalityExponent { get; set; } = 1.8;
 
         /// <summary>
         /// Constructor
@@ -337,6 +282,50 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow()
         {
             this.SetDefaults();
+        }
+
+        /// <summary>
+        /// Create a copy of the class
+        /// </summary>
+        /// <returns>A new RuminantParametersGrow</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object Clone()
+        {
+            RuminantParametersGrow clonedParameters = new()
+            {
+                CashmereCoefficient = CashmereCoefficient,
+                EGrowthEfficiencyCoefficient = EGrowthEfficiencyCoefficient,
+                EGrowthEfficiencyIntercept = EGrowthEfficiencyIntercept,
+                ELactationEfficiencyCoefficient = ELactationEfficiencyCoefficient,
+                ELactationEfficiencyIntercept = ELactationEfficiencyIntercept,
+                EMaintCoefficient = EMaintCoefficient,
+                EMaintEfficiencyCoefficient = EMaintEfficiencyCoefficient,
+                EMaintEfficiencyIntercept = EMaintEfficiencyIntercept,
+                EMaintExponent = EMaintExponent,
+                EMaintIntercept = EMaintIntercept,
+                EnergyMaintenanceMaximumAge = EnergyMaintenanceMaximumAge.Clone() as AgeSpecifier,
+                GrowthEfficiency = GrowthEfficiency,
+                GrowthEnergyIntercept1 = GrowthEnergyIntercept1,
+                GrowthEnergyIntercept2 = GrowthEnergyIntercept2,
+                IntakeCoefficient = IntakeCoefficient,
+                IntakeIntercept = IntakeIntercept,
+                MaximumSizeOfIndividual = MaximumSizeOfIndividual,
+                MaxJuvenileIntake = MaxJuvenileIntake,
+                MilkIntakeCoefficient = MilkIntakeCoefficient,
+                MilkIntakeIntercept = MilkIntakeIntercept,
+                MilkIntakeMaximum = MilkIntakeMaximum,
+                MilkLWTFodderSubstitutionProportion = MilkLWTFodderSubstitutionProportion,
+                MortalityBase = MortalityBase,
+                Kme = Kme,
+                LactatingPotentialModifierConstantA = LactatingPotentialModifierConstantA,
+                LactatingPotentialModifierConstantB = LactatingPotentialModifierConstantB,
+                LactatingPotentialModifierConstantC = LactatingPotentialModifierConstantC,
+                ProportionalDiscountDueToMilk = ProportionalDiscountDueToMilk,
+                ProteinCoefficient = ProteinCoefficient,
+                ProteinDegradability = ProteinDegradability,
+                WoolCoefficient = WoolCoefficient,
+            };
+            return clonedParameters;
         }
     }
 }

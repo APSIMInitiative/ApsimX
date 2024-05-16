@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
@@ -239,7 +240,7 @@ namespace Models.CLEM.Activities
                                 ind.Location = grazeStore;
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedDetails, clock.Today, - 1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, clock.Today, ind);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.Parameters, clock.Today, - 1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, clock.Today, ind);
                         ind.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;

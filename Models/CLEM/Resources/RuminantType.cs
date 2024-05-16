@@ -28,6 +28,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersBreed), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         private RuminantHerd parentHerd = null;
@@ -67,25 +68,6 @@ namespace Models.CLEM.Resources
         {
             //bool error = false;
             parentHerd = this.Parent as RuminantHerd;
-
-            //var missingParameters = CLEMRuminantActivityBase.CheckRuminantParametersExist(this, new() { typeof(RuminantParametersGeneral) });
-            //foreach (var error in missingParameters)
-            //{
-            //    Summary.WriteMessage(this, error, MessageType.Error);
-            //}
-            //if (missingParameters.Any())
-            //    return;
-
-            bool error = false;
-            // check parameters are available for all ruminants.
-            if (Parameters.General is null)
-            {
-                Summary.WriteMessage(this, $"Missing [RuminantParameters].[RuminantParametersGeneral] parameters for [{NameWithParent}]", MessageType.Error);
-                error = true;
-            }
-
-            if (error)
-                throw new ApsimXException(this, "Missing [RuminantParameter] components! See CLEM Component for details.");
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (FindAllChildren<AnimalPricing>().Any())

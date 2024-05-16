@@ -27,7 +27,7 @@ namespace Models.CLEM.Timers
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         [Link] readonly IClock clock = null;

@@ -23,6 +23,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(CropActivityManageProduct) },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         private int currentCropIndex = 0;
@@ -222,17 +224,11 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            // check that this activity contains at least one CollectProduct activity
             var cropProductChildren = Children.OfType<CropActivityManageProduct>();
-            if (!cropProductChildren.Any())
-            {
-                string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
-            }
             if(cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
             {
                 string[] memberNames = new string[] { "Multiple crop product activities" };
-                results.Add(new ValidationResult("More than one [a=CropActivityManageProduct] with the same [CropName] were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
+                results.Add(new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
             }
             return results;
         }

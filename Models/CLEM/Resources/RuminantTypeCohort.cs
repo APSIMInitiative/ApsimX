@@ -30,6 +30,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantTypeCohort : CLEMModel
     {
         private SetPreviousConception setPreviousConception = null;
@@ -180,7 +181,7 @@ namespace Models.CLEM.Resources
                     // estimate birth scalar based on probability of multiple births. Uses 0.07 if parameters are not provided (but validation error will also be thrown)
                     double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
                            
-                    Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, birthScalar, weight);
+                    Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight);
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
@@ -290,7 +291,7 @@ namespace Models.CLEM.Resources
                 {
                     if (rumType.Parameters.General is not null)
                     {
-                        newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
+                        newInd = Ruminant.Create(Sex, rumType.Parameters, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
                         normWtString = newInd.Weight.NormalisedForAge.ToString("#,##0");
                     }
                 }
@@ -396,7 +397,7 @@ namespace Models.CLEM.Resources
                     {
                         Ruminant newInd = null;
                         if (rumtype.Parameters.General is not null)
-                            newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
+                            newInd = Ruminant.Create(Sex, rumtype.Parameters, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
 
                         string normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0")??"Unavailable";
                         if (newInd is null || (this.Weight != 0 && Math.Abs(this.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2))

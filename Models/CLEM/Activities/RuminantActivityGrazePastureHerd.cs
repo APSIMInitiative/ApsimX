@@ -26,6 +26,7 @@ namespace Models.CLEM.Activities
     [Description("Performs grazing of a specified herd and pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>

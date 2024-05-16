@@ -687,10 +687,10 @@ namespace Models.CLEM.Resources
         /// <param name="birthScalar">The birth scalar for individual taking into account multiple births</param>
         /// <param name="setWeight">The weight of the individual at creation</param>
         /// <param name="date">The date of creation</param>
-        public Ruminant(RuminantType setParams, int setAge, double birthScalar, double setWeight, DateTime date)
+        public Ruminant(RuminantParameters setParams, int setAge, double birthScalar, double setWeight, DateTime date)
         {
-            BreedDetails = setParams;
-            Parameters = setParams.Parameters;
+            //BreedDetails = setParams;
+            Parameters = setParams;
 
             if (setAge == 0 && setWeight > 0)
                 Weight = new(setWeight);
@@ -698,9 +698,9 @@ namespace Models.CLEM.Resources
                 Weight = new(birthScalar * Parameters.General.SRWFemale);
 
             if (Sex == Sex.Female)
-                Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale);
+                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
             else
-                Weight.SetStandardReferenceWeight(setParams.Parameters.General.SRWFemale * setParams.Parameters.General.SRWMaleMultiplier);
+                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
 
             // if setweight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
@@ -712,7 +712,8 @@ namespace Models.CLEM.Resources
                     setWeight = CalculateNormalisedWeight(setAge, true);
             }
 
-            Weight.Adjust(setWeight / this.Parameters.General.EBW2LW_CG18, setWeight, this);
+            // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+            Weight.Adjust(setWeight / (Parameters.Grow24_CG?.EBW2LW_CG18 ?? 1.09), setWeight, this);
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1 * setAge);
@@ -740,7 +741,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factory for creating ruminants based on provided values
         /// </summary>
-        public static Ruminant Create(Sex sex, RuminantType parameters, DateTime date, int age, double birthScalar, double weight = 0)
+        public static Ruminant Create(Sex sex, RuminantParameters parameters, DateTime date, int age, double birthScalar, double weight = 0)
         {
             if (sex == Sex.Male)
                 return new RuminantMale(parameters, date, age, birthScalar, weight);

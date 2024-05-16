@@ -29,6 +29,7 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
+    [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
     [ScopedModel]
     public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
@@ -110,21 +111,37 @@ namespace Models.CLEM
             CLEMModel.SetPropertyDefaults(this);
         }
 
+        /// <summary>An event handler to allow us to do preliminary checks for model relationships and availability.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialise(object sender, EventArgs e)
+        {
+            // catch any errors that occurred while checking all other Model associations during initialisation
+            ReportErrors(this, summary.GetMessages(FindAncestor<Simulation>().Name)?.Where(a => a.Severity == MessageType.Error));
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // manually check associations with the ZoneCLEM as it is not a CLEMModel
+            CLEMModel.CheckModelAssociciations(this as Models.Core.Model);
+
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
             wholeSimulationSummaryFile = $"{filebits.First()}.html";
             if (File.Exists(wholeSimulationSummaryFile))
                 File.Delete(wholeSimulationSummaryFile);
 
+            // catch any errors that occurred while checking all other Model associations during initialisation
+            ReportErrors(this, summary.GetMessages(FindAncestor<Simulation>().Name)?.Where(a => a.Severity == MessageType.Error));
+
             // before anything starts check that a CLEMEvents model is in scope
-            if (FindInScope<CLEMEvents>() is null)
-                throw new ApsimXException(this, $"Cannot find [x=CLEMEvents] component required for all CLEM simulations.{Environment.NewLine}Add a [x=CLEMEvents] component to the simulation. It is suggested this is placed as a child of the [x=APSIM Clock] component.");
+            //if (FindInScope<CLEMEvents>() is null)
+            //    throw new ApsimXException(this, $"Cannot find [x=CLEMEvents] component required for all CLEM simulations.{Environment.NewLine}Add a [x=CLEMEvents] component to the simulation. It is suggested this is placed as a child of the [x=APSIM Clock] component.");
         }
 
         [EventSubscribe("Completed")]
@@ -266,7 +283,7 @@ namespace Models.CLEM
         /// <param name="summary">Link to summary for reporting</param>
         /// <param name="events">Reference to the CLEM events clock</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary, CLEMEvents events)
+        public static bool Validate(IModel model, string modelPath, IModel parentZone, ISummary summary, CLEMEvents events)
         {
             string starter = "[=";
             if (typeof(IResourceType).IsAssignableFrom(model.GetType()))

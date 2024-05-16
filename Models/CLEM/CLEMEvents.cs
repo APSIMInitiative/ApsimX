@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Activities;
 using Models.Core;
+using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Clock))]
     [Description("Provides required Clock events for CLEM")]
     [HelpUri(@"Content/Features/ClockCLEM.htm")]
+    [ModelAssociations(singleInstance: true)]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class CLEMEvents : CLEMModel, IValidatableObject
     {
@@ -27,6 +29,8 @@ namespace Models.CLEM
         /// </summary>
         [Link] public Clock Clock { get; set; }
 
+        /// <summary>CLEM initialise occurs once at start of simulation and is first chance for checking setup before use</summary>
+        public event EventHandler CLEMInitialise;
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
         /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
@@ -245,6 +249,7 @@ namespace Models.CLEM
             }
             SetNextTimeStep(Clock.StartDate);
 
+            CLEMInitialise?.Invoke(this, e);
             CLEMInitialiseResource?.Invoke(this, e);
             CLEMInitialiseActivity?.Invoke(this, e);
             CLEMValidate?.Invoke(this, e);

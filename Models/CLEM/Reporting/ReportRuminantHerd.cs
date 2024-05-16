@@ -24,7 +24,7 @@ namespace Models.CLEM.Reporting
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 

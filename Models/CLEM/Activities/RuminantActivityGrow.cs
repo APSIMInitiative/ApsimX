@@ -29,6 +29,9 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation), typeof(RuminantParametersMethaneCharmley) },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
+        SingleInstance = true)]
     public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject
     {
         [Link(IsOptional = true)]
@@ -107,7 +110,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural", events.Clock.Today);
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedDetails, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.Parameters, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
                     ind.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
@@ -246,10 +249,10 @@ namespace Models.CLEM.Activities
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
             if (ind.SucklingOffspringList.Count == 0)
-                milkCurve = ind.Parameters.Grow.MilkCurveNonSuckling;
+                milkCurve = ind.Parameters.Lactation.MilkCurveNonSuckling;
             else // no milking
-                milkCurve = ind.Parameters.Grow.MilkCurveSuckling;
-            ind.Milk.PotentialRate = ind.Parameters.General.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Grow.MilkOffsetDay) / ind.Parameters.Grow.MilkPeakDay));
+                milkCurve = ind.Parameters.Lactation.MilkCurveSuckling;
+            ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));
             ind.Milk.PotentialRate = Math.Max(ind.Milk.PotentialRate, 0.0);
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.Milk.PotentialRate * 3.2 / kl;
@@ -576,7 +579,7 @@ namespace Models.CLEM.Activities
             // methane is methaneProduced / 55.28 * 1000; // grams per day
 
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
-            methaneProduced = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily;
+            methaneProduced = ind.Parameters.EntericMethaneCharmley.MethaneProductionCoefficient * intakeDaily;
         }
 
         /// <summary>

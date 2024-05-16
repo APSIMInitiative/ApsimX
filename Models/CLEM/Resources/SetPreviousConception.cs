@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [Description("Specify the conception status of a new female")]
     [HelpUri(@"Content/Features/Resources/SetPreviousConception.htm")]
     [Version(1, 0, 1, "")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class SetPreviousConception : CLEMModel, IValidatableObject
     {
         [Link]

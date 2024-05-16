@@ -13,7 +13,7 @@ namespace Models.CLEM
     /// A  class to allow the user to easily define the age of individuals in a convienient y,m,d format
     /// </summary>
     [Serializable]
-    public class AgeSpecifier
+    public class AgeSpecifier: ICloneable
     {
         private const decimal daysPerYear = 365.25M;
         private const decimal daysPerMonth = 30.4M;
@@ -187,6 +187,18 @@ namespace Models.CLEM
                 index++;
             }
             return age;
+        }
+
+        /// <summary>
+        /// Create clone of this AgeSpecifier
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object Clone()
+        {
+            AgeSpecifier cloned = new();
+            cloned = Parts;
+            return cloned;
         }
     }
 

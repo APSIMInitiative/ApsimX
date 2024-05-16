@@ -444,7 +444,7 @@ namespace Models.CLEM.Activities
                             {
                                 Ruminant newIndividual = item.Details.CreateIndividuals(1, null, clock.Today).FirstOrDefault();
                                 newIndividual.Location = pasture.Name;
-                                newIndividual.BreedDetails = item.BreedParams;
+                                newIndividual.Parameters.Details = item.BreedParams;
                                 newIndividual.HerdName = item.BreedParams.Name;
                                 newIndividual.DateOfPurchase = clock.Today;
                                 //newIndividual.DateEnteredSimulation = clock.Today;

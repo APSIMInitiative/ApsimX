@@ -18,8 +18,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantActivityGrowSCA.htm")]
-    public class RuminantParametersGrazing: CLEMModel, ISubParameters
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrazing.htm")]
+    public class RuminantParametersGrazing: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Maximum green in diet
@@ -74,6 +74,24 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrazing()
         {
             this.SetDefaults();
+        }
+
+        /// <summary>
+        /// Clone of the Grazing Parameters
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object Clone()
+        {
+            RuminantParametersGrazing clonedParameters = new()
+            {
+                GreenDietMax = GreenDietMax,
+                GreenDietCoefficient = GreenDietCoefficient,
+                GreenDietZero = GreenDietZero,
+                IntakeCoefficientBiomass = IntakeCoefficientBiomass,
+                StrictFeedingLimits = StrictFeedingLimits
+            };
+            return clonedParameters;
         }
     }
 }
