@@ -168,12 +168,14 @@
 
             // 2nd june will advance to next year
             AdvanceOneDay(weather, clock);
+            // this is a leap year, and the day number will jump by 2 (to 154)
             // 1952 153   16.0  20.6   6.1   0.0   2.8   9.7 300070
+            // 1952 154   16.0  20.6   7.2   0.0   2.8   7.5 300070
             Assert.AreEqual(weather.Radn, 16, delta);
             Assert.AreEqual(weather.MaxT, 20.6, delta);
-            Assert.AreEqual(weather.MinT, 6.1, delta);
+            Assert.AreEqual(weather.MinT, 7.2, delta);
             Assert.AreEqual(weather.Rain, 0.0, delta);
-            Assert.AreEqual(weather.VP, 9.7, delta);
+            Assert.AreEqual(weather.VP, 7.5, delta);
         }
         private void AdvanceOneDay(IModel weather, Clock clock)
         {
