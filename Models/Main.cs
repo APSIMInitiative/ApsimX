@@ -84,7 +84,7 @@ namespace Models
             foreach (var error in errors)
             {
                 //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
-                if (error as VersionRequestedError == null && error as HelpRequestedError == null) 
+                if (error as VersionRequestedError == null && error as HelpRequestedError == null)
                 {
                     Console.WriteLine("Console error output: " + error.ToString());
                     Trace.WriteLine("Trace error output: " + error.ToString());
@@ -144,6 +144,25 @@ namespace Models
                     string outFile = Path.Combine(Path.GetDirectoryName(dbFiles[0]), "merged.db");
                     DBMerger.MergeFiles(dbFiles, outFile);
                 }
+                else if (!string.IsNullOrWhiteSpace(options.Log))
+                {
+                    bool result = MessageType.TryParse(options.Log, true, out MessageType msgType);
+                    if (!result)
+                        throw new ArgumentException("log option was not set to one of the following: error, warning, information, diagnostic or all.");
+                    int verbosityFileChangeCount = 0;
+                    foreach (string file in files)
+                    {
+                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                        List<Summary> summaryModels = sims.FindAllDescendants<Summary>().ToList();
+                        foreach (Summary summaryModel in summaryModels)
+                        {
+                            summaryModel.Verbosity = msgType;
+                            verbosityFileChangeCount++;
+                        }
+                        sims.Write(sims.FileName);
+                    }
+                    Console.WriteLine($"{verbosityFileChangeCount} summary nodes changed to {options.Log} level.");
+                }
                 // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
@@ -164,11 +183,26 @@ namespace Models
                         }
                         else
                         {
-                            runner = new Runner(files,
-                                            options.RunTests,
-                                            runType: options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                            if(options.InMemoryDB)
+                            {
+                                List<Simulations> sims = new();
+                                sims = CreateSimsList(files);
+                                foreach(Simulations sim in sims)
+                                    sim.FindChild<DataStore>().UseInMemoryDB = true;
+                                runner = new Runner(sims,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            }
+                            else
+                            {
+                                runner = new Runner(files,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            }
                         }
                         RunSimulations(runner, options);
                     }
@@ -354,9 +388,17 @@ namespace Models
             {
                 if (!File.Exists(filePath))
                     sim.Write(filePath);
-                File.Copy(filePath, lastSaveFilePath, true);
+
+                if(string.IsNullOrWhiteSpace(lastSaveFilePath))
+                {
+                    File.Copy(filePath, originalFilePath, true);
+                    lastSaveFilePath = originalFilePath;
+                }
+                else File.Copy(filePath, lastSaveFilePath, true);
 
                 sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath, e => throw e, false).NewModel as Simulations;
+                if (options.InMemoryDB)
+                    sim.FindChild<DataStore>().UseInMemoryDB = true;
             }
             if (!string.IsNullOrEmpty(options.Playlist))
             {
@@ -723,6 +765,28 @@ namespace Models
 
             //file is not locked
             return false;
+        }
+
+        /// <summary>
+        /// Changes the files DataStore to use in memory DB.
+        /// </summary>
+        /// <param name="sims"></param>
+        private static void ChangeSimToUseInMemoryDB(Simulations sims)
+        {
+            sims.FindChild<DataStore>().UseInMemoryDB = true;
+        }
+
+        /// <summary>
+        /// Takes file strings and returns a list of Simulations
+        /// </summary>
+        /// <param name="files">a list of file names</param>
+        /// <returns>A list of Simulations</returns>
+        private static List<Simulations> CreateSimsList(IEnumerable<string> files)
+        {
+            List<Simulations> sims = new();
+            foreach(string file in files)
+                sims.Add(FileFormat.ReadFromFile<Simulations>(file,e => throw e, true).NewModel as Simulations);
+            return sims;
         }
     }
 }

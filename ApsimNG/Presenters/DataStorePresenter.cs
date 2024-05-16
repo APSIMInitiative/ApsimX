@@ -1,13 +1,13 @@
-﻿using UserInterface.EventArguments;
-using Models.Core;
-using Models.Factorial;
-using Models.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using UserInterface.Views;
 using APSIM.Shared.Documentation.Extensions;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using UserInterface.EventArguments;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -154,7 +154,9 @@ namespace UserInterface.Presenters
         {
             //base.Detach();
             // Keep the column and row filters
-            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
+            temporaryColumnFilters = columnFilterEditBox.Text;
+            temporaryRowFilters = rowFilterEditBox.Text;
+            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters);
             temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
@@ -252,7 +254,7 @@ namespace UserInterface.Presenters
             columns.Add("");
             if (dataStore != null)
             {
-                foreach (Tuple<string, Type> column in dataStore.Reader.GetColumns(tableDropDown.SelectedValue)) 
+                foreach (Tuple<string, Type> column in dataStore.Reader.GetColumns(tableDropDown.SelectedValue))
                     columns.Add(column.Item1);
             }
             orderByDropDown.Values = columns.ToArray();
