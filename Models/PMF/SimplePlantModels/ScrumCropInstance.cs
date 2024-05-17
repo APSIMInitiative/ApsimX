@@ -156,14 +156,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
         [Description(" Does the crop respond to water stress?")]
-        public YesNoAnswer ConsiderWaterStress
-        { 
-            get { return consideringWaterStress ? YesNoAnswer.Yes : YesNoAnswer.No; }
-            set { consideringWaterStress = value == YesNoAnswer.Yes; } 
-        }
-
-        /// <summary>Whether the crop should respond to water stress.</summary>
-        private bool consideringWaterStress = true;
+        public bool ConsiderWaterStress { get; set; }
 
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the basic management for this crop, need to be set by a manager
@@ -451,7 +444,7 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> cropParams = new Dictionary<string, string>(scrumParams);
 
-            if (consideringWaterStress)
+            if (ConsiderWaterStress)
             {
                 cropParams["WaterStressPhoto"] += "0.0";
                 cropParams["WaterStressCover"] += "0.0";
@@ -674,15 +667,6 @@ namespace Models.PMF.SimplePlantModels
                 d = d.AddDays(1);
             }
             return d;
-        }
-
-        /// <summary>Answer to a binary or polar question.</summary>
-        public enum YesNoAnswer
-        {
-            /// <summary>Positive answer.</summary>
-            Yes,
-            /// <summary>Negative answer.</summary>
-            No
         }
     }
 
