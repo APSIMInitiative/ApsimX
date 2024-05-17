@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [Description("Define ruminant conception using a single curve")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCurve.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantType) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantConceptionCurve : CLEMModel, IConceptionModel
     {
         /// <summary>

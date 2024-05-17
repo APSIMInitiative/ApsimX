@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all water store types (e.g. tank, dam, bore) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Water/WaterStore.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(ResourcesHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class WaterStore : ResourceBaseWithTransactions
     {
 

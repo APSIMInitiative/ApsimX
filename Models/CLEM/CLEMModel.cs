@@ -104,7 +104,7 @@ namespace Models.CLEM
         /// Method to check model associations based on attribute values.
         /// </summary>
         /// <param name="model"></param>
-        public static void CheckModelAssociciations(Core.Model model)
+        public static void CheckModelAssociciations(Model model)
         {
             ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
             if (requiredAttribte is not null)
@@ -116,15 +116,15 @@ namespace Models.CLEM
                     {
                         case ModelAssociationStyle.InScope:
                             if (model.FindAllInScope().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
-                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.Name}]");
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.Descendent:
                             if (model.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
-                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [x={model.Name}]");
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.Child:
                             if (model.FindAllChildren().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
-                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [x={model.Name}]");
+                                errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.DescendentOfRuminantType:
                             // find Ruminant Types
@@ -133,12 +133,12 @@ namespace Models.CLEM
                             foreach (var rumType in rumTypes)
                             {
                                 if (rumType.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
-                                    errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [r={rumType.Name}] as required by [x={model.Name}]");
+                                    errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [r={rumType.Name}] as required by [x={model.FullPath}]");
                             }
                             break;
                         case ModelAssociationStyle.Parent:
                             if (model.Parent.GetType() != requiredAttribte.AssociatedModels[i])
-                                errors.Add($"Only a component of type [x={requiredAttribte.AssociatedModels[i].Name}] is permitted as a parent of [x={model.Name}]");
+                                errors.Add($"Only a component of type [x={requiredAttribte.AssociatedModels[i].Name}] is permitted as a parent of [x={model.FullPath}]");
                             break;
                     }
                 }
@@ -157,7 +157,6 @@ namespace Models.CLEM
                         summary.WriteMessage(model.FindAncestor<Zone>(), error, MessageType.Error);
                 }
             }
-
         }
 
         /// <summary>

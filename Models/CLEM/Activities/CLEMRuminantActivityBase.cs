@@ -303,7 +303,7 @@ namespace Models.CLEM.Activities
                 bool ok = true;
                 switch (subParameter)
                 {
-                    case RuminantParametersBreed:
+                    case RuminantParametersBreeding:
                         ok = type.Parameters.Breeding is not null;
                         break;
                     default:

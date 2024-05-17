@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(ProductStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>

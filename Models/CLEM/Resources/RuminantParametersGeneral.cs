@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,10 +16,11 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantType))]
+    [ValidParent(ParentType = typeof(RuminantParametersHolder))]
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
@@ -197,6 +199,15 @@ namespace Models.CLEM.Resources
         public double SlowGrowthFactor_CN3 { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Conversion from empty body weigh to live weight
+        /// </summary>
+        [Description("Conversion from empty body weigh to live weight")]
+        [Category("Farm", "Weight")]
+        [Required, GreaterThanValue(1.0)]
+        [System.ComponentModel.DefaultValue(1.09)]
+        public double EBW2LW_CG18 { get; set; }
 
         /// <summary>
         /// Constructor to set defaults when needed

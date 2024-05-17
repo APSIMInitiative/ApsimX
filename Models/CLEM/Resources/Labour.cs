@@ -22,6 +22,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(ResourcesHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]

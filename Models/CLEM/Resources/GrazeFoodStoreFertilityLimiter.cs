@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [Description("Allows for the reduction of new pasture nitrogen content (N%) based on annual yield or growth month")]
     [Version(1, 0, 1, "Provides NABSA 'Fertility - N decline yield' functionality")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreFertilityLimiter.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(GrazeFoodStoreType) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class GrazeFoodStoreFertilityLimiter : CLEMModel
     {
         [Link]

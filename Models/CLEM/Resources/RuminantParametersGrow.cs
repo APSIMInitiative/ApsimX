@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,10 +13,11 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantType))]
+    [ValidParent(ParentType = typeof(RuminantParametersHolder))]
     [Description("This model provides all parameters specific to RuminantActivityGrow (V1 CLEM)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrow: CLEMModel, ISubParameters, ICloneable
     {
         #region Mortality

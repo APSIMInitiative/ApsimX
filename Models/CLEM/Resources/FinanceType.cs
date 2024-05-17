@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Finance) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

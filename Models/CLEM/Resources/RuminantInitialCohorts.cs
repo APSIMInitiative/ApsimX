@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantType) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantInitialCohorts : CLEMModel
     {
         /// <summary>

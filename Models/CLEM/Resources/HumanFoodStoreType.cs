@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a human food store (e.g. milk, eggs, wheat)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(HumanFoodStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

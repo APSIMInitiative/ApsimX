@@ -5528,10 +5528,12 @@ namespace Models.Core.ApsimFile
 
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
-                    node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2))); //value * 30.4
+                    if (!JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Any())
+                        node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2))); //value * 30.4
 
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
-                node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
+                if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
+                    node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
 
             foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
             {

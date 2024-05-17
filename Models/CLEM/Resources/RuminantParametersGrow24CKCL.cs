@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Presentation;
 using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.Attributes;
 using Models.DCAPST.Environment;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -19,6 +20,7 @@ namespace Models.CLEM.Resources
     [Description("RuminantActivityGrow24 (CK - efficiency, CL - lactation)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CKCL.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrow24CKCL : CLEMModel, ISubParameters, ICloneable
     {
         #region Efficiency of... CK#

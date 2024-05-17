@@ -2,6 +2,7 @@
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,11 +17,12 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantType))]
+    [ValidParent(ParentType = typeof(RuminantParametersHolder))]
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersBreed.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersBreed: CLEMModel, ISubParameters, ICloneable
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
+    public class RuminantParametersBreeding: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Advanced conception parameters if present
@@ -111,7 +113,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantParametersBreed()
+        public RuminantParametersBreeding()
         {
             this.SetDefaults();
         }
@@ -122,7 +124,7 @@ namespace Models.CLEM.Resources
         /// <returns>A copy of the class</returns>
         public object Clone()
         {
-            RuminantParametersBreed clonedParameters = new()
+            RuminantParametersBreeding clonedParameters = new()
             {
                 AllowFreemartins = AllowFreemartins,
                 CriticalCowWeight = CriticalCowWeight,

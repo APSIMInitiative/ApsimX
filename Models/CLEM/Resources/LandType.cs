@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/LandType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Land) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

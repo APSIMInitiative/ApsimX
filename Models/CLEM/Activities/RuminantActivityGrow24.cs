@@ -382,7 +382,7 @@ namespace Models.CLEM.Activities
             double emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
 
             // update weight based on the time-step
-            ind.Weight.Adjust(emptyBodyGainkg * events.Interval, ind.Parameters.Grow24_CG.EBW2LW_CG18 * emptyBodyGainkg * events.Interval, ind);
+            ind.Weight.Adjust(ind.Parameters.General.EBW2LW_CG18 * emptyBodyGainkg * events.Interval, ind);
 
             double MJFatChange = 0;
             double MJProteinChange = proteinGain1 / 1000.0 * 23.6;

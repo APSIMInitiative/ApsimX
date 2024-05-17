@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Presentation;
 using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.Attributes;
 using Models.DCAPST.Environment;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,8 @@ namespace Models.CLEM.Resources
     [Description("RuminantActivityGrow24 (CG - growth parameters)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CG.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CG : CLEMModel, ISubParameters, ICloneable
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
+    public class RuminantParametersGrow24CG: CLEMModel, ISubParameters, ICloneable
     {
         #region Growth CG#
 
@@ -168,15 +170,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.115)]// [breed] - Growth
         public double ProteinGainSlope2_CG15 { get; set; }
-
-        /// <summary>
-        /// Conversion from empty body weigh to live weight
-        /// </summary>
-        [Description("Conversion from empty body weigh to live weight")]
-        [Category("Farm", "Growth")]
-        [Required, GreaterThanValue(1.0)]
-        [System.ComponentModel.DefaultValue(1.09)]
-        public double EBW2LW_CG18 { get; set; }
 
         /// <summary>
         /// Breed growth efficiency scalar

@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [Description("Specify an attribute for the individual with associated value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantActivityControlledMating) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class SetAttributeFromHerd : CLEMModel, ISetAttribute
     {
         private IndividualAttribute lastInstance { get; set; } = null;

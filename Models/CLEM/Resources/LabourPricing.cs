@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Holds all labour price entries that define the pay rate of individuals")]
     [Version(1, 0, 1, "Initial release")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Labour) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class LabourPricing : CLEMModel, IValidatableObject
     {
         /// <summary>

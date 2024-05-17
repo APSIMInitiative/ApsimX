@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a piece of equipment (e.g. Tractor, bore)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Equipment/Equipmenttype.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Equipment) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

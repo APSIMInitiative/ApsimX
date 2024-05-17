@@ -346,10 +346,10 @@ namespace Models.CLEM
                             text = description.ToString();
                         }
                     }
-                    string error = String.Format("Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    string error = $"Invalid parameter value in {modelPath}{Environment.NewLine}PARAMETER: {validateError.MemberNames.FirstOrDefault()}";
                     if (text != "")
-                        error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
-                    error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
+                        error += $"{Environment.NewLine}DESCRIPTION: {text}";
+                    error += $"{Environment.NewLine}PROBLEM: {validateError.ErrorMessage}{Environment.NewLine}";
                     summary.WriteMessage(parentZone, error, MessageType.Error);
                 }
             }

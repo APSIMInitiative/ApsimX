@@ -29,8 +29,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation), typeof(RuminantParametersMethaneCharmley) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation) },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
     public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject
     {
@@ -517,7 +517,7 @@ namespace Models.CLEM.Activities
             }
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
-            ind.Weight.Adjust(energyPredictedBodyMassChange / ind.Parameters.Grow.GrowthEfficiency, energyPredictedBodyMassChange, ind);
+            ind.Weight.Adjust(energyPredictedBodyMassChange, ind);
         }
 
         /// <summary>

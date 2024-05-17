@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Labour) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class LabourAvailabilityList : LabourSpecifications
     {
         /// <summary>

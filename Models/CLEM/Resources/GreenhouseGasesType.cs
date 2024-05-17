@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(GreenhouseGases) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }

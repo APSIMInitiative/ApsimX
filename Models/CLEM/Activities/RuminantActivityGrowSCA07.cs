@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA07.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child, ModelAssociationStyle.Child, ModelAssociationStyle.Child, ModelAssociationStyle.Child },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
     public class RuminantActivityGrowSCA07 : CLEMRuminantActivityBase, IValidatableObject
     {
@@ -250,7 +250,7 @@ namespace Models.CLEM.Activities
             // othewise biases bc of how we est IVs
 
             // update weight, protein and fat
-            ind.Weight.Adjust(dEBWdt * events.Interval / ind.Parameters.Grow24_CG.EBW2LW_CG18, dEBWdt * events.Interval, ind); // kg
+            ind.Weight.Adjust(dEBWdt * events.Interval, ind); // kg
             ind.Energy.Protein.Adjust(dprotdt * events.Interval); //mj
             ind.Energy.Fat.Adjust(dfdt * events.Interval); // mj
     

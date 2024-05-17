@@ -16,6 +16,7 @@ namespace Models.CLEM.Resources
     [Description("Specifies an other animal cohort at the start of the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalsTypeCohort.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(OtherAnimalsType) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class OtherAnimalsTypeCohort : CLEMModel, IFilterable
     {
         /// <summary>

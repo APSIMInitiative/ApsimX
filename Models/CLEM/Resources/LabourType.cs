@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a labour type (i.e. individual or cohort)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(Labour) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
     {
         private double ageInMonths = 0;

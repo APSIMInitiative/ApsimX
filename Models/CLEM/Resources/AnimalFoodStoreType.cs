@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(AnimalFoodStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType
     {
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }

@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing), typeof(GrazeFoodStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.Parent })]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IValidatableObject
     {
         [Link(IsOptional = true)]

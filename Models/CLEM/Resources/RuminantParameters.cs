@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         /// Parameters for the Breed activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersBreed Breeding { get; set; }
+        public RuminantParametersBreeding Breeding { get; set; }
 
         /// <summary>
         /// General parameters defining the RuminantType
@@ -132,30 +132,6 @@ namespace Models.CLEM.Resources
                     property.SetValue(this, subParameterModel);
                 }
             }
-
-            //Breeding = ruminantType.FindChild<RuminantParametersBreed>();
-            //General = ruminantType.FindChild<RuminantParametersGeneral>();
-            //Grazing = ruminantType.FindChild<RuminantParametersGrazing>();
-            //Grow = ruminantType.FindChild<RuminantParametersGrow>();
-            //Grow24 = ruminantType.FindChild<RuminantParametersGrow24>();
-            //Grow24_CACRD = ruminantType.FindChild<RuminantParametersGrow24CACRD>();
-            //Grow24_CD = ruminantType.FindChild<RuminantParametersGrow24CD>();
-            //Grow24_CG = ruminantType.FindChild<RuminantParametersGrow24CG>();
-            //Grow24_CI = ruminantType.FindChild<RuminantParametersGrow24CI>();
-            //Grow24_CKCL = ruminantType.FindChild<RuminantParametersGrow24CKCL>();
-            //Grow24_CM = ruminantType.FindChild<RuminantParametersGrow24CM>();
-            //Grow24_CP = ruminantType.FindChild<RuminantParametersGrow24CP>();
-            //EntericMethaneCharmley = ruminantType.FindChild<RuminantParametersMethaneCharmley>();
-            //Lactation = ruminantType.FindChild<RuminantParametersLactation>();
-            //GrowMortality = ruminantType.FindChild<RuminantParametersGrowMortality>();
-        }
-
-        /// <summary>
-        /// Defult constructor for null initialise
-        /// </summary>
-        public RuminantParameters()
-        {
-
         }
 
         /// <summary>
@@ -190,41 +166,6 @@ namespace Models.CLEM.Resources
                 }
                 modified.Add(property.Name, false);
             }
-
-            //if (createCopy)
-            //{
-            //    if(parent.General is not null)
-            //        General = parent.General.Clone() as RuminantParametersGeneral;
-            //    if (parent.Grow is not null)
-            //        Grow = parent.Grow.Clone() as RuminantParametersGrow;
-            //    if (parent.Grow24 is not null)
-            //        Grow24 = parent.Grow24.Clone() as RuminantParametersGrow24;
-            //    if (parent.Grow24 is not null)
-            //        Grow24 = parent.Grow24.Clone() as RuminantParametersGrow24;
-            //    if (parent.Breeding is not null)
-            //        Breeding = parent.Breeding.Clone() as RuminantParametersBreed;
-            //    if (parent.Lactation is not null)
-            //        Lactation = parent.Lactation.Clone() as RuminantParametersLactation;
-            //    if (parent.EntericMethaneCharmley is not null)
-            //        EntericMethaneCharmley = parent.EntericMethaneCharmley.Clone() as RuminantParametersMethaneCharmley;
-            //    if (parent.GrowMortality is not null)
-            //        GrowMortality = parent.GrowMortality.Clone() as RuminantParametersGrowMortality;
-            //}
-            //else
-            //{
-            //    General = parent.General;
-            //    Grow = parent.Grow;
-            //    Grow24 = parent.Grow24;
-            //    Breeding = parent.Breeding;
-            //    Lactation = parent.Lactation;
-            //    EntericMethaneCharmley = parent.EntericMethaneCharmley;
-            //    GrowMortality = parent.GrowMortality;
-            //}
-
-            //foreach (var item in new string[] { "Details", "General", "Grow", "Grow24",
-            //    "Grow24_CACRD", "Grow24_CD", "Grow24_CG", "Grow24_CI", "Grow24_CKCL", "Grow24_CM", "Grow24_CP", 
-            //    "Breeding", "Lactation", "EntericMethaneCharmley", "GrowMortality" })
-            //    modified.Add(item, false);
         }
 
         /// <summary>
@@ -252,60 +193,6 @@ namespace Models.CLEM.Resources
                 }
                 propertyInfo.SetValue(localProperty, value);
             }
-
-            //if (!modified.GetValueOrDefault(key))
-            //{
-            //    switch (key)
-            //    {
-            //        case "General":
-            //            if (propertyInfo.GetValue(General) != value)
-            //            {
-            //                if (!modified.GetValueOrDefault(key))
-            //                {
-            //                    General = new RuminantParametersGeneral(General);
-            //                    modified[key] = true;
-            //                }
-            //                propertyInfo.SetValue(General, value);
-            //            }
-            //            break;
-            //        case "Growth":
-            //            if (propertyInfo.GetValue(Growth) != value)
-            //            {
-            //                if (!modified.GetValueOrDefault(key))
-            //                {
-            //                    Growth = new RuminantParametersGrowth(Growth);
-            //                    modified[key] = true;
-            //                }
-            //                propertyInfo.SetValue(Growth, value);
-            //            }
-            //            break;
-            //        case "Breeding":
-            //            if (propertyInfo.GetValue(Breeding) != value)
-            //            {
-            //                if (!modified.GetValueOrDefault(key))
-            //                {
-            //                    Breeding = new RuminantParametersBreeding(Breeding);
-            //                    modified[key] = true;
-            //                }
-            //                propertyInfo.SetValue(Breeding, value);
-            //            }
-            //            break;
-            //        case "Lactation":
-            //            if (propertyInfo.GetValue(Lactation) != value)
-            //            {
-            //                if (!modified.GetValueOrDefault(key))
-            //                {
-            //                    Lactation = new RuminantParametersLactation(Lactation);
-            //                    modified[key] = true;
-            //                }
-            //                propertyInfo.SetValue(Lactation, value);
-            //            }
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //    modified[key] = true;
-            //}
         }
 
         /// <summary>
