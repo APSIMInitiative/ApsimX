@@ -8,7 +8,6 @@ Example:
     $ python3 ZMQ-InteractiveVariables.py
 
 Todo:
-    * Unify Field nodes in Apsim and this client.
     * Create a 3D visual.
     * Make the ZMQServer object run as part of its own thread, reading from a
         dedicated queue.
@@ -128,8 +127,9 @@ class FieldNode(object):
     Create a new Field that is linked to its instance in APSIM.
     
     Attributes:
-        ap_id (int): Location within Apsim list.
-        configs (dict):
+        id (int): Location (index) within Apsim list.
+        info (dict): Includes the following keys:
+            { "X", "Y", "Z", "Name" }
         
     """
     def __init__(
@@ -143,11 +143,19 @@ class FieldNode(object):
                 [example_url.com] for supported configurations.
         """
         self.id = None
-        self.configs = configs
+        self.info = configs
         # Aliases.
         self.socket = server.socket
         self.send_command = server.send_command
         self.create()
+
+    def __repr__(self):
+        return "{}: @({},{},{})".format(
+            self.info["Name"],
+            self.info["X"],
+            self.info["Y"],
+            self.info["Z"]
+        )
 
     def digest_configs(
             self,
@@ -163,9 +171,9 @@ class FieldNode(object):
         """Prepare FieldNode configs for creating a new Field in Apsim.
         Returns:
             csv_configs (:obj:`list` of :obj:`str`): List of comma-separated
-                key-value pairs for each configuration.
+                key-value pairs for each configuration provided.
         """
-        return ["{},{}".format(key, val) for key, val in self.configs.items()]
+        return ["{},{}".format(key, val) for key, val in self.info.items()]
 
     def create(self):
         """Create a new field and link with ID reference returned by Apsim."""
@@ -182,9 +190,13 @@ class FieldNode(object):
 
 
 class ApsimController:
-    """Controller for apsim server."""
+    """Controller for apsim server.
+
+    Attributes:
+        fields (:obj:`list` of :obj:`FieldNode`): List of Fields in simulation.
+    """
     
-    def __init__(self, addr="0.0.0.0", port=27746, fields=1):
+    def __init__(self, addr="0.0.0.0", port=27746):
         """Initializes a ZMQ connection to the Apsim synchronizer
        
         Starts the command sequence by checking connect was received and sending
@@ -193,9 +205,8 @@ class ApsimController:
         Args:
             addr (str): Server address
             port (str): Server port number
-            fields (int): Number of fields to instantiate
         """
-        self.fields = fields
+        self.fields = []
         self.server = ZMQServer(addr, port)
         # Aliases.
         self.send_command = self.server.send_command
@@ -216,20 +227,29 @@ class ApsimController:
             pass
         
         # Create all your Fields here.
-        cool_configs = {
-            "Name": "CoolField",
-            "X": "1.0",
-            "Y": "2.0",
-            "Z": "3.0"
-        }
-        fresh_configs = {
-            "Name": "FreshField",
-            "X": "4.0",
-            "Y": "5.0",
-            "Z": "6.0"
-        }
-        CoolField = FieldNode(self.server, cool_configs)
-        FreshField = FieldNode(self.server, fresh_configs)
+        field_configs = [
+            {
+                "Name": "CoolField",
+                "X": "1.0",
+                "Y": "2.0",
+                "Z": "3.0"
+            },
+            {
+                "Name": "FreshField",
+                "X": "4.0",
+                "Y": "5.0",
+                "Z": "6.0"
+            }
+        ]
+        [
+            self.fields.append(
+                FieldNode(
+                    server=self.server,
+                    configs=config
+                )
+            ) for config in field_configs
+        ]
+        [print(field) for field in self.fields]
         # create fields
         #msg = self.send_command("fields", [self.fields], unpack=False)
         # Begin the simulation.
@@ -318,7 +338,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
 
 if __name__ == '__main__':
     # initialize connection
-    apsim = ApsimController(fields=50) 
+    apsim = ApsimController() 
 
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
 
