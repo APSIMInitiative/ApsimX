@@ -10,6 +10,8 @@ Example:
 Todo:
     * Unify Field nodes in Apsim and this client.
     * Create a 3D visual.
+    * Make the ZMQServer object run as part of its own thread, reading from a
+        dedicated queue.
 """
 
 import zmq
@@ -88,16 +90,15 @@ class ZMQServer(object):
         msgpack.packb for serialization.
 
         Args:
-            command: Command string
-            args: List of arguments
-            unpack: Unpack the resulting bytes
-            
+            command (str): Command string
+            args (:obj:`list` of :obj:`str`): List of arguments
+            unpack (bool): Unpack the resulting bytes
+
         Returns:
             Bytes received from the server. If unpack is True, then the data is
             decoded in a python object. Else if unpack is False the raw bytes is
             returned.
         """
-        
         # check for arguments, otherwise just send string
         if args:
             self.socket.send_string(command, flags=zmq.SNDMORE)
@@ -131,7 +132,6 @@ class FieldNode(object):
         configs (dict):
         
     """
-
     def __init__(
             self,
             server,
@@ -149,10 +149,14 @@ class FieldNode(object):
         self.send_command = server.send_command
         self.create()
 
-    def _digest_configs(
+    def digest_configs(
             self,
-            configs: dict
+            fpath: str
         ):
+        """Import configurations from a CSV file.
+        Args:
+            fpath (str): Relative path of file.
+        """
         pass
 
     def _format_configs(self):
@@ -166,48 +170,16 @@ class FieldNode(object):
     def create(self):
         """Create a new field and link with ID reference returned by Apsim."""
         csv_configs = self._format_configs()
-        self.id = self.send()
-
-    def send(
-            self,
-            command : str,
-            args : tuple = None,
-            unpack : bool = True
-        ):
-        """
-        Args:
-            command (str):
-            args (:obj:`list` of :obj:`str`):
-            unpack (bool):
-
-        Returns:
-            ap_id (int): Corresponds to the index of the node in Apsim.
-        """
-        # check for arguments, otherwise just send string
-        if args:
-            self.send_string(command, flags=zmq.SNDMORE)
-            # list of data to send
-            msg = []
-            # loop over them; serialize using msgpack.
-            [msg.append(msgpack.packb(arg)) for arg in args]
-            self.send_multipart(msg)
-        else:
-            self.send_string(command)
-            
-        # get the response
-        recv_bytes = self.socket.recv()
-        # process based on arg
-        if unpack:
-            recv_data = msgpack.unpackb(recv_bytes)
-        else:
-            recv_data = recv_bytes
-
-        # return data
-        return recv_data
+        self.id = self.send_command(
+            command="field",
+            args=csv_configs,
+            unpack=False
+        )
+        print(self.id)
 
 
 class ApsimController:
-    """Controller for apsim server"""
+    """Controller for apsim server."""
     
     def __init__(self, addr="0.0.0.0", port=27746, fields=1):
         """Initializes a ZMQ connection to the Apsim synchronizer
@@ -240,24 +212,21 @@ class ApsimController:
             # TODO error handling
             pass
         
-        msg = self.send_command(
-            "field", [
-                "Name,CoolField",
-                "X,1.0",
-                "Y,2.0",
-                "Z,3.0"
-            ],
-            unpack=False
-        )
-        msg = self.send_command(
-            "field", [
-                "Name,FreshField",
-                "X,4.0",
-                "Y,5.0",
-                "Z,6.0"
-            ],
-            unpack=False
-        )
+        # Create all your Fields here.
+        cool_configs = {
+            "Name": "CoolField",
+            "X": "1.0",
+            "Y": "2.0",
+            "Z": "3.0"
+        }
+        fresh_configs = {
+            "Name": "FreshField",
+            "X": "4.0",
+            "Y": "5.0",
+            "Z": "6.0"
+        }
+        CoolField = FieldNode(self.server, cool_configs)
+        FreshField = FieldNode(self.server, fresh_configs)
         # create fields
         #msg = self.send_command("fields", [self.fields], unpack=False)
         # Begin the simulation.
