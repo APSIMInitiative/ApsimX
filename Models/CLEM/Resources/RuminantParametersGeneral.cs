@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>

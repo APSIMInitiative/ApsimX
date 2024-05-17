@@ -18,7 +18,6 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all graze food store types (pastures) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStore.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(ResourcesHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class GrazeFoodStore : ResourceBaseWithTransactions
     {
         /// <summary>

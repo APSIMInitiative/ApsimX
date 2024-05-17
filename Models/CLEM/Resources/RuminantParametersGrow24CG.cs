@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("RuminantActivityGrow24 (CG - growth parameters)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CG.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrow24CG: CLEMModel, ISubParameters, ICloneable
     {
         #region Growth CG#

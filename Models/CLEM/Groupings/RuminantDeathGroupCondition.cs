@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("Manages the death of specified ruminants based on body condition.")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantDeathGroupCondition.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantDeathGroupCondition : RuminantGroup, IRuminantDeathGroup
+    public class RuminantDeathGroupCondition : RuminantDeathGroup, IRuminantDeathGroup
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -60,7 +60,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public void DetermineDeaths(IEnumerable<Ruminant> individuals)
+        public override void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
             IEnumerable<Ruminant> died = new List<Ruminant>();
             switch (ConditionMetric)

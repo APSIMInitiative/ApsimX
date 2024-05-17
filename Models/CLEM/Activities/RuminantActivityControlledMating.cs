@@ -24,7 +24,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantActivityBreed) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private List<ISetAttribute> attributeList;

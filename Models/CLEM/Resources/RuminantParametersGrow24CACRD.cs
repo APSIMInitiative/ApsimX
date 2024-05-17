@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("RuminantActivityGrow24 (CRD - rumen digestability)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CRD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrow24CACRD : CLEMModel, ISubParameters, ICloneable
     {
         #region Rumen Degradability CRD#

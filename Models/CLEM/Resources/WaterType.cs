@@ -17,7 +17,6 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a water store (e.g. dam, bore, tank)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Water/WaterStoreType.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(WaterStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

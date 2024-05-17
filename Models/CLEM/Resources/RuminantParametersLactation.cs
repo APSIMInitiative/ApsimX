@@ -21,8 +21,6 @@ namespace Models.CLEM.Resources
     [Description("This model provides all parameters specific to RuminantActivityGrow24")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersLactation.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersLactation : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>

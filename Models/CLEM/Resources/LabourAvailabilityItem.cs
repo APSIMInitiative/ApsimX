@@ -19,7 +19,6 @@ namespace Models.CLEM.Resources
     [Description("Set the labour availability of specified individuals with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(LabourAvailabilityList) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class LabourAvailabilityItem : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>

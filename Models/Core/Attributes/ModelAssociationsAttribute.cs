@@ -27,10 +27,6 @@ namespace Models.Core.Attributes
         /// Model must be a descendent of all ruminant types
         /// </summary>
         DescendentOfRuminantType,
-        /// <summary>
-        /// the parent model must be the specified type
-        /// </summary>
-        Parent,
     }
 
 

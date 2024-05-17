@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder), typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral), typeof(RuminantHerd) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.Parent })]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder), typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link(IsOptional = true)]

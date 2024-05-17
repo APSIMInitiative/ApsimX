@@ -24,9 +24,14 @@ namespace Models.CLEM.Activities
     [Description("Determines death of ruminants.")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantDeath.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantActivityDeath : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityDeath : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         private IEnumerable<IRuminantDeathGroup> filterGroups;
+
+        /// <summary>
+        /// List of current individuals to consider for death
+        /// </summary>
+        public List<Ruminant> CurrentIndividuals { get; set; }
 
         /// <summary>
         /// Constructor
@@ -34,6 +39,23 @@ namespace Models.CLEM.Activities
         public RuminantActivityDeath()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "RuminantDeathGroup":
+                case "RuminantDeathGroupCondition":
+                case "RuminantDeathGroupRate":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() 
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -56,14 +78,15 @@ namespace Models.CLEM.Activities
             if (!TimingOK) return;
             Status = ActivityStatus.NotNeeded;
 
-            List<Ruminant> individuals = CurrentHerd().ToList();
+            CurrentIndividuals = CurrentHerd().ToList();
 
             foreach (var group in filterGroups)
             {
-                IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(individuals); 
+                IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(CurrentIndividuals); 
                 group.DetermineDeaths(individualsToCheck);
-                foreach (var individual in individualsToCheck)
-                    individuals.Remove(individual);
+                CurrentIndividuals.RemoveAll(a => individualsToCheck.Contains(a));
+                //foreach (var individual in individualsToCheck)
+                //    CurrentIndividuals.Remove(individual);
             }
 
             // remove individuals that died from the herd.
@@ -75,7 +98,7 @@ namespace Models.CLEM.Activities
             }
 
             // if any individuals not checked
-            if (individuals.Any())
+            if (CurrentIndividuals.Any())
             {
                 string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);

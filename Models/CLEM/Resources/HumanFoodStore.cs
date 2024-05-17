@@ -14,7 +14,6 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all human food store types in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStore.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(ResourcesHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class HumanFoodStore : ResourceBaseWithTransactions
     {
 

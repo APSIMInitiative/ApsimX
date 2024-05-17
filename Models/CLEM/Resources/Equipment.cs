@@ -14,7 +14,6 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all equipment store types (e.g. tractors, bores, harvester) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Equipment/Equipment.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(ResourcesHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class Equipment : ResourceBaseWithTransactions
     {
 

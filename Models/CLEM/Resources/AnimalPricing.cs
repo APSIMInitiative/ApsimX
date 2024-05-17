@@ -21,7 +21,6 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 3, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Resources/Ruminants/AnimalPricing.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantType) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class AnimalPricing : CLEMModel, IValidatableObject
     {
         /// <summary>

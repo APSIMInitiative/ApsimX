@@ -135,6 +135,14 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Default constructor to create empty instance of RuminantParameters
+        /// </summary>
+        public RuminantParameters()
+        {
+            
+        }
+
+        /// <summary>
         /// Constructor for shallow reference based copy or full deep copy from parent details
         /// Non modifed parameter sets will be shared across the entire herd of individuals
         /// </summary>

@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("RuminantActivityGrow24 (CI - intake parameters)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CI.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrow24CI : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>

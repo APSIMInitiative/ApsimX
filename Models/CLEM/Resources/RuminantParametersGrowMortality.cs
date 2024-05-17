@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("This model provides parameters for the original model ruminant mortality")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowMortality.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersGrowMortality : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>

@@ -19,7 +19,6 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an other animal type (e.g. chickens)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(OtherAnimals) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

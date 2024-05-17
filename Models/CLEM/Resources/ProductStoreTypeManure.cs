@@ -21,7 +21,6 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(ProductStore) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link(IsOptional = true)]

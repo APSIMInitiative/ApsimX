@@ -20,8 +20,8 @@ namespace Models.CLEM.Resources
     [Description("This model provides all parameters specific to RuminantActivityGrow24")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder), typeof(RuminantParametersGrow24CACRD), typeof(RuminantParametersGrow24CD), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL), typeof(RuminantParametersGrow24CM), typeof(RuminantParametersGrow24CP) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child },
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24CACRD), typeof(RuminantParametersGrow24CD), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL), typeof(RuminantParametersGrow24CM), typeof(RuminantParametersGrow24CP) },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child },
         SingleInstance = true)]
     public class RuminantParametersGrow24 : CLEMModel, ISubParameters, ICloneable
     {

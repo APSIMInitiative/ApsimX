@@ -310,6 +310,11 @@ namespace Models.CLEM.Activities
                 {
                     switch (componentType.Name)
                     {
+                        case "RuminantDeathGroup":
+                        case "RuminantDeathGroupRate":
+                        case "RuminantDeathGroupCondition":
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantDeathGroup>());
+                            break;
                         case "RuminantGroup":
                         case "RuminantGroupLinked":
                             companionModelsPresent.Add("RuminantGroup", LocateCompanionModels<RuminantGroup>());

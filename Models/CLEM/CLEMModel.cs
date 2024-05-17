@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 //using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
@@ -8,6 +10,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -133,12 +136,8 @@ namespace Models.CLEM
                             foreach (var rumType in rumTypes)
                             {
                                 if (rumType.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
-                                    errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [r={rumType.Name}] as required by [x={model.FullPath}]");
+                                    errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [r={rumType.Name}] as required by [x={model.FullPath}]");
                             }
-                            break;
-                        case ModelAssociationStyle.Parent:
-                            if (model.Parent.GetType() != requiredAttribte.AssociatedModels[i])
-                                errors.Add($"Only a component of type [x={requiredAttribte.AssociatedModels[i].Name}] is permitted as a parent of [x={model.FullPath}]");
                             break;
                     }
                 }
@@ -157,6 +156,18 @@ namespace Models.CLEM
                         summary.WriteMessage(model.FindAncestor<Zone>(), error, MessageType.Error);
                 }
             }
+            IEnumerable<ValidParentAttribute> validParents = model.GetType().GetCustomAttributes<ValidParentAttribute>();
+            if (validParents.Any())
+            {
+                if(!validParents.Where(a => a.ParentType == (model as IModel).Parent.GetType() | (a.ParentType.IsInterface && model.Parent.GetType().GetInterfaces().Contains(a.ParentType))).Any())
+                {
+                    Summary summary = model.FindAncestor<Simulation>().FindChild<Summary>();
+                    if(validParents.Count() > 1)
+                        summary.WriteMessage(model.FindAncestor<Zone>(), $"Only a component of type {string.Join(',', validParents.Select(a => $"[{a.ParentType.Name}]"))} is permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                    else
+                        summary.WriteMessage(model.FindAncestor<Zone>(), $"Only components of types {string.Join("", validParents.Select(a => $"[{a.ParentType.Name}]"))} are permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                }
+            }   
         }
 
         /// <summary>

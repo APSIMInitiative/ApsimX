@@ -21,7 +21,6 @@ namespace Models.CLEM.Resources
     [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersBreed.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersBreeding: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>

@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("Manages the death of specified ruminants based on their condition.")]
     [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantDeathGroup : CLEMRuminantActivityBase, IRuminantDeathGroup, IHandlesActivityCompanionModels, IValidatableObject
+    public class RuminantDeathGroup : RuminantGroup, IRuminantDeathGroup, IValidatableObject
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -39,10 +39,10 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public void DetermineDeaths(IEnumerable<Ruminant> individuals)
+        public virtual void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
             // order descending to ensure mothers' deaths are determined before juveniles.
-            foreach (var ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm))
+            foreach (var ind in individuals)
             {
                 double mortalityRate;
                 if (!ind.Weaned)
@@ -79,7 +79,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         /// <param name="validationContext"></param>
         /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 

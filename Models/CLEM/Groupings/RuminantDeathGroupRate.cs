@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("Manages the death of specified ruminants based on annual mortality rate.")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantDeathGroupRate.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantDeathGroupRate : RuminantGroup, IRuminantDeathGroup, IValidatableObject
+    public class RuminantDeathGroupRate : RuminantDeathGroup, IRuminantDeathGroup, IValidatableObject
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -64,7 +64,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public void DetermineDeaths(IEnumerable<Ruminant> individuals)
+        public override void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
             // convert mortality from annual to time-step.
             double mortalityRate = Rate * events.Interval;
@@ -73,6 +73,7 @@ namespace Models.CLEM.Groupings
             {
                 if (Style == ParameterStyle.GetFromParameters)
                     mortalityRate = ind.Parameters.FindBaseMortalityRate  * events.Interval; 
+                
                 //ToDo: fix so this is calculated to daily once elsewhere.
                 //ToDo: check CD1 is daily rate
 
@@ -90,7 +91,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         /// <param name="validationContext"></param>
         /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 

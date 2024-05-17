@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [Description("This model provides all general parameters for the Enteric Methane - Charmely")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersMethaneCharmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Parent })]
     public class RuminantParametersMethaneCharmley: CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
