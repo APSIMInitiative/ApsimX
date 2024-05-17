@@ -249,7 +249,13 @@ class ApsimController:
                 "X": "7.0",
                 "Y": "8.0",
                 "Z": "9.0"
-            }
+            },
+            {
+                "Name": "FunkyField",
+                "X": "4.0",
+                "Y": "5.0",
+                "Z": "3.0"
+            },
         ]
         [
             self.fields.append(
