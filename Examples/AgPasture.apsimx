@@ -1806,22 +1806,36 @@
                 "",
                 "        [Description(\"Species to kill/end in the pasture. Comma delimited, case matters, can be blank\")]",
                 "        public string[] TheSpecies2Kill { get; set; }        ",
-                "        ",
-                "        [Separator(\"Cultivation of the field\")]",
                 "",
-                "        [Description(\"Days from killing pasture to cultivation. Can be 0 for the same day\")]",
-                "        public int Days2Cultivation { get; set; }",
+                "",
+                "        [Separator(\"First cultivation of the field\")]",
+                "",
+                "        [Description(\"Date for first cultivation\")]",
+                "        public string DateCultivation1 { get; set; }",
                 "",
                 "        [Description(\"Fraction of residues to incorporate\")]",
-                "        public double FracResidues { get; set; }",
+                "        public double FracResidues1 { get; set; }",
                 "",
                 "        [Description(\"Depth of cultivation (mm)\")]",
-                "        public double CultivationDepth { get; set; }",
+                "        public double CultivationDepth1 { get; set; }",
+                "",
+                "",
+                "        [Separator(\"Second cultivation of the field\")]",
+                "",
+                "        [Description(\"Date for second cultivation\")]",
+                "        public string DateCultivation2 { get; set; }",
+                "",
+                "        [Description(\"Fraction of residues to incorporate\")]",
+                "        public double FracResidues2 { get; set; }",
+                "",
+                "        [Description(\"Depth of cultivation (mm)\")]",
+                "        public double CultivationDepth2 { get; set; }",
+                "",
                 "",
                 "        [Separator(\"Resowing of pasture\")]",
                 "",
-                "        [Description(\"Days from cultivation to resowing. Can be 0 for the same day\")]",
-                "        public int Days2Resowing { get; set; }",
+                "        [Description(\"Days from second cultivation to resowing\")]",
+                "        public string DateResow { get; set; }",
                 "",
                 "        [Description(\"Species to resow. Comma delimited, case matters\")]",
                 "        public string[] TheSpecies2Sow { get; set; }        ",
@@ -1831,18 +1845,21 @@
                 "        [EventSubscribe(\"DoManagement\")]",
                 "        private void OnDoManagement(object sender, EventArgs e)",
                 "        {",
+                "\t\t\t// kill the pasture",
                 "            if (DateUtilities.WithinDates(Date2Kill, clock.Today, Date2Kill))",
                 "\t\t\t\tforeach (var plant in plants)",
                 "              \t\tif (TheSpecies2Kill != null && TheSpecies2Kill.Length > 0 && TheSpecies2Kill.Contains(plant.Name))",
-                "              \t\t{",
-                "                \t\t//plant.Harvest();",
                 "                \t\tplant.EndCrop();",
-                "                \t}",
                 "",
-                "            if (DateUtilities.WithinDates(Date2Kill, clock.Today.AddDays(-1 * Days2Cultivation), Date2Kill))",
-                "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues, CultivationDepth);",
+                "\t\t\t// first cultivation",
+                "            if (DateUtilities.WithinDates(DateCultivation1, clock.Today, DateCultivation1))",
+                "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues1, CultivationDepth1);",
                 "",
-                "            if (DateUtilities.WithinDates(Date2Kill, clock.Today.AddDays(-1 * (Days2Cultivation + Days2Resowing)), Date2Kill))",
+                "\t\t\t// second cultivation",
+                "            if (DateUtilities.WithinDates(DateCultivation2, clock.Today, DateCultivation2))",
+                "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues2, CultivationDepth2);",
+                "",
+                "            if (DateUtilities.WithinDates(DateResow, clock.Today, DateResow))",
                 "\t\t\t\tforeach (var plant in plants)",
                 "              \t\tif (TheSpecies2Sow != null && TheSpecies2Sow.Length > 0 && TheSpecies2Sow.Contains(plant.Name))",
                 "                \t\tplant.Sow(cultivar: plant.Name, population: 100.0, depth: 5.0, rowSpacing: 75.0);",
@@ -1858,31 +1875,43 @@
               "Parameters": [
                 {
                   "Key": "Date2Kill",
-                  "Value": "5/10/1980"
+                  "Value": "5-Oct-1980"
                 },
                 {
                   "Key": "TheSpecies2Kill",
                   "Value": "AGPRyegrass, AGPWhiteClover"
                 },
                 {
-                  "Key": "Days2Cultivation",
-                  "Value": "2"
-                },
-                {
-                  "Key": "FracResidues",
-                  "Value": "0.8"
-                },
-                {
-                  "Key": "CultivationDepth",
-                  "Value": "100"
-                },
-                {
-                  "Key": "Days2Resowing",
-                  "Value": "3"
-                },
-                {
                   "Key": "TheSpecies2Sow",
                   "Value": "AGPRyegrass, AGPWhiteClover"
+                },
+                {
+                  "Key": "FracResidues2",
+                  "Value": "0.5"
+                },
+                {
+                  "Key": "CultivationDepth2",
+                  "Value": "10"
+                },
+                {
+                  "Key": "DateCultivation1",
+                  "Value": "8-Oct-1980"
+                },
+                {
+                  "Key": "FracResidues1",
+                  "Value": "0.7"
+                },
+                {
+                  "Key": "CultivationDepth1",
+                  "Value": "20"
+                },
+                {
+                  "Key": "DateCultivation2",
+                  "Value": "15-Oct-1980"
+                },
+                {
+                  "Key": "DateResow",
+                  "Value": "17-Oct-1980"
                 }
               ],
               "Name": "RenewPasture",
