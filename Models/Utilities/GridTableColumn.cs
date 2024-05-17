@@ -202,10 +202,10 @@ namespace Models.Utilities
                                     string[] modifiedMetadata = SoilUtilities.DetermineMetadata(original, originalMetadata, modified, null);
                                     metadata.Value = modifiedMetadata;
                                 }
-                                    property.Value = modified;
+                                property.Value = modified;
                             }
                             else if (property.DataType == typeof(DateTime[]))
-                                property.Value = DataTableUtilities.GetColumnAsDates(data, Name); //todo: add numRows/startRow option for dates
+                                property.Value = DataTableUtilities.GetColumnAsDates(data, Name, numRows-startRow, startRow);
                         }
                     }
                 }

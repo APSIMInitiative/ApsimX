@@ -70,6 +70,11 @@ namespace UserInterface.Interfaces
         string[] Lines { get; set; }
 
         /// <summary>
+        /// Gets or Sets the script as read only (editable)
+        /// </summary>
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
         /// Controls syntax highlighting mode.
         /// </summary>
         EditorType Mode { get; set; }
