@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace UserInterface.Views
 {
@@ -211,10 +212,21 @@ namespace UserInterface.Views
             if (sheet.CellEditor != null)
                 if (sheet.CellEditor.IsEditing)
                     sheet.CellEditor.EndEdit();
-
+                    
+            int i = 0;
+            int length = (selectedRowIndexBottom - selectedRowIndex) * (selectedColumnIndexRight - selectedColumnIndex);
+            int[] rowIndices = new int[length];
+            int[] columnIndices = new int[length];
+            string[] values = new string[length];
             for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
-                    sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
+                {
+                    rowIndices[i] = rowIndex;
+                    columnIndices[i] = columnIndex;
+                    values[i] = "";
+                    i++;
+                }
+            sheet.DataProvider.SetCellContents(columnIndices, rowIndices, values);
         }
 
         /// <summary>Select all cells</summary>

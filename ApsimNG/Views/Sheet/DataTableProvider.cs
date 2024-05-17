@@ -20,9 +20,11 @@ namespace UserInterface.Views
 
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="sender">The sender of the event.</param>
-        /// <param name="colIndex">The index of the column that was changed.</param>
-        /// <param name="rowIndex">The index of the row that was changed.</param>
-        public delegate void CellChangedDelegate(ISheetDataProvider sender, int colIndex, int rowIndex);
+        /// <param name="colIndices">The indices of the columns that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows that were changed.</param>
+        /// <param name="values">The values of the cells changed.</param>
+
+        public delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
@@ -75,27 +77,31 @@ namespace UserInterface.Views
         }
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        /// <param name="rowIndex">Row index of cell.</param>
-        /// <param name="value">The value.</param>
-        public void SetCellContents(int colIndex, int rowIndex, string value)
+        /// <param name="colIndices">Column indices.</param>
+        /// <param name="rowIndices">Row indices.</param>
+        /// <param name="values">The values.</param>
+        public void SetCellContents(int[] colIndices, int[] rowIndices, string[] values)
         {
-            var cellState = GetCellState(colIndex, rowIndex);
-            if (cellState == SheetDataProviderCellState.Normal || cellState == SheetDataProviderCellState.Calculated)
+            int cellCount = colIndices.Length * rowIndices.Length;
+            for(int i = 0 ; i < cellCount; i++ )
             {
-                int i = rowIndex - numHeadingRows;
-                if (i >= 0)
+                var cellState = GetCellState(colIndices[i], rowIndices[i]);
+                if (cellState == SheetDataProviderCellState.Normal || cellState == SheetDataProviderCellState.Calculated)
                 {
-                    while (i >= Data.Rows.Count)
-                        Data.Rows.Add(Data.NewRow());
-
-                    var existingValue = Data.Rows[i][colIndex];
-                    if (existingValue != null && value == null ||
-                        existingValue == null && value != null ||
-                        existingValue.ToString() != value.ToString())
+                    int j = rowIndices[i] - numHeadingRows;
+                    if (j >= 0)
                     {
-                        Data.Rows[i][colIndex] = value;
-                        CellChanged?.Invoke(this, colIndex, rowIndex);
+                        while (i >= Data.Rows.Count)
+                            Data.Rows.Add(Data.NewRow());
+
+                        var existingValue = Data.Rows[i][colIndices[i]];
+                        if (existingValue != null && values[i] == null ||
+                            existingValue == null && values[i] != null ||
+                            existingValue.ToString() != values[i].ToString())
+                        {
+                            Data.Rows[i][colIndices[i]] = values[i];
+                            CellChanged?.Invoke(this, colIndices, rowIndices, values);
+                        }
                     }
                 }
             }
