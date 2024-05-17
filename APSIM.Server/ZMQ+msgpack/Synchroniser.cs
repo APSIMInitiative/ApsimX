@@ -67,106 +67,116 @@ namespace Models
                 if (msg.FrameCount <= 0) { continue; }
 
                 var command = msg[0].ConvertToString();
-                if (command == "resume")
+                string simVarName;
+                object simVarValue;
+                switch (command)
                 {
-                    moreToDo = false;
+                    case "resume":
+                        moreToDo = false;
+                        break;
+                    case "do":
+                        if (msg.FrameCount >= 2)
+                            {
+                                onDoCommand(msg);
+                                connection.SendFrame("ok");
+                            }
+                        break;
+                    case "set":
+                        // set an apsim variable. 
+                        //  arg 1 is the variable path (eg "[Nutrient].NO3.kgha"), 
+                        //  arg 2 is the packed object                
+                        simVarName = MessagePackSerializer.Deserialize<string>(msg[1].Buffer);
 
-                }
-                else if (command == "do" && msg.FrameCount >= 2)
-                {
-                    onDoCommand(msg);
-                    connection.SendFrame("ok");
+                        // See what type the apsim variable is
+                        var myType = simulation.Get(simVarName).GetType();
+                        //Console.WriteLine("Got set {0}, my type is {1}", simVarName, myType);
 
-                }
-                else if (command == "set" && msg.FrameCount == 3)
-                {
-                    // set an apsim variable. 
-                    //  arg 1 is the variable path (eg "[Nutrient].NO3.kgha"), 
-                    //  arg 2 is the packed object                
-                    string variableName = MessagePackSerializer.Deserialize<string>(msg[1].Buffer);
-
-                    // See what type the apsim variable is
-                    var myType = simulation.Get(variableName).GetType();
-                    //Console.WriteLine("Got set {0}, my type is {1}", variableName, myType);
-
-                    object value = MessagePackSerializer.Deserialize<object>(msg[2].Buffer);
-                    //Console.WriteLine("Got set {0} of incoming type {1}", variableName, value.GetType());
-                    if (value.GetType().IsArray != myType.IsArray)
-                        throw new Exception("Array/scalar mismatch for " + variableName);
-
-                    if (myType.IsArray)
-                    {
-                        Type myElementType = myType.GetElementType();
-                        Object[] values = (value as object[]);
-                        if (isNumeric(myElementType))
+                        simVarValue = MessagePackSerializer.Deserialize<object>(msg[2].Buffer);
+                        //Console.WriteLine("Got set {0} of incoming type {1}", simVarName, simVarValue.GetType());
+                        if (simVarValue.GetType().IsArray != myType.IsArray)
                         {
-                            var myValues = Array.ConvertAll(values, (e) => (double)e);
-                            simulation.Set(variableName, myValues);
+                            throw new Exception("Array/scalar mismatch for " + simVarName);
                         }
-                        else if (isInteger(myElementType))
+                        if (myType.IsArray)
                         {
-                            var myValues = Array.ConvertAll(values, (e) => (int)e);
-                            simulation.Set(variableName, myValues);
-                        }
-                        else if (isString(myElementType))
-                        {
-                            var myValues = Array.ConvertAll(values, (e) => (string)e);
-                            simulation.Set(variableName, myValues);
+                            Type myElementType = myType.GetElementType();
+                            Object[] simVarValues = (simVarValue as object[]);
+                            if (isNumeric(myElementType))
+                            {
+                                var myValues = Array.ConvertAll(simVarValues, (e) => (double)e);
+                                simulation.Set(simVarName, myValues);
+                            }
+                            else if (isInteger(myElementType))
+                            {
+                                var myValues = Array.ConvertAll(simVarValues, (e) => (int)e);
+                                simulation.Set(simVarName, myValues);
+                            }
+                            else if (isString(myElementType))
+                            {
+                                var myValues = Array.ConvertAll(simVarValues, (e) => (string)e);
+                                simulation.Set(simVarName, myValues);
+                            }
+                            else
+                            {
+                                throw new Exception("Don't know what to do setting a " + myElementType + " variable");
+                            }
+
+                            //Type myElementType = myType.GetElementType();
+                            //var simVarValues = Array.ConvertAll
+                            //(
+                            //  (object[])simVarValue, (e) => Convert.ChangeType(e, myElementType)
+                            //) as System.Array;
+                            //Console.WriteLine("Doing set {0} of type {1} ({2}) = ", simVarName, 
+                            //                  simVarValues.GetType(), simVarValues.GetType().GetElementType(),  
+                            //                  simVarValues.GetValue(0).ToString());
+                            //simulation.Set(simVarName, simVarValues);
                         }
                         else
                         {
-                            throw new Exception("Don't know what to do setting a " + myElementType + " variable");
+                            simulation.Set(simVarName, Convert.ChangeType(simVarValue, myType));
                         }
-
-                        //Type myElementType = myType.GetElementType();
-                        //var values = Array.ConvertAll((object[])value, (e) => Convert.ChangeType(e, myElementType)) as System.Array;
-                        //Console.WriteLine("Doing set {0} of type {1} ({2}) = ", variableName, 
-                        //                  values.GetType(), values.GetType().GetElementType(),  
-                        //                  values.GetValue(0).ToString());
-                        //simulation.Set(variableName, values);
-                    }
-                    else
-                    {
-                        simulation.Set(variableName, Convert.ChangeType(value, myType));
-                    }
-                    connection.SendFrame("ok");
-
-                }
-                else if (command == "get" && msg.FrameCount == 2)
-                {
-                    string variableName = MessagePackSerializer.Deserialize<string>(msg[1].Buffer);
-                    object value = simulation.Get(variableName);
-                    if (value is IFunction function)
-                        value = function.Value();
-                    else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
-                    {
-                        try
+                        connection.SendFrame("ok");
+                        break;
+                    case "get":
+                        if (msg.FrameCount == 2)
                         {
-                            value = ReflectionUtilities.Clone(value);
+                            simVarName = MessagePackSerializer.Deserialize<string>(msg[1].Buffer);
+                            simVarValue = simulation.Get(simVarName);
+                            if (simVarValue is IFunction function)
+                                simVarValue = function.Value();
+                            else if (simVarValue != null && (simVarValue.GetType().IsArray || simVarValue.GetType().IsClass))
+                            {
+                                try
+                                {
+                                    simVarValue = ReflectionUtilities.Clone(simVarValue);
+                                }
+                                catch (Exception err)
+                                {
+                                    throw new Exception
+                                        (
+                                         $@"Cannot report variable {simVarName}:
+                                            Variable is a non-reportable type:
+                                            {simVarValue?.GetType()?.Name}.", err
+                                        );
+                                }
+                            }
+                            //Console.WriteLine("Got get '{0}' of type '{1}'", simVarName, simVarValue?.GetType()); 
+                            byte[] bytes;
+                            if (simVarValue != null)
+                            {
+                                bytes = MessagePackSerializer.Serialize(simVarValue);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Sending NA");
+                                bytes = MessagePackSerializer.Serialize("NA"); // fixme. Probably a better way to do this
+                            }
+                            connection.SendFrame(bytes);
                         }
-                        catch (Exception err)
-                        {
-                            throw new Exception($"Cannot report variable \"{variableName}\": Variable is a non-reportable type: \"{value?.GetType()?.Name}\".", err);
-                        }
-                    }
-                    //Console.WriteLine("Got get '{0}' of type '{1}'", variableName, value?.GetType()); 
-
-                    byte[] bytes;
-                    if (value != null)
-                    {
-                        bytes = MessagePackSerializer.Serialize(value);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Sending NA");
-                        bytes = MessagePackSerializer.Serialize("NA"); // fixme. Probably a better way to do this
-                    }
-
-                    connection.SendFrame(bytes);
-                }
-                else
-                {
-                    throw new Exception("Expected resume/get/set, not '" + command + "'");
+                        break;
+                    default:
+                        throw new Exception("Expected resume/get/set, not '" + command + "'");
+                        break;
                 }
             }
         }
@@ -197,7 +207,7 @@ namespace Models
                     else if (vname == "field")
                     {
                         var irrigation_idx = MessagePackSerializer.Deserialize<int>(msg[i + 1].Buffer);
-                        if (irrigation_idx > IrrigationList.Count())
+                        if (irrigation_idx >= IrrigationList.Count())
                         {
                             throw new Exception($"Field index is out of range. Idx: {irrigation_idx}");
                         }

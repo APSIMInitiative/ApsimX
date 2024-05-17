@@ -42,6 +42,10 @@ namespace APSIM.ZMQServer
 
         private RequestSocket connection = null;
 
+        public interface IClientMsg
+        {
+            
+        }
         public ApsimEncapsulator(GlobalServerOptions options)
         {
             // read from file
@@ -73,26 +77,94 @@ namespace APSIM.ZMQServer
             // TODO check for null return
 
             // send string indicating we are in the setup phase
+            // TODO(nubby): redefine interface to allow for more customizeable Field creation.
             connection.SendFrame("setup");
-            var setup_msg = connection.ReceiveMultipartMessage();
-            string command = setup_msg[0].ConvertToString();
-            if (command == "fields")
+            var next_msg = connection.ReceiveMultipartMessage();
+            // Awaits the command "energize" to start the simulation.
+            string command = next_msg[0].ConvertToString();
+            int fieldNum = 0;
+            while (command != "energize")
             {
-                int num_fields = MessagePackSerializer.Deserialize<int>(setup_msg[1].Buffer);
-                for (int i = 0; i < num_fields; i++)
-                { 
-                    Zone clone = Apsim.Clone<Zone>(template_field);
-                    clone.Name = $"Field{i}";
-                    // add to simulation tree
-                    sim_root.Children.Add(clone);
-                    // register irrigator with synchroniser
-                    Irrigation irrigation = clone.FindChild<Irrigation>();
-                    synchroniser.IrrigationList.Add(irrigation);
+                switch (command)
+                {
+                    case "fields":
+                        int num_fields = MessagePackSerializer.Deserialize<int>(next_msg[1].Buffer);
+                        for (int i = 0; i < num_fields; i++)
+                        { 
+                            Zone clone = Apsim.Clone<Zone>(template_field);
+                            clone.Name = $"Field{fieldNum}";
+                            // add to simulation tree
+                            sim_root.Children.Add(clone);
+                            // register irrigator with synchroniser
+                            Irrigation irrigation = clone.FindChild<Irrigation>();
+                            synchroniser.IrrigationList.Add(irrigation);
+                            fieldNum++;
+                        }
+                        break;
+                    case "field":
+                        // TODO(nubby):
+                        //  3. translate K-V pairs into Field params.
+                        Zone newField = Apsim.Clone<Zone>(template_field);
+                        newField.Name = $"Field{fieldNum}";
+                        Dictionary<string, dynamic> fieldConfigs = new Dictionary<string, dynamic>();
+                        foreach (var arg in next_msg.Skip(1))
+                        {
+                            // TODO(nubby): Error handling.
+                            string [] kv = MessagePackSerializer.Deserialize<dynamic>(arg.Buffer).Split(',');
+                            try
+                            {
+                                fieldConfigs.Add(kv[0], kv[1]);
+                            }
+                            catch (ArgumentException)
+                            {
+                                Console.WriteLine(
+                                    $"Key {kv[0]} already configured; please only configure each Field param once."
+                                );
+                            }
+                        };
+                        foreach (string key in fieldConfigs.Keys)
+                        {
+                            switch (key)
+                            {
+                                case "Name":
+                                    newField.Name = fieldConfigs[key];
+                                    break;
+                                case "X":
+                                    newField.X = Convert.ToDouble(fieldConfigs[key]);
+                                    break;
+                                case "Y":
+                                    newField.Y = Convert.ToDouble(fieldConfigs[key]);
+                                    break;
+                                case "Z":
+                                    newField.Z = Convert.ToDouble(fieldConfigs[key]);
+                                    break;
+                            }
+                        }
+                        // add to simulation tree
+                        sim_root.Children.Add(newField);
+                        // register irrigator with synchroniser
+                        Irrigation irrigationNew = newField.FindChild<Irrigation>();
+                        synchroniser.IrrigationList.Add(irrigationNew);
+                        Console.WriteLine($"Added {newField.Name} to simulation.");
+                        // Return the index of the newly-created Field to the Client.
+                        byte[] bFieldNum = BitConverter.GetBytes(fieldNum);
+                        if (BitConverter.IsLittleEndian)    // (for portability.)
+                        {
+                            Array.Reverse(bFieldNum);
+                        }
+                        connection.SendFrame(bFieldNum);
+                        fieldNum++;
+                        break;
+                    case "energize":
+                        Console.WriteLine("Setup complete; beginning simulation...");
+                        connection.SendFrame("ready");
+                        break;
+                    default:
+                        Console.WriteLine("Unknown setup command {0}", command);
+                        break;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Unknown setup command {0}", command);
+                next_msg = connection.ReceiveMultipartMessage();
+                command = next_msg[0].ConvertToString();
             }
 
             // close socket
