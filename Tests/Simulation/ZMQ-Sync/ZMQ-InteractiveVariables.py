@@ -142,7 +142,7 @@ class FieldNode(object):
             configs (:obj: `dict`, optional): Pre-formatted field configs; see
                 [example_url.com] for supported configurations.
         """
-        self.ap_id = None
+        self.id = None
         self.configs = configs
         # Aliases.
         self.socket = server.socket
@@ -170,12 +170,15 @@ class FieldNode(object):
     def create(self):
         """Create a new field and link with ID reference returned by Apsim."""
         csv_configs = self._format_configs()
-        self.id = self.send_command(
-            command="field",
-            args=csv_configs,
-            unpack=False
+        self.id = int.from_bytes(
+            self.send_command(
+                command="field",
+                args=csv_configs,
+                unpack=False
+            ),
+            "big",
+            signed=False
         )
-        print(self.id)
 
 
 class ApsimController:

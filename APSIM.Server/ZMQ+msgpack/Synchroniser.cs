@@ -215,7 +215,6 @@ namespace Models
                     }
                 }
 
-                Console.WriteLine(irig_data);
                 // sanity check irrigation amount
                 if (irig_data.IrrigationAmount > 0)
                 {

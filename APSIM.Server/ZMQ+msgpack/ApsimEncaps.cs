@@ -85,7 +85,6 @@ namespace APSIM.ZMQServer
             int fieldNum = 0;
             while (command != "energize")
             {
-                Console.WriteLine(command);
                 switch (command)
                 {
                     case "fields":
@@ -147,6 +146,13 @@ namespace APSIM.ZMQServer
                         Irrigation irrigationNew = newField.FindChild<Irrigation>();
                         synchroniser.IrrigationList.Add(irrigationNew);
                         Console.WriteLine($"Added {newField.Name} to simulation.");
+                        // Return the index of the newly-created Field to the Client.
+                        byte[] bFieldNum = BitConverter.GetBytes(fieldNum);
+                        if (BitConverter.IsLittleEndian)    // (for portability.)
+                        {
+                            Array.Reverse(bFieldNum);
+                        }
+                        connection.SendFrame(bFieldNum);
                         fieldNum++;
                         break;
                     case "energize":
@@ -157,7 +163,6 @@ namespace APSIM.ZMQServer
                         Console.WriteLine("Unknown setup command {0}", command);
                         break;
                 }
-                connection.SendFrame("ack");
                 next_msg = connection.ReceiveMultipartMessage();
                 command = next_msg[0].ConvertToString();
             }
