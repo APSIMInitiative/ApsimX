@@ -18,6 +18,7 @@ import msgpack
 import time
 
 import matplotlib.pyplot as plt
+import numpy as np
     
 import pdb
 
@@ -144,6 +145,8 @@ class FieldNode(object):
         """
         self.id = None
         self.info = configs
+        self.coords = [configs["X"], configs["Y"], configs["Z"]]
+        self.name = configs["Name"]
         # Aliases.
         self.socket = server.socket
         self.send_command = server.send_command
@@ -156,6 +159,7 @@ class FieldNode(object):
             self.info["Y"],
             self.info["Z"]
         )
+
 
     def digest_configs(
             self,
@@ -239,6 +243,12 @@ class ApsimController:
                 "X": "4.0",
                 "Y": "5.0",
                 "Z": "6.0"
+            },
+            {
+                "Name": "DopeField",
+                "X": "7.0",
+                "Y": "8.0",
+                "Z": "9.0"
             }
         ]
         [
@@ -336,12 +346,43 @@ def poll_zmq(controller : ApsimController) -> tuple:
     return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
+def plot_oasis(controller: ApsimController):
+    """Generate a 3D plot representation of an OASIS simulation.
+
+    Args:
+        controller (:obj:`ApsimController`)
+    """
+    ax = plt.figure().add_subplot(projection="3d")
+    x, y, z, labels = [], [], [], []
+    for field in controller.fields:
+        x.append(field.coords[0])
+        y.append(field.coords[1])
+        z.append(field.coords[2]) 
+        labels.append(field.name)
+
+    x = np.array(x,dtype="float")
+    y = np.array(y,dtype="float")
+    z = np.array(z,dtype="float")
+
+    ax.scatter(x, y, z)
+    [ax.text(_x, _y, _z, label) for _x, _y, _z, label in zip(x, y, z, labels)]
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+
+    plt.show()
+
 if __name__ == '__main__':
     # initialize connection
     apsim = ApsimController() 
 
+    # TODO(nubby): Integrate polling into ZMQServer object.
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
 
+    # Plot simulation.
+    # TODO(nubby): Integrate irrigation with colors.
+    plot_oasis(apsim)
+    """
     # Code for testing with echo server
     #start_str = socket.recv_string()
     #if start_str != "connect":
@@ -369,6 +410,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.grid(True)
     plt.show()
+    """
     """
     # Test for FieldNode setup.
     patonfigs = {
