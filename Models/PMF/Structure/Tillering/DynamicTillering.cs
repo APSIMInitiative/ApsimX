@@ -1,5 +1,4 @@
 ﻿using APSIM.Shared.Utilities;
-using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -8,7 +7,6 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Utilities;
 using Newtonsoft.Json;
-using PdfSharpCore.Pdf.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +22,12 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(LeafCulms))]
     public class DynamicTillering : Model, ITilleringMethod
     {
+        /// <summary>
+        /// Used to log to the summary window.
+        /// </summary>
+        [Link] 
+        ISummary summary = null;
+
         /// <summary>
         /// Link to clock (used for FTN calculations at time of sowing).
         /// </summary>
@@ -92,6 +96,11 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public int TilleringMethod { get; set; }
 
+        /// <summary>
+        /// Simple translation of hte tillering method value.
+        /// </summary>
+        private bool IsDynamicTillering => TilleringMethod == 1;
+
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
@@ -116,7 +125,6 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public double SupplyDemandRatio { get; private set; }
 
-        private int flagStage;
         private int floweringStage;
         private int endJuvenilePhase;
         private int startOfGrainFillPhase;
@@ -131,11 +139,6 @@ namespace Models.PMF.Struct
         private bool initialTillersAdded = false;
 
         private double GetDeltaDmGreen() { return leaf.potentialDMAllocation.Structural; }
-
-        private bool BeforeFlagLeafStage()
-        {
-            return BeforePhase("FlagLeaf", ref flagStage);
-        }
 
         private bool BeforeFloweringStage()
         {
@@ -177,8 +180,8 @@ namespace Models.PMF.Struct
 
             if (BeforeEndJuvenileStage())
             {
-                //// ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-                //// FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+                // ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+                // FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
                 culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.Culms[0], areaCalc as ICulmLeafArea));
             }
 
@@ -214,7 +217,7 @@ namespace Models.PMF.Struct
             }
             if (newLeafNo == endThermalQuotientLeafNo && !initialTillersAdded)   // L5 Fully Expanded
             {
-                if (TilleringMethod == 1)        // Dynamic calculation
+                if (IsDynamicTillering)        // Dynamic calculation
                 {
                     double PTQ = radiationValues / temperatureValues;
                     CalcTillerNumber(PTQ);
@@ -239,7 +242,7 @@ namespace Models.PMF.Struct
         private double CalcLeafAppearance(Culm culm)
         {
             var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
-            var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
+            var leafAppearanceRate = culms.GetLeafAppearanceRate(leavesRemaining);
             // if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
             var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
 
@@ -278,7 +281,7 @@ namespace Models.PMF.Struct
             double L5Area = areaMethod.CalculateIndividualLeafArea(5, mainCulm);
             double L9Area = areaMethod.CalculateIndividualLeafArea(9, mainCulm);
 
-            double Phy5 = culms.getLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
+            double Phy5 = culms.GetLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
 
             // Calc Demand = LA9 - LA5
             var demand = L9Area - L5Area;
@@ -346,7 +349,7 @@ namespace Models.PMF.Struct
             // 4. there should be a tiller at that node. (Check tillerOrder)
 
             var tillersAdded = culms.Culms.Count - 1;
-            if (TilleringMethod == 1)
+            if (IsDynamicTillering)
             {
                 double lLAI = CalcLinearLAI();
                 if (lLAI > maxLAIForTillerAddition.Value()) return;
@@ -410,21 +413,25 @@ namespace Models.PMF.Struct
         public double CalcActualLeafArea(double dltStressedLAI)
         {
             var mainCulm = culms.Culms.FirstOrDefault();
+            var dltStressedLAI2 = dltStressedLAI;
 
-            if (mainCulm != null &&
-                AfterEndJuvenileStage() &&
-                CalculatedTillerNumber > 0.0 &&
-                mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf &&
-                TilleringMethod == 1
-            )
+            if (IsDynamicTillering)
             {
-                CalculateTillerCessation(dltStressedLAI);
-            }
+                if (mainCulm != null &&
+                    AfterEndJuvenileStage() &&
+                    CalculatedTillerNumber > 0.0 &&
+                    mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf
+                )
+                {
+                    CalculateTillerCessation(dltStressedLAI);
+                }
 
-            // recalculate todays LAI
-            var dltStressedLAI2 = 0.0;
-            foreach (var culm in culms.Culms)
-                dltStressedLAI2 += culm.DltLAI;
+                dltStressedLAI2 = 0.0;
+                foreach (var culm in culms.Culms)
+                {
+                    dltStressedLAI2 += culm.DltLAI;
+                }
+            }
 
             double laiSlaReductionFraction = CalcCarbonLimitation(dltStressedLAI2);
             double leaf = mainCulm.CurrentLeafNo;
@@ -441,6 +448,40 @@ namespace Models.PMF.Struct
             //var calculatedLeafArea = dltStressedLAI2 - laiSlaReductionFraction;
             //return calculatedLeafArea;
             return dltLAI;
+        }
+
+        private double CalcCarbonLimitation(double dltStressedLAI)
+        {
+            var leafMass = leaf.Live.Wt;
+            var laiTotal = leaf.LAITotal;
+
+            if (leafMass < 0.0) return 1.0;
+
+            double dltDmGreen = GetDeltaDmGreen();
+            var leafMassNew = (leafMass + dltDmGreen);
+            if (leafMassNew < 0.0) return 1.0;
+            var slaNew = (laiTotal + dltStressedLAI) / leafMassNew;            
+
+            var mainCulm = culms.Culms[0];
+
+            // Changing to Reeves + 10%
+            double nLeaves = mainCulm.CurrentLeafNo;
+            MaxSLA = 429.72 - 18.158 * (nLeaves);
+            MaxSLA = Math.Min(400, MaxSLA);
+            MaxSLA = Math.Max(150, MaxSLA);
+
+            if (slaNew <= MaxSLA) return 1.0;
+
+            // Leaf is getting too thin, reduce area growth.
+            var dltLaiPossible = MaxSLA * leafMassNew - laiTotal;
+            var laiFractionalReductionForSLA = Math.Max(dltLaiPossible / dltStressedLAI, 0.0);
+
+            if (laiFractionalReductionForSLA < 1)
+            {
+                summary.WriteMessage(this, $"Leaf Area reduced due to carbon limitation: {Environment.NewLine}", MessageType.Information);
+                summary.WriteMessage(this, $"LaiTotal: {laiTotal}. MaxSLA: {MaxSLA}. SlaNew: {slaNew}. dltStressedLAI: {dltStressedLAI:F3}. Reduce by: {laiFractionalReductionForSLA:F3}. dltDmGreen: {dltDmGreen:F3}", MessageType.Information);
+            }
+            return laiFractionalReductionForSLA;
         }
 
         //double CalcSLA()
@@ -523,26 +564,6 @@ namespace Models.PMF.Struct
             //          return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
             var maxLaiTarget = MaxSLA * (dmGreen) / 10000;
             return Math.Max(leaf.LAI - maxLaiTarget, 0);
-        }
-
-        private double CalcCarbonLimitation(double dltStressedLAI)
-        {
-            double dltDmGreen = GetDeltaDmGreen();
-            if (dltDmGreen <= 0.001) return 1.0;
-
-            var mainCulm = culms.Culms[0];
-
-            // Changing to Reeves + 10%
-            double nLeaves = mainCulm.CurrentLeafNo;
-            MaxSLA = 429.72 - 18.158 * (nLeaves);
-            MaxSLA *= ((100 + 20) / 100.0);     // sla bound vary 20%
-
-            MaxSLA = Math.Min(400, MaxSLA);
-            MaxSLA = Math.Max(150, MaxSLA);
-            var dltLaiPossible = dltDmGreen * MaxSLA / 10000.0;
-
-            double fraction = Math.Min(dltStressedLAI > 0 ? (dltLaiPossible / dltStressedLAI) : 1.0, 1.0);
-            return fraction;
         }
 
         // THIS IS THE OLD ONE.
@@ -631,12 +652,13 @@ namespace Models.PMF.Struct
 
                 TilleringMethod = data.TilleringMethod;
 
-                if (data.TilleringMethod == -1)     // Rule Of Thumb
+                // Rule Of Thumb
+                if (data.TilleringMethod == -1)
                     CalculatedTillerNumber = CalculateFtn();
-                else if (data.TilleringMethod == 0) // Fixed tiller number
+
+                // Fixed tiller number
+                else if (data.TilleringMethod == 0)
                     CalculatedTillerNumber = data.FTN;
-                //if (data.TilleringMethod != 1)      // Not dynamically calculated 
-                //  CalculatedTillerNumber = FertileTillerNumber;
             }
         }
         private double CalculateFtn()

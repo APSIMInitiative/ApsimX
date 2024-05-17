@@ -1216,8 +1216,8 @@ namespace Models.PMF.Organs
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
-                DltPotentialLAI = culms.dltPotentialLAI;
-                DltStressedLAI = culms.dltStressedLAI;
+                DltPotentialLAI = culms.DltPotentialLAI;
+                DltStressedLAI = culms.DltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
                 //this is done at start of the day

@@ -152,7 +152,7 @@ namespace Models.PMF.Struct
 		private double calcLeafAppearance(Culm culm)
 		{
 			var leavesRemaining = Math.Max(0.0, culms.FinalLeafNo - culm.LeafNoAtAppearance - culm.CurrentLeafNo);
-			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
+			var leafAppearanceRate = culms.GetLeafAppearanceRate(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
 
