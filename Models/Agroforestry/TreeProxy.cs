@@ -9,7 +9,6 @@ using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Utilities;
 using System.Data;
 
@@ -198,12 +197,12 @@ namespace Models.Agroforestry
                 columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
                 columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
                 columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
-                GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
+                GridTable grid1 = new GridTable("TreeProxySpatial", columns, this);
                 grid1.SetUnits(1, "m");
                 grid1.SetUnits(3, "(>=0)");
 
                 columns = new List<GridTableColumn>();
-                GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
+                GridTable grid2 = new GridTable("TreeProxyTemporal", columns, this);
 
                 List<GridTable> list = new List<GridTable>() { grid1, grid2 };
                 return list;
@@ -221,7 +220,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
+            if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 //convert height in mm to height in metres
                 //first row is units, so skip
@@ -231,7 +230,7 @@ namespace Models.Agroforestry
                 return dt;
             }
             //this is a special case, we need to manually handle the changes to Table
-            else if (dt.TableName.Equals("TreeProxySpatial"))
+            else if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 var data = new DataTable();
                 data.TableName = dt.TableName;
@@ -293,8 +292,9 @@ namespace Models.Agroforestry
                         DataRow row = data.NewRow();
                         for (int y = 1; y < this.Table.Count; y++)
                         {
-                            if (this.Table[y][x].ToString().Length > 0)
-                                empty = false;
+                            if (this.Table[y][x] != null)
+                                if (this.Table[y][x].ToString().Length > 0)
+                                    empty = false;
                             row[y-1] = this.Table[y][x];
                         }
                         if (!empty)
@@ -343,7 +343,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
+            if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 //convert height in m to height in mm
                 //first row is units, so skip
@@ -352,7 +352,7 @@ namespace Models.Agroforestry
                         dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) * 1000;
                 return dt;
             }
-            else if (dt.TableName.Equals("TreeProxySpatial"))
+            else if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 //add all datas
                 List<List<string>> newTable = new List<List<string>>();
