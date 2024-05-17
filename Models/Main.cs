@@ -184,7 +184,17 @@ namespace Models
                         else
                         {
                             if(options.InMemoryDB)
-                                runner = CreateRunnerForInMemoryDBOption(options, files);
+                            {
+                                List<Simulations> sims = new();
+                                sims = CreateSimsList(files);
+                                foreach(Simulations sim in sims)
+                                    sim.FindChild<DataStore>().UseInMemoryDB = true;
+                                runner = new Runner(sims,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            }
                             else
                             {
                                 runner = new Runner(files,
@@ -387,7 +397,8 @@ namespace Models
                 else File.Copy(filePath, lastSaveFilePath, true);
 
                 sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath, e => throw e, false).NewModel as Simulations;
-                ChangeSimToUseInMemoryDB(sim);
+                if (options.InMemoryDB)
+                    sim.FindChild<DataStore>().UseInMemoryDB = true;
             }
             if (!string.IsNullOrEmpty(options.Playlist))
             {
@@ -776,27 +787,6 @@ namespace Models
             foreach(string file in files)
                 sims.Add(FileFormat.ReadFromFile<Simulations>(file,e => throw e, true).NewModel as Simulations);
             return sims;
-        }
-
-        /// <summary>
-        /// Creates a Runner specifically for use when the InMemoryDB option is used.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="files"></param>
-        /// <returns></returns>
-        public static Runner CreateRunnerForInMemoryDBOption(Options options, IEnumerable<string> files)
-        {
-            List<Simulations> sims = new();
-            Runner runner;
-            sims = CreateSimsList(files);
-            foreach(Simulations sim in sims)
-                ChangeSimToUseInMemoryDB(sim);
-            runner = new Runner(sims,
-                        options.RunTests,
-                        runType: options.RunType,
-                        numberOfProcessors: options.NumProcessors,
-                        simulationNamePatternMatch: options.SimulationNameRegex);
-            return runner;
         }
     }
 }
