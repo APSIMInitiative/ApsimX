@@ -30,7 +30,11 @@ namespace Models.Core.ApsimFile
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
 
-            parent.Children.Add(modelToAdd);
+            if(parent.IsChildAllowable(modelToAdd.GetType()))
+            {
+                parent.Children.Add(modelToAdd);
+            }
+            else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
             // Call OnCreated
             modelToAdd.OnCreated();
