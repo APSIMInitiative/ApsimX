@@ -78,6 +78,11 @@ namespace UserInterface.Presenters
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
+            Gtk.Label redValuesWarningLbl = new("Note: red values are estimates only.");
+            if (model is Physical)
+                ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
+                redValuesWarningLbl.Visible = true;
+
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
             if (!propertyView.AnyProperties)
@@ -129,11 +134,9 @@ namespace UserInterface.Presenters
                         if (model is SoilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
-                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
-                            llsoilName = llsoilName + " LL";
-
+                            string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = cropName + " LL";
                             llsoil = (model as SoilCrop).LL;
-
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,

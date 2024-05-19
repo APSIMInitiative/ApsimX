@@ -9,7 +9,6 @@ using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Utilities;
 using System.Data;
 
@@ -198,12 +197,12 @@ namespace Models.Agroforestry
                 columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
                 columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
                 columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
-                GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
+                GridTable grid1 = new GridTable("TreeProxySpatial", columns, this);
                 grid1.SetUnits(1, "m");
                 grid1.SetUnits(3, "(>=0)");
 
                 columns = new List<GridTableColumn>();
-                GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
+                GridTable grid2 = new GridTable("TreeProxyTemporal", columns, this);
 
                 List<GridTable> list = new List<GridTable>() { grid1, grid2 };
                 return list;
@@ -221,7 +220,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
+            if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 //convert height in mm to height in metres
                 //first row is units, so skip
@@ -231,7 +230,7 @@ namespace Models.Agroforestry
                 return dt;
             }
             //this is a special case, we need to manually handle the changes to Table
-            else if (dt.TableName.Equals("TreeProxySpatial"))
+            else if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 var data = new DataTable();
                 data.TableName = dt.TableName;
@@ -255,7 +254,7 @@ namespace Models.Agroforestry
                 // Get the first soil. For now we're assuming all soils have the same structure.
                 var physical = zones.First().FindInScope<Physical>();
 
-                if (this.Table.Count == 0)
+                if (this.Table.Count < 2)
                 {
                     DataRow row = data.NewRow();
                     row["Parameter"] = "Shade (%)";
@@ -286,15 +285,22 @@ namespace Models.Agroforestry
                 }
                 else
                 {
-                    for (int y = 0; y < this.Table.Count-1; y++)
+                    for (int x = 0; x < this.Table[1].Count; x++)
                     {
-                        for (int x = 0; x < this.Table[y+1].Count; x++)
+                        //clean up any empty rows
+                        bool empty = true;
+                        DataRow row = data.NewRow();
+                        for (int y = 1; y < this.Table.Count; y++)
                         {
-                            if (y == 0)
-                                data.Rows.Add(data.NewRow());
-                            data.Rows[x][y] = this.Table[y+1][x];
+                            if (this.Table[y][x] != null)
+                                if (this.Table[y][x].ToString().Length > 0)
+                                    empty = false;
+                            row[y-1] = this.Table[y][x];
                         }
+                        if (!empty)
+                            data.Rows.Add(row);
                     }
+                    
                     /*
                     // add Zones not in the table
                     IEnumerable<string> except = colNames.Except(forestryModel.Table[0]);
@@ -337,7 +343,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
+            if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 //convert height in m to height in mm
                 //first row is units, so skip
@@ -346,18 +352,18 @@ namespace Models.Agroforestry
                         dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) * 1000;
                 return dt;
             }
-            else if (dt.TableName.Equals("TreeProxySpatial"))
+            else if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 //add all datas
                 List<List<string>> newTable = new List<List<string>>();
-                for (int x = 0; x < dt.Rows.Count; x++)
+                for (int y = 0; y < dt.Rows.Count; y++)
                 {
-                    for (int y = 0; y < dt.Columns.Count; y++)
+                    List<string> row = new List<string>();
+                    for (int x = 0; x < dt.Columns.Count; x++)
                     {
-                        if (x == 0)
-                            newTable.Add(new List<string>());
-                        newTable[y].Add(dt.Rows[x][y].ToString());
+                        row.Add(dt.Rows[x][y].ToString());
                     }
+                    newTable.Add(row);
                 }
 
                 //add headers - Yes, this is how it's supposed to be

@@ -443,5 +443,14 @@ namespace UnitTests.Core.ApsimFile
             Assert.AreEqual("Total", oc.Item2);
             Assert.AreEqual(new double[] { 100.0, 200.0 }, oc.Item3);
         }
+
+        [Test]
+        public void TestUpgradeSoil()
+        {
+          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.apsim");
+          ConverterReturnType result = Converter.DoConvert(xml, Converter.LatestVersion);
+          Assert.IsNotNull(JsonUtilities.ChildWithName(result.Root, "SoilTemperature"));
+          Assert.IsNotNull(JsonUtilities.ChildWithName(result.Root, "Nutrient"));
+        }
     }
 }

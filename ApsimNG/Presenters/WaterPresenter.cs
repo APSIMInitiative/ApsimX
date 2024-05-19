@@ -259,23 +259,11 @@ namespace UserInterface.Presenters
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
-
-
-            if (llsoil != null && llsoilsName != null)
-            {       //draw the area relative to the water LL instead.
-                graph.DrawRegion($"PAW relative to {llsoilsName}", llsoil, swCumulativeThickness,
-                             sw, swCumulativeThickness,
-                             AxisPosition.Top, AxisPosition.Left,
-                             System.Drawing.Color.LightSkyBlue, true);
-            }
-            else
-            {       //draw the area relative to whatever the water node is currently relative to
+            //draw the area relative to whatever the water node is currently relative to
                 graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
                             sw, swCumulativeThickness,
                             AxisPosition.Top, AxisPosition.Left,
                             System.Drawing.Color.LightSkyBlue, true);
-            }
-
 
             graph.DrawLineAndMarkers("Airdry", airdry,
                                      cumulativeThickness,

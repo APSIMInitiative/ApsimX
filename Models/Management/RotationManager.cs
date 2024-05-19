@@ -22,14 +22,6 @@ namespace Models.Management
     /// Instead, it relies on other components (usually manager scripts)
     /// for their specific knowledge. An example crop rotation is provided
     /// in the RotationManager.apsimx example file.
-    /// 
-    /// todo:
-    ///
-    /// - Implement node/arc ID separate from name?
-    /// - dynamic / auto layout of new nodes/arcs
-    /// - ?intellisense isn't picking up member functions? events are OK.
-    /// - Syntax checking of rules / actions.
-    /// - "fixme" where noted in code
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.BubbleChartView")]
@@ -56,13 +48,13 @@ namespace Models.Management
         /// <summary>
         /// The nodes of the graph. These represent states of the rotation.
         /// </summary>
-        public List<StateNode> Nodes { get; set; } = new List<StateNode>();
+        public List<Node> Nodes { get; set; } = new List<Node>();
 
         /// <summary>
         /// The arcs on the bubble chart which define transition
         /// between stages (nodes).
         /// </summary>
-        public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
+        public List<Arc> Arcs { get; set; } = new List<Arc>();
 
         /// <summary>
         /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
@@ -91,21 +83,34 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { get; set; }
+        public int CurrentStateId { get; set; }
+
+        /// <summary>
+        /// Current State of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public string CurrentState { 
+            get {return CurrentStateName; } 
+            set {CurrentStateId = getStateIDByName(value);} 
+        }
+
+        /// <summary>
+        /// Name of the Current State
+        /// </summary>
+        [JsonIgnore]
+        public string CurrentStateName
+        {
+            get { return getStateNameByID(CurrentStateId); }
+        }
 
         /// <summary>
         /// All dynamic events published by the rotation manager.
         /// </summary>
-        /// <remarks>
-        /// fixme:
-        /// If any nodes are disconnected from the rest of the graph,
-        /// their names will still be included in this list.
-        /// </remarks>
         public IEnumerable<string> Events
         {
             get
             {
-                foreach (StateNode state in Nodes)
+                foreach (Node state in Nodes)
                 {
                     yield return $"TransitionFrom{state}";
                     yield return $"TransitionTo{state}";
@@ -123,6 +128,22 @@ namespace Models.Management
             return Nodes.Select(n => n.Name).ToArray();
         }
 
+        private string getStateNameByID(int id)
+        {
+            foreach (Node state in Nodes)
+                if (state.ID == id)
+                    return state.Name;
+            return "No State";
+        }
+
+        private int getStateIDByName(string name)
+        {
+            foreach (Node state in Nodes)
+                if (state.Name == name)
+                    return state.ID;
+            return 0;
+        }
+
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
         /// </summary>
@@ -131,9 +152,13 @@ namespace Models.Management
         [EventSubscribe("Commencing")]
         private void OnCommence(object sender, EventArgs e)
         {
-            CurrentState = InitialState;
+            CurrentStateId = 0;
+            for (int i = 0; i < Nodes.Count && CurrentStateId == 0; i++)
+                if (Nodes[i].Name == InitialState)
+                    CurrentStateId = Nodes[i].ID;
+
             if (Verbose)
-                summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
+                summary.WriteMessage(this, $"Initialised, state={CurrentStateName} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
         [EventSubscribe("StartOfSimulation")]
@@ -164,8 +189,8 @@ namespace Models.Management
             {
                 more = false;
                 double bestScore = -1.0;
-                RuleAction bestArc = null;
-                foreach (var arc in Arcs.FindAll(arc => arc.SourceName == CurrentState))
+                Arc bestArc = null;
+                foreach (var arc in Arcs.FindAll(arc => arc.SourceID == CurrentStateId))
                 {
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
@@ -179,16 +204,16 @@ namespace Models.Management
                         }
                         catch (Exception ex) 
                         {
-                            throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
+                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message );
                         }
                         double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                        detailedLogger?.DoRuleEvaluation(arc.DestinationName, testCondition, result);
+                        detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
                         score *= result;
                     }
 
                     if (Verbose)
                     {
-                        string arcName = $"Transition from {arc.SourceName} to {arc.DestinationName}";
+                        string arcName = $"Transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} by {arc.Name}";
                         string message;
                         if (score > 0)
                         {
@@ -210,7 +235,7 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
-                    detailedLogger?.DoTransition(bestArc.DestinationName);
+                    detailedLogger?.DoTransition(getStateNameByID(bestArc.DestinationID));
                     TransitionTo(bestArc);
                     more = true;
                     MadeAChange = true;
@@ -231,28 +256,47 @@ namespace Models.Management
             TopLevel = oldState;
             return(MadeAChange);
         }
+
         /// <summary>
         /// Log the state of the system (usually beginning/end of simulation)
         /// </summary>
         public void DoLogState() 
         {
-            detailedLogger?.DoTransition(CurrentState);
+            detailedLogger?.DoTransition(CurrentStateName);
         }
+
+        /// <summary>
+        /// Set the current state to the first node with the given name
+        /// </summary>
+        public void SetCurrentStateByName(string name)
+        {
+            CurrentStateId = getStateIDByName(name);
+            return;
+        }
+
+        /// <summary>
+        /// Set the current state to the first node with the given name
+        /// </summary>
+        public string GetCurrentStateName()
+        {
+            return getStateNameByID(CurrentStateId);
+        }
+
         /// <summary>
         /// Transition along an arc to another stage/node.
         /// </summary>
         /// <param name="transition">The arc to be followed.</param>
-        private void TransitionTo(RuleAction transition)
+        private void TransitionTo(Arc transition)
         {
             try
             {
                 if (Verbose)
-                    summary.WriteMessage(this, $"Transitioning from {transition.SourceName} to {transition.DestinationName}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
-                eventService.Publish($"TransitionFrom{CurrentState}", null);
+                eventService.Publish($"TransitionFrom{CurrentStateName}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
 
-                CurrentState = transition.DestinationName;
+                CurrentStateId = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
                 {
@@ -273,13 +317,13 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish($"TransitionTo{CurrentState}", null);
+                eventService.Publish($"TransitionTo{CurrentStateName}", null);
                 if (Verbose)
-                    summary.WriteMessage(this, $"Current state is now {CurrentState}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Current state is now {CurrentStateName}", MessageType.Diagnostic);
             }
             catch (Exception err)
             {
-                throw new Exception($"Unable to transition to state {CurrentState}", err);
+                throw new Exception($"Unable to transition to state {CurrentStateName}", err);
             }
         }
 
@@ -374,61 +418,6 @@ namespace Models.Management
             }
 
             return parameterValues;
-        }
-    }
-
-    /// <summary>Rules and actions required for a transition</summary>
-    [Serializable]
-    public class RuleAction : Arc
-    {
-        /// <summary>
-        /// Contructor
-        /// </summary>
-        public RuleAction(Arc a) : base(a)
-        {
-            Conditions = new List<string>();
-            Actions = new List<string>();
-        }
-
-        /// <summary>Test conditions that need to be satisfied for this transition</summary>
-        public List<string> Conditions { get; set; }
-
-        /// <summary>Actions undertaken when making this transition</summary>
-        public List<string> Actions { get; set; }
-
-        /// <param name="other"></param>
-        public void CopyFrom(RuleAction other)
-        {
-            base.CopyFrom(other);
-            this.Conditions = new List<string>(other.Conditions);
-            this.Actions = new List<string>(other.Actions);
-        }
-    }
-
-    /// <summary>A state in the directed graph.</summary>
-    [Serializable]
-    public class StateNode : Node
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="n">Node from which properties will be copied.</param>
-        /// <param name="description">Description of the node.</param>
-        public StateNode(Node n, string description = null) : base(n) => Description = description;
-
-        /// <summary>
-        /// Description of the node.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Copy all properties of another node into this one.
-        /// </summary>
-        /// <param name="other">A node whose properties will be copied.</param>
-        public void CopyFrom(StateNode other)
-        {
-            Description = other.Description;
-            base.CopyFrom(other);
         }
     }
 }

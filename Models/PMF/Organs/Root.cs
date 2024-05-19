@@ -168,6 +168,9 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
+        /// <summary>Link to the soilCrop</summary>
+        public SoilCrop SoilCrop {get; private set;} = null;
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -179,8 +182,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        private SoilCrop soilCrop;
 
         /// <summary>Constructor</summary>
         public Root()
@@ -958,8 +959,8 @@ namespace Models.PMF.Organs
         public double TotalExtractableWater()
         {
 
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
+            double[] LL = SoilCrop.LL;
+            double[] KL = SoilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
@@ -1081,8 +1082,8 @@ namespace Models.PMF.Organs
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
-            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
+            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             Zones = new List<ZoneState>();
