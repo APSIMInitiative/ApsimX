@@ -7,6 +7,15 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public static class CodeFormatting 
     {
+        //Stores each line of code alongside any strings or comments that are removed while formatting
+        private class ScriptLine {
+            List<string> strings;
+
+            List<List<string>> comments;
+
+            string text;
+        }
+
         /// <summary>
         /// </summary>
         public static string Reformat(string lines)
@@ -19,6 +28,9 @@ namespace APSIM.Shared.Utilities
         public static string[] Reformat(string[] lines)
         {
             List<string> output = new List<string>(lines);
+
+            //Remove strings and comments and store for later
+            output;
 
             //trim whitespace from lines
             output = clearEmptyLines(output, true);
@@ -43,6 +55,9 @@ namespace APSIM.Shared.Utilities
 
             //Add tab whitespace back in
             output = addIndent(output, "\t");
+
+            //Restore strings and comments
+            output;
 
             return output.ToArray();
         }
@@ -142,7 +157,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         private static bool safeContains(string line, string value)
         {
-            List<string> parts = safeSplitString(line.Replace("\\", ""), new char[] {'"'});
+            List<string> parts = safeSplitString(line, new char[] {'"'});
             bool result = false;
             bool isString = false;
             foreach(string part in parts)
