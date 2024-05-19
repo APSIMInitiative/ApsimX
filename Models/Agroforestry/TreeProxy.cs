@@ -197,12 +197,12 @@ namespace Models.Agroforestry
                 columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
                 columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
                 columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
-                GridTable grid1 = new GridTable("TreeProxySpatial", columns, this);
+                GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
                 grid1.SetUnits(1, "m");
                 grid1.SetUnits(3, "(>=0)");
 
                 columns = new List<GridTableColumn>();
-                GridTable grid2 = new GridTable("TreeProxyTemporal", columns, this);
+                GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
 
                 List<GridTable> list = new List<GridTable>() { grid1, grid2 };
                 return list;
@@ -220,7 +220,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxySpatial"))
+            if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 //convert height in mm to height in metres
                 //first row is units, so skip
@@ -230,7 +230,7 @@ namespace Models.Agroforestry
                 return dt;
             }
             //this is a special case, we need to manually handle the changes to Table
-            else if (dt.TableName.Equals("TreeProxyTemporal"))
+            else if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 var data = new DataTable();
                 data.TableName = dt.TableName;
@@ -343,7 +343,7 @@ namespace Models.Agroforestry
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            if (dt.TableName.Equals("TreeProxySpatial"))
+            if (dt.TableName.Equals("TreeProxyTemporal"))
             {
                 //convert height in m to height in mm
                 //first row is units, so skip
@@ -352,14 +352,14 @@ namespace Models.Agroforestry
                         dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) * 1000;
                 return dt;
             }
-            else if (dt.TableName.Equals("TreeProxyTemporal"))
+            else if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 //add all datas
                 List<List<string>> newTable = new List<List<string>>();
                 for (int y = 0; y < dt.Rows.Count; y++)
                 {
                     List<string> row = new List<string>();
-                    for (int x = 0; x < dt.Columns.Count; x++)
+                    for (int x = 1; x < dt.Columns.Count; x++)
                     {
                         row.Add(dt.Rows[x][y].ToString());
                     }
@@ -483,6 +483,9 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
+                if (Table[i][0].Length == 0)
+                    throw new Exception($"Cell at position [{Table[0][i-2]}, {Table[1][i]}] is empty");
+
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0],
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
