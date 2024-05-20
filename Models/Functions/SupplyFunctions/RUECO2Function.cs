@@ -53,23 +53,18 @@ namespace Models.Functions.SupplyFunctions
             {
 
                 double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
+                double CP = (163.0 - temp) / (5.0 - 0.1 * temp);
 
-
-                if (temp >= 50.0)
+                if (temp >= 46.5)
                     throw new Exception("Average daily temperature too high for RUE CO2 Function");
-
-                if (MetData.CO2 < 300)
-                    throw new Exception("CO2 concentration too low for RUE CO2 Function");
+                if (MetData.CO2 <= CP)
+                    throw new Exception("Daily C02 concentrations are below compensation point");
                 else if (MetData.CO2 == 350)
                     return 1.0;
                 else
                 {
-                    double CP;      //co2 compensation point (ppm)
                     double first;
                     double second;
-
-                    CP = (163.0 - temp) / (5.0 - 0.1 * temp);
-
                     first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
                     second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
                     return first / second;
