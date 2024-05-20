@@ -40238,8 +40238,8 @@
                         0.99
                       ],
                       "FOM": [
-                        850.0,
-                        500.0,
+                        200.0,
+                        150.0,
                         100.0,
                         15.0,
                         10.0,
@@ -40307,8 +40307,8 @@
                         500.0
                       ],
                       "InitialValues": [
-                        50.0,
                         30.0,
+                        20.0,
                         10.0,
                         5.0,
                         3.0,
@@ -40340,8 +40340,8 @@
                         500.0
                       ],
                       "InitialValues": [
-                        0.494,
-                        0.35,
+                        0.0,
+                        0.0,
                         0.2,
                         0.2,
                         0.135,
@@ -40859,6 +40859,10 @@
                           "Value": "Maturity"
                         },
                         {
+                          "Key": "ExpectedYield",
+                          "Value": "12"
+                        },
+                        {
                           "Key": "FieldLoss",
                           "Value": "0"
                         },
@@ -40873,10 +40877,6 @@
                         {
                           "Key": "ResidueIncorporationDepth",
                           "Value": "150"
-                        },
-                        {
-                          "Key": "ExpectedYield",
-                          "Value": "21"
                         }
                       ],
                       "Name": "Sowing",
@@ -41337,14 +41337,14 @@
                   "ExtinctCoeff": 0.7,
                   "TypicalHarvestStage": "Maturity",
                   "SeedlingNConc": 0.05,
-                  "ProductHarvestNConc": 0.02,
-                  "StoverHarvestNConc": 0.005,
+                  "ProductHarvestNConc": 0.015,
+                  "StoverHarvestNConc": 0.004,
                   "RootNConc": 0.01,
                   "LegumePropn": 0.0,
                   "BaseT": 0.0,
-                  "OptT": 25.0,
-                  "MaxT": 30.0,
-                  "Tt_SowtoEmerge": 125.0,
+                  "OptT": 30.0,
+                  "MaxT": 35.0,
+                  "Tt_SowtoEmerge": 250.0,
                   "GSMax": 0.008,
                   "R50": 150.0,
                   "ConsiderWaterStress": false,
@@ -47469,6 +47469,10 @@
                           "Value": "Maturity"
                         },
                         {
+                          "Key": "ExpectedYield",
+                          "Value": "21"
+                        },
+                        {
                           "Key": "FieldLoss",
                           "Value": "0"
                         },
@@ -47483,10 +47487,6 @@
                         {
                           "Key": "ResidueIncorporationDepth",
                           "Value": "150"
-                        },
-                        {
-                          "Key": "ExpectedYield",
-                          "Value": "21"
                         }
                       ],
                       "Name": "Sowing",
