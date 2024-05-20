@@ -17,10 +17,14 @@ namespace Models.Climate
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This model samples a weather file. There are three sampling methods.\r\n" +
-                 "1. RandomSample - all years of weather data will be sampled randomly.\r\n" +
-                 "2. SpecificYears - specific years can be specified. Weather data will be drawn from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year.\r\n" +
-                 "3. RandomChooseFirstYear - randomly choose a year in the weather record. Once simulation is running, weather data is drawn sequentially from the chosen year.")]
+    [Description("This model samples from a weather file taking slices of data of one or more years at a time in order to preserve seasonal patterns. 'Year' means 12 months rather than a calendar year\r\n \r\n" +
+                 "The start of a year is taken from Clock.StartDate using dd-mmm. The duration of the simulation is set using the difference between StartDate and EndDate. \r\n  \r\n" +
+                 "Options with random sampling can be with a random seed or with a specified seed. Provide a seed for repeatable simulation results. \r\n \r\n" +
+                 "There are three sampling methods.\r\n" +
+                 "1. RandomSample - whole years of weather data will be sampled randomly and independently until the duration specified in Clock has been met.\r\n" +
+                 "2. SpecificYears - specific years can be specified. Weather data will be taken from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year until the duration specified in Clock has been met.\r\n" +
+                 "3. RandomChooseFirstYear - allows multi-year slices of weather data to be sampled. It will randomly choose a start year in the weather record and continue from that date until the duration specified in Clock has been met.")]
+
     public class WeatherSampler : Model, IWeather
     {
         /// <summary>A data table of all weather data.</summary>
@@ -60,7 +64,7 @@ namespace Models.Climate
 
         /// <summary>The weather file name.</summary>
         [Summary]
-        [Description("Weather file name")]
+        [Description("Weather file to sample from")]
         public string FileName { get; set; }
 
         /// <summary>Type of year sampling.</summary>
@@ -69,7 +73,7 @@ namespace Models.Climate
 
         /// <summary>The sample years.</summary>
         [Summary]
-        [Description("Seed to pass to random number generator. Leave blank for random. Provide value for repeatable simulation results.")]
+        [Description("Seed to pass to random number generator. Leave blank for fully random")]
         [Display(VisibleCallback = "IsRandomEnabled")]
         public string Seed { get; set; }
 

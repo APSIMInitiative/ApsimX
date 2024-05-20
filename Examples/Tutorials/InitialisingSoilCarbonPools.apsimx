@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 174,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# Initialising soil carbon pools\n\n*Dean Holzworth (CSIRO, Australia) and Val Snow (AgResearch, New Zealand)*\n\n(Text last updated **xx mmmm** 2025)\n\nAPSIM, like many other models, uses conceptual soil carbon pools in the simulation of carbon and nitrogen dynamics.\n\nInitialisation of the soil carbon pools\n\n**Report** is the model in APSIM that is used to generate columns of simulation outputs for further analysis. \n\nThe simulations in this example are to show examples of the different reporting capabilities and to provide a test that they continue to produce the correct results.\n\nThe intention is that this documentation is read alongside the simulation that produced it to see the detail of the examples. The simulation is to be found under the \"Examples\" button as Report.apsim.\n\n\n   \n\n\n\n\n",
+      "Text": "# Initialising soil carbon pools\n\nVal Snow (AgResearch, New Zealand) and Dean Holzworth (CSIRO, Australia)\n\n(Last updated 21 May 2024)\n\nThe intention is that this documentation is read alongside the simulation that produced it to see the detail of the examples. The simulation is to be found under the \"Examples\" button, then select the “Tutorials” folder and open “InitialisingSoilCarbonPools.apsimx”.\n\nAPSIM, like many other models, uses conceptual soil carbon pools in the simulation of carbon and nitrogen dynamics. See Probert et al. (1998) and Cichota et al (2021) for a description of these pools. Because the pools are conceptual, they cannot be measured and so a method to initialise them is needed and that is the purpose of this tutorial.\n\nThe general approach is to set up a ‘spin up’ simulation. This is a long-duration spin-up simulation that includes the weather, soil and management (cropping, fertiliser, irrigation) conditions appropriate for the intended simulation. This simulation is run for an appropriate time and the partitioning between the pools at the end of the spin up are captured to initialise the new simulation. \n\nThe duration of the spin up should be set depending on the known general history of the site being simulated. For example, if the site has been in undisturbed grassland for hundreds of years then a 100+ year simulation under generally similar conditions should be made. Usually there is not daily weather available for long spin-ups so the WeatherSampler component is used to artificially lengthen what ever data is available through random sampling with replacement of a shorter weather file. See the notes in WeatherSampler for more information on this.\n\nA second complication is that APSIM’s outputs are structured in the same way as the data needed to set initial values for the carbon pools. This is remedied using a model applied to the DataStore that will reformat the outputs such that they can be pasted back into the Organic UI. To use this, ensure that the “JustFinals” Report component is in the simulation (copy it from this tutorial simulation), add the “CreateProfileTable” model to the DataStore and select “JustFinals”. \n\n\n![Add CreateProfileTable to the DataStore](CarbonPools_Fig1.png)\n\n\nNow when you click on the DataStore and select “CreateProfileTable” in the “Table” dropdown, a properly formatted set of data will be available to copy and paste into Organic.\n\n\n![Formatted carbon pool data ready to copy and paste into Organic](CarbonPools_Fig2.png)\n\n\nFor this method to work, ensure that before you run the spin-up simulation that the depth layering in Organic is the same as in the Physical model.\n\n## References\nCichota, R., I. Vogeler, J. Sharp, K. Verburg, N. Huth, D. Holzworth, N. Dalgliesh and V. Snow (2021). \"A protocol to build soil descriptions for APSIM simulations.\" MethodsX 8: 101566.\n\nProbert, M. E., J. P. Dimes, B. A. Keating, R. C. Dalal and W. M. Strong (1998). \"APSIM's water and nitrogen modules and simulation of the dynamics of water and nitrogen in fallow systems.\" Agricultural Systems 56: 1–28.\n\n",
       "Name": "About this tutorial",
       "ResourceName": null,
       "Children": [],
@@ -42,7 +42,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "2000-06-01T00:00:00",
-          "End": "2500-05-31T00:00:00",
+          "End": "2100-05-31T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -52,7 +52,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "ResourceName": null,
@@ -62,21 +62,17 @@
         },
         {
           "$type": "Models.Climate.WeatherSampler, Models",
-          "FileName": "C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\Lincoln.met",
-          "StartDateOfSimulation": "01-jun-1960",
+          "FileName": "C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\NZ_Lincoln.met",
           "TypeOfSampling": 1,
+          "Seed": "",
           "Years": [
-            1960.0,
-            1971.0,
-            1987.0,
-            1993.0,
-            1204.0,
-            1985.0
+            1960,
+            1971,
+            1987,
+            1993,
+            1204,
+            1985
           ],
-          "NumberOfLeadInYears": 0,
-          "NumYears": 50,
-          "StartDate": "0001-01-01T00:00:00",
-          "EndDate": "0001-01-01T00:00:00",
           "Name": "WeatherSampler",
           "ResourceName": null,
           "Children": [],
@@ -829,9 +825,33 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.5682632779406973,
+                    0.7983870967741936,
+                    0.8660509144380112,
+                    0.8666209105467857,
+                    0.8666209105467857
+                  ],
                   "Texture": null,
                   "BD": [
                     1.3,
@@ -893,11 +913,43 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -930,9 +982,33 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "AGPRyegrassSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -968,9 +1044,33 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "AGPWhiteCloverSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -1033,6 +1133,7 @@
                 },
                 {
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "CONSTANT_TEMPdepth": 10.0,
                   "Thickness": null,
                   "InitialValues": null,
                   "Name": "SoilTemperature",
@@ -2744,7 +2845,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "ResourceName": null,
@@ -2755,20 +2856,16 @@
         {
           "$type": "Models.Climate.WeatherSampler, Models",
           "FileName": "C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\Lincoln.met",
-          "StartDateOfSimulation": "01-jun-1960",
           "TypeOfSampling": 1,
+          "Seed": null,
           "Years": [
-            1960.0,
-            1971.0,
-            1987.0,
-            1993.0,
-            1204.0,
-            1985.0
+            1960,
+            1971,
+            1987,
+            1993,
+            1204,
+            1985
           ],
-          "NumberOfLeadInYears": 0,
-          "NumYears": 500,
-          "StartDate": "0001-01-01T00:00:00",
-          "EndDate": "0001-01-01T00:00:00",
           "Name": "WeatherSampler",
           "ResourceName": null,
           "Children": [],
