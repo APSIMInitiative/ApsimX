@@ -30,12 +30,13 @@ namespace Models.Core.ApsimFile
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
 
-            parent.Children.Add(modelToAdd);
-
-            // Call OnCreated
+            if(parent.IsChildAllowable(modelToAdd.GetType()))
+            {
+                parent.Children.Add(modelToAdd);
+            }
+            else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
+                       
             modelToAdd.OnCreated();
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
-                model.OnCreated();
 
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();

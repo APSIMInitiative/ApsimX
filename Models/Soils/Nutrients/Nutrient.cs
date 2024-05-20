@@ -3,6 +3,7 @@ using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils.NutrientPatching;
 using Models.Surface;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace Models.Soils.Nutrients
     /// </solutes>
     [Serializable]
     [ScopedModel]
+    [ValidParent(ParentType = typeof(NutrientPatchManager))]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
