@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using Models.Agroforestry;
-using Models.Core;
 using Models.Soils;
 using UserInterface.Views;
-using UserInterface.Commands;
-using UserInterface.EventArguments;
-using APSIM.Shared.Utilities;
 using Models.Utilities;
 
 namespace UserInterface.Presenters
