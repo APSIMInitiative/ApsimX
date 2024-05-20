@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using Models.Agroforestry;
-using Models.Core;
 using Models.Soils;
 using UserInterface.Views;
-using UserInterface.Commands;
-using UserInterface.EventArguments;
-using APSIM.Shared.Utilities;
 using Models.Utilities;
 
 namespace UserInterface.Presenters
@@ -67,12 +61,12 @@ namespace UserInterface.Presenters
             List<GridTable> tables = forestryModel.Tables;
 
             spatialGridPresenter = new GridPresenter();
-            spatialGridPresenter.Attach(tables[0], forestryViewer.SpatialDataGrid, explorerPresenter);
+            spatialGridPresenter.Attach(tables[1], forestryViewer.SpatialDataGrid, explorerPresenter);
             spatialGridPresenter.CellChanged += OnCellChanged;
             spatialGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             temporalGridPresenter = new GridPresenter();
-            temporalGridPresenter.Attach(tables[1], forestryViewer.TemporalDataGrid, explorerPresenter);
+            temporalGridPresenter.Attach(tables[0], forestryViewer.TemporalDataGrid, explorerPresenter);
             temporalGridPresenter.CellChanged += OnCellChanged;
             temporalGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
