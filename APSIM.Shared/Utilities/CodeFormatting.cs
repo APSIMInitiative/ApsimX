@@ -9,11 +9,29 @@ namespace APSIM.Shared.Utilities
     {
         //Stores each line of code alongside any strings or comments that are removed while formatting
         private class ScriptLine {
-            List<string> strings;
+            public List<string> strings;
 
-            List<List<string>> comments;
+            public List<string> comments;
 
-            string text;
+            public string text;
+
+            public bool openComment;
+
+            public ScriptLine()
+            {
+                this.text = "";
+                this.strings = new List<string>();
+                this.comments = new List<string>();
+                this.openComment = false;
+            }
+
+            public ScriptLine(string t)
+            {
+                this.text = t;
+                this.strings = new List<string>();
+                this.comments = new List<string>();
+                this.openComment = false;
+            }
         }
 
         /// <summary>
@@ -27,39 +45,48 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static string[] Reformat(string[] lines)
         {
-            List<string> output = new List<string>(lines);
+            List<ScriptLine> input = new List<ScriptLine>();
+            foreach(string line in lines)
+            {
+                ScriptLine newLine = new ScriptLine(line);
+                input.Add(newLine);
+            }
 
             //Remove strings and comments and store for later
-            output;
+            input = RemoveSafeText(input);
 
             //trim whitespace from lines
-            output = clearEmptyLines(output, true);
+            input = clearEmptyLines(input, true);
 
             //make sure { } and [ ] are on new lines
-            output = putSymbolsOnNewLines(output);
-
+            input = putSymbolsOnNewLines(input);
+/*
             //Remove unnecessary whitespace
-            output = removeWhitespace(output);
+            input = removeWhitespace(input);
 
             //Combine links [ ] back together
-            output = combineRows(output, '[', ']');
+            input = combineRows(input, '[', ']');
 
             //Fix properties to be back to one row
-            output = combinePropertyRows(output);
+            input = combinePropertyRows(input);
 
             //put single line Link tags back to one row
-            output = combineLinkRows(output);
+            input = combineLinkRows(input);
 
             //Add empty line spacing back in
-            output = addSpacing(output);
+            input = addSpacing(input);
 
             //Add tab whitespace back in
-            output = addIndent(output, "\t");
-
+            input = addIndent(input, "\t");
+*/
             //Restore strings and comments
-            output;
+            input = RestoreSafeText(input);
+            
+            string[] output = new string[input.Count];
+            for(int i = 0; i < input.Count; i++)
+                output[i] = input[i].text;
 
-            return output.ToArray();
+            return output;
         }
 
         /// <summary>
@@ -88,17 +115,22 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Remove blank lines and trim whitespace. New copy is returned.
         /// </summary>
-        private static List<string> clearEmptyLines(List<string> lines, bool doTrim)
+        private static List<ScriptLine> clearEmptyLines(List<ScriptLine> lines, bool doTrim)
         {
-            List<string> output = new List<string>();
-            foreach(string line in lines)
+            List<ScriptLine> output = new List<ScriptLine>();
+            foreach(ScriptLine line in lines)
             {
-                if (line.Length > 0) 
+                if (line.text.Length > 0) 
                 {
                     if (doTrim)
-                        output.Add(line.Trim());
-                    else
+                    {
+                        line.text = line.text.Trim();
                         output.Add(line);
+                    }
+                    else
+                    {
+                        output.Add(line);
+                    }
                 }
             }
             return output;
@@ -106,24 +138,48 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// </summary>
-        private static List<string> putSymbolsOnNewLines(List<string> lines)
+        private static List<ScriptLine> putSymbolsOnNewLines(List<ScriptLine> lines)
         {
             char[] newlineSymbols = new char[] {'{', '}', '[', ']'};
-            List<string> output = new List<string>(lines);
+            List<ScriptLine> newLines = new List<ScriptLine>();
 
-            for(int i = 0; i < output.Count; i++) 
+            foreach(ScriptLine line in lines)
             {
-                string line = output[i];
+                List<ScriptLine> subLines = new List<ScriptLine>();
                 //only do this if the line contains the symbol
-                if (Contains(line, newlineSymbols) && line.Length > 1)
+                if (Contains(line.text, newlineSymbols) && line.text.Length > 1)
                 {
-                    output.RemoveAt(i); //remove existing line
-                    List<string> parts = safeSplitString(line, newlineSymbols);
-                    for(int j = parts.Count-1; j >= 0; j--)
-                        output.Insert(i, parts[j].Trim());
+                    string[] parts = Split(line.text, newlineSymbols);
+                    for(int j = 0; j < parts.Length; j++)
+                    {
+                        ScriptLine newLine = new ScriptLine(parts[j].Trim());
+                        newLine.openComment = line.openComment;
+                        subLines.Add(newLine);
+                    }
+                }
+
+                int commentIndex = 0;
+                int stringIndex = 0;
+                foreach(ScriptLine subLine in subLines)
+                {
+                    int i = subLine.text.IndexOf("//");
+                    while (i >= 0) 
+                    {
+                        subLine.comments.Add(line.comments[commentIndex]);
+                        commentIndex += 1;
+                        i = subLine.text.IndexOf("//", i);
+                    }
+                    i = subLine.text.IndexOf("\"\"");
+                    while (i >= 0) 
+                    {
+                        subLine.comments.Add(line.strings[commentIndex]);
+                        stringIndex += 1;
+                        i = subLine.text.IndexOf("\"\"", i);
+                    }
+                    newLines.Add(subLine);
                 }
             }
-            return output;
+            return newLines;
         }
 
         /// <summary>
@@ -155,132 +211,210 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Check if the given code line has any of the provided characters in it
         /// </summary>
-        private static bool safeContains(string line, string value)
+        public static string[] Split(string line, char[] characters)
         {
-            List<string> parts = safeSplitString(line, new char[] {'"'});
-            bool result = false;
-            bool isString = false;
-            foreach(string part in parts)
-            {
-                if (part.CompareTo("\"") == 0)
-                    isString = !isString;
-                else if (part.Contains(value) && !isString)
-                    result = true;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Check if the given code line has any of the provided characters in it
-        /// </summary>
-        private static bool safeContains(string line, char value)
-        {
-            return safeContains(line, value.ToString());
-        }
-
-        /// <summary>
-        /// Splits a string but make sure the seperator isn't within a string component
-        /// Empty parts are not returned.
-        /// </summary>
-        private static List<string> safeSplitString(string line, char[] seperators)
-        {
-            List<string> output = new List<string>();
-            bool inString = false;
-            char previous = ' ';
-            string ss = "";
-
+            List<string> parts = new List<string>();
+            string current = "";
             foreach(char c in line)
             {
-                bool isSeperator = false;
-                char seperator = ' ';
-                foreach(char s in seperators)
+                foreach(char s in characters)
                 {
                     if (c == s) 
                     {
-                        isSeperator = true;
-                        seperator = s;
+                        if (current.Length > 0)
+                        {
+                            parts.Add(current);
+                            current = "";
+                        }
                     }
                 }
-
-                if (!inString && isSeperator)
-                {
-                    if (ss.Length > 0) 
-                    {
-                        output.Add(ss);
-                        ss = "";
-                    }
-                    output.Add(seperator.ToString());
-                }
-                else
-                {
-                    ss += c;
-                }
-
-                if ((c == '"' || c== '\'') && previous != '\\')
-                {
-                    inString = !inString;
-                }
-                previous = c;
             }
+            if (current.Length > 0)
+                parts.Add(current);
 
-            if (ss.Length > 0) 
-                output.Add(ss);
-
-            return output;
+            return parts.ToArray();
         }
 
         /// <summary>
-        /// Splits a string but make sure the seperator isn't within a string component
-        /// Empty parts are not returned.
         /// </summary>
-        private static string safeReplaceString(string line, string oldValue, string newValue)
+        private static List<ScriptLine> RemoveSafeText(List<ScriptLine> lines)
         {
-            string output = line;
-            bool inString = false;
-            char previous = ' ';
+            List<ScriptLine> newLines = new List<ScriptLine>();
 
-            for(int i = 0; i < output.Length; i++) 
+            bool nextLineStartsAsComment = false;
+            foreach(ScriptLine line in lines)
             {
-                char c = output[i];
-                if (!inString && c == oldValue[0] && output.Length - i > oldValue.Length)
-                {
-                    string match = "";
-                    for(int j = 0; j < oldValue.Length; j++) 
-                    {
-                        match += output[i+j];
-                    }
-                    if (match.CompareTo(oldValue) == 0) {
-                        output = output.Remove(i, oldValue.Length);
-                        output = output.Insert(i, newValue);
-                    }
-                }
-                if ((c == '"' || c== '\'') && previous != '\\')
-                {
-                    inString = !inString;
-                }
-                previous = c;
+                ScriptLine nLine = RemoveSafeTextFromLine(line, nextLineStartsAsComment);
+                if (nLine.openComment)
+                    nextLineStartsAsComment = true;
+                else
+                    nextLineStartsAsComment = false;
+                newLines.Add(nLine);
             }
-            return output;
+            return newLines;
+        }
+
+        /// <summary>
+        /// </summary>
+        private static ScriptLine RemoveSafeTextFromLine(ScriptLine line, bool startsAsComment)
+        {
+            ScriptLine newLine = new ScriptLine();
+            newLine.text = line.text;
+
+            bool inComment = startsAsComment;
+            bool multiline = startsAsComment;
+            string newText = "";
+            string newComment = "";
+            char previousChar = ' ';
+            char previousChar2 = ' ';
+            //COMMENTS
+            foreach(char c in newLine.text)
+            {
+                if (!inComment)
+                {
+                    newText += c;
+                    if (c == '/' && previousChar == '/' && previousChar2 != '\\')
+                    {
+                        inComment = true;
+                        newComment = "//";
+                    }
+                    if (c == '*' && previousChar == '/' && previousChar2 != '\\')
+                    {
+                        inComment = true;
+                        multiline = true;
+                        newComment = "/*";
+                        newText = newText.Remove(newText.Length-1);
+                        newText += "/";
+                    }
+                }
+                else
+                {
+                    newComment += c;
+                    if (c == '/' && previousChar == '*' && previousChar2 != '\\')
+                    {
+                        inComment = false;
+                        multiline = false;
+                        newLine.comments.Add(newComment);
+                        newComment = "";
+                    }
+                }
+                previousChar2 = previousChar;
+                previousChar = c;
+            }
+            newLine.text = newText;
+            if (newComment.Length > 0)
+                newLine.comments.Add(newComment);
+            newLine.openComment = multiline;
+
+            //STRINGS
+            newText = "";
+            bool inString = false;
+            string newString = "";
+            previousChar = ' ';
+            foreach(char c in newLine.text)
+            {
+                if (!inString)
+                {
+                    newText += c;
+                    if (c == '"' && previousChar != '\\')
+                    {
+                        inString = true;
+                        newString = "";
+                    }
+                }
+                else
+                {
+                    if (c == '"' && previousChar != '\\')
+                    {
+                        newText += c;
+                        inString = false;
+                        newLine.strings.Add(newString);
+                    }
+                    else
+                    {
+                        newString += c;
+                    }
+                }
+                previousChar = c;
+            }
+            newLine.text = newText;
+
+            return newLine;
+        }
+
+        /// <summary>
+        /// </summary>
+        private static List<ScriptLine> RestoreSafeText(List<ScriptLine> lines)
+        {
+            List<ScriptLine> newLines = new List<ScriptLine>();
+
+            bool nextLineStartsAsComment = false;
+            foreach(ScriptLine line in lines)
+            {
+                ScriptLine nLine = RestoreSafeTextToLine(line, nextLineStartsAsComment);
+                newLines.Add(nLine);
+
+                if (line.openComment)
+                    nextLineStartsAsComment = true;
+                else
+                    nextLineStartsAsComment = false;
+            }
+            return newLines;
+        }
+
+        /// <summary>
+        /// </summary>
+        private static ScriptLine RestoreSafeTextToLine(ScriptLine line, bool startsAsComment)
+        {
+            string text = "";
+            int index = 0;
+            if (startsAsComment && line.comments.Count > 0) 
+            {
+                text += line.comments[0];
+                index = 1;
+            }
+            text += line.text;
+            
+            for (int i = index; i < line.comments.Count; i++)
+            {
+                index = text.IndexOf("//", index);
+                if (index >= 0) 
+                {
+                    text = text.Remove(index, 2);
+                    text = text.Insert(index, line.comments[i]);
+                }
+            }
+
+            index = 0;
+            foreach(string stringPart in line.strings)
+            {
+                index = text.IndexOf("\"\"", index);
+                if (index >= 0) 
+                    text = text.Insert(index + 1, stringPart);
+            }
+
+            return new ScriptLine(text);
         }
 
         /// <summary>
         /// Removes tabs and double spaces
         /// </summary>
-        private static List<string> removeWhitespace(List<string> lines)
+        private static List<ScriptLine> removeWhitespace(List<ScriptLine> lines)
         {
-            List<string> output = new List<string>();
-            foreach(string line in lines)
+            List<ScriptLine> output = new List<ScriptLine>();
+            foreach(ScriptLine line in lines)
             {
-                string newLine = line;
-                while(safeContains(newLine, "  ")) 
+                string text = line.text;
+                while(text.Contains("  ")) 
                 {
-                    newLine = safeReplaceString(newLine, "  ", " ");
+                    text = text.Replace("  ", " ");
                 }
-                while(safeContains(newLine, "\t\t")) 
+                while(text.Contains("\t\t")) 
                 {
-                    safeReplaceString(newLine, "\t\t", "\t");
+                    text = text.Replace("\t\t", "\t");
                 }
-                output.Add(newLine);
+                line.text = text;
+                output.Add(line);
             }
             return clearEmptyLines(output, true);
         }
@@ -289,20 +423,21 @@ namespace APSIM.Shared.Utilities
         /// Combine rows between two characters back together
         /// optional interior can be added so that they only combine if the given string is inside.
         /// </summary>
-        private static List<string> combineRows(List<string> lines, char start, char end, string interior = "")
+        private static List<ScriptLine> combineRows(List<ScriptLine> lines, char start, char end, string interior = "")
         {
-            List<string> output = new List<string>();
+            /*
+            List<ScriptLine> output = new List<ScriptLine>();
             for(int i = 0; i < lines.Count; i++)
             {
-                if (lines[i].StartsWith(start))
+                if (lines[i].text.StartsWith(start))
                 {
                     int startI = i;
-                    string newLine = "";
+                    string text = "";
                     bool stop = false;
                     for(int j = i; j < lines.Count && !stop; j++)
                     {
-                        newLine += lines[j] + " ";
-                        if (lines[j].EndsWith(end)) 
+                        text += lines[j].text + " ";
+                        if (lines[j].text.EndsWith(end)) 
                         {
                             stop = true;
                         }
@@ -313,7 +448,7 @@ namespace APSIM.Shared.Utilities
                     }
                     bool writeLine = false;
                     if (interior.Length > 0) {
-                        if (safeContains(newLine.Replace(" ", "").Replace("\t", ""), interior.Replace(" ", "").Replace("\t", ""))) 
+                        if (safeContains(text.Replace(" ", "").Replace("\t", ""), interior.Replace(" ", "").Replace("\t", ""))) 
                         {
                             writeLine = true;
                         }
@@ -324,8 +459,9 @@ namespace APSIM.Shared.Utilities
                     }
                     if (writeLine) 
                     {
-                        newLine = safeReplaceString(newLine, start+" ", start.ToString());
-                        newLine = safeReplaceString(newLine, " "+end, end.ToString());
+                        text = safeReplaceString(text, start+" ", start.ToString());
+                        text = safeReplaceString(text, " "+end, end.ToString());
+
                         output.Add(newLine.Trim());
                     }
                     else
@@ -340,13 +476,16 @@ namespace APSIM.Shared.Utilities
                 }
             }
             return clearEmptyLines(output, true);
+            */
+            return lines;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private static List<string> combinePropertyRows(List<string> lines)
+        private static List<ScriptLine> combinePropertyRows(List<ScriptLine> lines)
         {
+            /*
             List<string> output = new List<string>(lines);
 
             //Combine {get; set;} back to one row
@@ -360,16 +499,16 @@ namespace APSIM.Shared.Utilities
                     output[i-1] += " " + line;
                     output.RemoveAt(i);
                 }
-            }
-            return output;
+            }*/
+            return lines;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private static List<string> combineLinkRows(List<string> lines)
+        private static List<ScriptLine> combineLinkRows(List<ScriptLine> lines)
         {
-            List<string> output = new List<string>(lines);
+            /*List<string> output = new List<string>(lines);
 
             for(int i = 0; i < output.Count; i++)
             {
@@ -380,15 +519,16 @@ namespace APSIM.Shared.Utilities
                     output.RemoveAt(i+1);
                 }
             }
-            return output;
+            return output;*/
+            return lines;
         }
 
         /// <summary>
         /// Combine rows between two characters back together
         /// </summary>
-        private static List<string> addIndent(List<string> lines, string indent)
+        private static List<ScriptLine> addIndent(List<ScriptLine> lines, string indent)
         {
-            int indents = 0;
+            /*int indents = 0;
             List<string> output = new List<string>();
 
             foreach(string line in lines)
@@ -412,14 +552,16 @@ namespace APSIM.Shared.Utilities
                 output.Add(newLine);
             }
 
-            return output;
+            return output;*/
+            return lines;
         }
 
         /// <summary>
         /// Combine rows between two characters back together
         /// </summary>
-        private static List<string> addSpacing(List<string> lines)
+        private static List<ScriptLine> addSpacing(List<ScriptLine> lines)
         {
+            /*
             List<string> output = new List<string>();
             string previousLine = " ";
 
@@ -449,7 +591,8 @@ namespace APSIM.Shared.Utilities
                 output.Add(line);
                 previousLine = line;
             }
-            return output;
+            return output;*/
+            return lines;
         }
     }
 }
