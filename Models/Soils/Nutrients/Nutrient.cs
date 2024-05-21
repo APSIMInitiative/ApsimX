@@ -60,8 +60,8 @@ namespace Models.Soils.Nutrients
         private readonly IPhysical soilPhysical = null;
 
         /// <summary>The Urea pool.</summary>
-        [Link]
-        private readonly Solute[] solutes = null;
+        [NonSerialized]
+        private IEnumerable<ISolute> solutes = null;
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
@@ -292,6 +292,12 @@ namespace Models.Soils.Nutrients
             denitrifiedN = new double[soilPhysical.Thickness.Length];
             nitrifiedN = new double[soilPhysical.Thickness.Length];
             mineralisedN = new double[soilPhysical.Thickness.Length];
+
+            // Try getting solutes from children first. This happens when using NutrientPatchManager.
+            // If not found, use scope to locate solutes.
+            solutes = FindAllChildren<ISolute>();
+            if (!solutes.Any())
+                solutes = FindAllInScope<ISolute>();
 
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");
