@@ -272,19 +272,51 @@ namespace Models.Soils
             if (KS != null && KS.Length > 0)
                 KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
 
+            ParticleSizeClay ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeSilt ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeSand ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeClayMetadata ??= new string[Thickness.Length];
+            ParticleSizeSiltMetadata ??= new string[Thickness.Length];
+            ParticleSizeSandMetadata ??= new string[Thickness.Length];
+
             // Fill in missing particle size values.
-            var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSand, ParticleSizeSandMetadata, Thickness.Length, (i) => 5.0);
-            ParticleSizeSand = values;
-            ParticleSizeSandMetadata = metadata;   
-            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSilt, ParticleSizeSiltMetadata, Thickness.Length, (i) => 65.0);
-            ParticleSizeSilt = values;
-            ParticleSizeSiltMetadata = metadata;
-            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeClay, ParticleSizeClayMetadata, Thickness.Length, (i) => 30.0);
-            ParticleSizeClay = values;
-            ParticleSizeClayMetadata = metadata;
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                bool clayIsSupplied = !double.IsNaN(ParticleSizeClay[i]);
+                bool siltIsSupplied = !double.IsNaN(ParticleSizeSilt[i]);
+                bool sandIsSupplied = !double.IsNaN(ParticleSizeSand[i]);
+
+                if (!clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 30);
+                    SetDefaultSilt(i, 65);
+                    SetDefaultSand(i, 5);
+                }
+                else if (clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultSilt(i, 0.65 * (100-ParticleSizeClay[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (siltIsSupplied && !clayIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100-ParticleSizeSilt[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (sandIsSupplied && !clayIsSupplied && !siltIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100-ParticleSizeSilt[i]));
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                }
+                else if (clayIsSupplied && siltIsSupplied && !sandIsSupplied)
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                else if (clayIsSupplied && sandIsSupplied && !siltIsSupplied)
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                else if (siltIsSupplied && sandIsSupplied && !clayIsSupplied)
+                    SetDefaultClay(i, 100 - ParticleSizeSilt[i] - ParticleSizeSand[i]);
+            }
 
             // Fill in missing rocks.
-            (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) => 
+            var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) => 
             {
                 double particleDensity = 2.65;
                 double totalPorosity = (1 - BD[i] / particleDensity) * 0.93;
@@ -297,6 +329,34 @@ namespace Models.Soils
             Rocks = values;
             RocksMetadata = metadata;
         }
+
+        /// <summary>Set the default clay content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultClay(int i, double value)
+        {
+            ParticleSizeClay[i] = value;
+            ParticleSizeClayMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default silt content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSilt(int i, double value)
+        {
+            ParticleSizeSilt[i] = value;
+            ParticleSizeSiltMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default sand content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSand(int i, double value)
+        {
+            ParticleSizeSand[i] = value;
+            ParticleSizeSandMetadata[i] = "Calculated";
+        }
+
 
         private Water WaterNode
         {
