@@ -112,8 +112,17 @@ namespace Models.Core
         /// <summary>
         /// List of plant organs that have damagable organs returned in plant.organ format.
         /// </summary>
-        PlantOrganList
+        PlantOrganList,
 
+		/// <summary>
+        /// Provides a EditorView object for display
+        /// </summary>
+        Code,
+
+         /// <summary>
+        /// Provides a GTK Colour Picker dialog
+        /// </summary>
+        ColourPicker
     }
 
     /// <summary>
