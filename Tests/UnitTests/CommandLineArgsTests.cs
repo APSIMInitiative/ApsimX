@@ -760,7 +760,7 @@ save {apsimxFileName}
         public void TestPlaylistCaseInsensitivity()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = sims.FindChild<Simulation>().Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -868,6 +868,84 @@ run";
             Manager manager = moddedSim.FindDescendant<Manager>("Sowing");
             var modifiedPair = KeyValuePair.Create("StartDate", "2-May");
             Assert.IsTrue(manager.Parameters.Contains(modifiedPair));
+        }
+          
+        /// <summary>
+        /// Test log switch works as expected.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ChangesVerbosity_ToError()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Utilities.RunModels($"{simName} --log error");
+            Simulations simAfterVerbosityChange = FileFormat.ReadFromFile<Simulations>(simName, e => throw e, true).NewModel as Simulations;
+            Summary summary = simAfterVerbosityChange.FindDescendant<Summary>();
+            Assert.True(summary.Verbosity == MessageType.Error);
+        }
+
+        /// <summary>
+        /// Test log switch throws an exception when a bad string is included.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ThrowsException_When_NonMatchingVerbosityType_IsUsed()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Assert.Throws<Exception>(() => Utilities.RunModels($"{simName} --log xyz"));
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_DoesNotFillDB()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileName = Path.GetFileNameWithoutExtension(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileName + ".db";
+            Utilities.RunModels($"{sims.FileName} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_WorksWithApplySwitch()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileNameWithoutExt + ".db";
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"load {simsFileName}{Environment.NewLine}" +
+                $"duplicate [Simulation] Simulation1{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+            Utilities.RunModels($"--apply {commandsFilePath} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);            
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_WorksWithApplySwitch_WithFile()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileNameWithoutExt + ".db";
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"duplicate [Simulation] Simulation1{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+            Utilities.RunModels($"{sims.FileName} --apply {commandsFilePath} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);            
         }
     }
 }

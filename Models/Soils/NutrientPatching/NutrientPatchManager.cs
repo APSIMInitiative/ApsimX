@@ -175,6 +175,38 @@ namespace Models.Soils.NutrientPatching
         public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
 
         /// <summary>
+        /// Add an amount of c, n, p (kg/ha) into a layer of the microbial pool.
+        /// </summary>
+        /// <param name="i">Layer index</param>
+        /// <param name="c">Amount of carbon (kg/ha)</param>
+        /// <param name="n">Amount of nitrogen (kg/ha)</param>
+        /// <param name="p">Amount of phosphorus (kg/ha)</param>
+        public void AddToMicrobial(int i, double c, double n, double p)
+        {
+            var areas = patches.Select(patch => patch.RelativeArea).ToList();
+            var poolsAsList = patches.Select(patch => patch.Nutrient.Microbial).ToList();
+
+            for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
+                poolsAsList[poolIndex].Add(i, c/areas[poolIndex], n/areas[poolIndex], p/areas[poolIndex]);
+        }
+
+        /// <summary>
+        /// Add an amount of c, n, p (kg/ha) into a layer of the humic pool.
+        /// </summary>
+        /// <param name="i">Layer index</param>
+        /// <param name="c">Amount of carbon (kg/ha)</param>
+        /// <param name="n">Amount of nitrogen (kg/ha)</param>
+        /// <param name="p">Amount of phosphorus (kg/ha)</param>
+        public void AddToHumic(int i, double c, double n, double p)
+        {
+            var areas = patches.Select(patch => patch.RelativeArea).ToList();
+            var poolsAsList = patches.Select(patch => patch.Nutrient.Humic).ToList();
+
+            for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
+                poolsAsList[poolIndex].Add(i, c/areas[poolIndex], n/areas[poolIndex], p/areas[poolIndex]);
+        }
+
+        /// <summary>
         /// Called by solutes to get the value of a solute.
         /// </summary>
         /// <param name="name">The name of the solute to get.</param>
@@ -452,6 +484,27 @@ namespace Models.Soils.NutrientPatching
             newPatch.Name = "base";
             patches.Add(newPatch);
             Structure.Add(newPatch.Nutrient, this);
+
+            // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition 
+            // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
+            var microbialPool = new OrganicPoolPatch(this)
+            {
+                Name = "Microbial"
+            };
+            Structure.Add(microbialPool, this);
+
+            // Move the child to the first in the list so that scoping finds it before child of nutrient with same name.
+            Children.Remove(microbialPool);
+            Children.Insert(0, microbialPool);
+
+            var humicPool = new OrganicPoolPatch(this)
+            {
+                Name = "Humic"
+            };
+            Structure.Add(humicPool, this);
+            Children.Remove(humicPool);
+            Children.Insert(0, humicPool);
+
         }
 
         /// <summary>
