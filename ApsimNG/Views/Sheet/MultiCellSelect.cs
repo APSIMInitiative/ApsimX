@@ -214,11 +214,12 @@ namespace UserInterface.Views
                     sheet.CellEditor.EndEdit();
                     
             int i = 0;
-            int length = (selectedRowIndexBottom - selectedRowIndex) * (selectedColumnIndexRight - selectedColumnIndex);
+            int length = (selectedRowIndexBottom - selectedRowIndex + 1) * (selectedColumnIndexRight - selectedColumnIndex + 1);
             int[] rowIndices = new int[length];
             int[] columnIndices = new int[length];
             string[] values = new string[length];
             for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
+            {
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                 {
                     rowIndices[i] = rowIndex;
@@ -226,6 +227,7 @@ namespace UserInterface.Views
                     values[i] = "";
                     i++;
                 }
+            }
             sheet.DataProvider.SetCellContents(columnIndices, rowIndices, values);
         }
 

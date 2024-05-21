@@ -313,6 +313,7 @@ namespace UserInterface.Presenters
                 {
                     SaveGridToModel();
                     CellChanged?.Invoke(sender, colIndices, rowIndices, values);
+
                 }
                 catch (Exception err)
                 {

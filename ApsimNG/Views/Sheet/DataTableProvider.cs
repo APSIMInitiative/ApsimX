@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace UserInterface.Views
 {
@@ -82,8 +83,7 @@ namespace UserInterface.Views
         /// <param name="values">The values.</param>
         public void SetCellContents(int[] colIndices, int[] rowIndices, string[] values)
         {
-            int cellCount = colIndices.Length * rowIndices.Length;
-            for(int i = 0 ; i < cellCount; i++ )
+            for(int i = colIndices.Length-1; i >= 0; i-- )
             {
                 var cellState = GetCellState(colIndices[i], rowIndices[i]);
                 if (cellState == SheetDataProviderCellState.Normal || cellState == SheetDataProviderCellState.Calculated)
@@ -91,20 +91,64 @@ namespace UserInterface.Views
                     int j = rowIndices[i] - numHeadingRows;
                     if (j >= 0)
                     {
-                        while (i >= Data.Rows.Count)
+                        while (j >= Data.Rows.Count)
                             Data.Rows.Add(Data.NewRow());
 
-                        var existingValue = Data.Rows[i][colIndices[i]];
+                        var existingValue = Data.Rows[j][colIndices[i]];
                         if (existingValue != null && values[i] == null ||
                             existingValue == null && values[i] != null ||
                             existingValue.ToString() != values[i].ToString())
                         {
-                            Data.Rows[i][colIndices[i]] = values[i];
-                            CellChanged?.Invoke(this, colIndices, rowIndices, values);
+                            Data.Rows[j][colIndices[i]] = values[i];                           
                         }
                     }
                 }
             }
+
+            // Check each row. If all cells in a row are null except the read-only cells
+            // make them mutable temporarily, change the value to null, and make them read-only again.
+            // This is required to allow the DataTable to have rows removed correctly.
+            if (values.All(v => v == ""))
+            {
+                foreach (DataRow row in Data.Rows)
+                {
+                    bool isRowEmptyExceptForReadOnlyCells = false;
+                    List<bool> rowEmptyStates = new();    
+                    foreach(DataColumn column in Data.Columns)
+                    {
+                        SheetDataProviderCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
+                        if(cellState != SheetDataProviderCellState.ReadOnly)
+                        {
+                            var dataValue = Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal];
+                            if(dataValue.ToString().Equals(""))
+                            {
+                                rowEmptyStates.Add(true);
+                            }
+                            else rowEmptyStates.Add(false);
+                        }
+                    }
+
+                    if (!rowEmptyStates.Contains(false) && rowEmptyStates.Any() != false)
+                        isRowEmptyExceptForReadOnlyCells = true;
+                    
+                    // Set the read-only cells to mutable temporarily, change value, set back to read-only.
+                    if (isRowEmptyExceptForReadOnlyCells)
+                    {
+                        foreach(DataColumn column in Data.Columns)
+                        {
+                            SheetDataProviderCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
+                            if(cellState == SheetDataProviderCellState.ReadOnly)
+                            {
+                                column.ReadOnly = false;
+                                Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal] = "";
+                                column.ReadOnly = true;
+                            }                      
+                        }
+                    }
+                }
+            }
+
+            CellChanged?.Invoke(this, colIndices, rowIndices, values);
         }
 
         /// <summary>Is the column readonly?</summary>
