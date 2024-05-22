@@ -187,7 +187,7 @@ namespace Models.Soils.NutrientPatching
             var poolsAsList = patches.Select(patch => patch.Nutrient.Microbial).ToList();
 
             for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
-                poolsAsList[poolIndex].Add(i, c/areas[poolIndex], n/areas[poolIndex], p/areas[poolIndex]);
+                poolsAsList[poolIndex].Add(i, c, n, p);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Models.Soils.NutrientPatching
             var poolsAsList = patches.Select(patch => patch.Nutrient.Humic).ToList();
 
             for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
-                poolsAsList[poolIndex].Add(i, c/areas[poolIndex], n/areas[poolIndex], p/areas[poolIndex]);
+                poolsAsList[poolIndex].Add(i, c, n, p);
         }
 
         /// <summary>
