@@ -156,8 +156,10 @@ namespace Models.Core
                                 peStream: ms,
                                 pdbStream: withDebug ? pdbStream : null,
                                 xmlDocumentationStream: xmlDocumentationStream,
-                                embeddedTexts: embeddedTexts
+                                embeddedTexts: embeddedTexts,
+                                options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb)
                                 );
+
                             if (!emitResult.Success)
                             {
                                 // Errors were found. Add then to the return error string.
@@ -183,6 +185,7 @@ namespace Models.Core
                                     previousCompilations.Add(compilation);
                                 }
 
+                                /*
                                 // Write the assembly to disk if this is a GUI run. Only need the .dll for debugging runs.
                                 if (Path.GetFileName(Assembly.GetEntryAssembly().Location) == "ApsimNG.dll")
                                 {
@@ -196,7 +199,14 @@ namespace Models.Core
                                     xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
                                     using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
                                         xmlDocumentationStream.WriteTo(documentationWriter);
+
+                                    // Write pdb Documentation file.
+                                    string pdbFile = Path.ChangeExtension(fileName, ".pdb");
+                                    pdbStream.Seek(0, SeekOrigin.Begin);
+                                    using (FileStream pdbWriter = new FileStream(pdbFile, FileMode.Create, FileAccess.Write))
+                                        pdbStream.WriteTo(pdbWriter);
                                 }
+                                */
                                 // Set the compilation properties.
                                 ms.Seek(0, SeekOrigin.Begin);
                                 pdbStream.Seek(0, SeekOrigin.Begin);
