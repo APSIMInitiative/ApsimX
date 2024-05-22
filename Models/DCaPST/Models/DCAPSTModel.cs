@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Interfaces;
 
@@ -10,7 +11,7 @@ namespace Models.DCAPST
     /// 
     /// </summary>
     [Serializable]
-    public class DCAPSTModel : IPhotosynthesisModel
+    public class DCAPSTModel : Model, IPhotosynthesisModel
     {
         /// <summary>
         /// The solar geometry

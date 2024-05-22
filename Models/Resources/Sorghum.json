@@ -3737,6 +3737,24 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.maxSLAAdjustment",
+                      "Name": "maxSLAAdjustment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.slaLeafNoCoefficient",
+                      "Name": "slaLeafNoCoefficient",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].Parameters.maxLAIForTillerAddition",
                       "Name": "maxLAIForTillerAddition",
                       "ResourceName": null,
@@ -6150,6 +6168,26 @@
                   "FixedValue": 15.0,
                   "Units": "%",
                   "Name": "tillerSlaBound",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 25,
+                  "Units": "%",
+                  "Name": "maxSLAAdjustment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 18.158,
+                  "Units": null,
+                  "Name": "slaLeafNoCoefficient",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -9384,7 +9422,8 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
@@ -9397,7 +9436,8 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
                   ],
                   "Name": "M35-1",
                   "ResourceName": null,
@@ -9416,7 +9456,8 @@
                     "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
@@ -9427,7 +9468,8 @@
                     "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
@@ -9459,7 +9501,7 @@
                     "[Phenology].TTFlowerToMaturity.FixedValue = 695",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
                   ],
                   "Name": "dekalb_DK55",
                   "ResourceName": null,

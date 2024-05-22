@@ -1,5 +1,3 @@
-using APSIM.Shared.APSoil;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
@@ -56,12 +54,6 @@ namespace Models.DCAPST
         private string cropName = string.Empty;
 
         /// <summary>
-        /// Store the model as this is used in different functions after assignment.
-        /// </summary>
-        [JsonIgnore]
-        private DCAPSTModel dcapstModel = null;
-
-        /// <summary>
         /// This flag is set to indicate that we have started using DCaPST. 
         /// We wait until the Leaf LAI reaches our tolerance before starting to use 
         /// DCaPST and the continue to use it until a new sowing event occcurs.
@@ -104,7 +96,14 @@ namespace Models.DCAPST
         /// <summary>
         /// The DCaPST Parameters.
         /// </summary>
-        public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
+        [JsonIgnore]
+        public DCaPSTParameters Parameters { get; private set; } = new DCaPSTParameters();
+
+        /// <summary>
+        /// Store the model as this is used in different functions after assignment.
+        /// </summary>
+        [JsonIgnore]
+        public DCAPSTModel DcapstModel { get; private set; } = null;
 
         /// <summary>
         /// The biological transpiration limit of a plant
@@ -264,7 +263,7 @@ namespace Models.DCAPST
                 return;
             }
 
-            dcapstModel = SetUpModel(
+            DcapstModel = SetUpModel(
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
@@ -280,7 +279,7 @@ namespace Models.DCAPST
             double sln = GetSln(leaf);
             double soilWaterValue = GetSoilWater(leaf);
 
-            dcapstModel.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
+            DcapstModel.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
 
             // Outputs
             foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
@@ -289,12 +288,12 @@ namespace Models.DCAPST
                 {
                     new CanopyEnergyBalanceInterceptionlayerType()
                     {
-                        AmountOnGreen = dcapstModel.InterceptedRadiation
+                        AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
                 };
 
-                canopy.PotentialEP = dcapstModel.WaterDemanded;
-                canopy.WaterDemand = dcapstModel.WaterDemanded;
+                canopy.PotentialEP = DcapstModel.WaterDemanded;
+                canopy.WaterDemand = DcapstModel.WaterDemanded;
             }
         }
 
@@ -304,24 +303,24 @@ namespace Models.DCAPST
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (dcapstModel is null) return;
+            if (DcapstModel is null) return;
 
             var leaf = GetLeaf();
 
             if (leaf is SorghumLeaf sorghumLeaf)
             {
-                if (dcapstModel.InterceptedRadiation > 0)
+                if (DcapstModel.InterceptedRadiation > 0)
                 {
-                    sorghumLeaf.BiomassRUE = dcapstModel.ActualBiomass;
+                    sorghumLeaf.BiomassRUE = DcapstModel.ActualBiomass;
                 }
-                if (dcapstModel.WaterSupplied > 0)
+                if (DcapstModel.WaterSupplied > 0)
                 {
-                    sorghumLeaf.BiomassTE = dcapstModel.ActualBiomass;
+                    sorghumLeaf.BiomassTE = DcapstModel.ActualBiomass;
                 }
             }
             else if (leaf is Leaf complexLeaf)
             {
-                complexLeaf.DMSupply.Fixation = dcapstModel.ActualBiomass;
+                complexLeaf.DMSupply.Fixation = DcapstModel.ActualBiomass;
             }
             else
             {

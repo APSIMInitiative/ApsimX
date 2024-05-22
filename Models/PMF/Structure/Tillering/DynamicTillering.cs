@@ -79,13 +79,15 @@ namespace Models.PMF.Struct
         [Link(Type = LinkType.Child, ByName = true)]
         readonly IFunction tillerSlaBound = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        readonly IFunction slaLeafNoCoefficient = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        readonly IFunction maxSLAAdjustment = null;
+
         /// <summary>Number of potential Fertile Tillers at harvest</summary>
         [JsonIgnore]
         public double CalculatedTillerNumber { get; set; }
-
-        /// <summary>Tillering calculation type</summary>
-        [JsonIgnore]
-        public int TilleringMethod { get; set; }
 
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
@@ -124,6 +126,7 @@ namespace Models.PMF.Struct
         private readonly List<int> tillerOrder = new();
         private bool initialTillersAdded = false;
         private bool isDynamicTillering = true;
+        private TilleringMethodEnum tilleringMethod = TilleringMethodEnum.DynamicTillering;
 
         private double GetDeltaDmGreen() { return leaf.potentialDMAllocation.Structural; }
 
@@ -412,40 +415,44 @@ namespace Models.PMF.Struct
 
         private double CalcCarbonLimitation(double dltStressedLAI)
         {
+            if (dltStressedLAI <= 0.0) return 1.0;
+
             // Get the total leaf mass and LAI of the plant.
-            var leafMass = leaf.Live.Wt;
-            var laiTotal = leaf.LAITotal;
+            var leafMassGm2 = leaf.Live.Wt;
+            var laiTotalM2 = leaf.LAITotal;
 
             // If there is no leaf mass then there is nothing to do.
-            if (leafMass < 0.0) return 1.0;
+            if (leafMassGm2 < 0.0) return 1.0;
 
             double dltDmGreen = GetDeltaDmGreen();
-            var leafMassNew = (leafMass + dltDmGreen);
-            if (leafMassNew < 0.0) return 1.0;
-            var slaNew = (laiTotal + dltStressedLAI) / leafMassNew;            
+            var leafMassNewGm2 = (leafMassGm2 + dltDmGreen);
+            if (leafMassNewGm2 < 0.0) return 1.0;
+            var slaNewCm2g = (laiTotalM2 + dltStressedLAI) * 10000 / leafMassNewGm2;
 
             var mainCulm = culms.Culms[0];
             double nLeaves = mainCulm.CurrentLeafNo;
             MaxSLA = CalculateMaxSLA(nLeaves);
+            MaxSLA *= (100 + maxSLAAdjustment.Value()) / 100.0;
             ConstrainMaxSLA();
 
-            if (slaNew <= MaxSLA) return 1.0;
+            if (slaNewCm2g <= MaxSLA) return 1.0;
 
             // Leaf is getting too thin, reduce area growth.
-            var dltLaiPossible = MaxSLA * leafMassNew - laiTotal;
+            var dltLaiPossible = (MaxSLA / 10000) * leafMassNewGm2 - laiTotalM2;
             var laiFractionalReductionForSLA = Math.Max(dltLaiPossible / dltStressedLAI, 0.0);
 
             if (laiFractionalReductionForSLA < 1)
             {
                 summary.WriteMessage(this, $"Leaf Area reduced due to carbon limitation: {Environment.NewLine}", MessageType.Information);
-                summary.WriteMessage(this, $"LaiTotal: {laiTotal}. MaxSLA: {MaxSLA}. SlaNew: {slaNew}. dltStressedLAI: {dltStressedLAI:F3}. Reduce by: {laiFractionalReductionForSLA:F3}. dltDmGreen: {dltDmGreen:F3}", MessageType.Information);
+                summary.WriteMessage(this, $"LaiTotal: {laiTotalM2:F3}. MaxSLA: {MaxSLA:F3}. SlaNew: {slaNewCm2g:F3}. dltStressedLAI: {dltStressedLAI:F3}. Reduce by: {laiFractionalReductionForSLA:F3}. dltDmGreen: {dltDmGreen:F3}", MessageType.Information);
             }
             return laiFractionalReductionForSLA;
         }
 
-        private static double CalculateMaxSLA(double nLeaves)
+        private double CalculateMaxSLA(double nLeaves)
         {
-            return 429.72 - 18.158 * (nLeaves);
+            var slaLeafNoCoefficientValue = slaLeafNoCoefficient.Value();
+            return 429.72 - slaLeafNoCoefficientValue * (nLeaves);
         }
 
         private void ConstrainMaxSLA()
@@ -457,7 +464,7 @@ namespace Models.PMF.Struct
         private void CalculateTillerCessation(double dltStressedLAI)
         {
             bool moreToAdd = (CurrentTillerNumber < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
-            var tillerLaiToReduce = CalcCeaseTillerSignal(dltStressedLAI);
+            var tillerLaiToReduce = CalcCeaseTillerSignal();
             double nLeaves = culms.Culms[0].CurrentLeafNo;
 
             if (nLeaves < 8 || moreToAdd || tillerLaiToReduce < 0.00001) return;
@@ -500,7 +507,7 @@ namespace Models.PMF.Struct
             culms.Culms.ForEach(c => CurrentTillerNumber += c.Proportion); CurrentTillerNumber -= 1;
         }
 
-        private double CalcCeaseTillerSignal(double dltStressedLAI)
+        private double CalcCeaseTillerSignal()
         {
             var mainCulm = culms.Culms.FirstOrDefault();
 
@@ -509,7 +516,7 @@ namespace Models.PMF.Struct
             double nLeaves = mainCulm.CurrentLeafNo;
             MaxSLA = CalculateMaxSLA(nLeaves);
             // sla bound vary 30 - 40%
-            MaxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);
+            MaxSLA *= (100 - tillerSlaBound.Value()) / 100.0;
             ConstrainMaxSLA();
             double dmGreen = leaf.Live.Wt;
 
@@ -575,9 +582,9 @@ namespace Models.PMF.Struct
                 radiationValues = 0.0;
                 temperatureValues = 0.0;
 
-                TilleringMethod = data.TilleringMethod;
+                tilleringMethod = (TilleringMethodEnum)data.TilleringMethod;
 
-                switch ((TilleringMethodEnum)data.TilleringMethod)
+                switch (tilleringMethod)
                 {
                     case TilleringMethodEnum.RulOfThumb:
                         CalculatedTillerNumber = RuleOfThumbFTNGenerator.CalculateFtn(weather, plant, clock);
@@ -589,6 +596,7 @@ namespace Models.PMF.Struct
 
                     case TilleringMethodEnum.DynamicTillering:
                         isDynamicTillering = true;
+                        CalculatedTillerNumber = 0.0;
                         break;
                 }
             }
