@@ -55,6 +55,15 @@
                   "Name": "ReturnType",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
+                  "Name": "PatchNum",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -71,7 +80,8 @@
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
                         "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[KillClover].Script.Enable = false",
+                        "[PatchAndZoneManager].Script.NumSpecies = 2"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -650,8 +660,9 @@
                         "[Weather].FileName = VCS_Ruakura.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
-                        "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = true"
+                        "[Fertilisation].Script.Amount = 150",
+                        "[KillClover].Script.Enable = false",
+                        "[PatchAndZoneManager].Script.NumSpecies = 2"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -936,7 +947,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -998,11 +1009,11 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1068,7 +1079,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1102,7 +1113,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1144,7 +1155,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1173,7 +1184,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1181,7 +1192,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1232,7 +1243,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1283,7 +1294,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1334,7 +1345,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1349,15 +1360,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1367,7 +1378,8 @@
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
                         "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[KillClover].Script.Enable = false",
+                        "[PatchAndZoneManager].Script.NumSpecies = 2"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2115,7 +2127,8 @@
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
                         "[Fertilisation].Script.Amount = 250",
-                        "[KillClover].Script.Enable = false"
+                        "[KillClover].Script.Enable = false",
+                        "[PatchAndZoneManager].Script.NumSpecies = 2"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2176,7 +2189,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2322,7 +2335,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2360,7 +2373,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2398,7 +2411,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2436,7 +2449,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2474,7 +2487,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2512,11 +2525,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2566,7 +2579,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2574,7 +2587,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2640,7 +2653,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2669,7 +2682,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2677,7 +2690,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2728,7 +2741,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2779,7 +2792,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2830,7 +2843,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2845,15 +2858,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2863,7 +2876,8 @@
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
                         "[Fertilisation].Script.Amount = 400",
-                        "[KillClover].Script.Enable = true"
+                        "[KillClover].Script.Enable = true",
+                        "[PatchAndZoneManager].Script.NumSpecies = 1"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -3611,7 +3625,8 @@
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
                         "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[KillClover].Script.Enable = false",
+                        "[PatchAndZoneManager].Script.NumSpecies = 2"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -4358,15 +4373,6 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 5",
-                  "Name": "PatchNum",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1, 5, 10, 20, 50, 70, 100, 150, 200, 300, 500",
                   "Name": "PatchNumAll",
                   "ResourceName": null,
@@ -4376,7 +4382,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=true",
+                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false,true",
                   "Name": "PatchType",
                   "ResourceName": null,
                   "Children": [],
@@ -4400,7 +4406,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "1975-12-31T00:00:00",
+              "End": "1976-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -4409,7 +4415,7 @@
             },
             {
               "$type": "Models.Summary, Models",
-              "Verbosity": 100,
+              "Verbosity": 0,
               "Name": "SummaryFile",
               "ResourceName": null,
               "Children": [],
@@ -4498,6 +4504,9 @@
                 "        [Description(\"How many patches or zones should be created?\")]",
                 "        public int ZoneCount { get; set; }",
                 "        ",
+                "        [Description(\"How many pasture species will be active in this simulation?\")]",
+                "        public int NumSpecies { get; set; }",
+                "        ",
                 "        [Description(\"Nature of nutrient return\")]",
                 "        public UrineReturnTypes UrineReturnType { get; set; }",
                 "",
@@ -4552,22 +4561,15 @@
                 "            var simulation = Parent.Parent as Simulation;",
                 "            var zone = simulation.FindChild<Zone>();",
                 "                ",
-                "            // Set the maximum N uptake for all species",
-                "            foreach (var species in zone.FindAllDescendants<PastureSpecies>())",
-                "            {",
-                "                var root = species.FindChild<PastureBelowGroundOrgan>();",
-                "                root.MaximumNUptake = 1.5;   // in Classic this was 3 kg N /ha /day for the whole sward - but now these are seperate species",
-                "            }",
+                "\t        foreach (var species in zone.FindAllDescendants<PastureSpecies>())",
+                "\t        {",
+                "\t            var root = species.FindChild<PastureBelowGroundOrgan>();",
+                "\t            root.MaximumNUptake = 1.5 / NumSpecies;   // in Classic this was 3 kg N /ha /day for the whole sward - but now these are seperate species",
+                "\t        }",
                 "                ",
                 "            if (!PseudoPatches)  // so now this is zones - possibly multiple zones",
                 "            {",
                 "                zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones",
-                "                   foreach (var species in zone.FindAllDescendants<PastureSpecies>())",
-                "                {",
-                "                    var root = species.FindChild<PastureBelowGroundOrgan>();",
-                "                    root.MaximumNUptake = 1.5;",
-                "                ",
-                "                }",
                 "                for (int i = 0; i < ZoneCount-1; i++)",
                 "                {",
                 "                    var newZone = Apsim.Clone(zone);",
@@ -4695,6 +4697,14 @@
                 "                if (Verbose)",
                 "                    summary.WriteMessage(this, \"Finished Grazing\", MessageType.Diagnostic);",
                 "",
+                "            }",
+                "            else",
+                "            {",
+                "                HarvestedWt = 0.0;",
+                "                HarvestedN = 0.0;",
+                "                AmountUrineNReturned = 0.0; ",
+                "                AmountDungNReturned = 0.0; ",
+                "                AmountDungCReturned = 0.0;",
                 "            }",
                 "        }",
                 "",
@@ -4930,8 +4940,8 @@
               ],
               "Parameters": [
                 {
-                  "Key": "UrineReturnType",
-                  "Value": "FromHarvest"
+                  "Key": "ZoneCount",
+                  "Value": "0"
                 },
                 {
                   "Key": "Verbose",
@@ -4939,11 +4949,11 @@
                 },
                 {
                   "Key": "PseudoPatches",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
-                  "Key": "ZoneCount",
-                  "Value": "5"
+                  "Key": "UrineReturnType",
+                  "Value": "FromHarvest"
                 },
                 {
                   "Key": "UrineReturnPattern",
@@ -4952,6 +4962,10 @@
                 {
                   "Key": "UrineDepthPenetration",
                   "Value": "200"
+                },
+                {
+                  "Key": "NumSpecies",
+                  "Value": "2"
                 }
               ],
               "Name": "PatchAndZoneManager",
@@ -4998,7 +5012,7 @@
                 "        [JsonIgnore] public int PatchCount  { get; set; }",
                 "        [JsonIgnore] public int ArrayLength  { get; set; }",
                 "",
-                "        [JsonIgnore] public DateTime SysTime  { get; set; }",
+                "        [JsonIgnore] public string SysTime  { get; set; }",
                 "",
                 "// Whole paddock states and fluxes",
                 "        [JsonIgnore] public double DenitPdk { get; set; }",
@@ -5044,7 +5058,7 @@
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                 "        {    ",
-                "            Debugger.Break();",
+                "            //Debugger.Break();",
                 "            ",
                 "// first deal with the Nutrient things. These will always have multiple values - patches or zones            ",
                 "            if (patchAndZoneManager.PseudoPatches == true)",
@@ -5075,7 +5089,7 @@
                 "        [EventSubscribe(\"EndOfDay\")]",
                 "        private void OnEndOfDay(object sender, EventArgs e)",
                 "        {",
-                "            SysTime = DateTime.Now;",
+                "            SysTime = DateTime.Now.ToString();",
                 "        ",
                 "            if (patchAndZoneManager.PseudoPatches == false)  // explicit zones",
                 "            {",
@@ -5134,7 +5148,7 @@
                 "            }",
                 "            else  // PseudoPatches and there will only be one zone",
                 "            {",
-                "                for (int x = 0; x < zones.Length; x++)  // there is only onw however",
+                "                for (int x = 0; x < zones.Length; x++)  // there is only one however still need this to access the zone for the components",
                 "                {",
                 "                    var soil = zones[x].FindChild<Soil>();  ",
                 "                    var patchManager = soil.FindChild<NutrientPatchManager>();  ",
@@ -5169,7 +5183,7 @@
                 "                    ",
                 "                    DenitPdk = DenitByPatch.Sum() / nutrientPatchManager.NumPatches;",
                 "                    DenitN2OPdk = DenitN2OByPatch.Sum() / nutrientPatchManager.NumPatches;",
-                "                    LeachedNPdk = LeachedNByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    LeachedNPdk = LeachedNByPatch.Sum();                                        // not part of the patching so do not divide  / nutrientPatchManager.NumPatches;",
                 "                    UreaPdk = UreaByPatch.Sum() / nutrientPatchManager.NumPatches;",
                 "                    NH4Pdk = NH4ByPatch.Sum() / nutrientPatchManager.NumPatches;",
                 "                    NO3Pdk = NO3ByPatch.Sum() / nutrientPatchManager.NumPatches;",
@@ -5177,7 +5191,6 @@
                 "                    TotalCPdk = TotalCByPatch.Sum() / nutrientPatchManager.NumPatches;",
                 "                    TotalNPdk = TotalNByPatch.Sum() / nutrientPatchManager.NumPatches;",
                 "                    ",
-                "                    //LeachedNPdk = LeachedNByPatch.Sum();",
                 "                    HerbageWtPdk = HerbageWtByPatch.Sum();",
                 "                    HerbageNPdk = HerbageNByPatch.Sum();",
                 "                    HarvestedWtPdk = HarvestedWtByPatch.Sum();",
@@ -5197,7 +5210,7 @@
                 "",
                 "}"
               ],
-              "Parameters": [],
+              "Parameters": null,
               "Name": "ReportingWithZonesHelper",
               "ResourceName": null,
               "Children": [],
@@ -5240,17 +5253,20 @@
                 "[ReportingWithZonesHelper].ScriptReporting.SysTime as SysTime",
                 "",
                 "// states in the individual zones or patches",
-                "//[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.TotalCByPatch as TotalCByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.TotalNByPatch as TotalNByPatch ",
                 "",
-                "[NutrientPatchManager].NO3EachPatch",
+                "//[NutrientPatchManager].NO3EachPatch",
                 "sum([NO3].kgha)"
               ],
               "EventNames": [
-                "//Clock.Today >= new DateTime(1972, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
-                "[Clock].EndOfDay"
+                "//Clock.Today >= new DateTime(1970, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
+                "[Clock].EndOfDay",
+                "//[Clock].EndOfYear"
               ],
               "GroupByVariableName": null,
               "Name": "ReportingWithPatchesPaddock",
@@ -5616,7 +5632,7 @@
                     },
                     {
                       "Key": "Amount",
-                      "Value": "100"
+                      "Value": "150"
                     },
                     {
                       "Key": "AmountType",
@@ -5675,6 +5691,51 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Utilities;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using System.Linq;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Description(\"Enable this action?\")] public bool Enable { get; set; }",
+                    "        [Description(\"Pasture component to kill\")] public IPlant Crop { get; set; }",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "                if (Enable) ",
+                    "                    Crop.EndCrop();",
+                    "        }",
+                    "    }",
+                    "}",
+                    "       "
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "Enable",
+                      "Value": "False"
+                    },
+                    {
+                      "Key": "Crop",
+                      "Value": "[AGPRyegrass]"
+                    }
+                  ],
+                  "Name": "KillRyeGrass",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Irrigation, Models",
                   "Name": "Irrigation",
                   "ResourceName": null,
@@ -5686,6 +5747,190 @@
                   "$type": "Models.Fertiliser, Models",
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "grass",
+                  "InitialResidueType": "grass",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 15.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "doyGermination": 275,
+                  "daysEmergenceToAnthesis": 120,
+                  "daysAnthesisToMaturity": 85,
+                  "degreesDayForAnthesis": 1100.0,
+                  "degreesDayForMaturity": 900.0,
+                  "daysAnnualsFactor": 45,
+                  "FVPDFunction": {
+                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                    "Name": "LinearInterpolationFunction",
+                    "ResourceName": null,
+                    "Children": [],
+                    "Enabled": true,
+                    "ReadOnly": false
+                  },
+                  "CanopyType": "PastureSpecies",
+                  "LightProfile": null,
+                  "InitialShootDM": 1500.0,
+                  "InitialRootDM": 500.0,
+                  "InitialRootDepth": 750.0,
+                  "initialDMFractionsGrasses": [
+                    0.15,
+                    0.25,
+                    0.25,
+                    0.05,
+                    0.05,
+                    0.1,
+                    0.1,
+                    0.05,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "initialDMFractionsLegumes": [
+                    0.16,
+                    0.23,
+                    0.22,
+                    0.05,
+                    0.03,
+                    0.05,
+                    0.05,
+                    0.01,
+                    0.04,
+                    0.08,
+                    0.08
+                  ],
+                  "initialDMFractionsForbs": [
+                    0.2,
+                    0.2,
+                    0.15,
+                    0.05,
+                    0.1,
+                    0.15,
+                    0.1,
+                    0.05,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PhotosyntheticEfficiency": 0.01,
+                  "PhotosynthesisCurveFactor": 0.8,
+                  "FractionPAR": 0.5,
+                  "ReferenceCO2": 380.0,
+                  "CO2EffectScaleFactor": 700.0,
+                  "CO2EffectOffsetFactor": 600.0,
+                  "CO2EffectMinimum": 0.7,
+                  "CO2EffectExponent": 2.0,
+                  "ReproSeasonDurationCoeff": 2.0,
+                  "ReproSeasonShouldersLengthFactor": 1.0,
+                  "ReproSeasonOnsetDurationFactor": 0.6,
+                  "RelativeTurnoverEmerging": 2.0,
+                  "DetachmentDroughtCoefficient": 3.0,
+                  "DetachmentDroughtEffectMin": 0.1,
+                  "TurnoverStockFactor": 0.01,
+                  "TurnoverDefoliationEffectMin": 0.025,
+                  "MinimumGreenLeafProp": 0.8,
+                  "MinimumGreenRootProp": 0.5,
+                  "Name": "AGPRyegrass",
+                  "ResourceName": "AGPRyegrass",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "doyGermination": 275,
+                  "daysEmergenceToAnthesis": 120,
+                  "daysAnthesisToMaturity": 85,
+                  "degreesDayForAnthesis": 1100.0,
+                  "degreesDayForMaturity": 900.0,
+                  "daysAnnualsFactor": 45,
+                  "FVPDFunction": {
+                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                    "Name": "LinearInterpolationFunction",
+                    "ResourceName": null,
+                    "Children": [],
+                    "Enabled": true,
+                    "ReadOnly": false
+                  },
+                  "CanopyType": "PastureSpecies",
+                  "LightProfile": null,
+                  "InitialShootDM": 600.0,
+                  "InitialRootDM": 300.0,
+                  "InitialRootDepth": 350.0,
+                  "initialDMFractionsGrasses": [
+                    0.15,
+                    0.25,
+                    0.25,
+                    0.05,
+                    0.05,
+                    0.1,
+                    0.1,
+                    0.05,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "initialDMFractionsLegumes": [
+                    0.16,
+                    0.23,
+                    0.22,
+                    0.05,
+                    0.03,
+                    0.05,
+                    0.05,
+                    0.01,
+                    0.04,
+                    0.08,
+                    0.08
+                  ],
+                  "initialDMFractionsForbs": [
+                    0.2,
+                    0.2,
+                    0.15,
+                    0.05,
+                    0.1,
+                    0.15,
+                    0.1,
+                    0.05,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PhotosyntheticEfficiency": 0.01,
+                  "PhotosynthesisCurveFactor": 0.8,
+                  "FractionPAR": 0.5,
+                  "ReferenceCO2": 380.0,
+                  "CO2EffectScaleFactor": 700.0,
+                  "CO2EffectOffsetFactor": 600.0,
+                  "CO2EffectMinimum": 0.7,
+                  "CO2EffectExponent": 2.0,
+                  "ReproSeasonDurationCoeff": 2.0,
+                  "ReproSeasonShouldersLengthFactor": 1.0,
+                  "ReproSeasonOnsetDurationFactor": 0.6,
+                  "RelativeTurnoverEmerging": 2.0,
+                  "DetachmentDroughtCoefficient": 3.0,
+                  "DetachmentDroughtEffectMin": 0.1,
+                  "TurnoverStockFactor": 0.01,
+                  "TurnoverDefoliationEffectMin": 0.025,
+                  "MinimumGreenLeafProp": 0.8,
+                  "MinimumGreenRootProp": 0.5,
+                  "Name": "AGPWhiteClover",
+                  "ResourceName": "AGPWhiteClover",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5785,7 +6030,15 @@
                         55.0,
                         55.0
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.568,
+                        0.798,
+                        0.866,
+                        0.867,
+                        0.867
+                      ],
                       "Texture": null,
                       "BD": [
                         1.3,
@@ -5841,17 +6094,97 @@
                         20000.0,
                         20000.0
                       ],
-                      "BDMetadata": null,
-                      "AirDryMetadata": null,
-                      "LL15Metadata": null,
-                      "DULMetadata": null,
-                      "SATMetadata": null,
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "BDMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "AirDryMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "LL15Metadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "DULMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "SATMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KSMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -5884,9 +6217,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "AGPRyegrassSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -5922,9 +6279,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "AGPWhiteCloverSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -5960,9 +6341,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "Slurp1Soil",
                           "ResourceName": null,
                           "Children": [],
@@ -5998,9 +6403,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "Slurp2Soil",
                           "ResourceName": null,
                           "Children": [],
@@ -6036,9 +6465,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "Rye1Soil",
                           "ResourceName": null,
                           "Children": [],
@@ -6074,9 +6527,33 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "Rye2Soil",
                           "ResourceName": null,
                           "Children": [],
@@ -6138,14 +6615,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "Name": "Nutrient",
-                      "ResourceName": "Nutrient",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Organic, Models",
                       "FOMCNRatio": 40.0,
                       "Thickness": [
@@ -6195,13 +6664,13 @@
                         0.99
                       ],
                       "FOM": [
-                        331.337020409173,
-                        245.4605019055056,
-                        164.53709493722965,
-                        121.89207790753734,
-                        73.93128242700234,
-                        40.57434806729268,
-                        22.267674346259405
+                        331.337,
+                        245.461,
+                        164.537,
+                        121.892,
+                        73.931,
+                        40.574,
+                        22.268
                       ],
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
@@ -6241,34 +6710,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Swim3, Models",
-                      "Salb": 0.13,
-                      "CN2Bare": 0.0,
-                      "CNRed": 0.0,
-                      "CNCov": 0.8,
-                      "KDul": 1.0,
-                      "PSIDul": -100.0,
-                      "VC": true,
-                      "DTMin": 0.0,
-                      "DTMax": 30.0,
-                      "MaxWaterIncrement": 5.0,
-                      "SpaceWeightingFactor": 0.0,
-                      "SoluteSpaceWeightingFactor": 1.0,
-                      "Dis": 0.0,
-                      "Disp": 1.0,
-                      "A": 2.0,
-                      "DTHC": 0.1,
-                      "DTHP": 2.0,
-                      "Diagnostics": false,
-                      "Name": "Swim3",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
+                      "Name": "SoilTemperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6445,190 +6888,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "SurfOM": [],
-                  "Canopies": [],
-                  "InitialResidueName": "grass",
-                  "InitialResidueType": "grass",
-                  "InitialResidueMass": 0.0,
-                  "InitialStandingFraction": 0.0,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 15.0,
-                  "Name": "SurfaceOrganicMatter",
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "doyGermination": 275,
-                  "daysEmergenceToAnthesis": 120,
-                  "daysAnthesisToMaturity": 85,
-                  "degreesDayForAnthesis": 1100.0,
-                  "degreesDayForMaturity": 900.0,
-                  "daysAnnualsFactor": 45,
-                  "FVPDFunction": {
-                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                    "Name": "LinearInterpolationFunction",
-                    "ResourceName": null,
-                    "Children": [],
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "CanopyType": "PastureSpecies",
-                  "LightProfile": null,
-                  "InitialShootDM": 1500.0,
-                  "InitialRootDM": 450.0,
-                  "InitialRootDepth": 750.0,
-                  "initialDMFractionsGrasses": [
-                    0.15,
-                    0.25,
-                    0.25,
-                    0.05,
-                    0.05,
-                    0.1,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "initialDMFractionsLegumes": [
-                    0.16,
-                    0.23,
-                    0.22,
-                    0.05,
-                    0.03,
-                    0.05,
-                    0.05,
-                    0.01,
-                    0.04,
-                    0.08,
-                    0.08
-                  ],
-                  "initialDMFractionsForbs": [
-                    0.2,
-                    0.2,
-                    0.15,
-                    0.05,
-                    0.1,
-                    0.15,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "PhotosyntheticEfficiency": 0.01,
-                  "PhotosynthesisCurveFactor": 0.8,
-                  "FractionPAR": 0.5,
-                  "ReferenceCO2": 380.0,
-                  "CO2EffectScaleFactor": 700.0,
-                  "CO2EffectOffsetFactor": 600.0,
-                  "CO2EffectMinimum": 0.7,
-                  "CO2EffectExponent": 2.0,
-                  "ReproSeasonDurationCoeff": 2.0,
-                  "ReproSeasonShouldersLengthFactor": 1.0,
-                  "ReproSeasonOnsetDurationFactor": 0.6,
-                  "RelativeTurnoverEmerging": 2.0,
-                  "DetachmentDroughtCoefficient": 3.0,
-                  "DetachmentDroughtEffectMin": 0.1,
-                  "TurnoverStockFactor": 0.01,
-                  "TurnoverDefoliationEffectMin": 0.025,
-                  "MinimumGreenLeafProp": 0.8,
-                  "MinimumGreenRootProp": 0.5,
-                  "Name": "AGPRyegrass",
-                  "ResourceName": "AGPRyegrass",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "doyGermination": 275,
-                  "daysEmergenceToAnthesis": 120,
-                  "daysAnthesisToMaturity": 85,
-                  "degreesDayForAnthesis": 1100.0,
-                  "degreesDayForMaturity": 900.0,
-                  "daysAnnualsFactor": 45,
-                  "FVPDFunction": {
-                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                    "Name": "LinearInterpolationFunction",
-                    "ResourceName": null,
-                    "Children": [],
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "CanopyType": "PastureSpecies",
-                  "LightProfile": null,
-                  "InitialShootDM": 500.0,
-                  "InitialRootDM": 150.0,
-                  "InitialRootDepth": 350.0,
-                  "initialDMFractionsGrasses": [
-                    0.15,
-                    0.25,
-                    0.25,
-                    0.05,
-                    0.05,
-                    0.1,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "initialDMFractionsLegumes": [
-                    0.16,
-                    0.23,
-                    0.22,
-                    0.05,
-                    0.03,
-                    0.05,
-                    0.05,
-                    0.01,
-                    0.04,
-                    0.08,
-                    0.08
-                  ],
-                  "initialDMFractionsForbs": [
-                    0.2,
-                    0.2,
-                    0.15,
-                    0.05,
-                    0.1,
-                    0.15,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "PhotosyntheticEfficiency": 0.01,
-                  "PhotosynthesisCurveFactor": 0.8,
-                  "FractionPAR": 0.5,
-                  "ReferenceCO2": 380.0,
-                  "CO2EffectScaleFactor": 700.0,
-                  "CO2EffectOffsetFactor": 600.0,
-                  "CO2EffectMinimum": 0.7,
-                  "CO2EffectExponent": 2.0,
-                  "ReproSeasonDurationCoeff": 2.0,
-                  "ReproSeasonShouldersLengthFactor": 1.0,
-                  "ReproSeasonOnsetDurationFactor": 0.6,
-                  "RelativeTurnoverEmerging": 2.0,
-                  "DetachmentDroughtCoefficient": 3.0,
-                  "DetachmentDroughtEffectMin": 0.1,
-                  "TurnoverStockFactor": 0.01,
-                  "TurnoverDefoliationEffectMin": 0.025,
-                  "MinimumGreenLeafProp": 0.8,
-                  "MinimumGreenRootProp": 0.5,
-                  "Name": "AGPWhiteClover",
-                  "ResourceName": "AGPWhiteClover",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -6677,7 +6936,211 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "Name": "NUptake",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "UptakeN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NUptake",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "NUptakeCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "UptakeN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NUptake",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "HarvestedDM",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedWt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "HarvestedDM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "HarvestedDMCum",
               "ResourceName": null,
               "Children": [
                 {
@@ -6813,6 +7276,74 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "Name": "HarvestedNCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "HarvestedN",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Fixation",
               "ResourceName": null,
               "Children": [
@@ -6837,6 +7368,74 @@
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Fixation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FixationCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "FixedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Fixation",
@@ -6949,7 +7548,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "NUptake",
+              "Name": "Urine N returned",
               "ResourceName": null,
               "Children": [
                 {
@@ -6967,7 +7566,7 @@
                   "LineThickness": 0,
                   "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "UptakeN",
+                  "YFieldName": "UrineNReturned",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -6975,7 +7574,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "NUptake",
+                  "Name": "UrineNReturned",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7041,6 +7640,74 @@
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Denitrification",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "DenitrificationCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "Denit",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Denitrification",
@@ -7153,7 +7820,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "Urine N returned",
+              "Name": "N2OCum",
               "ResourceName": null,
               "Children": [
                 {
@@ -7171,7 +7838,7 @@
                   "LineThickness": 0,
                   "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "UrineNReturned",
+                  "YFieldName": "DenitN2O",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -7179,7 +7846,7 @@
                   "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "UrineNReturned",
+                  "Name": "N2O",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7222,6 +7889,74 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Leaching",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "LeachN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Leaching",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LeachingCum",
               "ResourceName": null,
               "Children": [
                 {
@@ -8084,6 +8819,258 @@
                   "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
                   "YFieldName": "MinNByPatch(3)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "TotalCPatches",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalCByPatch(1)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalCByPatch(2)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch2",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalCByPatch(3)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "TotalNPatches",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalNByPatch(1)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalNByPatch(2)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch2",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "TotalNByPatch(3)",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
