@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
+﻿using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
-using Microsoft.VisualBasic;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -13,6 +9,9 @@ using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Models.Utilities;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {

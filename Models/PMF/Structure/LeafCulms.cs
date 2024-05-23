@@ -25,48 +25,55 @@ namespace Models.PMF.Struct
     {
         /// <summary>The parent Plant</summary>
         [Link]
-        Plant plant = null;
+        private readonly Plant plant = null;
 
         /// <summary> Tillering Method that uses a fixed number of tillers</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private ITilleringMethod fixedTillering = null;
+        private readonly ITilleringMethod fixedTillering = null;
 
         /// <summary> Tillering Method that manages number of tillers dynamically</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private ITilleringMethod dynamicTillering = null;
+        private readonly ITilleringMethod dynamicTillering = null;
 
         /// <summary> Expansion stress. </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction expansionStress = null;
+        private readonly IFunction expansionStress = null;
 
         /// <summary> Appearance rate changes when this many leaves are remaining</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction noRateChange1 = null;
+        private readonly IFunction noRateChange1 = null;
 
         /// <summary> Appearance rate can change again when this many leaves are remaining</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction noRateChange2 = null;
+        private readonly IFunction noRateChange2 = null;
 
         /// <summary> The Initial Appearance rate for phyllocron.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction appearanceRate1 = null;
+        private readonly IFunction appearanceRate1 = null;
 
         /// <summary>The Appearance rate for phyllocron after noRateChange 1 .</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction appearanceRate2 = null;
+        private readonly IFunction appearanceRate2 = null;
 
         /// <summary>The Appearance rate for phyllocron after noRateChange 2 .</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction appearanceRate3 = null;
+        private readonly IFunction appearanceRate3 = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafNoAtEmergence = null;
+        private readonly IFunction leafNoAtEmergence = null;
 
         /// <summary> Set through Sowing Event</summary>
         [JsonIgnore]
         public int TilleringMethod { get; set; }
 
-        private ITilleringMethod Tillering => TilleringMethod == 0 ? dynamicTillering : dynamicTillering;
+        /// <summary>
+        /// Always use dynamic tillering. Dynamic, Fixed Rule of 
+        /// Thumb, will all put on tillers in the same way. The two differences are: 
+        /// - Fixed Tillering - The fertile tiller number is supplied
+        /// - Rule of Thumb Tillering - The fertile tiller number is calculated using lat/long and sowing density etc.
+        /// - Dynamic Tillering - Will put on tillers dynamically using GxMxE factors. It will also peform tiller cessation.
+        /// </summary>
+        private ITilleringMethod Tillering => dynamicTillering;
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]

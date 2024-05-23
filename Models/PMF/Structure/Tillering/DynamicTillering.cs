@@ -431,9 +431,10 @@ namespace Models.PMF.Struct
 
             var mainCulm = culms.Culms[0];
             double nLeaves = mainCulm.CurrentLeafNo;
+            var maxSLAAdjustmentValue = maxSLAAdjustment.Value();
             MaxSLA = CalculateMaxSLA(nLeaves);
-            MaxSLA *= (100 + maxSLAAdjustment.Value()) / 100.0;
             ConstrainMaxSLA();
+            MaxSLA *= (100 + maxSLAAdjustmentValue) / 100.0;
 
             if (slaNewCm2g <= MaxSLA) return 1.0;
 
@@ -515,9 +516,9 @@ namespace Models.PMF.Struct
             // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
             double nLeaves = mainCulm.CurrentLeafNo;
             MaxSLA = CalculateMaxSLA(nLeaves);
+            ConstrainMaxSLA();
             // sla bound vary 30 - 40%
             MaxSLA *= (100 - tillerSlaBound.Value()) / 100.0;
-            ConstrainMaxSLA();
             double dmGreen = leaf.Live.Wt;
 
             // Calc how much LAI we need to remove to get back to the SLA target line.
@@ -578,7 +579,6 @@ namespace Models.PMF.Struct
                 CurrentTillerNumber = 0.0;
                 CalculatedTillerNumber = 0.0;
                 isDynamicTillering = false;
-
                 radiationValues = 0.0;
                 temperatureValues = 0.0;
 
