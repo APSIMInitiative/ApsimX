@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
             // is only used by class property
             get
             {
-                if (!Weaned)
+                if (!IsWeaned)
                     return "NotBreeder";
                 if (!IsSterilised)
                 {
@@ -60,7 +60,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weaned && !IsSterilised && !IsPreBreeder;
+                return IsWeaned && !IsSterilised && !IsPreBreeder;
             }
         }
 
@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
-                return (Weaned && NumberOfBirths == 0);
+                return (IsWeaned && NumberOfBirths == 0);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
                 // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
                 //return (Weaned && Age < MinimumAge1stMating); need to include size restriction as well
-                return (Weaned && ((Weight.HighestAttained >= Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
+                return (IsWeaned && ((Weight.HighestAttained >= Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)) == false);
             }
         }
 
@@ -280,7 +280,7 @@ namespace Models.CLEM.Resources
         /// Indicates if birth is due this month
         /// Knows whether the feotus(es) have survived
         /// </summary>
-        public bool BirthDue
+        public bool IsBirthDue
         {
             get
             {
@@ -421,7 +421,7 @@ namespace Models.CLEM.Resources
             // use normalised weight for age if offset provided for pre simulation allocation
             WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays), true, false) : this.Weight.Base.Amount;
             NumberOfConceptions++;
-            ReplacementBreeder = false;
+            IsReplacementBreeder = false;
         }
 
         /// <summary>
@@ -458,7 +458,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">A link to the activity model calling this method for reporting</param>
         public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
         {
-            if (!BirthDue)
+            if (!IsBirthDue)
                 return false;
             
             for (int i = 0; i < CarryingCount; i++)
@@ -529,7 +529,7 @@ namespace Models.CLEM.Resources
             Milk.PotentialRate2 = 0;
             Milk.MaximumRate = 0;
             Fetuses.Clear();
-            MilkingPerformed = false;
+            Milk.MilkingPerformed = false;
             RelativeConditionAtParturition = Weight.RelativeCondition;
         }
 
@@ -546,7 +546,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.Lactation.MilkingDays);
+                return ((SucklingOffspringList.Any() | Milk.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.Lactation.MilkingDays);
             }
         }
 
@@ -567,7 +567,7 @@ namespace Models.CLEM.Resources
         /// <param name="halfIntervalOffset">Number of days to offset (e.g. half time step)</param>
         public double DaysLactating(double halfIntervalOffset = 0)
         {
-            if(SucklingOffspringList.Any() || MilkingPerformed)
+            if(SucklingOffspringList.Any() || Milk.MilkingPerformed)
             {
                 // must be at least 1 to get milk production on day of birth. 
                 double milkdays = Math.Max(0.0, TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays) + halfIntervalOffset;
@@ -578,12 +578,6 @@ namespace Models.CLEM.Resources
             }
             return 0;
         }
-
-        /// <summary>
-        /// Determines if milking has been performed on individual to increase milk production
-        /// </summary>
-        [FilterByProperty]
-        public bool MilkingPerformed { get; set; }
 
         /// <summary>
         /// A list of individuals currently suckling this female

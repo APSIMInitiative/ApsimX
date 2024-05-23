@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
-        [Category("Breed", "Diet")]
+        [Category("Farm", "Diet")]
         [Description("Coefficient to adjust intake for herbage biomass")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(0.01)]

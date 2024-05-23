@@ -77,7 +77,7 @@ namespace Models.CLEM.Resources
 
         // chewing scalar CM6
 
-        // digestability on chewing CM7
+        // digestibility on chewing CM7
 
         // Walking Slope CM8
 

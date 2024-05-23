@@ -174,7 +174,7 @@ namespace Models.CLEM.Resources
             }
 
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
-            if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))
+            if (!ind.IsWeaned & !ind.SaleFlag.ToString().Contains("Died"))
             {
                 if (ind.Mother != null)
                 {

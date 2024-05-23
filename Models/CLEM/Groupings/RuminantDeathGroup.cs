@@ -45,7 +45,7 @@ namespace Models.CLEM.Groupings
             foreach (var ind in individuals)
             {
                 double mortalityRate;
-                if (!ind.Weaned)
+                if (!ind.IsWeaned)
                 {
                     // ToDo: see if we can remove the breed parameter from grow below
                     if (ind.Mother == null || MathUtilities.IsLessThan(ind.Mother.Weight.Live, (ind.Parameters?.Breeding?.CriticalCowWeight ?? 0) * ind.Weight.StandardReferenceWeight))

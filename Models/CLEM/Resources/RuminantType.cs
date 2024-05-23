@@ -92,7 +92,7 @@ namespace Models.CLEM.Resources
                 }
 
             // get list of all sucking individuals
-            var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.Weaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
+            var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.IsWeaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
 
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {

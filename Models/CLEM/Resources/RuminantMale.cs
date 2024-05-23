@@ -45,7 +45,7 @@ namespace Models.CLEM.Resources
                 if (!IsSterilised && Attributes.Exists("Sire"))
                     if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)
                     {
-                        ReplacementBreeder = false;
+                        IsReplacementBreeder = false;
                         return true;
                     }
                 return false;
@@ -60,7 +60,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays) == false);
+                return (IsWeaned && (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays) == false);
             }
         }
 

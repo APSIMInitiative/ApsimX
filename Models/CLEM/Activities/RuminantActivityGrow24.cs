@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
                 ind.SetCurrentDate(events.Clock.Today);
 
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in CurrentHerd(false).Where(a => a.Weaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
+            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
 
             // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
             double yf = 1.0;
-            if (!ind.Weaned)
+            if (!ind.IsWeaned)
             {
                 // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
                 ind.Intake.MilkDaily.Expected = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays+(events.Interval/2.0), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                 {
                     Status = ActivityStatus.Success;
 
-                    // Adjusting potential intake for digestability of fodder is now done in RuminantIntake along with concentrates and fodder.
+                    // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
                     if(ind is RuminantFemale rumFemale)
                         ind.Intake.AdjustIntakeBasedOnFeedQuality(rumFemale.IsLactating, ind);
                     else
@@ -204,9 +204,9 @@ namespace Models.CLEM.Activities
 
                     CalculateEnergy(ind);
 
-                    if (ind.Weaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
+                    if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
                         unfed++;
-                    else if (!ind.Weaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
+                    else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
                         unfedcalves++;
                 }
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
@@ -232,7 +232,7 @@ namespace Models.CLEM.Activities
             // Sme 1 for females and castrates
             double sexEffectME = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Sex == Sex.Male && !ind.IsSterilised)
+            if (ind.IsWeaned && ind.Sex == Sex.Male && !ind.IsSterilised)
                 sexEffectME = 1.15;
 
             double conceptusProtein = 0;
@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
             // calculate here as is also needed in not weaned.. in case consumed feed and milk.
             ind.Energy.Km = 0.02 * ind.Intake.MDSolid + 0.5;
 
-            if (ind.Weaned)
+            if (ind.IsWeaned)
             {
                 CalculateMaintenanceEnergy(ind, ind.Energy.Km, sexEffectME);
 
@@ -331,7 +331,7 @@ namespace Models.CLEM.Activities
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;
             // efficiency of using DPLS
-            double kDPLS = (ind.Weaned)? ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
+            double kDPLS = (ind.IsWeaned)? ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
             // ToDo: Do these use SRW of Female or does it include the 1.2x factor for males?
@@ -341,12 +341,31 @@ namespace Models.CLEM.Activities
 
             double proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
-            // mj/kg gain
-            double energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
-            // units = kg protein/kg gain
-            double proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel) + sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
-            // units MJ tissue gain/kg ebg
+            double energyEmptyBodyGain;
+            double proteinContentOfGain;
+            if (ind.Parameters.General.UseCorrectedEquations)
+            {
+                // mj/kg gain
+                energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
+                // units = kg protein/kg gain
+                proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel) + sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
+            }
+            else
+            {
+                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = 6.7
+                // mj/kg gain
+                energyEmptyBodyGain =  6.7 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
+                // units = kg protein/kg gain
 
+                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = 0.21 or 5/23.6;
+                // ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 = 3.3
+                // ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 = 0.19
+                // ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 = 0.115
+
+                proteinContentOfGain = 5 - (sizeFactor1ForGain * (3.3 + (0.19 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
+            }
+
+            // units MJ tissue gain/kg ebg
             double netEnergyForGain = ind.Energy.Kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
             if (netEnergyForGain > 0)
                 netEnergyForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
@@ -408,7 +427,7 @@ namespace Models.CLEM.Activities
             ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((conceptusProtein + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
 
             // Total fecal protein
-            double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.Grow24_CACRD.MicrobialProteinDigestibility_CA7 * ind.Parameters.Grow24_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.Grow24_CACRD.MilkProteinDigestability_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
+            double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.Grow24_CACRD.MicrobialProteinDigestibility_CA7 * ind.Parameters.Grow24_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
 
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + MJProteinChange / 23.6) - TFP - DermalProtein;
@@ -453,7 +472,7 @@ namespace Models.CLEM.Activities
             }
             rdpReq = CalculateCrudeProtein(ind, adjustedFeedingLevel);
 
-            ind.Intake.CalculateDigestibleProteinLeavingStomach(rdpReq, ind.Parameters.Grow24_CACRD.MilkProteinDigestability_CA5);
+            ind.Intake.CalculateDigestibleProteinLeavingStomach(rdpReq, ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5);
         }
 
         private static double CalculateCrudeProtein(Ruminant ind, double feedingLevel)

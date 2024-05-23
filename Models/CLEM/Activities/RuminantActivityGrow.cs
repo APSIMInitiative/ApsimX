@@ -10,6 +10,7 @@ using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
+using Models.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -84,7 +85,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in herd.Where(a => a.Weaned == false))
+            foreach (var ind in herd.Where(a => a.IsWeaned == false))
             {
                 int weaningAge = ind.Parameters.General.NaturalWeaningAge.InDays;
                 if (weaningAge == 0)
@@ -140,7 +141,7 @@ namespace Models.CLEM.Activities
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
-            if (!ind.Weaned)
+            if (!ind.IsWeaned)
             {
                 // potential milk intake/animal/day
                 ind.Intake.MilkDaily.Expected = ind.Parameters.Grow.MilkIntakeIntercept + ind.Parameters.Grow.MilkIntakeCoefficient * ind.Weight.Live;
@@ -280,7 +281,7 @@ namespace Models.CLEM.Activities
                 {
                     ind.MetabolicIntake = ind.Intake.SolidsDaily.Actual;
                     Status = ActivityStatus.Success;
-                    if (ind.Weaned)
+                    if (ind.IsWeaned)
                     {
                         // check that they had some food
                         if (ind.Intake.SolidsDaily.Actual == 0)
@@ -344,7 +345,7 @@ namespace Models.CLEM.Activities
                             unfedcalves++;
                     }
 
-                    // TODO: nabsa adjusts potential intake for digestability of fodder here.
+                    // TODO: nabsa adjusts potential intake for digestibility of fodder here.
                     // This is now done in RuminantActivityGrazePasture
 
                     // calculate energy
@@ -386,7 +387,7 @@ namespace Models.CLEM.Activities
             // Sme 1 for females and castrates
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            if (ind.IsWeaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
                 sme = 1.15;
 
             double energyDiet = EnergyGross * ind.Intake.DMD / 100.0;
@@ -401,7 +402,7 @@ namespace Models.CLEM.Activities
             ind.Energy.Kg = kg;
             double energyPredictedBodyMassChange;
             double energyMaintenance;
-            if (!ind.Weaned)
+            if (!ind.IsWeaned)
             {
                 // unweaned individuals are assumed to be suckling as natural weaning rate set regardless of inclusion of wean activity
                 // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
@@ -508,6 +509,7 @@ namespace Models.CLEM.Activities
 
                 // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
                 double energyEmptyBodyGain = ind.Parameters.Grow.GrowthEnergyIntercept1 + feedingValue + (ind.Parameters.Grow.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
+
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
                 if (MathUtilities.IsPositive(energyBalance))
                     energyPredictedBodyMassChange = ind.Parameters.Grow.GrowthEfficiency * kg * energyBalance / energyEmptyBodyGain;

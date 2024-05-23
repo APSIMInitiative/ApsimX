@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Individual is suckling, still with mother and not weaned
         /// </summary>
-        public bool IsSucklingWithMother { get { return !Weaned && mother is not null; } }
+        public bool IsSucklingWithMother { get { return !IsWeaned && mother is not null; } }
 
         private DateTime dateOfWeaning = default;
 
@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool Weaned { get { return dateOfWeaning != default; } }
+        public bool IsWeaned { get { return dateOfWeaning != default; } }
 
         /// <summary>
         /// Number of days since weaned
@@ -127,7 +127,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Weaned)
+                if (IsWeaned)
                     return Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.Weaned, 0.0));
                 else
                     return 0;
@@ -142,7 +142,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && age < (DateTime.IsLeapYear(DateOfBirth.Year)?366:365));
+                return (IsWeaned && age < (DateTime.IsLeapYear(DateOfBirth.Year)?366:365));
             }
         }
 
@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return !Weaned;
+                return !IsWeaned;
             }
         }
 
@@ -208,7 +208,7 @@ namespace Models.CLEM.Resources
         /// Marked as a replacement breeder
         /// </summary>
         [FilterByProperty]
-        public bool ReplacementBreeder { get; set; }
+        public bool IsReplacementBreeder { get; set; }
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
@@ -251,7 +251,7 @@ namespace Models.CLEM.Resources
                     fromDate = DateOfBirth;
                     break;
                 case RuminantTimeSpanTypes.Weaned:
-                    if(Weaned)
+                    if(IsWeaned)
                         fromDate = dateOfWeaning;
                     break;
                 case RuminantTimeSpanTypes.Conceived:
@@ -289,7 +289,7 @@ namespace Models.CLEM.Resources
                     fromDate = DateOfBirth;
                     break;
                 case RuminantTimeSpanTypes.Weaned:
-                    if (Weaned)
+                    if (IsWeaned)
                         fromDate = dateOfWeaning;
                     break;
                 case RuminantTimeSpanTypes.Conceived:
@@ -610,7 +610,7 @@ namespace Models.CLEM.Resources
         /// Is the individual currently marked for sale?
         /// </summary>
         [FilterByProperty]
-        public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
+        public bool IsReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
 
         /// <summary>
         /// Method called on offspring when mother is lost (e.g. dies or sold)

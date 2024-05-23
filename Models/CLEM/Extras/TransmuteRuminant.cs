@@ -94,7 +94,7 @@ namespace Models.CLEM
             double available = 0;
             foreach (var group in groupings)
             {
-                foreach (var ind in group.Filter((ResourceGroup as RuminantHerd).Herd.Where(a => !a.ReadyForSale)))
+                foreach (var ind in group.Filter((ResourceGroup as RuminantHerd).Herd.Where(a => !a.IsReadyForSale)))
                 {
                     switch (TransmuteStyle)
                     {

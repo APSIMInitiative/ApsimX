@@ -256,7 +256,7 @@ namespace Models.CLEM.Activities
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
                     {
-                        if (ind.Weaned)
+                        if (ind.IsWeaned)
                         {
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
@@ -338,7 +338,7 @@ namespace Models.CLEM.Activities
                 foreach (Ruminant ind in herd)
                 {
                     double eaten;
-                    if (ind.Weaned)
+                    if (ind.IsWeaned)
                         eaten = Math.Min(Math.Max(0,ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
                         eaten = Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)); ;

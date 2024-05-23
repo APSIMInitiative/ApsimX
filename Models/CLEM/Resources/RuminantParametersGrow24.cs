@@ -102,18 +102,18 @@ namespace Models.CLEM.Resources
         //// CA1- CA4, CA9 hard coded in DUDP calculations FoodResourceStore.DUDP
 
         ///// <summary>
-        ///// Milk protein digestability (SCA CA5) [Core] - Lactation
+        ///// Milk protein digestibility (SCA CA5) [Core] - Lactation
         ///// </summary>
         //[Description("Milk protein digestability [CA5]")]
         //[System.ComponentModel.DefaultValue(0.92)]
         //[Category("Breed", "Growth")]
         //[Required, Proportion]
-        //public double MilkProteinDigestability_CA5 { get; set; }
+        //public double MilkProteinDigestibility_CA5 { get; set; }
 
         ///// <summary>
-        ///// Digestability of microbial protein (SCA CA7) [Core] - gorwth 
+        ///// Digestibility of microbial protein (SCA CA7) [Core] - gorwth 
         ///// </summary>
-        //[Description("Digestability of microbial protein [CA7]")]
+        //[Description("Digestibility of microbial protein [CA7]")]
         //[Category("Breed", "Growth")]
         //[System.ComponentModel.DefaultValue(0.6)]
         //[Required, Proportion]
@@ -797,7 +797,7 @@ namespace Models.CLEM.Resources
 
         //// chewing scalar CM6
 
-        //// digestability on chewing CM7
+        //// digestibility on chewing CM7
 
         //// Walking Slope CM8
 

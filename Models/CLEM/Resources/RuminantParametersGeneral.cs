@@ -31,6 +31,13 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValue("Bos taurus")]
         public string Breed { get; set; }
 
+        /// <summary>
+        /// Use corrected equations of animal energy requirement for growth
+        /// </summary>
+        [Category("Farm", "General")]
+        [Description("Use corrected energy equations")]
+        public bool UseCorrectedEquations { get; set; } = true;
+
         #region Age
 
         /// <summary>

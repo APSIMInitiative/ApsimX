@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #1 [CG8]")]
         [System.ComponentModel.DefaultValue(27.0)] // B.indicus 23.2
-        [Required, GreaterThanValue(0)] // [breed] - Growth
+        [Required, GreaterThanValue(0)] 
         public double GrowthEnergyIntercept1_CG8 { get; set; }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
         [System.ComponentModel.DefaultValue(20.3)] // B.indicus 16.5
-        [Required, GreaterThanValue(0)] // [breed] - Growth
+        [Required, GreaterThanValue(0)] 
         public double GrowthEnergyIntercept2_CG9 { get; set; }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Growth energy slope #1 [CG10]")]
         [System.ComponentModel.DefaultValue(2.0)]
-        [Required, GreaterThanValue(0)] // [breed] - Growth
+        [Required, GreaterThanValue(0)] 
         public double GrowthEnergySlope1_CG10 { get; set; }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG11]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(13.8)]// [breed] - Growth
+        [System.ComponentModel.DefaultValue(13.8)]
         public double GrowthEnergySlope2_CG11 { get; set; }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain intercept #1 [CG12]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.072)] // B.indicus 0.092 // [breed] - Growth
+        [System.ComponentModel.DefaultValue(0.072)] // B.indicus 0.092 
         public double ProteinGainIntercept1_CG12 { get; set; }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain intercept #2 [CG13]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.140)] // B.indicus 0.120 [breed] - Growth
+        [System.ComponentModel.DefaultValue(0.140)] // B.indicus 0.120
         public double ProteinGainIntercept2_CG13 { get; set; }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope #1 [CG14]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.008)]// [breed] - Growth
+        [System.ComponentModel.DefaultValue(0.008)]
         public double ProteinGainSlope1_CG14 { get; set; }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope #2 [CG15]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.115)]// [breed] - Growth
+        [System.ComponentModel.DefaultValue(0.115)]
         public double ProteinGainSlope2_CG15 { get; set; }
 
         /// <summary>

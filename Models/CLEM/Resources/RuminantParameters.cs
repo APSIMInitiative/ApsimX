@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow24CM Grow24_CM { get; set; }
 
         /// <summary>
-        /// Rumen digestability and efficiency parameters for the Grow24 activity
+        /// Rumen digestibility and efficiency parameters for the Grow24 activity
         /// </summary>
         [JsonIgnore]
         public RuminantParametersGrow24CACRD Grow24_CACRD { get; set; }

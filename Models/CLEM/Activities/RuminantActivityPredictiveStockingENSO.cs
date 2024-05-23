@@ -262,7 +262,7 @@ namespace Models.CLEM.Activities
                 // total adult equivalents of all breeds on pasture for utilisation
                 double totalAE = paddockIndividuals.Sum(a => a.Weight.AdultEquivalent);
                 // determine AE marked for sale and purchase of managed herd
-                double markedForSaleAE = paddockIndividuals.Where(a => a.ReadyForSale).Sum(a => a.Weight.AdultEquivalent);
+                double markedForSaleAE = paddockIndividuals.Where(a => a.IsReadyForSale).Sum(a => a.Weight.AdultEquivalent);
                 double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == pasture.Name).Sum(a => a.Weight.AdultEquivalent);
 
                 double herdChange = 1.0;

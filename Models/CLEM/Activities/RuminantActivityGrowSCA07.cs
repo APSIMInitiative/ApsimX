@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
                 ind.SetCurrentDate(events.Clock.Today);
 
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in CurrentHerd(false).Where(a => a.Weaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
+            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
 
             // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
             double yf = 1.0;
-            if (!ind.Weaned)
+            if (!ind.IsWeaned)
             {
                 // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
                 ind.Intake.MilkDaily.Expected = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays + (events.Interval / 2.0), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
@@ -172,9 +172,9 @@ namespace Models.CLEM.Activities
 
                     CalculateEnergy(ind);
 
-                    if (ind.Weaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
+                    if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
                         unfed++;
-                    else if (!ind.Weaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
+                    else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
                         unfedcalves++;
                 }
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);

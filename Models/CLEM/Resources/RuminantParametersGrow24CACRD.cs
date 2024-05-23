@@ -10,14 +10,14 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CA - digestibility and CRD - Rumen degradability)
     /// All default values are provided for cattle and Bos indicus breeds where values apply.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CRD - rumen digestability)")]
+    [Description("RuminantActivityGrow24 (CRD - rumen digestibility)")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CRD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrow24CACRD : CLEMModel, ISubParameters, ICloneable
@@ -90,18 +90,18 @@ namespace Models.CLEM.Resources
         // CA1- CA4, CA9 hard coded in DUDP calculations FoodResourceStore.DUDP
 
         /// <summary>
-        /// Milk protein digestability (SCA CA5) [Core] - lactation
+        /// Milk protein digestibility (SCA CA5) [Core] - lactation
         /// </summary>
-        [Description("Milk protein digestability [CA5]")]
+        [Description("Milk protein digestibility [CA5]")]
         [System.ComponentModel.DefaultValue(0.92)]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double MilkProteinDigestability_CA5 { get; set; }
+        public double MilkProteinDigestibility_CA5 { get; set; }
 
         /// <summary>
-        /// Digestability of microbial protein (SCA CA7) [Core] - growth 
+        /// Digestibility of microbial protein (SCA CA7) [Core] - growth 
         /// </summary>
-        [Description("Digestability of microbial protein [CA7]")]
+        [Description("Digestibility of microbial protein [CA7]")]
         [Category("Core", "Growth")]
         [System.ComponentModel.DefaultValue(0.6)]
         [Required, Proportion]
@@ -145,7 +145,7 @@ namespace Models.CLEM.Resources
                 RumenDegradableProteinSlope_CRD5 = RumenDegradableProteinSlope_CRD5,
                 RumenDegradableProteinExponent_CRD6 = RumenDegradableProteinExponent_CRD6,
                 ProteinShortfallAlleviationScalar = ProteinShortfallAlleviationScalar,
-                MilkProteinDigestability_CA5 = MilkProteinDigestability_CA5,
+                MilkProteinDigestibility_CA5 = MilkProteinDigestibility_CA5,
                 MicrobialProteinDigestibility_CA7 = MicrobialProteinDigestibility_CA7,
                 FaecalProteinFromMCP_CA8 = FaecalProteinFromMCP_CA8,
             };

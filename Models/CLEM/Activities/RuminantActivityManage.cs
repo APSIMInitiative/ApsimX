@@ -796,7 +796,7 @@ namespace Models.CLEM.Activities
 
                     // these are the breeders already marked for sale
                     // don't include those marked as max age sale as these can't be considered excess female
-                    int numberFemaleMarkedForSale = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
+                    int numberFemaleMarkedForSale = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.IsReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
 
                     // defined heifers here as weaned and will be a breeder in the next year
                     // we should not include those individuals > 12 months before reaching breeder age
@@ -869,7 +869,7 @@ namespace Models.CLEM.Activities
                         if (GrowOutYoungMales)
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectMalesForGrowOut");
-                            var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters, GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned && !a.ReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut")));
+                            var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters, GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned && !a.IsReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut")));
                             number = uniqueIndividuals.Count();
                         }
                         break;
@@ -877,7 +877,7 @@ namespace Models.CLEM.Activities
                         if (GrowOutYoungFemales)
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
-                            var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters, GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.ReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut")));
+                            var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters, GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.IsReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut")));
                             number = uniqueIndividuals.Count(); 
                         }
                         break;
@@ -993,22 +993,22 @@ namespace Models.CLEM.Activities
                 // select females for growing out
                 if (GrowOutYoungFemales)
                     foreach (var removalFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut"))
-                        foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.ReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut"))).ToList())
+                        foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.IsReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut"))).ToList())
                         {
                             ind.Location = grazeStoreGrowOutFemales;
                             ind.Attributes.Add("GrowOut");
-                            if (!ind.ReadyForSale)
+                            if (!ind.IsReadyForSale)
                                 growoutOccurred = true;
                         }
 
                 // select old males for growing out
                 if (GrowOutYoungMales)
                     foreach (var removalFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectMalesForGrowOut"))
-                        foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned && !a.ReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut"))).ToList())
+                        foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned && !a.IsReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut"))).ToList())
                         {
                             ind.Location = grazeStoreGrowOutMales;
                             ind.Attributes.Add("GrowOut");
-                            if (!ind.ReadyForSale)
+                            if (!ind.IsReadyForSale)
                                 growoutOccurred = true;
                             // do not castrate here as we may need to keep some of this months pool as replacement breeders
                             // see replacement sire section in timingOK
@@ -1099,12 +1099,12 @@ namespace Models.CLEM.Activities
                             // remove sires followed by replacement sires in one go
                             if (numberToRemove > 0)
                                 foreach (var removalFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveSiresFromHerd"))
-                                    foreach (var male in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsSire || a.ReplacementBreeder)).OrderByDescending(a => a.Class).Take(numberToRemove))
+                                    foreach (var male in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsSire || a.IsReplacementBreeder)).OrderByDescending(a => a.Class).Take(numberToRemove))
                                     {
                                         male.Location = grazeStoreSires;
                                         male.SaleFlag = HerdChangeReason.ExcessSireSale;
                                         Status = ActivityStatus.Success;
-                                        male.ReplacementBreeder = false;
+                                        male.IsReplacementBreeder = false;
                                         numberToRemove--;
                                     }
 
@@ -1136,13 +1136,13 @@ namespace Models.CLEM.Activities
                             // only consider individuals that will mature in next 12 months and are not castrated
                             foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungMalesFromSales"))
                                 // male, saleflag is AgeWeightSale, not castrated and age will mature in next 12 months
-                                foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.Weaned && (a.AgeInDays - a.Parameters.General.MaleMinimumAge1stMating.InDays > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
+                                foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsWeaned && (a.AgeInDays - a.Parameters.General.MaleMinimumAge1stMating.InDays > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
                                 {
                                     male.Location = grazeStoreSires;
                                     male.SaleFlag = HerdChangeReason.None;
                                     male.Attributes.Remove("GrowOut");
                                     male.Attributes.Add("Sire");
-                                    male.ReplacementBreeder = true;
+                                    male.IsReplacementBreeder = true;
                                     numberMaleSiresInHerd++;
                                     maleBreedersRequired--;
                                 }
@@ -1158,7 +1158,7 @@ namespace Models.CLEM.Activities
                                         male.SaleFlag = HerdChangeReason.None;
                                         male.Attributes.Remove("GrowOut");
                                         male.Attributes.Add("Sire");
-                                        male.ReplacementBreeder = true;
+                                        male.IsReplacementBreeder = true;
                                         numberMaleSiresInHerd++;
                                         maleBreedersRequired--;
                                     }
@@ -1290,9 +1290,9 @@ namespace Models.CLEM.Activities
 
                         // excess breeders were found so there is no need for any replacement breeders to be flagged
                         foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemaleReplacementBreeders"))
-                            foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.ReplacementBreeder)).ToList())
+                            foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsReplacementBreeder)).ToList())
                             {
-                                female.ReplacementBreeder = false;
+                                female.IsReplacementBreeder = false;
                             }
 
                     }
@@ -1307,7 +1307,7 @@ namespace Models.CLEM.Activities
                         {
                             // remove females breeders from sale herd to replace breeders (not those sold because too old)
                             foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersFromSales"))
-                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.ReadyForSale && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays)).Take(femaleBreedersRequired).ToList())
+                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsReadyForSale && a.AgeInDays >= a.Parameters.General.MinimumAge1stMating.InDays)).Take(femaleBreedersRequired).ToList())
                                 {
                                     female.Attributes.Remove("GrowOut"); // in case grow out
                                     female.SaleFlag = HerdChangeReason.None;
@@ -1324,7 +1324,7 @@ namespace Models.CLEM.Activities
                                 {
                                     female.Attributes.Remove("GrowOut");
                                     if (!female.IsBreeder && !female.IsSterilised)
-                                        female.ReplacementBreeder = true;
+                                        female.IsReplacementBreeder = true;
                                     female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
                                 }
@@ -1413,15 +1413,15 @@ namespace Models.CLEM.Activities
                             }
                         }
 
-                        var replacementsInHerd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.ReplacementBreeder);
+                        var replacementsInHerd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsReplacementBreeder);
                         int numberOfReplacements = replacementsInHerd.Count();
 
                         if(numberOfReplacements >= femaleBreedersRequired)
                         {
                             foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemaleReplacementBreeders"))
-                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.ReplacementBreeder)).Take(numberOfReplacements - femaleBreedersRequired).ToList())
+                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsReplacementBreeder)).Take(numberOfReplacements - femaleBreedersRequired).ToList())
                                 {
-                                    female.ReplacementBreeder = false;
+                                    female.IsReplacementBreeder = false;
                                 }
                         }
                         else
@@ -1436,7 +1436,7 @@ namespace Models.CLEM.Activities
                                     {
                                         female.Attributes.Remove("GrowOut");
                                         if (female.IsPreBreeder)
-                                            female.ReplacementBreeder = true;
+                                            female.IsReplacementBreeder = true;
                                         female.Location = grazeStoreBreeders;
                                         numberOfReplacements++;
                                     }
@@ -1446,13 +1446,13 @@ namespace Models.CLEM.Activities
                             if (numberOfReplacements < femaleBreedersRequired)
                             {
                                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungFemalesFromSales"))
-                                    foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.ReadyForSale && (a.AgeInDays - a.Parameters.General.MinimumAge1stMating.InDays > -334))).Take(femaleBreedersRequired - numberOfReplacements).ToList())
+                                    foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsReadyForSale && (a.AgeInDays - a.Parameters.General.MinimumAge1stMating.InDays > -334))).Take(femaleBreedersRequired - numberOfReplacements).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut"); // in case grow out
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
                                         if (female.IsPreBreeder)
-                                            female.ReplacementBreeder = true;
+                                            female.IsReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
                             }
@@ -1460,14 +1460,14 @@ namespace Models.CLEM.Activities
                             // identify even younger individuals as replacements from sales
                             if (numberOfReplacements < femaleBreedersRequired)
                                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungFemalesFromSales"))
-                                    foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale)).Where(a => a.IsPreBreeder || !a.Weaned).OrderByDescending(a => a.AgeInDays).Take(femaleBreedersRequired-numberOfReplacements).ToList())
+                                    foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale)).Where(a => a.IsPreBreeder || !a.IsWeaned).OrderByDescending(a => a.AgeInDays).Take(femaleBreedersRequired-numberOfReplacements).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut");
                                         // keep by removing any tag for sale.
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
                                         if (!female.IsBreeder)
-                                            female.ReplacementBreeder = true;
+                                            female.IsReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
 
@@ -1480,16 +1480,16 @@ namespace Models.CLEM.Activities
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
                                         if (!female.IsBreeder)
-                                            female.ReplacementBreeder = true;
+                                            female.IsReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
 
                             // identify some unweaned individuals to be flagged as replacement breeders so avoid selling after weaned
                             if (numberOfReplacements < femaleBreedersRequired)
                                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectUnweanedFemalesAsReplacements"))
-                                    foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale)).Where(a => !a.Weaned).OrderByDescending(a => a.AgeInDays).Take(femaleBreedersRequired-numberOfReplacements).ToList())
+                                    foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale)).Where(a => !a.IsWeaned).OrderByDescending(a => a.AgeInDays).Take(femaleBreedersRequired-numberOfReplacements).ToList())
                                     {
-                                        female.ReplacementBreeder = true;
+                                        female.IsReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
 
@@ -1524,7 +1524,7 @@ namespace Models.CLEM.Activities
             // time to castrate any males that have not been assigned as replacement breeders from this years young male pool
             // get grow-out males that are not castrated and not marked as replacement breeder
             if (CastrateMales)
-                foreach (RuminantMale male in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => !a.ReplacementBreeder && !a.IsCastrated && a.Attributes.Exists("GrowOut")).ToList())
+                foreach (RuminantMale male in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => !a.IsReplacementBreeder && !a.IsCastrated && a.Attributes.Exists("GrowOut")).ToList())
                     male.AddNewAttribute(new SetAttributeWithValue() { AttributeName="Castrated", Category= RuminantAttributeCategoryTypes.Sterilise_Castrate });
         }
 
@@ -1591,7 +1591,7 @@ namespace Models.CLEM.Activities
                 {
                     individual.Attributes.Remove("GrowOut");
                     individual.Attributes.Add("Sire");
-                    individual.ReplacementBreeder = true;
+                    individual.IsReplacementBreeder = true;
                     individual.SaleFlag = HerdChangeReason.None;
                     maleBreedersRequired--;
                 }
@@ -1608,7 +1608,7 @@ namespace Models.CLEM.Activities
                 {
                     individual.Attributes.Remove("GrowOut");
                     if (!(individual as RuminantFemale).IsBreeder)
-                        individual.ReplacementBreeder = true;
+                        individual.IsReplacementBreeder = true;
                     individual.SaleFlag = HerdChangeReason.None;
                     femaleBreedersRequired--;
                 }

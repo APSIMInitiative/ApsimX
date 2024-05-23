@@ -57,6 +57,10 @@ namespace Models.CLEM.Resources
         /// Tracks the nutrition after peak lactation for milk production.
         /// </summary>
         public double NutritionAfterPeakLactationFactor { get; set; }
+        /// <summary>
+        /// Determines if milking has been performed on individual to increase milk production
+        /// </summary>
+        public bool MilkingPerformed { get; set; } = false;
 
         /// <summary>
         /// The proportion of the potential milk production achieved in timestep

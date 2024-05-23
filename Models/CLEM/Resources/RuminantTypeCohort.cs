@@ -201,7 +201,7 @@ namespace Models.CLEM.Resources
                     else
                     {
                         // the user has specified that this individual is not suckling, but it is younger than the weaning age, so wean today with no reporting.
-                        if(!ruminant.Weaned)
+                        if(!ruminant.IsWeaned)
                             ruminant.Wean(false, string.Empty, date);
                     }
 
