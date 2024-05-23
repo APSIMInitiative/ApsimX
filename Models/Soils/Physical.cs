@@ -159,7 +159,9 @@ namespace Models.Soils
         public double[] KS { get; set; }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        [Summary]
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] PAWC { get { return APSoilUtilities.CalcPAWC(Thickness, LL15, DUL, null); } }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
@@ -218,6 +220,7 @@ namespace Models.Soils
                 columns.Add(new GridTableColumn("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry")), metadata: new VariableProperty(this, GetType().GetProperty("AirDryMetadata"))));
                 columns.Add(new GridTableColumn("LL15", new VariableProperty(this, GetType().GetProperty("LL15")), metadata: new VariableProperty(this, GetType().GetProperty("LL15Metadata"))));
                 columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL")), metadata: new VariableProperty(this, GetType().GetProperty("DULMetadata"))));
+                columns.Add(new GridTableColumn("PAWC", new VariableProperty(this, GetType().GetProperty("PAWC"))));
                 columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT")), metadata: new VariableProperty(this, GetType().GetProperty("SATMetadata"))));
                 if (waterNodePresent)
                     columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
