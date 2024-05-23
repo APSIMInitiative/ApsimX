@@ -124,8 +124,19 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             var weatherModel = model.FindInScope<IWeather>();
-            latitudeEditBox.Text = weatherModel.Latitude.ToString();
-            longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            if (weatherModel != null)
+            {
+                latitudeEditBox.Text = weatherModel.Latitude.ToString();
+                longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            }
+
+            if(weatherModel == null)
+            {
+                this.explorerPresenter.MainPresenter.
+                    ShowMessage("To have the latitude and longitude fields auto-filled add a weather node to your simulation.", 
+                    Simulation.MessageType.Warning, 
+                    true);
+            }
             radiusEditBox.Text = "10";
 
             dataView.SortColumn = "Distance (km)";
