@@ -133,7 +133,7 @@ namespace UserInterface.Presenters
             if(weatherModel == null)
             {
                 this.explorerPresenter.MainPresenter.
-                    ShowMessage("To have the latitude and longitude fields auto-filled add a weather node to your simulation.", 
+                    ShowMessage("Tip: To have the latitude and longitude fields auto-filled add a weather node to your simulation.", 
                     Simulation.MessageType.Warning, 
                     true);
             }

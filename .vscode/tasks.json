@@ -6,7 +6,9 @@
             "command": "dotnet",
             "type": "process",
             "args": [
-                "clean"
+                "clean",
+                "--verbosity",
+                "minimal"
             ]
         },
         {
@@ -17,7 +19,9 @@
                 "build",
                 "${workspaceFolder}/ApsimX.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "/consoleloggerparameters:NoSummary",
+                "--verbosity",
+                "minimal"
             ],
             "problemMatcher": "$msCompile"
         },
