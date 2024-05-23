@@ -13,14 +13,6 @@
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
-            "args":[
-                "--verbosity",
-                "minimal"
-            ],
-            "justMyCode": true,
-            "logging": {
-                "moduleLoad": false,
-            }
         },
         {
             "name": "APSIM.Cli: Debug",
