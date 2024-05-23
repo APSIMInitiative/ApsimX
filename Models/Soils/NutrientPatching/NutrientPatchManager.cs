@@ -63,6 +63,14 @@ namespace Models.Soils.NutrientPatching
         [Units("mm")]
         public double LayerForNPartition { get; set; } = -99;
 
+        /// <summary>The maximum amount of NO3 (by layer) that is available to plants (ppm).</summary>
+        [Units("ppm")]
+        public double[] MaximumNO3AvailableToPlants { get; set; } = null;
+
+        /// <summary>The maximum amount of NH4 (by layer) that is available to plants (ppm).</summary>
+        [Units("ppm")]
+        public double[] MaximumNH4AvailableToPlants { get; set; } = null;
+
         /// <summary>The inert pool.</summary>
         public IOrganicPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
 
@@ -92,6 +100,12 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>The NH4 pool.</summary>
         public ISolute NH4 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NH4)); } }
+
+        /// <summary>The effective NO3 pool.</summary>
+        public ISolute NO3Effective { get { return SumSolutesEffective(patches.Select(patch => patch.Nutrient.NO3), MaximumNO3AvailableToPlants); } }
+
+        /// <summary>The NH4 pool.</summary>
+        public ISolute NH4Effective { get { return SumSolutesEffective(patches.Select(patch => patch.Nutrient.NH4), MaximumNH4AvailableToPlants); } }
 
         /// <summary>The Urea pool.</summary>
         public ISolute Urea { get { return SumSolutes(patches.Select(patch => patch.Nutrient.Urea)); } }
@@ -418,6 +432,33 @@ namespace Models.Soils.NutrientPatching
             }
             return new Solute(name, values);
         }
+
+        /// <summary>
+        /// Sum a list of solutes, multiplying them by their respective areas.
+        /// </summary>
+        /// <param name="solutes">The list of solutes</param>
+        /// <param name="maximums">The maximum values (by layer) available to plants.</param>
+        private ISolute SumSolutesEffective(IEnumerable<ISolute> solutes, double[] maximums)
+        {
+            var areas = patches.Select(patch => patch.RelativeArea).ToList();
+
+            var values = new double[soilPhysical.Thickness.Length];
+            string name = solutes.First().Name;
+            foreach (var patch in solutes.Zip(areas))
+            {
+                var soluteppm = patch.First.ppm;
+                var area = patch.Second;
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                {
+                    double value = soluteppm[i];
+                    if (maximums != null)
+                        value = Math.Min(value, maximums[i]);
+                    values[i] += value * area;
+                }
+            }
+            values = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, values);
+            return new Solute(name, values);
+        }        
 
         /// <summary>
         /// Sum a list of double values, multiplying them by their respective areas.
