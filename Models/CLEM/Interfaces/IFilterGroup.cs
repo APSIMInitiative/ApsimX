@@ -29,7 +29,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Retrieves information on a property
         /// </summary>
-        PropertyInfo GetProperty(string name);
+        IEnumerable<PropertyInfo> GetProperty(string name);
 
         /// <summary>
         /// Filters the source using the group items

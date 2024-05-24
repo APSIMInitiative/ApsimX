@@ -27,10 +27,10 @@ namespace Models.CLEM.Groupings
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
-        private PropertyInfo propertyInfo;
+        private IEnumerable<PropertyInfo> propertyInfo = new List<PropertyInfo>();
         private bool validOperator = true;
         
-        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();
 
         /// <summary>
         /// The property or method to filter by
@@ -85,8 +85,8 @@ namespace Models.CLEM.Groupings
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-                if(propertyInfo is not null)
-                    validOperator = CheckValidOperator(propertyInfo, out string _);
+                if(propertyInfo.Any())
+                    validOperator = CheckValidOperator(propertyInfo.Last(), out string _);
             }
         }
 
@@ -108,19 +108,19 @@ namespace Models.CLEM.Groupings
             // Check that the filter applies to objects of type T
             var filterParam = Expression.Parameter(typeof(T));
 
-            // check if the parameter passes can inherit the declaring type
+            // check if the parameter passed can inherit the declaring type
             // this will not allow females to check male properties
             // convert parameter to the type of the property, null if fails
-            var filterInherit = Expression.TypeAs(filterParam, propertyInfo.DeclaringType);
-            var typeis = Expression.TypeIs(filterParam, propertyInfo.DeclaringType);
+            var filterInherit = Expression.TypeAs(filterParam, propertyInfo.First().DeclaringType);
+            var typeis = Expression.TypeIs(filterParam, propertyInfo.First().DeclaringType);
 
             // Look for the property
-            var key = Expression.Property(filterInherit, propertyInfo.Name);
+            var key = Expression.Property(filterInherit, propertyInfo.Last().Name);
 
             // Try convert the Value into the same data type as the property
 
             string propError = "";
-            switch (propertyInfo.PropertyType.Name)
+            switch (propertyInfo.Last().PropertyType.Name)
             {
                 case "Boolean":
                     if(Value != null && !bool.TryParse(Value.ToString(), out _))
@@ -135,7 +135,7 @@ namespace Models.CLEM.Groupings
                 throw new ApsimXException(this, propError);
             }
 
-            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, ModifiedValueToUse.ToString(), true) : Convert.ChangeType(ModifiedValueToUse ?? 0, propertyInfo.PropertyType);
+            var ce = propertyInfo.Last().PropertyType.IsEnum ? Enum.Parse(propertyInfo.Last().PropertyType, ModifiedValueToUse.ToString(), true) : Convert.ChangeType(ModifiedValueToUse ?? 0, propertyInfo.Last().PropertyType);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T
@@ -150,7 +150,7 @@ namespace Models.CLEM.Groupings
             else
                 binary = Expression.MakeBinary(Operator, key, value);
 
-            // only perfom if the type is a match to the type of property
+            // only perform if the type is a match to the type of property
             var body = Expression.Condition(
                 typeis,
                 binary,
@@ -261,7 +261,7 @@ namespace Models.CLEM.Groupings
             Initialise();
 
             using StringWriter filterWriter = new();
-            if (propertyInfo is null)
+            if (propertyInfo.Any() == false)
             {
                 filterWriter.Write($"Filter:");
                 string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
@@ -273,9 +273,9 @@ namespace Models.CLEM.Groupings
 
             filterWriter.Write($"Filter:");
             bool truefalse = IsOperatorTrueFalseTest();
-            if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
+            if (truefalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
             {
-                if (propertyInfo.PropertyType == typeof(bool))
+                if (propertyInfo.Last().PropertyType == typeof(bool))
                 {
                     if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
                         filterWriter.Write(" not");
@@ -307,7 +307,7 @@ namespace Models.CLEM.Groupings
                     {
                         string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
                         string spanclose = (htmltags) ? "</span>" : "";
-                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.PropertyType.Name}{spanclose}");
+                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanclose}");
                     }
                 }
                 else
@@ -343,25 +343,25 @@ namespace Models.CLEM.Groupings
             {
 
                 // check valid operator
-                if (!CheckValidOperator(propertyInfo, out _))
+                if (!CheckValidOperator(propertyInfo.Last(), out _))
                 {
                     string[] memberNames = new string[] { "Invalid operator" };
-                    results.Add(new ValidationResult($"The operator provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]", memberNames));
+                    results.Add(new ValidationResult($"The operator provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]", memberNames));
                 }
 
                 // check valid property value.
                 // valid for enum
-                if (propertyInfo.PropertyType.IsEnum)
+                if (propertyInfo.Last().PropertyType.IsEnum)
                 {
-                    if (!Enum.TryParse(propertyInfo.PropertyType, Value.ToString(), out _))
+                    if (!Enum.TryParse(propertyInfo.Last().PropertyType, Value.ToString(), out _))
                     {
                         string[] memberNames = new string[] { "Invalid compare value" };
-                        results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.PropertyType))}]", memberNames));
+                        results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.Last().PropertyType))}]", memberNames));
                     }
                 }
 
                 // valid for true / false bool
-                if (propertyInfo.PropertyType == typeof(bool))
+                if (propertyInfo.Last().PropertyType == typeof(bool))
                 {
                     // blank entry is permitted if using isTrue or isFalse otherwise check value
                     if (Value != null)

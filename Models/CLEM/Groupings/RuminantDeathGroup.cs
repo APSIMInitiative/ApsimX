@@ -86,7 +86,7 @@ namespace Models.CLEM.Groupings
             if (FindInScope<RuminantParametersGrow>() is null)
             {
                 string[] memberNames = new string[] { "Missing Ruminant.Grow parameters" };
-                results.Add(new ValidationResult($"[a=RuminantActivityDeathOriginal] requires parameters defined in [r=Ruminant.Parameters.RuminantParametersGrow].{Environment.NewLine}Ensure [r=Ruminant.Parameters.RuminantParametersGrow] is present and has the parameters for your breed provided..", memberNames));
+                results.Add(new ValidationResult($"[a=RuminantActivityDeath] requires parameters defined in [r=Ruminant.Parameters.RuminantParametersGrow].{Environment.NewLine}Ensure [r=Ruminant.Parameters.RuminantParametersGrow] is present and has the parameters for your breed provided..", memberNames));
             }
             return results;
         }

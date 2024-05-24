@@ -47,7 +47,7 @@ namespace Models.CLEM.Groupings
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
-        public object OrderRule<T>(T t) => Parent.GetProperty(PropertyOfIndividual).GetValue(t, null);
+        public object OrderRule<T>(T t) => Parent.GetProperty(PropertyOfIndividual).First().GetValue(t, null);
 
         /// <summary>
         /// Convert sort to string
