@@ -352,12 +352,12 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = 6.7
+                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = NEW value 6.7
                 // mj/kg gain
                 energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
                 // units = kg protein/kg gain
 
-                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = 0.21 or 5/23.6;
+                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = NEW VALUE 0.21 or 5/23.6;
                 // ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 = 3.3
                 // ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 = 0.19
                 // ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 = 0.115

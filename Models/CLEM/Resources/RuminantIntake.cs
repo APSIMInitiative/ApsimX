@@ -64,8 +64,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adjust intake consumed based on feed quality
         /// </summary>
-        public void AdjustIntakeBasedOnFeedQuality(bool islactating, Ruminant ind )
+        public void AdjustIntakeBasedOnFeedQuality(bool islactating, Ruminant ind)
         {
+            if (ind.Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+                return;
+
             double sumFs = 0;
             double iReduction = 0;
 

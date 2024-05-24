@@ -23,6 +23,13 @@ namespace Models.CLEM.Resources
     public class RuminantParametersGrow24CI : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
+        /// Switch to ignore the adjustment og intake as a function of feed quality.
+        /// </summary>
+        [Description("Do not adjust intake by quality")]
+        [Category("Breed", "Intake")]
+        public bool IgnoreFeedQualityIntakeAdustment { get; set; } = false;
+
+        /// <summary>
         /// Relative size scalar (SCA CI1) [Breed] - Growth
         /// </summary>
         [Description("Relative size scalar [CI1]")]
@@ -188,8 +195,8 @@ namespace Models.CLEM.Resources
         /// Relative condition effect (SCA CI20)
         /// </summary>
         [Category("Farm", "Lactation")]
-        [Description("Relative condition effect [CI20]")]
-        [Required, GreaterThanValue(1)]
+        [Description("Relative condition effect [CI20] 1=off")]
+        [Required, GreaterThanEqualValue(1)]
         [System.ComponentModel.DefaultValue(1.5)]
         public double RelativeConditionEffect_CI20 { get; set; }
 
