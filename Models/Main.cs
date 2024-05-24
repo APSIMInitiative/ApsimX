@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -319,50 +320,83 @@ namespace Models
                 bool isSimToBeRun = false;
                 Simulations tempSim = null;
                 string lastSaveFilePath = null;
+                BatchFile batchFile = null;
 
-                foreach (string command in commandsList)
+                if (!string.IsNullOrEmpty(options.Batch))
                 {
-                    string[] splitCommand = command.Split(' ', '=');
-                    ConfigureCommandRun(splitCommand, configFileDirectory, ref originalFilePath, ref savePath, ref loadPath, ref isSimToBeRun, ref tempSim);
-
-                    // Throw if the first command is not a save or load command.
-                    if (String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
+                    batchFile = new(options.Batch);
+                    foreach (DataRow row in batchFile.DataTable.Rows)
                     {
-                        throw new Exception("First command in a config file can only be either a save or load command if no apsimx file is included.");
+                        // TODO: Needs to handle the replacing of config file placeholders.
+                        DoSingleCommand(options, 
+                            configFileDirectory, 
+                            commandsList, 
+                            ref originalFilePath, 
+                            ref savePath, 
+                            ref loadPath, 
+                            ref isSimToBeRun, 
+                            ref tempSim, 
+                            ref lastSaveFilePath,
+                            row);
                     }
+                }
+                else DoSingleCommand(options, 
+                    configFileDirectory, 
+                    commandsList, 
+                    ref originalFilePath, 
+                    ref savePath, 
+                    ref loadPath, 
+                    ref isSimToBeRun, 
+                    ref tempSim, 
+                    ref lastSaveFilePath);
 
-                    // As long as a file can be loaded any other command can be run.
-                    if (!String.IsNullOrEmpty(loadPath))
-                    {
-                        // Temporary sim for holding changes.
-                        Simulations sim = null;
+            }
+        }
 
-                        if (tempSim != null)
-                            sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
+        private static void DoSingleCommand(Options options, string configFileDirectory, List<string> commandsList, ref string originalFilePath, ref string savePath, ref string loadPath, ref bool isSimToBeRun, ref Simulations tempSim, ref string lastSaveFilePath, DataRow row = null)
+        {
+            foreach (string command in commandsList)
+            {
+                string[] splitCommand = command.Split(' ', '=');
+                ConfigureCommandRun(splitCommand, configFileDirectory, ref originalFilePath, ref savePath, ref loadPath, ref isSimToBeRun, ref tempSim);
 
-                        if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
-                        {
-                            sim.Write(sim.FileName, savePath);
-                            lastSaveFilePath = savePath;
-                            savePath = "";
-                        }
-
-                        if (isSimToBeRun)
-                        {
-                            RunModifiedApsimxFile(options, loadPath, tempSim, sim, originalFilePath, lastSaveFilePath);
-                            isSimToBeRun = false;
-                        }
-                    }
-                    else if (!string.IsNullOrEmpty(savePath))
-                    {
-                        // Create a new simulation as an existing apsimx file was not included.
-                        Simulations sim = CreateMinimalSimulation();
-                        sim.Write(sim.FileName, savePath);
-                        savePath = "";
-                    }
-                    else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
+                // Throw if the first command is not a save or load command.
+                if (String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
+                {
+                    throw new Exception("First command in a config file can only be either a " + 
+                        "save or load command if no apsimx file is included.");
                 }
 
+                // As long as a file can be loaded any other command can be run.
+                if (!String.IsNullOrEmpty(loadPath))
+                {
+                    // Temporary sim for holding changes.
+                    Simulations sim = null;
+
+                    if (tempSim != null)
+                        sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
+
+                    if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
+                    {
+                        sim.Write(sim.FileName, savePath);
+                        lastSaveFilePath = savePath;
+                        savePath = "";
+                    }
+
+                    if (isSimToBeRun)
+                    {
+                        RunModifiedApsimxFile(options, loadPath, tempSim, sim, originalFilePath, lastSaveFilePath);
+                        isSimToBeRun = false;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(savePath))
+                {
+                    // Create a new simulation as an existing apsimx file was not included.
+                    Simulations sim = CreateMinimalSimulation();
+                    sim.Write(sim.FileName, savePath);
+                    savePath = "";
+                }
+                else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
             }
         }
 
@@ -765,15 +799,6 @@ namespace Models
 
             //file is not locked
             return false;
-        }
-
-        /// <summary>
-        /// Changes the files DataStore to use in memory DB.
-        /// </summary>
-        /// <param name="sims"></param>
-        private static void ChangeSimToUseInMemoryDB(Simulations sims)
-        {
-            sims.FindChild<DataStore>().UseInMemoryDB = true;
         }
 
         /// <summary>

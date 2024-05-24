@@ -56,7 +56,7 @@ namespace Models.Core.ConfigFile
         /// <param name="command">An override or instruction command.</param>
         /// <param name="configFileDirectory">A path to the config file's directory</param>
         /// <param name="tempSim">A file path to an .apsimx file.</param>
-        public static IModel RunConfigCommands(/*string apsimxFilePath*/Simulations tempSim, string command, string configFileDirectory)
+        public static IModel RunConfigCommands(Simulations tempSim, string command, string configFileDirectory)
         {
             try
             {
@@ -539,6 +539,17 @@ namespace Models.Core.ConfigFile
             string trimmedSection = section.TrimEnd();
             return trimmedSection.Replace(' ', '@');
 
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <returns></returns>
+        public static string ReplaceBatchFilePlaceholder(string commandString)
+        {
+            return "";
         }
     }
 }

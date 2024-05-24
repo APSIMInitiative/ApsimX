@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
@@ -143,6 +144,12 @@ namespace Models
         /// </summary>
         [Option("in-memory-db", HelpText = "Sets datastore to use memory instead of database." )]
         public bool InMemoryDB {get; set;}
+
+        /// <summary>
+        /// Allows the use of a batch file which specifies a series of changes to make to an apsimx file. Used in conjunction with --apply switch.
+        /// </summary>
+        [Option('b', "batch", HelpText="Allows the use of a batch file which specifies a series of changes to make to an apsimx file. To be used with the --apply switch.")]
+        public string Batch{ get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.
