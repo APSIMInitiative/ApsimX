@@ -567,6 +567,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         private static List<ScriptLine> addIndent(List<ScriptLine> lines, string indent)
         {
+            bool oneLineIndent = false;
             int indents = 0;
             List<ScriptLine> newLines = new List<ScriptLine>();
 
@@ -577,10 +578,20 @@ namespace APSIM.Shared.Utilities
                 {
                     indents -= 1;
                 }
+                if (line.text.Contains('{'))
+                {
+                    oneLineIndent = false;
+                }
 
                 for(int i = 0; i < indents; i++) {
                     newLine += indent;
                 }
+                if (oneLineIndent)
+                {
+                    newLine += indent;
+                    oneLineIndent = false;
+                }
+
                 newLine += line.text;
 
                 if (line.text.Contains('{') && !line.text.Contains('}'))
@@ -594,6 +605,10 @@ namespace APSIM.Shared.Utilities
                 if (line.text.Contains(')') && !line.text.Contains('('))
                 {
                     indents -= 1;
+                }
+                if (line.text.StartsWith("if (") || line.text.StartsWith("if(") || line.text.StartsWith("else (") || line.text.StartsWith("else("))
+                {
+                    oneLineIndent = true;
                 }
 
                 line.text = newLine;
