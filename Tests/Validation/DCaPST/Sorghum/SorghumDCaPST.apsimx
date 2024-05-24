@@ -465,7 +465,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 3.025"
+                    "Parameters.Pathway.SpectralCorrectionFactor = 0.3466"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
