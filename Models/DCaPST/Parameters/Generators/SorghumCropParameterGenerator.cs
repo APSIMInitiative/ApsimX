@@ -66,19 +66,14 @@ namespace Models.DCAPST
         /// <returns>A populated PathwayParameters object.</returns>
         private static PathwayParameters GeneratePathwayParameters()
         {
-            var co2Multiplier = 1.0;
-            var lightResponseMultiplier = co2Multiplier > 0 ? 
-                1.0 / co2Multiplier :
-                1.0;
-
             return new PathwayParameters()
             {
                 IntercellularToAirCO2Ratio = 0.4,
                 FractionOfCyclicElectronFlow = 0.5,
                 RespirationSLNRatio = 0.0,
-                MaxRubiscoActivitySLNRatio = 0.28 * co2Multiplier,
-                MaxElectronTransportSLNRatio = 2.5 * co2Multiplier,
-                MaxPEPcActivitySLNRatio = 1.1 * co2Multiplier,
+                MaxRubiscoActivitySLNRatio = 0.28,
+                MaxElectronTransportSLNRatio = 2.5,
+                MaxPEPcActivitySLNRatio = 1.1,
                 MesophyllCO2ConductanceSLNRatio = 0.0146,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
@@ -131,7 +126,7 @@ namespace Models.DCAPST
                     At25 = 0,
                     Factor = 40600
                 },
-                SpectralCorrectionFactor = 0.39609236234459 * lightResponseMultiplier,
+                SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
                 BundleSheathConductance = 0.003
