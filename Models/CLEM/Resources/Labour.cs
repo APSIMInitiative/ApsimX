@@ -379,11 +379,11 @@ namespace Models.CLEM.Resources
 
                     // check that pricing item meets the specified criteria.
                     var items = priceGroup.FindAllChildren<FilterByProperty>()
-                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual) == property)
+                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual).First() == property)
                         .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
 
                     var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
-                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual) == property) &
+                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual).First() == property) &
                         (
                             (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
                             (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |

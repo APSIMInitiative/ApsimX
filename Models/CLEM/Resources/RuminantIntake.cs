@@ -139,6 +139,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines the proportion of the potential intake actually achieved.
         /// </summary>
+        [FilterByProperty]
         public double ProportionOfPotentialIntakeObtained
         {
             get

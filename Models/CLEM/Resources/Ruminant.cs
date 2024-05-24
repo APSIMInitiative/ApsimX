@@ -26,6 +26,7 @@ namespace Models.CLEM.Resources
         /// Ruminant intake manager
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public RuminantIntake Intake { get; set; } = new();
 
         /// <summary>

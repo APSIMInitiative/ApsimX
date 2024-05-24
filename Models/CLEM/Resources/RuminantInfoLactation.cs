@@ -32,18 +32,22 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount produced (L)
         /// </summary>
+        [FilterByProperty]
         public double Produced { get; set; }
         /// <summary>
         /// Amount currently available (L)
         /// </summary>
+        [FilterByProperty]
         public double Available { get; set; }
         /// <summary>
         /// Amount milked (L)
         /// </summary>
+        [FilterByProperty]
         public double Milked { get; set; }
         /// <summary>
         /// Amount suckled (L)
         /// </summary>
+        [FilterByProperty]
         public double Suckled { get; set; }
         /// <summary>
         /// Protein required for lactation

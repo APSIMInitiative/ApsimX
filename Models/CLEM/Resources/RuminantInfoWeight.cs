@@ -66,6 +66,7 @@ namespace Models.CLEM.Resources
         /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
         /// This should be true as these are either doen early (birth) on activitiy (shear) or in the growth model before weight gain.
         /// </summary>
+        [FilterByProperty]
         public double Live { get { return live; } }
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current weight of individual  (kg)
         /// </summary>
+        [FilterByProperty]
         public double Gain { get { return Live - Previous; } }
 
         /// <summary>
@@ -96,6 +98,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adult equivalent
         /// </summary>
+        [FilterByProperty]
         public double AdultEquivalent { get; private set; }
 
         /// <summary>
@@ -111,6 +114,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Normalised weight for current age
         /// </summary>
+        [FilterByProperty]
         public double NormalisedForAge { get; private set; }
 
         /// <summary>
@@ -127,6 +131,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The current live weight as a proportion of highest weight achieved
         /// </summary>
+        [FilterByProperty]
         public double ProportionOfHighWeight { get { return HighestAttained == 0 ? 1 : Live / HighestAttained; } }
 
         /// <summary>
@@ -146,12 +151,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative size based on highest weight achieved (High weight / standard reference weight)
         /// </summary>
+        [FilterByProperty]
         public double RelativeSizeByHighWeight { get { return HighestAttained / StandardReferenceWeight; } }
 
         /// <summary>
         /// Relative condition (base weight / normalised weight)
         /// Does not include conceptus weight in pregnant females.
         /// </summary>
+        [FilterByProperty]
         public double RelativeCondition { get { return Base.Amount / NormalisedForAge; } }
 
         /// <summary>

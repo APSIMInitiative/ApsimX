@@ -343,7 +343,7 @@ namespace Models.CLEM.Activities
 
             double energyEmptyBodyGain;
             double proteinContentOfGain;
-            if (ind.Parameters.General.UseCorrectedEquations)
+            if (!ind.Parameters.General.UseCorrectedEquations)
             {
                 // mj/kg gain
                 energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
@@ -354,7 +354,7 @@ namespace Models.CLEM.Activities
             {
                 // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = 6.7
                 // mj/kg gain
-                energyEmptyBodyGain =  6.7 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
+                energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
                 // units = kg protein/kg gain
 
                 // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = 0.21 or 5/23.6;
@@ -362,7 +362,7 @@ namespace Models.CLEM.Activities
                 // ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 = 0.19
                 // ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 = 0.115
 
-                proteinContentOfGain = 5 - (sizeFactor1ForGain * (3.3 + (0.19 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
+                proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 - (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 + (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
             }
 
             // units MJ tissue gain/kg ebg
