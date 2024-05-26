@@ -209,8 +209,8 @@ namespace Models.PMF.Struct
                 // Dynamic calculation
                 if (isDynamicTillering)
                 {
-                    double PTQ = radiationValues / temperatureValues;
-                    CalcTillerNumber(PTQ);
+                    double ptq = radiationValues / temperatureValues;
+                    CalcTillerNumber(ptq);
                 }
 
                 AddInitialTillers();
@@ -431,11 +431,8 @@ namespace Models.PMF.Struct
 
             var mainCulm = culms.Culms[0];
             double nLeaves = mainCulm.CurrentLeafNo;
-            var maxSLAAdjustmentValue = maxSLAAdjustment.Value();
-            MaxSLA = CalculateMaxSLA(nLeaves);
-            ConstrainMaxSLA();
-            MaxSLA *= (100 + maxSLAAdjustmentValue) / 100.0;
-
+            CalculateMaxSLA(nLeaves, maxSLAAdjustment);
+            
             if (slaNewCm2g <= MaxSLA) return 1.0;
 
             // Leaf is getting too thin, reduce area growth.
@@ -450,16 +447,13 @@ namespace Models.PMF.Struct
             return laiFractionalReductionForSLA;
         }
 
-        private double CalculateMaxSLA(double nLeaves)
+        private void CalculateMaxSLA(double nLeaves, IFunction allowedSlaPercentageIncrease)
         {
             var slaLeafNoCoefficientValue = slaLeafNoCoefficient.Value();
-            return 429.72 - slaLeafNoCoefficientValue * (nLeaves);
-        }
-
-        private void ConstrainMaxSLA()
-        {
+            MaxSLA = 429.72 - slaLeafNoCoefficientValue * (nLeaves);
             MaxSLA = Math.Min(400, MaxSLA);
             MaxSLA = Math.Max(150, MaxSLA);
+            MaxSLA *= (100 + allowedSlaPercentageIncrease.Value()) / 100.0;
         }
 
         private void CalculateTillerCessation(double dltStressedLAI)
@@ -515,10 +509,7 @@ namespace Models.PMF.Struct
             // Calculate sla target that is below the actual SLA - so as the leaves gets thinner it signals to the tillers to cease growing further
             // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
             double nLeaves = mainCulm.CurrentLeafNo;
-            MaxSLA = CalculateMaxSLA(nLeaves);
-            ConstrainMaxSLA();
-            // sla bound vary 30 - 40%
-            MaxSLA *= (100 - tillerSlaBound.Value()) / 100.0;
+            CalculateMaxSLA(nLeaves, tillerSlaBound);
             double dmGreen = leaf.Live.Wt;
 
             // Calc how much LAI we need to remove to get back to the SLA target line.
