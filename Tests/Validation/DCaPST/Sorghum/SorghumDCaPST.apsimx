@@ -730,7 +730,7 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": 20.0,
+                  "Minimum": 0.0,
                   "Maximum": 1200.0,
                   "Interval": null
                 },
@@ -741,7 +741,7 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": 20.0,
+                  "Minimum": 0.0,
                   "Maximum": 1200.0,
                   "Interval": null
                 }
