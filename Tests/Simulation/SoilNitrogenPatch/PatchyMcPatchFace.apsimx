@@ -51,7 +51,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = FromHarvest,SetMonthly",
+                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = SetMonthly,FromHarvest",
                   "Name": "Return",
                   "ResourceName": null,
                   "Children": [],
@@ -60,7 +60,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50,25,15,1",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
                   "Name": "Num",
                   "ResourceName": null,
                   "Children": [],
@@ -4765,7 +4765,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=2,3,4",
+                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=3",
                   "Name": "EffN",
                   "ResourceName": null,
                   "Children": [],
@@ -4981,8 +4981,8 @@
                 "            else",
                 "                DivisorForReporting = ZoneCount;",
                 "",
-                "            MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
-                "            //MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
+                "            //MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
+                "            MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
                 "            //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
                 "",
                 "            if (PseudoPatches)",
@@ -5092,7 +5092,7 @@
                 "                else if (UrineReturnType == UrineReturnTypes.SetMonthly)",
                 "                {",
                 "                    AmountUrineNReturned = MonthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input",
-                "                    AmountDungNReturned = AmountUrineNReturned * (0.35 / 0.50);  // ",
+                "                    AmountDungNReturned = AmountUrineNReturned / 0.50 * 0.35;  // ",
                 "                    AmountDungCReturned = AmountDungNReturned * 20;",
                 "                }",
                 "                if (Verbose)",
@@ -5165,7 +5165,7 @@
                 "                    {",
                 "                        Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;",
                 "",
-                "                          thisFert.Apply(amount: AmountUrineNReturned / zone.Area, ",
+                "                          thisFert.Apply(amount: (AmountUrineNReturned * ZoneCount), ",
                 "                                  type: Fertiliser.Types.UreaN,  ",
                 "                                  depthTop: 0.0, ",
                 "                                  depthBottom: UrineDepthPenetration, ",
@@ -5348,10 +5348,6 @@
               ],
               "Parameters": [
                 {
-                  "Key": "UrineReturnType",
-                  "Value": "FromHarvest"
-                },
-                {
                   "Key": "Verbose",
                   "Value": "False"
                 },
@@ -5362,6 +5358,10 @@
                 {
                   "Key": "ZoneCount",
                   "Value": "0"
+                },
+                {
+                  "Key": "UrineReturnType",
+                  "Value": "FromHarvest"
                 },
                 {
                   "Key": "UrineReturnPattern",
@@ -6158,8 +6158,8 @@
                 "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitN2OPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
                 "Sum of [ReportingWithZonesHelper].ScriptReporting.LeachedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
                 "",
-                "Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
-                "Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
                 "//Last of [ReportingWithZonesHelper].ScriptReporting.NO3Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NO3N",
                 "//Last of [ReportingWithZonesHelper].ScriptReporting.MinNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MinN",
                 "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalCPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalC",
