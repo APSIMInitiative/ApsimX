@@ -899,6 +899,9 @@ namespace Models.PMF.Organs
             double dmSenescingProportion = dltSenescedBiomass / Live.Wt;
             double nSenescingProportion = dltSenescedN / Live.N;
 
+            // keep track of N in senesced material for reporting
+            DltSenescedN += dltSenescedN;
+
             //order is important as the proortion is calculated for each component of the live weight
             UpdateBiomassComponent(Dead, Live, dmSenescingProportion);
             UpdateBiomassComponent(Senesced, Live, dmSenescingProportion);
