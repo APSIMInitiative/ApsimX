@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using APSIM.Shared.Documentation.Extensions;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Xml.Serialization;
 
 namespace Models.CLEM
@@ -31,17 +31,17 @@ namespace Models.CLEM
         public bool RandomiseBeforeSorting { get; set; }
 
         /// <summary>
-        /// The properties available for filtering
-        /// </summary>
-        [NonSerialized]
-        protected Dictionary<string, List<PropertyInfo>> properties;
-
-        /// <summary>
         /// An identifier for this FilterGroup based on parent requirements
         /// </summary>
         [Description("Group identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
+
+        /// <summary>
+        /// The properties available for filtering
+        /// </summary>
+        [NonSerialized]
+        protected Dictionary<string, List<PropertyInfo>> properties;
 
         /// <inheritdoc/>
         [XmlIgnore]
@@ -108,50 +108,22 @@ namespace Models.CLEM
         /// </summary>
         public void InitialiseFilters(bool includeBuildRules = true)
         {
-            properties = GetNestedProperties(typeof(TFilter), "", new List<PropertyInfo>());
+            var pp = GetNestedPropertiesYield(typeof(TFilter), new List<PropertyInfo>());
+            properties = pp.ToDictionary(pair => pair.Key, pair => pair.Value);
+
             var types = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
                 .Where(t => t.IsSubclassOf(typeof(TFilter)));
+
+            // get parameters specific for each type of ruminant (male and female)
             foreach (var subtype in types)
             {
-                foreach (var sub in GetNestedProperties(subtype, subtype.Name, new List<PropertyInfo>()))
-                    properties.Add(sub.Key, sub.Value);
+                foreach (var sub in GetNestedPropertiesYield(subtype, new List<PropertyInfo>()))
+                    properties.Add($"{subtype.Name[8..]}.{sub.Key}", sub.Value);
             }
 
             properties =  properties.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
-
-            //properties = typeof(TFilter)
-            //    .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-            //    .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
-            //    .ToDictionary(prop => prop.Name, prop => prop);
-
-            //foreach (var property in properties.Values.ToList())
-            //{
-            //    var subProperties = property.PropertyType.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-            //        .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
-            //        .ToDictionary(prop => $"{property.Name}.{prop.Name}", prop => prop);
-            //    foreach (var item in subProperties)
-            //        properties.Add(item.Key, item.Value);
-            //}
-
-            //var types = Assembly.GetExecutingAssembly()
-            //    .GetTypes()
-            //    .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
-            //    .Where(t => t.IsSubclassOf(typeof(TFilter)));
-
-            //foreach (var type in types)
-            //{
-            //    var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-            //                        .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
-            //    foreach (var prop in props)
-            //    {
-            //        string key = prop.DeclaringType.Name;
-            //        if (key.StartsWith(typeof(TFilter).Name))
-            //            key = key.Substring(typeof(TFilter).Name.Length);
-            //        properties.Add($"{key}.{prop.Name}", prop);
-            //    }
-            //}
 
             foreach (Filter filter in FindAllChildren<Filter>())
             {
@@ -163,88 +135,27 @@ namespace Models.CLEM
             sortList = FindAllChildren<ISort>();
         }
 
-        ///// <summary>
-        ///// Recursively gets all properties of a type where FilterByPropertyAttribute is present.
-        ///// </summary>
-        ///// <param name="type">The type to get properties from</param>
-        ///// <param name="header">Recursive name header tracker</param>
-        ///// <param name="nestedPropertyList"></param>
-        ///// <returns>A list of PropertyInfo objects representing the properties</returns>
-        //public static IEnumerable<string, List<PropertyInfo>> GetNestedPropertiesYield(Type type, string header, List<PropertyInfo> nestedPropertyList)
-        //{
-        //     var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-        //        .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
-        //        //.ToDictionary(prop => $"{(header == string.Empty ? "" : $"{header}.")}{prop.Name}", prop => (nestedPropertyList is null) ? new List<PropertyInfo> { prop } : nestedPropertyList.Concat(new List<PropertyInfo> { prop }).ToList());
-
-        //    foreach (var prop in allProperties)
-        //    {
-        //        var subProperties = GetNestedPropertiesYield(prop.PropertyType, $"{(header == string.Empty ? "" : $"{header}.")}{prop.Name}");
-        //        if (!subProperties.Any())
-        //            yield return new KeyValuePair<string, List<PropertyInfo>>($"{(header == string.Empty ? "" : $"{header}.")}{prop.Name}", new List<PropertyInfo> { prop });
-        //            //properties.Remove(prop.Key);
-
-        //        foreach (var sub in subProperties)
-        //        {
-        //            properties.Add(sub.Key, sub.Value);
-        //        }
-        //    }
-        //    return properties;
-        //}
-
-
-
-
         /// <summary>
         /// Recursively gets all properties of a type where FilterByPropertyAttribute is present.
         /// </summary>
         /// <param name="type">The type to get properties from</param>
-        /// <param name="header">Recursive name header tracker</param>
         /// <param name="nestedPropertyList"></param>
         /// <returns>A list of PropertyInfo objects representing the properties</returns>
-        public static Dictionary<string, List<PropertyInfo>> GetNestedProperties(Type type, string header, List<PropertyInfo> nestedPropertyList)
+        public static IEnumerable<KeyValuePair<string, List<PropertyInfo>>> GetNestedPropertiesYield(Type type, List<PropertyInfo> nestedPropertyList)
         {
-            Dictionary<string, List<PropertyInfo>> properties = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
-                .ToDictionary(prop => $"{(header == string.Empty ? "" : $"{header}.")}{prop.Name}", prop => (nestedPropertyList is null) ? new List<PropertyInfo> { prop } : nestedPropertyList.Concat(new List<PropertyInfo> { prop }).ToList());
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+               .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
 
-            foreach (var prop in properties.ToList())
+            if (!props.Any())
+                yield return new KeyValuePair<string, List<PropertyInfo>>(string.Join('.', nestedPropertyList.Select(a => a.Name)) , nestedPropertyList);
+
+            foreach (var prop in props)
             {
-                var subProperties = GetNestedProperties(prop.Value.Last().PropertyType, $"{(header == string.Empty ? "" : $"{header}.")}{prop.Value.Last().Name}", prop.Value);
-                if (subProperties.Any())
-                    properties.Remove(prop.Key);
-
-                foreach (var sub in subProperties)
+                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat((new List<PropertyInfo>() { prop })).ToList()))
                 {
-                    properties.Add(sub.Key, sub.Value);
+                    yield return new KeyValuePair<string, List<PropertyInfo>>(sub.Key, sub.Value);
                 }
             }
-            return properties;
-        }
-
-        /// <summary>
-        /// Recursively gets all properties of a type where FilterByPropertyAttribute is present.
-        /// </summary>
-        /// <param name="type">The type to get properties from</param>
-        /// <param name="header">Recursive name header tracker</param>
-        /// <returns>A list of PropertyInfo objects representing the properties</returns>
-        public static Dictionary<string, PropertyInfo> GetNestedProperties(Type type, string header)
-        {
-            Dictionary<string, PropertyInfo> properties = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
-                .ToDictionary(prop => $"{(header == string.Empty ? "" : $"{header}.")}{prop.Name}", prop => prop);
-
-            foreach (var prop in properties.Values.ToList())
-            {
-                var subProperties = GetNestedProperties(prop.PropertyType, $"{(header == string.Empty?"":$"{header}.")}{prop.Name}");
-                if(subProperties.Any())
-                    properties.Remove(prop.Name);
-
-                foreach (var sub in subProperties)
-                {
-                    properties.Add(sub.Key, sub.Value);
-                }
-            }
-            return properties;
         }
 
         /// <inheritdoc/>

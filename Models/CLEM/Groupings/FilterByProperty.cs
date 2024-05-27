@@ -65,19 +65,19 @@ namespace Models.CLEM.Groupings
             base.SetDefaults();
         }
 
-        ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            List<ValidationResult> results = new List<ValidationResult>();
-            ValidationContext context = new ValidationContext(this, null, null);
-            if (Validator.TryValidateObject(this, context, results, true))
-            {
-                Initialise();
-                // rules can only be built on commence not during use in UI (Descriptive summaries)
-                BuildRule();
-            }
-        }
+//        ///<inheritdoc/>
+//        [EventSubscribe("CLEMValidate")]
+//        protected void OnValidation(object sender, EventArgs e)
+//        {
+//            List<ValidationResult> results = new List<ValidationResult>();
+//            ValidationContext context = new ValidationContext(this, null, null);
+//            if (Validator.TryValidateObject(this, context, results, true))
+//            {
+////                Initialise();
+//                // rules can only be built on commence not during use in UI (Descriptive summaries)
+////                BuildRule();
+//            }
+//        }
 
         /// <inheritdoc/>
         public override void Initialise()
@@ -99,7 +99,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            if (!validOperator || propertyInfo is null) return f => false;
+            if (!validOperator || !propertyInfo.Any()) return f => false;
             return CompileComplex<T>();
         }
 
@@ -114,8 +114,22 @@ namespace Models.CLEM.Groupings
             var filterInherit = Expression.TypeAs(filterParam, propertyInfo.First().DeclaringType);
             var typeis = Expression.TypeIs(filterParam, propertyInfo.First().DeclaringType);
 
+            // now using the Ienumerable of property info, build the expression as this allows nested properties to be used. 
+            Expression key = null;
+            foreach (var property in propertyInfo)
+            {
+                if (key == null)
+                {
+                    key = Expression.Property(filterInherit, property.Name);
+                }
+                else
+                {
+                    key = Expression.Property(key, property.Name);
+                }
+            }
+
             // Look for the property
-            var key = Expression.Property(filterInherit, propertyInfo.Last().Name);
+            //var key = Expression.Property(filterInherit, propertyInfo.Last().Name);
 
             // Try convert the Value into the same data type as the property
 
