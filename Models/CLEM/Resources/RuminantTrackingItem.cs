@@ -38,11 +38,6 @@ namespace Models.CLEM.Resources
             if (Amount + change < 0)
                 Change = -Amount;
             Amount += Change;
-
-            //if (MathUtilities.IsGreaterThanOrEqual(change, 0) || MathUtilities.IsGreaterThan(Amount, Math.Abs(change)))
-            //    Amount += change;
-            //else
-            //    Amount = 0;
         }
 
         /// <summary>

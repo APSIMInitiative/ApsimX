@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> requestResources = new List<ResourceRequest>();
+            List<ResourceRequest> requestResources = new();
             int numberTrucked = 0;
             double herdValue = 0;
 
@@ -477,8 +477,8 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check that all or none of children are ShortfallsWithImplications
-            var truckingComponents = FindAllChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
-            if (truckingComponents.Any() && (truckingComponents.Count() != FindAllChildren<RuminantTrucking>().Count()))
+            var truckingComponents = FindAllChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
+            if (truckingComponents.Any() && (truckingComponents.Count != FindAllChildren<RuminantTrucking>().Count()))
             {
                 string[] memberNames = new string[] { "RuminantTrucking" };
                 results.Add(new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", memberNames));

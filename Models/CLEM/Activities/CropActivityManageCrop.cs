@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
                     if(areaneeded > 0)
                     {
                         ResourceRequestList = new List<ResourceRequest> {
-                            new ResourceRequest() {
+                            new () {
                                 Resource = LinkedLandItem,
                                 AllowTransmutation = false,
                                 Required = areaneeded,

@@ -1,3 +1,4 @@
+using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -195,7 +196,7 @@ namespace Models.CLEM.Activities
                         if (price.UseWholePackets)
                             packets = Math.Truncate(packets);
 
-                        if (amount < 0)
+                        if (MathUtilities.IsNegative(amount))
                         {
                             packetsToDo[0, 0] += packets;
                             amountToDo[0, 0] += packets * price.PacketSize;
@@ -378,7 +379,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (currentEntries.Count > 0)
+                if (MathUtilities.IsPositive(currentEntries.Count))
                     Status = ActivityStatus.Warning;
                 return;
             }

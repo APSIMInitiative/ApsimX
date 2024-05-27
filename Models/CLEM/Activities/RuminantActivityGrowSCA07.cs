@@ -56,8 +56,25 @@ namespace Models.CLEM.Activities
         {
             // Because this activity inherits from CLEMRuminantActivityBase we have access to herd details.
             InitialiseHerd(true, true);
-
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+
+            // warn about a couple settings that may have been missed and have an influence of outcomes. These are designed for expert use such as feedlot validation.
+            ISummary summary = null;
+            foreach (var ind in CurrentHerd(false).GroupBy(a => a.HerdName))
+            {
+                // condition-based intake reduction
+                if (ind.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
+                {
+                    summary = FindInScope<Summary>();
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1", MessageType.Warning);
+                }
+                // intake reduced by quality of feed
+                if (ind.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+                {
+                    summary ??= FindInScope<Summary>();
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to false", MessageType.Warning);
+                }
+            }
         }
 
         /// <summary>Function to naturally wean individuals at start of timestep.</summary>

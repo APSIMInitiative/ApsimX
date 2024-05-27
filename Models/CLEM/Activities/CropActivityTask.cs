@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                 if(follow is CropActivityManageProduct)
                     return results;
 
-                if(!(follow is ActivityFolder))
+                if(follow is not ActivityFolder)
                 {
                     string[] memberNames = new string[] { "Parent model" };
                     results.Add(new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", memberNames));

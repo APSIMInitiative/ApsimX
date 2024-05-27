@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
             else
             {
                 // make sure labour hired present
-                if (labour.Items.Where(a => a.Hired).Count() == 0)
+                if (!labour.Items.Where(a => a.Hired).Any())
                 {
                     string[] memberNames = new string[] { "Hired labour" };
                     results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));

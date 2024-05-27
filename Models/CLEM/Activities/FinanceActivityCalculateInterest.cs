@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -47,15 +48,15 @@ namespace Models.CLEM.Activities
                 // make interest payments on bank accounts
                 foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                 {
-                    if (accnt.Balance > 0)
+                    if (MathUtilities.IsPositive(accnt.Balance))
                     {
-                        if (accnt.InterestRatePaid > 0)
+                        if (MathUtilities.IsPositive(accnt.InterestRatePaid))
                         {
                             accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, null, "Interest");
                             SetStatusSuccessOrPartial();
                         }
                     }
-                    else if (accnt.Balance < 0)
+                    else if (MathUtilities.IsNegative(accnt.Balance))
                     {
                         double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
                         if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)

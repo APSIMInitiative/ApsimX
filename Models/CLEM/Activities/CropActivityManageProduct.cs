@@ -169,26 +169,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                    identifiers: new List<string>()
+                    {
 
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per kg harvested",
-                            "per land unit of crop",
-                            "per hectare of crop",
-                            "per land unit harvested",
-                            "per hectare harvested",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                    },
+                    measures: new List<string>() {
+                        "fixed",
+                        "per kg harvested",
+                        "per land unit of crop",
+                        "per hectare of crop",
+                        "per land unit harvested",
+                        "per hectare harvested",
+                    }
+                    ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -374,7 +372,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="date">date to process</param>
         /// <returns>year month integer</returns>
-        public int CalculateYearMonth(DateTime date)
+        public static int CalculateYearMonth(DateTime date)
         {
             return date.Year * 12 + date.Month;
         }
@@ -493,7 +491,6 @@ namespace Models.CLEM.Activities
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                 }
             }
-
             return null;
         }
 
@@ -524,7 +521,6 @@ namespace Models.CLEM.Activities
 
                 limiter.AddWeightCarried(AmountHarvested);
             }
-
         }
 
         /// <inheritdoc/>

@@ -289,33 +289,33 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>
-        /// Method to check if required sub-parameters have been supplied.
-        /// </summary>
-        /// <param name="type">The Ruminant type to check</param>
-        /// <param name="subParametersList">List of required SubParameters</param>
-        /// <returns>A list of error messages for missing sub-parameters</returns>
-        public static List<string> CheckRuminantParametersExist(RuminantType type, List<ISubParameters> subParametersList) 
-        {
-            List<string> errors = new();
-            foreach (var subParameter in subParametersList)
-            {
-                bool ok = true;
-                switch (subParameter)
-                {
-                    case RuminantParametersBreeding:
-                        ok = type.Parameters.Breeding is not null;
-                        break;
-                    default:
-                        break;
-                }
+        ///// <summary>
+        ///// Method to check if required sub-parameters have been supplied.
+        ///// </summary>
+        ///// <param name="type">The Ruminant type to check</param>
+        ///// <param name="subParametersList">List of required SubParameters</param>
+        ///// <returns>A list of error messages for missing sub-parameters</returns>
+        //public static List<string> CheckRuminantParametersExist(RuminantType type, List<ISubParameters> subParametersList) 
+        //{
+        //    List<string> errors = new();
+        //    foreach (var subParameter in subParametersList)
+        //    {
+        //        bool ok = true;
+        //        switch (subParameter)
+        //        {
+        //            case RuminantParametersBreeding:
+        //                ok = type.Parameters.Breeding is not null;
+        //                break;
+        //            default:
+        //                break;
+        //        }
 
-                if (!ok)
-                {
-                    errors.Add($"The [RuminantParametersBreed] components is required by this simulation for [{type.Name}]");
-                }
-            }
-            return errors;
-        }
+        //        if (!ok)
+        //        {
+        //            errors.Add($"The [RuminantParametersBreed] components is required by this simulation for [{type.Name}]");
+        //        }
+        //    }
+        //    return errors;
+        //}
     }
 }

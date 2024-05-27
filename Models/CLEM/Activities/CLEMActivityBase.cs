@@ -265,7 +265,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public static string UpdateTransactionCategory(CLEMActivityBase model, string relatesToValue = "")
         {
-            List<string> transCatsList = new List<string>();
+            List<string> transCatsList = new();
             if (model.parentZone is null)
                 model.parentZone = model.FindAncestor<ZoneCLEM>();
 

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -59,7 +60,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (Amount > 0)
+            if (MathUtilities.IsPositive(Amount))
             {
                 bankAccount.Add(Amount, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial();

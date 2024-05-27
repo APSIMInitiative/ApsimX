@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class LabourActivityOffFarm: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        private FinanceType bankType { get; set; }
+        private FinanceType bankType;
 
         /// <summary>
         /// Bank account name to pay to

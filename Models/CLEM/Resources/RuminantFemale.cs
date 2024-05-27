@@ -554,6 +554,7 @@ namespace Models.CLEM.Resources
         /// Lactation information
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
 
         /// <summary>

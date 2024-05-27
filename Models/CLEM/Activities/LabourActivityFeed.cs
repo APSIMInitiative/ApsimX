@@ -56,13 +56,13 @@ namespace Models.CLEM.Activities
         /// Feed type
         /// </summary>
         [JsonIgnore]
-        public HumanFoodStoreType FeedType { get; set; }
+        public HumanFoodStoreType FeedType { get; private set; }
 
         /// <summary>
         /// The list of individuals remaining to be fed in the current timestep
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<LabourType> IndividualsToBeFed { get; set; }
+        public IEnumerable<LabourType> IndividualsToBeFed { get; private set; }
 
         /// <summary>
         /// Constructor

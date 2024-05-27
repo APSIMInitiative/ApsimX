@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                SetStatusSuccessOrPartial(unitsToSkip > 0);
+                SetStatusSuccessOrPartial(MathUtilities.IsPositive(unitsToSkip));
             }
         }
 

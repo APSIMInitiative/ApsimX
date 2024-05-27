@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
             // proportion green
             double greenPasture = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.Amount);
             pastureToDo = pasture.Amount;
-            if (pastureToDo > 0)
+            if (MathUtilities.IsPositive(pastureToDo))
             {
                 if (MathUtilities.IsGreaterThan(greenPasture / pastureToDo, MinimumProportionGreen))
                 {
@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(areaToDo - areaToSkip > 0)
+            if(MathUtilities.IsPositive(areaToDo - areaToSkip))
             {
                 // remove biomass
                 pasture.Remove(new ResourceRequest()

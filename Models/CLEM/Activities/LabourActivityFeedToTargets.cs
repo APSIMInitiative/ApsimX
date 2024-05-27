@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         private ResourcesHolder resourcesHolder = null;
 
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
             }
 
             List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).ToList();
-            peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
+            _ = peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
             double aE = peopleList.Sum(a => a.TotalAdultEquivalents);

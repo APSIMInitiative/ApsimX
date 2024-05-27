@@ -112,7 +112,6 @@ namespace Models.CLEM.Activities
 
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
-
             foreach (var ind in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -254,7 +253,6 @@ namespace Models.CLEM.Activities
             ind.Milk.Available = ind.Milk.ProductionRate * events.Interval;
 
             // returns the energy required for milk production
-
             return ind.Milk.ProductionRate * 3.2 / kl;
         }
 
@@ -267,8 +265,6 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             int cmonth = events.Clock.Today.Month;
-
-            // grow individuals
 
             IEnumerable<string> breeds = herd.Select(a => a.Breed).Distinct();
             Status = ActivityStatus.NotNeeded;
@@ -300,26 +296,33 @@ namespace Models.CLEM.Activities
                         // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
                         // Crude protein required generally 130g per kg of digestable feed.
+                        // WRONG! this is actually the CP provided by the rumen per kg digested. 
+
+                        // JD - discussion
+                        // Assume energy is limiting intake before protein
+                        // in most cases it is
+                        // Recommend this is turned off - parameter = 0;
+                        // Better to flag a warning if protein is limiting intake
                         
-                        double crudeProteinRequired = 0.0;
-                        //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient / 100.0 * ind.Intake.DMD / 100 * ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
-                        //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient * ind.Intake.DMD / 100;
+                        //double crudeProteinRequired = 0.0;
+                        // //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient / 100.0 * ind.Intake.DMD / 100 * ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
+                        // //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient * ind.Intake.DMD / 100;
 
-                        // adjust for efficiency of use of protein, (default 90%) degradable. now user param.
-                        double crudeProteinSupply = (ind.Intake.CrudeProtein) * ind.Parameters.Grow.ProteinDegradability; //  PercentNOfIntake * 62.5
-                        // This was proteinconcentration * 0.9
+                        // // adjust for efficiency of use of protein, (default 90%) degradable. now user param.
+                        //double crudeProteinSupply = (ind.Intake.CrudeProtein) * ind.Parameters.Grow.ProteinDegradability; //  PercentNOfIntake * 62.5
+                        //// This was proteinconcentration * 0.9
 
-                        // prevent future divide by zero issues.
-                        if (MathUtilities.FloatsAreEqual(crudeProteinSupply, 0.0))
-                            crudeProteinSupply = 0.001;
+                        //// prevent future divide by zero issues.
+                        //if (MathUtilities.FloatsAreEqual(crudeProteinSupply, 0.0))
+                        //    crudeProteinSupply = 0.001;
 
-                        if (MathUtilities.IsLessThan(crudeProteinSupply, crudeProteinRequired))
-                        {
-                            double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired); // half-linear
-                            //TODO: add min protein to parameters
-                            ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.MetabolicIntake *= ratioSupplyRequired; // reduces intake proportionally as protein drops below CP required
-                        }
+                        //if (MathUtilities.IsLessThan(crudeProteinSupply, crudeProteinRequired))
+                        //{
+                        //    double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired); // half-linear
+                        //    //TODO: add min protein to parameters
+                        //    ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
+                        //    ind.MetabolicIntake *= ratioSupplyRequired; // reduces intake proportionally as protein drops below CP required
+                        //}
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
@@ -381,7 +384,6 @@ namespace Models.CLEM.Activities
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
 
-            // ind.MetabolicIntake is the inake received adjusted by any crude protein shortfall in AnimalWeightGain()
             double intakeDaily = ind.MetabolicIntake / events.Interval;
 
             // Sme 1 for females and castrates
@@ -436,11 +438,21 @@ namespace Models.CLEM.Activities
                 ind.Energy.ForLactation = 0;
 
                 double feedingValue;
-                if (MathUtilities.IsPositive(EnergyBalance))
-                    feedingValue = 2 * 0.7 * EnergyBalance / (kgl * energyMaintenance) - 1;
-                else
-                    //(from Hirata model)
-                    feedingValue = 2 * EnergyBalance / (0.85 * energyMaintenance) - 1;
+
+                //
+                // These original equations seems to be incorrect.
+                // See adult section below!
+                //
+
+
+                // REMOVED!
+                // if (MathUtilities.IsPositive(EnergyBalance))
+                //     feedingValue = 2 * 0.7 * EnergyBalance / (kgl * energyMaintenance) - 1;
+                // else
+                //     // (from Hirata model)
+                //     feedingValue = 2 * EnergyBalance / (0.85 * energyMaintenance) - 1;
+
+                feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
 
                 double energyEmptyBodyGain = ind.Parameters.Grow.GrowthEnergyIntercept1 + feedingValue + (ind.Parameters.Grow.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight.Live / ind.Weight.NormalisedForAge - 0.4)));
 
@@ -491,7 +503,7 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                //TODO: add draft individual energy requirement
+                //TODO: add draught individual energy requirement
 
                 double feedingValue;
                 //ind.EnergyFromIntake = energyMetabolicFromIntake;
@@ -499,11 +511,20 @@ namespace Models.CLEM.Activities
                 ind.Energy.ForMaintenance = energyMaintenance;
                 ind.Energy.ForLactation = energyMilk;
 
+                //
+                // These original equations seems to be incorrect.
+                // Based on assessment with J.D. and the form of parameter needed in energyEmptyBodyGain 
+                // The correct measure of feeding value is (metabolisable energy from intake / energy for maintenance) - 1
+                // Will need to be updated in all versions and documentation.
+
+                // REMOVED!
                 // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
-                if (MathUtilities.IsPositive(energyBalance))
-                    feedingValue = 2 * ((kg * energyBalance) / (km * energyMaintenance) - 1);
-                else
-                    feedingValue = 2 * (energyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                // if (MathUtilities.IsPositive(energyBalance))
+                //     feedingValue = 2 * ((kg * energyBalance) / (km * energyMaintenance) - 1);
+                // else
+                //     feedingValue = 2 * (energyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+
+                feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
 
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight.Live / ind.Weight.StandardReferenceWeight);
 

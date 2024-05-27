@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -99,7 +100,7 @@ namespace Models.CLEM.Activities
 
             amountToSkip = 0;
             amountToDo = resourceTypeProcessModel.Amount;
-            if (Reserve > 0)
+            if (MathUtilities.IsPositive(Reserve))
             {
                 amountToDo = Math.Min(amountToDo, Reserve);
             }
@@ -120,7 +121,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if (amountToDo > 0)
+            if (MathUtilities.IsPositive(amountToDo))
             {
                 resourceRequest = new ResourceRequest()
                 {

@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
         /// <returns>Limiter as proportion</returns>
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
-            // Grow Frier 2012 will do the feed quality adjustment in greater detail.
+            // Grow Frier 2012 will do the feed quality adjustment in greater detail (Intake.AdjustByFeedQuality)
             if (usingGrow24) return 1;
 
             // determine pasture quality from all pools (DMD) at start of grazing

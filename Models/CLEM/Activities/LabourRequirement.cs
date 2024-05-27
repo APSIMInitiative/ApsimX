@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         private double maximumDaysPerGroup = 0;
         private double minimumDaysPerPerson = 0;
         private Labour labourResource;
-        private List<ResourceRequest> resourceList = new List<ResourceRequest>();
+        private readonly List<ResourceRequest> resourceList = new();
 
         /// <summary>
         /// Constructor
@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(daysNeeded))
             {
-                CLEMActivityBase handlesActivityComponents = Parent as CLEMActivityBase;
+                //CLEMActivityBase handlesActivityComponents = Parent as CLEMActivityBase;
 
                 foreach (LabourGroup fg in FindAllChildren<LabourGroup>())
                 {

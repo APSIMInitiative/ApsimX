@@ -281,25 +281,6 @@ namespace Models.CLEM.Activities
             return uniqueIndividuals;
         }
 
-        //#region validation
-        ///// <summary>
-        ///// Validate model
-        ///// </summary>
-        ///// <param name="validationContext"></param>
-        ///// <returns></returns>
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    var results = new List<ValidationResult>();
-
-        //    if (breedingParent is null)
-        //    {
-        //        string[] memberNames = new string[] { "Controlled mating parent" };
-        //        results.Add(new ValidationResult($"Invalid parent component of [a={Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
-        //    }
-        //    return results;
-        //}
-        //#endregion
-
         #region descriptive summary
 
         /// <inheritdoc/>

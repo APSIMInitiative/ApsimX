@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.
         /// </summary>
-        public int NumberConceived { get; set; }
+        public int NumberConceived { get; private set; }
 
         /// <summary>
         /// Infer pregnancy status at startup
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                                 // if mandatory attributes are present in the herd, save male value with female details.
                                 if (female.BreedDetails.IncludedAttributeInheritanceWhenMating)
                                     // randomly select male as father
-                                    AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)]);
+                                    AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count - 1)]);
 
                                 // report conception status changed
                                 conceptionArgs.Status = ConceptionStatus.Conceived;
@@ -304,7 +304,7 @@ namespace Models.CLEM.Activities
                         {
                             int maleCount = location.OfType<RuminantMale>().Count();
                             // get a list of males to provide attributes when in controlled mating.
-                            if(maleCount > 0 && location.FirstOrDefault().BreedDetails.IncludedAttributeInheritanceWhenMating)
+                            if (maleCount > 0 && location.FirstOrDefault().BreedDetails.IncludedAttributeInheritanceWhenMating)
                                 maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
 
                             int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();
@@ -318,7 +318,7 @@ namespace Models.CLEM.Activities
                     // shuffle the not pregnant females when obtained to avoid any inherant order by creation of individuals affecting which individuals are available first
                     var notPregnantFemales = location.OfType<RuminantFemale>().Where(a => !a.IsPregnant).OrderBy(a => RandomNumberGenerator.Generator.Next()).ToList();
                     int totalToBreed = notPregnantFemales.Count;
-                    while(cnt < totalToBreed)
+                    while (cnt < totalToBreed)
                     {
                         RuminantFemale female = notPregnantFemales.ElementAt(cnt);
                         ConceptionStatus status = ConceptionStatus.NotMated;
@@ -359,7 +359,7 @@ namespace Models.CLEM.Activities
                             if (Math.Abs(conceptionRate) > 0)
                             {
                                 // if controlled mating (ActiDetConcepRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
-                                //ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
+                                // ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
                                 if ((female.ActivityDeterminedConceptionRate != null)?conceptionRate > 0:RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, events.Clock.Today);
@@ -398,7 +398,7 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warning, Summary, this, MessageType.Information);
                     }
                 }
-                if(breedoccurred)
+                if (breedoccurred)
                 {
                     Status = ActivityStatus.Success;
                     AddStatusMessage("Breeding occurred");

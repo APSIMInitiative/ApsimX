@@ -55,8 +55,25 @@ namespace Models.CLEM.Activities
         {
             // Because this activity inherits from CLEMRuminantActivityBase we have access to herd details.
             InitialiseHerd(true, true);
-
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+
+            // warn about a couple settings that may have been missed
+            ISummary summary = null;
+            foreach (var ind in CurrentHerd(false).GroupBy(a => a.HerdName))
+            { 
+                // condition-based intake reduction
+                if(ind.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
+                {
+                    summary = FindInScope<Summary>();
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1", MessageType.Warning);
+                }
+                // intake reduced by quality of feed
+                if (ind.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+                {
+                    summary ??= FindInScope<Summary>();
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to false", MessageType.Warning);
+                }
+            }
         }
 
         /// <summary>Function to naturally wean individuals at start of timestep.</summary>
@@ -112,7 +129,8 @@ namespace Models.CLEM.Activities
         {
             // CF - Condition factor SCA Eq.3
             double cf = 1.0;
-            if(ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
+            // ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 = 1.0 will ignore this condition-base reduction.
+            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
             {
                 if (ind.Weight.BodyCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
                     cf = 0;
@@ -226,7 +244,7 @@ namespace Models.CLEM.Activities
             kl = 0;
 
             // The feed quality measures are now provided in IFeedType and FoodResourcePackets
-            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or sillage, temperate pasture, tropical pasture, or milk) in RuminantIntake
+            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or sillage, temperate pasture, tropical pasture, or milk) in Ruminant.Intake
             // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
 
             // Sme 1 for females and castrates
@@ -291,7 +309,7 @@ namespace Models.CLEM.Activities
                 double received = 0;
                 if(ind.Mother is not null)
                     received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate/ ind.Mother.SucklingOffspringList.Count);
-                // remove consumed milk from mother.
+                // remove consumed milk from mother's milk available.
                 ind.Mother?.Milk.Take(received*events.Interval, MilkUseReason.Suckling);
 
                 milkPacket.MetabolisableEnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
@@ -316,12 +334,12 @@ namespace Models.CLEM.Activities
 
                 CalculateMaintenanceEnergy(ind, kml, sexEffectME);
             }
-            double adjustedFeedingLevel = ind.Energy.FromIntake / ind.Energy.ForMaintenance - 2;
+            double adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 2;
 
             // Wool production
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
 
-            //TODO: add draft individual energy requirement: does this also apply to unweaned individuals? If so move outside loop
+            //TODO: add draught individual energy requirement: does this also apply to unweaned individuals? If so move outside loop
 
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
@@ -334,7 +352,6 @@ namespace Models.CLEM.Activities
             double kDPLS = (ind.IsWeaned)? ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
-            // ToDo: Do these use SRW of Female or does it include the 1.2x factor for males?
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6) / (ind.Parameters.Grow24_CG.ConditionMaxEffect_CG7 - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6)), 1));
@@ -345,23 +362,20 @@ namespace Models.CLEM.Activities
             double proteinContentOfGain;
             if (!ind.Parameters.General.UseCorrectedEquations)
             {
-                // mj/kg gain
+                // units = mj/kg gain
                 energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
                 // units = kg protein/kg gain
                 proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel) + sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
             }
             else
             {
-                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = NEW value 6.7
+                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = NEW value 6.7 for the corrected equations. 
+                // CG9, CG10, CG11 are not changed from previous.
                 // mj/kg gain
                 energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
                 // units = kg protein/kg gain
-
-                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = NEW VALUE 0.21 or 5/23.6;
-                // ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 = 3.3
-                // ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 = 0.19
-                // ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 = 0.115
-
+                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = NEW value 0.21 (or 5/23.6) for the corrected equations.
+                // CG13, CG14, CG15 are not changed from previous.
                 proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 - (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 + (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
             }
 
@@ -388,7 +402,7 @@ namespace Models.CLEM.Activities
 
                 ind.Energy.ForLactation = MP / 0.94 * kl;
 
-                // adjusted NEG1/ 
+                // adjusted NEG1 
                 double NEG2 = netEnergyForGain + ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 * (checkFemale.Milk.PotentialRate2 - MP);
                 double PG2 = proteinGain1 + (checkFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
                 double ProteinNet2 = PG2 - proteinContentOfGain * (NEG2 / energyEmptyBodyGain);
@@ -423,17 +437,13 @@ namespace Models.CLEM.Activities
             ind.Energy.Fat.Adjust(MJFatChange * events.Interval); // for time step
 
             // N balance = 
-            // ToDo: not currently used
             ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((conceptusProtein + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
 
             // Total fecal protein
             double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.Grow24_CACRD.MicrobialProteinDigestibility_CA7 * ind.Parameters.Grow24_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
-
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + MJProteinChange / 23.6) - TFP - DermalProtein;
-            // ToDo: not currently used
             ind.Output.NitrogenExcreted = (TFP + TUP) * events.Interval;
-
             ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
             ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;
 
@@ -460,7 +470,6 @@ namespace Models.CLEM.Activities
             ind.Energy.ToGraze /= km;
 
             double rdpReq;
-            // todo: check ind.Params.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
             ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
             ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
             ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
@@ -479,9 +488,7 @@ namespace Models.CLEM.Activities
         {
             // 1. calc RDP intake. Rumen Degradable Protein
 
-            // ToDo: check what happens with RDPReq if feedingvalue <- 0... what FMIE term will be used in equation.
             double FMEIterm = 1;
-
             if (feedingLevel > 0)
             {
                 FMEIterm = 0;
@@ -497,7 +504,7 @@ namespace Models.CLEM.Activities
                             break;
                         case FeedType.HaySilage:
                             DPrf = 1 - (ind.Parameters.Grow24_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.Grow24_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
-                            FMEIrf = 1; // add later depending on feed type, need to add new types PastureTrop, PastureTemp, HaySilage (non-grazed forage). ?? Lucena
+                            FMEIrf = 1; // ToDo: add later depending on feed type, need to add new types PastureTrop, PastureTemp, HaySilage (non-grazed forage). ?? Lucena
                             break;
                         case FeedType.Milk:
                             FMEIrf = 0; // ignore milk. solids only
@@ -524,8 +531,8 @@ namespace Models.CLEM.Activities
 
             // 3.calculate RDP requirement
 
-            // ignored GrassGro timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
-            // ignored GrassGro latitude factor for now.
+            // Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
+            // Ignored from GrassGro latitude factor for now.
             // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
 
             return (ind.Parameters.Grow24_CACRD.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.Grow24_CACRD.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.Grow24_CACRD.RumenDegradableProteinExponent_CRD6 *
@@ -541,11 +548,6 @@ namespace Models.CLEM.Activities
         {
             // TODO: wool production energy here!
             // TODO: include wool production here.
-
-            // grow wool and cashmere from CLEM based on IAT/NABSA
-            //ind.Wool += ind.Parameters.General.WoolCoefficient * ind.MetabolicIntake;
-            //ind.Cashmere += ind.Parameters.General.CashmereCoefficient * ind.MetabolicIntake;
-
             return 0;
         }
 
@@ -563,8 +565,8 @@ namespace Models.CLEM.Activities
                 ind.Milk.Milked = 0;
                 ind.Milk.Suckled = 0;
 
-                // this is called in potential intake using last months energy available after pregnancy
-                // and called again in CalculateEnergy of Weight Gain where it uses the energy available after ____ maint? from the current time step.
+                // this is called in potential intake using last month's energy available after pregnancy
+                // and called again in CalculateEnergy of WeightGain where it uses the energy available after ____ maint? from the current time step.
 
                 // update old parameters in breed params to new approach based on energy and not L milk.
                 // TODO: new intercept = 0.4 and coefficient = 0.02

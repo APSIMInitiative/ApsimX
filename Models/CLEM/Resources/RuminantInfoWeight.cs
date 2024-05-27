@@ -72,6 +72,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The empty body mass of the individual (kg)
         /// </summary>
+        [FilterByProperty]
         public double EmptyBodyMass { get; private set; }
 
         /// <summary>

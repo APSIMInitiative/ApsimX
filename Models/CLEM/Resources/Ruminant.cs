@@ -33,6 +33,8 @@ namespace Models.CLEM.Resources
         /// Store for tracking energy use
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
+
         public RuminantInfoEnergy Energy { get; set; }
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Models.CLEM.Resources
         /// Store for tracking all weights
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public RuminantInfoWeight Weight { get; set; }
 
         /// <summary>

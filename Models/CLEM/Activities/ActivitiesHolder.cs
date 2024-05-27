@@ -136,7 +136,7 @@ namespace Models.CLEM.Activities
                 child.ReportActivityStatus(0, fromSetup);
 
             // add timestep activity for reporting
-            ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
+            ActivityPerformedEventArgs ea = new()
             {
                 Name = timeStep.Name,
                 Status = timeStep.Status,
