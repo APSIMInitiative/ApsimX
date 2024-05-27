@@ -36,6 +36,9 @@ namespace UnitTests.Core
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
 
+            foreach (var ex in errors)
+                Console.WriteLine(ex.ToString());
+
             // Check that no errors were thrown
             Assert.AreEqual(0, errors.Count);
 
