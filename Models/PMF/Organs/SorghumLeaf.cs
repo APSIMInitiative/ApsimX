@@ -891,13 +891,13 @@ namespace Models.PMF.Organs
             if (!MathUtilities.IsPositive(dltSenescedBiomass)) return;
 
             double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-            DltSenescedN += DltSenescedLai * Math.Max(slnToday, 0.0);
+            double dltSenescedN = DltSenescedLai * Math.Max(slnToday, 0.0);
 
-            if (MathUtilities.IsGreaterThan(DltSenescedN, Live.N))
+            if (MathUtilities.IsGreaterThan(dltSenescedN, Live.N))
                 throw new Exception($"Attempted to senesce more N than exists on leaf '{Name}'");
 
             double dmSenescingProportion = dltSenescedBiomass / Live.Wt;
-            double nSenescingProportion = DltSenescedN / Live.N;
+            double nSenescingProportion = dltSenescedN / Live.N;
 
             //order is important as the proortion is calculated for each component of the live weight
             UpdateBiomassComponent(Dead, Live, dmSenescingProportion);
