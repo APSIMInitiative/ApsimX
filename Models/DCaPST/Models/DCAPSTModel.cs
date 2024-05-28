@@ -11,7 +11,7 @@ namespace Models.DCAPST
     /// 
     /// </summary>
     [Serializable]
-    public class DCAPSTModel : Model, IPhotosynthesisModel
+    public class DCAPSTModel : IPhotosynthesisModel
     {
         /// <summary>
         /// The solar geometry

@@ -388,7 +388,7 @@ namespace Models.PMF.Struct
                     mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf
                 )
                 {
-                    CalculateTillerCessation(dltStressedLAI);
+                    CalculateTillerCessation();
                 }
 
                 updatedDltStressedLAI = 0.0;
@@ -456,7 +456,7 @@ namespace Models.PMF.Struct
             MaxSLA *= (100 + allowedSlaPercentageIncrease.Value()) / 100.0;
         }
 
-        private void CalculateTillerCessation(double dltStressedLAI)
+        private void CalculateTillerCessation()
         {
             bool moreToAdd = (CurrentTillerNumber < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
             var tillerLaiToReduce = CalcCeaseTillerSignal();
