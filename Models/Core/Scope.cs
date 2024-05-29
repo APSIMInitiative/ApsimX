@@ -13,7 +13,8 @@ namespace Models.Core
     public class ScopingRules
     {
         private Dictionary<IModel, List<IModel>> cache = new Dictionary<IModel, List<IModel>>();
-        private static SortedSet<string> scopedModels = new();
+        private static Dictionary<string, bool> scopedModels = new();
+        private static readonly object scopedModelsLock = new();
 
 
         /// <summary>
@@ -125,11 +126,13 @@ namespace Models.Core
         /// <returns></returns>
         public static bool IsScopedModel(IModel relativeTo)
         {
-            if (scopedModels.Contains(relativeTo.GetType().Name))
-                return true;
-            bool isScoped = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
-            if (isScoped)
-                scopedModels.Add(relativeTo.GetType().Name);
+            if (scopedModels.TryGetValue(relativeTo.GetType().Name, out bool isScoped))
+                return isScoped;
+            isScoped = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
+            lock (scopedModelsLock)
+            {
+                scopedModels.Add(relativeTo.GetType().Name, isScoped);
+            }
             return isScoped;
         }
 
