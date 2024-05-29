@@ -123,15 +123,9 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Validation of this resource
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // Add warning if no individuals defined
             if (FindAllChildren<LabourType>().Any() && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
@@ -142,7 +136,7 @@ namespace Models.CLEM.Resources
                     Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
-            return results;
+            return null;
         }
 
         #endregion

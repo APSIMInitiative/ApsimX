@@ -76,28 +76,19 @@ namespace Models.CLEM.Reporting
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             if (ruminantHerd is null)
             {
-                string[] memberNames = new string[] { "Missing resource" };
-                results.Add(new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", memberNames));
+                yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", new string[] { "Missing resource" });
             }
             if (!this.FindAllChildren<RuminantGroup>().Any())
             {
-                string[] memberNames = new string[] { "Missing ruminant filter group" };
-                results.Add(new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
+                yield return new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", new string[] { "Missing ruminant filter group" });
             }
-            return results;
         }
 
         #endregion

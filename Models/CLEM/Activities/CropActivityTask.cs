@@ -152,29 +152,21 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             IModel follow = Parent;
             while (!(follow is ActivitiesHolder))
             {
                 if(follow is CropActivityManageProduct)
-                    return results;
+                    break;
 
                 if(follow is not ActivityFolder)
                 {
-                    string[] memberNames = new string[] { "Parent model" };
-                    results.Add(new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", memberNames));
-                    return results;
+                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", new string[] { "Parent model" });
                 }
                 follow = follow.Parent;
             }
-            return results;
         }
         #endregion
 

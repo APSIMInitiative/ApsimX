@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/SetAttributeWithProperty.htm")]
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class SetAttributeWithProperty : CLEMModel, IValidatableObject, ISetAttribute
+    public class SetAttributeWithProperty : CLEMModel, ISetAttribute
     {
         [NonSerialized]
         private PropertyInfo propertyInfo;
@@ -194,19 +194,6 @@ namespace Models.CLEM.Resources
             SetDefaults();
             propertyInfo = typeof(RuminantType).GetProperty(PropertyOfIndividual);
         }
-
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-        #endregion
 
         #region descriptive summary
 

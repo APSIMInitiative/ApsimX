@@ -168,55 +168,6 @@ namespace Models.CLEM
             }
         }
 
-        #region validation
-
-        ///// <summary>
-        ///// Validate object
-        ///// </summary>
-        ///// <param name="validationContext"></param>
-        ///// <returns></returns>
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    var results = new List<ValidationResult>();
-
-        //    // Check that CLEMEvents component is present under Clock
-        //    var clemEvents = this.FindAllInScope<CLEMEvents>();
-        //    if (!clemEvents.Any())
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Resources" };
-        //        results.Add(new ValidationResult("A simulation using CLEM must contain a [CLEMEvents] component usually placed as a child of [Clock]", memberNames));
-        //    }
-        //    if (clemEvents.Count() > 1)
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Resources" };
-        //        results.Add(new ValidationResult("CLEM simulations must contain only one (1) [CLEMEvents] component usually as a child of the single APSIM [Clock]", memberNames));
-        //    }
-        //    // check that one resources and on activities are present.
-        //    int componentCount = this.FindAllChildren<ResourcesHolder>().Count();
-        //    if (componentCount == 0)
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Resources" };
-        //        results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
-        //    }
-        //    if (componentCount > 1)
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Resources" };
-        //        results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
-        //    }
-        //    componentCount = this.FindAllChildren<ActivitiesHolder>().Count();
-        //    if (componentCount == 0)
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Activities" };
-        //        results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
-        //    }
-        //    if (componentCount > 1)
-        //    {
-        //        string[] memberNames = new string[] { "CLEM.Activities" };
-        //        results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
-        //    }
-        //    return results;
-        //}
-
         /// <summary>An event handler to allow us to validate properties and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -361,7 +312,6 @@ namespace Models.CLEM
             }
             return valid;
         }
-        #endregion
 
         #region Descriptive summary
 

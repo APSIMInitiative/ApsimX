@@ -121,40 +121,34 @@ namespace Models.CLEM
         }
 
         #region validation
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (XValues == null)
             {
                 string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("X values are required for relationship", memberNames));
+                yield return new ValidationResult("X values are required for relationship", memberNames);
             }
             if (YValues == null)
             {
                 string[] memberNames = new string[] { "YValues" };
-                results.Add(new ValidationResult("Y values are required for relationship", memberNames));
+                yield return new ValidationResult("Y values are required for relationship", memberNames);
             }
             if (XValues.Length != YValues.Length)
             {
                 string[] memberNames = new string[] { "XValues and YValues" };
-                results.Add(new ValidationResult("The same number of X and Y values are required for relationship", memberNames));
+                yield return new ValidationResult("The same number of X and Y values are required for relationship", memberNames);
             }
             if (XValues.Length == 0)
             {
                 string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("No data points were provided for relationship", memberNames));
+                yield return new ValidationResult("No data points were provided for relationship", memberNames);
             }
             if (XValues.Length < 2)
             {
                 string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("At least two data points are required for relationship", memberNames));
+                yield return new ValidationResult("At least two data points are required for relationship", memberNames);
             }
-            return results;
         }
         #endregion
 

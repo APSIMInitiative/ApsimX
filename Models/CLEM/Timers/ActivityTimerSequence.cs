@@ -80,22 +80,14 @@ namespace Models.CLEM.Timers
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check validity of sequence
             if (sequence.Replace("0", "").Replace("1", "").Trim() != "")
             {
-                string[] memberNames = new string[] { "ActivityTimerSequence" };
-                results.Add(new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", memberNames));
+                yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", new string[] { "ActivityTimerSequence" });
             }
-            return results;
         }
         #endregion
 

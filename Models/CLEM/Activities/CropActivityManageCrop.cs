@@ -216,21 +216,14 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             var cropProductChildren = Children.OfType<CropActivityManageProduct>();
             if(cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
             {
-                string[] memberNames = new string[] { "Multiple crop product activities" };
-                results.Add(new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
+                yield return new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", new string[] { "Multiple crop product activities" });
             }
-            return results;
         }
         #endregion
 

@@ -169,22 +169,14 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Determines whether the specified object is valid.
-        /// </summary>
-        /// <param name="validationContext">The validation context.</param>
-        /// <returns>A collection that holds failed-validation information.</returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // ensure all folders are not APSIM folders
             if (FindAllDescendants<Folder>().Any())
             {
-                string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+                yield return new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", new string[] { "ActivityHolder" });
             }
-            return results;
         }
 
         #endregion

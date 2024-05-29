@@ -128,16 +128,10 @@ namespace Models.CLEM.Timers
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             Model current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
@@ -150,11 +144,8 @@ namespace Models.CLEM.Timers
 
             if (ManageProductActivity == null)
             {
-                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
-                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
+                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", new string[] { "CropActivityManageProduct parent" });
             }
-
-            return results;
         }
         #endregion
 

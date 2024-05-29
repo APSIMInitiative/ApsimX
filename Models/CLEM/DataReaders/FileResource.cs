@@ -440,18 +440,14 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
-                string[] memberNames = new string[] { "WorksheetName" };
-                results.Add(new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", memberNames));
+                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
             }
             if(StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
             {
-                string[] memberNames = new string[] { "MonthColumnName" };
-                results.Add(new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", memberNames));
+                yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", new string[] { "MonthColumnName" });
             }
-            return results;
         } 
         #endregion
     }

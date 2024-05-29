@@ -30,26 +30,17 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (!FindAllChildren<LabourPriceGroup>().Any())
             {
-                string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [LabourPriceGroups] to include labour pricing.", memberNames));
+                yield return new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [LabourPriceGroups] to include labour pricing.", new string[] { "Labour pricing" });
             }
             else if (FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Any(a => a.Value == 0))
             {
-                string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
+                yield return new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Labour pricing" });
             }
-            return results;
         }
 
         #endregion

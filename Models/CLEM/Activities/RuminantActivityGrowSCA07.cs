@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.PMF.Phen;
 using Models.Utilities;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -323,22 +324,14 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check parameters are available for all ruminants.
             foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow24 is null))
             {
-                string[] memberNames = new string[] { "RuminantParametersGrowSCA" };
-                results.Add(new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", memberNames));
+                yield return new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
             }
-            return results;
         }
 
         #endregion

@@ -99,41 +99,34 @@ namespace Models.CLEM
         }
 
         #region validation
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that one resources and on activities are present.
             int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A market place must contain a Resources Holder to manage resources", memberNames));
+                yield return new ValidationResult("A market place must contain a Resources Holder to manage resources", memberNames);
             }
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames));
+                yield return new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames);
             }
             holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
-                results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
+                yield return new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames);
             }
             // only one market
             holderCount = FindAncestor<Simulation>().FindAllChildren<Market>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
-                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames));
+                yield return new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames);
             }
-
-            return results;
         }
         #endregion
 

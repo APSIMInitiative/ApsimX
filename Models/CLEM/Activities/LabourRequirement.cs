@@ -10,6 +10,7 @@ using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -232,7 +233,6 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -240,7 +240,6 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // ensure labour resource added
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
@@ -251,8 +250,7 @@ namespace Models.CLEM.Activities
             // check filter groups present
             if (!FindAllChildren<LabourGroup>().Any())
             {
-                string[] memberNames = new string[] { "Labour filter group" };
-                results.Add(new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", memberNames));
+                yield return new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", new string[] { "Labour filter group" });
             }
 
             // check for individual nesting.
@@ -263,14 +261,11 @@ namespace Models.CLEM.Activities
                 {
                     if (currentfg.FindAllChildren<LabourGroup>().Count() > 1)
                     {
-                        string[] memberNames = new string[] { "Labour requirement" };
-                        results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
+                        yield return new ValidationResult($"Invalid nested labour filter groups in [f={currentfg.Name}] for [a={Name}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", new string[] { "Labour filter group" });
                     }
                     currentfg = currentfg.FindAllChildren<LabourGroup>().FirstOrDefault();
                 }
             }
-
-            return results;
         }
         #endregion
 

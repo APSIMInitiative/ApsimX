@@ -49,15 +49,9 @@ namespace Models.CLEM.Groupings
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (MonthlyValues.Length > 0)
             {
                 if (MonthlyValues.Max() == 0)
@@ -65,7 +59,7 @@ namespace Models.CLEM.Groupings
                     Summary.WriteMessage(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]", MessageType.Warning);
                 }
             }
-            return results;
+            return null;
         }
 
         #endregion

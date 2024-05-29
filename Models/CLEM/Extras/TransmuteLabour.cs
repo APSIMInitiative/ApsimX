@@ -107,31 +107,23 @@ namespace Models.CLEM
         }
 
         #region validation
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             IResourceType parentResource = null;
             if (ResourceGroup is null)
             {
                 parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
-                string[] memberNames = new string[] { "Labour resource" };
-                results.Add(new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", memberNames));
+                yield return new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", new string[] { "Labour resource" });
             }
 
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
-                if(parentResource is null )
+                if (parentResource is null)
                     parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
-                string[] memberNames = new string[] { "Transmte pricing" };
-                results.Add(new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", memberNames));
+                yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", new string[] { "Transmte pricing" });
 
             }
-            return results;
         }
         #endregion
 

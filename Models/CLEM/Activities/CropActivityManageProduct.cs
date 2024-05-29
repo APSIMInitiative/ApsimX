@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -571,25 +572,18 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (Parent.GetType() != typeof(CropActivityManageCrop) && Parent.GetType() != typeof(CropActivityManageProduct))
             {
-                string[] memberNames = new string[] { "Parent model" };
-                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", memberNames));
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", new string[] { "Parent model" });
             }
 
             // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
             if (!((Parent.GetType() == typeof(CropActivityManageCrop) || (Parent.GetType() == typeof(CropActivityManageProduct) && Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
             {
-                string[] memberNames = new string[] { "Invalid nesting" };
-                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", new string[] { "Invalid nesting" });
             }
 
             // ensure we don't try and change the crop area planeted when using unallocated land
@@ -598,16 +592,13 @@ namespace Models.CLEM.Activities
                 var parentManageCrop = this.FindAncestor<CropActivityManageCrop>();
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
-                    string[] memberNames = new string[] { "Invalid crop area" };
-                    results.Add(new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", memberNames));
+                    yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", new string[] { "Invalid crop area" });
                 }
                 if(Parent is CropActivityManageProduct)
                 {
-                    string[] memberNames = new string[] { "Invalid crop area" };
-                    results.Add(new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", memberNames));
+                    yield return new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", new string[] { "Invalid crop area" });
                 }
             }
-            return results;
         }
 
         #endregion

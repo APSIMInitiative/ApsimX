@@ -298,41 +298,35 @@ namespace Models.CLEM
 
         #region validation
 
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (Clock.StartDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult($"Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames));
+                yield return new ValidationResult($"Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
             }
             if (Clock.EndDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.EndDate" };
-                results.Add(new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}", memberNames));
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}", memberNames);
             }
             if (Clock.EndDate <= Clock.StartDate)
             {
                 string[] memberNames = new string[] { "Clock.EndDate" };
-                results.Add(new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}. End of simulation must be after the start of the simulation.", memberNames));
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}. End of simulation must be after the start of the simulation.", memberNames);
             }
 
             if (TimeStep == TimeStepTypes.Monthly & Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult($"CLEM must commence on the first day of a month when using monthly time-step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames));
+                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time-step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
             }
             if (TimeStep == TimeStepTypes.Custom & CustomTimeStep <= 0)
             {
                 string[] memberNames = new string[] { "Custom time-step" };
-                results.Add(new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time-step style", memberNames));
+                yield return new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time-step style", memberNames);
             }
-            return results;
         }
 
         /// <summary>An event handler to allow us to validate properties and setup</summary>

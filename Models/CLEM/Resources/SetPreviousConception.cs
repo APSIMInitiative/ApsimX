@@ -60,15 +60,10 @@ namespace Models.CLEM.Resources
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             RuminantTypeCohort ruminantCohort = Parent as RuminantTypeCohort;
-            var results = new List<ValidationResult>();
             if ((Parent as RuminantTypeCohort).Sex == Sex.Female)
             {
                 // get the breed to check gestation
@@ -85,29 +80,27 @@ namespace Models.CLEM.Resources
                         if (NumberDaysPregnant < ruminantType.Parameters.General.GestationLength.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            results.Add(new ValidationResult($"The number of months pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames));
+                            yield return new ValidationResult($"The number of months pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames);
                         }
                         // get the individual to check female and suitable age for conception supplied.
                         if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.General.MinimumAge1stMating.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            results.Add(new ValidationResult($"The individual specified must be at least [{ruminantType.Parameters.General}] month old at the time of conception [r=SetPreviousConception]", memberNames));
+                            yield return new ValidationResult($"The individual specified must be at least [{ruminantType.Parameters.General}] month old at the time of conception [r=SetPreviousConception]", memberNames);
                         }
                     }
                     else
                     {
                         string[] memberNames = new string[] { "Ruminant cohort details" };
-                        results.Add(new ValidationResult($"Cannot locate a [r=RuminantType] in tree structure above [r=SetPreviousConception]", memberNames));
+                        yield return new ValidationResult($"Cannot locate a [r=RuminantType] in tree structure above [r=SetPreviousConception]", memberNames);
                     }
                 }
             }
             else
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Previous conception status can only be calculated for female ruminants", memberNames));
+                yield return new ValidationResult("Previous conception status can only be calculated for female ruminants", memberNames);
             }
-
-            return results;
         }
         #endregion
 

@@ -474,16 +474,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check that all or none of children are ShortfallsWithImplications
             var truckingComponents = FindAllChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
             if (truckingComponents.Any() && (truckingComponents.Count != FindAllChildren<RuminantTrucking>().Count()))
             {
-                string[] memberNames = new string[] { "RuminantTrucking" };
-                results.Add(new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", memberNames));
+                yield return new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", new string[] { "RuminantTrucking" });
             }
-            return results;
         }
         #endregion
 

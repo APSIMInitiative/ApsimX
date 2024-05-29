@@ -81,20 +81,13 @@ namespace Models.CLEM
 
         #region validation
 
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            List<ValidationResult> results = new List<ValidationResult>();
             if (MathUtilities.IsLessThan(Maximum, Minimum))
             {
-                string[] memberNames = new string[] { "Maximum" };
-                results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
+                yield return new ValidationResult("The maximum running value must be greater than the Minimum value", new string[] { "Maximum" });
             }
-            return results;
         }
 
         #endregion

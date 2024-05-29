@@ -640,39 +640,28 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // if finances and not account provided throw error
             if (SellExcess && Resources.FindResource<Finance>() != null)
             {
                 if (bankAccount is null)
                 {
-                    string[] memberNames = new string[] { "AccountName" };
-                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
+                    yield return new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", new string[] { "AccountName" });
                 }
             }
 
             if (Resources.FoundMarket != null & bankAccount is null)
             {
-                string[] memberNames = new string[] { "AccountName" };
-                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a={Name}].", memberNames));
+                yield return new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a={Name}].", new string[] { "AccountName" });
             }
 
             // check that at least one target has been provided.
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            if (!FindAllChildren<LabourActivityFeedTarget>().Any())
             {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
-                results.Add(new ValidationResult($"At least one [LabourActivityFeedTarget] component is required below the feed activity [{Name}]", memberNames));
+                yield return new ValidationResult($"At least one [LabourActivityFeedTarget] component is required below the feed activity [{Name}]", new string[] { "LabourActivityFeedToTargets" });
             }
-
-            return results;
         }
         #endregion
 

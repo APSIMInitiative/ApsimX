@@ -34,7 +34,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
-    public class FileSQLiteCrop : CLEMModel, IFileCrop, IValidatableObject
+    public class FileSQLiteCrop : CLEMModel, IFileCrop
     {
         private bool nitrogenColumnExists = false;
         private bool harvestTypeColumnExists = false;
@@ -144,17 +144,6 @@ namespace Models.CLEM
         public bool FileExists
         {
             get { return File.Exists(this.FullFileName); }
-        }
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
         }
 
         /// <summary>

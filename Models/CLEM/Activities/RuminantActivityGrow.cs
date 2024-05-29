@@ -556,22 +556,14 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check parameters are available for all ruminants.
             foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow is null))
             {
-                string[] memberNames = new string[] { "RuminantParametersGrow" };
-                results.Add(new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", memberNames));
+                yield return new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrow" });
             }
-            return results;
         }
 
         #endregion

@@ -91,14 +91,9 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate this component before simulation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (bankType == null && Resources.FindResource<Finance>() != null)
                 Summary.WriteMessage(this, $"No bank account has been specified for [a={Name}]. No funds will be earned!", MessageType.Warning);
 
@@ -106,17 +101,14 @@ namespace Models.CLEM.Activities
             // get check labour required
             if (labour == null)
             {
-                string[] memberNames = new string[] { "Labour requirement" };
-                results.Add(new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", memberNames));
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", new string[] { "Labour requirement" });
             }
 
             // check pricing
             if (!Resources.FindResourceGroup<Labour>().PricingAvailable)
             {
-                string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", memberNames));
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", new string[] { "Labour pricing" });
             }
-            return results;
         }
         #endregion
 

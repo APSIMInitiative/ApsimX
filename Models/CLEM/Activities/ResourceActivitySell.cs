@@ -8,6 +8,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -241,16 +242,10 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             switch (SellStyle)
             {
                 case ResourceSellStyle.ProportionOfStore:
@@ -258,14 +253,12 @@ namespace Models.CLEM.Activities
                 case ResourceSellStyle.ReserveProportion:
                     if (Value > 1)
                     {
-                        string[] memberNames = new string[] { "Selling style" };
-                        results.Add(new ValidationResult("The specified selling style expects a value between 0 and 1", memberNames));
+                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", new string[] { "Selling style" });
                     }
                     break;
                 default:
                     break;
             }
-            return results;
         }
 
         #endregion

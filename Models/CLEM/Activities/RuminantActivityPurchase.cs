@@ -219,20 +219,15 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
             var specifyRuminants = FindAllChildren<SpecifyRuminant>();
             if (specifyRuminants.Count() == 0)
             {
                 string[] memberNames = new string[] { "PurchaseDetails" };
-                results.Add(new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
+                yield return new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames);
             }
             else
             {
@@ -243,12 +238,12 @@ namespace Models.CLEM.Activities
                     if (items.Count() > 1)
                     {
                         string[] memberNames = new string[] { "SpecifyRuminant cohort" };
-                        results.Add(new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames));
+                        yield return new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames);
                     }
                     if (items.First().Suckling)
                     {
                         string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
-                        results.Add(new ValidationResult("Suckling individuals are not permitted as ruminant purchases.", memberNames));
+                        yield return new ValidationResult("Suckling individuals are not permitted as ruminant purchases.", memberNames);
                     }
                 }
             }
@@ -258,7 +253,7 @@ namespace Models.CLEM.Activities
                 if(MathUtilities.FloatsAreEqual(cumulativeProp, 1.0) == false)
                 {
                     string[] memberNames = new string[] { "SpecifyRuminant proportions" };
-                    results.Add(new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames));
+                    yield return new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames);
                 }
             }
 
@@ -268,11 +263,9 @@ namespace Models.CLEM.Activities
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };
-                    results.Add(new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                    yield return new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                 }
             }
-
-            return results;
         }
         #endregion
 

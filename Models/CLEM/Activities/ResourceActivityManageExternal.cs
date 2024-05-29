@@ -392,13 +392,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (fileResource == null)
             {
-                string[] memberNames = new string[] { "FileResourceReader" };
-                results.Add(new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
+                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", new string[] { "FileResourceReader" });
             }
-            return results;
         }
         #endregion
 

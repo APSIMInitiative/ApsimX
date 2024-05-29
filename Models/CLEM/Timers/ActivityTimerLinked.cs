@@ -140,27 +140,19 @@ namespace Models.CLEM.Timers
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (linkedTimer is null)
             {
-                string[] memberNames = new string[] { "Linked timer" };
                 string errorMsg;
                 if (ExistingTimerName is null)
                     errorMsg = "No existing timer has been specified";
                 else
                     errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
 
-                results.Add(new ValidationResult(errorMsg, memberNames));
+                yield return new ValidationResult(errorMsg, new string[] { "Linked timer" });
             }
-            return results;
         }
         #endregion
     }

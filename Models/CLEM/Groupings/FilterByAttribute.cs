@@ -203,14 +203,13 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             string[] memberNames;
             if (FilterStyle == AttributeFilterStyle.ByValue)
             {
                 if ((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
                 {
                     memberNames = new string[] { "Missing filter compare value" };
-                    results.Add(new ValidationResult($"A value to compare with the Attribute tag is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
+                    yield return new ValidationResult($"A value to compare with the Attribute tag is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
                 }
             }
             else
@@ -223,7 +222,7 @@ namespace Models.CLEM.Groupings
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
                                 memberNames = new string[] { "Invalid value" };
-                                results.Add(new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False", memberNames));
+                                yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False", memberNames);
                             }
                         break;
                     case ExpressionType.IsTrue:
@@ -232,17 +231,15 @@ namespace Models.CLEM.Groupings
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
                                 memberNames = new string[] { "Invalid value" };
-                                results.Add(new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False, or blank entry", memberNames));
+                                yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False, or blank entry", memberNames);
                             }
                         break;
                     default:
                         memberNames = new string[] { "Invalid operator" };
-                        results.Add(new ValidationResult($"The [{Operator}] operator is not valid for attribute filtering using the [Exists] style for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]{Environment.NewLine}Expecting [IsTrue], [IsFalse], [Equals] or [NotEquals]", memberNames));
+                        yield return new ValidationResult($"The [{Operator}] operator is not valid for attribute filtering using the [Exists] style for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]{Environment.NewLine}Expecting [IsTrue], [IsFalse], [Equals] or [NotEquals]", memberNames);
                         break;
                 }
             }
-
-            return results;
         }
         #endregion
 

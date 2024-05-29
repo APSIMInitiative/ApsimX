@@ -53,21 +53,13 @@ namespace Models.CLEM.Groupings
 
         #region validation
 
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (Parent.FindAllChildren<CLEMModel>().Last() != this)
             {
-                string[] memberNames = new string[] { "RandomSort" };
-                results.Add(new ValidationResult($"The sort item [f={Name}] must be the last component in its group", memberNames));
+                yield return new ValidationResult($"The sort item [f={Name}] must be the last component in its group", new string[] { "RandomSort" });
             }
-            return results;
         }
         #endregion
     }

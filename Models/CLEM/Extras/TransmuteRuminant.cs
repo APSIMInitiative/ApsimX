@@ -199,22 +199,14 @@ namespace Models.CLEM
         }
 
         #region validation
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (ResourceGroup is null)
             {
                 IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
-                string[] memberNames = new string[] { "Ruminant herd resource" };
-                results.Add(new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", memberNames));
+                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", new string[] { "Ruminant herd resource" });
             }
-            return results;
         }
         #endregion
 

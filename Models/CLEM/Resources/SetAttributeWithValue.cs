@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute
+    public class SetAttributeWithValue : CLEMModel, ISetAttribute
     {
         /// <summary>
         /// Store of last instance of the individual attribute defined
@@ -159,19 +159,6 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             SetDefaults();
         }
-
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-        #endregion
 
         #region descriptive summary
 

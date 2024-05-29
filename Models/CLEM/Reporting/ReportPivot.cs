@@ -217,20 +217,13 @@ namespace Models.CLEM.Reporting
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (FindAllInScope<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
             {
-                string[] memberNames = new string[] { "Duplicate report name" };
-                results.Add(new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", memberNames));
+                yield return new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", new string[] { "Duplicate report name" });
             }
-            return results;
         }
 
         /// <inheritdoc/>

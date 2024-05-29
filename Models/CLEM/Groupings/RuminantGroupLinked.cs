@@ -84,27 +84,19 @@ namespace Models.CLEM.Groupings
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (linkedGroup is null)
             {
-                string[] memberNames = new string[] { "Linked filter group" };
                 string errorMsg;
                 if (ExistingGroupName is null)
                     errorMsg = "No existing filter group has been specified";
                 else
                     errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same ZoneCLEM";
 
-                results.Add(new ValidationResult(errorMsg, memberNames));
+                yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
             }
-            return results;
         }
         #endregion
 

@@ -188,11 +188,10 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            if (this.FindAllChildren<Transmutation>().Count() > 0)
+            if (FindAllChildren<Transmutation>().Any())
             {
                 string[] memberNames = new string[] { "Transmutations" };
-                results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));
+                yield return new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames);
             }
 
             pasture = new object();
@@ -205,7 +204,7 @@ namespace Models.CLEM.Resources
                 if (pasture == null)
                 {
                     string[] memberNames = new string[] { "Pasture link" };
-                    results.Add(new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames));
+                    yield return new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames);
                 }
             }
 
@@ -224,11 +223,10 @@ namespace Models.CLEM.Resources
                     foreach (var item in missing)
                     {
                         string[] memberNames = new string[] { item };
-                        results.Add(new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames));
+                        yield return new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames);
                     }
                 }
             }
-            return results;
         }
         #endregion
 

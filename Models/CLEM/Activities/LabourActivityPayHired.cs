@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -165,39 +166,29 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // make sure finance present
             // this is performed in the assignment of bankaccount in InitialiseActivity
 
             if (labour is null)
             {
-                string[] memberNames = new string[] { "Labour" };
-                results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
+                yield return new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", new string[] { "Labour" });
             }
             else
             {
                 // make sure labour hired present
                 if (!labour.Items.Where(a => a.Hired).Any())
                 {
-                    string[] memberNames = new string[] { "Hired labour" };
-                    results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
+                    yield return new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", new string[] { "Hired labour" });
                 }
                 // make sure pay rates present
                 if (!labour.PricingAvailable)
                 {
-                    string[] memberNames = new string[] { "Labour pay rate" };
-                    results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
+                    yield return new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", new string[] { "Labour pay rate" });
                 }
             }
-            return results;
         }
         #endregion
 

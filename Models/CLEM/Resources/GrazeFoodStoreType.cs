@@ -899,15 +899,9 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             bool noGrowSeason;
             int first = (int)FirstMonthOfGrowSeason;
             int last = (int)LastMonthOfGrowSeason;
@@ -918,10 +912,8 @@ namespace Models.CLEM.Resources
 
             if (StartingAmount > 0 & noGrowSeason)
             {
-                string[] memberNames = new string[] { "Invalid initial biomass growth season" };
-                results.Add(new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={this.NameWithParent}]", memberNames));
+                yield return new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={NameWithParent}]", new string[] { "Invalid initial biomass growth season" });
             }
-            return results;
         }
         #endregion
 

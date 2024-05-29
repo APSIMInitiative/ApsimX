@@ -202,10 +202,7 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            string[] memberNames = new string[] { "Ruminant Milking Timer" };
-            results.Add(new ValidationResult($"Milking timer has not been updated after time-set and daily ruminant age changes", memberNames));
-            return results;
+            yield return new ValidationResult($"Milking timer has not been updated after time-step and daily ruminant age changes", new string[] { "Ruminant Milking Timer" });
         }
 
         #endregion

@@ -449,30 +449,21 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check that only one instance of each resource group is present
             foreach (var item in this.FindAllChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
-                string[] memberNames = new string[] { item.Key.FullName };
-                results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));
+                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), new string[] { item.Key.FullName });
             }
 
             // check that only one resource type with a given name is present
             foreach (var item in this.FindAllDescendants<IResourceType>().GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
             {
                 var bits = item.Key.Split(':');
-                string[] memberNames = new string[] { "Multiple resource type with same name" };
-                results.Add(new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", memberNames));
+                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", new string[] { "Multiple resource type with same name" });
             }
-            return results;
         }
 
         #endregion

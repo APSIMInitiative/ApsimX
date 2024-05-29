@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
 using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using Models.GrazPlan;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {
@@ -106,25 +107,15 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // if no filter groups error
             var filtergroups = FindAllChildren<IRuminantDeathGroup>();
             if(!filtergroups.Any())
             {
-                string[] memberNames = new string[] { "Missing FilterGroup" };
-                results.Add(new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", memberNames));
+                yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", new string[] { "Missing FilterGroup" });
             }
-
-
-            return results;
         }
         #endregion
 

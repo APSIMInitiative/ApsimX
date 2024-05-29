@@ -98,29 +98,20 @@ namespace Models.CLEM.Resources
         }
 
         #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check that this model contains children RuminantDestockGroups with filters
-            var results = new List<ValidationResult>();
             // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-
             if (ruminantType is null)
             {
-                string[] memberNames = new string[] { "Ruminant type" };
-                results.Add(new ValidationResult("An invalid [r=RuminantType] was specified", memberNames));
+                yield return new ValidationResult("An invalid [r=RuminantType] was specified", new string[] { "Ruminant type" });
             }
 
             if (this.FindAllChildren<RuminantTypeCohort>().Count() != 1)
             {
-                string[] memberNames = new string[] { "Specify ruminant" };
-                results.Add(new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", memberNames));
+                yield return new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", new string[] { "Specify ruminant" });
             }
-            return results;
         }
         #endregion
 

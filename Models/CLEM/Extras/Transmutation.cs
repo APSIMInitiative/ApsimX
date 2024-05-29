@@ -65,20 +65,13 @@ namespace Models.CLEM
 
         #region validation
 
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
-                string[] memberNames = new string[] { "Transmutes" };
-                results.Add(new ValidationResult("No transmute components provided under this transmutation", memberNames));
+                yield return new ValidationResult("No transmute components provided under this transmutation", new string[] { "Transmutes" });
             }
-            return results;
         }
         #endregion
 

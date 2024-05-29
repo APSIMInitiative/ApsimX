@@ -487,38 +487,31 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // ensure multiple conception model are not provided associated. COnception model can be missing if no breeding required.
             //int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
             if (FindAllChildren<IConceptionModel>().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult($"Only one Conception component is permitted below the Ruminant Type [r={Name}]", memberNames));
+                yield return new ValidationResult($"Only one Conception component is permitted below the Ruminant Type [r={Name}]", memberNames);
             }
 
             IEnumerable<AnimalPricing> pricing = FindAllChildren<AnimalPricing>();
             if (pricing.Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult($"Only one Animal pricing schedule is permitted within a Ruminant Type [{Name}]", memberNames));
+                yield return new ValidationResult($"Only one Animal pricing schedule is permitted within a Ruminant Type [{Name}]", memberNames);
             }
             else if (pricing.Count() == 1)
             {
                 if (!pricing.FirstOrDefault().FindAllChildren<AnimalPriceGroup>().Any())
                 {
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult($"At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{Name}]", memberNames));
+                    yield return new ValidationResult($"At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{Name}]", memberNames);
                 }
             }
-            return results;
         }
 
         #endregion
