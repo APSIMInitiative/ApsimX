@@ -83,7 +83,9 @@ namespace Models.Storage
         /// <param name="table">The table definition to write to the database.</param>
         private void AlterTable(ref DataTable table)
         {
-            bool haveBegunTransaction = false;
+            List<string> names = new List<string>();
+            List<string> columns = new List<string>();
+            List<Type> dataTypes = new List<Type>();
 
             foreach (DataColumn column in table.Columns)
             {
@@ -93,22 +95,25 @@ namespace Models.Storage
                 }
                 else
                 {
-                    if (!haveBegunTransaction)
-                    {
-                        haveBegunTransaction = true;
-                        connection.BeginTransaction();
-                    }
-
                     // Column is missing from database file - write it.
-                    bool allowLongStrings = table.TableName.StartsWith("_");
-                    connection.AddColumn(Name, column.ColumnName, connection.GetDBDataTypeName(column.DataType, allowLongStrings));
+                    names.Add(Name);
+                    columns.Add(column.ColumnName);
+                    dataTypes.Add(column.DataType);
                     columnNamesInDb.Add(column.ColumnName);
                 }
             }
 
-            // End the transaction that we started above.
-            if (haveBegunTransaction)
+            connection.BeginTransaction();
+            try {
+                for (int i = 0; i < names.Count; i++)
+                {
+                    bool allowLongStrings = table.TableName.StartsWith("_");
+                    connection.AddColumn(names[i], columns[i], connection.GetDBDataTypeName(dataTypes[i], allowLongStrings));
+                }
+            }
+            finally {
                 connection.EndTransaction();
+            }
         }
     }
 }

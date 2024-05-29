@@ -67,8 +67,8 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
 
-        ///<summary></summary> 
-        [JsonIgnore] public ScrumManagementInstance CurrentCropParams { get; set; }
+        ///<summary>parameters for the current crop</summary> 
+        [JsonIgnore] public ScrumManagementInstance CurrentCropManagement { get; set; }
 
         /// <summary>clock</summary>
         [Link]
@@ -196,25 +196,25 @@ namespace Models.PMF.SimplePlantModels
         ////// This secton contains the components that take the management parameters from the table and sends them to SCRUM on sow date !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         private int rotPos = 0;
         private ScrumCropInstance currentCrop = null;
+        private bool currentCropEstablished;
 
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             tabDat = readCSVandUpdateProperties();
             rotPos = 1;
-            CurrentCropParams = getCurrentParams(tabDat, rotPos);
+            setCurrentCrop(rotPos);
+            currentCropEstablished = false;
         }
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (clock.Today == CurrentCropParams.EstablishDate)
+            if ((clock.Today == CurrentCropManagement.EstablishDate)&& (CurrentCropManagement.HarvestDate <= clock.EndDate))
             {
-                if ((CurrentCropParams.EstablishDate < clock.EndDate) && (CurrentCropParams.HarvestDate <= clock.EndDate))
-                {
-                    currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropParams.CropName);
-                    currentCrop.Establish(CurrentCropParams);
-                }
+                currentCrop.Establish(CurrentCropManagement);
+                currentCropEstablished = true;
+
             }
         }
 
@@ -223,15 +223,23 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if (clock.Today == CurrentCropParams.HarvestDate)
+            if ((clock.Today == CurrentCropManagement.HarvestDate)&&(currentCropEstablished))
             {
+                currentCropEstablished = false;
                 rotPos +=1;
                 if (rotPos>tabDat.Columns.Count-1)
                 {
                     rotPos = 1;
                 }
-                CurrentCropParams = getCurrentParams(tabDat, rotPos);
+                setCurrentCrop(rotPos);
             }
+        }
+
+        private void setCurrentCrop(int rotPos)
+        {
+            CurrentCropManagement = getCurrentParams(tabDat, rotPos);
+            currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropManagement.CropName);
+            if (currentCrop == null) { throw new Exception("Can not find a ScrumCropInstance named " + CurrentCropManagement.CropName + " in the simulation"); }
         }
 
         /// <summary>
@@ -243,7 +251,7 @@ namespace Models.PMF.SimplePlantModels
         private ScrumManagementInstance getCurrentParams(DataTable tab, int rotPos)
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            ret.Add("CropName", tab.Columns[rotPos].ToString());
+            //ret.Add("CropName", tab.Columns[rotPos].ToString());
             for (int i = 0; i < tab.Rows.Count; i++)
             {
                 ret.Add(tab.Rows[i]["Inputfield"].ToString(), tab.Rows[i][rotPos].ToString());
@@ -251,6 +259,6 @@ namespace Models.PMF.SimplePlantModels
             ScrumManagementInstance retSMI = new ScrumManagementInstance(ret, clock.Today);
             return retSMI;
         }
-
+        
     }
 }

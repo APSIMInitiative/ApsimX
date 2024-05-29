@@ -45,7 +45,11 @@ namespace UserInterface.Presenters
             gridPresenter.Detach();
         }
 
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
         }
     }

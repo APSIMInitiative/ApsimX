@@ -267,7 +267,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
                 if (model != null)
                 {
                     // Set the clipboard text.
@@ -323,7 +323,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
                 if (model != null)
                 {
                     // Set the clipboard text.
@@ -372,7 +372,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.Delete(model);
             }
@@ -392,7 +392,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.MoveUp(model);
             }
@@ -541,7 +541,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Soil;
+                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
                 if (currentSoil != null)
                 {
                     ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
@@ -611,7 +611,7 @@ namespace UserInterface.Presenters
                     return;
                 }
 
-                Tests test = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Tests;
+                Tests test = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Tests;
                 try
                 {
                     test.Test(true);
@@ -890,7 +890,9 @@ namespace UserInterface.Presenters
         public bool ShowModelStructureChecked()
         {
             IModel model = explorerPresenter.CurrentNode as IModel;
-            if (model != null && model.Children.Count < 1)
+            if (model == null)
+                return false;
+            if (model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
         }
@@ -1052,7 +1054,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
                 if (model != null)
                 {
                     string modelPath = model.FullPath;
@@ -1095,7 +1097,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Manager;
+                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Manager;
                 if (model != null)
                 {
                     model.RebuildScriptModel();

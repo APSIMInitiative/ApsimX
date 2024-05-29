@@ -8,6 +8,7 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Struct;
 using Newtonsoft.Json;
+using static Models.PMF.Organs.Leaf;
 
 namespace Models.PMF.Organs
 {
@@ -718,10 +719,21 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the initialisation.</summary>
-        public void DoInitialisation()
+        public void DoInitialisation(Leaf.LeafCohortParameters CohortParameters)
         {
             IsInitialised = true;
             Age = 0;
+
+            // All this stuff below is here to ensure FN is not < 1 on the day of emergence
+            double functionalNConc = (CohortParameters.CriticalNConc.Value() -
+                                          CohortParameters.MinimumNConc.Value() * CohortParameters.StructuralFraction.Value()) *
+                                         (1 / (1 - CohortParameters.StructuralFraction.Value()));
+            Live.StructuralWt = 0.00001;
+            Live.MetabolicWt = 0.00001;
+            Live.StorageWt = 0.00001;
+            Live.StructuralN = Live.StructuralWt * functionalNConc;
+            Live.MetabolicN = Live.MetabolicWt * functionalNConc;
+            Live.StorageN = Live.StorageWt * functionalNConc;
         }
 
         /// <summary>Does the appearance.</summary>

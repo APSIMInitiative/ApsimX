@@ -119,7 +119,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndex, int[] rowIndex, string[] values)
         {
         }
     }

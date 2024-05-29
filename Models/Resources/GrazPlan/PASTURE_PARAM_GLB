@@ -1,12 +1,12 @@
-<parameters name="standard" version="3.3.4">
-  <par name="editor">Andrew Moore</par>
-  <par name="edited">10 Apr 2015</par>
+<parameters name="standard" version="3.4.6">
+  <par name="editor">Neville Herrmann</par>
+  <par name="edited">14 Dec 2023</par>
   <par name="isc4">false</par>
   <par name="k-i-">,,13.5,15.0,0.6,,,,,</par>
   <par name="k-f2-">40.0,10.0,30.0</par>
   <par name="k-br1-">0.1,0.02</par>
-  <par name="k-br2-">10.0,0.02,0.05</par>
-  <par name="k-y-">,4.7,32.0,0.05,7.0,-0.2,0.85,0.125</par>
+  <par name="k-br2-">10.0,0.02,0.05,</par>
+  <par name="k-y-">,4.7,32.0,0.05,7.0,-0.2,0.85,0.125,</par>
   <par name="k-eff-">1.0,1.0,1.0,1.0</par>
   <par name="k-reloc-">0.33,0.2,0.2</par>
   <par name="k-dg-">0.99,0.981,0.939,0.897,0.855,0.813,0.771,0.729,0.687,0.645,0.603,0.561</par>
@@ -41,7 +41,7 @@
 
     <set name="Pooid grasses">
       <par name="longday">true</par>
-      <par name="k-v-">,,,,,,,,,0.25,,,,,,-99.9,,,,,,,,,</par>
+      <par name="k-v-">,,,,,,,,,0.25,,,,,,-99.9,,,,,,,,,,,,,,</par>
       <par name="k-i-6">0.18</par>
       <par name="k-wu-">,,,,120.0,0.6</par>
       <par name="k-ru-">,,,16.0,35.0,55.0</par>
@@ -54,7 +54,7 @@
 
       <set name="Perennial Ryegrass" locales="au">
         <par name="annual">false</par>
-        <par name="k-v-">0.05,0.2,5.0,,400.0,400.0,,,600.0,,17.0,0.5,10.0,120.0,,,,,0.5,6.0,1600.0,,,,</par>
+        <par name="k-v-">0.05,0.2,5.0,,400.0,400.0,,,600.0,,17.0,0.5,10.0,120.0,,,,,0.5,6.0,1600.0,,,,,,,,,</par>
         <par name="k-i-">0.0215,0.004,,,,,0.6,0.9,,</par>
         <par name="k-wu-">,,,,100.0,0.9</par>
         <par name="k-ru-1">2.2</par>
@@ -71,7 +71,7 @@
 
       <set name="Phalaris" locales="au">
         <par name="annual">false</par>
-        <par name="k-v-">0.05,0.2,5.0,11.3,,350.0,,,550.0,,17.0,0.5,9.0,160.0,,,,,0.5,5.0,1050.0,,,,</par>
+        <par name="k-v-">0.05,0.2,5.0,11.3,,350.0,,,550.0,,17.0,0.5,9.0,160.0,,,,,0.5,5.0,1050.0,,,,,,,,,</par>
         <par name="k-i-">0.03,0.0055,,,,,0.5,0.8,,</par>
         <par name="k-ru-1">2.05</par>
         <par name="k-t-">5.0,12.0</par>
@@ -85,9 +85,9 @@
         <par name="k-hr">1.0</par>
       </set>
 
-      <set name="Cocksfoot" locales="au">
+      <set name="Cocksfoot - summer active" locales="au">
         <par name="annual">false</par>
-        <par name="k-v-">0.05,0.2,5.0,11.0,,250.0,,,300.0,,17.0,0.5,9.0,140.0,,,,,0.5,3.0,1000.0,,,,</par>
+        <par name="k-v-">0.05,0.2,5.0,11.0,,250.0,,,300.0,,17.0,0.5,9.0,140.0,,,,,0.5,3.0,1000.0,,,,,,,,,</par>
         <par name="k-i-">0.026,0.005,,,,,0.55,0.8,,</par>
         <par name="k-ru-1">2.15</par>
         <par name="k-t-">5.0,12.0</par>
@@ -101,9 +101,27 @@
         <par name="k-hr">1.0</par>
       </set>
 
-      <set name="Tall Fescue">
+      <set name="Cocksfoot - summer dormant" locales="au">
+        <par name="editor">Brian Horton</par>
+        <par name="edited">30 Oct 2023</par>
         <par name="annual">false</par>
-        <par name="k-v-">0.05,0.2,5.0,11.0,,450.0,,,1450.0,,,,,,,,,,,5.0,2400.0,,,,</par>
+        <par name="k-v-">0.05,0.2,5.0,12.0,,250.0,,,200.0,,19.0,0.5,9.0,140.0,,,,,0.5,3.0,1000.0,,,,,,,,,</par>
+        <par name="k-i-">0.026,0.005,,,,,0.55,0.8,,</par>
+        <par name="k-ru-1">2.15</par>
+        <par name="k-t-">5.0,12.0</par>
+        <par name="k-mr-1">0.005</par>
+        <par name="k-tl-">0.6,0.01,,</par>
+        <par name="k-a-">0.8,0.3,,0.75,0.6</par>
+        <par name="k-r-">1000.0,2.0,0.0,,,,,,130.0,0.00014</par>
+        <par name="k-d-">,,,-5.0,-11.0,1.0,,,</par>
+        <par name="k-f1-stem">0.0012</par>
+        <par name="k-y-1">0.016</par>
+        <par name="k-hr">1.0</par>
+      </set>
+
+      <set name="Tall Fescue - summer active" locales="au">
+        <par name="annual">false</par>
+        <par name="k-v-">0.05,0.2,5.0,11.0,,450.0,,,1450.0,,,,,,,,,,,5.0,2400.0,,,,,,,,,</par>
         <par name="k-i-">0.03,0.0055,,,,,0.55,0.8,,</par>
         <par name="k-ru-1">2.15</par>
         <par name="k-t-">6.0,14.0</par>
@@ -136,23 +154,24 @@
         <par name="k-hr">1.0</par>
 
         <set name="Annual Ryegrass" locales="au">
-          <par name="k-v-">0.43,0.29,4.7,,340.0,650.0,15.0,,750.0,0.1,,,,,,,,,,6.0,1350.0,,,,</par>
+          <par name="k-v-">0.43,0.29,4.7,,340.0,650.0,15.0,,750.0,0.1,,,,,,,,,,6.0,1350.0,,,,,,,,,</par>
           <par name="k-ru-1">2.0</par>
           <par name="k-r-">,,,,,,,,240.0,0.00012</par>
           <par name="k-s-2">120.0</par>
         </set>
 
         <set name="Annual Grass - Early" locales="au">
-          <par name="k-v-">0.05,0.16,0.0,,300.0,790.0,15.0,,1350.0,0.1,,,,,,,,,,6.0,1850.0,,,,</par>
+          <par name="k-v-">0.05,0.16,0.0,,300.0,790.0,15.0,,1350.0,0.1,,,,,,,,,,6.0,1850.0,,,,,,,,,</par>
           <par name="k-ru-1">1.95</par>
           <par name="k-r-">,,,,,,,,160.0,0.00013</par>
           <par name="k-s-2">90.0</par>
         </set>
-      </set><!-- annual pooids -->
+      </set>
+      <!-- annual pooids -->
 
       <set name="Poa sieberiana" locales="au">
         <par name="annual">false</par>
-        <par name="k-v-">,,0.0,12.5,,1300.0,,,2200.0,,,,,,,,,,,5.0,2500.0,,,,</par>
+        <par name="k-v-">,,0.0,12.5,,1300.0,,,2200.0,,,,,,,,,,,5.0,2500.0,,,,,,,,,</par>
         <par name="k-i-">0.017,0.003,,,,,0.45,0.65,0.6,</par>
         <par name="k-ru-1">2.15</par>
         <par name="k-t-">5.0,12.5</par>
@@ -167,7 +186,8 @@
         <par name="k-y-1">0.01</par>
         <par name="k-hr">2.5</par>
       </set>
-    </set><!-- Pooid grasses -->
+    </set>
+    <!-- Pooid grasses -->
 
     <set name="Stipoid grasses">
       <par name="k-v-10">0.25</par>
@@ -181,7 +201,7 @@
       <set name="Austrostipa spp." locales="au">
         <par name="annual">false</par>
         <par name="longday">true</par>
-        <par name="k-v-">,,0.0,11.0,,800.0,,,1500.0,,,,,,,-99.9,,,,4.0,2000.0,,,,</par>
+        <par name="k-v-">,,0.0,11.0,,800.0,,,1500.0,,,,,,,-99.9,,,,4.0,2000.0,,,,,,,,,</par>
         <par name="k-i-">0.016,0.003,,,,,0.5,0.65,,</par>
         <par name="k-ru-1">2.2</par>
         <par name="k-t-">5.5,13.5</par>
@@ -196,7 +216,8 @@
         <par name="k-y-1">0.015</par>
         <par name="k-hr">3.0</par>
       </set>
-    </set><!-- Stipoid grasses -->
+    </set>
+    <!-- Stipoid grasses -->
 
     <set name="Arundinoid grasses">
       <par name="k-i-6">0.18</par>
@@ -207,7 +228,7 @@
       <set name="Austrodanthonia spp. (tableland)" locales="au">
         <par name="annual">false</par>
         <par name="longday">true</par>
-        <par name="k-v-">0.05,0.2,0.0,10.3,,200.0,,,2800.0,0.25,,,,,,-99.9,,,,,4200.0,,,,</par>
+        <par name="k-v-">0.05,0.2,0.0,10.3,,200.0,,,2800.0,0.25,,,,,,-99.9,,,,,4200.0,,,,,,,,,</par>
         <par name="k-i-">0.016,0.005,,,,,0.55,0.8,,</par>
         <par name="k-ru-1">2.1</par>
         <par name="k-t-">6.0,13.5</par>
@@ -222,7 +243,8 @@
         <par name="k-y-1">0.015</par>
         <par name="k-hr">1.5</par>
       </set>
-    </set><!-- Arundinoid grasses -->
+    </set>
+    <!-- Arundinoid grasses -->
 
     <set name="Oryzoid grasses">
       <par name="k-i-6">0.18</par>
@@ -233,7 +255,7 @@
       <set name="Microlaena" locales="au">
         <par name="annual">false</par>
         <par name="longday">true</par>
-        <par name="k-v-">,,0.0,13.5,,300.0,,,2000.0,0.25,,,,,,-99.9,,,,,4200.0,,,,</par>
+        <par name="k-v-">,,0.0,13.5,,300.0,,,2000.0,0.25,,,,,,-99.9,,,,,4200.0,,,,,,,,,</par>
         <par name="k-i-">0.025,0.005,,,,,0.45,0.8,,</par>
         <par name="k-ru-1">1.8</par>
         <par name="k-t-">4.5,12.0</par>
@@ -248,7 +270,8 @@
         <par name="k-y-1">0.015</par>
         <par name="k-hr">1.5</par>
       </set>
-    </set><!-- Oryzoid grasses -->
+    </set>
+    <!-- Oryzoid grasses -->
 
     <set name="Panicoid grasses">
       <par name="annual">false</par>
@@ -260,13 +283,15 @@
       <par name="k-q-leaf-">0.8,,,200.0,0.008,4.0</par>
       <par name="k-q-stem-">0.75,0.45,0.35,,0.005,4.0</par>
 
-      <set name="Kikuyu (beta)" locales="au">
+      <set name="Kikuyu" locales="au">
+        <par name="editor">Dean Thomas</par>
+        <par name="edited">29 Aug 2023</par>
         <par name="longday">true</par>
-        <par name="k-v-">,,5.0,12.5,,700.0,,,2000.0,0.25,,,,,,-99.9,,,,5.0,2200.0,,,,</par>
-        <par name="k-i-">0.03,0.005,,,,,0.55,0.8,,</par>
+        <par name="k-v-">,,5.0,12.5,,700.0,,,2000.0,0.25,,,,,,-99.9,,,,5.0,2200.0,,,,,,,,,</par>
+        <par name="k-i-">0.021,0.006,,,,,0.444,0.284,,</par>
         <par name="k-wu-1">0.4</par>
-        <par name="k-ru-">4.0,,0.3,,,</par>
-        <par name="k-bt-1">12.0</par>
+        <par name="k-ru-">4.078,,0.965,,,</par>
+        <par name="k-bt-1">11.908</par>
         <par name="k-t-">10.0,25.0</par>
         <par name="k-w-1">0.4</par>
         <par name="k-tl-">0.4,0.02,,</par>
@@ -274,14 +299,15 @@
         <par name="k-r-">1200.0,2.0,0.0,,,,,,115.0,0.00016</par>
         <par name="k-d-">800.0,0.003,0.003,0.0,-5.0,0.0,,,</par>
         <par name="k-f1-">0.005,0.002</par>
-        <par name="k-q-leaf-">,0.5,0.5,,,</par>
+        <par name="k-q-leaf-">0.85,0.5,0.5,,0.005,</par>
+        <par name="k-q-stem-1">0.8</par>
         <par name="k-y-1">0.012</par>
-        <par name="k-hr">1.0</par>
+        <par name="k-hr">5.0</par>
       </set>
 
       <set name="Bothriochloa" locales="au">
         <par name="longday">true</par>
-        <par name="k-v-">,,5.0,11.5,,950.0,,,2200.0,0.25,,,,,,-99.9,,,,5.0,2500.0,,,,</par>
+        <par name="k-v-">,,5.0,11.5,,950.0,,,2200.0,0.25,,,,,,-99.9,,,,5.0,2500.0,,,,,,,,,</par>
         <par name="k-i-">0.03,0.0055,,,,,0.55,0.75,,</par>
         <par name="k-wu-1">0.4</par>
         <par name="k-ru-">3.5,,0.1,,,</par>
@@ -298,14 +324,16 @@
         <par name="k-y-1">0.008</par>
         <par name="k-hr">1.5</par>
       </set>
-    </set><!-- Panicoid grasses -->
-  </set><!-- Grasses -->
+    </set>
+    <!-- Panicoid grasses -->
+  </set>
+  <!-- Grasses -->
 
   <set name="Temperate legumes">
     <par name="grass">false</par>
     <par name="legume">true</par>
     <par name="longday">true</par>
-    <par name="k-v-">,,,,,,,,,,,,,,0.0,-99.9,,,,,,,,,</par>
+    <par name="k-v-">,,,,,,,,,,,,,,0.0,-99.9,,,,,,,,,,,,,,</par>
     <par name="k-i-">,,,,,0.12,,,0.8,1.0</par>
     <par name="k-wu-">,1.0,,,150.0,0.5</par>
     <par name="k-ru-">,99.9,0.6,16.0,35.0,55.0</par>
@@ -340,7 +368,7 @@
 
     <set name="Sub Clover">
       <par name="annual">true</par>
-      <par name="k-v-">,,2.5,,10.0,,35.0,0.5,,0.25,,,,,,,,,,5.0,,,,,</par>
+      <par name="k-v-">,,2.5,,10.0,,35.0,0.5,,0.25,,,,,,,,,,5.0,,,,,,,,,,</par>
       <par name="k-i-">0.029,0.007,,,,,0.65,1.0,,</par>
       <par name="k-wu-1">0.35</par>
       <par name="k-ru-1">2.35</par>
@@ -358,30 +386,31 @@
       <par name="k-hr">1.0</par>
 
       <set name="Sub Clover - Mt Barker" locales="au">
-        <par name="k-v-">0.019,0.09,,,,380.0,,,1100.0,,,,,,,,,,,,1500.0,,,,</par>
+        <par name="k-v-">0.019,0.09,,,,380.0,,,1100.0,,,,,,,,,,,,1500.0,,,,,,,,,</par>
         <par name="k-s-1">0.012</par>
       </set>
 
       <set name="Sub Clover - Leura" locales="au">
-        <par name="k-v-">0.019,0.11,,,,380.0,,,1100.0,,,,,,,,,,,,1500.0,,,,</par>
+        <par name="k-v-">0.019,0.11,,,,380.0,,,1100.0,,,,,,,,,,,,1500.0,,,,,,,,,</par>
         <par name="k-t-1">5.5</par>
         <par name="k-s-1">0.012</par>
       </set>
 
       <set name="Sub Clover - Seaton Park" locales="au">
-        <par name="k-v-">0.025,0.12,,,,350.0,,,1000.0,,,,,,,,,,,,1400.0,,,,</par>
+        <par name="k-v-">0.025,0.12,,,,350.0,,,1000.0,,,,,,,,,,,,1400.0,,,,,,,,,</par>
         <par name="k-s-1">0.016</par>
       </set>
 
       <set name="Sub Clover - Dalkeith" locales="au">
-        <par name="k-v-">0.037,0.11,,,,285.0,,,900.0,,,,,,,,,,,,1300.0,,,,</par>
+        <par name="k-v-">0.037,0.11,,,,285.0,,,900.0,,,,,,,,,,,,1300.0,,,,,,,,,</par>
         <par name="k-s-1">0.05</par>
       </set>
-    </set><!-- Sub Clover -->
+    </set>
+    <!-- Sub Clover -->
 
     <set name="Annual Medics">
       <par name="annual">true</par>
-      <par name="k-v-">,,,,,,30.0,0.5,,0.25,,,,,,,,,,,,,,,</par>
+      <par name="k-v-">,,,,,,30.0,0.5,,0.25,,,,,,,,,,,,,,,,,,,,</par>
       <par name="k-i-">0.029,0.007,,,,,0.75,1.0,,</par>
       <par name="k-wu-1">0.35</par>
       <par name="k-ru-1">2.35</par>
@@ -399,14 +428,15 @@
       <par name="k-hr">1.0</par>
 
       <set name="Medic - Paraggio" locales="au">
-        <par name="k-v-">0.09,0.13,1.0,,200.0,560.0,,,850.0,,,,,,,,,,,5.0,1100.0,,,,</par>
+        <par name="k-v-">0.09,0.13,1.0,,200.0,560.0,,,850.0,,,,,,,,,,,5.0,1100.0,,,,,,,,,</par>
         <par name="k-s-1">0.1</par>
       </set>
-    </set><!-- Annual Medics -->
+    </set>
+    <!-- Annual Medics -->
 
     <set name="White Clover" locales="au">
       <par name="annual">false</par>
-      <par name="k-v-">,,0.0,8.0,,900.0,30.0,0.5,2400.0,0.25,,,,,,,,,,3.0,3400.0,,,,</par>
+      <par name="k-v-">,,0.0,8.0,,900.0,30.0,0.5,2400.0,0.25,,,,,,,,,,3.0,3400.0,,,,,,,,,</par>
       <par name="k-i-">0.0195,0.005,,,,,0.7,0.8,,</par>
       <par name="k-wu-1">0.4</par>
       <par name="k-ru-1">2.3</par>
@@ -428,7 +458,7 @@
     <set name="Lucerne">
       <par name="annual">false</par>
       <par name="longday">false</par>
-      <par name="k-v-">,,1.0,,350.0,600.0,,,,0.25,,,,,0.5,,,,,15.0,,0.0,1.0,0.5,0.0</par>
+      <par name="k-v-">,,1.0,,350.0,600.0,,,,0.25,,,,,0.5,,,,,15.0,,0.0,1.0,0.5,0.0,,,,,</par>
       <par name="k-i-">0.026,0.004,,,,,0.5,0.6,,</par>
       <par name="k-wu-1">0.35</par>
       <par name="k-ru-1">2.35</par>
@@ -465,8 +495,10 @@
         <par name="k-mr-1">0.0</par>
         <par name="k-tl-">0.4,0.02,,</par>
       </set>
-    </set><!-- Lucerne -->
-  </set><!-- Temperate legumes -->
+    </set>
+    <!-- Lucerne -->
+  </set>
+  <!-- Temperate legumes -->
 
   <set name="Asteraceae">
     <par name="grass">false</par>
@@ -502,7 +534,7 @@
     <set name="Capeweed" locales="au">
       <par name="annual">true</par>
       <par name="longday">true</par>
-      <par name="k-v-">,,5.0,,500.0,450.0,20.0,0.0,800.0,0.1,,,,,0.0,-99.9,,,,5.0,1200.0,,,,</par>
+      <par name="k-v-">,,5.0,,500.0,450.0,20.0,0.0,800.0,0.1,,,,,0.0,-99.9,,,,5.0,1200.0,,,,,,,,,</par>
       <par name="k-i-">0.0185,0.0045,,,,,0.7,0.9,,</par>
       <par name="k-ru-1">2.1</par>
       <par name="k-t-">6.0,13.5</par>
@@ -524,5 +556,6 @@
       <par name="k-cpseed">0.2</par>
       <par name="k-hr">1.0</par>
     </set>
-  </set><!-- Asteraceae -->
+  </set>
+  <!-- Asteraceae -->
 </parameters>

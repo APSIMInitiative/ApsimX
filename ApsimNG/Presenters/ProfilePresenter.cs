@@ -1,10 +1,10 @@
-﻿using APSIM.Shared.Graphing;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
-using System;
-using System.Collections.Generic;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
         public ProfilePresenter()
         {
         }
-        
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="v">Data store view to work with.</param>
@@ -54,14 +54,18 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
+            Soil soilNode = this.model.FindAncestor<Soil>();
+            if (soilNode != null)
+            {
+                physical = soilNode.FindChild<Physical>();
+                physical.InFill();
+                water = soilNode.FindChild<Water>();
+            }
+
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
-
-            Soil soilNode = this.model.FindAncestor<Soil>();
-            physical = soilNode.FindChild<Physical>();
-            water = soilNode.FindChild<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
@@ -71,8 +75,17 @@ namespace UserInterface.Presenters
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
-            int paneWidth = view.MainWidget.ParentWindow.Width; //this shoudl get the width of this view
+            int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
+
+            Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
+            if (model is Physical)
+            {
+                ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
+                redValuesWarningLbl.UseMarkup = true;
+                redValuesWarningLbl.Visible = true;
+            }
+
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
@@ -125,17 +138,15 @@ namespace UserInterface.Presenters
                         if (model is SoilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
-                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
-                            llsoilName = llsoilName + " LL";
-
+                            string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = cropName + " LL";
                             llsoil = (model as SoilCrop).LL;
-                            
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
                                                           "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
                     }
-                        
+
                     else if (model is Organic organic)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
@@ -187,7 +198,7 @@ namespace UserInterface.Presenters
             double padding = 0.01; //add 1% to bounds
             double xTopMin = MathUtilities.Min(fom);
             double xTopMax = MathUtilities.Max(fom);
-            xTopMin -= xTopMax * padding; 
+            xTopMin -= xTopMax * padding;
             xTopMax += xTopMax * padding;
 
             double height = MathUtilities.Max(cumulativeThickness);
@@ -213,7 +224,7 @@ namespace UserInterface.Presenters
             double padding = 0.01; //add 1% to bounds
             double xTopMin = 0;
             double xTopMax = MathUtilities.Max(values);
-            
+
 
             double height = MathUtilities.Max(cumulativeThickness);
             height += height * padding;
@@ -222,7 +233,7 @@ namespace UserInterface.Presenters
             {
                 xTopMin -= 0.5;
                 xTopMax += 0.5;
-            } 
+            }
             else
             {
                 xTopMin -= xTopMax * padding;
@@ -281,7 +292,6 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            DisconnectEvents();
             gridPresenter.CellChanged += OnCellChanged;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -295,10 +305,11 @@ namespace UserInterface.Presenters
 
         /// <summary>Invoked when a grid cell has changed.</summary>
         /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
-        {
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        {           
             Refresh();
         }
 

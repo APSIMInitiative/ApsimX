@@ -1573,6 +1573,71 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Y as double[], new double[] { 1, 5 });
         }
 
+        /// <summary>Create xy series definitions from predicted/observed table.</summary>
+        [Test]
+        public void SeriesFromPredictedObservedWithMissingObserved()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<IModel>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Experiment", "Exp1"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Experiment", "Exp1"),
+                        new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
+                        new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Report",
+                                XFieldName = "Predicted.Grain.Wt",
+                                YFieldName = "Observed.Grain.Wt",
+                                FactorToVaryColours = "Experiment",
+                                FactorToVaryMarkers = "Experiment"
+                            }
+                        }
+                    }
+                }
+            };
+            folder.ParentAllDescendants();
+
+            string data =
+                "CheckpointName SimulationName SimulationID Predicted.Grain.Wt  Observed.Grain.Wt Experiment\r\n" +
+                "            ()             ()           ()                 ()                 ()         ()\r\n" +
+                "       Current           Sim1            1                  1                  1       Exp1\r\n" +
+                "       Current           Sim2            2                  2                  5       null\r\n" +
+                "       Current           Sim3            3                  3                  8       Exp2\r\n" +
+                "       Current           Sim4            4                  4                  6       Exp2\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var graph = folder.Children[1] as Graph;
+            var page = new GraphPage();
+            page.Graphs.Add(graph);
+            var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
+
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].SeriesDefinitions.Count, 2);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].Y as double[], new double[] { 1, 5 });
+
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].Title, "Exp2");
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].X as double[], new double[] { 3, 4 });
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].Y as double[], new double[] { 8, 6 });
+        }
+
         /// <summary>Create xy series definitions from predicted/observed table with error bars.</summary>
         [Test]
         public void SeriesWithErrorBars()

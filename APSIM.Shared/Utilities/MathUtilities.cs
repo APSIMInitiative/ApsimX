@@ -694,7 +694,7 @@ namespace APSIM.Shared.Utilities
             {
                 foreach (string Value in Values)
                 {
-                    if (Value != "")
+                    if (!string.IsNullOrEmpty(Value))
                         return true;
                 }
             }
@@ -1873,7 +1873,5 @@ namespace APSIM.Shared.Utilities
 
             return double.NaN;
         }
-
-
     }
 }

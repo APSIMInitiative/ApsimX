@@ -12,7 +12,7 @@ using System.Data;
 namespace Models
 {
     /// <summary>
-    /// The clock model is resonsible for controlling the daily timestep in APSIM. It
+    /// The clock model is responsible for controlling the daily timestep in APSIM. It
     /// keeps track of the simulation date and loops from the start date to the end
     /// date, publishing events that other models can subscribe to.
     /// </summary>

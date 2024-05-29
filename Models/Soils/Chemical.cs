@@ -117,16 +117,19 @@ namespace Models.Soils
         /// <returns></returns>
         public IEnumerable<Solute> GetStandardisedSolutes()
         {
-            var solutes = new List<Solute>();
+            List<Solute> solutes = new List<Solute>();
 
             // Add in child solutes.
-            foreach (var solute in Parent.FindAllChildren<Solute>())
+            foreach (Solute solute in Parent.FindAllChildren<Solute>())
             {
                 if (MathUtilities.AreEqual(Thickness, solute.Thickness))
                     solutes.Add(solute);
                 else
                 {
-                    var standardisedSolute = solute.Clone();
+                    Solute standardisedSolute = solute.Clone();
+                    if (standardisedSolute.Parent == null)
+                        standardisedSolute.Parent = solute.Parent;
+
                     if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
                         standardisedSolute.InitialValues = SoilUtilities.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
                     else

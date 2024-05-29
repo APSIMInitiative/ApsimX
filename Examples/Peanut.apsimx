@@ -708,7 +708,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Aflotoxin Percentage",
+          "Name": "Aflotoxin Risk",
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -725,7 +725,7 @@
               "LineThickness": 0,
               "TableName": "HarvestReport",
               "XFieldName": "SimulationName",
-              "YFieldName": "Peanut.AflotoxinPercentage",
+              "YFieldName": "Peanut.AflotoxinRisk",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,

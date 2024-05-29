@@ -2,7 +2,7 @@
 title: "Module 2: Surface Organic Matter Simulation"
 draft: false
 ---
-<p style="font-size: 10px">Created 23/02/2023</p>
+<p style="font-size: 10px">Created 23/02/2023 - Last updated 05/03/2023</p>
 
 <em style="color: red"> IMPORTANT NOTE: It is highly recommended that you upgrade your APSIM Next Gen version to at least version 2023.2.7164.0 or later.</em>
 
@@ -124,5 +124,8 @@ To demonstrate this we will reproduce the previous simulation but apply legume r
 	- Click one of the legend items
 	- a menu will appear at the bottom of the graph and you can change the drop down menu's value to top right or any other position to your liking.
 	![Change legend location](/images/moduleTwoImages/step9.png)
-	*Congratulations on completing module two!*
+
+*Congratulations on completing module two!*
+
+<i><span style="color:red;">Note</span>: If you found any incorrect/outdated information in this tutorial, please let us know on GitHub by <a href="https://www.github.com/APSIMInitiative/Apsimx/issues/new/choose/">submitting an issue.</a></i>
 

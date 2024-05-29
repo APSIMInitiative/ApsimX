@@ -156,6 +156,8 @@ namespace UserInterface.Views
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
+            hpaned1.AddNotification(OnDividerNotified);
+            vpaned1.AddNotification(OnDividerNotified);
 
             notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
             notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
@@ -227,6 +229,7 @@ namespace UserInterface.Views
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
+                Utility.Configuration.Settings.DarkTheme = false;
                 //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
             }
 
@@ -306,6 +309,9 @@ namespace UserInterface.Views
         /// Show a detailed error message.
         /// </summary>
         public event EventHandler ShowDetailedError;
+
+        /// <summary>Invoked when the divider position is changed</summary>
+        public event EventHandler DividerChanged;
 
         /// <summary>
         /// Get the list and button view
@@ -1090,6 +1096,15 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>Listens to an event of the divider position changing</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnDividerNotified(object sender, GLib.NotifyArgs args)
+        {
+            if (DividerChanged != null)
+                DividerChanged.Invoke(sender, new EventArgs());
         }
 
         /// <summary>

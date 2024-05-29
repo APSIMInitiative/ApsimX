@@ -107,7 +107,11 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum cover of tree canopyl (0-1)</summary>
+        /// <summary>Winter cover of tree canopy (0-1)</summary>
+        [Description("Winter cover of tree canopy (0-1)")]
+        public double BaseCover { get; set; }
+
+        /// <summary>Maximum cover of tree canopy (0-1)</summary>
         [Description("Maximum cover of tree canopy (0-1)")]
         public double MaxCover { get; set; }
 
@@ -124,8 +128,11 @@ namespace Models.PMF.SimplePlantModels
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
-        /// <summary>Maximum green cover</summary>
+        /// <summary>
+        /// Parameters relating to fruit size and growth
+        /// </summary>
         [Separator("Fruit parameters")]
+
         [Description("Fruit number retained (/m2 post thinning)")]
         public int Number { get; set; }
 
@@ -152,6 +159,20 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum Size </summary>
         [Description("Max Size (Days After Winter Solstice)")]
         public int DAWSMaxSize { get; set; }
+
+        /// <summary>Management events</summary>
+        [Separator("Management Event Timings.  May be sent from a manager if not set here")]
+
+        [Description("Tick this box if you are sending pruning and harvest events from a manager.  If not untick the box and specify days below")]
+        public bool PrunAndHarvestFromManager { get; set; }
+
+        /// <summary></summary>
+        [Description("Pruning (Days After Winter Solstice)")]
+        public int pruneDAWS { get; set; }
+
+        /// <summary></summary>
+        [Description("Harvest (Days After Winter Solstice)")]
+        public int harvestDAWS { get; set; }
 
 
         /// <summary>Cutting Event</summary>
@@ -189,10 +210,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
 
-        private int harvestDAWS = 320;
-        private int pruneDAWS = 360;
-
-        
+       
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -212,7 +230,8 @@ namespace Models.PMF.SimplePlantModels
             {"RootNConc","[STRUM].Root.MaximumNConc.FixedValue = "},
             {"WoodNConc","[STRUM].Trunk.MaximumNConc.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
-            {"MaxLAI","[STRUM].Leaf.Area.Maximum.FixedValue = " },
+            {"BaseLAI","[STRUM].Leaf.Area.Winter.BaseArea.FixedValue = " },
+            {"MaxLAI","[STRUM].Leaf.Area.SeasonalGrowth.AnnualDelta.FixedValue = " },
             {"GSMax","[STRUM].Leaf.Gsmax350 = " },
             {"R50","[STRUM].Leaf.R50 = " },
             {"InitialTrunkWt","[STRUM].Trunk.InitialWt.Structural.FixedValue = "},
@@ -327,7 +346,6 @@ namespace Models.PMF.SimplePlantModels
             treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
             treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
             treeParams["LeafFall"] += EndLeafFallDAWS.ToString();
-            pruneDAWS = EndLeafFallDAWS;
             treeParams["MaxRootDepth"] += MaxRD.ToString();
             treeParams["Proot"] += Proot.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
@@ -340,6 +358,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["RootNConc"] += RootNConc.ToString();
             treeParams["WoodNConc"] += TrunkNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
+            treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["MaxLAI"] += ((Math.Log(1 - MaxCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
@@ -353,7 +372,6 @@ namespace Models.PMF.SimplePlantModels
             treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
             treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
             treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
-            harvestDAWS = DAWSMaxSize;
 
 
             if (AgeAtSimulationStart <= 0)
@@ -375,13 +393,16 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (weather.DaysSinceWinterSolstice == harvestDAWS)
+            if (PrunAndHarvestFromManager == false)
             {
-                PhenologyHarvest?.Invoke(this, new EventArgs());
-            }
-            if (weather.DaysSinceWinterSolstice == pruneDAWS)
-            {
-                PhenologyPrune?.Invoke(this, new EventArgs());
+                if (weather.DaysSinceWinterSolstice == harvestDAWS)
+                {
+                    PhenologyHarvest?.Invoke(this, new EventArgs());
+                }
+                if (weather.DaysSinceWinterSolstice == pruneDAWS)
+                {
+                    PhenologyPrune?.Invoke(this, new EventArgs());
+                }
             }
         }
 

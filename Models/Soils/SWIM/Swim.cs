@@ -1785,6 +1785,11 @@ namespace Models.Soils
                 var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                if (soluteParam.FIP == null || double.IsNaN(MathUtilities.Sum(soluteParam.FIP)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have FIP values.");
+                if (soluteParam.Exco == null || double.IsNaN(MathUtilities.Sum(soluteParam.Exco)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have EXCO values.");
+
                 fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, physical.Thickness, double.NaN);
                 exco[i] = SoilUtilities.MapConcentration(soluteParam.Exco, soluteParam.Thickness, physical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], physical.BD);
@@ -1867,7 +1872,7 @@ namespace Models.Soils
 
                 var plant = model as IPlant;
                 if (plant == null)
-                    plant = model.Parent as IPlant; // the canopy might be a leaf and it's parent is a plant.
+                    plant = model.FindAncestor<IPlant>(); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
                 if (plant != null)
                 {
                     if (plant.IsAlive)
@@ -1885,7 +1890,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    throw new Exception($"A canopy was found that isn't a plant. Name: {(canopies[vegnum] as IModel).Name}");
+                    throw new Exception($"A canopy was found that isn't on a plant. Name: {(canopies[vegnum] as IModel).Name}");
             }
             crop_cover = 1.0 - bare;
         }

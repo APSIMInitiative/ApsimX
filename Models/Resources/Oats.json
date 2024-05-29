@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 174,
   "Name": "Simulations",
   "Children": [
     {
@@ -670,6 +670,7 @@
               "Start": "Sowing",
               "End": "Germination",
               "Name": "Germinating",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -692,6 +693,7 @@
               "End": "Emergence",
               "TTForTimeStep": 0.0,
               "Name": "Emerging",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
