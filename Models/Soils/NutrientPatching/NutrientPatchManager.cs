@@ -307,6 +307,8 @@ namespace Models.Soils.NutrientPatching
         /// <param name="patch">Details of the patch to add.</param>
         public void Add(AddSoilCNPatchType patch)
         {
+            Initialise();
+
             AddSoilCNPatchwithFOMType PatchtoAdd = new AddSoilCNPatchwithFOMType();
             PatchtoAdd.Sender = patch.Sender;
             PatchtoAdd.SuppressMessages = patch.SuppressMessages;
@@ -506,46 +508,58 @@ namespace Models.Soils.NutrientPatching
             return new OrganicPool(c, n, p);
         }
 
-        /// <summary>At the start of the simulation set up LifeCyclePhases</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [EventSubscribe("Commencing")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        /// <summary>At the start of the simulation set up.</summary>
+        public override void OnPreLink()
         {
-            // Make sure the NutrientPatchManager is after the solutes so that scoping works.
-            // This is an ugly hack but I can't think of an easy way to get around the problem of
-            // the plant models and soil water finding the solutes under NutrientPatchManager
-            // instead of the solute directly under the soil. Scoping design problem.
-            if (Parent.Children.Last() != this)
-                throw new Exception("NutrientPatchManager must be the last child of soil");
+            Initialise();
+        }
 
-            // Create a new nutrient patch.
-            var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
-            newPatch.CreationDate = clock.Today;
-            newPatch.Name = "base";
-            patches.Add(newPatch);
-            Structure.Add(newPatch.Nutrient, this);
-
-            // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition 
-            // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
-            var microbialPool = new OrganicPoolPatch(this)
+        /// <summary>
+        /// Initialise the patch manager if necessary.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        private void Initialise()
+        {
+            if (!patches.Any())
             {
-                Name = "Microbial"
-            };
-            Structure.Add(microbialPool, this);
+                // Make sure the NutrientPatchManager is after the solutes so that scoping works.
+                // This is an ugly hack but I can't think of an easy way to get around the problem of
+                // the plant models and soil water finding the solutes under NutrientPatchManager
+                // instead of the solute directly under the soil. Scoping design problem.
+                if (Parent.Children.Last() != this)
+                    throw new Exception("NutrientPatchManager must be the last child of soil");
 
-            // Move the child to the first in the list so that scoping finds it before child of nutrient with same name.
-            Children.Remove(microbialPool);
-            Children.Insert(0, microbialPool);
+                // Find the physical node.
+                soilPhysical = FindInScope<Physical>();
+                clock = FindInScope<Clock>();
 
-            var humicPool = new OrganicPoolPatch(this)
-            {
-                Name = "Humic"
-            };
-            Structure.Add(humicPool, this);
-            Children.Remove(humicPool);
-            Children.Insert(0, humicPool);
+                // Create a new nutrient patch.
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
+                newPatch.CreationDate = clock.Today;
+                newPatch.Name = "base";
+                patches.Add(newPatch);
+                Structure.Add(newPatch.Nutrient, this);
 
+                // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition 
+                // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
+                var microbialPool = new OrganicPoolPatch(this)
+                {
+                    Name = "Microbial"
+                };
+                Structure.Add(microbialPool, this);
+
+                // Move the child to the first in the list so that scoping finds it before child of nutrient with same name.
+                Children.Remove(microbialPool);
+                Children.Insert(0, microbialPool);
+
+                var humicPool = new OrganicPoolPatch(this)
+                {
+                    Name = "Humic"
+                };
+                Structure.Add(humicPool, this);
+                Children.Remove(humicPool);
+                Children.Insert(0, humicPool);
+            }
         }
 
         /// <summary>
@@ -751,7 +765,7 @@ namespace Models.Soils.NutrientPatching
                         }
                         patches[k].CreationDate = clock.Today;
                         idPatchesJustAdded.Add(k);
-                        if (!PatchtoAdd.SuppressMessages)
+                        if (summary != null && !PatchtoAdd.SuppressMessages)
                         {
                             summary.WriteMessage(this, "create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
                                          ", based on existing patch(" + idPatchesAffected[i].ToString() +
