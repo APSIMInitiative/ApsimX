@@ -391,6 +391,22 @@ namespace Models.DCAPST
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters sowingData)
         {
+            // Reset DCAPST trigger point because the crop has just been sown again and we don't want to start using DCAPST
+            // until it is triggered again (LAI dependent).
+            dcapsReachedLAITriggerPoint = false;
+            var leaf = GetLeaf();
+            if (leaf is SorghumLeaf sorghumLeaf)
+            {
+                sorghumLeaf.MicroClimateSetting = 0;
+            }
+
+            DcapstModel = null;
+
+            SetCultivarOverrides(sowingData);
+        }
+
+        private void SetCultivarOverrides(SowingParameters sowingData)
+        {
             // DcAPST allows specific Crop and Cultivar settings to be used.
             // Search and extract the Cultivar if it has been specified.
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(this, sowingData);
@@ -398,10 +414,6 @@ namespace Models.DCAPST
 
             // We've got a Cultivar so apply all of the specified overrides to manipulate this models settings.
             cultivar.Apply(this);
-
-            // Reset DCAPST trigger point because the crop has just been sown again and we don't want to start using DCAPST
-            // until it is triggered again (LAI dependent).
-            dcapsReachedLAITriggerPoint = false;
         }
 
         private static double GetRootShootRatio(IPlant plant)
