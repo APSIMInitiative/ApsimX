@@ -54,6 +54,21 @@ namespace Models.DCAPST
         private string cropName = string.Empty;
 
         /// <summary>
+        /// The plant which is set dynamically, based on the CropName.
+        /// </summary>
+        IPlant plant;
+
+        /// <summary>
+        /// The leaf.
+        /// </summary>
+        ICanopy leaf;
+
+        /// <summary>
+        /// The root shoot ration function
+        /// </summary>
+        IFunction rootShootRatioFunction;
+
+        /// <summary>
         /// This flag is set to indicate that we have started using DCaPST. 
         /// We wait until the Leaf LAI reaches our tolerance before starting to use 
         /// DCaPST and the continue to use it until a new sowing event occcurs.
@@ -221,6 +236,8 @@ namespace Models.DCAPST
         public void Reset()
         {
             Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            plant = null;
+            SetUpPlant();
         }
 
         /// <summary>
@@ -245,20 +262,17 @@ namespace Models.DCAPST
         [EventSubscribe("DoDCAPST")]
         private void OnDoDCaPST(object sender, EventArgs args)
         {
+            SetUpPlant();
+
             // 0. Get SLN, LAI, total avail SW, root shoot ratio
             // 1. Perform internal calculations
             // 2. Set biomass production in leaf
             // 3. Set water demand and potential EP via ICanopy
+            double rootShootRatio = GetRootShootRatio();
 
-            IPlant plant = FindInScope<IPlant>(CropName);
-            double rootShootRatio = GetRootShootRatio(plant);
+            CalculateDcapstTrigger();
 
-            // fixme - are we using the right SW??
-            var leaf = GetLeaf(plant);
-
-            CalculateDcapstTrigger(leaf);
-
-            if (!ShouldRunDcapstModel(leaf))
+            if (!ShouldRunDcapstModel())
             {
                 return;
             }
@@ -276,8 +290,8 @@ namespace Models.DCAPST
                 Reduction
             );
 
-            double sln = GetSln(leaf);
-            double soilWaterValue = GetSoilWater(leaf);
+            double sln = GetSln();
+            double soilWaterValue = GetSoilWater();
 
             DcapstModel.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
 
@@ -303,9 +317,7 @@ namespace Models.DCAPST
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (DcapstModel is null) return;
-
-            var leaf = GetLeaf();
+            if (DcapstModel is null) return;;
 
             if (leaf is SorghumLeaf sorghumLeaf)
             {
@@ -328,22 +340,7 @@ namespace Models.DCAPST
             }
         }
 
-        /// <summary>
-        /// Simple helper to extract the current Leaf node.
-        /// </summary>
-        /// <returns>The leaf.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        private ICanopy GetLeaf(IPlant plant = null)
-        {
-            if (plant == null) plant = FindInScope<IPlant>(CropName);
-            if (plant == null) throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
-            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
-            if (leaf == null) throw new ArgumentNullException(nameof(leaf), "Cannot find leaf configuration");
-
-            return leaf;
-        }
-
-        private bool ShouldRunDcapstModel(ICanopy leaf)
+        private bool ShouldRunDcapstModel()
         {
             if (leaf is null) return false;
 
@@ -352,7 +349,52 @@ namespace Models.DCAPST
                 dcapsReachedLAITriggerPoint;
         }
 
-        private double GetSoilWater(ICanopy leaf)
+        private void SetUpPlant()
+        {
+            if (!string.IsNullOrEmpty(cropName) && 
+                plant is null)
+            {
+                plant = FindInScope<IPlant>(CropName);
+                rootShootRatioFunction = GetRootShootRatioFunction();
+                leaf = GetLeaf();
+            }
+        }
+
+        /// <summary>
+        /// Simple helper to extract the current Leaf node.
+        /// </summary>
+        /// <returns>The leaf.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        private ICanopy GetLeaf()
+        {
+            if (plant == null) return null;
+            ICanopy leafFind = plant.FindChild<ICanopy>("Leaf");
+            if (leafFind == null) throw new ArgumentNullException(nameof(leafFind), "Cannot find leaf configuration");
+            return leafFind;
+        }
+
+        private double GetRootShootRatio()
+        {
+            var rootShootRatioValue = rootShootRatioFunction.Value(); 
+            if (ROOT_SHOOT_RATIO_DIVISOR > 0.0)
+            {
+                rootShootRatioValue /= ROOT_SHOOT_RATIO_DIVISOR;
+            }
+            return rootShootRatioValue;
+        }
+
+        private IFunction GetRootShootRatioFunction()
+        {
+            if (plant is null) return null;
+
+            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            if (variable is null) return null;
+            if (variable.Value is not IFunction function) return null;
+
+            return function;
+        }
+
+        private double GetSoilWater()
         {
             double soilWaterValue = soilWater.SW.Sum();
              
@@ -365,23 +407,23 @@ namespace Models.DCAPST
             return soilWaterValue;
         }
 
-        private void CalculateDcapstTrigger(ICanopy leaf)
+        private void CalculateDcapstTrigger()
         {
             if (!dcapsReachedLAITriggerPoint &&
                 leaf.LAI >= LEAF_LAI_START_USING_DCAPST_TRIGGER)
             {
                 dcapsReachedLAITriggerPoint = true;
-                SetMicroClimateForSpecificLeafTypes(leaf);
+                SetMicroClimateForSpecificLeafTypes(1);
             }
         }
 
-        private static void SetMicroClimateForSpecificLeafTypes(ICanopy leaf)
+        private void SetMicroClimateForSpecificLeafTypes(int microClimateSetting)
         {
             // Sorghum calculates InterceptedRadiation and WaterDemand internally
             // Use the MicroClimateSetting to override.
             if (leaf is SorghumLeaf sorghumLeaf)
             {
-                sorghumLeaf.MicroClimateSetting = 1;
+                sorghumLeaf.MicroClimateSetting = microClimateSetting;
             }
         }
 
@@ -394,12 +436,7 @@ namespace Models.DCAPST
             // Reset DCAPST trigger point because the crop has just been sown again and we don't want to start using DCAPST
             // until it is triggered again (LAI dependent).
             dcapsReachedLAITriggerPoint = false;
-            var leaf = GetLeaf();
-            if (leaf is SorghumLeaf sorghumLeaf)
-            {
-                sorghumLeaf.MicroClimateSetting = 0;
-            }
-
+            SetMicroClimateForSpecificLeafTypes(0);
             DcapstModel = null;
 
             SetCultivarOverrides(sowingData);
@@ -416,27 +453,7 @@ namespace Models.DCAPST
             cultivar.Apply(this);
         }
 
-        private static double GetRootShootRatio(IPlant plant)
-        {
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
-            if (variable is null)
-            {
-                return 0;
-            }
-
-            if (variable.Value is not IFunction function)
-            {
-                return 0;
-            }
-
-            var rootShootRatioValue = ROOT_SHOOT_RATIO_DIVISOR > 0.0 ?
-                function.Value() / ROOT_SHOOT_RATIO_DIVISOR :
-                function.Value();
-
-            return rootShootRatioValue;
-        }
-
-        private static double GetSln(ICanopy leaf)
+        private double GetSln()
         {
             if (leaf is SorghumLeaf sorghumLeaf)
             {
