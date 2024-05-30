@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 167,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -366,6 +366,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -428,9 +429,11 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -498,6 +501,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -531,6 +535,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -574,6 +579,7 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -603,6 +609,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -610,6 +617,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -662,6 +670,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -712,6 +721,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -764,6 +774,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -781,13 +792,16 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -797,6 +811,8 @@
                         "[Weather].FileName = VCS_Ruakura.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
+                        "[Fertilisation].Script.Amount = 150",
+                        "[KillClover].Script.Enable = false"
                         "[Fertilisation].Script.Amount = 150",
                         "[KillClover].Script.Enable = false"
                       ],
@@ -866,15 +882,7 @@
                                 66.0,
                                 66.0
                               ],
-                              "Rocks": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
+                              "Rocks": null,
                               "Texture": null,
                               "BD": [
                                 1.31,
@@ -930,97 +938,17 @@
                                 97.995,
                                 97.995
                               ],
-                              "BDMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "AirDryMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "LL15Metadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "DULMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "SATMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "KSMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "RocksMetadata": [
-                                "Calculated",
-                                "Calculated",
-                                "Calculated",
-                                "Calculated",
-                                "Calculated",
-                                "Calculated",
-                                "Calculated"
-                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "ParticleSizeSiltMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
-                              "ParticleSizeClayMetadata": [
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                              ],
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -1053,33 +981,9 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
-                                  "KLMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
-                                  "XFMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1115,33 +1019,9 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
-                                  "KLMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
-                                  "XFMetadata": [
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1578,6 +1458,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -1836,6 +1717,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1897,6 +1779,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -1960,6 +1843,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2021,6 +1905,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -2084,6 +1969,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2146,9 +2032,11 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2200,6 +2088,7 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2207,6 +2096,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2274,6 +2164,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2303,6 +2194,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2310,6 +2202,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2362,6 +2255,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2412,6 +2306,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2464,6 +2359,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2481,13 +2377,16 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2560,6 +2459,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2706,6 +2606,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2743,6 +2644,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -2782,6 +2684,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2819,6 +2722,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -2858,6 +2762,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2896,9 +2801,11 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2950,6 +2857,7 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2957,6 +2865,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3024,6 +2933,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3053,6 +2963,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3060,6 +2971,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3112,6 +3024,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3162,6 +3075,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3214,6 +3128,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3231,13 +3146,16 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3310,6 +3228,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3456,6 +3375,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3493,6 +3413,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -3532,6 +3453,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3569,6 +3491,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -3608,6 +3531,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3646,9 +3570,11 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3700,6 +3626,7 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3707,6 +3634,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3774,6 +3702,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3803,6 +3732,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3810,6 +3740,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3862,6 +3793,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3912,6 +3844,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3964,6 +3897,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3981,13 +3915,16 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4060,6 +3997,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4206,6 +4144,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4243,6 +4182,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4282,6 +4222,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4319,6 +4260,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4358,6 +4300,7 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4396,9 +4339,11 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4450,6 +4395,7 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4457,6 +4403,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4524,6 +4471,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4553,6 +4501,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4560,6 +4509,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4612,6 +4562,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4662,6 +4613,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4714,6 +4666,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4731,13 +4684,16 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4789,6 +4745,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
+              "End": "2021-12-31T00:00:00",
               "End": "2021-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -5988,6 +5945,7 @@
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                 "        {    ",
+                "            //Debugger.Break();",
                 "            //Debugger.Break();",
                 "            ",
                 "// first deal with the Nutrient things. These will always have multiple values - patches or zones            ",
@@ -8187,7 +8145,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8198,7 +8155,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8255,7 +8211,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8266,7 +8221,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8300,7 +8254,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "HarvestedN",
@@ -8413,6 +8367,72 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "Name": "HarvestedNCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "HarvestedN",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Fixation",
               "ResourceName": null,
               "Children": [
@@ -8436,7 +8456,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Fixation",
@@ -8549,6 +8569,72 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "Name": "FixationCum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "FixedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Fixation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Composition",
               "ResourceName": null,
               "Children": [
@@ -8595,7 +8681,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8606,7 +8691,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8640,7 +8724,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "UrineNReturned",
@@ -8663,7 +8747,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8674,7 +8757,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8708,7 +8790,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Denitrification",
@@ -8731,7 +8813,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8799,7 +8880,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8810,7 +8890,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8867,7 +8946,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8878,7 +8956,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8912,7 +8989,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "N2O",
@@ -8935,7 +9012,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9003,7 +9079,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9014,7 +9089,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9071,7 +9145,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9082,7 +9155,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9139,7 +9211,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9150,7 +9221,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9207,7 +9277,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9218,7 +9287,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9275,7 +9343,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9286,7 +9353,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9401,7 +9467,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9412,7 +9477,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9527,7 +9591,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9538,7 +9601,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9653,7 +9715,6 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9664,7 +9725,6 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
