@@ -191,7 +191,7 @@ namespace Models.Core
 
                                 compilation.Code = code;
                                 compilation.Reference = compiled.ToMetadataReference();
-                                compilation.CompiledAssembly = Assembly.LoadFile(fileName);
+                                compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
                             }
                             else
                             {
