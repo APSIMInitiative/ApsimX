@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 167,
+  "Version": 174,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -366,7 +366,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -429,11 +428,9 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -501,7 +498,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -535,7 +531,6 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -579,7 +574,6 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -609,7 +603,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -617,7 +610,6 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -670,7 +662,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -721,7 +712,6 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -774,7 +764,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -792,16 +781,13 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -811,8 +797,6 @@
                         "[Weather].FileName = VCS_Ruakura.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
-                        "[Fertilisation].Script.Amount = 150",
-                        "[KillClover].Script.Enable = false"
                         "[Fertilisation].Script.Amount = 150",
                         "[KillClover].Script.Enable = false"
                       ],
@@ -882,7 +866,15 @@
                                 66.0,
                                 66.0
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.31,
@@ -938,17 +930,97 @@
                                 97.995,
                                 97.995
                               ],
-                              "BDMetadata": null,
-                              "AirDryMetadata": null,
-                              "LL15Metadata": null,
-                              "DULMetadata": null,
-                              "SATMetadata": null,
-                              "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "BDMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "AirDryMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "LL15Metadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "DULMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "SATMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "KSMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -981,9 +1053,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1019,9 +1115,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1458,7 +1578,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -1717,7 +1836,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1779,7 +1897,6 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -1843,7 +1960,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1905,7 +2021,6 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -1969,7 +2084,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2032,11 +2146,9 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2088,7 +2200,6 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2096,7 +2207,6 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2164,7 +2274,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2194,7 +2303,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2202,7 +2310,6 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2255,7 +2362,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2306,7 +2412,6 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2359,7 +2464,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2377,16 +2481,13 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2459,7 +2560,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2606,7 +2706,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2644,7 +2743,6 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -2684,7 +2782,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2722,7 +2819,6 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -2762,7 +2858,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2801,11 +2896,9 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2857,7 +2950,6 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2865,7 +2957,6 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2933,7 +3024,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2963,7 +3053,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -2971,7 +3060,6 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3024,7 +3112,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3075,7 +3162,6 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3128,7 +3214,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3146,16 +3231,13 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3228,7 +3310,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3375,7 +3456,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3413,7 +3493,6 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -3453,7 +3532,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3491,7 +3569,6 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -3531,7 +3608,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3570,11 +3646,9 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3626,7 +3700,6 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3634,7 +3707,6 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3702,7 +3774,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3732,7 +3803,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3740,7 +3810,6 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3793,7 +3862,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3844,7 +3912,6 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3897,7 +3964,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -3915,16 +3981,13 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3997,7 +4060,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4144,7 +4206,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4182,7 +4243,6 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4222,7 +4282,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4260,7 +4319,6 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4300,7 +4358,6 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4339,11 +4396,9 @@
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
-                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4395,7 +4450,6 @@
                               "ResourceName": "WaterBalance",
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4403,7 +4457,6 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4471,7 +4524,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4501,7 +4553,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4509,7 +4560,6 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4562,7 +4612,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4613,7 +4662,6 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4666,7 +4714,6 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -4684,16 +4731,13 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4745,7 +4789,6 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "2021-12-31T00:00:00",
               "End": "2021-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -4822,7 +4865,6 @@
                 "namespace Models",
                 "{",
                 "    [Serializable]",
-                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
                 "    public class PatchScript : Model",
                 "    {",
                 "        [Link] private Clock clock;",
@@ -5348,523 +5390,6 @@
               "$type": "Models.Manager, Models",
               "CodeArray": [
                 "using Newtonsoft.Json;",
-                "using Models.Soils.Nutrients;",
-                "using Models.Soils.NutrientPatching;",
-                "using Models.Interfaces;",
-                "using System.Diagnostics;",
-                "using System.Collections.Generic;",
-                "using APSIM.Shared.Utilities;",
-                "using Models.Surface;",
-                "using Models.Soils;",
-                "using System.Xml.Serialization;",
-                "using Models.AgPasture;",
-                "using Models.Zones;",
-                "using Models.PMF;",
-                "using Models.Core;",
-                "using Models.Core.ApsimFile;",
-                "using System;",
-                "using System.Linq;",
-                "using Models.Climate;",
-                "",
-                "namespace Models",
-                "{",
-                "    [Serializable]",
-                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                "    public class PatchScript : Model",
-                "    {",
-                "        [Link] private Clock clock;",
-                "        [Link] private Soil soil;",
-                "        [Link] private ISummary summary;",
-                "        [Link] private Weather weather;",
-                "        [Link] private Zone zone;",
-                "        [Link] private IPhysical soilPhysical;",
-                "        [Link] private List<NutrientPatchManager> patchManagers;",
-                "",
-                "        private Sward sward;",
-                "      ",
-                "        [Description(\"Verbose reporting to the summary file?\")]",
-                "        public bool Verbose { get; set; }",
-                "        ",
-                "        [Description(\"Should this simulation create Patches? If not then explict Zones will be created\")]",
-                "        public bool PseudoPatches { get; set; }",
-                "        ",
-                "        [Description(\"How many patches or zones should be created?\")]",
-                "        public int ZoneCount { get; set; }",
-                "        ",
-                "        [Description(\"How many pasture species will be active in this simulation?\")]",
-                "        public int NumSpecies { get; set; }",
-                "        ",
-                "        [Description(\"Nature of nutrient return\")]",
-                "        public UrineReturnTypes UrineReturnType { get; set; }",
-                "",
-                "        [Description(\"Pattern (spatial) of nutrient return\")]",
-                "        public UrineReturnPatterns UrineReturnPattern { get; set; }",
-                "",
-                "        [Description(\"Depth of urine penetration (mm)\")]",
-                "        public double UrineDepthPenetration { get; set; }",
-                "",
-                "        ",
-                "        public int ZoneNumForUrine { get; set; }    // zone or patch that urine will be applied to",
-                "        public int NumZonesForUrine { get; set; }   // not enabled yet but for applying urine across more than one zone or patch",
-                "        public double DivisorForReporting { get; set; }   // ",
-                "        ",
-                "        public double HarvestedWt { get; set; }     // from the whole paddock",
-                "        public double HarvestedN { get; set; }      // from the whole paddock",
-                "        public double AmountUrineNReturned { get; set; }   // to the whole paddock",
-                "        public double AmountDungNReturned { get; set; }    // to the whole paddock",
-                "        public double AmountDungCReturned { get; set; }    // to the whole paddock",
-                "        ",
-                "        private double[] MonthlyUrineNAmt;                 // breaks the N balance but useful for testing",
-                "        private bool GrazeToday;",
-                "        private double[] UrineDepthPenetrationArray;",
-                "",
-                "        [NonSerialized]",
-                "        Random pseudoRandom; // = new Random(666);  // sets a constant seed value",
-                "",
-                "",
-                "        public enum UrineReturnPatterns",
-                "        {",
-                "            // <summary>Not enabled Uniform</summary>",
-                "            //UniformAcrossAllPatches,",
-                "            /// <summary>Rotating in order</summary>",
-                "            RotatingInOrder,",
-                "            /// <summary>Not enabled Random</summary>",
-                "            Random,",
-                "            /// <summary>Not enabled Pseudo-random</summary>",
-                "            PseudoRandom",
-                "        }",
-                "        ",
-                "        public enum UrineReturnTypes",
-                "        {",
-                "            /// <summary>FromHarvest</summary>",
-                "            FromHarvest,",
-                "            /// <summary>SetMonthly</summary>",
-                "            SetMonthly",
-                "        }",
-                "",
-                "",
-                "        public override void OnPreLink()",
-                "        {",
-                "            var simulation = Parent.Parent as Simulation;",
-                "            var zone = simulation.FindChild<Zone>();",
-                "                ",
-                "\t        foreach (var species in zone.FindAllDescendants<PastureSpecies>())",
-                "\t        {",
-                "\t            var root = species.FindChild<PastureBelowGroundOrgan>();",
-                "\t            root.MaximumNUptake = 1.5 / NumSpecies;   // in Classic this was 3 kg N /ha /day for the whole sward - but now these are seperate species",
-                "\t        }",
-                "                ",
-                "            if (!PseudoPatches)  // so now this is zones - possibly multiple zones",
-                "            {",
-                "                zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones",
-                "                for (int i = 0; i < ZoneCount-1; i++)",
-                "                {",
-                "                    var newZone = Apsim.Clone(zone);",
-                "                    Structure.Add(newZone, simulation);",
-                "                }",
-                "            }",
-                "        }",
-                "",
-                "        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)",
-                "        {",
-                "        //Debugger.Break();",
-                "            if (Verbose && !PseudoPatches)",
-                "                summary.WriteMessage(this, \"Created \" + ZoneCount + \" identical zones, each of area \" + (1.0 / ZoneCount) + \" ha\", MessageType.Diagnostic);",
-                "",
-                "            if (Verbose)",
-                "                summary.WriteMessage(this, \"Initialising the ZoneManager for grazing, urine return and reporting\", MessageType.Diagnostic);",
-                "",
-                "            sward = new Sward(zone); ",
-                "            pseudoRandom = new Random(666);  // sets a constant seed value",
-                "            ",
-                "            if (PseudoPatches)",
-                "                DivisorForReporting = 1.0;",
-                "            else",
-                "                DivisorForReporting = ZoneCount;",
-                "",
-                "            //MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
-                "            MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
-                "            //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
-                "",
-                "            if (PseudoPatches)",
-                "            {",
-                "                foreach (var patchManager in patchManagers)",
-                "                {",
-                "                    //patchManager.MaximumNitrogenAvailableToPlants = 0.45; This is now set in pre start",
-                "                    patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;",
-                "                    patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;",
-                "                    patchManager.basePatchApproach = BaseApproachEnum.IDBased;",
-                "                    patchManager.AllowPatchAmalgamationByAge = false;",
-                "                    patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge                                ",
-                "                }",
-                "",
-                "                int[] PatchToAddTo = new int[1];  //need an array variable for this",
-                "                string[] PatchNmToAddTo = new string[1];  ",
-                "                int nPatchesAdded = 0;",
-                "                double NewArea = 1.0 / ZoneCount;",
-                "                ",
-                "                while (nPatchesAdded < ZoneCount - 1)",
-                "                {",
-                "                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();",
-                "                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;",
-                "                    NewPatch.AreaFraction = NewArea;",
-                "                    PatchToAddTo[0] = 0;",
-                "                    PatchNmToAddTo[0] = \"0\";",
-                "                    NewPatch.AffectedPatches_id = PatchToAddTo;",
-                "                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;",
-                "                    NewPatch.SuppressMessages = Verbose;",
-                "",
-                "                    foreach (var patchManager in patchManagers)",
-                "                        patchManager.Add(NewPatch);",
-                "                    nPatchesAdded += 1;",
-                "                }                ",
-                "",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, patchManagers[0].NumPatches.ToString() + \" pseudopatches have been created\", MessageType.Diagnostic);",
-                "            }",
-                "",
-                "            if (Verbose)",
-                "                summary.WriteMessage(this, \"Finished initialising the Manager for grazing, urine return and reporting\", MessageType.Diagnostic);",
-                "",
-                "            NumZonesForUrine = 1;  // in the future this might be > 1",
-                "            ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below ",
-                "        }",
-                "",
-                "        [EventSubscribe(\"DoManagement\")]",
-                "        private void OnDoManagement(object sender, EventArgs e)",
-                "        {    ",
-                "",
-                "            // if this is the start of the simulation then sort out the depth for the urine penetration. Can't do this in initialisation because of the module order",
-                "            if (clock.Today == clock.StartDate)",
-                "                UrinePenetration();",
-                "",
-                "            GrazeToday = false;",
-                "            if (clock.Today.AddDays(1).Day == 1)    // why separate this from the if below?  - to allow for multiple options in the future",
-                "                GrazeToday = true;",
-                "",
-                "            if (GrazeToday)",
-                "            {",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, \"Doing grazing\", MessageType.Diagnostic);",
-                "",
-                "                // do the herbage removal part of the grazing",
-                "                int i = -1;  // to use as a zone counter",
-                "                HarvestedWt = 0.0;",
-                "                HarvestedN = 0.0;",
-                "                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())   // NOTE - this is a zone regardless of pseudopatches ",
-                "                {",
-                "                    i += 1;",
-                "                    var sward = new Sward(zone);",
-                "                    sward.Graze(amount: 1000.0, type: \"SetResidueAmount\", Verbose);   // note that I have hardcoded the grazing residual for now",
-                "                    HarvestedWt += sward.HarvestedWt * zone.Area;",
-                "                    HarvestedN += sward.HarvestedN * zone.Area;",
-                "                    if (Verbose)",
-                "                        summary.WriteMessage(this, \"Just harvested \" + HarvestedWt + \" from Zone \" + zone.Name, MessageType.Diagnostic);",
-                "                }",
-                "",
-                "                if (UrineReturnType == UrineReturnTypes.FromHarvest)",
-                "                {",
-                "                    AmountUrineNReturned = HarvestedN * 0.50;  // ",
-                "                    AmountDungNReturned = HarvestedN * 0.35;  // ",
-                "                    AmountDungCReturned = AmountDungNReturned * 20;",
-                "                }",
-                "                else if (UrineReturnType == UrineReturnTypes.SetMonthly)",
-                "                {",
-                "                    AmountUrineNReturned = MonthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input",
-                "                    AmountDungNReturned = AmountUrineNReturned * (0.35 / 0.50);  // ",
-                "                    AmountDungCReturned = AmountDungNReturned * 20;",
-                "                }",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, \"The amount of urine N to be returned to the whole paddock is \" + AmountUrineNReturned, MessageType.Diagnostic);",
-                "",
-                "                DoUrineReturn();",
-                "",
-                "                DoTramplingAndDungReturn();",
-                "",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, \"Finished Grazing\", MessageType.Diagnostic);",
-                "",
-                "            }",
-                "            else",
-                "            {",
-                "                HarvestedWt = 0.0;",
-                "                HarvestedN = 0.0;",
-                "                AmountUrineNReturned = 0.0; ",
-                "                AmountDungNReturned = 0.0; ",
-                "                AmountDungCReturned = 0.0;",
-                "            }",
-                "        }",
-                "",
-                "        public void DoTramplingAndDungReturn()",
-                "        {",
-                "             // Note that dung is assumed to be spread uniformly over the paddock (patches or sones).",
-                "             // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level",
-                "                        ",
-                "            int i = -1;  // patch or paddock counter",
-                "            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())",
-                "            {",
-                "                i += 1;",
-                "                SurfaceOrganicMatter surfaceOM = zone.FindInScope<SurfaceOrganicMatter>() as SurfaceOrganicMatter; ",
-                "",
-                "                // do some trampling of litter",
-                "                // accelerate the movement of surface litter into the soil - do this before the dung is added",
-                "                double temp = surfaceOM.Wt * 0.1;",
-                "",
-                "                TillageType trampling = new TillageType();",
-                "                surfaceOM.Incorporate(fraction: (double) 0.1, depth: (double)100.0, Verbose);",
-                "",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, \"For patch \" + i + \" the amount of litter trampled was \" + temp + \" and the remaining litter is \" + (surfaceOM.Wt), MessageType.Diagnostic);",
-                "",
-                "                // move the dung to litter  ",
-                "                AddFaecesType dung = new AddFaecesType();",
-                "                dung.OMWeight = AmountDungCReturned / 0.4;  //assume dung C is 40% of OM  ",
-                "                dung.OMN = AmountDungNReturned;",
-                "                surfaceOM.AddFaeces(dung);",
-                "                if (Verbose)",
-                "                    summary.WriteMessage(this, \"For patch \" + i + \" the amount of dung DM added to the litter was \" + (AmountDungCReturned / 0.4) + \" and the amount of N added in the dung was \" + (AmountDungNReturned), MessageType.Diagnostic);",
-                "",
-                "            } ",
-                "        }",
-                "",
-                "        public void DoUrineReturn()",
-                "        {",
-                "            GetZoneForUrineReturn();  ",
-                "",
-                "              if (Verbose)",
-                "                  summary.WriteMessage(this, \"The Zone for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);",
-                "",
-                "            if (!PseudoPatches)",
-                "            {",
-                "                int i = -1; //to count the zones",
-                "                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())",
-                "                {",
-                "                    i += 1;",
-                "                    if (i == ZoneNumForUrine)",
-                "                    {",
-                "                        Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;",
-                "",
-                "                          thisFert.Apply(amount: AmountUrineNReturned / zone.Area, ",
-                "                                  type: Fertiliser.Types.UreaN,  ",
-                "                                  depthTop: 0.0, ",
-                "                                  depthBottom: UrineDepthPenetration, ",
-                "                                  doOutput: Verbose);",
-                "                                        ",
-                "                         if (Verbose)",
-                "                             summary.WriteMessage(this, AmountUrineNReturned + \" urine N added to Zone \" + i + \", the local load was \" + AmountUrineNReturned / zone.Area + \" kg N /ha\", MessageType.Diagnostic);",
-                "                     }",
-                "                 }",
-                "            }",
-                "            else // PseudoPatches",
-                "            {",
-                "                        int[] PatchToAddTo = new int[1];  //because need an array variable for this",
-                "                        string[] PatchNmToAddTo = new string[0];  //need an array variable for this",
-                "                        //List<IModel> zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();   //TODO ask Dean - is all this needed?",
-                "                        double[] UreaToAdd = new double[soilPhysical.Thickness.Length];  ",
-                "",
-                "                        for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)",
-                "                            UreaToAdd[ii] = UrineDepthPenetrationArray[ii]  * AmountUrineNReturned * ZoneCount;",
-                "",
-                "                        // needed??   UreaReturned += AmountFertNReturned;",
-                "",
-                "                        AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();",
-                "                        CurrentPatch.Sender = \"manager\";",
-                "                        CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;",
-                "                        PatchToAddTo[0] = ZoneNumForUrine;",
-                "                        CurrentPatch.AffectedPatches_id = PatchToAddTo;",
-                "                        CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;",
-                "                        CurrentPatch.Urea = UreaToAdd; ",
-                "",
-                "                        var patchManager = soil.FindChild<NutrientPatchManager>(); ",
-                "",
-                "                         if (Verbose)",
-                "                            summary.WriteMessage(this, \"Patch MinN prior to urine return: \" + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);",
-                "                        patchManager.Add(CurrentPatch); ",
-                "                         if (Verbose)",
-                "                            summary.WriteMessage(this, \"Patch MinN after urine return: \" + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);",
-                "            } ",
-                "        }",
-                "",
-                "        public void GetZoneForUrineReturn()",
-                "        {",
-                "            if (UrineReturnPattern == UrineReturnPatterns.RotatingInOrder) ",
-                "            {",
-                "                ZoneNumForUrine += 1;  //increment the zone number - it was initialised at -1. NOTE, ZoneNumForUrine is used for both zones and patches",
-                "                if (ZoneNumForUrine >= ZoneCount)",
-                "                    ZoneNumForUrine = 0;  // but reset back to the first patch if needed",
-                "            }",
-                "            else if (UrineReturnPattern == UrineReturnPatterns.Random)",
-                "            {",
-                "                Random rnd = new Random();",
-                "                ZoneNumForUrine = rnd.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected",
-                "            }",
-                "            else if (UrineReturnPattern == UrineReturnPatterns.PseudoRandom)",
-                "            {",
-                "                ZoneNumForUrine = pseudoRandom.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected",
-                "            }",
-                "            else",
-                "                throw new Exception(\"UrineResturnPattern not recognised\");",
-                "",
-                "            if (Verbose)",
-                "                summary.WriteMessage(this, \"The next zone/patch for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);",
-                "        }",
-                "",
-                "",
-                "        public void UrinePenetration()",
-                "        {",
-                "            // note that this only looks at the first paddock and assumes that all the paddocks are the same",
-                "            int iii = -1;  // to use as a patch counter",
-                "            foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())",
-                "            {",
-                "                iii += 1;",
-                "                if (iii == 0)",
-                "                {",
-                "                    Soil soil = zone.FindInScope<Soil>() as Soil;",
-                "                    double tempDepth = 0.0;",
-                "                    UrineDepthPenetrationArray = new double[soilPhysical.Thickness.Length];",
-                "                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
-                "                    {",
-                "                        tempDepth += soilPhysical.Thickness[i];",
-                "                        if (tempDepth <= UrineDepthPenetration)",
-                "                        {",
-                "                            UrineDepthPenetrationArray[i] = soilPhysical.Thickness[i] / UrineDepthPenetration;",
-                "                        }",
-                "                        else",
-                "                        {",
-                "                            UrineDepthPenetrationArray[i] = (UrineDepthPenetration - (tempDepth - soilPhysical.Thickness[i])) / (tempDepth - (tempDepth - soilPhysical.Thickness[i])) * soilPhysical.Thickness[i] / UrineDepthPenetration;",
-                "                            UrineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, UrineDepthPenetrationArray[i]));",
-                "                        }",
-                "                        if (Verbose)",
-                "                            summary.WriteMessage(this, \"The proportion of urine applied to the \" + i + \"th layer will be \" + UrineDepthPenetrationArray[i], MessageType.Diagnostic);",
-                "                    }",
-                "                }",
-                "            }",
-                "",
-                "        } ",
-                "",
-                "",
-                "        ",
-                "   ",
-                "    // A class for aggregating a pasture species mix.  ??????????????? is this needed now?",
-                "    [Serializable]",
-                "    class Sward",
-                "    {",
-                "         private const double Epsilon = 0.000000001;",
-                "        private double amountRequired;",
-                "",
-                "        public Sward(Zone zone)",
-                "        {",
-                "            Species = zone.FindAllDescendants<PastureSpecies>().OfType<IModel>().ToList().Cast<PastureSpecies>().ToList();",
-                "        }",
-                "        ",
-                "        public List<PastureSpecies> Species { get; private set; }",
-                "",
-                "        public double HarvestableWt { get { return Species.Sum(sp => sp.Harvestable.Wt); } }",
-                "",
-                "        public double HarvestedWt { get { return Species.Sum(sp => sp.HarvestedWt); } }",
-                "",
-                "        public double HarvestedN { get { return Species.Sum(sp => sp.HarvestedN); } }",
-                "",
-                "        public double StandingHerbageWt { get { return Species.Sum(sp => sp.Standing.Wt); } }",
-                "",
-                "        public double AboveGroundWt { get { return Species.Sum(sp => sp.AboveGroundWt); } }",
-                "",
-                "        public bool IsAlive",
-                "        {",
-                "            get",
-                "            {",
-                "                bool alive = true;",
-                "                Species.ForEach(sp => alive = alive && sp.PlantStatus == \"alive\");",
-                "                return alive;",
-                "            }",
-                "         }",
-                "     ",
-                "",
-                "        /// <summary>Removes plant material simulating a graze event.</summary>",
-                "        /// <param name=\"amount\">The DM amount (kg/ha)</param>",
-                "        /// <param name=\"type\">How the amount is interpreted (SetResidueAmount or SetRemoveAmount)</param>",
-                "        public void Graze(double amount, string type, bool Verbose)",
-                "        {",
-                "            double amountAvailable = HarvestableWt;",
-                "            if (IsAlive || (amountAvailable > Epsilon))",
-                "            {",
-                "                // Get the amount required to remove",
-                "                if (type.ToLower() == \"setresidueamount\")",
-                "                {",
-                "                    // Remove all DM above given residual amount",
-                "                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);",
-                "                }",
-                "                else if (type.ToLower() == \"setremoveamount\")",
-                "                {",
-                "                    // Remove a given amount",
-                "                    amountRequired = Math.Max(0.0, amount);",
-                "                }",
-                "                else",
-                "                {",
-                "                    throw new Exception(\"Type of amount to remove on graze not recognized (use \\'SetResidueAmount\\' or \\'SetRemoveAmount\\'\");",
-                "                }",
-                "                // Get the actual amount to remove",
-                "                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));",
-                "",
-                "                // Get the amounts to remove by mySpecies:",
-                "                if (amountToRemove > Epsilon)",
-                "                {",
-                "                    double[] fractionToRemove = new double[Species.Count];",
-                "                    for (int s = 0; s < Species.Count; s++)",
-                "                    {",
-                "                        // get the fraction to required for each mySpecies, partition according to available DM to harvest",
-                "                        fractionToRemove[s] = Species[s].Harvestable.Wt / amountAvailable;",
-                "",
-                "                        // remove DM and N for each mySpecies (digestibility is also evaluated)",
-                "                        Species[s].RemoveBiomass(amountToRemove * fractionToRemove[s], Verbose);",
-                "                    }",
-                "                }",
-                "            }",
-                "        }",
-                "    }",
-                "    }",
-                "}"
-              ],
-              "Parameters": [
-                {
-                  "Key": "ZoneCount",
-                  "Value": "0"
-                },
-                {
-                  "Key": "Verbose",
-                  "Value": "False"
-                },
-                {
-                  "Key": "PseudoPatches",
-                  "Value": "False"
-                },
-                {
-                  "Key": "UrineReturnType",
-                  "Value": "FromHarvest"
-                },
-                {
-                  "Key": "UrineReturnPattern",
-                  "Value": "RotatingInOrder"
-                },
-                {
-                  "Key": "UrineDepthPenetration",
-                  "Value": "200"
-                },
-                {
-                  "Key": "NumSpecies",
-                  "Value": "2"
-                }
-              ],
-              "Name": "PatchAndZoneManagerOld",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "CodeArray": [
-                "using Newtonsoft.Json;",
                 "using System.Linq;",
                 "using System.Collections.Generic;",
                 "using APSIM.Shared.Utilities;",
@@ -5945,7 +5470,6 @@
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                 "        {    ",
-                "            //Debugger.Break();",
                 "            //Debugger.Break();",
                 "            ",
                 "// first deal with the Nutrient things. These will always have multiple values - patches or zones            ",
@@ -6099,7 +5623,7 @@
                 "",
                 "}"
               ],
-              "Parameters": [],
+              "Parameters": null,
               "Name": "ReportingWithZonesHelper",
               "ResourceName": null,
               "Children": [],
@@ -8145,6 +7669,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8155,6 +7680,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8211,6 +7737,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8221,6 +7748,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8254,7 +7782,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "HarvestedN",
@@ -8357,72 +7885,6 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "HarvestedNCum",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -11094807,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "ReportingWithPatchesPaddock",
-                  "XFieldName": "Date",
-                  "YFieldName": "HarvestedN",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "HarvestedN",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8456,7 +7918,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Fixation",
@@ -8559,72 +8021,6 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "FixationCum",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -11094807,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "ReportingWithPatchesPaddock",
-                  "XFieldName": "Date",
-                  "YFieldName": "FixedN",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Fixation",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8681,6 +8077,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8691,6 +8088,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8724,7 +8122,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "UrineNReturned",
@@ -8747,6 +8145,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8757,6 +8156,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8790,7 +8190,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Denitrification",
@@ -8813,6 +8213,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8880,6 +8281,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8890,6 +8292,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8946,6 +8349,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8956,6 +8360,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -8989,7 +8394,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "N2O",
@@ -9012,6 +8417,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9079,6 +8485,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9089,6 +8496,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9145,6 +8553,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9155,6 +8564,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9211,6 +8621,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9221,6 +8632,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9277,6 +8689,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9287,6 +8700,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9343,6 +8757,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9353,6 +8768,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9467,6 +8883,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9477,6 +8894,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9591,6 +9009,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9601,6 +9020,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9715,6 +9135,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -9725,6 +9146,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
