@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 173,
+  "Version": 174,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -1380,29 +1380,41 @@
             "        [Separator(\"A model to apply fertiliser days after a variable reaches a threshold\")]",
             "        [Separator(\"Trigger to fertilse on\")]",
             "                 ",
-            "        [Description(\"Name of APSIM variable\")] ",
-            "        public string VariableName { get; set; } ",
+            "        [Description(\"Name of APSIM variable\")]",
+            "        public string VariableName { get; set; }",
             "                ",
-            "        [Description(\"Threshold value to trigger fertilise\")]       ",
+            "        [Description(\"Exact value to trigger fertilise\")]",
             "        public double TriggerValue { get; set; }",
             "        ",
-            "        [Description(\"Number of days to wait after trigger\")] ",
-            "        public int NumDaysToWait { get; set; }  ",
+            "        [Description(\"Number of days to wait after trigger\")]",
+            "        public int NumDaysToWait { get; set; }",
+            "        ",
+            "        [Description(\"Only trigger once per sowing\")] ",
+            "        public bool DoOncePerSowing { get; set; }",
             "               ",
             "        [Separator(\"Amount and type to fertilise\")]",
             "                 ",
-            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
-            "        public double Amount { get; set; }  ",
+            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")]",
+            "        public double Amount { get; set; }",
             "               ",
-            "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }   ",
+            "        [Description(\"Type of fertiliser to apply? \")]",
+            "        public Fertiliser.Types FertiliserType { get; set; }",
             "          ",
-            "        private DateTime FertiliseDate;  ",
+            "        private DateTime FertiliseDate;",
+            "        private Model obj;",
+            "        private bool waitingForFertiliser = false;",
+            "        private bool hasTriggeredPerSowing = true;",
             "               ",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        private void OnStartOfSimulation(object sender, EventArgs e)",
             "        {",
-            "        }               ",
+            "        }",
+            "        ",
+            "        [EventSubscribe(\"Sowing\")]",
+            "        private void OnSowing(object sender, EventArgs e)",
+            "        {",
+            "            hasTriggeredPerSowing = false;",
+            "        }    ",
             "               ",
             "        [EventSubscribe(\"DoManagementCalculations\")]",
             "        private void OnDoManagementCalculations(object sender, EventArgs e)",
@@ -1415,12 +1427,25 @@
             "                value = f.Value();",
             "            else",
             "                throw new Exception($\"Unknown type of variable: {VariableName}\");",
-            "                 ",
-            "            if (MathUtilities.FloatsAreEqual(value, TriggerValue, 0.1))",
-            "                FertiliseDate = clock.Today.AddDays(NumDaysToWait);",
+            "                ",
+            "            bool canTrigger = true;",
+            "            if (waitingForFertiliser)",
+            "                canTrigger = false;",
+            "            if (DoOncePerSowing && hasTriggeredPerSowing)",
+            "                canTrigger = false;",
+            "                    ",
+            "            if (canTrigger && MathUtilities.FloatsAreEqual(value, TriggerValue, 0.1))",
+            "            {",
+            "                waitingForFertiliser = true;",
+            "                hasTriggeredPerSowing = true;",
+            "                FertiliseDate = clock.Today.AddDays(NumDaysToWait);",
+            "            }",
             "",
             "            if (clock.Today == FertiliseDate)",
-            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            {",
+            "                waitingForFertiliser = false;",
+            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            }",
             "        }",
             "    }",
             "}"
@@ -1428,11 +1453,11 @@
           "Parameters": [
             {
               "Key": "VariableName",
-              "Value": "[Wheat].Phenology.Zadok.Stage"
+              "Value": "[Wheat].Phenology.Stage"
             },
             {
               "Key": "TriggerValue",
-              "Value": "11"
+              "Value": "2"
             },
             {
               "Key": "NumDaysToWait",
@@ -1445,6 +1470,10 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
+            },
+            {
+              "Key": "DoOncePerSowing",
+              "Value": "True"
             }
           ],
           "Name": "Fertilise when variable reaches threshold",
@@ -1514,6 +1543,10 @@
           ],
           "Parameters": [
             {
+              "Key": "EventName",
+              "Value": "[Wheat].Phenology.PlantEmerged"
+            },
+            {
               "Key": "NumDaysToWait",
               "Value": "10"
             },
@@ -1524,10 +1557,6 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
-            },
-            {
-              "Key": "EventName",
-              "Value": "[Wheat].Phenology.PlantEmerged"
             }
           ],
           "Name": "Fertilise on event",
