@@ -31,7 +31,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerInterval : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -77,7 +77,7 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                return (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month);
+                return (this.NextDueDate.Year == events.TimeStepStart.Year && this.NextDueDate.Month == events.TimeStepStart.Month);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Models.CLEM.Timers
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month)
+            if (ActivityDue)
             {
                 return true;
             }
@@ -120,7 +120,7 @@ namespace Models.CLEM.Timers
         /// <summary>An event handler to move timer setting to next timing.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
+        [EventSubscribe("CLEMEndOfTimeStep")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (this.ActivityDue)
@@ -136,12 +136,12 @@ namespace Models.CLEM.Timers
             int monthDue = (int)MonthDue;
             if (monthDue != 0)
             {
-                if (monthDue >= clock.StartDate.Month)
-                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
+                if (monthDue >= events.Clock.StartDate.Month)
+                    NextDueDate = new DateTime(events.Clock.StartDate.Year, monthDue, events.Clock.StartDate.Day);
                 else
                 {
-                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
-                    while (clock.StartDate > NextDueDate)
+                    NextDueDate = new DateTime(events.Clock.StartDate.Year, monthDue, events.Clock.StartDate.Day);
+                    while (events.Clock.StartDate > NextDueDate)
                         NextDueDate = NextDueDate.AddMonths(Interval);
                 }
             }
