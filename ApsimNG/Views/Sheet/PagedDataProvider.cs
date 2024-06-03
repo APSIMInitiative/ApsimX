@@ -138,10 +138,10 @@ namespace UserInterface.Views
         }
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="columnIndex">Column index of cell.</param>
-        /// <param name="rowIndex">Row index of cell.</param>
-        /// <param name="value">The value.</param>
-        public void SetCellContents(int columnIndex, int rowIndex, string value)
+        /// <param name="columnIndices">Column indices</param>
+        /// <param name="rowIndices">Row indices.</param>
+        /// <param name="values">The values</param>
+        public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
             throw new NotImplementedException();
         }
