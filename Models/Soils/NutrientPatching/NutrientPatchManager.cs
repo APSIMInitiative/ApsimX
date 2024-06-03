@@ -514,6 +514,15 @@ namespace Models.Soils.NutrientPatching
             Initialise();
         }
 
+        /// <summary>At the start of the simulation set up LifeCyclePhases</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("Commencing")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            Initialise();
+        }        
+
         /// <summary>
         /// Initialise the patch manager if necessary.
         /// </summary>
