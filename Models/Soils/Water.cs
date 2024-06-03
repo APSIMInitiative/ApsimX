@@ -383,7 +383,10 @@ namespace Models.Soils
             {
                 if (RelativeTo != "LL15")
                 {
-                    var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
+                    var physical = FindSibling<Physical>();
+                    if (physical == null)
+                        physical = FindInScope<Physical>();
+                    var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop != null)
                         return SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
                 }
