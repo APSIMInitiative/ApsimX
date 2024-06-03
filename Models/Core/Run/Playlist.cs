@@ -214,7 +214,7 @@ namespace Models
             output = output.Replace("\t", " ");
 
             foreach (char c in input)
-                if (char.IsLetter(c) || char.IsNumber(c) || c == '*' || c == '#' || c == ' ' || c == '_' || c == '-')
+                if (char.IsLetter(c) || char.IsNumber(c) || c == '*' || c == '#' || c == ' ' || c == '_' || c == '-' || c == '.')
                     output += c;
 
             //trim whitespace

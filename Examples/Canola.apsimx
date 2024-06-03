@@ -223,7 +223,7 @@
                   "PercentMethod": 1,
                   "FractionFull": 0.1,
                   "DepthWetSoil": "NaN",
-                  "RelativeTo": "CanolaSoil",
+                  "RelativeTo": "Canola",
                   "Name": "InitialWater",
                   "Children": [],
                   "Enabled": true,

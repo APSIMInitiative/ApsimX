@@ -132,7 +132,9 @@ namespace UserInterface.Views
                 if (saveEdit)
                 {
                     sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
-                    sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, entry.Text);
+                    sheet.DataProvider.SetCellContents(new int[]{selectedColumnIndex}, 
+                                                        new int[]{selectedRowIndex}, 
+                                                        new string[]{entry.Text});
                     sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }
 
