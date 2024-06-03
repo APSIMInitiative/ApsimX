@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using APSIM.Shared.Graphing;
 using Models.Core;
-using Models.Management;
 
 namespace Models.Interfaces
 {
@@ -13,12 +13,12 @@ namespace Models.Interfaces
         /// <summary>
         /// The nodes of the graph.
         /// </summary>
-        List<StateNode> Nodes { get; set; }
+        List<Node> Nodes { get; set; }
 
         /// <summary>
         /// The arcs of the graph.
         /// </summary>
-        List<RuleAction> Arcs { get; set; }
+        List<Arc> Arcs { get; set; }
 
         /// <summary>
         /// fixme - can this be refactored out?

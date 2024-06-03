@@ -244,7 +244,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                    ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
+                    ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/graphs/graphfilters/");
             }
             catch (Exception err)
             {

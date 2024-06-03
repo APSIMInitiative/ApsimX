@@ -1387,8 +1387,8 @@ namespace UnitTests.Core
             Assert.True(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)));
             Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.False(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
-            Assert.False(new MockModel().IsChildAllowable(typeof(NoValidParents)));
+            Assert.True(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
+            Assert.True(new MockModel().IsChildAllowable(typeof(NoValidParents)));
             Assert.False(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)));
             Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));

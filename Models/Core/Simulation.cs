@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Data;
 
 namespace Models.Core
 {
@@ -258,6 +259,8 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
+                StoreFactorsInDataStore();
+
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
             catch (Exception err)
@@ -373,6 +376,54 @@ namespace Models.Core
             // Check to make sure there is only one ISoilWater in each zone.
             foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
                 CheckNotMultipleSoilWaterModels(zone);
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IDataStore storage = null;
+            if (ss != null && ss.Count() > 0)
+                storage = ss.First();
+
+            if (storage != null && Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("ExperimentName", typeof(string));
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FolderName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                var experimentDescriptor = Descriptors.Find(d => d.Name == "Experiment");
+                var simulationDescriptor = Descriptors.Find(d => d.Name == "SimulationName");
+                var folderDescriptor = Descriptors.Find(d => d.Name == "FolderName");
+
+                foreach (var descriptor in Descriptors)
+                {
+                    if (descriptor.Name != "Experiment" &&
+                        descriptor.Name != "SimulationName" &&
+                        descriptor.Name != "FolderName" &&
+                        descriptor.Name != "Zone")
+                    {
+                        var row = table.NewRow();
+                        if (experimentDescriptor != null)
+                            row[0] = experimentDescriptor.Value;
+                        if (simulationDescriptor != null)
+                            row[1] = simulationDescriptor.Value;
+                        if (folderDescriptor != null)
+                            row[2] = folderDescriptor.Value;
+                        row[3] = descriptor.Name;
+                        row[4] = descriptor.Value;
+                        table.Rows.Add(row);
+                    }
+                }
+
+                // Report tables are automatically cleaned before the simulation is run,
+                // as an optimisation specifically designed for this call to WriteTable().
+                // Therefore, we do not need to delete existing data here.
+                storage.Writer.WriteTable(table, false);
+            }
         }
     }
 }
