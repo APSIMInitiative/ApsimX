@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Models.DCAPST.Canopy;
+using Models.DCAPST.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Core;
-using Models.DCAPST.Canopy;
-using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
