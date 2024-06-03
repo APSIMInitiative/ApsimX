@@ -356,12 +356,19 @@ namespace Models.Agroforestry
             {
                 //add all datas
                 List<List<string>> newTable = new List<List<string>>();
-                for (int y = 0; y < dt.Rows.Count; y++)
+                
+                //removes blank line that gets added sometimes
+                int startRow = 1;
+                for (int x = 0; x < dt.Columns.Count; x++)
+                    if (dt.Rows[0][x].ToString().Length > 0)
+                        startRow = 0;
+
+                for (int x = 0; x < dt.Columns.Count; x++)
                 {
                     List<string> row = new List<string>();
-                    for (int x = 1; x < dt.Columns.Count; x++)
+                    for (int y = startRow; y < dt.Rows.Count; y++)
                     {
-                        row.Add(dt.Rows[x][y].ToString());
+                        row.Add(dt.Rows[y][x].ToString());
                     }
                     newTable.Add(row);
                 }
@@ -372,6 +379,7 @@ namespace Models.Agroforestry
                 {
                     newTable[0].Add(dt.Columns[i].ColumnName);
                 }
+                
                 this.Table = newTable;
 
                 //since we don't want the gridtable to edit anything in the model, we just return an empty datatable here.
