@@ -100,7 +100,7 @@ namespace UnitTests.DCaPST
                 reduction
             );
 
-            // Assert - Nothing else can be tested :-(
+            // Assert - Nothing else can be tested.
             Assert.AreEqual(model.B, 0.409);
         }
 

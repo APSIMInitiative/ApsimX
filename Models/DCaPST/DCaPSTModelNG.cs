@@ -95,7 +95,7 @@ namespace Models.DCAPST
             get
             {
                 return cropName;
-            } 
+            }
             set
             {
                 // Optimise Handling a Crop Change call so that it only happens if the 
@@ -300,7 +300,7 @@ namespace Models.DCAPST
             {
                 canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                 {
-                    new CanopyEnergyBalanceInterceptionlayerType()
+                    new()
                     {
                         AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
@@ -317,7 +317,7 @@ namespace Models.DCAPST
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (DcapstModel is null) return;;
+            if (DcapstModel is null) return; ;
 
             if (leaf is SorghumLeaf sorghumLeaf)
             {
@@ -351,7 +351,7 @@ namespace Models.DCAPST
 
         private void SetUpPlant()
         {
-            if (!string.IsNullOrEmpty(cropName) && 
+            if (!string.IsNullOrEmpty(cropName) &&
                 plant is null)
             {
                 plant = FindInScope<IPlant>(CropName);
@@ -360,11 +360,6 @@ namespace Models.DCAPST
             }
         }
 
-        /// <summary>
-        /// Simple helper to extract the current Leaf node.
-        /// </summary>
-        /// <returns>The leaf.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
@@ -375,7 +370,7 @@ namespace Models.DCAPST
 
         private double GetRootShootRatio()
         {
-            var rootShootRatioValue = rootShootRatioFunction.Value(); 
+            var rootShootRatioValue = rootShootRatioFunction.Value();
             if (ROOT_SHOOT_RATIO_DIVISOR > 0.0)
             {
                 rootShootRatioValue /= ROOT_SHOOT_RATIO_DIVISOR;
@@ -397,7 +392,7 @@ namespace Models.DCAPST
         private double GetSoilWater()
         {
             double soilWaterValue = soilWater.SW.Sum();
-             
+
             if (leaf is SorghumLeaf &&
                 waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
             {
@@ -469,6 +464,9 @@ namespace Models.DCAPST
         /// <summary>
         /// Get the names of all plants in scope.
         /// </summary>
-        private IEnumerable<string> GetPlantNames() => FindAllInScope<IPlant>().Select(p => p.Name);
+        private IEnumerable<string> GetPlantNames()
+        {
+            return FindAllInScope<IPlant>().Select(p => p.Name);
+        }
     }
 }

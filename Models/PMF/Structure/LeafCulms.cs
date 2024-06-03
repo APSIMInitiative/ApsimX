@@ -120,7 +120,13 @@ namespace Models.PMF.Struct
 
         /// <summary>Leaf number.</summary>
         [JsonIgnore]
-        public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
+        public double LeafNo 
+        { 
+            get 
+            { 
+                return Culms[0]?.CurrentLeafNo ?? 0; 
+            } 
+        }
 
         /// <summary> Amount of Leaf that appears today</summary>
         [JsonIgnore]
@@ -154,7 +160,7 @@ namespace Models.PMF.Struct
         {
             get
             {
-                return Culms[0].LeafSizes.ToArray();
+                return Culms[0]?.LeafSizes.ToArray();
             }
         }
 
@@ -203,7 +209,6 @@ namespace Models.PMF.Struct
         /// <summary>Calculate Potential Leaf Area</summary>
         public void CalculatePotentialArea()
         {
-            //FinalLeafNo = numberOfLeaves.Value();
             Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo - c.CulmNo);
 
             dltLeafNo = Tillering.CalcLeafNumber();

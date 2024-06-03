@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Statistics.Mcmc;
-using Models.Core;
+﻿using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
