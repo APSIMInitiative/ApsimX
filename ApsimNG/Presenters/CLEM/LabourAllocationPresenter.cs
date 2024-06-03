@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
@@ -446,7 +447,8 @@ namespace UserInterface.Presenters
             {
                 // create row
                 // can row be included?
-                if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
+                // (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
+                if (validpAtt.Where(a => a.ParentType == model.GetType() | (a.ParentType.IsInterface && model.GetType().GetInterfaces().Contains(a.ParentType))).Any())
                 {
                     string emph = "_";
                     if (model.FindAllChildren<LabourRequirement>().Any())
