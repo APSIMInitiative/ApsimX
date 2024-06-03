@@ -28,8 +28,10 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
+        [JsonIgnore]
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
+        [JsonIgnore]
         [Link]
         private readonly Simulation simulation = null;
 
@@ -258,12 +260,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The offset from previous, current and last harvests in months
         /// </summary>
+        [JsonIgnore]
         public (int? previous, int? first, int? current, int? last) HarvestOffset { get { return harvestOffset; } }
 
         /// <summary>
         /// The various harvests in sequence in which to make decisions
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public (CropDataType previous, CropDataType first, CropDataType current, CropDataType last) Harvests { get; set; }
 
         /// <summary>
@@ -289,6 +292,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // set currently managed based on the parent. Nested (mixed) crops will happily occir with their parent, even if the parent is in rotation.
+            if(Parent is CropActivityManageProduct cropProductParent)
+               CurrentlyManaged = cropProductParent.CurrentlyManaged;
+
             harvests.current = null;
             rotationReady = false;
             harvestOffset = (null, null, null, null);
