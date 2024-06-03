@@ -5523,14 +5523,23 @@ namespace Models.Core.ApsimFile
                         new("RuminantActivityManage", "MaximumSireAge"),
                         new("RuminantActivityManage", "MaleSellingAge"),
                         new("RuminantActivityManage", "FemaleSellingAge"),
-                        new("ProductStoreTypeManure", "MaximumAge")
+                        new("ProductStoreTypeManure", "MaximumAge"),
+                        new("LabourType", "InitialAge")
             };
 
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
                     if (!JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Any())
-                        node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2))); //value * 30.4
-
+                        if (item.Item1 == "LabourType")
+                        {
+                            // previously set as years
+                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)*12));
+                        }
+                        else
+                        {
+                            // previously set as months
+                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)));
+                        }
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
                 if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
                     node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));

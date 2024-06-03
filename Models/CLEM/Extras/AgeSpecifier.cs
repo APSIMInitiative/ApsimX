@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 //using System.ComponentModel;
@@ -78,7 +79,19 @@ namespace Models.CLEM
         /// <param name="months">Age in months</param>
         public AgeSpecifier(decimal months)
         {
-            Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
+            if(months > 12)
+            {
+                decimal years = Math.Floor(months / 12);
+                decimal remainingMonths = months - (years * 12);
+                decimal partmonths = months - decimal.Floor(months);
+                Parts = new int[] { Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partmonths*30.4M) };
+            }
+            else
+            {
+                decimal partmonths = months - decimal.Floor(months);
+                Parts = new int[] { 0, Convert.ToInt32(months), Convert.ToInt32(partmonths * 30.4M) };
+            }
+            //Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
         }
 
         /// <summary>
