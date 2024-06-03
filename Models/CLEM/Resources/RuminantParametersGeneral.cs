@@ -170,6 +170,23 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValue(new[] { 0.0, 3.0, 5.0 })]
         public double[] BCScoreRange { get; set; }
 
+        /// <summary>
+        /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid)
+        /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
+        /// </summary>
+        [Category("Breed", "Growth")]
+        [Description("Proportion of EBW fat"), Tooltip("Assumes cow at relative condition 1 (mid condition)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double ProportionEBWFat { get; set; } = 0.25;
+
+        /// <summary>
+        /// Max fat as a proportion of Empty Body Weight assuming Relative Condition of 1.5
+        /// </summary>
+        [Category("Breed", "Growth")]
+        [Description("Proportion of EBW fat at RC=1.5"), Tooltip("Assumes cow at relative condition 1.5")]
+        [Required, Proportion]
+        public double ProportionEBWFatMax { get; set; } = 0.45;
+
         #endregion
 
         #region Normalised Weight CN

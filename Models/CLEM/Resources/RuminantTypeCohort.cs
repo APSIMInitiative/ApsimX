@@ -88,6 +88,12 @@ namespace Models.CLEM.Resources
         public double WeightSD { get; set; }
 
         /// <summary>
+        /// Provide initial fat and protein weight as array of two double values
+        /// </summary>
+        [Description("Provide initial fat and protein proportions of EBW (fat, protein)")]
+        public double[] ProvideInitialFatProteinProportions { get; set; }
+
+        /// <summary>
         /// Is suckling?
         /// </summary>
         [Description("Still suckling?")]
@@ -183,6 +189,13 @@ namespace Models.CLEM.Resources
                     double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
                            
                     Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight);
+                    RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinProportions);
+                    //if (ProvideInitialFatProteinProportions is null)
+                    //else
+                    //{
+                    //    ruminant.Weight.Fat.Set(ProvideInitialFatProteinProportions[0] * ruminant.Weight.EmptyBodyMass);
+                    //    ruminant.Weight.Protein.Set(ProvideInitialFatProteinProportions[1] * ruminant.Weight.EmptyBodyMass);
+                    //}
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;

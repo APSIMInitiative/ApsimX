@@ -1,4 +1,6 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -49,7 +51,6 @@ namespace Models.CLEM.Resources
         /// Track fetus fat weight (kg)
         /// </summary>
         public RuminantTrackingItem FetusFat { get; set; } = new();
-
 
         /// <summary>
         /// Track wool weight (kg)
@@ -181,6 +182,12 @@ namespace Models.CLEM.Resources
         public double RelativeSize { get { return  NormalisedForAge / StandardReferenceWeight; }  }
 
         /// <summary>
+        /// Is still growing (Z less than or equal to 0.9)
+        /// </summary>
+        [FilterByProperty]
+        public bool IsStillGrowing { get { return MathUtilities.IsLessThanOrEqual(RelativeSizeByHighWeight, 0.9); } }
+
+        /// <summary>
         /// Adjust weight
         /// </summary>
         /// <param name="wtChange">Change in weight (kg)</param>
@@ -217,7 +224,56 @@ namespace Models.CLEM.Resources
         public RuminantInfoWeight(double weightAtBirth)
         {
             AtBirth = weightAtBirth;
-            
+        }
+
+        /// <summary>
+        /// Calculate and set the initial fat and protein weights of the specified individual
+        /// </summary>
+        /// <param name="individual">The individual ruminant</param>
+        /// <param name="initialFastProteinProps">Provide initial EBW fat proportion and initial EBW fat proportion (optional)</param>
+        public static void SetInitialFatProtein(Ruminant individual, double[] initialFastProteinProps = null)
+        {
+            double pFat;
+            double pProtein = -1;
+            if (initialFastProteinProps is not null)
+            {
+                pFat = initialFastProteinProps[0];
+                if (initialFastProteinProps.Length >= 2)
+                {
+                    pProtein = initialFastProteinProps[1];
+                }
+            }
+            else
+            {
+                double RC = individual.Weight.RelativeCondition;
+                if (individual.Weight.IsStillGrowing)
+                    RC = 0.9;
+
+                double sexFactor = 1.0;
+                if (individual.Sex == Sex.Male && (individual as RuminantMale).IsAbleToBreed)
+                    sexFactor = 0.85;
+
+                double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
+                pFat = (individual.Parameters.General.ProportionEBWFat + (RC * RCFatSlope)) * sexFactor;
+            }
+#if DEBUG
+            individual.Weight.Fat.Set(pFat);
+#else
+            individual.Weight.Fat.Set(pFat * individual.Weight.EmptyBodyMass);
+#endif
+            if (pProtein >= 0)
+            {
+#if DEBUG
+                individual.Weight.Protein.Set(pProtein);
+#else
+            individual.Weight.Protein.Set(pProtein * individual.Weight.EmptyBodyMass);
+#endif
+                individual.Weight.Protein.Set(pProtein);
+            }
+            else
+            {
+                individual.Weight.Protein.Set(0.22 * (individual.Weight.EmptyBodyMass - individual.Weight.Fat.Amount));
+            }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
                 if (ind.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
                 {
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1 (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
                 if (ind.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)

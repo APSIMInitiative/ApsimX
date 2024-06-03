@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using static Models.Core.ScriptCompiler;
+using System.ComponentModel.Design;
 
 namespace Models.CLEM.Activities
 {
@@ -66,7 +67,7 @@ namespace Models.CLEM.Activities
                 if(ind.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
                 {
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1 (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
                 if (ind.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
@@ -418,16 +419,52 @@ namespace Models.CLEM.Activities
             // update weight based on the time-step
             ind.Weight.Adjust(ind.Parameters.General.EBW2LW_CG18 * emptyBodyGainkg * events.Interval, ind);
 
-            double MJFatChange = 0;
-            double MJProteinChange = proteinGain1 / 1000.0 * 23.6;
-            if (proteinGain1 < 0 & emptyBodyGainkg < 0)
+            double MJProteinChange = proteinGain1 * 23.6;
+            double MJFatChange;
+
+            // determine fat and protein change based on empty body weight change
+            // Protein is tracked as Crude Protein not on a wet basis.
+            // body weight gain is less than 0
+            if (MathUtilities.IsNegative(emptyBodyGainkg))
             {
-                MJFatChange = (ind.Energy.NetForGain - MJProteinChange);
+                // protein gain is less than 0
+                if (MathUtilities.IsNegative(proteinGain1))
+                {
+                    // this will handle the case when EB -ve and MJProt even more -ve (- -ve) will be positive MJFat
+                    if (MJProteinChange < ind.Energy.NetForGain)
+                    {
+                        // gaining fat but losing protein
+                        MJFatChange = ind.Energy.NetForGain - (0.8 * MJProteinChange);
+                    }
+                    else
+                    {
+                        // losing both fat and protein
+                        MJFatChange = ind.Energy.NetForGain - MJProteinChange;
+                    }
+                }
+                // protein gain is greater or equal 0
+                else
+                {
+                    // Assume all loss is fat
+                    MJFatChange = ind.Energy.NetForGain;
+                }
             }
-            if (proteinGain1 > 0 & emptyBodyGainkg < 0)
+            // body weight gain is 0 or positive
+            else
             {
-                // Assumes protein increase as suggested and all energy loss is Fat
-                MJFatChange = ind.Energy.NetForGain;
+                // protein gain is less than 0
+                // losing protein but gaining fat
+                if (MathUtilities.IsNegative(proteinGain1))
+                {
+                    // Assumes protein increase as suggested and all energy loss is Fat
+                    MJFatChange = ind.Energy.NetForGain - (MJProteinChange * 0.8); // - (-ve) adds MJProt to NetForGain
+                }
+                // protein gain is greater or equal 0
+                else
+                {
+                    // Assumes protein increase as suggested and all energy loss is Fat
+                    MJFatChange = ind.Energy.NetForGain - MJProteinChange;
+                }
             }
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.

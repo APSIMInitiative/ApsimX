@@ -159,7 +159,8 @@ namespace Models.CLEM
             IEnumerable<ValidParentAttribute> validParents = model.GetType().GetCustomAttributes<ValidParentAttribute>();
             if (validParents.Any())
             {
-                if(!validParents.Where(a => a.ParentType == (model as IModel).Parent.GetType() | (a.ParentType.IsInterface && model.Parent.GetType().GetInterfaces().Contains(a.ParentType))).Any())
+
+                if(!validParents.Where(a => a.ParentType == (model as IModel).Parent.GetType() | (a.ParentType.IsInterface && model.Parent.GetType().GetInterfaces().Contains(a.ParentType)) | (model.Parent.GetType().IsSubclassOf(a.ParentType))).Any())
                 {
                     Summary summary = model.FindAncestor<Simulation>().FindChild<Summary>();
                     if(validParents.Count() > 1)
