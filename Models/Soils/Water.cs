@@ -264,7 +264,7 @@ namespace Models.Soils
                         if (RelativeTo != "LL15")
                         {
                             //Get layer indices that have a XF as 0.
-                            var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
+                            var plantCrop = GetCropSoil();
 
                             double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, InitialValuesMM);
                             double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, RelativeToLLMM);
@@ -359,7 +359,7 @@ namespace Models.Soils
                     values = Physical.LL15;
                 else
                 {
-                    var plantCrop = FindAncestor<Soil>().FindDescendant<SoilCrop>(RelativeTo + "Soil");
+                    var plantCrop = GetCropSoil();
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";
@@ -383,10 +383,7 @@ namespace Models.Soils
             {
                 if (RelativeTo != "LL15")
                 {
-                    var physical = FindSibling<Physical>();
-                    if (physical == null)
-                        physical = FindInScope<Physical>();
-                    var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+                    SoilCrop plantCrop = GetCropSoil();
                     if (plantCrop != null)
                         return SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
                 }
@@ -732,6 +729,15 @@ namespace Models.Soils
                     return false;
             }
             return true;
+        }
+
+        private SoilCrop GetCropSoil()
+        {
+            var physical = FindSibling<Physical>();
+            if (physical == null)
+                physical = FindInScope<Physical>();
+            var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            return plantCrop;
         }
     }
 }
