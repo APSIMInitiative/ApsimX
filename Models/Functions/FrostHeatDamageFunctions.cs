@@ -24,13 +24,10 @@ namespace Models.Functions
         [Link]
         Plant Plant = null;
 
-        // Internal variables
-        //private string CropType;
-
         // Define parameters
 
         /// <summary>Crop to be simulated</summary>
-        [Separator("Crop to be simulated, barley, wheat or canola?")]
+        [Separator("Crop to be simulated, wheat or canola?")]
         // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
         public string CropType { get; set; }
@@ -38,104 +35,119 @@ namespace Models.Functions
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
         // <summary>Lower thereshold</summary>
-        [Description("Lower threshold of temperature for frost damage")]
-        public double FrostSurvLowT { get; set; }
+        [Description("Lower threshold of air temperature for frost damage")]
+        public double FrostLowTT { get; set; }
 
-        /// <summary>Multiplier of lower threshold</summary>
-        [Description("Multiplier of frost damage for lower threshold of temperature")]
-        public double FrostSurvLowR { get; set; }
+        /// <summary>Yield reduction at lower threshold</summary>
+        [Description("Yield reduction ratio of frost damage induced by lower threshold")]
+        public double FrostMaxReductionRatio { get; set; }
 
         /// <summary>Upper threshold</summary>
-        [Description("Upper threshold of temperature for frost damage")]
-        public double FrostSurvUpT { get; set; }
+        [Description("Upper threshold of air temperature for frost damage")]
+        public double FrostUpTT { get; set; }
 
-        /// <summary>Multiplier of upper threshold</summary>
-        [Description("Multiplier of frost damage for upper threshold of temperature")]
-        public double FrostSurvUpR { get; set; }
+        /// <summary>Yield reduction at upper threshold</summary>
+        [Description("Yield reduction ratio frost damage induced by upper threshold")]
+        public double FrostMinReductionRatio { get; set; }
 
 
-        /// <summary>Sensitivity period of frost damage</summary>
-        [Separator("Growth stages to define the sensitivity period of frost damage")]
-        // <summary>The first growth stage</summary>
-        [Description("The first growth stage")]
-        public double FrostSensGrowthStageFirst { get; set; }
+        /// <summary>Sensitive period of frost damage</summary>
+        [Separator("Growth stages to define the sensitive period of frost damage")]
+        // <summary>The start of sensitive period of frost damage</summary>
+        [Description("Start of sensitive period")]
+        public double FrostStartSensitiveGS { get; set; }
 
-        /// <summary>The second growth stage</summary>
-        [Description("The second growth stage")]
-        public double FrostSensGrowthStageSecond { get; set; }
+        /// <summary>The start of the most sensitive period of frost damage</summary>
+        [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
+        public double FrostStartMostSensitiveGS { get; set; }
 
-        /// <summary>The third growth stage</summary>
-        [Description("The third growth stage")]
-        public double FrostSensGrowthStageThird { get; set; }
+        /// <summary>The end of the most sensitive period of frost damagee</summary>
+        [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
+        public double FrostEndMostSensitiveGS { get; set; }
 
-        /// <summary>The fourth growth stage</summary>
-        [Description("The fourth growth stage")]
-        public double FrostSensGrowthStageFourth { get; set; }
+        /// <summary>The end of sensitive period of frost damage</summary>
+        [Description("End of sensitive period")]
+        public double FrostEndSensitiveGS { get; set; }
 
 
         /// <summary>Heat damage</summary>
         [Separator("Heat damage")]
         // <summary>Lower threshold</summary>
-        [Description("Lower threshold of temperature for heat damage")]
-        public double HeatSurvLowT { get; set; }
+        [Description("Lower threshold of air temperature for heat damage")]
+        public double HeatLowTT { get; set; }
 
-        /// <summary>Multiplier of lower threshold</summary>
-        [Description("Multiplier of heat damage for lower threshold of temperature")]
-        public double HeatSurvLowR { get; set; }
+        /// <summary>Yield reduction at lower threshold</summary>
+        [Description("Yield reduction ratio of heat damage induced by lower threshold")]
+        public double HeatMinReductionRatio { get; set; }
 
         /// <summary>Upper threshold</summary>
-        [Description("Upper threshold of temperature for heat damage")]
-        public double HeatSurvUpT { get; set; }
+        [Description("Upper threshold of air temperature for heat damage")]
+        public double HeatUpTT { get; set; }
 
-        /// <summary>Multiplier of upper threshold</summary>
-        [Description("Multiplier of heat damage for upper threshold of temperature")]
-        public double HeatSurvUpR { get; set; }
+        /// <summary>Yield reduction at upper threshold</summary>
+        [Description("Yield reduction ratio of heat damage induced by upper threshold")]
+        public double HeatMaxReductionRatio { get; set; }
 
 
         /// <summary>Sensitivity period of heat damage</summary>
         [Separator("Growth stages to define the sensitivity period of heat damage")]
-        // <summary>The first growth stage</summary>
-        [Description("The first growth stage")]
-        public double HeatSensGrowthStageFirst { get; set; }
+        // <summary>The start of sensitive period of heat damage</summary>
+        [Description("Start of sensitive period")]
+        public double HeatStartSensitiveGS { get; set; }
 
-        /// <summary>The second growth stage</summary>
-        [Description("The second growth stage")]
-        public double HeatSensGrowthStageSecond { get; set; }
+        /// <summary>The start of the most sensitive period of heat damage</summary>
+        [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
+        public double HeatStartMostSensitiveGS { get; set; }
 
-        /// <summary>The third growth stage</summary>
-        [Description("The third growth stage")]
-        public double HeatSensGrowthStageThird { get; set; }
+        /// <summary>The end of the most sensitive period</summary>
+        [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
+        public double HeatEndMostSensitiveGS { get; set; }
 
-        /// <summary>The fourth growth stage</summary>
-        [Description("The fourth growth stage")]
-        public double HeatSensGrowthStageFourth { get; set; }
+        /// <summary>The end of sensitive period of heat damage</summary>
+        [Description("End of sensitive period")]
+        public double HeatEndSensitiveGS { get; set; }
+
+
+        // Internal variables
+        //private string CropType;
+
+        /// <summary>Overall remainng ratio after frost events.</summary>
+        double FrostOverallRemaining;
+
+        /// <summary>Overall remainng ratio after heat events.</summary>
+        double HeatOverallRemaining;
 
 
         // Output variables
+        /// <summary>Daily potential yield reduction ratio by a frost event.</summary>
+        public double FrostPotentialReductionRatio { get; set; }
 
-        /// <summary>Daily multiplier of frost damage.</summary>
-        public double FrostSurv { get; set; }
+        /// <summary>Daily sensitivity of yield reduction to growth stage when the frost event occurs.</summary>
+        public double FrostSensitivity { get; set; }
 
-        /// <summary>Daily sensitivity of frost stress.</summary>
-        public double FrostSens { get; set; }
+        /// <summary>Daily actual yield reduction ratio by frost stress.</summary>
+        public double FrostReductionRatio { get; set; }
 
-        /// <summary>Daily multiplier of heat damage.</summary>
-        public double HeatSurv { get; set; }
+        /// <summary>Daily potential yiled reduction ratio by a heat event.</summary>
+        public double HeatPotentialReductionRatio { get; set; }
 
-        /// <summary>Daily sensitivity of heat stress.</summary>
-        public double HeatSens { get; set; }
+        /// <summary>Daily sensitivity of yield reduction to growth stage when the heat event occurs.</summary>
+        public double HeatSensitivity { get; set; }  
+              
+        /// <summary>Daily actual yield reduction ratio by heat stress.</summary>
+        public double HeatReductionRatio { get; set; }
 
-        /// <summary>Daily multiplier of frost and heat combined damage.</summary>
-        public double FrostHeatCombinedSurv { get; set; }
+        /// <summary>Daily actual yield reduction ratio by frost and heat stress.</summary>
+        public double FrostHeatReductionRatio { get; set; }
 
-        /// <summary>Final multiplier of frost and heat damage.</summary>
-        public double FinalStressMultiplier { get; set; }
+        /// <summary>Cumulative actual yield reduction ratio induced by frost stress.</summary>
+        public double CumulativeFrostReductionRatio { get; set; }
 
-        /// <summary>Final multiplier of frost damage.</summary>
-        public double FinalFrostMultiplier { get; set; }
+        /// <summary>Cumulative actual yield reduction ratio induced by heat stress.</summary>
+        public double CumulativeHeatReductionRatio { get; set; }
 
-        /// <summary>Final multiplier of heat damage.</summary>
-        public double FinalHeatMultiplier { get; set; }
+        /// <summary>Cumulative actual yield reduction ratio induced by frost and heat stress.</summary>
+        public double CumulativeFrostHeatReductionRatio { get; set; }
 
         /// <summary>Frost- and heat-limiated yield.</summary>
         /// [Units("g/m2")]
@@ -148,122 +160,131 @@ namespace Models.Functions
             //CropType = Plant.PlantType;
             //CropType = PlantType.PlantType;
 
-            FinalStressMultiplier = 1.0;
-            FinalFrostMultiplier = 1.0;
-            FinalHeatMultiplier = 1.0;
-            FrostHeatYield = 0;
+            FrostPotentialReductionRatio = 0;
+            FrostSensitivity = 0;
+            FrostReductionRatio = 0;
 
-            FrostSurv = 1.0;
-            FrostSens = 0;
-            HeatSurv = 1.0;
-            HeatSens = 0;
-            FrostHeatCombinedSurv = 1.0;
+            HeatPotentialReductionRatio = 0;
+            HeatSensitivity = 0;
+            HeatReductionRatio = 0;
+
+            FrostHeatReductionRatio = 0;
+
+            FrostOverallRemaining = 1;
+            HeatOverallRemaining = 1;
+
+            CumulativeFrostReductionRatio = 0;
+            CumulativeHeatReductionRatio = 0;
+            CumulativeFrostHeatReductionRatio = 0;
+            FrostHeatYield = 0;
         }
 
-        /// <summary>Caculates daily multiplier of frost stress.</summary>
-        private double FrostSurvFun(double t)
+        /// <summary>Caculates daily potential yield reduction ratio induced by a frost event.</summary>
+        private double FrostPotentialReductionRatioFun(double t)
         {
             double ratio = 0.0;
 
-            if (t >= FrostSurvUpT)
+            if (t >= FrostUpTT)
             {
-                ratio = 1.0d;
+                //ratio = 0.0d;
+                ratio = FrostMinReductionRatio;
             }
-            else if (t > FrostSurvLowT && t < FrostSurvUpT)
+            else if (t > FrostLowTT && t < FrostUpTT)
             {
                 ratio =
-                    t * ((FrostSurvUpR - FrostSurvLowR) / (FrostSurvUpT - FrostSurvLowT))
-                    + (FrostSurvLowR * FrostSurvUpT - FrostSurvLowT * FrostSurvUpR)
-                        / (FrostSurvUpT - FrostSurvLowT);
+                    t * ((FrostMinReductionRatio - FrostMaxReductionRatio) / (FrostUpTT - FrostLowTT))
+                    + (FrostMaxReductionRatio * FrostUpTT - FrostLowTT * FrostMinReductionRatio)
+                        / (FrostUpTT - FrostLowTT);
             }
-            else if (t <= FrostSurvLowT)
+            else if (t <= FrostLowTT)
             {
-                ratio = FrostSurvLowR;
+                ratio = FrostMaxReductionRatio;
             }
             return ratio;
         }
 
-        /// <summary>Caculates daily sensitivity of frost stress.</summary>
-        private double FrostSensFun(double GrowthStage)
+        /// <summary>Caculates daily sensitivity of yield reduction to growth stage when the frost event occurs.</summary>
+        private double FrostSensitivityFun(double GrowthStage)
         {
             double sens = 0.0;
 
-            if (GrowthStage <= FrostSensGrowthStageFirst)
+            if (GrowthStage <= FrostStartSensitiveGS)
             {
                 sens = 0;
             }
-            else if (GrowthStage > FrostSensGrowthStageFirst && GrowthStage < FrostSensGrowthStageSecond)
+            else if (GrowthStage > FrostStartSensitiveGS && GrowthStage < FrostStartMostSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((1 - 0) / (FrostSensGrowthStageSecond - FrostSensGrowthStageFirst))
-                    + (0 * FrostSensGrowthStageSecond - FrostSensGrowthStageFirst * 1) / (FrostSensGrowthStageSecond - FrostSensGrowthStageFirst);
+                    GrowthStage * ((1 - 0) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS))
+                    + (0 * FrostStartMostSensitiveGS - FrostStartSensitiveGS * 1) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS);
             }
-            else if (GrowthStage >= FrostSensGrowthStageSecond && GrowthStage <= FrostSensGrowthStageThird)
+            else if (GrowthStage >= FrostStartMostSensitiveGS && GrowthStage <= FrostEndMostSensitiveGS)
             {
                 sens = 1.0;
             }
-            else if (GrowthStage > FrostSensGrowthStageThird && GrowthStage < FrostSensGrowthStageFourth)
+            else if (GrowthStage > FrostEndMostSensitiveGS && GrowthStage < FrostEndSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((0 - 1) / (FrostSensGrowthStageFourth - FrostSensGrowthStageThird))
-                    + (1 * FrostSensGrowthStageFourth - FrostSensGrowthStageThird * 0) / (FrostSensGrowthStageFourth - FrostSensGrowthStageThird);
+                    GrowthStage * ((0 - 1) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS))
+                    + (1 * FrostEndSensitiveGS - FrostEndMostSensitiveGS * 0) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS);
             }
-            else if (GrowthStage >= FrostSensGrowthStageFourth)
+            else if (GrowthStage >= FrostEndSensitiveGS)
             {
                 sens = 0;
             }
             return sens;
         }
 
-        /// <summary>Caculates daily multiplier of heat stress.</summary>
-        private double HeatSurvFun(double t)
+        /// <summary>Caculates daily potential yield reduction ratio incuded by a heat event.</summary>
+        private double HeatPotentialReductionRatioFun(double t)
         {
-            double ratio = 1.0;
+            double ratio = 0.0;
 
-            if (t <= HeatSurvLowT)
+            if (t <= HeatLowTT)
             {
-                ratio = 1.0;
+                //ratio = 0.0;
+                ratio = HeatMinReductionRatio;
             }
-            else if (t > HeatSurvLowT && t < HeatSurvUpT)
+            else if (t > HeatLowTT && t < HeatUpTT)
             {
                 ratio =
-                    t * ((HeatSurvUpR - HeatSurvLowR) / (HeatSurvUpT - HeatSurvLowT))
-                    + (HeatSurvLowR * HeatSurvUpT - HeatSurvLowT * HeatSurvUpR)
-                        / (HeatSurvUpT - HeatSurvLowT);
+                    t * ((HeatMaxReductionRatio - HeatMinReductionRatio) / (HeatUpTT - HeatLowTT))
+                    + (HeatMinReductionRatio * HeatUpTT - HeatLowTT * HeatMaxReductionRatio)
+                        / (HeatUpTT - HeatLowTT);
             }
-            else if (t >= HeatSurvUpT)
+            else if (t >= HeatUpTT)
             {
-                ratio = HeatSurvUpR;
+                ratio = HeatMaxReductionRatio;
             }
             return ratio;
         }
 
-        /// <summary>Caculates daily sensitivity of heat stress.</summary>
-        private double HeatSensFun(double GrowthStage)
+        /// <summary>Caculates daily sensitivity of yield reduction when the heat event occurs.</summary>
+        private double HeatSensitivityFun(double GrowthStage)
         {
             double sens = 0;
 
-            if (GrowthStage <= HeatSensGrowthStageFirst)
+            if (GrowthStage <= HeatStartSensitiveGS)
             {
                 sens = 0;
             }
-            else if (GrowthStage > HeatSensGrowthStageFirst && GrowthStage < HeatSensGrowthStageSecond)
+            else if (GrowthStage > HeatStartSensitiveGS && GrowthStage < HeatStartMostSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((1 - 0) / (HeatSensGrowthStageSecond - HeatSensGrowthStageFirst))
-                    + (0 * HeatSensGrowthStageSecond - HeatSensGrowthStageFirst * 1) / (HeatSensGrowthStageSecond - HeatSensGrowthStageFirst);
+                    GrowthStage * ((1 - 0) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS))
+                    + (0 * HeatStartMostSensitiveGS - HeatStartSensitiveGS * 1) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS);
             }
-            else if (GrowthStage >= HeatSensGrowthStageSecond && GrowthStage <= HeatSensGrowthStageThird)
+            else if (GrowthStage >= HeatStartMostSensitiveGS && GrowthStage <= HeatEndMostSensitiveGS)
             {
                 sens = 1.0;
             }
-            else if (GrowthStage > HeatSensGrowthStageThird && GrowthStage < HeatSensGrowthStageFourth)
+            else if (GrowthStage > HeatEndMostSensitiveGS && GrowthStage < HeatEndSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((0 - 1) / (HeatSensGrowthStageFourth - HeatSensGrowthStageThird))
-                    + (1 * HeatSensGrowthStageFourth - HeatSensGrowthStageThird * 0) / (HeatSensGrowthStageFourth - HeatSensGrowthStageThird);
+                    GrowthStage * ((0 - 1) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS))
+                    + (1 * HeatEndSensitiveGS - HeatEndMostSensitiveGS * 0) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS);
             }
-            else if (GrowthStage >= HeatSensGrowthStageFourth)
+            else if (GrowthStage >= HeatEndSensitiveGS)
             {
                 sens = 0;
             }
@@ -299,29 +320,40 @@ namespace Models.Functions
                 throw new Exception("Crop type not supported!");
             }
 
-            // frost survival
-            FrostSurv = FrostSurvFun(Weather.MinT);
+            // Daily potential yield reduction ratio by a frost event
+            FrostPotentialReductionRatio = FrostPotentialReductionRatioFun(Weather.MinT);
 
-            // frost sensitivity
-            FrostSens = FrostSensFun(GrowthStageToday);
+            // Daily sensitivity of yield reduction to the growth stage when a frost event occurs
+            FrostSensitivity = FrostSensitivityFun(GrowthStageToday);
 
-            // heat survival
-            HeatSurv = HeatSurvFun(Weather.MaxT);
+            // Daily actual yield reduction by a frost event
+            FrostReductionRatio = FrostPotentialReductionRatio * FrostSensitivity;
 
-            // heat sensitivity
-            HeatSens = HeatSensFun(GrowthStageToday);
+            // Daily potential yield reduction by a heat event
+            HeatPotentialReductionRatio = HeatPotentialReductionRatioFun(Weather.MaxT);
 
-            // combined stress survival
-            FrostHeatCombinedSurv = (1 - (1 - FrostSurv) * FrostSens)
-                        * (1 - (1 - HeatSurv) * HeatSens);
+            // Daily sensitivity of yield reduction to the growth stage when a heat frost event occurs
+            HeatSensitivity = HeatSensitivityFun(GrowthStageToday);
 
-            // final multiplier
-            FinalStressMultiplier = FinalStressMultiplier * FrostHeatCombinedSurv;
-            FinalHeatMultiplier = FinalHeatMultiplier * (1 - (1 - HeatSurv) * HeatSens);
-            FinalFrostMultiplier = FinalFrostMultiplier * (1 - (1 - FrostSurv) * FrostSens);
+            // Daily actual yield reduction by a heat event
+            HeatReductionRatio = HeatPotentialReductionRatio * HeatSensitivity;
 
-            // frost and heat yield
-            FrostHeatYield = organs.Wt * FinalStressMultiplier;
+            // Daily actual yield reduction by the frost and heat events
+            FrostHeatReductionRatio = 1 - (1 - FrostReductionRatio) * (1 - HeatReductionRatio);
+
+            // Cumulative yield reduction by frost events
+            FrostOverallRemaining = FrostOverallRemaining * (1 - FrostReductionRatio);
+            CumulativeFrostReductionRatio = 1 - FrostOverallRemaining;
+
+            // Cumulative yield reduction by heat events
+            HeatOverallRemaining = HeatOverallRemaining * (1 - HeatReductionRatio);
+            CumulativeHeatReductionRatio = 1 - HeatOverallRemaining;
+
+            // Cumulative yield reduction by frost and heat events
+            CumulativeFrostHeatReductionRatio = 1 - FrostOverallRemaining * HeatOverallRemaining;
+
+            // Frost- and heat-limited yield
+            FrostHeatYield = organs.Wt * FrostOverallRemaining * HeatOverallRemaining;
         }
     }
 }
