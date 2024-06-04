@@ -36,7 +36,8 @@ namespace Models
             exitCode = 0;
             // Required to allow the --apply switch functionality of not including
             // an apsimx file path on the command line.
-            if (args.Length > 0 && args[0].Equals("--apply"))
+            // if (args.Length > 0 && args[0].Equals("--apply"))
+            if (args.Length > 0 && args.Contains("--apply"))
             {
                 isApplyOptionPresent = true;
                 string[] empty = { " " };
@@ -59,11 +60,7 @@ namespace Models
 
             if (isApplyOptionPresent)
             {
-                if (args.Length > 2)
-                {
-                    result.Value.Apply = args[2];
-                }
-                else
+                if (args.Length < 2)
                 {
                     string argsListString = string.Join(" ", args.ToList());
                     throw new Exception($"No config file was given with the --apply switch. Arguments given: {argsListString}");
@@ -113,7 +110,7 @@ namespace Models
                 {
                     throw new ArgumentException($"One or more files included before the --apply switch where not found. The files are: {options.Files.ToList()}.");
                 }
-                if (files == null || files.Length < 1 && string.IsNullOrEmpty(options.Apply))
+                if (files == null || files.Length < 1 && string.IsNullOrEmpty(options.Apply) && string.IsNullOrEmpty(options.Batch))
                     throw new ArgumentException($"No files were specified");
                 if (options.NumProcessors == 0)
                     throw new ArgumentException($"Number of processors cannot be 0");
@@ -235,9 +232,9 @@ namespace Models
         }
 
         /// <summary>
-        /// 
+        /// Parses and configures commands for use in model run.
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Arguments from Models command.</param>
         /// <returns></returns>
         private static List<string> ParseConfigFileCommands(Options options)
         {
@@ -322,9 +319,12 @@ namespace Models
                 string lastSaveFilePath = null;
                 BatchFile batchFile = null;
 
-                if (!string.IsNullOrEmpty(options.Batch))
+                if (options.Batch != null)
                 {
-                    batchFile = new(options.Batch);
+                    string[] batchArgs = options.Batch.Split(' ');
+                    if (batchArgs.Length > 0)
+                        batchFile = new(batchArgs[0]);
+
                     foreach (DataRow row in batchFile.DataTable.Rows)
                     {
                         // TODO: Needs to handle the replacing of config file placeholders.

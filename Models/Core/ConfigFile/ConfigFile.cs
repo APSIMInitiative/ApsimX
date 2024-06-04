@@ -543,13 +543,22 @@ namespace Models.Core.ConfigFile
 
 
         /// <summary>
-        /// 
+        /// Replaces placeholders in a list of commands. Assumes 
         /// </summary>
-        /// <param name="commandString"></param>
+        /// <param name="commandsWithSpacesRemoved"></param>
         /// <returns></returns>
-        public static string ReplaceBatchFilePlaceholder(string commandString)
+        public static List<string> ReplaceBatchFilePlaceholders(List<string> commandsWithSpacesRemoved)
         {
-            return "";
+            List<string> commandsWithPlaceHoldersReplaced = new();
+            foreach(string commandString in commandsWithSpacesRemoved)
+            {
+                if(commandString.Contains('$'))
+                {
+                    int dollarSignIndex = commandString.IndexOf('$');
+                    
+                }
+            }
+            return commandsWithPlaceHoldersReplaced;
         }
     }
 }
