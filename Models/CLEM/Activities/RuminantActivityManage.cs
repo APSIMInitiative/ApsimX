@@ -1309,7 +1309,8 @@ namespace Models.CLEM.Activities
                                 {
                                     female.Attributes.Remove("GrowOut"); // in case grow out
                                     female.SaleFlag = HerdChangeReason.None;
-                                    female.Location = grazeStoreBreeders;
+                                    if(grazeStoreBreeders != "")
+                                        female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
                                 }
                         }
