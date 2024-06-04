@@ -86,6 +86,10 @@ namespace Models
 
             int checkpointNumber = 0;
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
+            
+            if(!Enabled)
+                return regressionLines;
+
             foreach (var checkpointName in storage.CheckpointNames)
             {
                 if (checkpointName != "Current" && !storage.GetCheckpointShowOnGraphs(checkpointName)) // smh
