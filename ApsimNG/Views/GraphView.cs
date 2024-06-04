@@ -1221,8 +1221,7 @@ namespace UserInterface.Views
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
-            OxyLegendPosition oxyLegendPosition;
-            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out OxyLegendPosition oxyLegendPosition))
             {
                 this.plot1.Model.SetLegendFont(Font);
                 this.plot1.Model.SetLegendFontSize(FontSize);
@@ -1245,7 +1244,6 @@ namespace UserInterface.Views
                             series.Title = (series as INameableSeries).Name;
                             series.IsVisible = true;
                         }
-
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
