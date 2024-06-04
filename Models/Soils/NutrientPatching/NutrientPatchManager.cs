@@ -134,6 +134,9 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Total N2O lost to the atmosphere</summary>
         public IReadOnlyList<double> N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
 
+        /// <summary>Total N2O lost to the atmosphere from top 300mm of soil.</summary>
+        public IReadOnlyList<double> N2Oatm300mm { get { return SumDoubles(patches.Select(patch => SoilUtilities.KeepTopXmm(patch.Nutrient.N2Oatm, soilPhysical.Thickness, 300))); } }
+
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         public IReadOnlyList<double> MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
 
@@ -179,8 +182,11 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Denitrified Nitrogen (N flow from NO3) for each patch.</summary>
         public double[] DenitrifiedNEachPatch { get { return patches.Select(patch => patch.Nutrient.DenitrifiedN.Sum()).ToArray(); } }
 
-        /// <summary>Total N2O lost to the atmosphere for each patch.</summary>
-        public double[] DenitN2OEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
+        /// <summary>Total N2O lost to the atmosphere for each patch from top 300mm of soil.</summary>
+        public double[] N2OatmEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
+
+        /// <summary>Total N2O lost to the atmosphere for each patch from top 300mm of soil.</summary>
+        public double[] N2Oatm300mmEachPatch { get { return patches.Select(patch => SoilUtilities.KeepTopXmm(patch.Nutrient.N2Oatm, soilPhysical.Thickness, 300).Sum()).ToArray(); } }
 
         /// <summary>Total C for each patch</summary>
         public double[] TotalCEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalC.Sum()).ToArray(); } }

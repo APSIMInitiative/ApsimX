@@ -233,7 +233,7 @@
                 "            //=1*(G1^-0.117)",
                 "                ",
                 "                ",
-                "            if (!PseudoPatches)  ",
+                "            if (PseudoPatches)  ",
                 "            {",
                 "                zone.Area = 1.0;",
                 "                ",
@@ -684,12 +684,12 @@
               ],
               "Parameters": [
                 {
-                  "Key": "PseudoPatches",
-                  "Value": "False"
-                },
-                {
                   "Key": "Verbose",
                   "Value": "True"
+                },
+                {
+                  "Key": "PseudoPatches",
+                  "Value": "False"
                 },
                 {
                   "Key": "ZoneCount",
@@ -848,7 +848,7 @@
                 "                    var NO3 = soil.FindChild<ISolute>(\"NO3\");    ",
                 "",
                 "                    DenitByPatch[x] = patchManager.DenitrifiedN.Sum();",
-                "                    DenitN2OByPatch[x] = patchManager.N2Oatm[0] + patchManager.N2Oatm[1];  // only in the top 30 cm (2 layers)",
+                "                    DenitN2OByPatch[x] = patchManager.N2Oatm300mm.Sum();  // only in the top 30 cm (2 layers)",
                 "                    //DenitN2OByPatch[x] = patchManager.N2Oatm.Sum();  // for all depths",
                 "                    ",
                 "                    LeachedNByPatch[x] = waterBalance.LeachNO3 + waterBalance.LeachNH4 + waterBalance.LeachUrea;",
@@ -904,7 +904,7 @@
                 "                    var NO3 = soil.FindChild<ISolute>(\"NO3\");                                ",
                 "",
                 "                    DenitByPatch = patchManager.DenitrifiedNEachPatch;",
-                "                    DenitN2OByPatch = patchManager.DenitN2OEachPatch;   // note that until get a new output variable, this is for the whole profile",
+                "                    DenitN2OByPatch = patchManager.N2Oatm300mmEachPatch;   // note that until get a new output variable, this is for the whole profile",
                 "                    UreaByPatch = patchManager.UreaEachPatch;",
                 "                    NH4ByPatch = patchManager.NH4EachPatch;",
                 "                    NO3ByPatch = patchManager.NO3EachPatch;",

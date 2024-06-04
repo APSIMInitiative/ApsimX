@@ -83,6 +83,22 @@ namespace APSIM.Shared.Utilities
             return depth_of_root_in_layer / thickness[layerIndex];
         }
 
+        
+        /// <summary>Keep the top x mm of soil and zero the rest.</summary>
+        /// <param name="values">The layered values.</param>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="depth">The depth of soil to keep</param>
+        public static double[] KeepTopXmm(IReadOnlyList<double> values, double[] thickness, double depth)
+        {
+            double[] returnValues = values.ToArray();
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                double proportion = ProportionThroughLayer(thickness, i, depth);
+                returnValues[i] *= proportion;
+            }
+            return returnValues;
+        }        
+
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="thickness">Soil layer thickness.</param>
         /// <param name="bd">Bulk density.</param>
