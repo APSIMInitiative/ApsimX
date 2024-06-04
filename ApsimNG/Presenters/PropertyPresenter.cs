@@ -1,9 +1,5 @@
 using APSIM.Shared.Utilities;
-<<<<<<< HEAD
-using Models;
 using Models.CLEM.Interfaces;
-=======
->>>>>>> f56443ebfdfa1f83515a2384873cbe68a125b5f4
 using Models.Core;
 using System;
 using System.Collections;
