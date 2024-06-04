@@ -731,12 +731,20 @@ namespace Models.Soils
             return true;
         }
 
+        /// <summary>
+        /// Attempts to get an appropriate SoilCrop.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
             var physical = FindSibling<Physical>();
             if (physical == null)
                 physical = FindInScope<Physical>();
+                if (physical == null)
+                    throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
             var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            if (plantCrop == null)
+                throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;
         }
     }
