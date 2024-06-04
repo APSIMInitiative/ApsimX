@@ -72,6 +72,7 @@ namespace UserInterface.Presenters
             pawEdit = view.GetControl<EditView>("pawEdit");
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
+            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             Refresh();
         }
@@ -325,7 +326,16 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+
             graph.Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            graph.ExportToClipboard();
         }
     }
 }

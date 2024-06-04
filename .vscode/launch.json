@@ -14,7 +14,7 @@
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "requireExactSource": true,
+            "requireExactSource": false,
             "logging": {
                 "moduleLoad": false,
                 "threadExit": false

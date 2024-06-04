@@ -168,8 +168,8 @@ namespace UserInterface.Views
             if (row >= 0 && col >= 0)
             {
                 Widget widget = propertyTable.GetChildAt(col, row);
-                if (widget is Entry entry)
-                    entry.GrabFocus();
+                if (widget != null && widget as Entry != null)
+                    (widget as Entry).GrabFocus();
             }
 
             if (scrollV != null)
@@ -181,6 +181,7 @@ namespace UserInterface.Views
                                                 scrollV.StepIncrement, 
                                                 scrollV.PageIncrement, 
                                                 scrollV.PageSize);
+                }
             }
         }
 
