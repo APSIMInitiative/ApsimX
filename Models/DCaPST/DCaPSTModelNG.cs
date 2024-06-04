@@ -11,7 +11,10 @@ using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Display = Models.Core.DisplayAttribute;
 
 namespace Models.DCAPST
 {
@@ -317,7 +320,7 @@ namespace Models.DCAPST
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (DcapstModel is null) return; ;
+            if (DcapstModel is null) return;
 
             if (leaf is SorghumLeaf sorghumLeaf)
             {
@@ -351,13 +354,12 @@ namespace Models.DCAPST
 
         private void SetUpPlant()
         {
-            if (!string.IsNullOrEmpty(cropName) &&
-                plant is null)
-            {
-                plant = FindInScope<IPlant>(CropName);
-                rootShootRatioFunction = GetRootShootRatioFunction();
-                leaf = GetLeaf();
-            }
+            if (string.IsNullOrEmpty(cropName)) return;
+            if (plant != null) return;
+
+            plant = FindInScope<IPlant>(CropName);
+            rootShootRatioFunction = GetRootShootRatioFunction();
+            leaf = GetLeaf();
         }
 
         private ICanopy GetLeaf()
@@ -466,7 +468,12 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            return FindAllInScope<IPlant>().Select(p => p.Name);
+            var plants = FindAllInScope<IPlant>()
+                .Select(p => p.Name)
+                .Where(name => !string.IsNullOrEmpty(name))
+                .Distinct();
+
+            return plants;
         }
     }
 }
