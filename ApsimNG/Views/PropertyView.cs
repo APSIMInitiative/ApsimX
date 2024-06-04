@@ -176,12 +176,11 @@ namespace UserInterface.Views
             {
                 ScrolledWindow scroller = mainWidget as ScrolledWindow;
                 scroller.Vadjustment?.Configure(scrollV.Value, 
-                                                scrollV.Lower, 
-                                                scrollV.Upper, 
-                                                scrollV.StepIncrement, 
-                                                scrollV.PageIncrement, 
-                                                scrollV.PageSize);
-                }
+                                            scrollV.Lower, 
+                                            scrollV.Upper, 
+                                            scrollV.StepIncrement, 
+                                            scrollV.PageIncrement, 
+                                            scrollV.PageSize);
             }
         }
 
