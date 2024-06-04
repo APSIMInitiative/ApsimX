@@ -126,6 +126,7 @@ namespace UserInterface.Views
             Initialise(owner, vbox1);
         }
 
+   
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
@@ -202,16 +203,16 @@ namespace UserInterface.Views
                                 seriesNamePreviouslyUnselected = true;
                             if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
                                 newUnselectedSeriesNames.Add(seriesNameable.Name);
-                            else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && 
+                                    (series as OxyPlot.Series.Series).Title != null && 
+                                    seriesNamePreviouslyUnselected)
                                 reselectedSeriesNames.Add(seriesNameable.Name);
                         }
                         
                     }
                     UnselectedSeriesNames = newUnselectedSeriesNames;
-                    LegendPosition legendPosition;
-                    LegendOrientation legendOrientation;
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out LegendPosition legendPosition);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out LegendOrientation legendOrientation);
                     // Reformat the legend without the matching unselectedSeries.
                     FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
                 }
@@ -1383,7 +1384,7 @@ namespace UserInterface.Views
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        item.DetachHandler("activate");
+                        _ = item.DetachHandler("activate");
                     }
                 }
             }
