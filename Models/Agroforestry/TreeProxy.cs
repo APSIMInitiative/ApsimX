@@ -9,7 +9,6 @@ using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Utilities;
 using System.Data;
 
@@ -255,7 +254,7 @@ namespace Models.Agroforestry
                 // Get the first soil. For now we're assuming all soils have the same structure.
                 var physical = zones.First().FindInScope<Physical>();
 
-                if (this.Table.Count == 0)
+                if (this.Table.Count < 2)
                 {
                     DataRow row = data.NewRow();
                     row["Parameter"] = "Shade (%)";
@@ -286,15 +285,22 @@ namespace Models.Agroforestry
                 }
                 else
                 {
-                    for (int y = 0; y < this.Table.Count-1; y++)
+                    for (int x = 0; x < this.Table[1].Count; x++)
                     {
-                        for (int x = 0; x < this.Table[y+1].Count; x++)
+                        //clean up any empty rows
+                        bool empty = true;
+                        DataRow row = data.NewRow();
+                        for (int y = 1; y < this.Table.Count; y++)
                         {
-                            if (y == 0)
-                                data.Rows.Add(data.NewRow());
-                            data.Rows[x][y] = this.Table[y+1][x];
+                            if (this.Table[y][x] != null)
+                                if (this.Table[y][x].ToString().Length > 0)
+                                    empty = false;
+                            row[y-1] = this.Table[y][x];
                         }
+                        if (!empty)
+                            data.Rows.Add(row);
                     }
+                    
                     /*
                     // add Zones not in the table
                     IEnumerable<string> except = colNames.Except(forestryModel.Table[0]);
@@ -350,14 +356,21 @@ namespace Models.Agroforestry
             {
                 //add all datas
                 List<List<string>> newTable = new List<List<string>>();
-                for (int x = 0; x < dt.Rows.Count; x++)
+                
+                //removes blank line that gets added sometimes
+                int startRow = 1;
+                for (int x = 0; x < dt.Columns.Count; x++)
+                    if (dt.Rows[0][x].ToString().Length > 0)
+                        startRow = 0;
+
+                for (int x = 0; x < dt.Columns.Count; x++)
                 {
-                    for (int y = 0; y < dt.Columns.Count; y++)
+                    List<string> row = new List<string>();
+                    for (int y = startRow; y < dt.Rows.Count; y++)
                     {
-                        if (x == 0)
-                            newTable.Add(new List<string>());
-                        newTable[y].Add(dt.Rows[x][y].ToString());
+                        row.Add(dt.Rows[y][x].ToString());
                     }
+                    newTable.Add(row);
                 }
 
                 //add headers - Yes, this is how it's supposed to be
@@ -366,6 +379,7 @@ namespace Models.Agroforestry
                 {
                     newTable[0].Add(dt.Columns[i].ColumnName);
                 }
+                
                 this.Table = newTable;
 
                 //since we don't want the gridtable to edit anything in the model, we just return an empty datatable here.
@@ -477,6 +491,9 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
+                if (Table[i][0].Length == 0)
+                    throw new Exception($"Cell at position [{Table[0][i-2]}, {Table[1][i]}] is empty");
+
                 shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0],
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();

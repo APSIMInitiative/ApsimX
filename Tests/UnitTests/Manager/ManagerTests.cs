@@ -39,7 +39,7 @@ namespace UnitTests.ManagerTests
                 testManager.Parent = sims;
 
             if (withCompiler)
-                typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });         
+                testManager.SetCompiler(compiler);
 
             string basicCode = "";
             basicCode += "using System.Linq;\n";
@@ -150,11 +150,9 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false);
-
-            Assert.NotNull(errors);
-            Assert.AreEqual(1, errors.Count, "Encountered the wrong number of errors when opening OnCreatedError.apsimx.");
-            Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
+            IModel sims = FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false).NewModel;
+            Manager manager = sims.FindDescendant<Manager>();
+            Assert.Throws<Exception>(() => manager.RebuildScriptModel());
         }
 
         /// <summary>
@@ -295,7 +293,7 @@ namespace UnitTests.ManagerTests
             ScriptCompiler compiler = new ScriptCompiler();
             Manager testManager = new Manager();
 
-            typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });
+            Assert.DoesNotThrow(() => testManager.SetCompiler(compiler));
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("Compiler", reflectionFlagsMethods, null, testManager, null));
         }
 
@@ -320,8 +318,7 @@ namespace UnitTests.ManagerTests
 
             //check if works assigning directly.
             testManager = createManager(false, true, true, false);
-            ScriptCompiler compiler = new ScriptCompiler();
-            typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });
+            testManager.SetCompiler(new ScriptCompiler());
             Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null));
         }
 
@@ -335,11 +332,6 @@ namespace UnitTests.ManagerTests
         public void OnStartOfSimulationTests()
         {
             Manager testManager;
-
-            //should not throw, but not do anything
-            testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
-            Assert.IsNull(testManager.Parameters);
 
             //should work
             testManager = createManager(true, false, true, true);
@@ -442,11 +434,6 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager;
 
-            //should not throw, but should not compile when Oncreated has been run
-            testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.IsNull(testManager.Parameters);
-
             //should compile and have parameters
             testManager = createManager(true, false, true, true);
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
@@ -474,7 +461,7 @@ namespace UnitTests.ManagerTests
 
             //should throw error if broken code
             testManager = createManager(true, false, true, false);
-            testManager.Code = testManager.Code.Replace("{", "");
+            Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
             Assert.Throws<Exception>(() => testManager.OnCreated());
             Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
             Assert.IsNull(testManager.Parameters);
@@ -497,12 +484,6 @@ namespace UnitTests.ManagerTests
                 tags.Add(tag);
             Assert.AreEqual(1, tags.Count);
 
-            //should not work
-            testManager = createManager(true, false, true, false);
-            tags = new List<ITag>();
-            foreach (ITag tag in testManager.Document())
-                tags.Add(tag);
-            Assert.AreEqual(0, tags.Count);
         }
 
         /// <summary>
@@ -615,6 +596,20 @@ namespace UnitTests.ManagerTests
             testManager = new Manager();
             testManager.Cursor = null;
             Assert.IsNull(testManager.Cursor);
+        }
+
+        /// <summary>
+        /// Specific test for GetErrors
+        /// Check that it stores errors from a bad script
+        /// </summary>
+        [Test]
+        public void GetErrorsTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.Throws<Exception>(() => testManager.Code = "public class Script : Model {}");
+            Assert.Throws<Exception>(() => testManager.OnCreated());
+            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
+            Assert.AreEqual(3, testManager.Errors.Split('\n').Length);
         }
 
         /// <summary>

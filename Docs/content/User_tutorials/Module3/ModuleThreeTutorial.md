@@ -2,14 +2,14 @@
 title: "Module 3: The Nitrogen Cycle"
 draft: false
 ---
-<p style="font-size: 10px">Created 01/03/2023 - Last updated 05/03/2023</p>
+<p style="font-size: 10px">Created 01/03/2023 - Last updated 23/05/2024</p>
 
 <em style="color: red"> IMPORTANT NOTE: It is highly recommended that you upgrade your APSIM Next Gen version to at least version 2023.2.7164.0 or later.</em>
 
 ## The Nitrogen Cycle
 
 In this exercise you will observe the cycle of fertiliser nitrogen in a fallow situation; urea to ammonium, ammonium to nitrate and the loss of soil nitrate via denitrification. 
-This simulation will introduce editing a simple Manager rule and to more advanced features of graphing simulation results.
+This simulation will introduce editing a simple Manager rule and demonstrate more advanced features of graphing simulation results.
 
 1. Start a new simulation based on the `Wheat` example.
 2. Rename this simulation to Nitrogen Cycle.
@@ -17,7 +17,7 @@ This simulation will introduce editing a simple Manager rule and to more advance
 4. The simulation will use a different weather file. To do this:
 	- click the `weather` node
 	- click the `browse` button
-	- double-click `Dalby` (C:\Program Files\APSIM[Version]\Examples\WeatherFiles)
+	- double-click `AU_Dalby` (C:\Program Files\APSIM[Version]\Examples\WeatherFiles)
 	![Change weather image](/images/moduleThreeImages/img1.png)
 5. In the `Clock` node, change the starting date to `1/1/1989` and the end date to `31/12/1989`
 	![Clock variables](/images/moduleThreeImages/img2.png)
@@ -48,7 +48,10 @@ Make the depth equal to the entire soil profile (check Water node for the profil
 		sum([Soil].NO3.kgha) as NO3Total
 		sum([Soil].NH4.kgha) as NH4Total
 		sum([Soil].Nutrient.DenitrifiedN) as Denitrification
-	
+16. In the `Report events` section remove existing event variables. Then add:
+
+        [Clock].EndOfDay
+		
 16. Run the simulation
 17. Delete the current graph named `Wheat Yield Time Series`
 18. Add another `Graph` node to the `Nitrogen Cycle` simulation node

@@ -25,10 +25,10 @@ namespace UserInterface.Views
         string GetCellContents(int colIndex, int rowIndex);
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        /// <param name="rowIndex">Row index of cell.</param>
-        /// <param name="value">The value.</param>
-        void SetCellContents(int colIndex, int rowIndex, string value);
+        /// <param name="colIndices">Column index of cell.</param>
+        /// <param name="rowIndices">Row index of cell.</param>
+        /// <param name="values">The value.</param>
+        void SetCellContents(int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>Get the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>

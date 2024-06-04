@@ -1,6 +1,9 @@
 using APSIM.Shared.Utilities;
+<<<<<<< HEAD
 using Models;
 using Models.CLEM.Interfaces;
+=======
+>>>>>>> f56443ebfdfa1f83515a2384873cbe68a125b5f4
 using Models.Core;
 using System;
 using System.Collections;
@@ -52,6 +55,11 @@ namespace UserInterface.Presenters
         public Dictionary<Guid, PropertyObjectPair> GetPropertyMap { get { return propertyMap; } }
 
         /// <summary>
+        /// Called when the view is refreshed
+        /// </summary>
+        public event EventHandler ViewRefreshed;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -85,8 +93,21 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
+                view.PropertyChanged -= OnViewChanged;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+
+                this.view.SaveChanges();
+
+                if (GetAllEditorViews().Count > 0)
+                    this.view.DeleteEditorViews();
+
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
+
+                view.PropertyChanged += OnViewChanged;
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+                ViewRefreshed?.Invoke(this, new EventArgs());
             }
         }
 
@@ -197,7 +218,16 @@ namespace UserInterface.Presenters
             (view as ViewBase).Dispose();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
-    
+
+        /// <summary>
+        /// Returns a list of all code editor views that have been created.
+        /// Used by the presenter to connect up intellisense events.
+        /// </summary>
+        public List<EditorView> GetAllEditorViews()
+        {
+            return this.view.GetAllEditorViews();
+        }
+
         /// <summary>
         /// Called when a model is changed. Refreshes the view.
         /// </summary>

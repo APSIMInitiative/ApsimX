@@ -27,7 +27,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 174; } }
+        public static int LatestVersion { get { return 175; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5483,34 +5483,56 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change CLEM to work with Ruminant AgeInDays rather than months
+        /// Change name based system to id based system in directed graphs
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion174(JObject root, string _)
         {
-            //var propertyDeletes = new Tuple<string, string>[]
-            //{
-            //            new("GrazeFoodStoreType", "DryMatterDigestibility"),
-            //            new("GrazeFoodStoreType", "NitrogenContent"),
-            //            new("GrazeFoodStoreType", "NitrogenContent"),
-            //            new("GrazeFoodStoreType", "NitrogenContent"),
-            //            new("GrazeFoodStoreType", "NitrogenContent"),
-            //            new("AnimalFoodStoreType", "DryMatterDigestibility"),
-            //            new("AnimalFoodStoreType", "NitrogenContent"),
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                //give each node an id
+                int id = 0;
+                foreach (var node in rotationManager["Nodes"])
+                {
+                    id += 1;
+                    node["ID"] = id;
+                    node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
+                }
 
-            //            new("RuminantType", "GestationLength"),
-            //            new("RuminantType", "MinimumAge1stMating"),
-            //            new("RuminantType", "EnergyMaintenanceMaximumAge"),
-            //            new("RuminantActivityControlledMating", "MaximumAgeMating"),
-            //            new("RuminantActivityWean", "WeaningAge"),
-            //            new("RuminantActivityManage", "MaximumBreederAge"),
-            //            new("RuminantActivityManage", "MaximumSireAge"),
-            //            new("RuminantActivityManage", "MaleSellingAge"),
-            //            new("RuminantActivityManage", "FemaleSellingAge"),
-            //            new("ProductStoreTypeManure", "MaximumAge")
-            //};
+                //give each arc an id
+                foreach (var arc in rotationManager["Arcs"])
+                {
+                    id += 1;
+                    arc["ID"] = id;
+                    arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
 
+                    //connect up arc source/dest with ids instead of names
+                    string sourceName = arc["SourceName"].ToString();
+                    int sourceID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == sourceName)
+                            sourceID = (int)node["ID"];
+
+                    string destinationName = arc["DestinationName"].ToString();
+                    int destinationID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == destinationName)
+                            destinationID = (int)node["ID"];
+
+                    arc["SourceID"] = sourceID;
+                    arc["DestinationID"] = destinationID;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change CLEM to work with Ruminant AgeInDays rather than months
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion175(JObject root, string _)
+        {
             var propertyUpdates = new Tuple<string, string>[]
             {
                         new("RuminantType", "NaturalWeaningAge"),
@@ -5533,7 +5555,7 @@ namespace Models.Core.ApsimFile
                         if (item.Item1 == "LabourType")
                         {
                             // previously set as years
-                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)*12));
+                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2) * 12));
                         }
                         else
                         {
@@ -5547,7 +5569,7 @@ namespace Models.Core.ApsimFile
             foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
             {
                 node["PropertyOfIndividual"] = "AgeInYears";
-                node["Value"] = JContainer.FromObject(node.Value<decimal>("Value")/12.0m);
+                node["Value"] = JContainer.FromObject(node.Value<decimal>("Value") / 12.0m);
             }
 
             foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
