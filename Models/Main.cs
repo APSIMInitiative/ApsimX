@@ -181,11 +181,11 @@ namespace Models
                         }
                         else
                         {
-                            if(options.InMemoryDB)
+                            if (options.InMemoryDB)
                             {
                                 List<Simulations> sims = new();
                                 sims = CreateSimsList(files);
-                                foreach(Simulations sim in sims)
+                                foreach (Simulations sim in sims)
                                     sim.FindChild<DataStore>().UseInMemoryDB = true;
                                 runner = new Runner(sims,
                                                 options.RunTests,
@@ -265,48 +265,44 @@ namespace Models
                 bool isSimToBeRun = false;
                 string lastSaveFilePath = null;
 
-                foreach (string file in files)
+                if (options.Batch != null)
                 {
-                    foreach (string command in commandsList)
+                    BatchFile batchFile = new(options.Batch);
+                    foreach (string file in files)
                     {
-                        string[] splitCommand = command.Split(' ', '=');
-
-                        ConfigureCommandRun(splitCommand, configFileDirectory, ref originalFilePath, ref savePath, ref loadPath, ref isSimToBeRun, ref tempSim);
-
-                        // Set and create if not already a temporary sim to make changes to.
-                        // You should never make changes to the original unless specified in save command.
-                        if (savePath == null && loadPath == null)
+                        foreach (DataRow row in batchFile.DataTable.Rows)
                         {
-                            if (tempSim == null)
-                                tempSim = CreateTempApsimxFile(configFileDirectory, file, splitCommand);
-                        }
-
-                        Simulations sim = null;
-
-                        if (!string.IsNullOrWhiteSpace(loadPath))
-                        {
-                            sim = FileFormat.ReadFromString<Simulations>(loadPath, e => throw e, false).NewModel as Simulations;
-                            sim = ConfigFile.RunConfigCommands(sim, command, configFileDirectory) as Simulations;
-                        }
-                        else
-                            sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
-
-                        // Write to a specific file, if savePath is set use this instead of the file passed in through arguments.
-                        // Otherwise 
-                        if (!string.IsNullOrWhiteSpace(savePath))
-                        {
-                            sim.Write(savePath);
-                            savePath = "";
-                        }
-                        else sim.Write(tempSim.FileName);
-
-                        if (isSimToBeRun)
-                        {
-                            RunModifiedApsimxFile(options, file, tempSim, sim, originalFilePath, lastSaveFilePath);
-                            isSimToBeRun = false;
+                            ExecuteCommands(options,
+                            configFileDirectory,
+                            commandsList,
+                            ref originalFilePath,
+                            ref savePath,
+                            ref loadPath,
+                            ref tempSim,
+                            ref isSimToBeRun,
+                            lastSaveFilePath,
+                            file,
+                            row);
                         }
                     }
                 }
+                else
+                {
+                    foreach (string file in files)
+                    {
+                        ExecuteCommands(options,
+                        configFileDirectory,
+                        commandsList,
+                        ref originalFilePath,
+                        ref savePath,
+                        ref loadPath,
+                        ref tempSim,
+                        ref isSimToBeRun,
+                        lastSaveFilePath,
+                        file);
+                    }
+                }
+
             }
             // If no apsimx file path included proceeding --apply switch...              
             else if (files.Length < 1)
@@ -317,53 +313,120 @@ namespace Models
                 bool isSimToBeRun = false;
                 Simulations tempSim = null;
                 string lastSaveFilePath = null;
-                BatchFile batchFile = null;
-
                 if (options.Batch != null)
                 {
-                    string[] batchArgs = options.Batch.Split(' ');
-                    if (batchArgs.Length > 0)
-                        batchFile = new(batchArgs[0]);
-
+                    BatchFile batchFile = new(options.Batch);
                     foreach (DataRow row in batchFile.DataTable.Rows)
                     {
-                        // TODO: Needs to handle the replacing of config file placeholders.
-                        DoSingleCommand(options, 
-                            configFileDirectory, 
-                            commandsList, 
-                            ref originalFilePath, 
-                            ref savePath, 
-                            ref loadPath, 
-                            ref isSimToBeRun, 
-                            ref tempSim, 
+                        ExecuteCommands(options,
+                            configFileDirectory,
+                            commandsList,
+                            ref originalFilePath,
+                            ref savePath,
+                            ref loadPath,
+                            ref isSimToBeRun,
+                            ref tempSim,
                             ref lastSaveFilePath,
                             row);
                     }
                 }
-                else DoSingleCommand(options, 
-                    configFileDirectory, 
-                    commandsList, 
-                    ref originalFilePath, 
-                    ref savePath, 
-                    ref loadPath, 
-                    ref isSimToBeRun, 
-                    ref tempSim, 
+                else ExecuteCommands(options,
+                    configFileDirectory,
+                    commandsList,
+                    ref originalFilePath,
+                    ref savePath,
+                    ref loadPath,
+                    ref isSimToBeRun,
+                    ref tempSim,
                     ref lastSaveFilePath);
-
             }
         }
 
-        private static void DoSingleCommand(Options options, string configFileDirectory, List<string> commandsList, ref string originalFilePath, ref string savePath, ref string loadPath, ref bool isSimToBeRun, ref Simulations tempSim, ref string lastSaveFilePath, DataRow row = null)
+        /// <summary>
+        /// Executes the list of commands. Used when files are included as an argument in Models call.
+        /// </summary>
+        /// <param name="options">Arguments from Models call.</param>
+        /// <param name="configFileDirectory">The directory from where Models call was executed.</param>
+        /// <param name="originalFilePath">The path to the current file used for Models --apply call.</param>
+        /// <param name="savePath">A path to save an apsimx file to.</param>
+        /// <param name="loadPath">A path from which to load an apsimx file from.</param>
+        /// <param name="tempSim">A temporary simulation to which changes are made.</param>
+        /// <param name="isSimToBeRun">Should apsimx file be run?</param>
+        /// <param name="lastSaveFilePath">The last save file path.</param>
+        /// <param name="file">The name of the file.</param>
+        private static void ExecuteCommands(Options options, string configFileDirectory, List<string> commandsList, ref string originalFilePath, ref string savePath, ref string loadPath, ref Simulations tempSim, ref bool isSimToBeRun, string lastSaveFilePath, string file, DataRow row = null)
         {
             foreach (string command in commandsList)
             {
                 string[] splitCommand = command.Split(' ', '=');
+
+                ConfigureCommandRun(splitCommand, configFileDirectory, ref originalFilePath, ref savePath, ref loadPath, ref isSimToBeRun, ref tempSim);
+
+                // Set and create if not already a temporary sim to make changes to.
+                // You should never make changes to the original unless specified in save command.
+                if (savePath == null && loadPath == null)
+                {
+                    if (tempSim == null)
+                        tempSim = CreateTempApsimxFile(configFileDirectory, file, splitCommand);
+                }
+
+                Simulations sim = null;
+
+                if (!string.IsNullOrWhiteSpace(loadPath))
+                {
+                    sim = FileFormat.ReadFromString<Simulations>(loadPath, e => throw e, false).NewModel as Simulations;
+                    sim = ConfigFile.RunConfigCommands(sim, command, configFileDirectory) as Simulations;
+                }
+                else
+                    sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
+
+                // Write to a specific file, if savePath is set use this instead of the file passed in through arguments.
+                // Otherwise 
+                if (!string.IsNullOrWhiteSpace(savePath))
+                {
+                    sim.Write(savePath);
+                    savePath = "";
+                }
+                else sim.Write(tempSim.FileName);
+
+                if (isSimToBeRun)
+                {
+                    RunModifiedApsimxFile(options, file, tempSim, sim, originalFilePath, lastSaveFilePath);
+                    isSimToBeRun = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes the list of commands. Used when files are NOT included as an argument in Models call.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="configFileDirectory"></param>
+        /// <param name="commandsList"></param>
+        /// <param name="originalFilePath"></param>
+        /// <param name="savePath"></param>
+        /// <param name="loadPath"></param>
+        /// <param name="isSimToBeRun"></param>
+        /// <param name="tempSim"></param>
+        /// <param name="lastSaveFilePath"></param>
+        /// <param name="row"></param>
+        private static void ExecuteCommands(Options options, string configFileDirectory, List<string> commandsList, ref string originalFilePath, ref string savePath, ref string loadPath, ref bool isSimToBeRun, ref Simulations tempSim, ref string lastSaveFilePath, DataRow row = null)
+        {
+            foreach (string command in commandsList)
+            {
+                string configured_command = null;
+                if (row != null)
+                    configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
+                else configured_command = command;
+
+                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
+                string[] splitCommand = configured_command.Split(' ', '=');
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref originalFilePath, ref savePath, ref loadPath, ref isSimToBeRun, ref tempSim);
 
                 // Throw if the first command is not a save or load command.
                 if (String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
                 {
-                    throw new Exception("First command in a config file can only be either a " + 
+                    throw new Exception("First command in a config file can only be either a " +
                         "save or load command if no apsimx file is included.");
                 }
 
@@ -374,7 +437,7 @@ namespace Models
                     Simulations sim = null;
 
                     if (tempSim != null)
-                        sim = ConfigFile.RunConfigCommands(tempSim, command, configFileDirectory) as Simulations;
+                        sim = ConfigFile.RunConfigCommands(tempSim, configured_command, configFileDirectory) as Simulations;
 
                     if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
                     {
@@ -423,7 +486,7 @@ namespace Models
                 if (!File.Exists(filePath))
                     sim.Write(filePath);
 
-                if(string.IsNullOrWhiteSpace(lastSaveFilePath))
+                if (string.IsNullOrWhiteSpace(lastSaveFilePath))
                 {
                     File.Copy(filePath, originalFilePath, true);
                     lastSaveFilePath = originalFilePath;
@@ -809,8 +872,8 @@ namespace Models
         private static List<Simulations> CreateSimsList(IEnumerable<string> files)
         {
             List<Simulations> sims = new();
-            foreach(string file in files)
-                sims.Add(FileFormat.ReadFromFile<Simulations>(file,e => throw e, true).NewModel as Simulations);
+            foreach (string file in files)
+                sims.Add(FileFormat.ReadFromFile<Simulations>(file, e => throw e, true).NewModel as Simulations);
             return sims;
         }
     }

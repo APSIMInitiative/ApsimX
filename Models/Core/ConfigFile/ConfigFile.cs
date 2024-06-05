@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -543,22 +544,17 @@ namespace Models.Core.ConfigFile
 
 
         /// <summary>
-        /// Replaces placeholders in a list of commands. Assumes 
+        /// Replaces placeholders in a list of commands.
         /// </summary>
-        /// <param name="commandsWithSpacesRemoved"></param>
+        /// <param name="commandString">a command string</param>
+        /// <param name="dataRow">A data row from a batch csv file.</param>
+        /// <param name="dataRowIndex"></param>
         /// <returns></returns>
-        public static List<string> ReplaceBatchFilePlaceholders(List<string> commandsWithSpacesRemoved)
+        public static string ReplaceBatchFilePlaceholders(string commandString, DataRow dataRow, int dataRowIndex)
         {
-            List<string> commandsWithPlaceHoldersReplaced = new();
-            foreach(string commandString in commandsWithSpacesRemoved)
-            {
-                if(commandString.Contains('$'))
-                {
-                    int dollarSignIndex = commandString.IndexOf('$');
-                    
-                }
-            }
-            return commandsWithPlaceHoldersReplaced;
+            if (!commandString.Contains('$'))
+                return commandString;
+            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex); 
         }
     }
 }
