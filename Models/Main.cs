@@ -347,6 +347,7 @@ namespace Models
         /// </summary>
         /// <param name="options">Arguments from Models call.</param>
         /// <param name="configFileDirectory">The directory from where Models call was executed.</param>
+        /// <param name="commandsList">A list of commands.</param>
         /// <param name="originalFilePath">The path to the current file used for Models --apply call.</param>
         /// <param name="savePath">A path to save an apsimx file to.</param>
         /// <param name="loadPath">A path from which to load an apsimx file from.</param>
@@ -354,6 +355,7 @@ namespace Models
         /// <param name="isSimToBeRun">Should apsimx file be run?</param>
         /// <param name="lastSaveFilePath">The last save file path.</param>
         /// <param name="file">The name of the file.</param>
+        /// <param name="row"></param>
         private static void ExecuteCommands(Options options, string configFileDirectory, List<string> commandsList, ref string originalFilePath, ref string savePath, ref string loadPath, ref Simulations tempSim, ref bool isSimToBeRun, string lastSaveFilePath, string file, DataRow row = null)
         {
             foreach (string command in commandsList)
