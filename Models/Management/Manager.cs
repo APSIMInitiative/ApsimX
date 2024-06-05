@@ -357,7 +357,7 @@ namespace Models
         }
 
         /// <summary>
-        /// 
+        /// Adjusts whitespace and newlines to fit dev team's normal formatting. For use with user scripts that have poor formatting.
         /// </summary>
         public void Reformat()
         {

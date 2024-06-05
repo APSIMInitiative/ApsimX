@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DocumentFormat.OpenXml.Drawing;
 
 namespace APSIM.Shared.Utilities
 {
