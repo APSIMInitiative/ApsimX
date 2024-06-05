@@ -19,17 +19,7 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.Memo, Models",
-          "Text": "The intent of this simulation is to replicate the testing in \n\nSnow, V.O., Cichota, R., McAuliffe, R.J., Hutchings, N.J., Vejlin, J., 2017. Increasing the spatial scale of process-based agricultural systems models by representing heterogeneity: The case of urine patches in grazed pastures. Environmental Modelling & Software 90 89-106.\n\nhttp://dx.doi.org/10.1016/j.envsoft.2017.01.005\n\nBasically it compares explicit patches to pseudo-patches under a range of conditions/intensity. Ideally there should be no or little difference between the two types of patches. Note that the grazing schedual (and the returns?? - check) should be imposed and the results compared on an annual basis.\n\nCurrent state is ....",
-          "Name": "Memo",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
+      "Children": [],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -51,8 +41,57 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false,true",
+                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=true",
                   "Name": "Type",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "Fix",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[AGPWhiteClover].MinimumNFixation = 0.2",
+                        "[AGPWhiteClover].MaximumNFixation = 0.6",
+                        "[AGPRyegrass].LightExtinctionCoefficient = 0.5"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Low",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[AGPWhiteClover].MinimumNFixation = 0.5",
+                        "[AGPWhiteClover].MaximumNFixation = 0.95",
+                        "[AGPRyegrass].LightExtinctionCoefficient = 0.55"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "High",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Fertilisation].Script.Amount = 0,100",
+                  "Name": "Fert",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -75,7 +114,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "1972-12-31T00:00:00",
+              "End": "2021-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -94,7 +133,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "VCS_Lincoln.met",
+              "FileName": "VCS_Ruakura.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -693,11 +732,11 @@
                 },
                 {
                   "Key": "ZoneCount",
-                  "Value": "3"
+                  "Value": "25"
                 },
                 {
                   "Key": "UrineReturnType",
-                  "Value": "SetMonthly"
+                  "Value": "FromHarvest"
                 },
                 {
                   "Key": "UrineReturnPattern",
@@ -709,7 +748,7 @@
                 },
                 {
                   "Key": "MaxEffectiveNConcentration",
-                  "Value": "3"
+                  "Value": "2"
                 }
               ],
               "Name": "PatchAndZoneManager",
@@ -1013,8 +1052,8 @@
               ],
               "EventNames": [
                 "//Clock.Today >= new DateTime(1970, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
-                "[Clock].EndOfDay",
-                "//[Clock].EndOfYear"
+                "//[Clock].EndOfDay",
+                "[Clock].EndOfYear"
               ],
               "GroupByVariableName": null,
               "Name": "ReportingWithPatchesPaddock",
@@ -1256,7 +1295,7 @@
                   "Parameters": [
                     {
                       "Key": "allowIrrigation",
-                      "Value": "True"
+                      "Value": "False"
                     },
                     {
                       "Key": "IrrigStart",
@@ -1380,7 +1419,7 @@
                     },
                     {
                       "Key": "Amount",
-                      "Value": "250"
+                      "Value": "100"
                     },
                     {
                       "Key": "AmountType",
@@ -1478,6 +1517,54 @@
                     }
                   ],
                   "Name": "KillRyeGrass",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Utilities;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.AgPasture;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Description(\"Enable this action?\")] public bool Enable { get; set; }",
+                    "        ",
+                    "        public PastureSpecies Clover { get; set; }",
+                    "        public PastureSpecies Grass { get; set; }",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "                if (Enable) ",
+                    "                {",
+                    "                    Clover.MinimumNFixation = 0.5;",
+                    "                    Clover.MaximumNFixation = 0.95;",
+                    "                    Grass.LightExtinctionCoefficient = 0.55;",
+                    "                }",
+                    "        }",
+                    "    }",
+                    "}",
+                    "       "
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "Enable",
+                      "Value": "True"
+                    }
+                  ],
+                  "Name": "UpdateAGPParms",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1961,7 +2048,7 @@
                           "Name": "AGPRyegrassSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -2023,11 +2110,11 @@
                           "Name": "AGPWhiteCloverSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2093,7 +2180,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2127,7 +2214,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2169,7 +2256,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2198,7 +2285,7 @@
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2206,7 +2293,7 @@
                       "Name": "SoilTemperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2257,7 +2344,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2308,7 +2395,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2359,7 +2446,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -2376,11 +2463,11 @@
                       "Name": "NutrientPatchManager",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2437,7 +2524,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2695,7 +2782,7 @@
                           "Name": "AGPRyegrassSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2757,7 +2844,7 @@
                           "Name": "AGPWhiteCloverSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2819,7 +2906,7 @@
                           "Name": "Slurp1Soil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2881,7 +2968,7 @@
                           "Name": "Slurp2Soil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2943,7 +3030,7 @@
                           "Name": "Rye1Soil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3005,11 +3092,11 @@
                           "Name": "Rye2Soil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3059,7 +3146,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3125,7 +3212,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3154,7 +3241,7 @@
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3162,7 +3249,7 @@
                       "Name": "SoilTemperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3213,7 +3300,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3264,7 +3351,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3315,7 +3402,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3332,11 +3419,11 @@
                       "Name": "NutrientPatchManager",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],

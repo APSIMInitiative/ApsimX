@@ -51,7 +51,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = SetMonthly,FromHarvest",
+                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = FromHarvest",
                   "Name": "Return",
                   "ResourceName": null,
                   "Children": [],
@@ -60,7 +60,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 5",
                   "Name": "Num",
                   "ResourceName": null,
                   "Children": [],
@@ -2203,14 +2203,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                              "Name": "Nutrient",
-                              "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Organic, Models",
                               "FOMCNRatio": 40.0,
                               "Thickness": [
@@ -2260,13 +2252,13 @@
                                 0.99
                               ],
                               "FOM": [
-                                331.337020409173,
-                                245.4605019055056,
-                                164.53709493722965,
-                                121.89207790753734,
-                                73.93128242700234,
-                                40.57434806729268,
-                                22.267674346259405
+                                331.337,
+                                245.461,
+                                164.537,
+                                121.892,
+                                73.931,
+                                40.574,
+                                22.268
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -2600,7 +2592,15 @@
                                 55.0,
                                 55.0
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.5682632779406973,
+                                0.7983870967741936,
+                                0.8660509144380112,
+                                0.8666209105467857,
+                                0.8666209105467857
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.3,
@@ -2662,11 +2662,43 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -2699,9 +2731,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2737,9 +2793,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2775,9 +2855,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2813,9 +2917,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2851,9 +2979,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2889,9 +3041,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2953,14 +3129,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                              "Name": "Nutrient",
-                              "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Organic, Models",
                               "FOMCNRatio": 40.0,
                               "Thickness": [
@@ -3010,13 +3178,13 @@
                                 0.99
                               ],
                               "FOM": [
-                                331.337020409173,
-                                245.4605019055056,
-                                164.53709493722965,
-                                121.89207790753734,
-                                73.93128242700234,
-                                40.57434806729268,
-                                22.267674346259405
+                                331.337,
+                                245.461,
+                                164.537,
+                                121.892,
+                                73.931,
+                                40.574,
+                                22.268
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -3350,7 +3518,15 @@
                                 55.0,
                                 55.0
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.5682632779406973,
+                                0.7983870967741936,
+                                0.8660509144380112,
+                                0.8666209105467857,
+                                0.8666209105467857
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.3,
@@ -3412,11 +3588,43 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -3449,9 +3657,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3487,9 +3719,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3525,9 +3781,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3563,9 +3843,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3601,9 +3905,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3639,9 +3967,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3703,14 +4055,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                              "Name": "Nutrient",
-                              "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Organic, Models",
                               "FOMCNRatio": 40.0,
                               "Thickness": [
@@ -3760,13 +4104,13 @@
                                 0.99
                               ],
                               "FOM": [
-                                331.337020409173,
-                                245.4605019055056,
-                                164.53709493722965,
-                                121.89207790753734,
-                                73.93128242700234,
-                                40.57434806729268,
-                                22.267674346259405
+                                331.337,
+                                245.461,
+                                164.537,
+                                121.892,
+                                73.931,
+                                40.574,
+                                22.268
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -4100,7 +4444,15 @@
                                 55.0,
                                 55.0
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.5682632779406973,
+                                0.7983870967741936,
+                                0.8660509144380112,
+                                0.8666209105467857,
+                                0.8666209105467857
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.3,
@@ -4162,11 +4514,43 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -4199,9 +4583,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4237,9 +4645,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4275,9 +4707,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4313,9 +4769,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4351,9 +4831,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4389,9 +4893,33 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4453,14 +4981,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                              "Name": "Nutrient",
-                              "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Organic, Models",
                               "FOMCNRatio": 40.0,
                               "Thickness": [
@@ -4510,13 +5030,13 @@
                                 0.99
                               ],
                               "FOM": [
-                                331.337020409173,
-                                245.4605019055056,
-                                164.53709493722965,
-                                121.89207790753734,
-                                73.93128242700234,
-                                40.57434806729268,
-                                22.267674346259405
+                                331.337,
+                                245.461,
+                                164.537,
+                                121.892,
+                                73.931,
+                                40.574,
+                                22.268
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -4765,7 +5285,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=3",
+                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=2.5",
                   "Name": "EffN",
                   "ResourceName": null,
                   "Children": [],
@@ -4789,7 +5309,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "2021-12-31T00:00:00",
+              "End": "2000-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -6092,7 +6612,7 @@
                     },
                     {
                       "Key": "Amount",
-                      "Value": "150"
+                      "Value": "190"
                     },
                     {
                       "Key": "AmountType",
@@ -6100,6 +6620,65 @@
                     }
                   ],
                   "Name": "Fertilisation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Utilities;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.AgPasture;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Description(\"Enable this action?\")] public bool Enable { get; set; }",
+                    "        ",
+                    "        [Description(\"Grass species\")] public PastureSpecies Grass { get; set; }",
+                    "        [Description(\"Clover species\")] public PastureSpecies Clover { get; set; }",
+                    "        ",
+                    "        //public PastureSpecies AGPWhiteClover { get; set; }",
+                    "        //public PastureSpecies Grass { get; set; }",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "                if (Enable) ",
+                    "                {",
+                    "                    Clover.MinimumNFixation = 0.5;",
+                    "                    Clover.MaximumNFixation = 0.95;",
+                    "                    Grass.LightExtinctionCoefficient = 0.55;",
+                    "                }",
+                    "        }",
+                    "    }",
+                    "}",
+                    "       "
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "Enable",
+                      "Value": "True"
+                    },
+                    {
+                      "Key": "Grass",
+                      "Value": "[AGPRyegrass]"
+                    },
+                    {
+                      "Key": "Clover",
+                      "Value": "[AGPWhiteClover]"
+                    }
+                  ],
+                  "Name": "UpdateAGPParms",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6415,7 +6994,7 @@
                   "YearOfSampling": null,
                   "DataSource": null,
                   "Comments": null,
-                  "Name": "VL",
+                  "Name": "Soil",
                   "ResourceName": null,
                   "Children": [
                     {
