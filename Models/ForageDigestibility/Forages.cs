@@ -118,7 +118,13 @@ namespace Models.ForageDigestibility
                 newRow[4] = row2["FractionConsumable"];
                 newRow[5] = row["MinimumAmount"];
                 
-                data.Rows.Add(newRow);
+                bool isEmpty = true;
+                for (int i = 0; i < newRow.ItemArray.Length; i++)
+                    if (newRow.ItemArray[i].ToString().Length > 0)
+                        isEmpty = false;
+
+                if (!isEmpty)
+                    data.Rows.Add(newRow);
 
                 dt.Rows.Remove(row);
                 if (row2 != null)
