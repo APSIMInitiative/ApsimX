@@ -17,6 +17,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
     [ValidParent(ParentType = typeof(LabourGroup))]
     [ValidParent(ParentType = typeof(TransmuteLabour))]
+    [ValidParent(ParentType = typeof(LabourActivityTask))]
     [Description("Defines specific individuals from the labour pool to undertake labour")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]

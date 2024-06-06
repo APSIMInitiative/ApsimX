@@ -346,7 +346,7 @@ namespace Models.CLEM.Groupings
                 yield return new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
             }
 
-                if (propertyInfo is null)
+                if (propertyInfo is null || !propertyInfo.Any())
                 {
                     string[] memberNames = new string[] { "Invalid property name" };
                     yield return new ValidationResult($"The property name [{PropertyOfIndividual}] was not found for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);

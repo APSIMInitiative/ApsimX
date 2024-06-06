@@ -198,7 +198,7 @@ namespace UserInterface.Presenters
                     {
                         Parent = labour,
                         Name = lt.Name,
-                        AgeInMonths = lt.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
+                        InitialAge = lt.InitialAge,
                         Sex = lt.Sex
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
@@ -261,7 +261,7 @@ namespace UserInterface.Presenters
                 htmlWriter.Write("\n</div>");
 
                 // aging note
-                if (labour.AllowAging)
+                if (labour.AllowAgeing)
                 {
                     htmlWriter.WriteLine("\n<div class=\"holdermain\">");
                     htmlWriter.WriteLine("\n<div class=\"clearfix warningbanner\">");
@@ -305,12 +305,18 @@ namespace UserInterface.Presenters
                                     {
                                         nested.InitialiseFilters();
                                         level++;
-                                        if (nested.Filter(lt))
+                                        LabourGroup filtergroup = nested;
+                                        if (nested is LabourGroupLinked ngl)
+                                        {
+                                            filtergroup = nested.FindAllInScope<LabourGroup>().Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
+                                        }
+
+                                        if (filtergroup is not null && filtergroup.Filter(lt))
                                         {
                                             found = true;
                                             break;
                                         }
-                                        nested.ClearRules();
+                                        filtergroup.ClearRules();
                                         nested = nested.FindAllChildren<LabourGroup>().FirstOrDefault();
                                     }
                                     if (found)
@@ -373,8 +379,10 @@ namespace UserInterface.Presenters
                     {
                         Parent = labour,
                         Name = lt.Name,
-                        AgeInMonths = lt.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
-                        Sex = lt.Sex
+                        InitialAge = lt.InitialAge,
+                        Sex = lt.Sex,
+                        Hired = lt.Hired,
+                        Individuals = lt.Individuals
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
                     newLabour.Attributes.Add("Group", att);
@@ -429,7 +437,7 @@ namespace UserInterface.Presenters
                 markdownString.Write("-  The preferential allocation of labour is identified from 1 (1st) to 5 (5th, max levels displayed)  \n");
 
                 // aging note
-                if (labour.AllowAging)
+                if (labour.AllowAgeing)
                 {
                     markdownString.Write("  \n***  \n");
                     markdownString.Write("Warnings  \n");
@@ -473,11 +481,23 @@ namespace UserInterface.Presenters
                                         nested.InitialiseFilters();
                                         level++;
                                         levelstring = (level < 5) ? level.ToString() : "4";
-                                        if (nested.Filter(lt))
+
+                                        LabourGroup filtergroup = nested;
+                                        if (nested is LabourGroupLinked ngl)
+                                        {
+                                            filtergroup = nested.FindAllInScope<LabourGroup>().Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
+                                            filtergroup.InitialiseFilters();
+                                        }
+                                        if (filtergroup is not null && filtergroup.Filter(lt))
                                         {
                                             found = true;
                                             break;
                                         }
+                                        //if (nested.Filter(lt))
+                                        //{
+                                        //    found = true;
+                                        //    break;
+                                        //}
                                         nested.ClearRules();
                                         nested = nested.FindChild<LabourGroup>();
                                     }

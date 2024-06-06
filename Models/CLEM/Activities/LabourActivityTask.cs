@@ -4,6 +4,7 @@ using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using Models.Core.Attributes;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Models.CLEM.Activities
 {
@@ -31,8 +32,19 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = null;
-            return resourcesNeeded;
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels)
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
         }
 
         /// <inheritdoc/>
@@ -51,6 +63,5 @@ namespace Models.CLEM.Activities
                     return new LabelsForCompanionModels();
             }
         }
-
     }
 }
