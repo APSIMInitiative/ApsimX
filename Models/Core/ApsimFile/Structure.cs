@@ -117,7 +117,7 @@ namespace Models.Core.ApsimFile
             EnsureNameIsUnique(clone);
 
             //set the name to whatever was found using the clone.
-            model.Name = clone.Name;
+            model.Name = clone.Name.Trim();
             Apsim.ClearCaches(model);
         }
 
@@ -161,29 +161,29 @@ namespace Models.Core.ApsimFile
             Simulations sims = modelToCheck.FindAncestor<Simulations>();
             if (sims != null)
             {
-                bool badName = true;
-                while (badName && counter < 10000)
+                bool goodName = false;
+                while (!goodName && counter < 10000)
                 {
                     var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                    if (obj == null)
+                    
+                    if (obj == null) //didn't find, valid name
+                        goodName = true;
+
+                    if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
                     {
-                        badName = false;
+                        if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                            if (modelToCheck.FindSibling(newName) == null)
+                                goodName = true;
+                    } 
+                    else if (modelToCheck.FindSibling(newName) == null) //check if any siblings have the same name
+                    {
+                        goodName = true;
                     }
-                    else if (obj is IVariable variable)
+
+                    if (goodName == false)
                     {
-                        if (modelToCheck.FindSibling(newName) == null)
-                            badName = false;
-                        if (variable.DataType.Name.CompareTo(originalName) == 0)
-                            badName = false;
-                        if (badName == true)
-                        {
-                            counter++;
-                            newName = originalName + counter.ToString();
-                        }
-                    }
-                    else
-                    {
-                        badName = false;
+                        counter++;
+                        newName = originalName + counter.ToString();
                     }
                 }
             }
