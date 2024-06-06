@@ -205,10 +205,10 @@ namespace Models.Core
                                     using (FileStream pdbWriter = new FileStream(pdbFile, FileMode.Create, FileAccess.Write))
                                         pdbStream.WriteTo(pdbWriter);
 
-                                    ms.Seek(0, SeekOrigin.Begin);
                                     pdbStream.Seek(0, SeekOrigin.Begin);
                                 }
 
+                                ms.Seek(0, SeekOrigin.Begin);
                                 compilation.Code = code;
                                 compilation.Reference = compiled.ToMetadataReference();
                                 compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
