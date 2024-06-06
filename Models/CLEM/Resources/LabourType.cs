@@ -22,7 +22,10 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
     {
-        private double ageInMonths = 0;
+        [Link]
+        private readonly CLEMEvents events = new CLEMEvents();
+
+        private DateTime birthDate;
 
         /// <summary>
         /// A list of attributes added to this individual
@@ -34,7 +37,7 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [JsonIgnore]
-        public string Units { get { return "NA"; } }
+        public string Units { get { return "Days available"; } }
 
         /// <summary>
         /// Initial age of individuals.
@@ -42,7 +45,7 @@ namespace Models.CLEM.Resources
         [Description("Initial Age")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        public AgeSpecifier InitialAge { get; set; } = new int[] { 18, 0 };
+        public AgeSpecifier InitialAge { get; set; } = new int[] { 18, 0, 0 };
 
         /// <summary>
         /// Male or Female
@@ -53,33 +56,53 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
+        /// Name of the labour compoonent
+        /// </summary>
+        [FilterByProperty]
+        public string NameOfLabour { get { return Name; } }
+
+        /// <summary>
         /// Age in years.
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-        public double Age { get { return Math.Floor(AgeInMonths / 12); } }
+        public double AgeInYears 
+        { 
+            get 
+            { 
+                if(AllowAgeing)
+                    return (events.TimeStepStart - birthDate).TotalDays/365.0; 
+                return InitialAge.InDays / 365.0;
+            } 
+        }
 
         /// <summary>
-        /// Age in months.
+        /// Allow ageing of this individual
         /// </summary>
         [JsonIgnore]
-        [FilterByProperty]
-        public double AgeInMonths
-        {
-            get
-            {
-                return ageInMonths;
-            }
-            set
-            {
-                if (ageInMonths != value)
-                {
-                    ageInMonths = value;
-                    // update AE
-                    adultEquivalent = (Parent as Labour).CalculateAE(value);
-                }
-            }
-        }
+        public bool AllowAgeing { get; private set; } = false;
+
+        ///// <summary>
+        ///// Age in months.
+        ///// </summary>
+        //[JsonIgnore]
+        //[FilterByProperty]
+        //public double AgeInMonths
+        //{
+        //    get
+        //    {
+        //        return ageInMonths;
+        //    }
+        //    set
+        //    {
+        //        if (ageInMonths != value)
+        //        {
+        //            ageInMonths = value;
+        //            // update AE
+        //            adultEquivalent = (Parent as Labour).CalculateAE(value);
+        //        }
+        //    }
+        //}
 
         private double? adultEquivalent = null;
 
@@ -88,23 +111,16 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-        public double AdultEquivalent
+        public double AdultEquivalent{ get { return adultEquivalent?? 1; } }
+
+        /// <summary>
+        /// Method for controlling model to set the Adult Equivalent measurement for this individual
+        /// </summary>
+        /// <param name="aeRelationship">Relationship model providing the AE relationship</param>
+        public void SetAdultEquivalent(Relationship aeRelationship)
         {
-            get
-            {
-                // if null then report warning that no AE relationship has been provided.
-                if (adultEquivalent == null)
-                {
-                    CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r=" + Parent.Name + "]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
-                    if (!parent.Warnings.Exists(warning))
-                    {
-                        parent.Warnings.Add(warning);
-                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
-                    }
-                }
-                return adultEquivalent ?? 1;
-            }
+            if (aeRelationship is not null)
+                adultEquivalent = aeRelationship.SolveY(AgeInYears);
         }
 
         /// <summary>
@@ -120,7 +136,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Total value of resource
         /// </summary>
@@ -131,7 +146,6 @@ namespace Models.CLEM.Resources
                 return null;
             }
         }
-
 
         /// <summary>
         /// Monthly dietary components
@@ -195,6 +209,7 @@ namespace Models.CLEM.Resources
         /// Hired labour switch
         /// </summary>
         [Description("Hired labour")]
+        [FilterByProperty]
         public bool Hired { get; set; }
 
         /// <summary>
@@ -260,6 +275,14 @@ namespace Models.CLEM.Resources
                 AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1) * AvailabilityLimiter);
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("OnInitialiseResources")]
+        private void OnInitialiseResources(object sender, EventArgs e)
+        {
+            birthDate = events.Clock.StartDate.AddDays(-1 * InitialAge.InDays);
+            AllowAgeing = (!Hired && (Parent as Labour).AllowAgeing);
+        }
+
         /// <summary>
         /// Get value of this individual
         /// </summary>
@@ -281,7 +304,7 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} does not support Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
             double amountAdded = (double)resourceAmount;
 

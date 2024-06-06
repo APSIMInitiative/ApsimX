@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
     public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         private List<string> warningsMultipleEntry = new();
         private List<string> warningsNotFound = new();
@@ -51,7 +51,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Allow individuals to age")]
         [Required]
-        public bool AllowAging { get; set; }
+        public bool AllowAgeing { get; set; }
 
         /// <summary>
         /// Current pay rate value of individuals
@@ -73,9 +73,6 @@ namespace Models.CLEM.Resources
         {
             // locate resources
             availabilityList = FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
-
-            if (clock.Today.Day != 1)
-                OnStartOfMonth(this, null);
         }
 
         /// <summary>
@@ -102,23 +99,21 @@ namespace Models.CLEM.Resources
         /// <returns>Amount eaten per day</returns>
         public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
-            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
-            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
+            //ToDo: check updates for time-steps less than monthy
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / events.Interval;
         }
 
         /// <inheritdoc/>
         public LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() { "Adult equivalent" },
-                        measures: new List<string>()
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>() { "Adult equivalent" },
+                                        measures: new List<string>()
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         #region validation
@@ -162,7 +157,7 @@ namespace Models.CLEM.Resources
                         Individuals = labourChildModel.Individuals,
                         Parent = this,
                         InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge.InDays/(double)AgeSpecifier.DaysPerMonth,
+                        //AgeInMonths = labourChildModel.InitialAge.InDays/(double)AgeSpecifier.DaysPerMonth,
                         LabourAvailability = labourChildModel.LabourAvailability,
                         Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
@@ -170,6 +165,7 @@ namespace Models.CLEM.Resources
                     labour.SetParentResourceBaseWithTransactions(this);
                     labour.Attributes.Add("Group", att);
                     labour.TransactionOccurred += Resource_TransactionOccurred;
+                    labour.SetAdultEquivalent(adultEquivalentRelationship);
                     Items.Add(labour);
                 }
                 else
@@ -183,7 +179,7 @@ namespace Models.CLEM.Resources
                             Individuals = 1,
                             Parent = this,
                             InitialAge = labourChildModel.InitialAge,
-                            AgeInMonths = labourChildModel.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
+                            //AgeInMonths = labourChildModel.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
                             LabourAvailability = labourChildModel.LabourAvailability,
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                             Hired = labourChildModel.Hired
@@ -191,12 +187,13 @@ namespace Models.CLEM.Resources
                         labour.SetParentResourceBaseWithTransactions(this);
                         labour.Attributes.Add("Group", att);
                         labour.TransactionOccurred += Resource_TransactionOccurred;
+                        labour.SetAdultEquivalent(adultEquivalentRelationship);
                         Items.Add(labour);
                     }
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (FindAllChildren<LabourPricing>().Count() > 0)
+            if (FindAllChildren<LabourPricing>().Any())
                 PayList = Apsim.Clone(FindAllChildren<LabourPricing>().FirstOrDefault());
         }
 
@@ -216,11 +213,17 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to check if labour availability is available.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfMonth")]
-        private void OnStartOfMonth(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             foreach (LabourType item in Items)
             {
+                if (AllowAgeing)
+                {
+                    if (adultEquivalentRelationship != null)
+                        item.SetAdultEquivalent(adultEquivalentRelationship);
+                }
+
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
                 item.DietaryComponentList?.Clear();
@@ -242,10 +245,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMUpdateLabourAvailability")]
         private void OnCLEMUpdateLabourAvailability(object sender, EventArgs e)
         {
-            int currentmonth = clock.Today.Month;
             foreach (LabourType item in Items)
                 // set available days from availabilityitem
-                item.SetAvailableDays(currentmonth);
+                item.SetAvailableDays(Math.Min(events.Interval, events.Interval));
         }
 
         private void CheckAssignLabourAvailability(LabourType labour)
@@ -273,45 +275,13 @@ namespace Models.CLEM.Resources
                 if (labour.LabourAvailability == null)
                 {
                     string msg = $"Unable to find labour availability suitable for labour type" +
-                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.Age}]" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.AgeInYears}]" +
                         $"\r\nAdd additional labour availability item to " +
                         $"[r={availabilityList.Name}] under [r={Name}]";
 
                     throw new ApsimXException(this, msg);
                 }
             }
-        }
-
-        /// <summary>Age individuals</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void ONCLEMAgeResources(object sender, EventArgs e)
-        {
-            if (AllowAging)
-            {
-                foreach (LabourType item in Items)
-                {
-                    if (!item.Hired)
-                        item.AgeInMonths++;
-
-                    //Update labour available if needed.
-                    CheckAssignLabourAvailability(item);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Calculate the AE of an individual based on provided relationship
-        /// </summary>
-        /// <returns>value</returns>
-        public double? CalculateAE(double ageInMonths)
-        {
-            if (adultEquivalentRelationship != null)
-                return adultEquivalentRelationship.SolveY(ageInMonths);
-            else
-                // no AE relationship provided.
-                return null;
         }
 
         /// <summary>
@@ -321,11 +291,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double AdultEquivalents(bool includeHired)
         {
-            double ae = 0;
-            foreach (LabourType person in Items)
-                if (!person.Hired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths) ?? 1) * Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
-            return ae;
+            return Items.Where(p => !p.Hired | includeHired).Sum(p => p.AdultEquivalent * Convert.ToDouble(p.Individuals, System.Globalization.CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -342,7 +308,7 @@ namespace Models.CLEM.Resources
                         return item.Value;
 
                 // no price match found.
-                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=sex: {ind.Sex}]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.AgeInYears}] [f=sex: {ind.Sex}]";
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
@@ -447,12 +413,19 @@ namespace Models.CLEM.Resources
         public override string ModelSummary()
         {
             using StringWriter htmlWriter = new();
-            if (AllowAging)
+            if (AllowAgeing)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Individuals age with time");
                 htmlWriter.Write("</div>");
             }
+            if(!this.FindAllChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"No [Relationship] with the identifier [Adult equivalent] was provided with [{Parent.Name}]. All individuals are assumed to be 1 AE.");
+                htmlWriter.Write("</div>");
+            }
+
             htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
             htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
             htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
