@@ -65,16 +65,18 @@ namespace UserInterface.Presenters
                 DataTable dataTable = null;
 
                 bool expSim = model.FindAllAncestors<Experiment>().Any();
-                if (expSim)
-                {
-                    markdownWriter.Write("### Multiple simulation experiment performed.  \r\n  \r\n");
-
-                    if (ds.Reader.TableNames.Any())
+                // ensure _Messages table has been created.
+                if (ds.Reader.TableNames.Any())
+                { 
+                    if (expSim)
+                    {
+                        markdownWriter.Write("### Multiple simulation experiment performed.  \r\n  \r\n");
                         dataTable = ds.Reader.GetData(tableName: "_Messages");
-                }
-                else
-                {
-                    dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                    }
+                    else
+                    {
+                        dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                    }
                 }
 
                 if (dataTable == null)
@@ -177,10 +179,6 @@ namespace UserInterface.Presenters
                                 terminatedCount++;
                             }
 
-                            markdownWriter.Write("  \r\n### ");
-                            if (expSim)
-                                markdownWriter.Write($"[{dr[2]}].");
-                            markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");
                             msgStr = msgStr.Replace("[rs=", @".resources-**");
@@ -199,8 +197,17 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
                             msgStr = msgStr.Replace("</b>", "**");
-                            markdownWriter.Write("  \r\n");
-                            markdownWriter.Write(msgStr);
+
+                            // do not include duplicates of final error message if already reported. 
+                            if (!markdownWriter.ToString().Contains(msgStr))
+                            {
+                                markdownWriter.Write("  \r\n### ");
+                                if (expSim)
+                                    markdownWriter.Write($"[{dr[2]}].");
+                                markdownWriter.Write(title);
+                                markdownWriter.Write("  \r\n");
+                                markdownWriter.Write(msgStr);
+                            }
                         }
                     }
                     if (dataRows.Length > maxErrors)
