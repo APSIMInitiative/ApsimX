@@ -161,29 +161,28 @@ namespace Models.Core.ApsimFile
             Simulations sims = modelToCheck.FindAncestor<Simulations>();
             if (sims != null)
             {
-                bool goodName = false;
-                while (!goodName && counter < 10000)
+                bool stop = false;
+                while (!stop && counter < 10000)
                 {
-                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                    
-                    if (obj == null) //didn't find, valid name
-                        goodName = true;
+                    bool goodName = true;
 
-                    if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
-                    {
-                        if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
-                            if (modelToCheck.FindSibling(newName) == null)
-                                goodName = true;
-                    } 
-                    else if (modelToCheck.FindSibling(newName) == null) //check if any siblings have the same name
-                    {
-                        goodName = true;
+                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
+                    if (obj != null) { //found a potential conflict
+                        goodName = false;
+                        if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
+                            if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                                if (modelToCheck.FindSibling(newName) == null)
+                                    goodName = true;
                     }
 
                     if (goodName == false)
                     {
                         counter++;
                         newName = originalName + counter.ToString();
+                    }
+                    else
+                    {
+                        stop = true;
                     }
                 }
             }
