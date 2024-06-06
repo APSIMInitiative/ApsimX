@@ -605,7 +605,9 @@ namespace APSIM.Shared.Utilities
                 {
                     indents -= 1;
                 }
-                if (line.text.StartsWith("if (") || line.text.StartsWith("if(") || line.text.StartsWith("else (") || line.text.StartsWith("else("))
+                if (line.text.StartsWith("if (") || line.text.StartsWith("if(") ||
+                    line.text.CompareTo("else") == 0 ||
+                    line.text.StartsWith("else if (") || line.text.StartsWith("else if("))
                 {
                     oneLineIndent = true;
                 }
