@@ -745,51 +745,30 @@ namespace Models.AgPasture
                                     double sendDungElsewhere,
                                     double sendUrineElsewhere)
             {
-                if (grazedForages.Any())
+                double fractionNToDung = double.NaN;
+                if (fractionExcretedNToDung != null)
+                    fractionNToDung = GetValueFromMonthArray(fractionExcretedNToDung, month);
+
+                var urineDung = UrineDungReturn.DoUrineReturn(grazedForages, physical.Thickness, urea, 
+                                                              GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month),
+                                                              GetValueFromMonthArray(fractionDefoliatedNToSoil, month),
+                                                              fractionNToDung,
+                                                              CNRatioDung,
+                                                              depthUrineIsAdded, 
+                                                              sendUrineElsewhere,
+                                                              sendDungElsewhere);
+                if (urineDung != null)
                 {
-                    double returnedToSoilWt = 0;
-                    double returnedToSoilN = 0;
-                    foreach (var grazedForage in grazedForages)
-                    {
-                        returnedToSoilWt += GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month) *
-                                            (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                        returnedToSoilN += GetValueFromMonthArray(fractionDefoliatedNToSoil, month) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
-                    }
+                    amountDungNReturned += urineDung.DungNToSoil;
+                    amountDungWtReturned += urineDung.DungWtToSoil;
+                    amountUrineNReturned += urineDung.UrineNToSoil;
 
-                    double dungNReturned;
-                    if (fractionExcretedNToDung != null)
-                        dungNReturned = GetValueFromMonthArray(fractionExcretedNToDung, month) * returnedToSoilN;
-                    else
-                    {
-                        const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
-                        dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
-                    }
-
-                    amountDungNReturned += dungNReturned;
-                    amountDungWtReturned += returnedToSoilWt;
-                    amountUrineNReturned += returnedToSoilN - dungNReturned;
-
-                    // We will do the urine and dung return.
-                    // find the layer that the fertilizer is to be added to.
-                    int layer = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depthUrineIsAdded);
-                    var ureaValues = urea.kgha;
-                    ureaValues[layer] += AmountUrineNReturned * (1- sendUrineElsewhere);
-                    urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
-
-                    // Send dung to surface
-                    var SOMData = new BiomassRemovedType();
-                    SOMData.crop_type = "RuminantDung_PastureFed";
-                    SOMData.dm_type = new string[] { SOMData.crop_type };
-                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_p = new float[] { 0.0F };
-                    SOMData.fraction_to_residue = new float[] { 1.0F };
-                    surfaceOrganicMatter.OnBiomassRemoved(SOMData);
+                    UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
 
                     if (doTrampling)
                     {
                         var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(pastureConsumedAtMaximumRateOfLitterRemoval, dmRemovedToday, 0),
-                                                                   maximumPropLitterMovedToSoil);
+                                                                    maximumPropLitterMovedToSoil);
                         surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
                     }
                 }
