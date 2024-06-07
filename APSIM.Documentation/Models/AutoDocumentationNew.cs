@@ -8,11 +8,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using Models.Functions;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Models.Types;
 
-namespace APSIM.Documentation
+namespace APSIM.Documentation.Models
 {
 
     /// <summary>
@@ -30,6 +31,18 @@ namespace APSIM.Documentation
 
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
+
+        /// <summary>Documents a model</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model)
+        {
+            if (model is IPlant)
+                return new PlantDoc(model).Document();
+            else if (model is IClock)
+                return new ClockDoc(model).Document();
+            else
+                return new GenericDoc(model).Document();
+        }
 
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
@@ -78,13 +91,6 @@ namespace APSIM.Documentation
             }
 
             return string.Empty;
-        }
-
-        /// <summary>Documents a model</summary>
-        /// <param name="model">The model to get documentation for.</param>
-        public static IEnumerable<APSIM.Shared.Documentation.ITag> Document(IModel model)
-        {
-            yield return new Paragraph("Not Implemented");
         }
 
         /// <summary>Writes the description of a class to the tags.</summary>

@@ -24,6 +24,7 @@ using Models.Soils;
 using Models.Storage;
 using UserInterface.Commands;
 using Utility;
+using APSIM.Documentation.Models;
 
 namespace UserInterface.Presenters
 {

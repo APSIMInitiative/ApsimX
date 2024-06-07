@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
-using Models;
-using Newtonsoft.Json;
+using Models.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -17,10 +14,16 @@ namespace APSIM.Documentation.Models.Types
     public class GenericDoc
     {
         /// <summary>
+        /// The model that the documentation should be generated for
+        /// </summary>
+        protected IModel model = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GenericDoc" /> class.
         /// </summary>
-        public GenericDoc()
+        public GenericDoc(IModel model)
         {
+            this.model = model;
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
         /// </remarks>
         public virtual IEnumerable<ITag> Document()
         {
-            yield return new Section(Name, GetModelDescription());
+            yield return new Section(model.Name, GetModelDescription());
         }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace APSIM.Documentation.Models.Types
                         eventNamesFiltered.Add(name); 
                     }           
             }
-            yield return new Paragraph($"Function {functionName} of Model {Name} contains the following Events in the given order.\n");
+            yield return new Paragraph($"Function {functionName} of Model {model.Name} contains the following Events in the given order.\n");
 
             DataTable data = new DataTable();
             data.Columns.Add("Event Handle", typeof(string));
@@ -92,9 +95,9 @@ namespace APSIM.Documentation.Models.Types
         protected IEnumerable<ITag> DocumentChildren<T>(bool withHeadings = false) where T : IModel
         {
             if (withHeadings)
-                return FindAllChildren<T>().Select(m => new Section(m.Name, m.Document()));
+                return model.FindAllChildren<T>().Select(m => new Section(m.Name, m.Document()));
             else
-                return FindAllChildren<T>().SelectMany(m => m.Document());
+                return model.FindAllChildren<T>().SelectMany(m => m.Document());
         }
     }
 }

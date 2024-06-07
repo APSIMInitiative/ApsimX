@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
 using Models;
-using Newtonsoft.Json;
+using Models.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -19,17 +14,15 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericDoc" /> class.
         /// </summary>
-        public ClockDoc()
-        {
-        }
+        public ClockDoc(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Section(Name, GetModelDescription());
-            yield return new Section(Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
+            yield return new Section(model.Name, GetModelDescription());
+            yield return new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
         }
     }
 }

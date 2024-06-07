@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
 using Models;
-using Newtonsoft.Json;
+using Models.Core;
+using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -17,18 +15,16 @@ namespace APSIM.Documentation.Models.Types
     public class PlantDoc : GenericDoc
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericDoc" /> class.
+        /// Initializes a new instance of the <see cref="PlantDoc" /> class.
         /// </summary>
-        public PlantDoc()
-        {
-        }
+        public PlantDoc(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Section($"The APSIM {Name} Model", GetTags());
+            yield return new Section($"The APSIM {model.Name} Model", GetTags());
         }
 
         /// <summary>
@@ -36,8 +32,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         private IEnumerable<ITag> GetTags()
         {
+            
             // If first child is a memo, document it first.
-            Memo introduction = Children?.FirstOrDefault() as Memo;
+            Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
             if (introduction != null)
                 foreach (ITag tag in introduction.Document())
                     yield return tag;
@@ -52,7 +49,7 @@ namespace APSIM.Documentation.Models.Types
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
-            foreach (IModel child in Children)
+            foreach (IModel child in this.model.Children)
             {
                 if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
                 {
@@ -65,7 +62,7 @@ namespace APSIM.Documentation.Models.Types
             yield return new Table(tableData);
 
             // Document children.
-            foreach (IModel child in Children)
+            foreach (IModel child in this.model.Children)
                 if (child != introduction)
                     yield return new Section(child.Name, child.Document());
         }
