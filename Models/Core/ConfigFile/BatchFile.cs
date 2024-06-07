@@ -79,6 +79,7 @@ namespace Models.Core.ConfigFile
                 columnName = configFileCommand[placeholderStartIndex..lastBracketIndex];
             else if (lastPeriodIndex != -1)
                 columnName = configFileCommand[placeholderStartIndex..lastPeriodIndex];
+            else columnName = configFileCommand[placeholderStartIndex..configFileCommand.Length];
             
             // Get the replacement value for the placeholder.
             string _row_value = null;

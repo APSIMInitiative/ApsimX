@@ -947,5 +947,74 @@ run";
             long fileLength = fileInfo.Length;
             Assert.True(fileLength == 4096);            
         }
+
+        [Test]
+        public void BatchSwitch_WorksWithApplySwitch_WithFile()
+        {
+            //Create simulation
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string simsFilePath = Path.Combine(Path.GetTempPath(), simsFileName);
+
+            // Create config file.
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"[Simulation].Name=$sim-name{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+
+            // Create a batch file
+            string batchFilePath = Path.Combine(Path.GetTempPath(), "batch.csv");
+            string batchContents =
+                $"sim-name,{Environment.NewLine}" +
+                $"SpecialSimulation,{Environment.NewLine}";
+            File.WriteAllText(batchFilePath, batchContents);
+
+            Utilities.RunModels($"{sims.FileName} --apply {commandsFilePath} --batch {batchFilePath}");
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            // Makes sure the originals' Name is not modified.
+            Assert.AreEqual("Simulation", originalSim.Name);
+            // Makes sure the new files' Simulation name is modified.
+            string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            Assert.AreEqual("SpecialSimulation", newSim.Name);
+        }
+
+        [Test]
+        public void BatchSwitch_WorksWithApplySwitch()
+        {
+            //Create simulation
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string simsFilePath = Path.Combine(Path.GetTempPath(), simsFileName);
+
+            // Create config file.
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"load {simsFileName}{Environment.NewLine}" +
+                $"[Simulation].Name=$sim-name{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+
+            // Create a batch file
+            string batchFilePath = Path.Combine(Path.GetTempPath(), "batch.csv");
+            string batchContents =
+                $"sim-name,{Environment.NewLine}" +
+                $"SpecialSimulation,{Environment.NewLine}";
+            File.WriteAllText(batchFilePath, batchContents);
+
+            Utilities.RunModels($"--apply {commandsFilePath} --batch {batchFilePath}");
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            // Makes sure the originals' Name is not modified.
+            Assert.AreEqual("Simulation", originalSim.Name);
+            // Makes sure the new files' Simulation name is modified.
+            string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            Assert.AreEqual("SpecialSimulation", newSim.Name);
+        }
     }
 }
