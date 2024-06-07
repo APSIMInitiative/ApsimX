@@ -72,6 +72,7 @@ namespace UserInterface.Presenters
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
+            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
@@ -320,6 +321,14 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            graph.ExportToClipboard();
         }
     }
 }
