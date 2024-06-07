@@ -17,26 +17,20 @@ public class UrineDungReturn
     /// Perform urine return to soil.
     /// </summary>
     /// <param name="grazedForages">Grazed forages.</param>
-    /// <param name="thickness">Thickness of each layer.</param>
-    /// <param name="urea">Urea solute</param>
     /// <param name="fractionDefoliatedBiomassToSoil"></param>
     /// <param name="fractionDefoliatedNToSoil"></param>
     /// <param name="fractionExcretedNToDung"></param>
     /// <param name="CNRatioDung"></param>
-    /// <param name="depthUrineIsAdded"></param>
     /// <param name="fractionUrineLostToSimulation">Fraction of the urine lost to simulation.</param>
     /// <param name="fractionDungLostToSimulation">Fraction of the dung lost to simulation.</param>
     /// <returns>The amount of urine and dung added to soil and lost from the simulation</returns>
-    public static UrineDung DoUrineReturn(List<DigestibleBiomass> grazedForages,
-                                          double[] thickness,
-                                          ISolute urea,
-                                          double fractionDefoliatedBiomassToSoil,
-                                          double fractionDefoliatedNToSoil,
-                                          double fractionExcretedNToDung,
-                                          double CNRatioDung,
-                                          double depthUrineIsAdded,
-                                          double fractionUrineLostToSimulation,
-                                          double fractionDungLostToSimulation)
+    public static UrineDung CalculateUrineDungReturn(List<DigestibleBiomass> grazedForages,
+                                                     double fractionDefoliatedBiomassToSoil,
+                                                     double fractionDefoliatedNToSoil,
+                                                     double fractionExcretedNToDung,
+                                                     double CNRatioDung,
+                                                     double fractionUrineLostToSimulation,
+                                                     double fractionDungLostToSimulation)
     {
         if (grazedForages.Any())
         {
@@ -68,16 +62,27 @@ public class UrineDungReturn
                 UrineNLostFromSimulation = (returnedToSoilN - dungNReturned) * fractionUrineLostToSimulation
             };
 
-            // We will do the urine and dung return.
-            // find the layer that the urea is to be added to.
+            return deposition;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Perform urine return.
+    /// </summary>
+    /// <param name="deposition">The urine, dung deposition to the soil.</param>
+    /// <param name="thickness">The layer thickness (mm).</param>
+    /// <param name="urea">The urea solute.</param>
+    /// <param name="depthUrineIsAdded">The depth to add the urine.</param>
+    public static void DoUrineReturn(UrineDung deposition, double[] thickness, ISolute urea, double depthUrineIsAdded)
+    {
+        if (deposition.UrineNToSoil > 0)
+        {
             int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthUrineIsAdded);
             var ureaDelta = new double[thickness.Length];
             ureaDelta[layer] = deposition.UrineNToSoil;
             urea.AddKgHaDelta(SoluteSetterType.Fertiliser, ureaDelta);
-
-            return deposition;
         }
-        return null;
     }
 
     /// <summary>

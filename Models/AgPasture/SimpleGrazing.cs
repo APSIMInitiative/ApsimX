@@ -745,24 +745,21 @@ namespace Models.AgPasture
                                     double sendDungElsewhere,
                                     double sendUrineElsewhere)
             {
-                double fractionNToDung = double.NaN;
-                if (fractionExcretedNToDung != null)
-                    fractionNToDung = GetValueFromMonthArray(fractionExcretedNToDung, month);
+                var urineDung = UrineDungReturn.CalculateUrineDungReturn(grazedForages,  
+                                                                         GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month),
+                                                                         GetValueFromMonthArray(fractionDefoliatedNToSoil, month),
+                                                                         GetValueFromMonthArray(fractionExcretedNToDung, month),
+                                                                         CNRatioDung,
+                                                                         sendUrineElsewhere,
+                                                                         sendDungElsewhere);
 
-                var urineDung = UrineDungReturn.DoUrineReturn(grazedForages, physical.Thickness, urea, 
-                                                              GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month),
-                                                              GetValueFromMonthArray(fractionDefoliatedNToSoil, month),
-                                                              fractionNToDung,
-                                                              CNRatioDung,
-                                                              depthUrineIsAdded, 
-                                                              sendUrineElsewhere,
-                                                              sendDungElsewhere);
                 if (urineDung != null)
                 {
                     amountDungNReturned += urineDung.DungNToSoil;
                     amountDungWtReturned += urineDung.DungWtToSoil;
                     amountUrineNReturned += urineDung.UrineNToSoil;
 
+                    UrineDungReturn.DoUrineReturn(urineDung, physical.Thickness, urea, depthUrineIsAdded);
                     UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
 
                     if (doTrampling)
@@ -777,7 +774,9 @@ namespace Models.AgPasture
             /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
             private static double GetValueFromMonthArray(double[] arr, int month)
             {
-                if (arr.Length == 1)
+                if (arr == null)
+                    return double.NaN;
+                else if (arr.Length == 1)
                     return arr[0];
                 else
                     return arr[month - 1];

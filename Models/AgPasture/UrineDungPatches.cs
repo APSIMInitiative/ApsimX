@@ -106,8 +106,6 @@ public class UrineDungReturnPatches
             summary.WriteMessage(model, $"The amount of urine N returned to the whole paddock is {urineDungReturn.UrineNToSoil}", MessageType.Diagnostic);
 
             // Do urine return.
-            summary.WriteMessage(model, $"The zone for urine return is {patchNumForUrine}", MessageType.Diagnostic);
-
             DeterminePatchForUrineReturn();  
             summary.WriteMessage(model, $"The zone for urine return is {patchNumForUrine}", MessageType.Diagnostic);
 
