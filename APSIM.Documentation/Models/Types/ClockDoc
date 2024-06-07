@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models;
+using Newtonsoft.Json;
+
+namespace APSIM.Documentation.Models.Types
+{
+
+    /// <summary>
+    /// Base documentation class for models
+    /// </summary>
+    public class ClockDoc : GenericDoc
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericDoc" /> class.
+        /// </summary>
+        public ClockDoc()
+        {
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, GetModelDescription());
+            yield return new Section(Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
+        }
+    }
+}

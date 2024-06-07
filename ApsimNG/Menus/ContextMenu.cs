@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Documentation;
 using APSIM.Interop.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
@@ -1008,7 +1009,8 @@ namespace UserInterface.Presenters
                     throw new Exception("You must save this file before documentation can be created");
                 }
 
-                pdf.Write(fileNameWritten, modelToDocument.Document());
+                ;
+                pdf.Write(fileNameWritten, AutoDocumentationNew.Document(modelToDocument));
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
 
