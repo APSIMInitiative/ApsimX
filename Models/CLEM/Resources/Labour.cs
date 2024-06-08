@@ -194,7 +194,11 @@ namespace Models.CLEM.Resources
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (FindAllChildren<LabourPricing>().Any())
+            {
                 PayList = Apsim.Clone(FindAllChildren<LabourPricing>().FirstOrDefault());
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
+                    item.InitialiseFilters();
+            }
         }
 
         /// <summary>
@@ -298,7 +302,7 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double PayRate(LabourType ind)
+        public double PayRate(LabourType ind, bool reportWarningIfNoPrice = false)
         {
             if (PricingAvailable)
             {
@@ -307,12 +311,15 @@ namespace Models.CLEM.Resources
                     if (item.Filter(ind))
                         return item.Value;
 
-                // no price match found.
-                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.AgeInYears}] [f=sex: {ind.Sex}]";
-                if (!warningsNotFound.Contains(warningString))
+                if(reportWarningIfNoPrice)
                 {
-                    warningsNotFound.Add(warningString);
-                    Summary.WriteMessage(this, warningString, MessageType.Warning);
+                    // no price match found.
+                    string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {Convert.ToInt32(ind.AgeInYears)}] [f=sex: {ind.Sex}]";
+                    if (!warningsNotFound.Contains(warningString))
+                    {
+                        warningsNotFound.Add(warningString);
+                        Summary.WriteMessage(this, warningString, MessageType.Warning);
+                    }
                 }
             }
             return 0;

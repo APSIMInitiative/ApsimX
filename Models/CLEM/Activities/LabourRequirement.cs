@@ -232,6 +232,13 @@ namespace Models.CLEM.Activities
             return resourceList;
         }
 
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            if(resourceList.Any())
+                SetStatusSuccessOrPartial(resourceList.Where(a => a.ResourceType == typeof(Labour) && a.Provided > a.Required).Any());
+        }
+
         #region validation
         /// <summary>
         /// Validate this object

@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 totaldays += days;
-                totalfees += days * item.PayRate();
+                totalfees += days * item.PayRate(true);
             }
             amountToDo = totaldays;
 

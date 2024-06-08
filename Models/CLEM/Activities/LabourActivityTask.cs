@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Models.Core.Attributes;
 using DocumentFormat.OpenXml.Drawing;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -63,5 +64,6 @@ namespace Models.CLEM.Activities
                     return new LabelsForCompanionModels();
             }
         }
+
     }
 }

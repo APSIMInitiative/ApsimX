@@ -82,28 +82,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public bool AllowAgeing { get; private set; } = false;
 
-        ///// <summary>
-        ///// Age in months.
-        ///// </summary>
-        //[JsonIgnore]
-        //[FilterByProperty]
-        //public double AgeInMonths
-        //{
-        //    get
-        //    {
-        //        return ageInMonths;
-        //    }
-        //    set
-        //    {
-        //        if (ageInMonths != value)
-        //        {
-        //            ageInMonths = value;
-        //            // update AE
-        //            adultEquivalent = (Parent as Labour).CalculateAE(value);
-        //        }
-        //    }
-        //}
-
         private double? adultEquivalent = null;
 
         /// <summary>
@@ -287,9 +265,9 @@ namespace Models.CLEM.Resources
         /// Get value of this individual
         /// </summary>
         /// <returns>value</returns>
-        public double PayRate()
+        public double PayRate(bool reportWarningIfNoPrice = false)
         {
-            return (Parent as Labour).PayRate(this);
+            return (Parent as Labour).PayRate(this, reportWarningIfNoPrice);
         }
 
         #region Transactions
