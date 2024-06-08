@@ -718,9 +718,9 @@ namespace Models.CLEM.Activities
             double conceptusProteinReq = ind.Parameters.Grow24_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus * 
                 (ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()) + ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()))));
 
-            conceptusProtein = conceptusProteinReq * ind.Weight.Conceptus.Amount;
+            conceptusProtein = conceptusProteinReq;
             // fat (kg)
-            conceptusFat = ((conceptusME * 0.13) - (conceptusProtein * 23.6)) / 39.3;
+            conceptusFat = ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3;
 
             //fetal fat and protein
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
