@@ -86,8 +86,8 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
-            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            Details = FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
+            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(Parent as CLEMModel, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if (Details is not null && ruminantType.Parameters.General is not null)
             {

@@ -5,6 +5,7 @@ using Models.CLEM.Resources;
 using Models.CLEM.Timers;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -58,6 +59,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
+        [JsonIgnore]
         public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>

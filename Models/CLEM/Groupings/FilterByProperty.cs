@@ -49,7 +49,7 @@ namespace Models.CLEM.Groupings
                 {
                     // allow full path names for location by ignoring the GrazeFoodStore component.
                     case "Location":
-                        if(Value.ToString().Contains("."))
+                        if(Value.ToString().Contains('.'))
                             return Value.ToString().Split('.')[1];
                         break;
                 }
@@ -84,6 +84,7 @@ namespace Models.CLEM.Groupings
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
+                //if(propertyInfo is null)
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 if(propertyInfo.Any())
                     validOperator = CheckValidOperator(propertyInfo.Last(), out string _);

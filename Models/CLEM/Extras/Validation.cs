@@ -241,6 +241,9 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if (value is null   )
+                return ValidationResult.Success;
+
             double maxvalue;
             if (value.GetType().IsArray)
                 maxvalue = (value as double[]).Min();
@@ -459,6 +462,9 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if(value is null)
+                return ValidationResult.Success;
+
             if (minNumberOfArrayItems == maxNumberOfArrayItems)
             {
                 DefaultErrorMessage += $" (expecting {minNumberOfArrayItems} values)";
