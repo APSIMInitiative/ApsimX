@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -56,7 +57,7 @@ namespace Models.Core.ConfigFile
         /// <param name="command">An override or instruction command.</param>
         /// <param name="configFileDirectory">A path to the config file's directory</param>
         /// <param name="tempSim">A file path to an .apsimx file.</param>
-        public static IModel RunConfigCommands(/*string apsimxFilePath*/Simulations tempSim, string command, string configFileDirectory)
+        public static IModel RunConfigCommands(Simulations tempSim, string command, string configFileDirectory)
         {
             try
             {
@@ -539,6 +540,21 @@ namespace Models.Core.ConfigFile
             string trimmedSection = section.TrimEnd();
             return trimmedSection.Replace(' ', '@');
 
+        }
+
+
+        /// <summary>
+        /// Replaces placeholders in a list of commands.
+        /// </summary>
+        /// <param name="commandString">a command string</param>
+        /// <param name="dataRow">A data row from a batch csv file.</param>
+        /// <param name="dataRowIndex"></param>
+        /// <returns></returns>
+        public static string ReplaceBatchFilePlaceholders(string commandString, DataRow dataRow, int dataRowIndex)
+        {
+            if (!commandString.Contains('$'))
+                return commandString;
+            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex); 
         }
     }
 }
