@@ -58,10 +58,6 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction b2 = null;
 
-        ///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-		//IFunction aX0 = null;
-
 		/// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
         IFunction aX0I = null;
