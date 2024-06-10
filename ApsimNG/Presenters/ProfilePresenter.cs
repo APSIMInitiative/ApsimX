@@ -72,16 +72,21 @@ namespace UserInterface.Presenters
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
+            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
-            Gtk.Label redValuesWarningLbl = new("Note: red values are estimates only.");
+            Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
             if (model is Physical)
+            {
                 ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
+                redValuesWarningLbl.UseMarkup = true;
                 redValuesWarningLbl.Visible = true;
+            }
+
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
@@ -301,10 +306,11 @@ namespace UserInterface.Presenters
 
         /// <summary>Invoked when a grid cell has changed.</summary>
         /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
-        {
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        {           
             Refresh();
         }
 
@@ -315,6 +321,14 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            graph.ExportToClipboard();
         }
     }
 }

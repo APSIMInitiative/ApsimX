@@ -86,6 +86,10 @@ namespace Models
 
             int checkpointNumber = 0;
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
+            
+            if(!Enabled)
+                return regressionLines;
+
             foreach (var checkpointName in storage.CheckpointNames)
             {
                 if (checkpointName != "Current" && !storage.GetCheckpointShowOnGraphs(checkpointName)) // smh
@@ -121,11 +125,11 @@ namespace Models
                             {
                                 List<List<double>> cleanXAndYLists = CreateCleanDefinitionAxisLists(definition);
                                 if (cleanXAndYLists[0].Count() > 1 && cleanXAndYLists[1].Count() > 1)
-                                    CreateRegressionsSeriesAndLines(regressionLines, cleanXAndYLists[0], cleanXAndYLists[1], definition.Colour);
+                                    CreateRegressionsSeriesAndLines(regressionLines, cleanXAndYLists[0], cleanXAndYLists[1], definition.Colour, definition.Title);
                             }
                             else
                                 if (definition.X is double[] && definition.Y is double[])
-                                CreateRegressionsSeriesAndLines(regressionLines, definition.X, definition.Y, definition.Colour);
+                                CreateRegressionsSeriesAndLines(regressionLines, definition.X, definition.Y, definition.Colour, definition.Title);
                         }
                     }
                     else
@@ -302,10 +306,10 @@ namespace Models
             return new List<List<double>> { cleanDefinitionXList, cleanDefinitionYList };
         }
 
-
-        private void CreateRegressionsSeriesAndLines(List<SeriesDefinition> regressionLines, IEnumerable xAxisList, IEnumerable yAxisList, Color seriesDefinitionColor)
+        
+        private void CreateRegressionsSeriesAndLines(List<SeriesDefinition> regressionLines, IEnumerable xAxisList, IEnumerable yAxisList, Color seriesDefinitionColor, string regressionLineName)
         {
-            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(xAxisList, yAxisList, seriesDefinitionColor, null);
+            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(xAxisList, yAxisList, seriesDefinitionColor, regressionLineName);
             if (regressionSeries != null)
             {
                 regressionLines.Add(regressionSeries);

@@ -252,6 +252,28 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Edit the text of the current node</summary>
+        public void EndRenamingCurrentNode(string newText)
+        {
+            if (isEdittingNodeLabel == true)
+            {
+                textRender.Editable = false;
+                // TreeView.ContextMenuStrip = this.PopupMenu;
+                if (Renamed != null && !string.IsNullOrEmpty(newText))
+                {
+                    NodeRenameArgs args = new NodeRenameArgs()
+                    {
+                        NodePath = this.nodePathBeforeRename,
+                        NewName = newText
+                    };
+                    Renamed(this, args);
+                    if (!args.CancelEdit)
+                        previouslySelectedNodePath = args.NodePath;
+                }
+                isEdittingNodeLabel = false;
+            }
+        }
+
         private TreePath CreatePath(Utility.TreeNode node)
         {
             return new TreePath(node.Indices);
@@ -1028,29 +1050,14 @@ namespace UserInterface.Views
         {
             try
             {
-                if (isEdittingNodeLabel == true)
-                {
-                    textRender.Editable = false;
-                    // TreeView.ContextMenuStrip = this.PopupMenu;
-                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
-                    {
-                        NodeRenameArgs args = new NodeRenameArgs()
-                        {
-                            NodePath = this.nodePathBeforeRename,
-                            NewName = e.NewText
-                        };
-                        Renamed(this, args);
-                        if (!args.CancelEdit)
-                            previouslySelectedNodePath = args.NodePath;
-                    }
-                }
+                EndRenamingCurrentNode(e.NewText);
             }
             catch (Exception err)
             {
+                isEdittingNodeLabel = false;
                 ShowError(err);
             }
-
-            isEdittingNodeLabel = false;
+            
         }
 
         /// <summary>
