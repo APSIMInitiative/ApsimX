@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/SetPreviousConception.htm")]
     [Version(1, 0, 1, "")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SetPreviousConception : CLEMModel, IValidatableObject
     {
         [Link]
@@ -29,7 +30,7 @@ namespace Models.CLEM.Resources
         /// Number of months pregnant
         /// </summary>
         [Description("Number of days pregnant")]
-        [GreaterThanValue(0)]
+        [GreaterThanEqualValue(0)]
         public int NumberDaysPregnant { get; set; }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Models.CLEM.Resources
                     // find type from a specify ruminant component
                     var specifyRuminant = this.FindAncestor<SpecifyRuminant>();
                     if (specifyRuminant != null)
-                        ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this as Model, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                        ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                     if (ruminantType != null)
                     {
