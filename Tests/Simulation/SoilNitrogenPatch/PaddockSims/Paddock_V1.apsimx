@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 166,
+  "Version": 174,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -33,7 +33,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Tests\\WeatherFiles\\Ruakura.met",
+          "FileName": "%root%/Tests/WeatherFiles/Ruakura.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -1107,6 +1107,8 @@
           ],
           "CNRatioDung": 0.0,
           "DepthUrineIsAdded": 250.0,
+          "SendDungElsewhere": 0.0,
+          "SendUrineElsewhere": 0.0,
           "FractionPopulationDecline": 0.0,
           "TramplingOn": false,
           "MaximumPropLitterMovedToSoil": 0.1,
@@ -1274,8 +1276,8 @@
             "        private double iniOrgN;",
             "        [Link]",
             "        private Nutrient Nutrient;",
-            "        [Link(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]",
-            "        private CarbonFlow ResidueDecomposition;",
+            "        [Link(Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")]",
+            "        private OrganicFlow ResidueDecomposition;",
             "",
             "",
             "        // --------------- Privates ---------------------------------",
@@ -1976,7 +1978,15 @@
                     66.0,
                     66.0
                   ],
-                  "Rocks": null,
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
                   "Texture": null,
                   "BD": [
                     1.3105,
@@ -2030,11 +2040,43 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -2067,9 +2109,33 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "AGPRyegrassSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -2105,9 +2171,33 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "AGPWhiteCloverSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -2282,14 +2372,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "Name": "Nutrient",
-                  "ResourceName": "Nutrient",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
                   "Thickness": [
                     200.0,
@@ -2379,6 +2461,8 @@
                   "AllowPatchAmalgamationByAge": false,
                   "PatchAgeForForcedMerge": 0.0,
                   "LayerForNPartition": -99.0,
+                  "MaximumNO3AvailableToPlants": null,
+                  "MaximumNH4AvailableToPlants": null,
                   "Name": "NutrientPatchManager",
                   "ResourceName": null,
                   "Children": [],
@@ -2405,6 +2489,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
@@ -2488,6 +2573,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
