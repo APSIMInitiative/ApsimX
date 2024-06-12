@@ -29,48 +29,42 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Rumen degradability intercept [CRD1]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.3)]
-        public double RumenDegradabilityIntercept_CRD1 { get; set; }
+        public double RumenDegradabilityIntercept_CRD1 { get; set; } = 0.3;
 
         /// <summary>
         /// Rumen degradability slope (SCA CRD2) (SCA CRD1) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradability slope [CRD2]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.25)]
-        public double RumenDegradabilitySlope_CRD2 { get; set; }
+        public double RumenDegradabilitySlope_CRD2 { get; set; } = 0.25;
 
         /// <summary>
         /// Rumen degradability slope for concentrates/supplements (SCA CRD3) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradability slope for concentrates [CRD3]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.1)]
-        public double RumenDegradabilityConcentrateSlope_CRD3 { get; set; }
+        public double RumenDegradabilityConcentrateSlope_CRD3 { get; set; } = 0.1;
 
         /// <summary>
         /// Rumen degradable protein intercept (SCA CRD4) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein intercept [CRD4]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.007)]
-        public double RumenDegradableProteinIntercept_CRD4 { get; set; }
+        public double RumenDegradableProteinIntercept_CRD4 { get; set; } = 0.007;
 
         /// <summary>
         /// Rumen degradable protein slope (SCA CRD5) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein slope [CRD5]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.005)]
-        public double RumenDegradableProteinSlope_CRD5 { get; set; }
+        public double RumenDegradableProteinSlope_CRD5 { get; set; } = 0.005;
 
         /// <summary>
         /// Rumen degradable protein exponent (SCA CRD6) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein exponent [CRD6]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.35)]
-        public double RumenDegradableProteinExponent_CRD6 { get; set; }
+        public double RumenDegradableProteinExponent_CRD6 { get; set; } = 0.35;
 
         // rumenDegradableProteinTimeOfYear [CRD7] 0.1 - not used
 
@@ -80,8 +74,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("N recycling to rumen scalar")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(0.0)] // B.indicus 0.5, B.indicus x breeds 0.25
-        public double ProteinShortfallAlleviationScalar { get; set; }
+        public double ProteinShortfallAlleviationScalar { get; set; } = 0.0; // B.indicus 0.5, B.indicus x breeds 0.25
 
         #endregion
 
@@ -93,41 +86,30 @@ namespace Models.CLEM.Resources
         /// Milk protein digestibility (SCA CA5) [Core] - lactation
         /// </summary>
         [Description("Milk protein digestibility [CA5]")]
-        [System.ComponentModel.DefaultValue(0.92)]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double MilkProteinDigestibility_CA5 { get; set; }
+        public double MilkProteinDigestibility_CA5 { get; set; } = 0.92;
 
         /// <summary>
         /// Digestibility of microbial protein (SCA CA7) [Core] - growth 
         /// </summary>
         [Description("Digestibility of microbial protein [CA7]")]
         [Category("Core", "Growth")]
-        [System.ComponentModel.DefaultValue(0.6)]
         [Required, Proportion]
-        public double MicrobialProteinDigestibility_CA7 { get; set; }
+        public double MicrobialProteinDigestibility_CA7 { get; set; } = 0.6;
 
         /// <summary>
         /// Faecal protein from MCP (SCA CA8) [Core] - growth
         /// </summary>
         [Description("Faecal protein from MCP [CA8]")]
         [Category("Core", "Growth")]
-        [System.ComponentModel.DefaultValue(0.25)]
         [Required, Proportion]
-        public double FaecalProteinFromMCP_CA8 { get; set; }
+        public double FaecalProteinFromMCP_CA8 { get; set; } = 0.25;
 
         // UDP digestibility in concentrates
 
         #endregion
 
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow24CACRD()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Create copy of this class

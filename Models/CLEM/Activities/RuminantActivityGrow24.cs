@@ -346,7 +346,9 @@ namespace Models.CLEM.Activities
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
             double EndogenousUrinaryProtein = ind.Parameters.Grow24_CM.BreedEUPFactor1_CM12 * Math.Log(ind.Weight.Live) - ind.Parameters.Grow24_CM.BreedEUPFactor2_CM13;
-            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + ((5.26 * (10 ^ -4)) * milkStore?.ME??0);
+
+            // ToDo: check with James. had (10^-4) = -10 changed to 5.26e-4 
+            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26e-4 * milkStore?.ME??0); 
             double DermalProtein = ind.Parameters.Grow24_CM.DermalLoss_CM14 * Math.Pow(ind.Weight.Live,0.75);
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;

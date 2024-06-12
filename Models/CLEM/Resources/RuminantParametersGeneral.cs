@@ -28,13 +28,12 @@ namespace Models.CLEM.Resources
         [Category("Breed", "General")]
         [Description("Breed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
-        [System.ComponentModel.DefaultValue("Bos taurus")]
-        public string Breed { get; set; }
+        public string Breed { get; set; } = "Bos taurus";
 
         /// <summary>
         /// Use corrected equations of animal energy requirement for growth
         /// </summary>
-        [Category("Farm", "General")]
+        [Category("Breed", "General")]
         [Description("Use corrected energy equations")]
         public bool UseCorrectedEquations { get; set; } = true;
 
@@ -63,6 +62,14 @@ namespace Models.CLEM.Resources
         public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
+        /// Minimum size for 1st mating, proportion of SRW
+        /// </summary>
+        [Category("Farm", "Breeding")]
+        [Description("Female minimum size for 1st mating (prop of SRW)")]
+        [Required, Proportion, GreaterThanEqualValue(0.0)]
+        public double MinimumSize1stMating { get; set; } = 0.6;
+
+        /// <summary>
         /// Male minimum age for 1st mating
         /// </summary>
         [Category("Farm", "Breeding")]
@@ -72,13 +79,12 @@ namespace Models.CLEM.Resources
         public AgeSpecifier MaleMinimumAge1stMating { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
-        /// Minimum size for 1st mating, proportion of SRW
+        /// Male minimum size for 1st mating, proportion of male SRW
         /// </summary>
         [Category("Farm", "Breeding")]
-        [Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required, Proportion, GreaterThanValue(0.0)]
-        [System.ComponentModel.DefaultValue(0.6)]
-        public double MinimumSize1stMating { get; set; }
+        [Description("Male minimum size 1st mating (prop of male SRW)")]
+        [Required, Proportion, GreaterThanEqualValue(0.0)]
+        public double MaleMinimumSize1stMating { get; set; } = 0.6;
 
         /// <summary>
         /// Days between conception and parturition
@@ -100,27 +106,24 @@ namespace Models.CLEM.Resources
         [Units("kg")]
         [Description("Standard Ref. Weight for a female")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(450)]
-        public double SRWFemale { get; set; }
-        
+        public double SRWFemale { get; set; } = 450;
+
         /// <summary>
         /// Standard Reference Weight for castrated male from female multiplier
         /// </summary>
         [Category("Farm", "General")]
         [Description("Castrated male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1.2)]
-        public double SRWCastrateMaleMultiplier { get; set; }
-        
+        public double SRWCastrateMaleMultiplier { get; set; } = 1.2;
+
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
         [Category("Farm", "General")]
         [Description("Male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1.4)]
-        public double SRWMaleMultiplier { get; set; }
-        
+        public double SRWMaleMultiplier { get; set; } = 1.4;
+
         /// <summary>
         /// Standard Reference Weight at birth
         /// </summary>
@@ -128,8 +131,7 @@ namespace Models.CLEM.Resources
         [Units("Proportion of female SRW")]
         [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
-        [System.ComponentModel.DefaultValue(new [] { 0.07, 0.055 })]
-        public double[] BirthScalar { get; set; }
+        public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
 
         /// <summary>
         /// Rate at which multiple births are concieved (twins, triplets, ...)
@@ -145,8 +147,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "General")]
         [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(450)]
-        public double BaseAnimalEquivalent { get; set; }
+        public double BaseAnimalEquivalent { get; set; } = 450;
 
         #endregion
 
@@ -158,17 +159,15 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Growth")]
         [Description("Rel. Body Cond. to Score rate")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.15)]
-        public double RelBCToScoreRate { get; set; }
-        
+        public double RelBCToScoreRate { get; set; } = 0.15;
+
         /// <summary>
         /// Body condition score range
         /// </summary>
         [Category("Farm", "Growth")]
         [Description("Body Condition Score range (min, mid, max)")]
         [Required, ArrayItemCount(3)]
-        [System.ComponentModel.DefaultValue(new[] { 0.0, 3.0, 5.0 })]
-        public double[] BCScoreRange { get; set; }
+        public double[] BCScoreRange { get; set; } = new[] { 0.0, 3.0, 5.0 };
 
         /// <summary>
         /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid)
@@ -196,30 +195,27 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
-        [System.ComponentModel.DefaultValue(0.0115)]
         [Category("Farm", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double AgeGrowthRateCoefficient_CN1 { get; set; }
+        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0115;
 
         /// <summary>
         /// Standard Reference Weight growth scalar (CN2 in SCA)
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Standard Reference Weight growth scalar [CN2]")]
-        [System.ComponentModel.DefaultValue(0.27)]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double SRWGrowthScalar_CN2 { get; set; }
+        public double SRWGrowthScalar_CN2 { get; set; } = 0.27;
 
         /// <summary>
         /// Slow growth factor (CN3 in SCA)
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Slow growth factor [CN3]")]
-        [System.ComponentModel.DefaultValue(0.4)]
         [Category("Farm", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double SlowGrowthFactor_CN3 { get; set; }
+        public double SlowGrowthFactor_CN3 { get; set; } = 0.4;
 
         #endregion
 
@@ -229,16 +225,7 @@ namespace Models.CLEM.Resources
         [Description("Conversion from empty body weigh to live weight")]
         [Category("Farm", "Weight")]
         [Required, GreaterThanValue(1.0)]
-        [System.ComponentModel.DefaultValue(1.09)]
-        public double EBW2LW_CG18 { get; set; }
-
-        /// <summary>
-        /// Constructor to set defaults when needed
-        /// </summary>
-        public RuminantParametersGeneral()
-        {
-            base.SetDefaults();
-        }
+        public double EBW2LW_CG18 { get; set; } = 1.09;
 
         /// <summary>
         /// Create a clone of this class
@@ -252,6 +239,7 @@ namespace Models.CLEM.Resources
                 MinimumAge1stMating = MinimumAge1stMating.Clone() as AgeSpecifier,
                 MaleMinimumAge1stMating = MaleMinimumAge1stMating.Clone() as AgeSpecifier,
                 MinimumSize1stMating = MinimumSize1stMating,
+                MaleMinimumSize1stMating = MaleMinimumSize1stMating,
                 GestationLength = GestationLength.Clone() as AgeSpecifier,
                 SRWFemale = SRWFemale,
                 SRWCastrateMaleMultiplier = SRWCastrateMaleMultiplier,
@@ -275,7 +263,15 @@ namespace Models.CLEM.Resources
         {
             if (BirthScalar.Length != MultipleBirthRate.Length - 1)
             {
-                yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantType.BirthScalar" });
+                yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantParametersGeneral.BirthScalar" });
+            }
+            if (MaleMinimumAge1stMating.InDays == 0 & MaleMinimumSize1stMating == 0)
+            {
+                yield return new ValidationResult($"Having both [MaleMinimumAge1stMating] and [MaleMinimumSize1stMating] set to [0] results in an invalid condition where any male is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
+            }
+            if (MinimumAge1stMating.InDays == 0 & MinimumSize1stMating == 0)
+            {
+                yield return new ValidationResult($"Having both [MinimumAge1stMating] and [MinimumSize1stMating] set to [0] results in an invalid condition where any female is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
             }
         }
 

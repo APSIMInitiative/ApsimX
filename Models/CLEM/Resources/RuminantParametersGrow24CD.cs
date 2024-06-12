@@ -28,8 +28,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Basal mortality rate")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(5.53e-5)]
-        public double BasalMortalityRate_CD1 { get; set; }
+        public double BasalMortalityRate_CD1 { get; set; } = 5.53e-5;
 
         /// <summary>
         /// Effect body condition on mortality # 1 CD2
@@ -37,8 +36,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Effect body condition on mortality #1")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.3)]
-        public double EffectBCOnMortality1_CD2 { get; set; }
+        public double EffectBCOnMortality1_CD2 { get; set; } = 0.3;
 
         /// <summary>
         /// Effect body condition on mortality # 2 CD3
@@ -46,8 +44,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Effect body condition on mortality #2")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.6)]
-        public double EffectBCOnMortality2_CD3 { get; set; }
+        public double EffectBCOnMortality2_CD3 { get; set; } = 0.6;
 
         /// <summary>
         /// Lower bound for pregnancy toximia 
@@ -55,8 +52,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Lower bound for pregnancy toximia")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(0.0)]
-        public double LowerBoundsPregnancyToximia_CD4 { get; set; }
+        public double LowerBoundsPregnancyToximia_CD4 { get; set; } = 0.0;
 
         /// <summary>
         /// Upper bound for pregnancy toximia 
@@ -64,8 +60,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Upper bound for pregnancy toximia")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(0.0)]
-        public double UpperBoundsPregnancyToximia_CD5 { get; set; }
+        public double UpperBoundsPregnancyToximia_CD5 { get; set; } = 0.0;
 
         /// <summary>
         /// Lower bound for pregnancy dystocia
@@ -73,8 +68,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Lower bound for pregnancy dystocia")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(0.0)]
-        public double LowerBoundsPregnancyDystocia_CD6 { get; set; }
+        public double LowerBoundsPregnancyDystocia_CD6 { get; set; } = 0.0;
 
         /// <summary>
         /// Upper bound for pregnancy dystocia 
@@ -82,8 +76,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Upper bound for pregnancy dystocia")]
         [Required, GreaterThanEqualValue(0)]
-        [System.ComponentModel.DefaultValue(0.0)]
-        public double UpperBoundsPregnancyDystocia_CD7 { get; set; }
+        public double UpperBoundsPregnancyDystocia_CD7 { get; set; } = 0.0;
 
         // Add dystocia for cattle at some stage.
 
@@ -94,9 +87,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Farm", "Survival")]
         [Description("Relative difference in weight of dying animals")]
-        [System.ComponentModel.DefaultValue(0.1)]
         [Required, GreaterThanValue(0)]
-        public double RelativeDifferenceWeightDyingIndividuals_CD12 { get; set; }
+        public double RelativeDifferenceWeightDyingIndividuals_CD12 { get; set; } = 0.1;
 
         /// <summary>
         /// Upper limit for mortality in weaners 
@@ -104,20 +96,11 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Upper limit for mortality in weaners")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1e-4)]  //ToDo find suitable default.. This is about 2x base mortality for now. So 2x mort at weaning dropping to base by 1 year old.
-        public double UpperLimitForMortalityInWeaners_CD13 { get; set; }
+        public double UpperLimitForMortalityInWeaners_CD13 { get; set; } = 1e-4; //ToDo find suitable default.. This is about 2x base mortality for now. So 2x mort at weaning dropping to base by 1 year old.
 
         // CD14 age where indivudal condidered wenaer for mort.
 
         // CD15 upper age of reduction in mort for weaners. Set in code based on weaner rule (12 months).
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow24CD()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Create copy of this class

@@ -27,8 +27,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Survival")]
         [Description("Base mortality rate (annual)")]
         [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.03)]
-        public double MortalityBase { get; set; }
+        public double MortalityBase { get; set; } = 0.03;
 
         /// <summary>
         /// Daily base mortality rate
@@ -274,16 +273,6 @@ namespace Models.CLEM.Resources
         [Description("Lactating potential intake modifier coefficient C")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; } = 1.7;
-
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Create a copy of the class

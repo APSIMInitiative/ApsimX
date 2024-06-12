@@ -36,8 +36,7 @@ namespace Models.CLEM.Resources
         [Description("Relative size scalar [CI1]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.025)]
-        public double RelativeSizeScalar_CI1 { get; set; }
+        public double RelativeSizeScalar_CI1 { get; set; } = 0.025;
 
         /// <summary>
         /// Relative size quadratic (SCA CI2) [Breed] - Growth
@@ -45,8 +44,7 @@ namespace Models.CLEM.Resources
         [Description("Relative size quadratic [CI2]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1.7)]
-        public double RelativeSizeQuadratic_CI2 { get; set; }
+        public double RelativeSizeQuadratic_CI2 { get; set; } = 1.7;
 
         /// <summary>
         /// Rumen Development Curvature (SCA CI3) [Breed] - Growth
@@ -54,8 +52,7 @@ namespace Models.CLEM.Resources
         [Description("Rumen Development Curvature [CI3]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.22)]
-        public double RumenDevelopmentCurvature_CI3 { get; set; }
+        public double RumenDevelopmentCurvature_CI3 { get; set; } = 0.22;
 
         /// <summary>
         /// Rumen Development Age (SCA CI4)
@@ -63,8 +60,7 @@ namespace Models.CLEM.Resources
         [Description("Rumen Development Age [CI4]")]
         [Required, GreaterThanValue(0)]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(60)]
-        public double RumenDevelopmentAge_CI4 { get; set; }
+        public double RumenDevelopmentAge_CI4 { get; set; } = 60;   
 
         ///// <summary>
         ///// High temperature effect (SCA CI5)
@@ -99,8 +95,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Peak lactation intake day [CI8]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(62)]
-        public double PeakLactationIntakeDay_CI8 { get; set; }
+        public double PeakLactationIntakeDay_CI8 { get; set; } = 62;
 
         /// <summary>
         /// Lactation response curvature (SCA CI9)
@@ -108,8 +103,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Lactation response curvature [CI9]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1.7)]
-        public double LactationResponseCurvature_CI9 { get; set; }
+        public double LactationResponseCurvature_CI9 { get; set; } = 1.7;
 
         /// <summary>
         /// Effect of levels of milk prodiction on intake -  Dairy cows  (SCA CI10)
@@ -117,8 +111,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Effect of levels of milk prodiction on intake [CI10]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.6)]
-        public double EffectLevelsMilkProdOnIntake_CI10 { get; set; }
+        public double EffectLevelsMilkProdOnIntake_CI10 { get; set; } = 0.6;
 
         /// <summary>
         /// Basal milk relative to SRW - Dairy cows  (SCA CI11)
@@ -126,8 +119,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Basal milk relative to SRW [CI11]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.05)]
-        public double BasalMilkRelSRW_CI11 { get; set; }
+        public double BasalMilkRelSRW_CI11 { get; set; } = 0.05;
 
         /// <summary>
         /// Lactation Condition Loss Adjustment (SCA CI12)
@@ -135,8 +127,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Lactation Condition Loss Adjustment [CI12]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.15)]
-        public double LactationConditionLossAdjustment_CI12 { get; set; }
+        public double LactationConditionLossAdjustment_CI12 { get; set; } = 0.15;
 
         /// <summary>
         /// Lactation Condition Loss Threshold (SCA CI13)
@@ -144,8 +135,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Lactation Condition Loss Threshold [CI13]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.005)]
-        public double LactationConditionLossThreshold_CI13 { get; set; }
+        public double LactationConditionLossThreshold_CI13 { get; set; } = 0.005;
 
         /// <summary>
         /// Lactation condition loss threshold decay (SCA CI14)
@@ -153,8 +143,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Lactation condition loss threshold decay [CI14]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.002)]
-        public double LactationConditionLossThresholdDecay_CI14 { get; set; }
+        public double LactationConditionLossThresholdDecay_CI14 { get; set; } = 0.002;
 
         /// <summary>
         /// Condition at parturition adjustment (SCA CI15)
@@ -162,8 +151,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Condition at parturition adjustment [CI15]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.5)]
-        public double ConditionAtParturitionAdjustment_CI15 { get; set; }
+        public double ConditionAtParturitionAdjustment_CI15 { get; set; } = 0.5;
 
         // CI16 EMPTY
 
@@ -172,16 +160,14 @@ namespace Models.CLEM.Resources
         ///// </summary>
         //[Description("Low temperature effect [CI17]")]
         //[Required, GreaterThanValue(0)]
-        //[System.ComponentModel.DefaultValue(0.01)]
-        //public double LowTemperatureEffect_CI17 { get; set; }
+        //public double LowTemperatureEffect_CI17 { get; set; } = 0.01;
 
         ///// <summary>
         ///// Rainfall scalar (SCA CI18)
         ///// </summary>
         //[Description("Rainfall scalar [CI18]")]
         //[Required, GreaterThanValue(0)]
-        //[System.ComponentModel.DefaultValue(20.0)]
-        //public double RainfallScalar_CI18 { get; set; }
+        //public double RainfallScalar_CI18 { get; set; } = 20.0;
 
         /// <summary>
         /// Peak lactation intake level (SCA CI19)
@@ -189,8 +175,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Peak lactation intake level [CI19]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(new[] { 0.416, 0.416 })]
-        public double[] PeakLactationIntakeLevel_CI19 { get; set; }
+        public double[] PeakLactationIntakeLevel_CI19 { get; set; } = new double[] { 0.416, 0.416 };
 
         /// <summary>
         /// Relative condition effect (SCA CI20)
@@ -198,16 +183,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Relative condition effect [CI20] 1=off")]
         [Required, GreaterThanEqualValue(1)]
-        [System.ComponentModel.DefaultValue(1.5)]
-        public double RelativeConditionEffect_CI20 { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow24CI()
-        {
-            this.SetDefaults();
-        }
+        public double RelativeConditionEffect_CI20 { get; set; } = 1.5;
 
         /// <summary>
         /// Create copy of this class

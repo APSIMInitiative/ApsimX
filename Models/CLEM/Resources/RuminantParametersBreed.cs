@@ -32,11 +32,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion offspring born male
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0.5)]
         [Category("Breed", "Breeding")]
         [Description("Proportion of offspring male")]
         [Required, Proportion]
-        public double ProportionOffspringMale { get; set; }
+        public double ProportionOffspringMale { get; set; } = 0.5;
         
         /// <summary>
         /// Inter-parturition interval intercept of PW (months)
@@ -44,26 +43,23 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Inter-parturition interval intercept of PW (months)")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(10.847)]
-        public double InterParturitionIntervalIntercept { get; set; }
-        
+        public double InterParturitionIntervalIntercept { get; set; } = 10.847;
+
         /// <summary>
         /// Inter-parturition interval coefficient of PW (months)
         /// </summary>
         [Category("Breed", "Breeding")]
         [Description("Inter-parturition interval coefficient of PW (months)")]
         [Required]
-        [System.ComponentModel.DefaultValue(-0.7994)]
-        public double InterParturitionIntervalCoefficient { get; set; }
-        
+        public double InterParturitionIntervalCoefficient { get; set; } = -0.7994;
+
         /// <summary>
         /// Minimum number of days between last birth and conception
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum number of days between last birth and conception")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(40)]
-        public double MinimumDaysBirthToConception { get; set; }
+        public double MinimumDaysBirthToConception { get; set; } = 40; 
         
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
@@ -79,8 +75,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Maximum number of matings per male per day")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(30)]
-        public double MaximumMaleMatingsPerDay { get; set; }
+        public double MaximumMaleMatingsPerDay { get; set; } = 30;
         
         /// <summary>
         /// Prenatal mortality rate
@@ -88,8 +83,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.079)]
-        public double PrenatalMortality { get; set; }
+        public double PrenatalMortality { get; set; } = 0.079;
 
         /// <summary>
         /// Allow determination of freemartins for this breed
@@ -97,7 +91,6 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Allow freemartins")]
         [Required]
-        [System.ComponentModel.DefaultValue(false)]
         public bool AllowFreemartins { get; set; } = false;
 
         ///// <summary>
@@ -105,17 +98,8 @@ namespace Models.CLEM.Resources
         ///// </summary>
         //[Category("Farm", "Breeding")]
         //[Description("Proportion suitable females accepting orphan")]
-        //[System.ComponentModel.DefaultValueAttribute(0)]
         //[Required, Proportion]
-        //public double ProportionAcceptingSurrogate { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersBreeding()
-        {
-            this.SetDefaults();
-        }
+        //public double ProportionAcceptingSurrogate { get; set; } = 0;
 
         /// <summary>
         /// Create a clone of this class

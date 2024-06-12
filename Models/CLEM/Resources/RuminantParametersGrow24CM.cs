@@ -29,8 +29,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Core", "Growth")]
         [Description("Heat production viscera feed level [CM1]")]
-        [System.ComponentModel.DefaultValue(0.09)]
-        public double HPVisceraFL_CM1 { get; set; }
+        public double HPVisceraFL_CM1 { get; set; } = 0.09;
 
         /// <summary>
         /// Feed heat production scalar (CM2 in SCA)
@@ -38,32 +37,28 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle. Value for Bos indicus breeds with all other cattle 0.36</value>
         [Category("Breed", "Growth")]
         [Description("Feed heat production scalar [CM2]")]
-        [System.ComponentModel.DefaultValue(0.36)] // B indicus 0.31
-        public double FHPScalar_CM2 { get; set; }
+        public double FHPScalar_CM2 { get; set; } = 0.36; // B indicus 0.31
 
         /// <summary>
         /// Maintenance exponent for age (SCA CM3)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Maintenance exponent for age [CM3]")]
-        [System.ComponentModel.DefaultValue(8e-5)]
-        public double MainExponentForAge_CM3 { get; set; }
+        public double MainExponentForAge_CM3 { get; set; } = 8e-5;
 
         /// <summary>
         /// Age effect min (SCA CM4)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Age effect min [CM4]")]
-        [System.ComponentModel.DefaultValue(0.84)]
-        public double AgeEffectMin_CM4 { get; set; }
+        public double AgeEffectMin_CM4 { get; set; } = 0.84;
 
         /// <summary>
         /// Milk scalar (SCA CM5)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Milk scalar [CM5]")]
-        [System.ComponentModel.DefaultValue(0.23)]
-        public double MilkScalar_CM5 { get; set; }
+        public double MilkScalar_CM5 { get; set; } = 0.23;
 
         // Not in SCA tables. CLEM work around
         // all converted into grazing energy factor in grazing.
@@ -72,8 +67,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Grazing energy from metabolic scalar")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.2)]
-        public double GrazingEnergyFromMetabolicScalar { get; set; }
+        public double GrazingEnergyFromMetabolicScalar { get; set; } = 0.2;
 
         // chewing scalar CM6
 
@@ -92,24 +86,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Breed EUP Factor #1 [CM12]")]
-        [System.ComponentModel.DefaultValue(1.61e-2)] // B.indicus 1.29e-2
-        public double BreedEUPFactor1_CM12 { get; set; }
+        public double BreedEUPFactor1_CM12 { get; set; } = 1.61e-2;  // B.indicus 1.29e-2
 
         /// <summary>
         /// Breed EUP Factor #2 (SCA CM13)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Breed EUP Factor #2 [CM13]")]
-        [System.ComponentModel.DefaultValue(4.22e-2)] // B.indicus 3.38e-2
-        public double BreedEUPFactor2_CM13 { get; set; }
+        public double BreedEUPFactor2_CM13 { get; set; } = 4.22e-2; // B.indicus 3.38e-2
 
         /// <summary>
         /// Dermal loss (SCA CM14)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Dermal loss [CM14]")]
-        [System.ComponentModel.DefaultValue(1.1e-4)]
-        public double DermalLoss_CM14 { get; set; }
+        public double DermalLoss_CM14 { get; set; } = 1.1e-4;
 
         // sme CM15 - hard coded
 
@@ -118,14 +109,6 @@ namespace Models.CLEM.Resources
         // threshold stocking density CM17
 
         #endregion
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow24CM()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Create copy of this class

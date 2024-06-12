@@ -30,9 +30,8 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use for wool [CG1]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.6)]
         [Required, Proportion]
-        public double EfficiencyOfDPLSUseForWool_CG1 { get; set; }
+        public double EfficiencyOfDPLSUseForWool_CG1 { get; set; } = 0.6;
 
         /// <summary>
         /// Efficiency of DPLS use from Feed (CG2 in SCA) [Breed] - [0.7] - Growth
@@ -40,9 +39,8 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use from feed [CG2]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.7)]
         [Required, Proportion]
-        public double EfficiencyOfDPLSUseFromFeed_CG2 { get; set; }
+        public double EfficiencyOfDPLSUseFromFeed_CG2 { get; set; } = 0.7;
 
         /// <summary>
         /// Efficiency of DPLS use from milk (CG3 in SCA) [Breed] - [0.8] - Growth
@@ -50,9 +48,8 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Efficiency of DPLS use from milk [CG3]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.8)]
         [Required, Proportion]
-        public double EfficiencyOfDPLSUseFromMilk_CG3 { get; set; }
+        public double EfficiencyOfDPLSUseFromMilk_CG3 { get; set; } = 0.8;
 
         /// <summary>
         /// Gain curvature (CG4 in SCA) [breed] - Growth
@@ -60,9 +57,8 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Gain curvature [CG4]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(6.0)]
         [Required]
-        public double GainCurvature_CG4 { get; set; }
+        public double GainCurvature_CG4 { get; set; } = 6.0;
 
         /// <summary>
         /// Gain midpoint (CG5 in SCA) [breed] - Growth
@@ -70,9 +66,7 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Gain midpoint [CG5]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.4)]
-        [Required]
-        public double GainMidpoint_CG5 { get; set; }
+        [Required] public double GainMidpoint_CG5 { get; set; } = 0.4;
 
         /// <summary>
         /// Condition no effect (CG6 in SCA)  [breed] - Growth
@@ -80,9 +74,7 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Condition no effect [CG6]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.9)]
-        [Required]
-        public double ConditionNoEffect_CG6 { get; set; }
+        [Required] public double ConditionNoEffect_CG6 { get; set; } = 0.9;
 
         /// <summary>
         /// Condition maximum effect (CG7 in SCA) [breed] - Growth
@@ -90,27 +82,23 @@ namespace Models.CLEM.Resources
         /// <value>Default is for cattle</value>
         [Description("Condition max effect [CG7]")]
         [Category("Breed", "Growth")]
-        [System.ComponentModel.DefaultValue(0.97)]
-        [Required]
-        public double ConditionMaxEffect_CG7 { get; set; }
+        [Required] public double ConditionMaxEffect_CG7 { get; set; } = 0.97;
 
         /// <summary>
         /// Intercept parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG8)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #1 [CG8]")]
-        [System.ComponentModel.DefaultValue(27.0)] // B.indicus 23.2
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergyIntercept1_CG8 { get; set; }
+        public double GrowthEnergyIntercept1_CG8 { get; set; } = 27.0; // B.indicus 23.2
 
         /// <summary>
         /// Intercept Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG9)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
-        [System.ComponentModel.DefaultValue(20.3)] // B.indicus 16.5
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergyIntercept2_CG9 { get; set; }
+        public double GrowthEnergyIntercept2_CG9 { get; set; } = 20.3; // B.indicus 16.5
 
         /// <summary>
         /// Slope parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG10)
@@ -118,9 +106,8 @@ namespace Models.CLEM.Resources
         /// <values>Default is for cattle</values>
         [Category("Breed", "Growth")]
         [Description("Growth energy slope #1 [CG10]")]
-        [System.ComponentModel.DefaultValue(2.0)]
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergySlope1_CG10 { get; set; }
+        public double GrowthEnergySlope1_CG10 { get; set; } = 2.0;
 
         /// <summary>
         /// Slope parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG11)
@@ -129,8 +116,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG11]")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(13.8)]
-        public double GrowthEnergySlope2_CG11 { get; set; }
+        public double GrowthEnergySlope2_CG11 { get; set; } = 13.8;
 
         /// <summary>
         /// First intercept of equation to determine energy protein mass (kg kg-1, SCA CG12)
@@ -138,8 +124,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain intercept #1 [CG12]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.072)] // B.indicus 0.092 
-        public double ProteinGainIntercept1_CG12 { get; set; }
+        public double ProteinGainIntercept1_CG12 { get; set; } = 0.072; // B.indicus 0.092 
 
         /// <summary>
         /// Second intercept of equation to determine energy protein mass (kg kg-1, SCA CG13)
@@ -147,8 +132,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain intercept #2 [CG13]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.140)] // B.indicus 0.120
-        public double ProteinGainIntercept2_CG13 { get; set; }
+        public double ProteinGainIntercept2_CG13 { get; set; } = 0.140; // B.indicus 0.120
 
         /// <summary>
         /// First slope of equation to determine energy protein mass (kg kg-1, SCA CG14)
@@ -157,8 +141,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope #1 [CG14]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.008)]
-        public double ProteinGainSlope1_CG14 { get; set; }
+        public double ProteinGainSlope1_CG14 { get; set; } = 0.008;
 
         /// <summary>
         /// Second slope of equation to determine energy protein mass (kg kg-1, SCA CG15)
@@ -167,8 +150,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope #2 [CG15]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.115)]
-        public double ProteinGainSlope2_CG15 { get; set; }
+        public double ProteinGainSlope2_CG15 { get; set; } = 0.115;
 
         /// <summary>
         /// Breed growth efficiency scalar
@@ -176,8 +158,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Breed growth efficiency scalar")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1)]
-        public double BreedGrowthEfficiencyScalar { get; set; }
+        public double BreedGrowthEfficiencyScalar { get; set; } = 1;
 
         /// <summary>
         /// Breed lactation efficiency scalar
@@ -185,8 +166,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Breed lactation efficiency scalar")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1)]
-        public double BreedLactationEfficiencyScalar { get; set; }
+        public double BreedLactationEfficiencyScalar { get; set; } = 1;
 
         /// <summary>
         /// Breed maintenance efficiency scalar
@@ -194,19 +174,9 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Growth")]
         [Description("Breed maintenance efficiency scalar")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1)]
-        public double BreedMainenanceEfficiencyScalar { get; set; }
+        public double BreedMainenanceEfficiencyScalar { get; set; } = 1;
 
         #endregion
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrow24CG()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Create copy of this class
@@ -215,7 +185,28 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            throw new NotImplementedException();
+            RuminantParametersGrow24CG clonedParameters = new()
+            {
+                EfficiencyOfDPLSUseForWool_CG1 = EfficiencyOfDPLSUseForWool_CG1,
+                EfficiencyOfDPLSUseFromFeed_CG2 = EfficiencyOfDPLSUseFromFeed_CG2,
+                EfficiencyOfDPLSUseFromMilk_CG3 = EfficiencyOfDPLSUseFromMilk_CG3,
+                GainCurvature_CG4 = GainCurvature_CG4,
+                GainMidpoint_CG5 = GainMidpoint_CG5,
+                ConditionNoEffect_CG6 = ConditionNoEffect_CG6,
+                ConditionMaxEffect_CG7 = ConditionMaxEffect_CG7,
+                GrowthEnergyIntercept1_CG8 = GrowthEnergyIntercept1_CG8,
+                GrowthEnergyIntercept2_CG9 = GrowthEnergyIntercept2_CG9,
+                GrowthEnergySlope1_CG10 = GrowthEnergySlope1_CG10,
+                GrowthEnergySlope2_CG11 = GrowthEnergySlope2_CG11,
+                ProteinGainIntercept1_CG12 = ProteinGainIntercept1_CG12,
+                ProteinGainIntercept2_CG13 = ProteinGainIntercept2_CG13,
+                ProteinGainSlope1_CG14 = ProteinGainSlope1_CG14,
+                ProteinGainSlope2_CG15 = ProteinGainSlope2_CG15,
+                BreedGrowthEfficiencyScalar = BreedGrowthEfficiencyScalar,
+                BreedLactationEfficiencyScalar = BreedLactationEfficiencyScalar,
+                BreedMainenanceEfficiencyScalar = BreedMainenanceEfficiencyScalar,
+            };
+            return clonedParameters;
         }
     }
 }

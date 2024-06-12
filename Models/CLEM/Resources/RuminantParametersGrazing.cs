@@ -29,8 +29,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Grazing")]
         [Description("Maximum green in diet")]
         [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.98)]
-        public double GreenDietMax { get; set; }
+        public double GreenDietMax { get; set; } = 0.98;
 
         /// <summary>
         /// Shape of curve for diet vs pasture
@@ -38,8 +37,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Grazing")]
         [Description("Shape of curve for diet vs pasture")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.15)]
-        public double GreenDietCoefficient { get; set; }
+        public double GreenDietCoefficient { get; set; } = 0.15;
 
         /// <summary>
         /// Proportion green in pasture at zero in diet
@@ -48,8 +46,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Diet")]
         [Description("Proportion green in pasture at zero in diet")]
         [Required, Proportion]
-        [System.ComponentModel.DefaultValue(0.04)]
-        public double GreenDietZero { get; set; }
+        public double GreenDietZero { get; set; } = 0.04;
 
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
@@ -57,9 +54,8 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Diet")]
         [Description("Coefficient to adjust intake for herbage biomass")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(0.01)]
 
-        public double IntakeCoefficientBiomass { get; set; }
+        public double IntakeCoefficientBiomass { get; set; } = 0.01;
 
         /// <summary>
         /// Enforce strict feeding limits
@@ -67,16 +63,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool StrictFeedingLimits { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrazing()
-        {
-            this.SetDefaults();
-        }
+        public bool StrictFeedingLimits { get; set; } = true;
 
         /// <summary>
         /// Clone of the Grazing Parameters
