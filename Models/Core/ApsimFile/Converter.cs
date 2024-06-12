@@ -5,8 +5,10 @@ using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
+using Models.PMF.Organs;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
+using PdfSharpCore.Pdf.Filters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -5533,61 +5535,81 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion175(JObject root, string _)
         {
-            UpdateTillering(root, "DynamicTillering");
-            UpdateTillering(root, "FixedTillering");
+            JObject parametersFolder = FindParametersFolder(root);
+            UpdateTillering(root, parametersFolder, "DynamicTillering");
+            UpdateTillering(root, parametersFolder, "FixedTillering");
         }
 
-        private static void UpdateTillering(JObject root, string name)
+        private static JObject FindParametersFolder(JObject root)
+        {
+            foreach (var folders in JsonUtilities.ChildrenOfType(root, "Folder"))
+            {
+                var parametersFolder = JsonUtilities.DescendantWithName(folders, "Parameters");
+                if (parametersFolder != null) return parametersFolder;
+            }
+            return default;
+        }
+
+        private static void UpdateTillering(
+            JObject root, 
+            JObject parametersFolder, 
+            string name
+        )
         {
             foreach (var tillering in JsonUtilities.ChildrenOfType(root, name))
             {
                 var tilleringChildren = JsonUtilities.Children(tillering);
-                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "slaLeafNoCoefficient", 18.158);
-                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "maxLAIForTillerAddition", 0.325);
-                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "maxSLAAdjustment", 25);
-
-                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient");
-                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition");
-                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment");
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient", 18.158);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition", 0.325);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment", 25);
 
                 var findAreaCalc = tilleringChildren.Find(c => JsonUtilities.Name(c).Equals("AreaCalc", StringComparison.OrdinalIgnoreCase));
 
                 if (findAreaCalc != null)
                 {
-                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "A2", -0.1293);
-                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "B2", -0.11);
-                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "aX0I", 3.58);
-                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "aX0S", 0.60);
-
-                    //var areaCalcChildren = JsonUtilities.Children(findAreaCalc);
-                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.A2", "A2");
-                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.B2", "B2");
-                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0I", "aX0I");
-                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0S", "aX0S");
+                    var areaCalcChildren = JsonUtilities.Children(findAreaCalc);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.A2", "A2", -0.1293);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.B2", "B2", -0.11);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0I", "aX0I", 3.58);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0S", "aX0S", 0.60);
                 }
             }
         }
 
-        private static void AddLeafAreaVariableRef(
-            JObject leafAreaRoot, 
+        private static void AddVariableRef(
+            JObject parametersFolder,
+            JObject root,
             List<JObject> children,
             string variableName,
-            string name
+            string name,
+            double leafParamFixedValue
         )
         {
-            if (leafAreaRoot is null) return;
+            if (root is null) return;
             if (children is null || !children.Any()) return;
             if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
 
-            var find = children.Find(c => JsonUtilities.Name(c).Equals(name, StringComparison.OrdinalIgnoreCase));
-           
-            if (find is null)
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // root object.
+            if (parametersFolder is null)
             {
-                JsonUtilities.AddModel(leafAreaRoot, new VariableReference()
+                JsonUtilities.AddConstantFunctionIfNotExists(root, name, leafParamFixedValue);
+            }
+            // The parameters folder exists, so add the constant there and have a variable
+            // reference that points to it.
+            else
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(parametersFolder, name, leafParamFixedValue);
+                var find = children.Find(c => JsonUtilities.Name(c).Equals(name, StringComparison.OrdinalIgnoreCase));
+
+                if (find is null)
                 {
-                    VariableName = variableName,
-                    Name = name
-                });
+                    JsonUtilities.AddModel(root, new VariableReference()
+                    {
+                        VariableName = variableName,
+                        Name = name
+                    });
+                }
             }
         }
     }
