@@ -4,6 +4,7 @@ namespace UserInterface.Presenters
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Security;
     using System.Reflection;
     using global::UserInterface.Interfaces;
     using global::UserInterface.Views;
@@ -225,7 +226,14 @@ namespace UserInterface.Presenters
 
             // disable right pane if user is not authorised
             if((selectedCategory ?? "") != "")
-                (propertyView as PropertyView).MainWidget.SetProperty("sensitive", new GLib.Value(sortOrderList[selectedCategory] <= userLevel));
+            {
+                int authLevel;
+                bool authOk = true;
+                if (sortOrderList.TryGetValue(selectedCategory, out authLevel))
+                    authOk = (userLevel >= authLevel);
+
+                (propertyView as PropertyView).MainWidget.SetProperty("sensitive", new GLib.Value(authOk));
+            }
 
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
             treeview.AddRightHandView(propertyView);

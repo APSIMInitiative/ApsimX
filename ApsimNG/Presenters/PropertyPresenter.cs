@@ -132,6 +132,8 @@ namespace UserInterface.Presenters
             List<Property> properties = new List<Property>();
             List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
             CategoryAttribute categoryAttribute = null;
+            PropertyInfo subProperty = null;
+            object subObject = null;
             foreach (PropertyInfo property in allProperties)
             {
                 // Assign any category attribute details here for category based property presenter (currently in CLEM)
@@ -145,7 +147,7 @@ namespace UserInterface.Presenters
                 DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
                 if (display != null && display.Type == DisplayType.SubModel)
                 {
-                    object subObject = property.GetValue(obj);
+                    subObject = property.GetValue(obj);
                     if (subObject == null)
                         subObject = Activator.CreateInstance(property.PropertyType);
                     PropertyGroup group = GetProperties(subObject);
@@ -166,10 +168,13 @@ namespace UserInterface.Presenters
                     string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
                     if (subPropertyName.Any())
                     {
-                        object subObject = property.GetValue(obj);
+                        subObject = property.GetValue(obj);
                         subObject ??= Activator.CreateInstance(property.PropertyType);
-                        PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
+                        subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
+                    }
 
+                    if (subPropertyName.Any() && subProperty is not null)
+                    {
                         result = new Property(subObject, subProperty, property);
                         propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty, Category = categoryAttribute });
                     }
