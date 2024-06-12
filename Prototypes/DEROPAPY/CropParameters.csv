@@ -3,8 +3,8 @@ Pp_FullCover_02,h,Photoperiod x-values for full cover target thermal-time length
 Tt_FullCover_02,oCd,Thermal-time duration of full-cover phase at PP x-values (FullCanopy to StartSenescence),Canopy,(0 700 700),(0 700 700),(0 700 700),(7000 700),(1000 800),(1000 800),(55 300),(1000 800),(1000 800),(500 700),(900 800),(900 800),(400 300),(400 300),(1167 1167),(1167 1167),(1167 1167),(1167 1167),(0 450 450),(0 450 450),(200 1000),(1300 1300),(1300 1300)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,Canopy,600,600,600,800,1100,1100,450,660,660,700,700,700,700,700,100,100,100,100,520,520,200,0,0
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,0,0,0,0,0,0,0,0,1100,1100,1100,1100,1000,1000,1370,1370,1500,0,0
-MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,0,0,0,0,0,0,0,0,3000,3000,3000,3000,3500,3500,4500,4500,2500,100,100
-MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,2500,2500,1800,1800,1800,1800,1800,1800,1800,1800,1800,950,950,5700,5700,4500,4500,3500,3500,3500,300,300
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,0,0,0,0,0,0,0,0,2050,3000,3000,3000,3500,3500,4500,4500,2500,100,100
+MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,2500,2500,1800,1800,1800,1800,1800,1800,1800,1800,1800,2500,950,5700,5700,4500,4500,3500,3500,3500,300,300
 MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,0,0,0,0,0,0,0,0,1200,1200,1200,1200,1200,1200,10000,10000,1200,300,300
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,800,800,800,800,800,800,800,800,1500,1500,1500,1500,1500,1500,1500,1500,1500,300,300
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,0,0,0
