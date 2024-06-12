@@ -463,15 +463,15 @@ namespace Models.CLEM.Resources
             
             for (int i = 0; i < CarryingCount; i++)
             {
-                // Previous suckling/calf weight from Freer
-                // Grow
-                //   calculate birth weigth Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
-                // Grow24
-                //   use the weight of fetus at birth
+                // Determine the best birth weight to use
+                // RuminantGrow 
+                //   calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                // RuminantGrow24
+                //   use the weight of fetus at birth as calculated during pregnancy
 
                 double weight = Weight.Fetus.Amount;
                 if (Weight.Fetus.Amount == 0)
-                    weight = Parameters.General.BirthScalar[NumberOfFetuses] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                    weight = Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
 
                 Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
                 newSucklingRuminant.Parameters = new RuminantParameters(Parameters);
