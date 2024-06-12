@@ -1732,18 +1732,14 @@ namespace Models.CLEM.Activities
                 }
                 if (Math.Round(sumProportions, 4) != 1)
                 {
-                    string[] memberNames = new string[] { "Invalid proportions set" };
-                    string error = $"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={Name}] do not add up to 1.";
-                    return new ValidationResult(error, memberNames);
+                    return new ValidationResult($"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={Name}] do not add up to 1.", new string[] { "Invalid proportions set" });
                 }
             }
             else
             {
                 if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
                 {
-                    string[] memberNames = new string[] { "No breeding males specified" };
-                    string error = $"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent sires required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males";
-                    return new ValidationResult(error, memberNames);
+                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent sires of breeding age [RuminantType.General.MaleMinimumAge1stMating] and size [RuminantType.General.MaleMinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males, otherwise add a male or adjust the 1st breeding criteria.", new string[] { "No breeding males specified" });
                 }
             }
             return null;
@@ -1770,7 +1766,7 @@ namespace Models.CLEM.Activities
             {
                 if (MaximumProportionBreedersPerPurchase > 0)
                 {
-                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent breeding females required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females", new string[] { "No breeding females specified" });
+                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent breeding females of age [RuminantType.General.MinimumAge1stMating] and size [RuminantType.General.MinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females, otherwise add a female or adjust the 1st breeding criteria.", new string[] { "No breeding females specified" });
                 }
             }
             return null;
