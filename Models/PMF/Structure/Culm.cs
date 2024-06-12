@@ -1,9 +1,5 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Models.Core;
-using Models.Functions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace Models.PMF.Struct
 {
@@ -57,8 +53,6 @@ namespace Models.PMF.Struct
         /// <summary>The position of the largest leaf on this culm.</summary>
         public double PositionOfLargestLeaf { get; set; }
 
-        // public Methods -------------------------------------------------------
-
         /// <summary>Constructor. </summary>
         /// <param name="leafAppearance"></param>
         public Culm(double leafAppearance)
@@ -79,11 +73,7 @@ namespace Models.PMF.Struct
             }
             else
             {
-                var relLeafSize = 0.0;
-                if (CulmNo == 1) relLeafSize = 0.23;
-                else if (CulmNo < 5) relLeafSize = 0.13;
-                else relLeafSize = 0.39;
-
+                double relLeafSize = GetRelativeLeafSize();
                 AreaOfLargestLeaf = mainCulm.AreaOfLargestLeaf * (1 - relLeafSize);
                 PositionOfLargestLeaf = mainCulm.PositionOfLargestLeaf - (CulmNo + 1);
             }
@@ -115,6 +105,15 @@ namespace Models.PMF.Struct
             DltStressedLAI = 0.0;
             CulmNo = 0;
             LeafSizes = new List<double>();
+        }
+
+        private double GetRelativeLeafSize()
+        {
+            if (CulmNo == 1)
+                return 0.23;
+            else if (CulmNo < 5)
+                return 0.13;
+            else return 0.39;
         }
     }
 }

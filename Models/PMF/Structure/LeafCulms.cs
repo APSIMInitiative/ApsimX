@@ -74,7 +74,7 @@ namespace Models.PMF.Struct
         /// - Dynamic Tillering - Will put on tillers dynamically using GxMxE factors. It will also peform tiller cessation.
         /// </summary>
         private ITilleringMethod Tillering => dynamicTillering;
-
+        
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
         public double FertileTillerNumber

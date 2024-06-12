@@ -1,18 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Xml;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
+using MathNet.Numerics.Financial;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Models.Core.ApsimFile
 {
@@ -23,7 +26,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 174; } }
+        public static int LatestVersion { get { return 175; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1542,6 +1545,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
             {
+
                 VariableReference varRef = new VariableReference();
                 varRef.Name = "XValue";
                 varRef.VariableName = linint["XProperty"].ToString();
@@ -5519,6 +5523,71 @@ namespace Models.Core.ApsimFile
                     arc["SourceID"] = sourceID;
                     arc["DestinationID"] = destinationID;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Change name based system to id based system in directed graphs
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion175(JObject root, string _)
+        {
+            UpdateTillering(root, "DynamicTillering");
+            UpdateTillering(root, "FixedTillering");
+        }
+
+        private static void UpdateTillering(JObject root, string name)
+        {
+            foreach (var tillering in JsonUtilities.ChildrenOfType(root, name))
+            {
+                var tilleringChildren = JsonUtilities.Children(tillering);
+                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "slaLeafNoCoefficient", 18.158);
+                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "maxLAIForTillerAddition", 0.325);
+                JsonUtilities.AddConstantFunctionIfNotExists(tillering, "maxSLAAdjustment", 25);
+
+                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient");
+                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition");
+                //AddLeafAreaVariableRef(tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment");
+
+                var findAreaCalc = tilleringChildren.Find(c => JsonUtilities.Name(c).Equals("AreaCalc", StringComparison.OrdinalIgnoreCase));
+
+                if (findAreaCalc != null)
+                {
+                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "A2", -0.1293);
+                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "B2", -0.11);
+                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "aX0I", 3.58);
+                    JsonUtilities.AddConstantFunctionIfNotExists(findAreaCalc, "aX0S", 0.60);
+
+                    //var areaCalcChildren = JsonUtilities.Children(findAreaCalc);
+                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.A2", "A2");
+                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.B2", "B2");
+                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0I", "aX0I");
+                    //AddLeafAreaVariableRef(findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0S", "aX0S");
+                }
+            }
+        }
+
+        private static void AddLeafAreaVariableRef(
+            JObject leafAreaRoot, 
+            List<JObject> children,
+            string variableName,
+            string name
+        )
+        {
+            if (leafAreaRoot is null) return;
+            if (children is null || !children.Any()) return;
+            if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
+
+            var find = children.Find(c => JsonUtilities.Name(c).Equals(name, StringComparison.OrdinalIgnoreCase));
+           
+            if (find is null)
+            {
+                JsonUtilities.AddModel(leafAreaRoot, new VariableReference()
+                {
+                    VariableName = variableName,
+                    Name = name
+                });
             }
         }
     }

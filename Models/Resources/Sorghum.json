@@ -9501,7 +9501,7 @@
                     "[Phenology].TTFlowerToMaturity.FixedValue = 695",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
                   ],
                   "Name": "dekalb_DK55",
                   "ResourceName": null,
