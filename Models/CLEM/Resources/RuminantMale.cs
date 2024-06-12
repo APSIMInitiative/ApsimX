@@ -20,15 +20,18 @@ namespace Models.CLEM.Resources
                     return "Castrate";
                 else
                 {
-                    if (IsPreBreeder)
+                    if (!IsAbleToBreed)
                     {
                         return "PreBreeder";
                     }
-                    else if(IsWildBreeder)
+                    else
                     {
+                        if (Attributes.Exists("Sire"))
+                        {
+                            return "Sire";
+                        }
                         return "WildBreeder";
                     }
-                    return "Sire";
                 }
             }
         }
@@ -43,7 +46,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (!IsSterilised && Attributes.Exists("Sire"))
-                    if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)
+                    if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays & Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight)
                     {
                         IsReplacementBreeder = false;
                         return true;
@@ -53,19 +56,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if this male is a weaned but less than age at first mating 
+        /// Indicates if this male is a weaned but less than age and size at first mating 
         /// </summary>
         [FilterByProperty]
         public bool IsPreBreeder
         {
             get
             {
-                return (IsWeaned && (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays) == false);
+                return (IsWeaned && !IsAbleToBreed);
             }
         }
 
         /// <summary>
-        /// Indicates if individual is breeding sire
+        /// Indicates if individual is able to breed but not specified as a breeding sire (e.g. wild breeder, "Mickey")
         /// Represents any uncastrated male of breeding age that is not assigned sire
         /// </summary>
         [FilterByProperty]
@@ -73,7 +76,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (!IsSterilised && !IsPreBreeder && !Attributes.Exists("Sire"));
+                return (IsWeaned && !IsSterilised && !IsPreBreeder && !Attributes.Exists("Sire"));
             }
         }
 
@@ -86,7 +89,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public override bool IsAbleToBreed {  get { return !IsSterilised; } }
+        public override bool IsAbleToBreed {  get { return !IsSterilised && ((Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)); } }
 
         /// <summary>
         /// Constructor
