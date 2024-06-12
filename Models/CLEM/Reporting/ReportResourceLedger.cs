@@ -286,7 +286,7 @@ namespace Models.CLEM.Reporting
                                 break;
                         }
                         if (IncludeRuminantWeight)
-                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.Weight as Weight");
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.Weight.Live as LiveWeight");
                         if (IncludeRuminantAE)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.AdultEquivalent as AE");
                         if (IncludeRuminantLocation)
