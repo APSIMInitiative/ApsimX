@@ -88,10 +88,18 @@ namespace Models.CLEM.Resources
         public double WeightSD { get; set; }
 
         /// <summary>
-        /// Provide initial fat and protein weight as array of two double values
+        /// Provide initial fat and protein percent of empty body mass as array of two double values
         /// </summary>
-        [Description("Provide initial fat and protein proportions of EBW (fat, protein)")]
-        public double[] ProvideInitialFatProteinProportions { get; set; }
+        [Description("Provide initial fat and protein percentage of EBW (fat, protein)")]
+        [Percentage]
+        public double[] ProvideInitialFatProteinPercentage { get; set; }
+
+        /// <summary>
+        /// Provide initial fat and protein mass (kg) as array of two double values
+        /// </summary>
+        [Description("Provide initial fat and protein mass (kg fat, kg protein)")]
+        [ArrayItemCount(2), GreaterThanEqualValue(0)]
+        public double[] ProvideInitialFatProteinMass { get; set; }
 
         /// <summary>
         /// Is suckling?
@@ -161,6 +169,7 @@ namespace Models.CLEM.Resources
         {
             List<Ruminant> individuals = new ();
             initialAttributes ??= new List<ISetAttribute>();
+            setPreviousConception = this.FindChild<SetPreviousConception>();
 
             if (number > 0)
             {
@@ -189,13 +198,6 @@ namespace Models.CLEM.Resources
                     double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
                            
                     Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight);
-                    RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinProportions);
-                    //if (ProvideInitialFatProteinProportions is null)
-                    //else
-                    //{
-                    //    ruminant.Weight.Fat.Set(ProvideInitialFatProteinProportions[0] * ruminant.Weight.EmptyBodyMass);
-                    //    ruminant.Weight.Protein.Set(ProvideInitialFatProteinProportions[1] * ruminant.Weight.EmptyBodyMass);
-                    //}
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
@@ -220,9 +222,8 @@ namespace Models.CLEM.Resources
 
                     if (Sire)
                     {
-                        if (this.Sex == Sex.Male)
+                        if (ruminant is RuminantMale ruminantMale)
                         {
-                            RuminantMale ruminantMale = ruminant as RuminantMale;
                             ruminantMale.Attributes.Add("Sire");
                         }
                         else
@@ -235,9 +236,8 @@ namespace Models.CLEM.Resources
                     // if weight not provided use normalised weight
                     // ruminant.PreviousWeight = ruminant.Weight;
 
-                    if (this.Sex == Sex.Female)
+                    if (ruminant is RuminantFemale ruminantFemale)
                     {
-                        RuminantFemale ruminantFemale = ruminant as RuminantFemale;
                         ruminantFemale.WeightAtConception = ruminant.Weight.Live;
                         ruminantFemale.NumberOfBirths = 0;
 
@@ -247,6 +247,13 @@ namespace Models.CLEM.Resources
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
                         ruminant.AddNewAttribute(item);
+
+                    if(ProvideInitialFatProteinPercentage is not null)
+                        RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinPercentage, true);
+                    else if (ProvideInitialFatProteinMass is not null)
+                        RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinMass, false);
+                    else
+                       RuminantInfoWeight.SetInitialFatProtein(ruminant, null);
 
                     individuals.Add(ruminant);
                 }

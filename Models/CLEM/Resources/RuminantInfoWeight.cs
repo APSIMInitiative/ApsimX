@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -151,14 +152,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Relative size based on highest weight achieved (High weight / standard reference weight)
+        /// Relative size based on highest weight achieved (high weight / standard reference weight)
         /// </summary>
         [FilterByProperty]
         public double RelativeSizeByHighWeight { get { return HighestAttained / StandardReferenceWeight; } }
 
         /// <summary>
+        /// Relative size based on live weight (live weight / standard reference weight)
+        /// </summary>
+        [FilterByProperty]
+        public double RelativeSizeByLiveWeight { get { return Live / StandardReferenceWeight; } }
+
+        /// <summary>
         /// Relative condition (base weight / normalised weight)
-        /// Does not include conceptus weight in pregnant females.
+        /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </summary>
         [FilterByProperty]
         public double RelativeCondition { get { return Base.Amount / NormalisedForAge; } }
@@ -170,7 +177,7 @@ namespace Models.CLEM.Resources
         public double BodyCondition { get { return Base.Amount / NormalisedForAge; } }
 
         /// <summary>
-        /// The current weight as a proportion of High weight achieved
+        /// The current live weight as a proportion of normalised weight for age
         /// </summary>
         [FilterByProperty]
         public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Live / NormalisedForAge; } }
@@ -230,17 +237,25 @@ namespace Models.CLEM.Resources
         /// Calculate and set the initial fat and protein weights of the specified individual
         /// </summary>
         /// <param name="individual">The individual ruminant</param>
-        /// <param name="initialFastProteinProps">Provide initial EBW fat proportion and initial EBW fat proportion (optional)</param>
-        public static void SetInitialFatProtein(Ruminant individual, double[] initialFastProteinProps = null)
+        /// <param name="initialFatProtein">Provide initial EBW fat proportion and initial EBW fat proportion (optional)</param>
+        /// <param name="assumeInitialPercentage">If true initialFatProtein is provided as a percentage</param>
+        public static void SetInitialFatProtein(Ruminant individual, double[] initialFatProtein = null, bool assumeInitialPercentage = true)
         {
             double pFat;
             double pProtein = -1;
-            if (initialFastProteinProps is not null)
+            double initialFactor = 1.0;
+            if (assumeInitialPercentage)
             {
-                pFat = initialFastProteinProps[0];
-                if (initialFastProteinProps.Length >= 2)
+                initialFactor = 0.01;
+            }
+
+            if (initialFatProtein is not null)
+            {
+                pFat = initialFatProtein[0]*initialFactor;
+
+                if (initialFatProtein.Length >= 2)
                 {
-                    pProtein = initialFastProteinProps[1];
+                    pProtein = initialFatProtein[1]*initialFactor;
                 }
             }
             else
@@ -254,21 +269,20 @@ namespace Models.CLEM.Resources
                     sexFactor = 0.85;
 
                 double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
-                pFat = (individual.Parameters.General.ProportionEBWFat + (RC * RCFatSlope)) * sexFactor;
+                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC-1) * RCFatSlope)) * sexFactor;
             }
-#if DEBUG
-            individual.Weight.Fat.Set(pFat);
-#else
-            individual.Weight.Fat.Set(pFat * individual.Weight.EmptyBodyMass);
-#endif
+
+            if(!assumeInitialPercentage)
+                individual.Weight.Fat.Set(pFat);
+            else
+                individual.Weight.Fat.Set(pFat * individual.Weight.EmptyBodyMass);
+
             if (pProtein >= 0)
             {
-#if DEBUG
-                individual.Weight.Protein.Set(pProtein);
-#else
-            individual.Weight.Protein.Set(pProtein * individual.Weight.EmptyBodyMass);
-#endif
-                individual.Weight.Protein.Set(pProtein);
+                if (!assumeInitialPercentage)
+                    individual.Weight.Protein.Set(pProtein);
+                else
+                    individual.Weight.Protein.Set(pProtein * individual.Weight.EmptyBodyMass);
             }
             else
             {
