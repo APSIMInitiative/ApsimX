@@ -46,26 +46,44 @@ namespace Models.Functions
         /// </exception>
         public double Value(int arrayIndex = -1)
         {
+            return currentValue;
+        }
+
+
+        [EventSubscribe("PostPhenology")]
+        private void onPostPhenology(object sender, EventArgs e)
+        {
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
-            
+
             if (pPhase.IsInPhase)
-            { 
-                foreach (IFunction kid in ChildFunctions) 
+            {
+                foreach (IFunction kid in ChildFunctions)
                 {
                     if (kid.Name != "StartValue")
                         currentValue *= kid.Value(-1);
                 }
             }
-            return currentValue;
         }
+
+        private  bool cropEndedYesterday = false;
 
         [EventSubscribe("StageWasReset")]
         private void onStageWasReset(object sender, StageSetType sst)
         {
             if ((sst.StageNumber <= pPhase.StartStage)||(pPhase.StartStage==0))
             {
-                currentValue = StartValue.Value(); 
+                cropEndedYesterday = true;
+            }
+        }
+
+        [EventSubscribe("StartOfDay")]
+        private void onStartOfDay(object sender, EventArgs e)
+        {
+            if (cropEndedYesterday) 
+            {
+                currentValue = StartValue.Value();
+                cropEndedYesterday = false;
             }
         }
 

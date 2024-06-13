@@ -296,6 +296,7 @@ namespace Models.PMF.Phen
                         else
                         {
                             AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                            PhaseSkipped.ProgressThroughPhase = PhaseSkipped.Target;
                         }
                     }
                     
