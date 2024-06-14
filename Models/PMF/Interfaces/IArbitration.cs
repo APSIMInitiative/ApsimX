@@ -17,10 +17,10 @@ namespace Models.PMF.Interfaces
     /// <summary>
     /// Interface for Biomass supply from photosynthesis
     /// </summary>
-    public interface ITotalDMFixationSupply
+    public interface ITotalCFixationSupply
     {
         /// <summary> The amount of DM fixed by photosynthesis</summary>
-        double TotalDMFixationSupply { get; }
+        double TotalCFixationSupply { get; }
     }
 
     /// <summary>
