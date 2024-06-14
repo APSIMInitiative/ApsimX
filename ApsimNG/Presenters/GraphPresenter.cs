@@ -230,7 +230,7 @@
                                 pointsInsideAxis += 1;
                         }
                     }
-                    if (xNaNCount > 0 || yNaNCount > 0 || bothNaNCount > 0)
+                    if (xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
                     {
                         explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: NaN Values found in points. These may be empty cells in the datastore.", Simulation.MessageType.Information, false);
                         if (xNaNCount > 0)

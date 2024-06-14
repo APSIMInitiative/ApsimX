@@ -186,8 +186,10 @@ namespace UserInterface.Views
                     double[] data = new double[spatialData.Rows.Count - 4];
                     for (int j = 4; j < spatialData.Rows.Count; j++)
                     {
-                        data[j - 4] = Convert.ToDouble(spatialData.Rows[j].ItemArray[i], 
-                                                       System.Globalization.CultureInfo.InvariantCulture);
+                        if (spatialData.Rows[j].ItemArray[i].ToString().Length > 0) 
+                            data[j - 4] = Convert.ToDouble(spatialData.Rows[j].ItemArray[i], System.Globalization.CultureInfo.InvariantCulture);
+                        else
+                            data[j - 4] = 0;
                     }
 
                     List<DataPoint> points = new List<DataPoint>();

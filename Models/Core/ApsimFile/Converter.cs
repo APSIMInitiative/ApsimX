@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 173; } }
+        public static int LatestVersion { get { return 174; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -229,7 +229,19 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
+                    // Add a soil temperature model.
+                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                    if (soilTemperature == null)
+                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
 
+                    // Add a nutrient model.
+                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                    if (nutrient == null)
+                    {
+                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                        nutrient["ResourceName"] = "Nutrient";
+                    }
 
                     return res;
                 }
@@ -1239,7 +1251,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
                     {
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
@@ -1248,7 +1260,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
                     {
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
@@ -1257,7 +1269,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
@@ -1271,7 +1283,7 @@ namespace Models.Core.ApsimFile
                             if (double.IsNaN(values[i]))
                                 values[i] = 0;
                         }
-                        if (values.Length < chemicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["Rocks"] = new JArray(mappedValues);
@@ -5463,6 +5475,50 @@ namespace Models.Core.ApsimFile
                 bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ", true);
                 if (changeMade)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Change name based system to id based system in directed graphs
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion174(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                //give each node an id
+                int id = 0;
+                foreach (var node in rotationManager["Nodes"])
+                {
+                    id += 1;
+                    node["ID"] = id;
+                    node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
+                }
+
+                //give each arc an id
+                foreach (var arc in rotationManager["Arcs"])
+                {
+                    id += 1;
+                    arc["ID"] = id;
+                    arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
+
+                    //connect up arc source/dest with ids instead of names
+                    string sourceName = arc["SourceName"].ToString();
+                    int sourceID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == sourceName)
+                            sourceID = (int)node["ID"];
+
+                    string destinationName = arc["DestinationName"].ToString();
+                    int destinationID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == destinationName)
+                            destinationID = (int)node["ID"];
+
+                    arc["SourceID"] = sourceID;
+                    arc["DestinationID"] = destinationID;
+                }
             }
         }
     }
