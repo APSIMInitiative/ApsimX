@@ -4,6 +4,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
 {
@@ -14,6 +15,8 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
+        /// <summary>The nutrient model</summary>
+        public INutrient nutrient { get; set; }
 
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
@@ -128,6 +131,7 @@ namespace Models.PMF.Organs
             this.Soil = soil;
             this.plant = Plant;
             this.parentNetwork = Plant.FindDescendant<RootNetwork>();
+            nutrient = soil.FindChild<INutrient>(); 
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -202,11 +206,26 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeBiomassProportions()
         {
+            OrganNutrientsState totalLive = new OrganNutrientsState();
+            OrganNutrientsState totalDead = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.Live;
-                LayerDeadProportion[i] = LayerDead[i] / parentNetwork.parentOrgan.Dead;
+                totalLive =  OrganNutrientsState.add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
+                totalDead =  OrganNutrientsState.add(totalDead, LayerDead[i],parentNetwork.parentOrgan.Cconc);
             }
+            double checkLiveWtPropn = 0;
+            double checkDeadWtPropn = 0;
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLive, 1);
+                LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDead, 1);
+                checkLiveWtPropn += LayerLiveProportion[i].Wt;
+                checkDeadWtPropn += LayerDeadProportion[i].Wt;
+            }
+            if (Math.Abs(checkLiveWtPropn - 1) > 1e-12 && (totalLive.Wt > 0))
+                throw new Exception("Error in calculating root LiveWt distribution");
+            if ((Math.Abs(checkDeadWtPropn - 1) > 1e-12)&&(totalDead.Wt > 0))
+                throw new Exception("Error in calculating root DeadWt distribution");
         }
 
         /// <summary>Clears this instance.</summary>
@@ -265,7 +284,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress;
+                Depth = Depth + (rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress);
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)

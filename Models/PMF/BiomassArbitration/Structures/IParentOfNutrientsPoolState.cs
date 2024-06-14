@@ -5,8 +5,7 @@
     /// </summary>
     public interface IParentOfNutrientsPoolState
     {
-        /// <summary>Update own properties and tell parent class to update its properties that are derived from this</summary>
-        void UpdateProperties();
+
     }
 }
 
