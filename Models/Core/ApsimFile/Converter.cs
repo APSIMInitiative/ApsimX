@@ -5559,9 +5559,12 @@ namespace Models.Core.ApsimFile
             foreach (var tillering in JsonUtilities.ChildrenOfType(root, name))
             {
                 var tilleringChildren = JsonUtilities.Children(tillering);
-                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient", 18.158);
+
+                // Setting slaLeafNoCoefficient to zero, disables the tillering SLA limitation routine (CalcCarbonLimitation)
+                // in DynamicTillering from reducing the SLA.
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient", 0.0);
                 AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition", 0.325);
-                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment", 25);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment", 0.0);
 
                 var findAreaCalc = tilleringChildren.Find(c => JsonUtilities.Name(c).Equals("AreaCalc", StringComparison.OrdinalIgnoreCase));
 

@@ -415,6 +415,10 @@ namespace Models.PMF.Struct
 
         private double CalcCarbonLimitation(double dltStressedLAI)
         {
+            var slaLeafNoCoefficientValue = slaLeafNoCoefficient.Value();
+
+            // If the coefficient is zero or negative, we don't want to apply this limitation.
+            if (slaLeafNoCoefficientValue <= 0.0) return 1.0;
             if (dltStressedLAI <= 0.0) return 1.0;
 
             // Get the total leaf mass and LAI of the plant.
