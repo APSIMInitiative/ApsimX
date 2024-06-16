@@ -3,8 +3,8 @@ Pp_FullCover_02,h,Photoperiod x-values for full cover target thermal-time length
 Tt_FullCover_02,oCd,Thermal-time duration of full-cover phase at PP x-values (FullCanopy to StartSenescence),Canopy,(0 700 700),(1000 800),(1000 800),(900 800),(400 300),(1167 1167),(1167 1167),(0 450 450),(200 1000),(1300 1300),(1300 1300)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,Canopy,600,1100,660,700,700,100,100,520,200,0,0
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,1100,1100,1000,1370,1500,0,0
-MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,2050,3000,3500,4500,2500,100,100
-MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1800,1800,1800,2500,5700,4500,3500,3500,300,300
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,1100,3000,3500,4500,2500,100,100
+MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1800,1800,1800,2600,5700,4500,3500,3500,300,300
 MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,1200,1200,1200,10000,1200,300,300
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,1500,1500,1500,1500,1500,300,300
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,0,0,6,6,6,0,0,0
@@ -60,7 +60,7 @@ AgeToMaxDimension,Y,Years until plant reaches mature size,Structure,1,1,1,1,6,6,
 AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,Structure,0,0,0,0,6,6,6,6,6,0.3,1
 SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,Structure,(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 0.5),(0.5 1 1 1),(0.5 1 1 1),(0.5 1 1 1),(0.5 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,Structure,0,0,0,0,500,1500,1000,1500,1500,0,0
-MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,1600,1100,2000,2300,1000,1600,1500,3000,3000,600,600
+MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,1600,1100,2000,2300,2000,2000,2000,2000,2000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
 TT_Temp_X,oC,Average temperature for thermal time calculation,ThermalTime,(0   18  26  34  44),(0  26  37),(1.9 26  40),2  30  35,(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
