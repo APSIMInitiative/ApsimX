@@ -5,8 +5,8 @@ Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,C
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,1100,1100,1000,1370,1500,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,0,3000,3500,4500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1800,1800,1800,2600,5700,4500,3500,3500,300,300
-MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,1200,1200,1200,10000,1200,300,300
-MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,1500,1500,1500,1500,1500,300,300
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,0,1200,1200,10000,1200,300,300
+MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,500,1500,1500,1500,1500,300,300
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,0,0,6,6,6,0,0,0
 LAImax,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),Canopy,6,7,7,6,6,2,2,2,8,6,3
 ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,Canopy,0.5,0.5,0.96,0.55,0.6,0.4,0.4,0.6,0.7,0.5,0.8
