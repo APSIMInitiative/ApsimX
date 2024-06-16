@@ -16,7 +16,7 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The arbitrator</summary>
         [Link]
-        ITotalCFixationSupply arbitrator = null;
+        IArbitrator arbitrator = null;
 
         [Link(Type = LinkType.Ancestor)]
         IOrgan parentOrgan = null;
@@ -27,7 +27,7 @@ namespace Models.Functions.DemandFunctions
             if (PartitionFraction.Value(arrayIndex) < 0)
                 throw new Exception("PartitionFraction in " + this.parentOrgan.Name + " is returning a negative value");
             if (arbitrator != null)
-                return arbitrator.TotalCFixationSupply * PartitionFraction.Value(arrayIndex);
+                return arbitrator.TotalDMFixationSupply * PartitionFraction.Value(arrayIndex);
             else
                 return 0;
         }

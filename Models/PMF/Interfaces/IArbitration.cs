@@ -12,6 +12,9 @@ namespace Models.PMF.Interfaces
 
         /// <summary>The N data class  </summary>
         BiomassArbitrationType N { get; }
+
+        /// <summary>The total biomass available from photosynthesis  </summary>
+        double TotalDMFixationSupply { get; }
     }
 
     /// <summary>
