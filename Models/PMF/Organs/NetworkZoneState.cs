@@ -217,10 +217,10 @@ namespace Models.PMF.Organs
             double checkDeadWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLive, 1);
-                LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDead, 1);
-                checkLiveWtPropn += LayerLiveProportion[i].Wt;
-                checkDeadWtPropn += LayerDeadProportion[i].Wt;
+                //LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLive, 1);
+                //LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDead, 1);
+                checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
+                checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
             }
             if (Math.Abs(checkLiveWtPropn - 1) > 1e-12 && (totalLive.Wt > 0))
                 throw new Exception("Error in calculating root LiveWt distribution");
