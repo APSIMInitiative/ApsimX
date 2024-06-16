@@ -4979,8 +4979,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].SenescenceRate",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
                   "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
