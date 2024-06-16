@@ -11,7 +11,7 @@ internal static class DeepClonerExprGenerator
     private static readonly MethodInfo _fieldSetMethod;
     static DeepClonerExprGenerator()
     {
-        _fieldSetMethod = typeof(FieldInfo).GetMethod(nameof(FieldInfo.SetValue), [typeof(object), typeof(object)])!;
+        _fieldSetMethod = typeof(FieldInfo).GetMethod(nameof(FieldInfo.SetValue), new Type[2] { typeof(object), typeof(object) })!;
     }
 
     internal static object GenerateClonerInternal(Type realType, bool asObject)
