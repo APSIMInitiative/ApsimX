@@ -4,21 +4,12 @@ using Models.PMF;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using Models.Climate;
-using APSIM.Shared.Interfaces;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Math;
-using DocumentFormat.OpenXml.Spreadsheet;
-using MathNet.Numerics.IntegralTransforms;
-using Models.GrazPlan;
-using Models.Soils.Arbitrator;
-using System.Security.Policy;
+
 namespace Models.Functions
 {
     /// <summary> Damage functions of frost and heat stress </summary>
     /// <remarks> <strong>Model Description</strong>: 
-    /// <para>The damage function is developed in APSIM NG to account for the effects of frost and heat stresses on yield predictions, 
+    /// <para>The damage function is developed in APSIM to account for the effects of frost and heat stresses on yield predictions, 
     /// which runs at the daily step.The damage function is the product of the potential yield reduction induced by extreme(i.e.frost and heat) events and the sensitivity of the 
     /// yield reduction to the growth stage when the events occur.The potential ratio of yield reduction induced by a frost or heat event is a piece-wise linear function of daily
     /// minimum or maximum air temperature, respectively.The potential ratio of yield reduction ranges from 0 to 1 indicating mild to severe yield reduction induced by an extreme 
@@ -43,7 +34,7 @@ namespace Models.Functions
     /// </para>
     /// </remarks>
     [Serializable]
-    [Description("Damage functions of frost and heat stresses are provided for barley, canola and wheat by the GRDC FAHMA project.")]
+    [Description("Damage functions of frost and heat stresses are developed for canola and wheat by the GRDC Frost and Heat Management Analytics (FAHMA) project.")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
@@ -64,82 +55,82 @@ namespace Models.Functions
         [Separator("Crop to be simulated, wheat or canola?")]
         // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
-        public string CropType { get; set; }
+        public string CropType { get; set; } = "Wheat";
 
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
         // <summary>Lower thereshold</summary>
         [Description("Lower threshold of air temperature for frost damage")]
-        public double FrostLowTT { get; set; }
+        public double FrostLowTT { get; set; } = -4.0;
 
         /// <summary>Yield reduction at lower threshold</summary>
         [Description("Yield reduction ratio of frost damage induced by lower threshold")]
-        public double FrostMaxReductionRatio { get; set; }
+        public double FrostMaxReductionRatio { get; set; } = 0.4;
 
         /// <summary>Upper threshold</summary>
         [Description("Upper threshold of air temperature for frost damage")]
-        public double FrostUpTT { get; set; }
+        public double FrostUpTT { get; set; } = 1.0;
 
         /// <summary>Yield reduction at upper threshold</summary>
         [Description("Yield reduction ratio frost damage induced by upper threshold")]
-        public double FrostMinReductionRatio { get; set; }
+        public double FrostMinReductionRatio { get; set; } = 0;
 
 
         /// <summary>Sensitive period of frost damage</summary>
         [Separator("Growth stages to define the sensitive period of frost damage")]
         // <summary>The start of sensitive period of frost damage</summary>
         [Description("Start of sensitive period")]
-        public double FrostStartSensitiveGS { get; set; }
+        public double FrostStartSensitiveGS { get; set; } = 6.4854544;
 
         /// <summary>The start of the most sensitive period of frost damage</summary>
         [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double FrostStartMostSensitiveGS { get; set; }
+        public double FrostStartMostSensitiveGS { get; set; } = 8.0;
 
         /// <summary>The end of the most sensitive period of frost damagee</summary>
         [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double FrostEndMostSensitiveGS { get; set; }
+        public double FrostEndMostSensitiveGS { get; set; } = 9.4983302;
 
         /// <summary>The end of sensitive period of frost damage</summary>
         [Description("End of sensitive period")]
-        public double FrostEndSensitiveGS { get; set; }
+        public double FrostEndSensitiveGS { get; set; } = 9.4990961;
 
 
         /// <summary>Heat damage</summary>
         [Separator("Heat damage")]
         // <summary>Lower threshold</summary>
         [Description("Lower threshold of air temperature for heat damage")]
-        public double HeatLowTT { get; set; }
+        public double HeatLowTT { get; set; } = 30.3459986;
 
         /// <summary>Yield reduction at lower threshold</summary>
         [Description("Yield reduction ratio of heat damage induced by lower threshold")]
-        public double HeatMinReductionRatio { get; set; }
+        public double HeatMinReductionRatio { get; set; } = 0;
 
         /// <summary>Upper threshold</summary>
         [Description("Upper threshold of air temperature for heat damage")]
-        public double HeatUpTT { get; set; }
+        public double HeatUpTT { get; set; } = 34.0000667;
 
         /// <summary>Yield reduction at upper threshold</summary>
         [Description("Yield reduction ratio of heat damage induced by upper threshold")]
-        public double HeatMaxReductionRatio { get; set; }
+        public double HeatMaxReductionRatio { get; set; } = 0.2031898;
 
 
         /// <summary>Sensitivity period of heat damage</summary>
         [Separator("Growth stages to define the sensitivity period of heat damage")]
         // <summary>The start of sensitive period of heat damage</summary>
         [Description("Start of sensitive period")]
-        public double HeatStartSensitiveGS { get; set; }
+        public double HeatStartSensitiveGS { get; set; } = 7.2832313;
 
         /// <summary>The start of the most sensitive period of heat damage</summary>
         [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double HeatStartMostSensitiveGS { get; set; }
+        public double HeatStartMostSensitiveGS { get; set; } = 7.483232;
 
         /// <summary>The end of the most sensitive period</summary>
         [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double HeatEndMostSensitiveGS { get; set; }
+        public double HeatEndMostSensitiveGS { get; set; } = 8.9709024;
 
         /// <summary>The end of sensitive period of heat damage</summary>
         [Description("End of sensitive period")]
-        public double HeatEndSensitiveGS { get; set; }
+        public double HeatEndSensitiveGS { get; set; } = 9.0945434;
 
 
         // Internal variables
