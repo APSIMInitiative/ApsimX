@@ -85,13 +85,13 @@ namespace Models.PMF
         public PlantNutrientsDelta Nitrogen { get; private set; }
 
         /// <summary> The amount of carbon fixed by photosynthesis</summary>
-        public double TotalCFixationSupply { get { return Carbon.TotalFixationSupply; } }
+        public double TotalCFixationSupply => Carbon.TotalFixationSupply;
 
         /// <summary> The amount of carbon fixed by photosynthesis</summary>
-        public double TotalCReTranslocationSupply { get { return Carbon.TotalReTranslocationSupply; } }
+        public double TotalCReTranslocationSupply => Carbon.TotalReTranslocationSupply;
 
         /// <summary> The amount of carbon fixed by photosynthesis</summary>
-        public double TotalCReAllocationSupply { get { return Carbon.TotalReAllocationSupply; } }
+        public double TotalCReAllocationSupply => Carbon.TotalReAllocationSupply;
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
@@ -299,12 +299,10 @@ namespace Models.PMF
                     endC += o.C;
                     endN += o.N;
                 }
-
-                double cdiff = Math.Abs(checkC - endC);
-                if (cdiff > 1e-12)
+                
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-12))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
-                double ndiff = Math.Abs(checkN - endN);
-                if (ndiff > 1e-12)
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }

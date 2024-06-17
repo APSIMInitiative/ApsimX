@@ -210,15 +210,15 @@ namespace Models.PMF.Organs
             OrganNutrientsState totalDead = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalLive =  OrganNutrientsState.add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
-                totalDead =  OrganNutrientsState.add(totalDead, LayerDead[i],parentNetwork.parentOrgan.Cconc);
+                totalLive =  OrganNutrientsState.Add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
+                totalDead =  OrganNutrientsState.Add(totalDead, LayerDead[i],parentNetwork.parentOrgan.Cconc);
             }
             double checkLiveWtPropn = 0;
             double checkDeadWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                //LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLive, 1);
-                //LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDead, 1);
+                LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
                 checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
                 checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
             }

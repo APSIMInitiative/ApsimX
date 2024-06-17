@@ -25,13 +25,11 @@ namespace Models.PMF
         public IFunction multiplier = null;
 
         private Organ parentOrgan = null;
-        private OrganNutrientDelta dNutrient = null;
-        //private OrganNutrientDelta dCarbon = null;
-        //private OrganNutrientDelta dNitrogen = null;
-
+        private OrganNutrientDelta organNutrientDelta = null;
+       
         /// <summary>Name of the organ and nutrient represented by this instance</summary>
         public string OrganAndNutrient
-        { get { return parentOrgan.Name+dNutrient.Name; } }
+        { get { return parentOrgan.Name+organNutrientDelta.Name; } }
 
         // Declare a delegate type for calculating the IFunction return value:
         private delegate double DeficitCalculation();
@@ -56,14 +54,12 @@ namespace Models.PMF
             return FindParentNutrientDelta(model.Parent);
         }
 
-        private string FindPoolName(IModel model)
+        private string checkPoolName(string name)
         {
-            if ((model.Name == "Structural")|| (model.Name == "Metabolic")|| (model.Name == "Storage"))
-                return model.Name;
-            if ((model is OrganNutrientDelta)||(model is Organ) || (model is IPlant) || (model is IZone) || (model is Simulation))
-                throw new Exception(Name + "cannot find pool with name of Structural, Metabolic or Storage");
-            return FindPoolName(model.Parent);
-
+            if ((name == "Structural")|| (name == "Metabolic")|| (name == "Storage"))
+                return name;
+            else 
+                throw new Exception("DeficitDemandFunction must be named \"Structural\", \"Metabolic\" or \"Storage\". Currently named " + name);
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -73,14 +69,12 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentOrgan = FindParentOrgan(this.Parent);
-            dNutrient = FindParentNutrientDelta(this.Parent);
-            string poolName = FindPoolName(this);
-            //dCarbon = FindNutrientDelta("Carbon", parentOrgan);
-            //dNitrogen = FindNutrientDelta("Nitrogen", parentOrgan);
-
+            organNutrientDelta = FindParentNutrientDelta(this.Parent);
+            string poolName = checkPoolName(this.Name);
+            
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
             //cleaner method would probably be to use classes
-            var nutrientName = dNutrient.Name;//this.Parent.Parent.Name;
+            var nutrientName = organNutrientDelta.Name;//this.Parent.Parent.Name;
             if (nutrientName == "Nitrogen")
             {
                 switch (poolName)
@@ -89,10 +83,10 @@ namespace Models.PMF
                         CalcDeficit = calcStructuralNitrogenDemand;
                         break;
                     case "Metabolic":
-                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Metabolic, dNutrient.ConcentrationOrFraction.Metabolic, dNutrient.ConcentrationOrFraction.Structural);
+                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Metabolic, organNutrientDelta.ConcentrationOrFraction.Metabolic, organNutrientDelta.ConcentrationOrFraction.Structural);
                         break;
                     case "Storage":
-                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Storage, dNutrient.ConcentrationOrFraction.Storage, dNutrient.ConcentrationOrFraction.Metabolic);
+                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Storage, organNutrientDelta.ConcentrationOrFraction.Storage, organNutrientDelta.ConcentrationOrFraction.Metabolic);
                         break;
                 };
             }
@@ -104,10 +98,10 @@ namespace Models.PMF
                         CalcDeficit = calcStructuralCarbonDemand;
                         break;
                     case "Metabolic":
-                        CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Metabolic, dNutrient.ConcentrationOrFraction.Metabolic);
+                        CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Metabolic, organNutrientDelta.ConcentrationOrFraction.Metabolic);
                         break;
                     case "Storage":
-                        CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Storage, dNutrient.ConcentrationOrFraction.Storage);
+                        CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Storage, organNutrientDelta.ConcentrationOrFraction.Storage);
                         break;
                 };
             }
@@ -120,7 +114,7 @@ namespace Models.PMF
         private double calcStructuralNitrogenDemand()
         {
             OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
-            return Carbon.DemandsAllocated.Total / parentOrgan.Cconc * dNutrient.ConcentrationOrFraction.Structural;
+            return Carbon.DemandsAllocated.Total / parentOrgan.Cconc * organNutrientDelta.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForNitrogenPool(double currentAmount, double upperConc, double LowerConc)
@@ -133,13 +127,13 @@ namespace Models.PMF
 
         private double calcStructuralCarbonDemand()
         {
-            return parentOrgan.totalCarbonDemand * dNutrient.ConcentrationOrFraction.Structural;
+            return parentOrgan.totalCarbonDemand * organNutrientDelta.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForCarbonPool(double currentAmount, double poolTargetConc)
         {
             double potentialStructuralC = parentOrgan.Live.Carbon.Structural + calcStructuralCarbonDemand();
-            double potentialTotalC = potentialStructuralC / dNutrient.ConcentrationOrFraction.Structural;
+            double potentialTotalC = potentialStructuralC / organNutrientDelta.ConcentrationOrFraction.Structural;
 
             double targetAmount = potentialTotalC * poolTargetConc;
             return targetAmount - currentAmount;

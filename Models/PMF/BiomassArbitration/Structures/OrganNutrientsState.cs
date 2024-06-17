@@ -37,89 +37,34 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Organ))]
-    public class OrganNutrientsState : Model, IParentOfNutrientsPoolState
+    public class OrganNutrientsState : Model
     {
         /// <summary> The weight of the organ</summary>
-        public NutrientPoolsState Weight
-        {
-            get
-            {
-                return Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0, 0, 0);
-            }
-        }
+        public NutrientPoolsState Weight => Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0, 0, 0);
 
         /// <summary> The weight of the organ</summary>
-        public double Wt
-        {
-            get
-            {
-                return Weight.Total;
-            }
-        }
-
+        public double Wt => Weight.Total;
+            
         /// <summary> The Carbon of the organ</summary>
-        public double C
-        {
-            get
-            {
-                return Carbon.Total;
-            }
-        }
-
+        public double C => Carbon.Total;
+            
         /// <summary> The Nitrogen of the organ</summary>
-        public double N
-        {
-            get
-            {
-                return Nitrogen.Total;
-            }
-        }
+        public double N => Nitrogen.Total;
 
         /// <summary> The Phosphorus of the organ</summary>
-        public double P
-        {
-            get
-            {
-                return Phosphorus.Total;
-
-            }
-        }
+        public double P => Phosphorus.Total;
 
         /// <summary> The Potassium of the organ</summary>
-        public double K
-        {
-            get
-            {
-                return Potassium.Total;
-            }
-        }
-
+        public double K => Potassium.Total;
+            
         /// <summary> The N concentration of the organ</summary>
-        public double NConc
-        {
-            get
-            {
-                return Wt > 0 ? N / Wt : 0;
-            }
-        }
+        public double NConc => Wt > 0 ? N / Wt : 0;
 
         /// <summary> The P concentration of the organ</summary>
-        public double PConc
-        {
-            get
-            {
-                return Wt > 0 ? P / Wt : 0;
-            }
-        }
+        public double PConc => Wt > 0 ? P / Wt : 0;
 
         /// <summary> The K concentration of the organ</summary>
-        public double KConc
-        {
-            get
-            {
-                return Wt > 0 ? K / Wt : 0;
-            }
-        }
+        public double KConc => Wt > 0 ? K / Wt : 0;
 
 
         /// <summary> The concentraion of carbon in total dry weight</summary>
@@ -184,7 +129,7 @@ namespace Models.PMF
         }
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientsState divide (OrganNutrientsState a, double b, double cconc)
+        public static OrganNutrientsState Divide(OrganNutrientsState a, double b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon / b;
@@ -192,12 +137,12 @@ namespace Models.PMF
             ret.Phosphorus = a.Phosphorus / b;
             ret.Potassium = a.Potassium / b;
             ret.Cconc = cconc;
-            return ret; 
+            return ret;
 
         }
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientsState divide (OrganNutrientsState a, OrganNutrientsState b, double cconc)
+        public static OrganNutrientsState Divide(OrganNutrientsState a, OrganNutrientsState b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon / b.Carbon;
@@ -209,7 +154,7 @@ namespace Models.PMF
         }
 
         /// <summary>return pools multiplied by value</summary>
-        public static OrganNutrientsState multiply (OrganNutrientsState a, double b, double cconc)
+        public static OrganNutrientsState Multiply(OrganNutrientsState a, double b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon * b;
@@ -221,7 +166,7 @@ namespace Models.PMF
         }
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientsState multiply (OrganNutrientsState a, OrganNutrientsState b, double cconc)
+        public static OrganNutrientsState Multiply(OrganNutrientsState a, OrganNutrientsState b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon * b.Carbon;
@@ -233,7 +178,7 @@ namespace Models.PMF
         }
 
         /// <summary>return sum or two pools</summary>
-        public static OrganNutrientsState add (OrganNutrientsState a, OrganNutrientsState b, double cconc)
+        public static OrganNutrientsState Add(OrganNutrientsState a, OrganNutrientsState b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon + b.Carbon;
@@ -245,7 +190,7 @@ namespace Models.PMF
         }
 
         /// <summary>return sum or two pools</summary>
-        public static OrganNutrientsState subtract (OrganNutrientsState a, OrganNutrientsState b, double cconc)
+        public static OrganNutrientsState Subtract(OrganNutrientsState a, OrganNutrientsState b, double cconc)
         {
             OrganNutrientsState ret = new OrganNutrientsState();
             ret.Carbon = a.Carbon - b.Carbon;
@@ -255,7 +200,24 @@ namespace Models.PMF
             ret.Cconc = cconc;
             return ret;
         }
+
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class from the OrganNutrientState passed in</summary>
+        public Biomass ToBiomass
+        {
+            get
+            {
+                Biomass retBiomass = new Biomass();
+                retBiomass.StructuralWt = this.Weight.Structural;
+                retBiomass.MetabolicWt = this.Weight.Metabolic;
+                retBiomass.StorageWt = this.Weight.Storage;
+                retBiomass.StructuralN = this.Nitrogen.Structural;
+                retBiomass.MetabolicN = this.Nitrogen.Metabolic;
+                retBiomass.StorageN = this.Nitrogen.Storage;
+                return retBiomass;
+            }
+        }
     }
+    
 
     /// <summary>
     /// This is a composite biomass class, representing the sum of 1 or more biomass objects.
@@ -302,7 +264,7 @@ namespace Models.PMF
         private void AddDelta(OrganNutrientsState delta)
         {
             double agrigatedCconc = (this.Carbon.Total + delta.Carbon.Total) / (this.Wt + delta.Wt);
-            Set(OrganNutrientsState.add(this, delta,agrigatedCconc), agrigatedCconc);
+            Set(OrganNutrientsState.Add(this, delta,agrigatedCconc), agrigatedCconc);
         }
 
         /// <summary>/// The constructor </summary>
