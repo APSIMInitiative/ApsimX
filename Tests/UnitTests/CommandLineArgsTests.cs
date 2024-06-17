@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -759,7 +760,7 @@ save {apsimxFileName}
         public void TestPlaylistCaseInsensitivity()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = sims.FindChild<Simulation>().Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -840,6 +841,180 @@ run";
             Simulations secondModdedSims = FileFormat.ReadFromFile<Simulations>(Path.GetTempPath() + firstApsimxFileNameWithoutExtension + "2" + ".apsimx", e => throw e, false).NewModel as Simulations;
 
 
+        }
+
+        [Test]
+        public void TestApplySwitch_WithConfigFileWithManagerOverride_ModifiesManager()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.test-wheat.apsimx");
+            Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
+            var originalPair = KeyValuePair.Create("StartDate", "1-may");
+            Assert.True(sims.FindDescendant<Manager>("Sowing").Parameters.Contains(originalPair));
+            sims.FileName = "test-wheat.apsimx";
+            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), "test-wheat.apsimx");
+            File.WriteAllText(tempSimsFilePath, json);
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newFileString =
+                $"load test-wheat.apsimx{Environment.NewLine}" +
+                $"[Sowing].Script.StartDate = 2-May{Environment.NewLine}" +
+                $"save test-wheat1.apsimx{Environment.NewLine}";
+
+            File.WriteAllText(newTempConfigFile, newFileString);
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+
+            //Check that StartDateParameter got modified to 2-May.
+            Simulations moddedSim = FileFormat.ReadFromFile<Simulations>($"{Path.Combine(Path.GetTempPath(), "test-wheat1.apsimx")}", e => throw e, false).NewModel as Simulations;
+            Manager manager = moddedSim.FindDescendant<Manager>("Sowing");
+            var modifiedPair = KeyValuePair.Create("StartDate", "2-May");
+            Assert.IsTrue(manager.Parameters.Contains(modifiedPair));
+        }
+          
+        /// <summary>
+        /// Test log switch works as expected.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ChangesVerbosity_ToError()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Utilities.RunModels($"{simName} --log error");
+            Simulations simAfterVerbosityChange = FileFormat.ReadFromFile<Simulations>(simName, e => throw e, true).NewModel as Simulations;
+            Summary summary = simAfterVerbosityChange.FindDescendant<Summary>();
+            Assert.True(summary.Verbosity == MessageType.Error);
+        }
+
+        /// <summary>
+        /// Test log switch throws an exception when a bad string is included.
+        /// </summary>
+        [Test]
+        public void LogSwitch_ThrowsException_When_NonMatchingVerbosityType_IsUsed()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simName = sims.FileName;
+            string tempFilePath = Path.GetTempPath();
+            Assert.Throws<Exception>(() => Utilities.RunModels($"{simName} --log xyz"));
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_DoesNotFillDB()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileName = Path.GetFileNameWithoutExtension(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileName + ".db";
+            Utilities.RunModels($"{sims.FileName} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_WorksWithApplySwitch()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileNameWithoutExt + ".db";
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"load {simsFileName}{Environment.NewLine}" +
+                $"duplicate [Simulation] Simulation1{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+            Utilities.RunModels($"--apply {commandsFilePath} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);            
+        }
+
+        [Test]
+        public void InMemoryDBSwitch_WorksWithApplySwitch_WithFile()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string dbFilePath = Path.GetTempPath() + simFileNameWithoutExt + ".db";
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"duplicate [Simulation] Simulation1{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+            Utilities.RunModels($"{sims.FileName} --apply {commandsFilePath} --in-memory-db");
+            var fileInfo = new FileInfo(dbFilePath);
+            long fileLength = fileInfo.Length;
+            Assert.True(fileLength == 4096);            
+        }
+
+        [Test]
+        public void BatchSwitch_WorksWithApplySwitch_WithFile()
+        {
+            //Create simulation
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string simsFilePath = Path.Combine(Path.GetTempPath(), simsFileName);
+
+            // Create config file.
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"[Simulation].Name=$sim-name{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+
+            // Create a batch file
+            string batchFilePath = Path.Combine(Path.GetTempPath(), "batch.csv");
+            string batchContents =
+                $"sim-name,{Environment.NewLine}" +
+                $"SpecialSimulation,{Environment.NewLine}";
+            File.WriteAllText(batchFilePath, batchContents);
+
+            Utilities.RunModels($"{sims.FileName} --apply {commandsFilePath} --batch {batchFilePath}");
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            // Makes sure the originals' Name is not modified.
+            Assert.AreEqual("Simulation", originalSim.Name);
+            // Makes sure the new files' Simulation name is modified.
+            string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            Assert.AreEqual("SpecialSimulation", newSim.Name);
+        }
+
+        [Test]
+        public void BatchSwitch_WorksWithApplySwitch()
+        {
+            //Create simulation
+            Simulations sims = Utilities.GetRunnableSim();
+            string simFileNameWithoutExt = Path.GetFileNameWithoutExtension(sims.FileName);
+            string simsFileName = Path.GetFileName(sims.FileName);
+            string simsFilePath = Path.Combine(Path.GetTempPath(), simsFileName);
+
+            // Create config file.
+            string commandsFilePath = Path.Combine(Path.GetTempPath(),"commands.txt");
+            string newFileString = 
+                $"load {simsFileName}{Environment.NewLine}" +
+                $"[Simulation].Name=$sim-name{Environment.NewLine}" +
+                $"save {simFileNameWithoutExt + "-new.apsimx"}{Environment.NewLine}"+
+                $"run{Environment.NewLine}";
+            File.WriteAllText(commandsFilePath,newFileString);
+
+            // Create a batch file
+            string batchFilePath = Path.Combine(Path.GetTempPath(), "batch.csv");
+            string batchContents =
+                $"sim-name,{Environment.NewLine}" +
+                $"SpecialSimulation,{Environment.NewLine}";
+            File.WriteAllText(batchFilePath, batchContents);
+
+            Utilities.RunModels($"--apply {commandsFilePath} --batch {batchFilePath}");
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            // Makes sure the originals' Name is not modified.
+            Assert.AreEqual("Simulation", originalSim.Name);
+            // Makes sure the new files' Simulation name is modified.
+            string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
+            Assert.AreEqual("SpecialSimulation", newSim.Name);
         }
     }
 }

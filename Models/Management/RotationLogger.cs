@@ -285,7 +285,7 @@ namespace Models.Management
          storage = this.FindInScope<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
-         if (SimulationName == "") 
+         if (! GetSimulationNames().Contains(SimulationName) )
              SimulationName = GetSimulationNames()[0];
 
          _RVPs = new List<RVPair>();
@@ -371,7 +371,8 @@ namespace Models.Management
       public string[] GetSimulationNames()
         {
             // populate the simulation names in the view.
-            IModel scopedParent = ScopingRules.FindScopedParentModel(this);
+            ScopingRules scope = new();
+            IModel scopedParent = scope.FindScopedParentModel(this);
 
             if (scopedParent is Simulation parentSimulation)
             {
