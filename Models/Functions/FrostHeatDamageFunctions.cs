@@ -4,10 +4,44 @@ using Models.PMF;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using Models.Climate;
-
+using APSIM.Shared.Interfaces;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Spreadsheet;
+using MathNet.Numerics.IntegralTransforms;
+using Models.GrazPlan;
+using Models.Soils.Arbitrator;
+using System.Security.Policy;
 namespace Models.Functions
 {
-    /// <summary> Damage functions of frost and heat stress. </summary>
+    /// <summary> Damage functions of frost and heat stress </summary>
+    /// <remarks> <strong>Model Description</strong>: 
+    /// <para>The damage function is developed in APSIM NG to account for the effects of frost and heat stresses on yield predictions, 
+    /// which runs at the daily step.The damage function is the product of the potential yield reduction induced by extreme(i.e.frost and heat) events and the sensitivity of the 
+    /// yield reduction to the growth stage when the events occur.The potential ratio of yield reduction induced by a frost or heat event is a piece-wise linear function of daily
+    /// minimum or maximum air temperature, respectively.The potential ratio of yield reduction ranges from 0 to 1 indicating mild to severe yield reduction induced by an extreme 
+    /// event. The function is described with three parameters including the lower and upper temperature thresholds and the maximum yield reduction. The sensitivity of yield reduction
+    /// to the growth stage is a piece-wise linear function of the growth stage simulated by APSIM. The sensitivity ranges from 0 to 1 indicating the least to most sensitivity of yield 
+    /// reduction.The function has four parameters: the lower and upper growth stage thresholds of the sensitive period to frost or heat stress, and the lower and upper growth stage 
+    /// thresholds of the most sensitive period around flowering when sensitivity equals 1. The same function of sensitivity applies to both frost and heat stress but with different 
+    /// parameterizations.</para><br/>
+    /// <para>The values of the parameters of the damage function are estimated by linking the frost- and heat-limited yield (i.e., obtained by applying the damage function to 
+    /// APSIM-simulated yields) and the corresponding field yields.Currently, the damage function was parameterized for canola and wheat, and it will be available for barley soon.</para><br/>
+    /// <strong>Model usage</strong>: <para>Add the <em>FrostHeatDamgeFunctions</em> model under the specific Plant model (i.e., Canola or Wheat model) via the interface</para><br/>
+    /// <strong>Model output</strong>: <para>The output variables include 
+    /// <list type="bullet"> 
+    /// <item><description><em>FrostReductionRatio</em>: Daily yield reduction ratio by the frost event</description></item>
+    /// <item><description><em>HeatReductionRatio</em>: Daily yield reduction ratio by the heat event</description></item>
+    /// <item><description><em>FrostHeatReductionRatio</em>: Daily yield reduction ratio by the frost and heat events</description></item>
+    /// <item><description><em>CumulativeFrostReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred frost events</description></item>
+    /// <item><description><em>CumulativeHeatReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred heat events</description></item>
+    /// <item><description><em>CumulativeFrostHeatReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred frost and heat events</description></item>
+    /// <item><description><em>FrostHeatYield</em>: Frost- and heat-limited yield</description></item>
+    /// </list>
+    /// </para>
+    /// </remarks>
     [Serializable]
     [Description("Damage functions of frost and heat stresses are provided for barley, canola and wheat by the GRDC FAHMA project.")]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -31,7 +65,7 @@ namespace Models.Functions
         // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
         public string CropType { get; set; }
-      
+
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
         // <summary>Lower thereshold</summary>
@@ -132,8 +166,8 @@ namespace Models.Functions
         public double HeatPotentialReductionRatio { get; set; }
 
         /// <summary>Daily sensitivity of yield reduction to growth stage when the heat event occurs.</summary>
-        public double HeatSensitivity { get; set; }  
-              
+        public double HeatSensitivity { get; set; }
+
         /// <summary>Daily actual yield reduction ratio by heat stress.</summary>
         public double HeatReductionRatio { get; set; }
 
@@ -152,7 +186,6 @@ namespace Models.Functions
         /// <summary>Frost- and heat-limiated yield.</summary>
         /// [Units("g/m2")]
         public double FrostHeatYield { get; set; }
-
         [EventSubscribe("Sowing")]
         private void OnDoSowing(object sender, EventArgs e)
         {
@@ -163,16 +196,12 @@ namespace Models.Functions
             FrostPotentialReductionRatio = 0;
             FrostSensitivity = 0;
             FrostReductionRatio = 0;
-
             HeatPotentialReductionRatio = 0;
             HeatSensitivity = 0;
             HeatReductionRatio = 0;
-
             FrostHeatReductionRatio = 0;
-
             FrostOverallRemaining = 1;
             HeatOverallRemaining = 1;
-
             CumulativeFrostReductionRatio = 0;
             CumulativeHeatReductionRatio = 0;
             CumulativeFrostHeatReductionRatio = 0;
@@ -183,7 +212,6 @@ namespace Models.Functions
         private double FrostPotentialReductionRatioFun(double t)
         {
             double ratio = 0.0;
-
             if (t >= FrostUpTT)
             {
                 //ratio = 0.0d;
@@ -192,9 +220,9 @@ namespace Models.Functions
             else if (t > FrostLowTT && t < FrostUpTT)
             {
                 ratio =
-                    t * ((FrostMinReductionRatio - FrostMaxReductionRatio) / (FrostUpTT - FrostLowTT))
-                    + (FrostMaxReductionRatio * FrostUpTT - FrostLowTT * FrostMinReductionRatio)
-                        / (FrostUpTT - FrostLowTT);
+                t * ((FrostMinReductionRatio - FrostMaxReductionRatio) / (FrostUpTT - FrostLowTT))
+                + (FrostMaxReductionRatio * FrostUpTT - FrostLowTT * FrostMinReductionRatio)
+                / (FrostUpTT - FrostLowTT);
             }
             else if (t <= FrostLowTT)
             {
@@ -207,7 +235,6 @@ namespace Models.Functions
         private double FrostSensitivityFun(double GrowthStage)
         {
             double sens = 0.0;
-
             if (GrowthStage <= FrostStartSensitiveGS)
             {
                 sens = 0;
@@ -215,8 +242,8 @@ namespace Models.Functions
             else if (GrowthStage > FrostStartSensitiveGS && GrowthStage < FrostStartMostSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((1 - 0) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS))
-                    + (0 * FrostStartMostSensitiveGS - FrostStartSensitiveGS * 1) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS);
+                GrowthStage * ((1 - 0) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS))
+                + (0 * FrostStartMostSensitiveGS - FrostStartSensitiveGS * 1) / (FrostStartMostSensitiveGS - FrostStartSensitiveGS);
             }
             else if (GrowthStage >= FrostStartMostSensitiveGS && GrowthStage <= FrostEndMostSensitiveGS)
             {
@@ -225,8 +252,8 @@ namespace Models.Functions
             else if (GrowthStage > FrostEndMostSensitiveGS && GrowthStage < FrostEndSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((0 - 1) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS))
-                    + (1 * FrostEndSensitiveGS - FrostEndMostSensitiveGS * 0) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS);
+                GrowthStage * ((0 - 1) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS))
+                + (1 * FrostEndSensitiveGS - FrostEndMostSensitiveGS * 0) / (FrostEndSensitiveGS - FrostEndMostSensitiveGS);
             }
             else if (GrowthStage >= FrostEndSensitiveGS)
             {
@@ -239,7 +266,6 @@ namespace Models.Functions
         private double HeatPotentialReductionRatioFun(double t)
         {
             double ratio = 0.0;
-
             if (t <= HeatLowTT)
             {
                 //ratio = 0.0;
@@ -248,9 +274,9 @@ namespace Models.Functions
             else if (t > HeatLowTT && t < HeatUpTT)
             {
                 ratio =
-                    t * ((HeatMaxReductionRatio - HeatMinReductionRatio) / (HeatUpTT - HeatLowTT))
-                    + (HeatMinReductionRatio * HeatUpTT - HeatLowTT * HeatMaxReductionRatio)
-                        / (HeatUpTT - HeatLowTT);
+                t * ((HeatMaxReductionRatio - HeatMinReductionRatio) / (HeatUpTT - HeatLowTT))
+                + (HeatMinReductionRatio * HeatUpTT - HeatLowTT * HeatMaxReductionRatio)
+                / (HeatUpTT - HeatLowTT);
             }
             else if (t >= HeatUpTT)
             {
@@ -263,7 +289,6 @@ namespace Models.Functions
         private double HeatSensitivityFun(double GrowthStage)
         {
             double sens = 0;
-
             if (GrowthStage <= HeatStartSensitiveGS)
             {
                 sens = 0;
@@ -271,8 +296,8 @@ namespace Models.Functions
             else if (GrowthStage > HeatStartSensitiveGS && GrowthStage < HeatStartMostSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((1 - 0) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS))
-                    + (0 * HeatStartMostSensitiveGS - HeatStartSensitiveGS * 1) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS);
+                GrowthStage * ((1 - 0) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS))
+                + (0 * HeatStartMostSensitiveGS - HeatStartSensitiveGS * 1) / (HeatStartMostSensitiveGS - HeatStartSensitiveGS);
             }
             else if (GrowthStage >= HeatStartMostSensitiveGS && GrowthStage <= HeatEndMostSensitiveGS)
             {
@@ -281,8 +306,8 @@ namespace Models.Functions
             else if (GrowthStage > HeatEndMostSensitiveGS && GrowthStage < HeatEndSensitiveGS)
             {
                 sens =
-                    GrowthStage * ((0 - 1) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS))
-                    + (1 * HeatEndSensitiveGS - HeatEndMostSensitiveGS * 0) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS);
+                GrowthStage * ((0 - 1) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS))
+                + (1 * HeatEndSensitiveGS - HeatEndMostSensitiveGS * 0) / (HeatEndSensitiveGS - HeatEndMostSensitiveGS);
             }
             else if (GrowthStage >= HeatEndSensitiveGS)
             {
@@ -301,7 +326,6 @@ namespace Models.Functions
             {
                 return;
             }
-
             Phenology phen = (Phenology)zone.Get("[" + CropType + "].Phenology");
             ReproductiveOrgan organs = (ReproductiveOrgan)zone.Get("[" + CropType + "].Grain");
 
