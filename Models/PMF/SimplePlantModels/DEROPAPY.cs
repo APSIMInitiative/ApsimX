@@ -443,6 +443,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["AgeToMaxDimension"] += clean(CurrentCropParams["AgeToMaxDimension"]);
             thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
             thisDero["LAIbase"] += clean(CurrentCropParams["LAIbase"]);
+            thisDero["LAIbaseInitial"] += clean(CurrentCropParams["LAIbase"]);
             thisDero["LAImax"] += clean(CurrentCropParams["LAImax"]);
             thisDero["ExtCoeff"] += clean(CurrentCropParams["ExtCoeff"]);
             thisDero["RUEtotal"] += clean(CurrentCropParams["RUEtotal"]);
@@ -535,7 +536,8 @@ namespace Models.PMF.SimplePlantModels
             {"MaxCanopyWidth","[DEROPAPY].Width.SeasonalGrowth.Maximum.MaxWidth.FixedValue = " },
             {"AgeToMaxDimension","[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
-            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.FixedValue = " },
+            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },                                   
+            {"LAIbaseInitial", "[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.GAICarryover.PreEventValue.FixedValue = "},
             {"LAImax","[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.LAIMax.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
