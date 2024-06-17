@@ -13,6 +13,7 @@ using UserInterface.Commands;
 using Models.Storage;
 using APSIM.Shared.Graphing;
 using Series = Models.Series;
+using Configuration = Utility.Configuration;
 
 namespace UserInterface.Presenters
 {
@@ -431,7 +432,7 @@ namespace UserInterface.Presenters
             {
                 this.SetModelProperty("TableName", this.seriesView.DataSource.SelectedValue);
                 List<string> warnings = PopulateFieldNames();
-                if (warnings != null && warnings.Count > 0)
+                if (warnings != null && warnings.Count > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 {
                     explorerPresenter.MainPresenter.ClearStatusPanel();
                     explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
@@ -555,7 +556,7 @@ namespace UserInterface.Presenters
             // Populate filter textbox.
             this.seriesView.Filter.Text = series.Filter;
 
-            if (warnings != null && warnings.Count > 0)
+            if (warnings != null && warnings.Count > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
         }
 
