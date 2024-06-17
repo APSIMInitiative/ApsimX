@@ -5529,7 +5529,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change name based system to id based system in directed graphs
+        /// Add new parameters to tillering and area calculation classes.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
