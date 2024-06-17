@@ -5,7 +5,7 @@ Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,C
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,1100,1100,1000,1370,1500,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,0,3000,3500,4500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1800,1800,1800,2600,5700,4500,3500,3500,300,300
-MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,0,1200,1200,10000,1200,300,300
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,10,1200,1200,10000,1200,300,300
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,500,1500,1500,1500,1500,300,300
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,0,0,6,6,6,0,0,0
 LAImax,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),Canopy,6,7,7,6,6,2,2,2,8,6,3
@@ -15,7 +15,7 @@ FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,CarbonDemand,0.34
 RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),CarbonSupply,1.8,1.2,1.05,1.66,0.9,2.3,1,0.6,1.2,1,0.9
 PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmospheric CO2,CarbonSupply,C4,C3,C3,C3,C3,C3,C3,C3,C3,C3,C3
 LeafPartitionFrac,fractional,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),Partitioning,0.42,0.45,0.7,0.65,0.1,0.14,0.2,0.2,0.3,0.1,0.1
-ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,Partitioning,0.42,0.45,0.15,0.2,0.6,0.06,0.6,0.6,0.8,0.7,0.7
+ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,Partitioning,0.42,0.45,0.15,0.2,0.6,0.06,0.6,0.2,0.8,0.7,0.7
 RootPartitionFrac,fractional,Proportion of total biomass partitioned to Root,Partitioning,0.16,0.1,0.15,0.15,0.2,0.2,0.4,0.3,0.2,0.2,0.2
 D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,Phenology,72,320,116,267,90,100,100,80,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,Phenology,13,0,7,0,8,0,0,10,10,0,0
