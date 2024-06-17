@@ -206,7 +206,7 @@ namespace Models.Soils
         {
             get
             {
-                bool waterNodePresent = FindInScope<Water>() != null;
+                bool waterNodePresent = FindSibling<Water>() != null;
                 var columns = new List<GridTableColumn>();
 
                 columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
