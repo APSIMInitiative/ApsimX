@@ -4,6 +4,8 @@ using Models.PMF;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using Models.Climate;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace Models.Functions
 {
@@ -51,86 +53,106 @@ namespace Models.Functions
 
         // Define parameters
 
+        /// <summary>Define the enum for crop types</summary>
+        public enum CropTypes
+        {
+            /// <summary>Wheat crop type.</summary>
+            Wheat,
+            /// <summary>Canola crop type.</summary>
+            Canola
+        }
+
         /// <summary>Crop to be simulated</summary>
         [Separator("Crop to be simulated, wheat or canola?")]
         // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
-        public string CropType { get; set; } = "Wheat";
+        //public string CropType { get; set; }
+        public CropTypes CropType
+        {
+            get => cropType;
+            set
+            {
+                cropType = value;
+                SetDefaultValues();
+            }
+        }
+        private CropTypes cropType;
+
 
         /// <summary>Frost damage</summary>
         [Separator("Frost damage")]
         // <summary>Lower thereshold</summary>
         [Description("Lower threshold of air temperature for frost damage")]
-        public double FrostLowTT { get; set; } = -4.0;
+        public double FrostLowTT { get; set; }
 
         /// <summary>Yield reduction at lower threshold</summary>
         [Description("Yield reduction ratio of frost damage induced by lower threshold")]
-        public double FrostMaxReductionRatio { get; set; } = 0.4;
+        public double FrostMaxReductionRatio { get; set; }
 
         /// <summary>Upper threshold</summary>
         [Description("Upper threshold of air temperature for frost damage")]
-        public double FrostUpTT { get; set; } = 1.0;
+        public double FrostUpTT { get; set; }
 
         /// <summary>Yield reduction at upper threshold</summary>
         [Description("Yield reduction ratio frost damage induced by upper threshold")]
-        public double FrostMinReductionRatio { get; set; } = 0;
+        public double FrostMinReductionRatio { get; set; }
 
 
         /// <summary>Sensitive period of frost damage</summary>
         [Separator("Growth stages to define the sensitive period of frost damage")]
         // <summary>The start of sensitive period of frost damage</summary>
         [Description("Start of sensitive period")]
-        public double FrostStartSensitiveGS { get; set; } = 6.4854544;
+        public double FrostStartSensitiveGS { get; set; }
 
         /// <summary>The start of the most sensitive period of frost damage</summary>
         [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double FrostStartMostSensitiveGS { get; set; } = 8.0;
+        public double FrostStartMostSensitiveGS { get; set; }
 
         /// <summary>The end of the most sensitive period of frost damagee</summary>
         [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double FrostEndMostSensitiveGS { get; set; } = 9.4983302;
+        public double FrostEndMostSensitiveGS { get; set; }
 
         /// <summary>The end of sensitive period of frost damage</summary>
         [Description("End of sensitive period")]
-        public double FrostEndSensitiveGS { get; set; } = 9.4990961;
+        public double FrostEndSensitiveGS { get; set; }
 
 
         /// <summary>Heat damage</summary>
         [Separator("Heat damage")]
         // <summary>Lower threshold</summary>
         [Description("Lower threshold of air temperature for heat damage")]
-        public double HeatLowTT { get; set; } = 30.3459986;
+        public double HeatLowTT { get; set; }
 
         /// <summary>Yield reduction at lower threshold</summary>
         [Description("Yield reduction ratio of heat damage induced by lower threshold")]
-        public double HeatMinReductionRatio { get; set; } = 0;
+        public double HeatMinReductionRatio { get; set; }
 
         /// <summary>Upper threshold</summary>
         [Description("Upper threshold of air temperature for heat damage")]
-        public double HeatUpTT { get; set; } = 34.0000667;
+        public double HeatUpTT { get; set; }
 
         /// <summary>Yield reduction at upper threshold</summary>
         [Description("Yield reduction ratio of heat damage induced by upper threshold")]
-        public double HeatMaxReductionRatio { get; set; } = 0.2031898;
+        public double HeatMaxReductionRatio { get; set; }
 
 
         /// <summary>Sensitivity period of heat damage</summary>
         [Separator("Growth stages to define the sensitivity period of heat damage")]
         // <summary>The start of sensitive period of heat damage</summary>
         [Description("Start of sensitive period")]
-        public double HeatStartSensitiveGS { get; set; } = 7.2832313;
+        public double HeatStartSensitiveGS { get; set; }
 
         /// <summary>The start of the most sensitive period of heat damage</summary>
         [Description("Start of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double HeatStartMostSensitiveGS { get; set; } = 7.483232;
+        public double HeatStartMostSensitiveGS { get; set; }
 
         /// <summary>The end of the most sensitive period</summary>
         [Description("End of the most sensitive period (i.e., when sensitivity = 1)")]
-        public double HeatEndMostSensitiveGS { get; set; } = 8.9709024;
+        public double HeatEndMostSensitiveGS { get; set; }
 
         /// <summary>The end of sensitive period of heat damage</summary>
         [Description("End of sensitive period")]
-        public double HeatEndSensitiveGS { get; set; } = 9.0945434;
+        public double HeatEndSensitiveGS { get; set; }
 
 
         // Internal variables
@@ -177,6 +199,76 @@ namespace Models.Functions
         /// <summary>Frost- and heat-limiated yield.</summary>
         /// [Units("g/m2")]
         public double FrostHeatYield { get; set; }
+
+        // Dictionary to hold default values for each crop type
+        private readonly Dictionary<CropTypes, Dictionary<string, double>> cropDefaults = new Dictionary<CropTypes, Dictionary<string, double>>()
+        {
+            {
+                CropTypes.Wheat, new Dictionary<string, double>()
+                {
+                    { nameof(FrostLowTT), -4.0 },
+                    { nameof(FrostMaxReductionRatio), 0.4 },
+                    { nameof(FrostUpTT), 1.0 },
+                    { nameof(FrostMinReductionRatio), 0 },
+                    { nameof(FrostStartSensitiveGS), 6.4854544 },
+                    { nameof(FrostStartMostSensitiveGS), 8.0 },
+                    { nameof(FrostEndMostSensitiveGS), 9.4983302 },
+                    { nameof(FrostEndSensitiveGS), 9.4990961 },
+                    { nameof(HeatLowTT), 30.3459986 },
+                    { nameof(HeatMinReductionRatio), 0 },
+                    { nameof(HeatUpTT), 34.0000667 },
+                    { nameof(HeatMaxReductionRatio), 0.2031898 },
+                    { nameof(HeatStartSensitiveGS), 7.2832313 },
+                    { nameof(HeatStartMostSensitiveGS), 7.483232 },
+                    { nameof(HeatEndMostSensitiveGS), 8.9709024 },
+                    { nameof(HeatEndSensitiveGS), 9.0945434 }
+                }
+            },
+            {
+                CropTypes.Canola, new Dictionary<string, double>()
+                {
+                    { nameof(FrostLowTT), -4.108862 },
+                    { nameof(FrostMaxReductionRatio), 0.3050003 },
+                    { nameof(FrostUpTT), -0.7549879 },
+                    { nameof(FrostMinReductionRatio), 0 },
+                    { nameof(FrostStartSensitiveGS), 7.222864 },
+                    { nameof(FrostStartMostSensitiveGS), 7.329504 },
+                    { nameof(FrostEndMostSensitiveGS), 8.063452 },
+                    { nameof(FrostEndSensitiveGS), 8.181088 },
+                    { nameof(HeatLowTT), 27.45271 },
+                    { nameof(HeatMinReductionRatio), 0 },
+                    { nameof(HeatUpTT), 38.8354 },
+                    { nameof(HeatMaxReductionRatio), 0.5810167 },
+                    { nameof(HeatStartSensitiveGS), 5.578273 },
+                    { nameof(HeatStartMostSensitiveGS), 6.260291 },
+                    { nameof(HeatEndMostSensitiveGS), 9.200536 },
+                    { nameof(HeatEndSensitiveGS), 9.428058 }
+                }
+            }
+        };
+
+        // Function to set default values using reflection
+        private void SetDefaultValues()
+        {
+            if (cropDefaults.TryGetValue(CropType, out var defaults))
+            {
+                Type thisType = this.GetType();
+                foreach (var kvp in defaults)
+                {
+                    PropertyInfo prop = thisType.GetProperty(kvp.Key);
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(this, kvp.Value);
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Unknown crop type: {CropType}");
+            }
+        }
+
+
         [EventSubscribe("Sowing")]
         private void OnDoSowing(object sender, EventArgs e)
         {
@@ -320,21 +412,9 @@ namespace Models.Functions
             Phenology phen = (Phenology)zone.Get("[" + CropType + "].Phenology");
             ReproductiveOrgan organs = (ReproductiveOrgan)zone.Get("[" + CropType + "].Grain");
 
-            double GrowthStageToday = 0;
-            if (CropType == "Wheat" | CropType == "wheat" | CropType == "Barley" | CropType == "barley" | CropType == "Canola" | CropType == "canola")
-            {
-                //GrowthStageToday = phen.Zadok;
-                GrowthStageToday = phen.Stage;
-            }
-            //else if (CropType == "Canola" | CropType == "canola")
-            //{
-            //    GrowthStageToday = phen.Stage;
-            //}
-            else
-            {
-                throw new Exception("Crop type not supported!");
-            }
-
+            double GrowthStageToday = phen.Stage; ;
+            //GrowthStageToday = phen.Zadok;
+            
             // Daily potential yield reduction ratio by a frost event
             FrostPotentialReductionRatio = FrostPotentialReductionRatioFun(Weather.MinT);
 
