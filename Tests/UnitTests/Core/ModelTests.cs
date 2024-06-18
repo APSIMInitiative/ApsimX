@@ -292,18 +292,6 @@ namespace UnitTests.Core
             // a bug (I think it is) but it is a problem for another day.
             Assert.AreEqual(plant1, plant1.FindInScope("Plant"));
 
-            // Another interesting bug which we can reproduce here is that, because
-            // the scope cache uses full paths, and plant1 and plant2 have the same
-            // name and parent (and thus full path), they share each other's cache.
-            //
-            // We can see that plant1 is the result of plant2.InScope("Plant"):
-            Assert.AreEqual(plant1, plant2.FindInScope("Plant"));
-            // However, if we clear the cache, and then try again, the result changes:
-            Apsim.ClearCaches(scopedSimulation);
-            // plant2 is suddenly the first result in scope of both plant1 and 2.
-            Assert.AreEqual(plant2, plant2.FindInScope("Plant"));
-            Assert.AreEqual(plant2, plant1.FindInScope("Plant"));
-
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
             scopedSimulation.Name = "asdf";
@@ -438,10 +426,6 @@ namespace UnitTests.Core
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             Assert.AreEqual(plant1, managerFolder.FindInScope<Plant>());
             Assert.AreEqual(plant1, plant1.FindInScope<Plant>());
-
-            // plant1 is actually in scope of itself. You could argue that this is
-            // a bug (I think it is) but it is a problem for another day.
-            Assert.AreEqual(plant1, plant2.FindInScope<Plant>());
         }
 
         /// <summary>
@@ -913,10 +897,6 @@ namespace UnitTests.Core
             IModel[] allPlants = new[] { plant1, plant2 };
             Assert.AreEqual(allPlants, managerFolder.FindAllInScope<Plant>().ToArray());
             Assert.AreEqual(allPlants, plant1.FindAllInScope<Plant>().ToArray());
-
-            // plant1 is actually in scope of itself. You could argue that this is
-            // a bug (I think it is) but it is a problem for another day.
-            Assert.AreEqual(allPlants, plant2.FindAllInScope<Plant>().ToArray());
         }
 
         /// <summary>
@@ -1407,8 +1387,8 @@ namespace UnitTests.Core
             Assert.True(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)));
             Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.False(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
-            Assert.False(new MockModel().IsChildAllowable(typeof(NoValidParents)));
+            Assert.True(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
+            Assert.True(new MockModel().IsChildAllowable(typeof(NoValidParents)));
             Assert.False(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)));
             Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));

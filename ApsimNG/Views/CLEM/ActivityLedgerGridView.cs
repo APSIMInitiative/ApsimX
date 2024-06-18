@@ -50,7 +50,7 @@ namespace UserInterface.Views
         /// </summary>
         public ActivityLedgerGridView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.CLEMGridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");

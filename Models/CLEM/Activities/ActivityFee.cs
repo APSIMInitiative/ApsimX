@@ -37,9 +37,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Bank account to use
         /// </summary>
-        [Description("Bank account to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
+        [Description("Resource to use")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance), typeof(AnimalFoodStore), typeof(Equipment), typeof(HumanFoodStore), typeof(ProductStore) } })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type required")]
         public string BankAccountName { get; set; }
 
         /// <summary>
@@ -59,7 +59,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Store finance type to use
         /// </summary>
-        public FinanceType BankAccount;
+        public IResourceType BankAccount;
+
+        /// <summary>
+        /// Store type to use
+        /// </summary>
+        public ResourceBaseWithTransactions ResourceStore;
 
         /// <summary>
         /// Constructor
@@ -77,7 +82,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            // get resource type to buy
+            BankAccount = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            if (BankAccount is not null)
+                ResourceStore = (BankAccount as IModel).Parent as ResourceBaseWithTransactions;
         }
 
         /// <inheritdoc/>
@@ -96,7 +104,7 @@ namespace Models.CLEM.Activities
                 resourceRequest = new ResourceRequest()
                 {
                     Resource = BankAccount,
-                    ResourceType = typeof(Finance),
+                    ResourceType = ResourceStore.GetType(),
                     ResourceTypeName = BankAccount.Name,
                     AllowTransmutation = true,
                     Required = charge,

@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
 {
 
     /// <summary>
-    /// This presenter class provides the functionality behind a TabbedExplorerView 
+    /// This presenter class provides the functionality behind a TabbedExplorerView
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
     /// then has an ExplorerPresenter and ExplorerView created when the tab is
     /// created.
@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
             this.view.Show();
 
             int height = this.view.PanelHeight;
-            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
             if (savedHeight > 0.9 || savedHeight < 0.1)
                 this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
@@ -93,7 +93,7 @@ namespace UserInterface.Presenters
 
             double width = this.view.WindowSize.Width;
             int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
-            if (savedHeight > 0.9 || savedHeight < 0.1)
+            if (savedWidth > 0.9 || savedWidth < 0.1)
                 this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
             else
                 this.view.SplitScreenPosition = (int)Math.Round(width * savedWidth);
@@ -242,9 +242,9 @@ namespace UserInterface.Presenters
         {
             view.HideProgressBar();
         }
-        
+
         /// <summary>
-        /// Displays several messages, with a separator between them. 
+        /// Displays several messages, with a separator between them.
         /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
@@ -300,7 +300,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// Displays several error messages in the status bar. Each error will have an associated
         /// </summary>
         /// <param name="errors"></param>
         /// <param name="overwrite"></param>
@@ -515,7 +515,7 @@ namespace UserInterface.Presenters
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
                     if (converter.DidConvert)
-                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
+                        this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -900,14 +900,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Returns the ExplorerPresenter for the specified file name, 
+        /// Returns the ExplorerPresenter for the specified file name,
         /// or null if the file is not currently open.
         /// </summary>
         /// <param name="fileName">The file name being sought.</param>
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right.</param>
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {            
+        {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
@@ -955,7 +955,7 @@ namespace UserInterface.Presenters
                 ShowError(e);
                 return null;
             }
-            
+
             //ExplorerView explorerView = new ExplorerView(null);
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -1068,10 +1068,10 @@ namespace UserInterface.Presenters
             // But check to be sure a tab has actually been closed and, if not, remove it now
 
             if (view.PageCount(onLeft) == nPages)
-                view.RemoveTab(index + 1, onLeft);  
+                view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
-            // This is a good time to force garbage collection 
+            // This is a good time to force garbage collection
             GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
@@ -1149,15 +1149,23 @@ namespace UserInterface.Presenters
         /// <param name="leftTab">Should the file be opened in the left tabset?</param>
         public void Import(string fileName)
         {
+            // When an old .apsim file is imported, exceptions can occur when converting the file but the 
+            // file is still converted i.e. exception isn't fatal. Catch these exceptions and show to user
+            // in the 
+
+            List<Exception> importExceptions = new();
             try
             {
                 var importer = new Importer();
-                importer.ProcessFile(fileName);
+                importer.ProcessFile(fileName, e => { importExceptions.Add(e); });
             }
             catch (Exception err)
             {
                 throw new Exception("Error during Import: " + err.Message);
             }
+            string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
+            if (!string.IsNullOrEmpty(importExceptionsAsString))
+                ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
         }
 
         /// <summary>
@@ -1272,8 +1280,10 @@ namespace UserInterface.Presenters
                     string contents = File.ReadAllText(file);
                     var converter = Converter.DoConvert(contents, version, file);
                     if (converter.DidConvert)
+                    {
                         File.WriteAllText(file, converter.Root.ToString());
-                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                        view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                    }
                 }
                 view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }
@@ -1327,7 +1337,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (double)this.view.StatusPanelPosition / (double)this.view.PanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
                 if (treeWidth > 0)
                     Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();

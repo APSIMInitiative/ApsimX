@@ -95,6 +95,15 @@ namespace Models.CLEM.Activities
                 pastureName = "";
             else
                 pastureName = ManagedPastureName.Split('.')[1];
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
+        {
+            // moved to FinalInitialise so that validation of setup can occur before performed.
 
             if (PerformAtStartOfSimulation)
             {
@@ -104,6 +113,7 @@ namespace Models.CLEM.Activities
                 {
                     AddStatusMessage("Moved individuals at start up");
                     Status = ActivityStatus.Success;
+                    TriggerOnActivityPerformed();
                 }
             }
         }

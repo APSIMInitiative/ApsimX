@@ -8,15 +8,14 @@ namespace Models.Functions
     /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
 
     [Serializable]
-
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-
     public class CERESMineralisationTemperatureFactor : Model, IFunction
     {
+        private double[] tf;
 
         [Link]
-        ISoilTemperature soiltemperature = null;
+        readonly ISoilTemperature soiltemperature = null;
 
         /// <summary>
         /// Base soil temperature for the temperature function in Nutrient. Default = 0.0 C.
@@ -38,14 +37,25 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES mineralisation temperature factor Model");
 
-            double TF = 0;
-            double ST = soiltemperature.Value[arrayIndex];
+            return tf[arrayIndex];
+        }
 
-            if (ST > MineralisationSTBase)
-                TF = Math.Pow(ST - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
-            if (TF > 1) TF = 1;
+        /// <summary>Invoked when soil temperature changes.</summary>
+        /// <value>The value.</value>
+        [EventSubscribe("SoilTemperatureChanged")]
+        private void OnSoilTemperatureChanged(object sender, EventArgs e)
+        {
+            double[] temperature = soiltemperature.Value;
 
-            return TF;
+            if (tf == null)
+                tf = new double[temperature.Length];
+
+            for (int i = 0; i < temperature.Length; i++)
+            {
+                if (temperature[i] > MineralisationSTBase)
+                    tf[i] = Math.Pow(temperature[i] - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
+                if (tf[i] > 1) tf[i] = 1;
+            }
         }
     }
 }

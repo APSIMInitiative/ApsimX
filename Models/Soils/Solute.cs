@@ -138,7 +138,7 @@ namespace Models.Soils
         /// <summary>Invoked to perform solute daily processes</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("DoSolute")]
         private void OnDoSolute(object sender, EventArgs e)
         {
             if (D0 > 0)
@@ -237,13 +237,7 @@ namespace Models.Soils
         public void Standardise(double[] targetThickness)
         {
             // Define default ppm value to use below bottom layer of this solute if necessary.
-            double defaultValue;
-            if (Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 1.0;
-            else if (Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 0.2;
-            else
-                defaultValue = 0.0;
+            double defaultValue = 0;
 
             SetThickness(targetThickness, defaultValue);
 
@@ -265,12 +259,12 @@ namespace Models.Soils
                 if (FIP != null)
                     FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
 
-                double[] ppm = InitialValues;
                 if (InitialValuesUnits == UnitsEnum.kgha)
-                    ppm = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
-                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, defaultValue);
-                InitialValuesUnits = Solute.UnitsEnum.ppm;
+                    InitialValues = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
+                InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, defaultValue);
                 Thickness = thickness;
+                if (InitialValuesUnits == UnitsEnum.kgha)
+                    InitialValues = SoilUtilities.ppm2kgha(Thickness, SoluteBD, InitialValues);
             }
         }
 

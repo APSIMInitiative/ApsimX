@@ -90,8 +90,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (UncollectedStores != null)
-                UncollectedStores.Clear();
+            UncollectedStores?.Clear();
             UncollectedStores = null;
         }
 
@@ -207,7 +206,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove from finance type store
+        /// Remove from product type store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
         public new void Remove(ResourceRequest request)

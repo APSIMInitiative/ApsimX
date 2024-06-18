@@ -291,6 +291,18 @@ namespace Models
                         value = value.Substring(posLastPeriod + 1);
                     parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                 }
+                else if (parameters[argumentIndex].ParameterType.IsArray)
+                {
+                    string[] tokens = value.Split(' ');
+                    var elementType = parameters[argumentIndex].ParameterType.GetElementType();
+                    if (elementType == typeof(double))
+                        parameterValues[argumentIndex] = MathUtilities.StringsToDoubles(tokens);
+                    else if (elementType == typeof(int))
+                        parameterValues[argumentIndex] = MathUtilities.StringsToIntegers(tokens);
+                    else if (elementType == typeof(string))
+                        parameterValues[argumentIndex] = tokens;
+                }
+
             }
 
             //if there were missing named arguments in the method call then use the default values for them.

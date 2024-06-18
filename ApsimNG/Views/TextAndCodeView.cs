@@ -39,7 +39,7 @@ namespace UserInterface.Views
             ScrolledWindow sw = (ScrolledWindow)builder.GetObject("scrolledwindow2");
             sw.Add((editorView as ViewBase).MainWidget);
 
-            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
             box1 = (VPaned)builder.GetObject("vpaned1");
             box1.Position = (int)Math.Round(bounds.Height * 0.8);
 

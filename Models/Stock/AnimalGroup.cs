@@ -1,14 +1,13 @@
+using APSIM.Shared.Utilities;
+using Models.Interfaces;
+using Models.Core;
+using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Interfaces;
-using StdUnits;
 
 namespace Models.GrazPlan
 {
-
     /// <summary>
     /// AnimalGroup class
     /// </summary>
@@ -1528,7 +1527,7 @@ namespace Models.GrazPlan
             // testResult : float;
             double result;
 
-            if ((this.AnimalState.DM_Intake.Solid < GrazType.VerySmall) || (this.AnimalState.RDP_Intake >= this.AnimalState.RDP_Reqd))
+            if ((this.AnimalState.DM_Intake.Solid < GrazType.VERYSMALL) || (this.AnimalState.RDP_Intake >= this.AnimalState.RDP_Reqd))
                 result = 1.0;
             else
             {
@@ -1667,7 +1666,7 @@ namespace Models.GrazPlan
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
                     classIdx = theAnimals.Herbage.SeedClass[speciesIdx, ripeIdx];
-                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
+                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VERYSMALL))
                     {
                         WeightAverage(ref heightRatio[classIdx],
                                         availFeed[classIdx],
@@ -1699,7 +1698,7 @@ namespace Models.GrazPlan
                 relQ[classIdx] = 1.0 - theAnimals.Genotype.GrazeC[3] * StdMath.DIM(theAnimals.Genotype.GrazeC[1] - selectFactor, theAnimals.Herbage.Herbage[classIdx].Digestibility); // Eq. 21
             relQ[GrazType.DigClassNo + 1] = 1;                                             // fixes range check error. Set this to the value that was calc'd when range check error was in place
 
-            suppRemains = (suppFWPerHead > GrazType.VerySmall);                           // Compute relative quality of supplement (if present)
+            suppRemains = (suppFWPerHead > GrazType.VERYSMALL);                           // Compute relative quality of supplement (if present)
             if (suppRemains)
             {
                 suppRelQ = Math.Min(theAnimals.Genotype.GrazeC[14],
@@ -1726,7 +1725,7 @@ namespace Models.GrazPlan
 
             fillRemaining = theAnimals.startFU;
 
-            if (suppRemains && (feedSuppFirst || (totalFeed <= GrazType.VerySmall)))
+            if (suppRemains && (feedSuppFirst || (totalFeed <= GrazType.VERYSMALL)))
             {
                 // Case where supplement is fed first
                 EatSupplement(theAnimals, timeStepLength, suppDWPerHead, theAnimals.IntakeSupplement, suppRelQ, true, ref suppRelIntake, ref fillRemaining);
@@ -1734,11 +1733,11 @@ namespace Models.GrazPlan
                 suppRemains = false;
             }
 
-            if (totalFeed > GrazType.VerySmall)
+            if (totalFeed > GrazType.VERYSMALL)
             {
                 // Case where there is pasture available to the animals
                 classIdx = 1;
-                while ((classIdx <= GrazType.DigClassNo + 1) && (fillRemaining >= GrazType.VerySmall))
+                while ((classIdx <= GrazType.DigClassNo + 1) && (fillRemaining >= GrazType.VERYSMALL))
                 {
                     suppEntry = Math.Min(1.0, 0.5 + (substSuppRelQ - relQ[classIdx])
                                                    / (CLASSWIDTH * theAnimals.Genotype.GrazeC[3]));
@@ -1782,7 +1781,7 @@ namespace Models.GrazPlan
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
                     classIdx = theAnimals.Herbage.SeedClass[speciesIdx, ripeIdx];
-                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
+                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VERYSMALL))
                         seedRI[speciesIdx, ripeIdx] = relIntake[classIdx] * theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass / availFeed[classIdx];
                 }
             }
@@ -2280,7 +2279,7 @@ namespace Models.GrazPlan
                 return new Genotype(null, Genotype, matedToGenotypeParameters, 0.5, 0.5);
             }
             else
-                return new Genotype(Genotype);
+                return new Genotype( Genotype);
         }
 
         /// <summary>
@@ -2331,7 +2330,7 @@ namespace Models.GrazPlan
             result = exp_ExpOdds / (1.0 + exp_ExpOdds);
             return result;
         }
-
+#pragma warning disable IDE0060
         /// <summary>
         /// Mortality submodel
         /// </summary>
@@ -2339,6 +2338,7 @@ namespace Models.GrazPlan
         /// <param name="newGroups"></param>
         private void Kill(double chill, ref List<AnimalGroup> newGroups)
         {
+#pragma warning restore IDE0060
             double deathRate;
             DifferenceRecord Diffs;
             int maleLosses;
@@ -3540,7 +3540,7 @@ namespace Models.GrazPlan
             this.AnimalState.DietPropn.Supp = this.AnimalState.DietPropn.Solid * StdMath.XDiv(this.AnimalState.ME_Intake.Supp, this.AnimalState.ME_Intake.Solid);
             this.AnimalState.DietPropn.Herbage = this.AnimalState.DietPropn.Solid - this.AnimalState.DietPropn.Supp;
 
-            if (this.AnimalState.ME_Intake.Total < GrazType.VerySmall)
+            if (this.AnimalState.ME_Intake.Total < GrazType.VERYSMALL)
             {
                 // Efficiencies of various uses of ME
                 this.AnimalState.Efficiency.Maint = this.Genotype.EfficC[4];
@@ -3948,7 +3948,7 @@ namespace Models.GrazPlan
 
             TissueInsulation = Genotype.ChillC[3] * Math.Min(1.0, 0.4 + 0.02 * AgeDays) *    // Reduce tissue insulation for animals under 1 month old
                                             (Genotype.ChillC[4] + (1.0 - Genotype.ChillC[4]) * BodyCondition);    // Tissue insulation calculated as a fn
-                                                                                                                  // of species and body condition
+                                                                                                            // of species and body condition
             Factor1 = BodyRadius / (BodyRadius + CoatDepth);                                // These factors are used in equation J.8
             Factor2 = BodyRadius * Math.Log(1.0 / Factor1);
             WetFactor = this.Genotype.ChillC[5] + (1.0 - this.Genotype.ChillC[5]) *
@@ -4048,7 +4048,7 @@ namespace Models.GrazPlan
 
             NetProtein = this.AnimalState.ProteinUse.Gain - this.AnimalState.GainPContent * this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
 
-            if ((NetProtein < 0) && (this.AnimalState.ProteinUse.Lact > GrazType.VerySmall))                // Deficiency of protein, i.e. protein is
+            if ((NetProtein < 0) && (this.AnimalState.ProteinUse.Lact > GrazType.VERYSMALL))                // Deficiency of protein, i.e. protein is
             {                                                                                               //  more limiting than ME
                 MilkScalar = Math.Max(0.0, 1.0 + Genotype.GainC[16] * NetProtein /                           // Redirect protein from milk to weight change
                                                                 this.AnimalState.ProteinUse.Lact);
@@ -4226,7 +4226,7 @@ namespace Models.GrazPlan
             CheckAnimList(ref newGroups);
             newGroups.Add(motherGroup);
         }
-
+#pragma warning disable IDE0060
         /// <summary>
         /// In the case where only one sex of lambs has been weaned, re-constitute
         /// groups of mothers with unweaned lambs or calves.
@@ -4253,7 +4253,7 @@ namespace Models.GrazPlan
         private void SplitMothers(ref AnimalGroup youngGroup, int totalYoung, double GroupPropn, ref List<AnimalGroup> newGroups)
         {
             // becoming : single twin triplet
-
+#pragma warning restore IDE0060
             // [0..3,1..3] first element [0] in 2nd dimension is a dummy
             double[,] PropnRemainingLambsAs = new double[4, 4]  {  {0, 0,    0,     0      }, // starting out: empty
                                                                    {0, 1,    0,     0      },               // single
@@ -4415,7 +4415,7 @@ namespace Models.GrazPlan
         {
             double suppRelFill;
 
-            if (theAnimals.PotIntake < GrazType.VerySmall)
+            if (theAnimals.PotIntake < GrazType.VERYSMALL)
                 suppRelFill = 0.0;
             else
             {

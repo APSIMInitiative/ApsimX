@@ -487,6 +487,48 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Round the specified number to the specified number of decimal places.
+        /// This allows numbers less than 1 to be rounded to the nearest sig fig.
+        /// Uses Demical to maintain correctness.
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
+        static public double RoundSignificant(double Value, int NumDecPlaces)
+        {
+            if (Value == 0) 
+                return 0;
+
+            Decimal v = (Decimal)Value;
+            bool isNegative = false;
+            if (Value < 0)
+            {
+                isNegative = true;
+                v = Math.Abs(v);
+            }
+
+            int count = 0;
+            while(v < 1)
+            {
+                v = v * 10;
+                count += 1;
+            }
+
+            v = Decimal.Round(v, NumDecPlaces);
+
+            while (count > 0)
+            {
+                v = v * (Decimal)0.1;
+                count -= 1;
+            }
+
+            if (isNegative)
+                return -(double)v;
+            else
+                return (double)v;
+        }
+
+        /// <summary>
         /// Round all values in Values to the specified number of decimal places.
         /// </summary>
         /// <param name="Values"></param>
@@ -652,7 +694,7 @@ namespace APSIM.Shared.Utilities
             {
                 foreach (string Value in Values)
                 {
-                    if (Value != "")
+                    if (!string.IsNullOrEmpty(Value))
                         return true;
                 }
             }
@@ -1831,7 +1873,5 @@ namespace APSIM.Shared.Utilities
 
             return double.NaN;
         }
-
-
     }
 }

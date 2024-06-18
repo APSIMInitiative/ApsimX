@@ -32,11 +32,10 @@ namespace Models.PMF.Phen
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
-        private Structure structure = null;
-
-        [Link(IsOptional = true)]
         private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
 
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        private Age age = null;
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -69,6 +68,40 @@ namespace Models.PMF.Phen
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
+        /// <summary>List of stages in phenology</summary>
+        [JsonIgnore]
+        public List<string> StageNames 
+        {
+            get
+            {
+                List<string> stages = new List<string>();
+                stages.Add(phases[0].Start.ToString());
+                foreach (IPhase p in  phases)
+                {
+                    stages.Add(p.End.ToString());
+                }
+            return stages;
+            }
+        }
+
+        /// <summary>List of numerical stage codes</summary>
+        [JsonIgnore]
+        public List<int> StageCodes
+        {
+            get
+            {
+                List<int> stages = new List<int>();
+                int current = 0;
+                stages.Add(current);
+                foreach (IPhase p in phases)
+                {
+                    current += 1;
+                    stages.Add(current);
+                }
+                return stages;
+            }
+        }
+
         /// <summary>The Thermal time accumulated tt</summary>
         [JsonIgnore]
         public double AccumulatedTT { get; set; }
@@ -79,7 +112,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { get; set; } = false;
+        public bool Emerged { get { return CurrentPhase.IsEmerged; } }
 
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
@@ -251,9 +284,8 @@ namespace Models.PMF.Phen
                     {
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        if (phase.IsEmerged==false) 
                         {
-                            Emerged = true;
                             PlantEmerged?.Invoke(this, new EventArgs());
                         }
                         else
@@ -282,6 +314,16 @@ namespace Models.PMF.Phen
             StageWasReset?.Invoke(this, new EventArgs());
         }
 
+        /// <summary>Allows setting of age if phenology has an age child</summary>
+        public void SetAge(double newAge)
+        {
+            if (age != null)
+            {
+                age.Years = (int)newAge;
+                age.FractionComplete = newAge - age.Years;
+            }
+        }
+        
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
         public bool OnStartDayOf(String stageName)
         {
@@ -472,17 +514,16 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if (!Emerged && (CurrentPhase.IsEmerged || CurrentPhase.End == structure?.LeafInitialisationStage))
-                    {
-                        Emerged = true;
-                        PlantEmerged?.Invoke(this, new EventArgs());
-                    }
-
                     stagesPassedToday.Add(CurrentPhase.End);
-                    if (currentPhaseIndex + 1 >= phases.Count)
+                    currentPhaseIndex = currentPhaseIndex + 1;
+
+                    if (currentPhaseIndex >= phases.Count)
                         throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                    currentPhaseIndex = currentPhaseIndex + 1;
+                    if (CurrentPhase.IsEmerged)
+                    {
+                        PlantEmerged?.Invoke(this, new EventArgs());
+                    }
 
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = CurrentPhase.Start;
@@ -506,7 +547,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Emerged = false;
+            
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -540,7 +581,6 @@ namespace Models.PMF.Phen
             Stage = 1;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;
-            Emerged = false;
             stagesPassedToday.Clear();
             currentPhaseIndex = 0;
             foreach (IPhase phase in phases)

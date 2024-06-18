@@ -25,12 +25,13 @@ namespace Models.Soils.Nutrients
         private double[] mineralisedN;
         private double[] mineralisedP;
         private double[] catm;
+        private double co2EfficiencyValue;
 
 
         [Link(Type = LinkType.Child, ByName = true)]
         private readonly IFunction rate = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(ByName = true)]
         private readonly IFunction co2Efficiency = null;
 
         [Link(ByName = true)]
@@ -66,26 +67,30 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            destinations = new IOrganicPool[DestinationNames.Length];
-
-            for (int i = 0; i < DestinationNames.Length; i++)
-            {
-                IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
-                if (destination == null)
-                    throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
-                destinations[i] = destination;
-            }
             mineralisedN = new double[numberLayers];
             mineralisedP = new double[numberLayers];
             catm = new double[numberLayers];
-            carbonFlowToDestination = new double[destinations.Length];
-            nitrogenFlowToDestination = new double[destinations.Length];
-            phosphorusFlowToDestination = new double[destinations.Length];
+            carbonFlowToDestination = new double[DestinationNames.Length];
+            nitrogenFlowToDestination = new double[DestinationNames.Length];
+            phosphorusFlowToDestination = new double[DestinationNames.Length];
+            co2EfficiencyValue = co2Efficiency.Value();
         }
 
         /// <summary>Perform daily flow calculations.</summary>
         public void DoFlow()
         {
+            if (destinations == null)
+            {
+                destinations = new IOrganicPool[DestinationNames.Length];
+                for (int i = 0; i < DestinationNames.Length; i++)
+                {
+                    IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
+                    if (destination == null)
+                        throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
+                    destinations[i] = destination;
+                }
+            }
+
             OrganicPool source = Parent as OrganicPool;
 
             int numLayers = source.C.Count;
@@ -109,11 +114,10 @@ namespace Models.Soils.Nutrients
                 double totalNitrogenFlowToDestinations = 0;
                 double totalPhosphorusFlowToDestinations = 0;
 
-                double co2Efficiency = this.co2Efficiency.Value(i);
                 for (int j = 0; j < numDestinations; j++)
                 {
                     var destination = destinations[j];
-                    carbonFlowToDestination[j] = carbonFlowFromSource * co2Efficiency * DestinationFraction[j];
+                    carbonFlowToDestination[j] = carbonFlowFromSource * co2EfficiencyValue * DestinationFraction[j];
                     nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destination.N[i], destination.C[i], 0.0);
                     totalNitrogenFlowToDestinations += nitrogenFlowToDestination[j];
                     phosphorusFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destination.P[i], destination.C[i], 0.0);

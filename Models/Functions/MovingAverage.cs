@@ -23,6 +23,7 @@ namespace Models.Functions
 
         /// <summary>The stage to start calculating moving average</summary>
         [Description("The stage to start calculating moving average")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StageToStartMovingAverage { get; set; }
 
 

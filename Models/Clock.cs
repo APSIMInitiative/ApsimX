@@ -12,7 +12,7 @@ using System.Data;
 namespace Models
 {
     /// <summary>
-    /// The clock model is resonsible for controlling the daily timestep in APSIM. It 
+    /// The clock model is responsible for controlling the daily timestep in APSIM. It
     /// keeps track of the simulation date and loops from the start date to the end
     /// date, publishing events that other models can subscribe to.
     /// </summary>
@@ -102,6 +102,8 @@ namespace Models
         // Public events that we're going to publish.
         /// <summary>Occurs once at the start of the simulation.</summary>
         public event EventHandler StartOfSimulation;
+        /// <summary>Occurs once at the start of the first day of the simulation.</summary>
+        public event EventHandler StartOfFirstDay;
         /// <summary>Occurs at start of each day.</summary>
         public event EventHandler StartOfDay;
         /// <summary>Occurs at start of each month.</summary>
@@ -123,6 +125,8 @@ namespace Models
         /// <summary>Final Initialise event. Occurs once at start of simulation.</summary>
         public event EventHandler FinalInitialise;
 
+        /// <summary>Occurs first each day to allow yesterdays values to be caught</summary>
+        public event EventHandler DoCatchYesterday;
         /// <summary>Occurs each day to calculuate weather</summary>
         public event EventHandler DoWeather;
         /// <summary>Occurs each day to do daily updates to models</summary>
@@ -149,16 +153,18 @@ namespace Models
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
         /// <summary>Occurs each day to do the daily residue decomposition</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
-        /// <summary>Occurs each day to do daily growth increment of total plant biomass</summary>                   
+        /// <summary>Occurs each day to do daily growth increment of total plant biomass</summary>
         public event EventHandler DoUpdateWaterDemand;
         /// <summary>Occurs each day to do water arbitration</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
-        /// <summary>Occurs each day to perform sorghum final leaf no calcs. Must happen between DoWaterArbitration and DoPhenology</summary>
+        /// <summary>Initiates water calculations for the Pasture model</summary>
+        public event EventHandler DoPastureWater;
+        /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
         public event EventHandler PrePhenology;
-        /// <summary>Occurs each day to perform phenology</summary>                             
-        public event EventHandler DoPhenology;                                         // Plant 
+        /// <summary>Occurs each day to perform phenology</summary>
+        public event EventHandler DoPhenology;                                         // Plant
         /// <summary>Occurs each day to do potential growth</summary>
-        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant        
+        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
         /// <summary>Occurs each day to do the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         public event EventHandler DoPotentialPlantPartioning;                          // PMF OrganArbitrator.
@@ -166,7 +172,7 @@ namespace Models
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         /// <summary>Occurs each day to do nutrient allocations</summary>
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
-        /// <summary>Occurs each day to do nutrient allocations</summary>
+        /// <summary>Occurs each day to do nutrient allocations. Pasture growth</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
         /// <summary>Occurs each day to finish partitioning</summary>
         public event EventHandler PartitioningComplete;
@@ -178,7 +184,9 @@ namespace Models
         public event EventHandler DoLifecycle;
         /// <summary>Occurs each day after the simulation is done. Does managment calculations</summary>
         public event EventHandler DoManagementCalculations;
-        /// <summary>Occurs at end of each day</summary>
+        /// <summary>Occurs after pasture growth and sends material to SOM</summary>
+        public event EventHandler DoEndPasture;
+        /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs at end of each day</summary>
         public event EventHandler DoReport;
@@ -321,8 +329,14 @@ namespace Models
             if (FinalInitialise != null)
                 FinalInitialise.Invoke(this, args);
 
+            if (StartOfFirstDay != null)
+                StartOfFirstDay.Invoke(this, args);
+
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
+                if (DoCatchYesterday != null)
+                    DoCatchYesterday.Invoke(this, args);
+
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 
@@ -390,6 +404,9 @@ namespace Models
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
+                if (DoPastureWater != null)
+                    DoPastureWater.Invoke(this, args);
+
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
 
@@ -413,6 +430,9 @@ namespace Models
 
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
+
+                if (DoEndPasture != null)
+                    DoEndPasture.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);

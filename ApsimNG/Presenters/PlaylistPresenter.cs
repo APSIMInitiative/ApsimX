@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
         /// <summary>Async wrapper around GetListOfSimulations</summary>
         private async Task<string[]> GetSimNamesAsync()
         {
-            return await Task.Run(() => playlistModel.GetListOfSimulations(simNameCache, expNameCache));
+            return await Task.Run(() => playlistModel.GenerateListOfSimulations(simNameCache, expNameCache));
         }
 
         /// <summary>Detach the model from the view.</summary>

@@ -15,82 +15,82 @@ namespace Models.GrazPlan
     /// <summary>
     /// # Stock
     /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER1997].
-    /// 
+    ///
     /// [The GrazPlan animal model technical description](https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf)
-    /// 
+    ///
     /// Animals may be of different genotypes. In particular, sheep and cattle may be represented within a single STOCK instance.
-    /// 
+    ///
     /// Usually a single STOCK module is added to an AusFarm simulation, at the top level in the
     /// module hierarchy.
-    /// 
+    ///
     /// In a grazing system, however, there may be a variety of different classes of livestock. Animals
     /// may be of different genotypes (including both sheep and cattle); may be males, females or
     /// castrates; are likely to have a range of different ages; and females may be pregnant and/or
     /// lactating. The set of classes of livestock can change over time as animals enter or leave the
     /// system, are mated, give birth or are weaned. Further, animals that are otherwise similar may be
     /// placed in different paddocks, where their growth rates may differ.
-    /// 
+    ///
     /// ![The list of animal groups at a particular time during a hypothetical simulation containing a STOCK module. Group 1 is distinct from the others because it has a different genotype and sex. Groups 2 and 3 are distinct because they are in different age classes (yearling vs mature). Groups 2 and 4 are distinct because they are in different reproductive states (pregnant vs lactating). Note how the unweaned lambs are associated with their mothers.](StockGroupsExample.png)
-    /// 
+    ///
     /// In the STOCK component, this complexity is handled by representing the set of animals in a
     /// simulated system as a list of animal groups (Figure 2.1). The members of each animal group
     /// have the same genotype and age class, but may have a range of ages (for example, an animal
     /// group containing mature animals may include four-year-old, five-year-old and six-year-old
     /// stock). The members of each animal group also have the same stage of pregnancy and/or
     /// lactation; the same number of suckling offspring; and occupy the same paddock.
-    /// 
+    ///
     /// The set of animal groups changes as animals enter and leave the simulation, and as
     /// physiological events such as maturation, mating, birth or weaning take place. Animal groups
     /// that become sufficiently similar are merged into a single group. The state of any unweaned
     /// lambs or calves is stored alongside that of their mothers; at weaning, the male and female
     /// weaners are transferred into two new animal groups within the main list.
-    /// 
+    ///
     /// In addition to the biological state variables that describe the animals, each animal group has
     /// four attributes that are of particular interest when writing management scripts.
-    /// 
+    ///
     /// **Index**
-    /// 
+    ///
     /// Each animal group has a unique, internally-assigned integer index, starting at 1.
     /// Because the set of groups present in a component instance is dynamic, the index
     /// number associated with a particular group of animals can – and usually does – change
     /// over time. This dynamic numbering scheme has consequences for the way that animals
     /// of a particular kind must be located when writing management scripts.
-    /// 
+    ///
     /// **Paddock**
-    /// 
+    ///
     /// Each animal group is also assigned a paddock. The forage and supplementary feed
     /// available to a group of animals are determined by the paddock it occupies. Paddocks are
     /// referred to by name in the STOCK component:
-    /// 
+    ///
     /// * To set the paddock occupied by an animal group, use the **Move** event.
     /// * To determine the paddock occupied by an animal group, use the **Paddock** variable.
-    /// 
+    ///
     /// It is the user’s responsibility to ensure that paddock names correspond to PADDOCK
     /// modules or other sources of necessary driving variables.
-    /// 
+    ///
     /// **Tag Value**
-    /// 
+    ///
     /// Each animal group also has a user-assigned tag value that takes an integer value. Tag
     /// values have two purposes:
-    /// 
+    ///
     /// * They can be used to manage distinct groups of animals in a common fashion. For
     /// example, all lactating ewes might be assigned the same tag value, and then all
     /// animals with this tag value might undergo the same supplementary feeding regime.
     /// * If tag values are assigned sequentially (starting at 1), they can be used to generate
     /// summary variables. For example, **WeightTag[1]** gives the average live weight
     /// of all animals in groups with a tag value of 1.
-    /// 
+    ///
     /// Note that animal groups with different tag values are never merged, even if they are
     /// otherwise similar.
-    /// 
+    ///
     /// * To set the tag value of an animal group, use the **Tag** method.
     /// * To determine the tag value of an animal group, use the **TagNo** variable.
-    /// 
+    ///
     ///  **Merging groups of similar animals**
-    ///  
+    ///
     /// Animal groups that become sufficiently similar are merged into a single group.
     /// Animals are similar if all these are the same:
-    /// 
+    ///
     /// * Occupy the same paddock
     /// * Reproduction status (Castrated, Male, Empty, Early Preg,  Late Preg)
     /// * Number of foetuses
@@ -122,7 +122,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The random number host
         /// </summary>
-        public MyRandom randFactory;
+        public MyRandom randFactory = null;
 
         /// <summary>
         /// The supplement used
@@ -207,19 +207,23 @@ namespace Models.GrazPlan
         #endregion
 
         #region Readable properties ====================================================
-        /// <summary>Mass of grazers per unit area</summary>
+        /// <summary>
+        /// Mass of grazers per unit area
+        /// This returns the kg/ha of all paddocks in the order stored in the Stock component.
+        /// </summary>
         [Units("kg/ha")]
-        public double Trampling
+        public double[] Trampling
         {
             get
-            {   // TODO: complete the function
+            {
+                double[] rates = new double[this.StockModel.Paddocks.Count - 1];
+                for (int idx = 1; idx <= this.StockModel.Paddocks.Count() - 1; idx++)
+                {
+                    PaddockInfo paddInfo = this.StockModel.Paddocks[idx];
+                    rates[idx - 1] = this.StockModel.ReturnMassPerArea(paddInfo.Name, "kg/ha");
+                }
 
-                ForageProvider forageProvider;
-
-                // using the component ID
-                // return the mass per area for all forages
-                forageProvider = this.StockModel.ForagesAll.FindProvider(0);
-                return this.StockModel.ReturnMassPerArea(StockModel.Paddocks[0], forageProvider, "kg/ha"); // by paddock or from forage ref
+                return rates;
             }
         }
 
@@ -3687,7 +3691,7 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            randFactory.Initialise(RandSeed);
+            this.randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
             var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
@@ -3705,7 +3709,7 @@ namespace Models.GrazPlan
         [EventSubscribe("EndOfSimulation")]
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
-            randFactory = new MyRandom(RandSeed);
+            this.randFactory = new MyRandom(RandSeed);
         }
 
 
@@ -3806,12 +3810,12 @@ namespace Models.GrazPlan
 
         #region Management methods ============================================
         // ............................................................................
-        // Management methods                                                         
+        // Management methods
         // ............................................................................
 
         /// <summary>
-        /// Causes a set of related age cohorts of animals to enter the simulation. 
-        /// Each age cohort may contain animals that are pregnant and/or lactating, in which case distributions of numbers of foetuses and/or suckling offspring are computed automatically. 
+        /// Causes a set of related age cohorts of animals to enter the simulation.
+        /// Each age cohort may contain animals that are pregnant and/or lactating, in which case distributions of numbers of foetuses and/or suckling offspring are computed automatically.
         /// This event is primarily intended to simplify the initialisation of flocks and herds in simulations.
         /// </summary>
         /// <param name="animals">The animal data</param>
@@ -3949,7 +3953,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Commences mating of a particular group of animals.  If the animals are not empty females, or if they are too young, has no effect
         /// </summary>
-        /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated. 
+        /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated.
         /// Must match the name field of a member of the genotypes property.</param>
         /// <param name="mateDays">Length of the mating period in days.</param>
         /// <param name="group">The animal group to mate. null denotes that all empty females of sufficient age should be mated.</param>
@@ -3967,9 +3971,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Converts ram lambs to wether lambs, or bull calves to steers.  If the animal group(s) denoted by group has no suckling young, has no effect. 
-        /// If the number of male lambs or calves in a nominated group is greater than the number to be castrated, the animal group will be split; 
-        /// the sub-group with castrated offspring will remain at the original index and the sub-group with offspring that were not castrated will 
+        /// Converts ram lambs to wether lambs, or bull calves to steers.  If the animal group(s) denoted by group has no suckling young, has no effect.
+        /// If the number of male lambs or calves in a nominated group is greater than the number to be castrated, the animal group will be split;
+        /// the sub-group with castrated offspring will remain at the original index and the sub-group with offspring that were not castrated will
         /// be added at the end of the set of animal groups.
         /// </summary>
         /// <param name="number">Number of male lambs or calves to be castrated.</param>
@@ -4001,7 +4005,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Weans some or all of the lambs or calves from an animal group. 
+        /// Weans some or all of the lambs or calves from an animal group.
         /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
         /// </summary>
         /// <param name="number">The number of lambs or calves to be weaned.</param>
@@ -4030,7 +4034,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Ends lactation in cows that have already had their calves weaned.  The event has no effect on other animals.
-        /// If the number of cows in a nominated group is greater than the number to be dried off, the animal group will be split; 
+        /// If the number of cows in a nominated group is greater than the number to be dried off, the animal group will be split;
         /// the sub-group that is no longer lactating will remain at the original index and the sub-group that continues lactating will be added at the end of the set of animal groups
         /// </summary>
         /// <param name="number">Number of females for which lactation is to end.</param>
@@ -4095,6 +4099,16 @@ namespace Models.GrazPlan
         {
             outputSummary.WriteMessage(this, "Sort animals by tag", MessageType.Diagnostic);
             StockModel.Sort();
+        }
+
+        /// <summary>
+        /// Get the trampling mass for the specified paddock
+        /// </summary>
+        /// <param name="paddockName">Name of the zone/paddock</param>
+        /// <returns>Rate in kg/ha</returns>
+        public double TramplingMass(string paddockName)
+        {
+            return this.StockModel.ReturnMassPerArea(paddockName, "kg/ha");
         }
 
         #endregion ============================================

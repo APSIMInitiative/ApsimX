@@ -94,3 +94,28 @@ save C:\TestSims\newMinimalSim.apsimx
 run
 ```
 
+## Changing log verbosity
+- This can be done using the `--log` switch.
+- This is helpful for reducing database file sizes when running simulations on cloud infrastructure. The best argument type for reducing the file size is `error`.
+- Acceptable arguments:
+    - error
+    - warning
+    - information
+    - diagnostic
+    - all 
+
+### Example
+` Models.exe example.apsimx --log error`
+
+## Use in memory database
+- This uses a in memory database rather than database files for running simulations.
+- This can be done using the `--in-memory-db` switch.
+- A database file is still created however no data will be stored to the database file.
+
+### Example
+`Models.exe example.apsimx --in-memory-db`
+
+`Models.exe --apply config-file.txt --in-memory-db`
+
+`Models.exe example.apsimx --apply config-file.txt --in-memory-db`
+

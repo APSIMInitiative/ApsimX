@@ -56,6 +56,12 @@ namespace Models.CLEM.Activities
         public string MethaneStoreName { get; set; }
 
         /// <summary>
+        /// Use the corrected energy equation 
+        /// </summary>
+        [Description("Use the corrected energy equation (27_5_24)")]
+        public bool UseFixedEnergyConversionEquation { get; set; } = true;
+
+        /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
         [JsonIgnore]
@@ -99,7 +105,7 @@ namespace Models.CLEM.Activities
                 if(MathUtilities.FloatsAreEqual(weaningAge, 0))
                     weaningAge = ind.BreedParams.GestationLength;
 
-                if (MathUtilities.IsGreaterThan(ind.Age, weaningAge))
+                if (MathUtilities.IsGreaterThanOrEqual(ind.Age, weaningAge))
                 {
                     ind.Wean(true, "Natural");
 
@@ -243,7 +249,7 @@ namespace Models.CLEM.Activities
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.SucklingOffspringList.Count() == 0)
+            if (ind.SucklingOffspringList.Count == 0)
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             else // no milking
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
@@ -257,7 +263,7 @@ namespace Models.CLEM.Activities
                 adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
 
             // set milk production in lactating females for consumption.
-            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
+            ind.MilkProduction = Math.Min(ind.MilkProductionPotential, Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
             ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
 
             // returns the energy required for milk production
@@ -470,11 +476,18 @@ namespace Models.CLEM.Activities
                 ind.EnergyMilk = 0;
 
                 double feedingValue;
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
+                if (!UseFixedEnergyConversionEquation)
+                {
+                    if (MathUtilities.IsPositive(ind.EnergyBalance))
+                        feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
+                    else
+                        //(from Hirata model)
+                        feedingValue = 2 * ind.EnergyBalance / (0.85 * energyMaintenance) - 1;
+                }
                 else
-                    //(from Hirata model)
-                    feedingValue = 2 * ind.EnergyBalance / (0.85 * energyMaintenance) - 1;
+                {
+                    feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
+                }
 
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight / ind.NormalisedAnimalWeight - 0.4)));
 
@@ -484,23 +497,22 @@ namespace Models.CLEM.Activities
             {
                 double energyMilk = 0;
                 double energyFetus = 0;
+                ind.EnergyIntake = energyMetabolicFromIntake;
+
+                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
+                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
+                // Reference: SCA p.24
+                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
+                // 0.000082 is -0.03 Age in Years/365 for days
+                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance; // milk will be zero for non lactating individuals.
 
                 if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
-                    // calculate energy for lactation
-                    // look for milk production calculated before offspring may have been weaned
-
-                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
-                    {
-                        // recalculate milk production based on DMD of food provided
-                        energyMilk = CalculateMilkProduction(femaleind);
-                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
-                    }
-
-                    // Determine energy required for foetal development
+                    // Determine energy required for fetal development
                     if (femaleind.IsPregnant)
                     {
                         double standardReferenceWeight = ind.StandardReferenceWeight;
@@ -510,30 +522,42 @@ namespace Models.CLEM.Activities
                         double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
+                        ind.EnergyBalance -= energyFetus;
+                    }
+
+                    // calculate energy for lactation
+                    // look for milk production calculated before offspring may have been weaned
+
+                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
+                    {
+                        // recalculate milk production based on DMD of food provided
+                        energyMilk = CalculateMilkProduction(femaleind);
+                        ind.EnergyBalance -= energyMilk;
+                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
+                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
                 }
 
                 //TODO: add draft individual energy requirement
 
-                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
-                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
-
-                // Reference: SCA p.24
-                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
-                // 0.000082 is -0.03 Age in Years/365 for days
-                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
-                ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
                 ind.EnergyIntake = energyMetabolicFromIntake;
                 ind.EnergyFetus = energyFetus;
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyMilk;
 
-                // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
+                if (!UseFixedEnergyConversionEquation)
+                {
+                    // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
+                    if (MathUtilities.IsPositive(ind.EnergyBalance))
+                        feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
+                    else
+                        feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                }
                 else
-                    feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                {
+                    feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
+                }
 
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight / ind.StandardReferenceWeight);
 
@@ -601,7 +625,19 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = new List<Ruminant>();
+            List<Ruminant> died = new();
+
+            died = herd.Where(a => a.Weight == 0).ToList();
+            if (died.Any())
+            {
+                foreach (Ruminant ind in died)
+                {
+                    ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                }
+            }
+
+            died = new();
             if (herd.Any())
             {
                 switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
@@ -628,12 +664,11 @@ namespace Models.CLEM.Activities
                         ind.Died = true;
                         ind.SaleFlag = HerdChangeReason.DiedUnderweight;
                     }
-                    ruminantHerd.RemoveRuminant(died, this);
                 }
             }
 
             // base mortality adjusted for condition
-            foreach (var ind in ruminantHerd.Herd)
+            foreach (var ind in ruminantHerd.Herd.Where(a => !a.Died))
             {
                 double mortalityRate = 0;
                 if (!ind.Weaned)
@@ -654,16 +689,19 @@ namespace Models.CLEM.Activities
 
                 // convert mortality from annual (calculated) to monthly (applied).
                 if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), mortalityRate/12))
+                {
                     ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedMortality;
+                }
             }
 
-            died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died = herd.Where(a => a.Died).ToList();
             //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
             IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {
@@ -673,7 +711,7 @@ namespace Models.CLEM.Activities
                     {
                         foreach (var suckling in deadMother.SucklingOffspringList)
                         {
-                            if(wetMothersAssigned < wetMothersAvailable.Count)
+                            if(wetMothersAssigned < wetMothersAvailable.Count && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), suckling.BreedParams.ProportionAcceptingSurrogate))
                             {
                                 suckling.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;

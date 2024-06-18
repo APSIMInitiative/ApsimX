@@ -24,14 +24,14 @@ namespace Models.Management
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     public class BiomassRemovalEvents : Model, IGridModel
-    {        
+    {
         /// <summary>
         /// Crop to remove biomass from
         /// </summary>
-        [Description("Crop to remove biomass from") ]
+        [Description("Crop to remove biomass from")]
         public IPlant PlantToRemoveFrom {
             get { return _plant; }
-            set { _plant = value; LinkCrop(); } 
+            set { _plant = value; LinkCrop(); }
         }
         [JsonIgnore]
         private IPlant _plant { get; set; }
@@ -74,7 +74,7 @@ namespace Models.Management
         /// <summary>Harvesting Event</summary>
         public event EventHandler<EventArgs> Harvesting;
 
-        [Link] 
+        [Link]
         private Clock Clock = null;
 
         /// <summary>
@@ -200,13 +200,41 @@ namespace Models.Management
             if (String.IsNullOrEmpty(RemovalDatesInput))
                 return;
 
-            string[] inputs = RemovalDatesInput.Split(',');   
+            string[] inputs = RemovalDatesInput.Split(',');
             foreach (string date in inputs)
             {
                 if (DateUtilities.CompareDates(date, Clock.Today) == 0)
-                    Remove();                
+                    Remove();
             }
             return;
+        }
+
+        [EventSubscribe("PhenologyCut")]
+        private void OnPhenologyCut(object sender, EventArgs e)
+        {
+            if (RemovalType == BiomassRemovalType.Cutting)
+                Remove();
+        }
+
+        [EventSubscribe("PhenologyGraze")]
+        private void OnPhenologyGraze(object sender, EventArgs e)
+        {
+            if (RemovalType == BiomassRemovalType.Grazing)
+                Remove();
+        }
+
+        [EventSubscribe("PhenologyPrune")]
+        private void OnPhenologyPrune(object sender, EventArgs e)
+        {
+            if (RemovalType == BiomassRemovalType.Pruning)
+                Remove();
+        }
+
+        [EventSubscribe("PhenologyHarvest")]
+        private void OnPhenologyHarvest(object sender, EventArgs e)
+        {
+            if (RemovalType == BiomassRemovalType.Harvesting)
+                Remove();
         }
 
         private void LinkCrop()

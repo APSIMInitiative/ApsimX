@@ -68,7 +68,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\4025_36675.met",
+                          "FileName": "%root%/Examples/WeatherFiles/4025_36675.met",
                           "ExcelWorkSheetName": "",
                           "Name": "4025_36675",
                           "Children": [],
@@ -1926,7 +1926,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\-2500_39425.met",
+                          "FileName": "%root%/Examples/WeatherFiles/-2500_39425.met",
                           "ExcelWorkSheetName": "",
                           "Name": "-2500_39425",
                           "Children": [],
@@ -3784,7 +3784,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\-1375_37985.met",
+                          "FileName": "%root%/Examples/WeatherFiles/-1375_37985.met",
                           "ExcelWorkSheetName": "",
                           "Name": "-1375_37985",
                           "Children": [],
@@ -5642,7 +5642,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\-225_36025.met",
+                          "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
                           "ExcelWorkSheetName": "",
                           "Name": "-225_36025",
                           "Children": [],
@@ -7500,7 +7500,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\-1025_34875.met",
+                          "FileName": "%root%/Examples/WeatherFiles/-1025_34875.met",
                           "ExcelWorkSheetName": "",
                           "Name": "-1025_34875",
                           "Children": [],
@@ -9405,7 +9405,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%\\Examples\\WeatherFiles\\75_34825.met",
+                          "FileName": "%root%/Examples/WeatherFiles/75_34825.met",
                           "ExcelWorkSheetName": "",
                           "Name": "75_34825",
                           "Children": [],
@@ -11295,7 +11295,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Examples\\WeatherFiles\\-225_36025.met",
+              "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],

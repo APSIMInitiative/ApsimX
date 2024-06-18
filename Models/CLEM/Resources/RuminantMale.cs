@@ -50,7 +50,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [FilterByProperty]
-        public override bool Sterilised { get { return IsCastrated; } }
+        public override bool IsSterilised { get { return IsCastrated; } }
 
         /// <summary>
         /// Indicates if individual is castrated

@@ -1,4 +1,5 @@
-﻿using Models.Interfaces;
+﻿using Models.Core;
+using Models.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -30,6 +31,7 @@ namespace UserInterface.Presenters
             gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridModel).Tables[0], view.Grid, parentPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+            gridPresenter.AddIntellisense(model as Model);
             gridPresenter.CellChanged += OnCellChanged;
         }
 
@@ -43,7 +45,11 @@ namespace UserInterface.Presenters
             gridPresenter.Detach();
         }
 
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
         }
     }

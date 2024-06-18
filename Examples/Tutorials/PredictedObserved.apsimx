@@ -15,7 +15,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed.xlsx"
+            "%root%/Examples/Tutorials/Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"

@@ -27,6 +27,11 @@
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
+        /// Whether this axis should hold a date value
+        /// </summary>
+        private bool isDateAxis = false;
+
+        /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
         /// <param name="model">The axis model</param>
@@ -40,7 +45,6 @@
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            // this.view.IsDateAxis = false/*axis.DateTimeAxis*/ // fixme;
 
             // Tell the view to populate the axis.
             PopulateView();
@@ -52,6 +56,7 @@
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
+            this.view.LabelOnOneLineChanged += OnLabelOnOneLineChanged;
         }
 
 
@@ -70,6 +75,7 @@
             view.MaximumChanged -= OnMaximumChanged;
             view.IntervalChanged -= OnIntervalChanged;
             view.CrossesAtZeroChanged -= OnCrossesAtZeroChanged;
+            view.LabelOnOneLineChanged -= OnLabelOnOneLineChanged;
         }
 
         /// <summary>
@@ -80,9 +86,10 @@
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
-            view.SetMinimum(axis.Minimum ?? double.NaN, false/*axis.DateTimeAxis*/);
-            view.SetMaximum(axis.Maximum ?? double.NaN, false/*axis.DateTimeAxis*/);
-            view.SetInterval(axis.Interval ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.LabelOnOneLine = axis.LabelOnOneLine;
+            view.SetMinimum(axis.Minimum ?? double.NaN, isDateAxis);
+            view.SetMaximum(axis.Maximum ?? double.NaN, isDateAxis);
+            view.SetInterval(axis.Interval ?? double.NaN, isDateAxis);
         }
         
         /// <summary>
@@ -198,6 +205,32 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// User has changed the LabelOnOneLine checkbox,
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLabelOnOneLineChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "LabelOnOneLine", view.LabelOnOneLine));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Set if this axis should hold a date
+        /// </summary>
+        /// <param name="isDate">Whether this is a date axis or not</param>
+        public void SetAsDateAxis(bool isDate)
+        {
+            this.isDateAxis = isDate;
         }
     }
 }

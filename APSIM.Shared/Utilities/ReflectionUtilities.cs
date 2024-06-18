@@ -5,7 +5,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -55,14 +54,88 @@
         /// Return all properties. The normal .NET reflection doesn't return private fields in base classes.
         /// This function does.
         /// </summary>
-        public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags)
+        public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags, bool includeBase)
         {
-            if (type == typeof(Object) || type == null) return new List<PropertyInfo>();
+            var list = new List<PropertyInfo>();
+            if (type == typeof(Object) || type == null) 
+                return list;
 
-            var list = GetAllProperties(type.BaseType, flags);
+            if (includeBase)
+                list = GetAllProperties(type.BaseType, flags, includeBase);
+
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
             list.AddRange(type.GetProperties(flags | BindingFlags.DeclaredOnly));
             return list;
+        }
+
+        /// <summary>
+        /// Return all methods. The normal .NET reflection doesn't return private methods in base classes.
+        /// This function does.
+        /// </summary>
+        public static List<MethodInfo> GetAllMethods(Type type, BindingFlags flags, bool includeBase)
+        {
+            var list = new List<MethodInfo>();
+            if (type == typeof(Object) || type == null)
+                return list;
+
+            if (includeBase)
+                list = GetAllMethods(type.BaseType, flags, includeBase);
+
+            // in order to avoid duplicates, force BindingFlags.DeclaredOnly
+            list.AddRange(type.GetMethods(flags | BindingFlags.DeclaredOnly).ToList());
+            return list;
+        }
+
+        /// <summary>
+        /// Return all methods, with property methods removed from the list.
+        /// </summary>
+        public static List<MethodInfo> GetAllMethodsWithoutProperties(Type type)
+        {
+            List<MethodInfo> methods = ReflectionUtilities.GetAllMethods(type, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, false);
+            List<PropertyInfo> properties = ReflectionUtilities.GetAllProperties(type, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, false);
+
+            //remove methods with < or > in the name, these don't actually exist in the source.
+            for (int i = methods.Count - 1; i >= 0; i--)
+            {
+                string name = methods[i].Name;
+                if (name.Contains("<") || name.Contains(">"))
+                {
+                    methods.Remove(methods[i]);
+                }
+            }
+
+            //remove properties from methods list
+            foreach (PropertyInfo prop in properties)
+            {
+                for (int i = methods.Count - 1; i >= 0; i--)
+                {
+                    string name = methods[i].Name;
+                    if (name.CompareTo("get_" + prop.Name) == 0 || name.CompareTo("set_" + prop.Name) == 0)
+                    {
+                        methods.Remove(methods[i]);
+                    }
+                }
+            }
+            return methods;
+        }
+
+        /// <summary>
+        /// Return all methods, with property methods removed from the list.
+        /// </summary>
+        public static List<MethodInfo> GetAllMethodsForProperty(Type type, PropertyInfo property)
+        {
+            List<MethodInfo> methods = ReflectionUtilities.GetAllMethods(type, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, false);
+            List<MethodInfo> propMethods = new List<MethodInfo>();
+
+            for (int i = 0; i < methods.Count; i++)
+            {
+                string name = methods[i].Name;
+                if (name.CompareTo("get_" + property.Name) == 0 || name.CompareTo("set_" + property.Name) == 0)
+                {
+                    propMethods.Add(methods[i]);
+                }
+            }
+            return methods;
         }
 
         /// <summary>
@@ -381,7 +454,7 @@
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
                 IEnumerable<JsonProperty> fields = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
-                IEnumerable<JsonProperty> properties = GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                IEnumerable<JsonProperty> properties = GetAllProperties(type, bindingFlags, true).Select(p => base.CreateProperty(p, memberSerialization));
                 if (!includeChildren)
                     properties = properties.Where(p => p.PropertyName != "Children");
                 List<JsonProperty> props = fields.Union(properties).ToList();

@@ -35,7 +35,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": "%root%/Examples/WeatherFiles/dalby.ini",
-          "FileName": "WeatherFiles/dalby.csv",
+          "FileName": "%root%/Examples/WeatherFiles/dalby.csv",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],

@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             task = "available";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>(); 
             ManageActivityResourcesAndTasks("labour available");
         }
 
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             task = "used";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>();
             ManageActivityResourcesAndTasks("labour used");
         }
 

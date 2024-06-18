@@ -1,8 +1,8 @@
-using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using Gtk;
 using UserInterface.Views;
 
 namespace Utility
@@ -205,12 +205,28 @@ namespace Utility
         /// Bottom is the top of the status window
         /// Top is the bottom of the menu bar
         /// </summary>
-        public static System.Drawing.Rectangle GetBorderOfRightHandView(ExplorerView explorerView)
+        public static System.Drawing.Rectangle GetBorderOfRightHandView(ViewBase view)
         {
-            int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
-            int bottom = (explorerView.Owner as MainView).StatusPanelPosition;
-            int left = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).X;
-            int right = explorerView.MainWidget.AllocatedWidth + left;
+            ViewBase mainView = view;
+            ViewBase explorerView = null;
+            while (mainView as MainView == null)
+            {
+                if (mainView == null) //return a box if this could not compute correctly.
+                    return new Rectangle(0, 0, 100, 100);
+                else
+                    mainView = mainView.Owner;
+
+                if (mainView as ExplorerView != null)
+                    explorerView = mainView;
+            }          
+
+            if (explorerView == null)
+                explorerView = mainView;
+
+            int top = GtkUtilities.GetPositionOfWidget(view.MainWidget).Y;
+            int bottom = (mainView as MainView).StatusPanelPosition;
+            int left = GtkUtilities.GetPositionOfWidget(view.MainWidget).X;
+            int right = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).X + explorerView.MainWidget.AllocatedWidth;
 
             int width = right - left;
             int height = bottom - top;

@@ -495,15 +495,20 @@ namespace Models.Core
             if (!typeof(IModel).IsAssignableFrom(type))
                 return false;
 
-            // Functions are currently allowable anywhere
-            // Note - IFunction does have a [ValidParent(DropAnywhere = true)]
-            // attribute, but the GetAttributes method doesn't look in interfaces.
-            if (type.GetInterface("IFunction") != null)
-                return true;
+            List<Type> modelParentTypes = new();
+            foreach(ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(typeof(Model), typeof(ValidParentAttribute), true))
+                modelParentTypes.Add(validParent.ParentType);
+
+            bool hasValidParents = false;
 
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(type, typeof(ValidParentAttribute), true))
             {
+                // Used to make objects that have no explicit ValidParent attributes allowed
+                // to be placed anywhere.
+                if (!modelParentTypes.Contains(validParent.ParentType))
+                    hasValidParents = true;
+
                 if (validParent != null)
                 {
                     if (validParent.DropAnywhere)
@@ -513,7 +518,12 @@ namespace Models.Core
                         return true;
                 }
             }
-            return false;
+            
+            // If it doesn't have any valid parents, it should be able to be placed anywhere.
+            if(hasValidParents)
+                return false;
+            else 
+                return true;
         }
 
         /// <summary>
@@ -633,7 +643,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a list of Event Handles that are Invoked in the prodivded function
+        /// Gets a list of Event Handles that are Invoked in the provided function
         /// </summary>
         /// <remarks>
         /// Model source file must be included as embedded resource in project xml

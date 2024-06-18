@@ -17,8 +17,8 @@ namespace Models.Functions
         [Link(ByName = true)]
         Solute NH4 = null;
 
-        [Link(Type = LinkType.Child)]
-        CERESMineralisationTemperatureFactor CERESTF = null;
+        [Link(ByName = true)]
+        CERESMineralisationTemperatureFactor TF = null;
 
         [Link(Type = LinkType.Child)]
         CERESNitrificationWaterFactor CERESWF = null;
@@ -49,7 +49,7 @@ namespace Models.Functions
 
             double PotentialRate = PotentialNitrificationRate / (NH4.ppm[arrayIndex] + ConcentrationAtHalfMax);
 
-            double RateModifier = CERESTF.Value(arrayIndex);
+            double RateModifier = TF.Value(arrayIndex);
             RateModifier = Math.Min(RateModifier, CERESWF.Value(arrayIndex));
             RateModifier = Math.Min(RateModifier, CERESpHF.Value(arrayIndex));
 

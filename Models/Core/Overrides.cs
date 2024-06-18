@@ -109,6 +109,11 @@ namespace Models.Core
                 undos.Add(new Override(undoPath, oldValue, Override.MatchTypeEnum.NameAndType));
             }
 
+            // Updates the parameters from the manager model.
+            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            if (pathObject is Manager manager)
+                manager.GetParametersFromScriptModel();
+
             // Reverse the order of the undos so that get applied in the correct order.
             undos.Reverse();
             return undos;
@@ -154,11 +159,14 @@ namespace Models.Core
                     continue;
 
                 string[] values = lines[i].Split('=');
-                if (values.Length != 2)
+                if (values.Length < 2)
                     throw new Exception($"Wrong number of values specified on line {lines[i]}");
 
                 string path = values[0].Trim();
                 string value = values[1].Trim();
+                // Handles factor specifications.
+                if (values.Length > 2)
+                    value += " =" + values[2];
                 yield return new Override(path, value, Override.MatchTypeEnum.NameAndType);
             }
         }
