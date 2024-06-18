@@ -5,6 +5,7 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Factorial;
 using Models.Interfaces;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -206,7 +207,10 @@ namespace Models.Soils
         {
             get
             {
+
                 bool waterNodePresent = FindSibling<Water>() != null;
+                bool ancestorIsExperiment = FindAncestor<Experiment>() != null;
+
                 var columns = new List<GridTableColumn>();
 
                 columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
@@ -220,7 +224,14 @@ namespace Models.Soils
                 columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL")), metadata: new VariableProperty(this, GetType().GetProperty("DULMetadata"))));
                 columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT")), metadata: new VariableProperty(this, GetType().GetProperty("SATMetadata"))));
                 if (waterNodePresent)
+                {
                     columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
+                }
+                if (!waterNodePresent && ancestorIsExperiment)
+                {
+                    Water experimentSimWater = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
+                    columns.Add(new GridTableColumn("SW", new VariableProperty(experimentSimWater, experimentSimWater.GetType().GetProperty("InitialValues")), readOnly: true));
+                }
                 columns.Add(new GridTableColumn("KS", new VariableProperty(this, GetType().GetProperty("KS")), metadata: new VariableProperty(this, GetType().GetProperty("KSMetadata"))));
 
                 foreach (var soilCrop in FindAllChildren<SoilCrop>())
@@ -294,17 +305,17 @@ namespace Models.Soils
                 }
                 else if (clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
                 {
-                    SetDefaultSilt(i, 0.65 * (100-ParticleSizeClay[i]));
+                    SetDefaultSilt(i, 0.65 * (100 - ParticleSizeClay[i]));
                     SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
                 }
                 else if (siltIsSupplied && !clayIsSupplied && !sandIsSupplied)
                 {
-                    SetDefaultClay(i, 0.3 * (100-ParticleSizeSilt[i]));
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
                     SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
                 }
                 else if (sandIsSupplied && !clayIsSupplied && !siltIsSupplied)
                 {
-                    SetDefaultClay(i, 0.3 * (100-ParticleSizeSilt[i]));
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
                     SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
                 }
                 else if (clayIsSupplied && siltIsSupplied && !sandIsSupplied)
@@ -316,7 +327,7 @@ namespace Models.Soils
             }
 
             // Fill in missing rocks.
-            var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) => 
+            var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) =>
             {
                 double particleDensity = 2.65;
                 double totalPorosity = (1 - BD[i] / particleDensity) * 0.93;
@@ -681,7 +692,7 @@ namespace Models.Soils
                         // if a crop parameterisation already exists for this crop then don't add a predicted one.
                         if (crops.Find(c => c.Name.Equals(cropName + "Soil", StringComparison.InvariantCultureIgnoreCase)) == null)
                             Structure.Add(PredictedCrop(soil, cropName), water);
-                            //water.Children.Add(PredictedCrop(soil, cropName));
+                        //water.Children.Add(PredictedCrop(soil, cropName));
                     }
                 }
             }
@@ -861,7 +872,7 @@ namespace Models.Soils
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());                        
+                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());
                     for (int i = 0; i < Thickness.Length; i++)
                         crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
