@@ -45,19 +45,45 @@ namespace UnitTests.ManagerTests
             basicCode += "using System.Linq;\n";
             basicCode += "using System;\n";
             basicCode += "using Models.Core;\n";
-            basicCode += "namespace Models {\n";
+            basicCode += "\n";
+            basicCode += "namespace Models\n";
+            basicCode += "{\n";
             basicCode += "\t[Serializable]\n";
-            basicCode += "\tpublic class Script : Model {\n";
+            basicCode += "\tpublic class Script : Model\n";
+            basicCode += "\t{\n";
             basicCode += "\t\t[Description(\"AProperty\")]\n";
-            basicCode += "\t\tpublic string AProperty { get; set; } = \"Hello World\";\n";
-            basicCode += "\t\tpublic int AMethod() { return 0; }\n";
-            basicCode += "\t\tpublic int BMethod(int arg1) { return arg1; }\n";
-            basicCode += "\t\tpublic int CMethod(int arg1, int arg2) { return arg1; }\n";
-            basicCode += "\t\tpublic int DMethod(int arg1, int arg2, int arg3) { return arg1; }\n";
-            basicCode += "\t\tpublic int EMethod(int arg1, int arg2, int arg3, int arg4) { return arg1; }\n";
-            basicCode += "\t\tpublic void Document() { return; }\n";
+            basicCode += "\t\tpublic string AProperty {get; set;} = \"Hello World\";\n";
+            basicCode += "\t\tpublic int AMethod()\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn 0;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int BMethod(int arg1)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int CMethod(int arg1, int arg2)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int DMethod(int arg1, int arg2, int arg3)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int EMethod(int arg1, int arg2, int arg3, int arg4)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic void Document()\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn;\n";
+            basicCode += "\t\t}\n";
             basicCode += "\t}\n";
-            basicCode += "}\n";
+            basicCode += "}";
 
             if (withCode)
                 testManager.Code = basicCode;
@@ -650,6 +676,19 @@ namespace UnitTests.ManagerTests
             Assert.DoesNotThrow(() => testManager.RunMethod("DMethod", 1, 1, 1));
             Assert.DoesNotThrow(() => testManager.RunMethod("EMethod", 1, 1, 1, 1));
             Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", new object[] {1, 1}));
+        }
+
+        /// <summary>
+        /// Specific test for RunMethod
+        /// Check that we can call and run functions in a script from a manager
+        /// </summary>
+        [Test]
+        public void RunReformatTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            string code = testManager.Code;
+            testManager.Reformat();
+            Assert.AreEqual(code, testManager.Code);
         }
 
         /// <summary>

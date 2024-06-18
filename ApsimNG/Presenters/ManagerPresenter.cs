@@ -88,7 +88,7 @@ namespace UserInterface.Presenters
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
-            //managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
+            managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
             managerView.CursorLocation = manager.Cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
@@ -192,7 +192,11 @@ namespace UserInterface.Presenters
         {
             try
             {
-                throw new NotImplementedException();
+                manager.Reformat();
+                if (managerView.Editor != null)
+                {
+                    managerView.Editor.Text = manager.Code;
+                }
             }
             catch (Exception err)
             {
