@@ -88,8 +88,8 @@ namespace Models.Climate
 
         /// <summary>The date when years tick over.</summary>
         [Summary]
-        [Description("Water year day 0 - when to split the year from one to the next (d-mmm)")]
-        public string WaterYear { get; set; }
+        [Description("The date marking the start of sampling years (d-mmm). Leave blank for 1-Jan")]
+        public string SplitDate { get; set; }
 
 
 
@@ -290,8 +290,8 @@ namespace Models.Climate
             if (Years == null || Years.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
 
-            if (string.IsNullOrEmpty(WaterYear)) {
-                WaterYear = "1-jan";
+            if (string.IsNullOrEmpty(SplitDate)) {
+                SplitDate = "1-jan";
             }
 
             currentYearIndex = 0;
@@ -304,14 +304,14 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (clock.Today == DateUtilities.GetDate(WaterYear, clock.Today.Year))
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
                 if (currentYearIndex == Years.Length)
                     currentYearIndex = 0;
                 
-                var dateToFind = DateUtilities.GetDate(WaterYear, Years[currentYearIndex]);
+                var dateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
                 currentRowIndex = FindRowForDate(dateToFind);
             }
 

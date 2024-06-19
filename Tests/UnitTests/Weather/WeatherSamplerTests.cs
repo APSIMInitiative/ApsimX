@@ -140,7 +140,7 @@
                     {
                         FileName = weatherFilePath,
                         Years = new int[] { 1995, 1952, 1993 },
-                        WaterYear = "2-jun"
+                        SplitDate = "2-jun"
                     },
                     new MockSummary()
                 }
