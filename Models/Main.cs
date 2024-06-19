@@ -481,6 +481,7 @@ namespace Models
 
                 if (string.IsNullOrWhiteSpace(lastSaveFilePath))
                 {
+                    tempSim.Write(filePath);
                     File.Copy(filePath, originalFilePath, true);
                     lastSaveFilePath = originalFilePath;
                 }
