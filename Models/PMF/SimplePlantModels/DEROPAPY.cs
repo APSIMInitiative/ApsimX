@@ -261,7 +261,7 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (!deropapy.IsAlive)
+            if ((!deropapy.IsAlive) &&(CurrentCropName!="None"))
             {
                 readCSVandUpdateProperties();
                 Establish();
