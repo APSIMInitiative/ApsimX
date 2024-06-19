@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepCloner.Core", "DeepCloner.Core\DeepCloner.Core.csproj", "{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,18 @@ Global
 		{99742687-C9AD-4BF7-866D-5C61BA00EB57}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99742687-C9AD-4BF7-866D-5C61BA00EB57}.Release|x86.ActiveCfg = Release|Any CPU
 		{99742687-C9AD-4BF7-866D-5C61BA00EB57}.Release|x86.Build.0 = Release|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Debug|x86.Build.0 = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.DebugAnyCPU|Any CPU.ActiveCfg = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.DebugAnyCPU|Any CPU.Build.0 = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.DebugAnyCPU|x86.ActiveCfg = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.DebugAnyCPU|x86.Build.0 = Debug|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Release|x86.ActiveCfg = Release|Any CPU
+		{E444CDEC-DB43-4FE6-993A-ABE126B9CF14}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
