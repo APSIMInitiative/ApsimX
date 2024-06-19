@@ -148,48 +148,15 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
             {
-                IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
-                if (UseCohorts)
+                //IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
+                if (UseCohorts | labourChildModel.Individuals <= 1)
                 {
-                    LabourType labour = new()
-                    {
-                        Sex = labourChildModel.Sex,
-                        Individuals = labourChildModel.Individuals,
-                        Parent = this,
-                        InitialAge = labourChildModel.InitialAge,
-                        //AgeInMonths = labourChildModel.InitialAge.InDays/(double)AgeSpecifier.DaysPerMonth,
-                        LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name,
-                        Hired = labourChildModel.Hired
-                    };
-                    labour.SetParentResourceBaseWithTransactions(this);
-                    labour.Attributes.Add("Group", att);
-                    labour.TransactionOccurred += Resource_TransactionOccurred;
-                    labour.SetAdultEquivalent(adultEquivalentRelationship);
-                    Items.Add(labour);
+                    Items.Add(CreateNewLabour(labourChildModel));
                 }
                 else
                 {
-                    for (int i = 0; i < labourChildModel.Individuals; i++)
-                    {
-                        // get the availability from provided list
-                        LabourType labour = new()
-                        {
-                            Sex = labourChildModel.Sex,
-                            Individuals = 1,
-                            Parent = this,
-                            InitialAge = labourChildModel.InitialAge,
-                            //AgeInMonths = labourChildModel.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
-                            LabourAvailability = labourChildModel.LabourAvailability,
-                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
-                            Hired = labourChildModel.Hired
-                        };
-                        labour.SetParentResourceBaseWithTransactions(this);
-                        labour.Attributes.Add("Group", att);
-                        labour.TransactionOccurred += Resource_TransactionOccurred;
-                        labour.SetAdultEquivalent(adultEquivalentRelationship);
-                        Items.Add(labour);
-                    }
+                    for (int i = 1; i <= labourChildModel.Individuals; i++)
+                        Items.Add(CreateNewLabour(labourChildModel, i));
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
@@ -199,6 +166,30 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                     item.InitialiseFilters();
             }
+        }
+
+        /// <summary>
+        /// Create a full clone of a child labour type
+        /// </summary>
+        /// <param name="labourType">The labour type to use</param>
+        /// <param name="individualIndex">Optional individual index to specify multiple individual</param>
+        /// <returns></returns>
+        private LabourType CreateNewLabour(LabourType labourType, int? individualIndex = null)
+        {
+            IndividualAttribute att = new() { StoredValue = labourType.Name };
+            LabourType newLabourType = labourType.Clone() as LabourType;
+            newLabourType.CohortName = labourType.Name;
+            if (individualIndex is not null)
+            {
+                newLabourType.Individuals = 1;
+                newLabourType.Name = $"{labourType.Name}_{individualIndex}";
+            }
+            newLabourType.Parent = this;
+            newLabourType.SetParentResourceBaseWithTransactions(this);
+            newLabourType.Attributes.Add("Cohort", att);
+            newLabourType.TransactionOccurred += Resource_TransactionOccurred;
+            newLabourType.SetAdultEquivalent(adultEquivalentRelationship);
+            return newLabourType;
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a labour type (i.e. individual or cohort)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
-    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable, ICloneable
     {
         [Link]
         private readonly CLEMEvents events = new CLEMEvents();
@@ -56,10 +56,16 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
-        /// Name of the labour compoonent
+        /// Name of the labour component
         /// </summary>
         [FilterByProperty]
-        public string NameOfLabour { get { return Name; } }
+        public string IndividualName { get { return Name; } }
+
+        /// <summary>
+        /// Name of the labour cohort
+        /// </summary>
+        [FilterByProperty]
+        public string CohortName { get; set; }
 
         /// <summary>
         /// Age in years.
@@ -408,6 +414,23 @@ namespace Models.CLEM.Resources
                 return "";
             else
                 return base.ModelSummaryOpeningTags();
+        }
+
+        /// <inheritdoc/>
+        public object Clone()
+        {
+            return new LabourType()
+            {
+                InitialAge = this.InitialAge,
+                Sex = this.Sex,
+                Individuals = this.Individuals,
+                Hired = this.Hired,
+                Name = this.Name,
+                CohortName = this.CohortName,
+                LabourAvailability = this.LabourAvailability,
+                AvailabilityLimiter = this.AvailabilityLimiter,
+                DietaryComponentList = this.DietaryComponentList
+            };
         }
 
         #endregion

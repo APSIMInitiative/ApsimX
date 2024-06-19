@@ -202,7 +202,7 @@ namespace UserInterface.Presenters
                         Sex = lt.Sex
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
-                    newLabour.Attributes.Add("Group", att);
+                    newLabour.Attributes.Add("Cohort", att);
                     labourList.Add(newLabour);
                 }
 
@@ -265,7 +265,7 @@ namespace UserInterface.Presenters
                 {
                     htmlWriter.WriteLine("\n<div class=\"holdermain\">");
                     htmlWriter.WriteLine("\n<div class=\"clearfix warningbanner\">");
-                    htmlWriter.Write("<div class=\"typediv\">" + "Warning" + "</div>");
+                    htmlWriter.Write("<div class=\"typediv\">Warning</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\n<div class=\"warningcontent\">");
                     htmlWriter.Write("\n<div class=\"activityentry\">As this simulation allows aging of individuals (see Labour) these allocations may change over the duration of the simulation. ");
