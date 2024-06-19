@@ -31,6 +31,9 @@ namespace Models
         [Link]
         private ISoilWater soilWater = null;
 
+        [Link]
+        private ICalculateEo EoCalculator = null;
+
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
 
@@ -105,10 +108,6 @@ namespace Models
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
         public double ReferenceHeight { get; set; }
-
-        /// <summary>Should MicroClimate calculate Eo</summary>
-        [Description("Should MicroClimate calculate Eo? (default=true)")]
-        public bool CalculateEo { get; set; } = true;
 
         /// <summary>Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)</summary>
         [Description("Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)")]
@@ -271,19 +270,18 @@ namespace Models
                 }
 
             // Light distribution is now complete so calculate remaining micromet equations
-            foreach (var ZoneMC in microClimatesZones)
+            foreach (var zoneMC in microClimatesZones)
             {
-                ZoneMC.CalculateEnergyTerms(soilWater.Salb);
-                ZoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
-                ZoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
-                ZoneMC.CalculateGc(dayLengthEvap);
-                ZoneMC.CalculateGa(ReferenceHeight);
-                ZoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
-                ZoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
-                ZoneMC.CalculateOmega();
-                ZoneMC.SetCanopyEnergyTerms();
-                if (CalculateEo)
-                    ZoneMC.CalculateEo();
+                zoneMC.CalculateEnergyTerms(soilWater.Salb);
+                zoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
+                zoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
+                zoneMC.CalculateGc(dayLengthEvap);
+                zoneMC.CalculateGa(ReferenceHeight);
+                zoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
+                zoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
+                zoneMC.CalculateOmega();
+                zoneMC.SetCanopyEnergyTerms();
+                zoneMC.SoilWater.Eo = EoCalculator.Calculate(zoneMC);
             }
         }
 

@@ -1,10 +1,9 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 174,
+  "Version": 175,
   "Name": "Simulations",
   "Children": [
-
     {
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "Wheat",
