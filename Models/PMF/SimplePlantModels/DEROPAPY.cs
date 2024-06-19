@@ -331,7 +331,7 @@ namespace Models.PMF.SimplePlantModels
 
             double AgeAtSimulationStart = Double.Parse(CurrentCropParams["AgeAtStartSimulation"]);
             string cropName = this.Name;
-            double depth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]) * AgeAtSimulationStart / Double.Parse(CurrentCropParams["AgeToMaxDimension"]), rootDepth);
+            double depth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]) * (AgeAtSimulationStart-1) / Double.Parse(CurrentCropParams["AgeToMaxDimension"]), rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -442,6 +442,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["MaxCanopyWidth"] += clean(CurrentCropParams["MaxCanopyWidth"]);
             thisDero["AgeToMaxDimension"] += clean(CurrentCropParams["AgeToMaxDimension"]);
             thisDero["SeasonalDimensionPattern"] += clean(CurrentCropParams["SeasonalDimensionPattern"]);
+            thisDero["RelSlowLAI"] += clean(CurrentCropParams["RelSlowLAI"]);
             thisDero["LAIbase"] += clean(CurrentCropParams["LAIbase"]);
             thisDero["LAIbaseInitial"] += clean(CurrentCropParams["LAIbase"]);
             thisDero["LAIAnnualGrowth"] += clean(CurrentCropParams["LAIAnnualGrowth"]);
@@ -475,6 +476,8 @@ namespace Models.PMF.SimplePlantModels
             thisDero["WaterStressExtCoeff_Frac_Y"] += clean(CurrentCropParams["WaterStressExtCoeff_Frac_Y"]);
             thisDero["WaterStressRUE_Fw_X"] += clean(CurrentCropParams["WaterStressRUE_Fw_X"]);
             thisDero["WaterStressRUE_Fract_Y"] += clean(CurrentCropParams["WaterStressRUE_Fract_Y"]);
+            thisDero["WaterStressLAISenes_X"] += clean(CurrentCropParams["WaterStressLAISenes_X"]);
+            thisDero["WaterStressLAISenes_Y"] += clean(CurrentCropParams["WaterStressLAISenes_Y"]);
             thisDero["FlowerNumberMax"] += clean(CurrentCropParams["FlowerNumberMax"]);
             thisDero["FlowerMaxTempStress_Temp_X"] += clean(CurrentCropParams["FlowerMaxTempStress_Temp_X"]);
             thisDero["FlowerMaxTempStress_Factor_Y"] += clean(CurrentCropParams["FlowerMaxTempStress_Factor_Y"]);
@@ -536,6 +539,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxCanopyWidth","[DEROPAPY].Width.SeasonalGrowth.Maximum.MaxWidth.FixedValue = " },
             {"AgeToMaxDimension","[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
+            {"RelSlowLAI",  "[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.GrowthPattern.XYPairs.X[2] = "},
             {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },                                   
             {"LAIbaseInitial", "[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.GAICarryover.PreEventValue.FixedValue = "},
             {"LAIAnnualGrowth","[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.LAIAnnualGrowth.FixedValue = " },
@@ -566,6 +570,8 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressExtCoeff_Frac_Y","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y = " },
             {"WaterStressRUE_Fw_X","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.X = " },
             {"WaterStressRUE_Fract_Y","[DEROPAPY].Leaf.Photosynthesis.FW.XYPairs.Y = " },
+            {"WaterStressLAISenes_X", "[DEROPAPY].Leaf.Canopy.DeadAreaIndex.DroughtedLAI.DailyDroughtSenescence.WaterStressFactor.XYPairs.X = " },
+            {"WaterStressLAISenes_Y", "[DEROPAPY].Leaf.Canopy.DeadAreaIndex.DroughtedLAI.DailyDroughtSenescence.WaterStressFactor.XYPairs.Y = " },
             {"FlowerNumberMax","[DEROPAPY].Product.FlowerNumber.Maximum.FixedValue = " },
             {"FlowerMaxTempStress_Temp_X","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MaxTempStress.XYPairs.X = " },
             {"FlowerMaxTempStress_Factor_Y","[DEROPAPY].Product.FlowerNumber.StressDuringFlowering.MaxTempStress.XYPairs.Y = " },
