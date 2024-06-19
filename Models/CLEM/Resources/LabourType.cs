@@ -305,8 +305,7 @@ namespace Models.CLEM.Resources
         /// <param name="dietComponent"></param>
         public void AddIntake(LabourDietComponent dietComponent)
         {
-            if (DietaryComponentList == null)
-                DietaryComponentList = new List<LabourDietComponent>();
+            DietaryComponentList ??= new List<LabourDietComponent>();
 
             LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore != null && a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
             if (alreadyEaten != null)

@@ -93,6 +93,14 @@ namespace Models.CLEM.Resources
         [Required]
         public bool AllowFreemartins { get; set; } = false;
 
+        /// <summary>
+        /// Probability of conceiving while lactating
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Probability of conception during lactation")]
+        [Required, Proportion]
+        public double ConceptionDuringLactationProbability { get; set; } = 1.0;
+
         ///// <summary>
         ///// Proportion of wet mother's with no offspring accepting orphan
         ///// </summary>
@@ -116,6 +124,7 @@ namespace Models.CLEM.Resources
                 MinimumDaysBirthToConception = MinimumDaysBirthToConception,
                 MaximumMaleMatingsPerDay = MaximumMaleMatingsPerDay, 
                 PrenatalMortality = PrenatalMortality,
+                ConceptionDuringLactationProbability = ConceptionDuringLactationProbability,
             };
             return clonedParameters;
         }

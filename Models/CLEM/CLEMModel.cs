@@ -645,9 +645,9 @@ namespace Models.CLEM
         public static string AddMemosToSummary(IModel model, Func<string, string> markdown2Html = null)
         {
             string html = "";
-            string memoContainerClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-container-simple" : "memo-container";
-            string memoHeadClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-head-simple" : "memo-head";
-            string memoTextClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-text-simple" : "memo-text";
+            string memoContainerClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-container-simple" : "memo-container";
+            string memoHeadClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-head-simple" : "memo-head";
+            string memoTextClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-text-simple" : "memo-text";
 
             foreach (var memo in model.FindAllChildren<Memo>())
             {
@@ -746,7 +746,7 @@ namespace Models.CLEM
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}</div>");
                 }
                 if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-                    if (this.Children.Count() == 0)
+                    if (Children.Count == 0)
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
 
                 return htmlWriter.ToString();

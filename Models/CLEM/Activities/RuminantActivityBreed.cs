@@ -528,7 +528,11 @@ namespace Models.CLEM.Activities
                 if (female.BreedDetails.ConceptionModel == null)
                     throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\r\nPlease add a conception component below the [r=RuminantType]", female.BreedDetails.Name));
 
-                return female.BreedDetails.ConceptionModel.ConceptionRate(female);
+                double rate = female.BreedDetails.ConceptionModel.ConceptionRate(female);
+                // functionality to handled Bos indicus not conceiving while lactating as reported by Ca_C7 property in CN30 project.
+                if (female.IsLactating)
+                    rate *= female.Parameters.Breeding.ConceptionDuringLactationProbability;
+                return rate;
             }
             return 0;
         }

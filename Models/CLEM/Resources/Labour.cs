@@ -27,8 +27,8 @@ namespace Models.CLEM.Resources
         [Link]
         private readonly CLEMEvents events = null;
 
-        private List<string> warningsMultipleEntry = new();
-        private List<string> warningsNotFound = new();
+        private readonly List<string> warningsMultipleEntry = new();
+        private readonly List<string> warningsNotFound = new();
         private Relationship adultEquivalentRelationship = null;
         private LabourAvailabilityList availabilityList;
 
