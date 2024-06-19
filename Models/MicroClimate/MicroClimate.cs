@@ -106,6 +106,10 @@ namespace Models
         [Units("m")]
         public double ReferenceHeight { get; set; }
 
+        /// <summary>Should MicroClimate calculate Eo</summary>
+        [Description("Should MicroClimate calculate Eo? (default=true)")]
+        public bool CalculateEo { get; set; } = true;
+
         /// <summary>Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)</summary>
         [Description("Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)")]
         [Bounds(Lower = 0.0, Upper = 40.0)]
@@ -278,7 +282,8 @@ namespace Models
                 ZoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
                 ZoneMC.CalculateOmega();
                 ZoneMC.SetCanopyEnergyTerms();
-                ZoneMC.CalculateEo();
+                if (CalculateEo)
+                    ZoneMC.CalculateEo();
             }
         }
 
