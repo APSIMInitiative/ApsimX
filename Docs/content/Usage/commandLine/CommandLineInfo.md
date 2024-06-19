@@ -9,10 +9,10 @@ Apsim Next Gen can be used to do your normal functions as you would from the ful
 
 ## How to run apsim next gen from the command line?
 
-Navigate to where you have apsim next gen installed, on Windows it's installed by default under: 
+Copy the path to the Models.exe executable. If installed for all users, this is located at:
 
 ```
-C:\Program Files\APSIM<Version-number>\bin
+"C:\Program Files\APSIM<Version-number>\bin\Models.exe"
 ```
 
 <small> replace \<version-number\> with your current version number. </small>
@@ -20,21 +20,27 @@ C:\Program Files\APSIM<Version-number>\bin
 Use: 
 
 ```
-Models.exe --apply <configFileName.txt>
+"C:\Program Files\APSIM<Version-number>\bin\Models.exe" --apply <configFileName.txt>
 ``` 
 <strong style="color:red"> Note: Above command can only be used when load is the first command in the configFile. </strong>
 
-or
-
-Use: 
+or use: 
 
 ```
-Models.exe <pathToApsimxFile> --apply <configFileName.txt> 
+"C:\Program Files\APSIM<Version-number>\bin\Models.exe" --apply <configFileName.txt> 
 ```
+
+
+## Making running models easier
+* To make the running of models easier, models can be add to Path. Doing so means that you can type `Models` instead of typing the full file path to the Models.exe.
+* To do this add the full path to the Path system environment variable. 
+* For more details on how to do this, see <a href="https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/" target="_blank">here</a>
+
 
 ## What is a config file?
 
 A config file is simply a text file with a simple command on each line.
+
 
 ## What commands can you perform?
 
@@ -58,6 +64,7 @@ A config file is simply a text file with a simple command on each line.
     - paths must be relative to the location of the configFile.
 - you can comment out command lines by using ```#``` or ```/```
     - note: must be at the start of the line. 
+
 
 ## What does an example config file look like?
 ```
@@ -94,6 +101,7 @@ save C:\TestSims\newMinimalSim.apsimx
 run
 ```
 
+
 ## Changing log verbosity
 - This can be done using the `--log` switch.
 - This is helpful for reducing database file sizes when running simulations on cloud infrastructure. The best argument type for reducing the file size is `error`.
@@ -103,19 +111,51 @@ run
     - information
     - diagnostic
     - all 
+- Example
+    - ` Models.exe example.apsimx --log error`
 
-### Example
-` Models.exe example.apsimx --log error`
 
 ## Use in memory database
-- This uses a in memory database rather than database files for running simulations.
+- This uses an in memory database rather than database files for running simulations.
 - This can be done using the `--in-memory-db` switch.
 - A database file is still created however no data will be stored to the database file.
+- Examples:
+    - `Models.exe example.apsimx --in-memory-db`
+    - `Models.exe --apply config-file.txt --in-memory-db`
+    - `Models.exe example.apsimx --apply config-file.txt --in-memory-db`
 
-### Example
-`Models.exe example.apsimx --in-memory-db`
+## Making repeated changes to many files (batching)
+* For situations where you need to make the same changes to many apsim files but need specific nodes or parameters changed, 
+the `--apply` switch can be used in conjunction with the `--batch` switch.
+* An example where this would be useful is when you want to change the soil and weather for each individual APSIM file and you have 10s to 100s to 1000s of APSIM files.
 
-`Models.exe --apply config-file.txt --in-memory-db`
+* To do this you will need two specific files along with any APSIM files you want to change, these files are:
 
-`Models.exe example.apsimx --apply config-file.txt --in-memory-db`
+    * A config file containing 'placeholders'
+        * the placeholders are the values that will be replaced by the values in the batch file 
+        * a placeholder is a name that starts with a $ symbol. An example would be `$weather-file-name`.
+        * placeholders cannot contain spaces.
+        * an example config file:
+
+        ```
+        load BaseCl.apsimx
+        [Soil]=SoilLibrary.apsimx;[$soil-name]
+        [Weather].FileName=$weather-file-name
+        [SimulationExp].Name=$sim-name
+        run 
+        ```
+
+    * A batch file, this is a csv file with headers that match the placeholders (minus the $ symbols)
+        * for each row in the batch file a run through of the config file is completed. 
+        * an example batch file:
+
+        
+        |soil-name|weather-file-name|sim-name|
+        |----|----|----|
+        |Ahiaruhe_1a1|16864.met|Sim0001|
+        |Ahuriri_7a1|19479.met|Sim0002|
+        |Ailsa_5a1|19479.met|Sim0003|
+        
+    
+* To run this we would run something like: `"C:\Program Files\APSIM<your version number>\bin\Models.exe" --apply config-file-name.txt --batch batch-file-name.csv`
 

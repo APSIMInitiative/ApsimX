@@ -4,5 +4,5 @@ draft: false
 weight: 10
 ---
 
-* [Command Line info](/usage/commandLine/CommandLineInfo)
-* [Tutorials](/usage/commandLine/CommandLineTutorialWindows)
+* [Command Line info](/usage/commandline/commandlineinfo)
+* [Tutorials](/usage/commandline/commandlinetutorialwindows)
