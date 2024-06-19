@@ -52,10 +52,10 @@ WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,Stress,(0 
 WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,Stress,(0 0.8 1),(0 0.8 1),(0 0.5 1),(0 0.8 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45)
+FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 30 35),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45),(0 30 45)
 FlowerMaxTempStress_Factor_Y,fractional,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 1)
-FlowerMinTempStress_Temp_X,oC,Minimum temperature at flowering,Stress,(-5 0 1),(-5 0 1),(-5 0 1),(-5 0 1),(0 3),(0 10),(0 10),(0 5),(0 10),(0 10),(0 10)
-FlowerMinTempStress_Factor_Y,fractional,Multiplier of potential flower number at threshold MINIMUM temperature,Stress,(1 1 1),(1 1 1),(1 1 1),(1 1 1),(1 1),(1 1),(1 1),(0 1),(1 1),(1 1),(1 1)
+FlowerMinTempStress_Temp_X,oC,Minimum temperature at flowering,Stress,(-5 0 1),(-5 0 1),(-5 0 1),(-5 0 10),(0 3),(0 10),(0 10),(0 5),(0 10),(0 10),(0 10)
+FlowerMinTempStress_Factor_Y,fractional,Multiplier of potential flower number at threshold MINIMUM temperature,Stress,(1 1 1),(1 1 1),(1 1 1),(0 1 1),(1 1),(1 1),(1 1),(0 1),(1 1),(1 1),(1 1)
 RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),Stress,(0 1500 1700),(0 1500),(0 1500),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
 RainfallExcessDamage_Fract_Y,fractional,Fractional multiplier of produce (excess water damage),Stress,(1 1 0),(1 1),(1 1),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
 AgeToMaxDimension,Y,Years until plant reaches mature size,Structure,1,1,1,1,6,6,6,6,6,1,1
