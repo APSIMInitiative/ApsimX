@@ -1,26 +1,29 @@
 ParamName,ParamUnit,Description,Category,Maize,Wheat,Hemp,OSR,Grapevine,Macadamia,Lemon,Avocado,Apple,RyeGrass,Clover
+,,,,,,,,,,,,,,
 CropType,string,Type of crop (i.e. crop name) used for characterising organic matter residues composition,Type,Maize,Maize,Maize,Maize,Grapevine,Grapevine,Grapevine,Grapevine,Grapevine,pasture,whiteclover
 AgeToMaxDimension,Y,Years until plant reaches mature size,Structure,1,1,1,1,6,6,6,6,6,1,1
-AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,Structure,0,0,0,0,6,6,6,6,6,0.3,1
-SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,Structure,(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1),0 1 1 1),(0 1 1 1),(0 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
+AgeAtStartSimulation,Y,How old is the plant at the start of the simulation (needs to be 1 for annuals),Structure,1,1,1,1,6,6,6,6,6,0.3,1
+SeasonalDimensionPattern,0-1,Relative values for seasonal height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,Structure,(0.05 .3 0.3 1),(0.05 .3 0.3 1),(0.05 1 1 1),(0.05 1 1 1),(0 1 1 1),0 1 1 1),(0 1 1 1),(0 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,Structure,0,0,0,0,500,1500,1000,1500,1500,0,0
-MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,1600,1100,2000,2300,2000,2000,2000,2000,2000,600,600
+MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,2300,2000,2000,2000,2000,2000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
+ProduceDryMatterFrac,0-1,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
 Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-9 -1),(-4 0 4),(-10 -5),(-5 0),(-5 0),(-5 -2),(-3 0),(-10 -5),(-5 0),(-5 0)
-Frost_Frac_Y,fractional,Frost damage at x-axes temperaure,Stress,(1 0),(0 0),(1 0 0),(1 0),(0 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
-WaterStressLAI_Fw_X,fractional,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
-WaterStressLAI_Frac_Y,fractional,Fractional multiplier of LAI expansion rates,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
-WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
-WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,Stress,(0 0.8 1),(0 0.8 1),(0 0.5 1),(0 0.8 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
-WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+Frost_Frac_Y,0-1,Frost damage at x-axes temperaure,Stress,(1 0),(0 0),(1 0 0),(1 0),(0 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
+WaterStressLAI_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressLAI_Frac_Y,0-1,Fractional multiplier of LAI expansion rates,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+WaterStressExtCoeff_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.9 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressExtCoeff_Frac_Y,0-1,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0.5 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+WaterStressRUE_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.8 1),(0 0.8 1),(0 0.5 1),(0 0.8 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressRUE_Fract_Y,0-1,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+WaterStressLAISenes_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.3 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressLAISenes_Y,0-1,The proportion of LAI senesced each day due to water stress,Stress,(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0)
 FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 30 45),(0 15 30 35),(0 30 45),(0 15 30 45),(0 17 30 45),(0 30 45),(0 30 45),(0 30 45)
-FlowerMaxTempStress_Factor_Y,fractional,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(0 1 1 0),(1 1 0),(0 1 1 0),(0 1 1 0),(1 1 0),(1 1 0),(1 1 1)
+FlowerMaxTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(0 1 1 0),(1 1 0),(0 1 1 0),(0 1 1 0),(1 1 0),(1 1 0),(1 1 1)
 FlowerMinTempStress_Temp_X,oC,Minimum temperature at flowering,Stress,(-5 0 1),(-5 0 1),(-5 0 1),(-5 0 1),(0 0),(0 10),(-2 0),(-2 0),(0 10),(0 10),(0 10)
-FlowerMinTempStress_Factor_Y,fractional,Multiplier of potential flower number at threshold MINIMUM temperature,Stress,(1 1 1),(1 1 1),(1 1 1),(1 1 1),(0 1),(1 1),(0 1),(0 1),(1 1),(1 1),(1 1)
+FlowerMinTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MINIMUM temperature,Stress,(1 1 1),(1 1 1),(1 1 1),(1 1 1),(0 1),(1 1),(0 1),(0 1),(1 1),(1 1),(1 1)
 RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),Stress,(0 1500 1700),(0 1500),(0 1500),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
-RainfallExcessDamage_Fract_Y,fractional,Fractional multiplier of produce (excess water damage),Stress,(1 1 0),(1 1),(1 1),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
+RainfallExcessDamage_Fract_Y,0-1,Fractional multiplier of produce (excess water damage),Stress,(1 1 0),(1 1),(1 1),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
 LeafMaxNConc,gN/gDM,Highest N conc of organ,PlantNitrogen,0,0,0,0,0,0,0,0,0,0,0
 LeafMinNConc,gN/gDM,Lowest N conc of organ,PlantNitrogen,0,0,0,0,0,0,0,0,0,0,0
 ProductMaxNConc,gN/gDM,Highest N conc of organ,PlantNitrogen,0,0,0,0,0,0,0,0,0,0,0
@@ -55,14 +58,15 @@ PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmo
 RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,CarbonSupply,(8 20 35 50),(0 15 25 35),(0 25 30 45),(0  15 25 35),(5 25 30 45),(10  24 26  35),(10 25 30 45),(10 25 33 45),(5 20 30 40),(3 18 25 35),(5 20 25 35)
 FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,CarbonDemand,3600,30000,35400,97000,800,250,70,12,40,1000,1000
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,CarbonDemand,0.34,0.045,0.00718,0.0032,.5,2,10,70,35,10,10
-LeafPartitionFrac,fractional,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),CarbonDemand,0.42,0.45,0.7,0.60,.2,0.14,0.2,.3,0.3,0.1,0.1
-ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,CarbonDemand,0.42,0.45,0.15,0.25,0.6,0.06,0.6,.4,0.8,0.7,0.7
-RootPartitionFrac,fractional,Proportion of total biomass partitioned to Root,CarbonDemand,0.16,0.1,0.15,0.15,0.2,0.2,0.4,0.3,0.2,0.2,0.2
+LeafPartitionFrac,0-1,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),CarbonDemand,0.42,0.45,0.7,0.60,.2,0.14,0.2,.3,0.3,0.1,0.1
+ProductPartitionFrac,0-1,Proportion of total biomass partitioned to Product,CarbonDemand,0.42,0.45,0.15,0.25,0.6,0.06,0.6,.4,0.8,0.7,0.7
+RootPartitionFrac,0-1,Proportion of total biomass partitioned to Root,CarbonDemand,0.16,0.1,0.15,0.15,0.2,0.2,0.4,0.3,0.2,0.2,0.2
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,1100,1100,1000,1370,1500,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,1100,3000,3500,3500,2500,100,100
-MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1800,1800,1800,2600,5700,4500,4500,3500,300,300
+MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1000,1800,900,2600,5700,4500,4500,3500,300,300
 MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,Canopy,0,0,0,0,10,1200,1200,1000,1200,300,300
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,Canopy,800,800,800,800,500,1500,1500,1500,1500,300,300
 LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,0,0,6,6,6,0,0,0
 LAIAnnualGrowth,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),Canopy,6,7,7,6,6,2,2,2,8,6,3
-ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,Canopy,0.5,0.5,0.96,0.55,0.6,0.4,0.4,.5,0.7,0.5,0.8
+ExtCoeff,0-1,Extinction coefficient for diffuse light across canopy,Canopy,.75,0.75,0.96,0.55,.7,.6,.7,.7,0.7,0.5,0.8
+RelSlowLAI,0-1,Releative progress through Growing Phase when LAI reaches 10% of its maximum (3.1 - 3.8),Canopy,3.5,3.5,3.5,3.5,3.2,3.2,3.2,3.2,3.2,3.2,3.2
