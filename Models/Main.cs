@@ -123,6 +123,13 @@ namespace Models
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
+                else if (options.ListEnabledSimulationNames)
+                {
+                    foreach (string file in files)
+                    {
+                        ListSimulationNames(file, options.SimulationNameRegex, true);
+                    }
+                }
                 else if (options.ListReferencedFileNames)
                 {
                     foreach (string file in files)
@@ -668,13 +675,20 @@ namespace Models
                 File.WriteAllText(file, converter.Root.ToString());
         }
 
-        private static void ListSimulationNames(string fileName, string simulationNameRegex)
+        private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
-            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
-
+            if (showEnabledOnly)
+            {
+                List<Simulation> enabledSims = file.FindAllDescendants<Simulation>().Where(sim => sim.Enabled == true).ToList();
+                enabledSims.ForEach(sim => Console.WriteLine(sim.Name));
+            }
+            else
+            {
+                SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+                jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+            }
         }
 
         private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
