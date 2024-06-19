@@ -1018,6 +1018,7 @@ namespace Models.CLEM.Activities
                 if (growoutOccurred)
                     nonGrowOutHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, includeCheckHerdMeetsCriteria: true).Where(a => !a.Attributes.Exists("GrowOut")).ToList();
 
+                Status = ActivityStatus.NotNeeded;
 
                 if (PerformMaleDestocking)
                 {
@@ -1039,8 +1040,6 @@ namespace Models.CLEM.Activities
                 }
 
             }
-
-            Status = ActivityStatus.NotNeeded;
 
             // select old females for sale
             if (MarkOldBreedersForSale && PerformFemaleDestocking)
