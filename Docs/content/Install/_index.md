@@ -5,3 +5,4 @@ weight: 20
 ---
 
 * [MacOS Installation](/install/macos)
+* [Linux Installation](/install/linux)

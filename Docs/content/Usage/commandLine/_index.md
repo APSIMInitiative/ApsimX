@@ -4,5 +4,6 @@ draft: false
 weight: 10
 ---
 
-* [Command Line info](/usage/commandline/commandlineinfo)
+* [Command Line How-To](/usage/commandline/command-line-how-to)
 * [Tutorials](/usage/commandline/commandlinetutorialwindows)
+* [Command Line on Linux](/usage/commandline/command-line-linux)
