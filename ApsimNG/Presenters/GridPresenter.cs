@@ -82,23 +82,17 @@ namespace UserInterface.Presenters
             //For example, the datastore presenter uses this to fill out the table.
             ISheetDataProvider dataProvider = null;
             if (model as ISheetDataProvider != null)
-            {
+            {  
+                // e.g. DataStorePresenter goes through here.
                 dataProvider = model as ISheetDataProvider;
                 gridTable = null;
             }
-            //else we are receiving a model with IGridTable that we should get our GridTable from
-            else if (model as IGridModel != null)
-            {
-                this.model = (model as Model);
-                IGridModel m = (model as IGridModel);
-                gridTable = m.Tables[0];
-            }
             //else we are receiving a GridTable that was created by another presenter
             else if (model as GridTable != null)
-            {
+            {  
+                // e.g. PropertyAndGridPresenter goes through here.
                 gridTable = (model as GridTable);
             }
-
             else
             {
                 throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
@@ -520,14 +514,17 @@ namespace UserInterface.Presenters
                 if (grid.Sheet.DataProvider != null)
                 {
                     var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
-                    List<string> unitsRow = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                        unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
+                    if (gridTable.HasUnits())
+                    {
+                        List<string> unitsRow = new List<string>();
+                        for (int i = 0; i < data.Columns.Count; i++)
+                            unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
 
-                    DataRow row = data.NewRow();
-                    row.ItemArray = unitsRow.ToArray();
+                        DataRow row = data.NewRow();
+                        row.ItemArray = unitsRow.ToArray();
 
-                    data.Rows.InsertAt(row, 0);
+                        data.Rows.InsertAt(row, 0);
+                    }
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
             }
