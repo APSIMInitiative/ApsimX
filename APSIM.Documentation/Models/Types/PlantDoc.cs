@@ -24,7 +24,16 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Section($"The APSIM {model.Name} Model", GetTags());
+            return DocumentSubSection(new List<ITag>(), 0, 0);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> DocumentSubSection(List<ITag> tags, int headingLevel, int indent)
+        {
+            tags.Add(new Section($"The APSIM {model.Name} Model", GetTags()));
+            return tags;
         }
 
         /// <summary>

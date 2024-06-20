@@ -1,20 +1,11 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Markdig;
-    using Markdig.Renderers;
-    using Markdig.Syntax;
-    using Markdig.Parsers;
-    using Utility;
+﻿using System.Collections.Generic;
+using System.Text;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presenter of unspecified type
     /// </summary>
@@ -52,18 +43,18 @@
 
             // It's slightly simpler to generate Markdown for this, but it
             // would be pretty easy to build this directly as HTML
-            List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
+            List<ITag> tags = new List<ITag>();
             AutoDocumentation.DocumentModel(this.model, tags, 1, 0, false, force: true);
 
             StringBuilder contents = new StringBuilder();
-            foreach (AutoDocumentation.ITag tag in tags)
+            foreach (ITag tag in tags)
             {
-                if (tag is AutoDocumentation.Heading heading)
+                if (tag is Heading heading)
                 {
                     contents.AppendLine();
                     contents.Append($"### {heading.text}");
                 }
-                else if (tag is AutoDocumentation.Paragraph paragraph)
+                else if (tag is Paragraph paragraph)
                 {
                     contents.AppendLine();
                     contents.Append(paragraph.text);

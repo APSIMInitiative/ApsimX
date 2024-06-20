@@ -15,7 +15,7 @@ namespace Models
     [ViewName("UserInterface.Views.MapView")]
     [PresenterName("UserInterface.Presenters.MapPresenter")]
     [ValidParent(DropAnywhere = true)]
-    public class Map : Model, AutoDocumentation.ITag
+    public class Map : Model, ITag
     {
         /// <summary>List of coordinates to show on map</summary>
         public List<Coordinate> GetCoordinates(List<string> names = null)

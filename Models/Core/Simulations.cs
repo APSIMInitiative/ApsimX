@@ -294,7 +294,7 @@ namespace Models.Core
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
         /// <param name="headingLevel">The starting heading level.</param>
-        public void DocumentModel(string modelNameToDocument, List<AutoDocumentation.ITag> tags, int headingLevel)
+        public void DocumentModel(string modelNameToDocument, List<ITag> tags, int headingLevel)
         {
             Simulation simulation = this.FindInScope<Simulation>();
             if (simulation != null)

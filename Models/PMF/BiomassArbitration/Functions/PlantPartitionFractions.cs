@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -81,11 +82,11 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<ITag> tags, int headingLevel, int indent)
         {
 
             // add a heading
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            tags.Add(new Heading(Name, headingLevel));
 
             // get description of this class
             AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
@@ -113,9 +114,9 @@ namespace Models.PMF
             }
 
             // add a description of the equation for this function
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
+            tags.Add(new Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
                 + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
-            tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+            tags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
                 + organName + "].NitrogenDemandSwitch.", indent));
 
         }

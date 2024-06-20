@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Shared.Documentation;
 using Models.Functions;
 
 namespace Models.Core
@@ -395,7 +396,7 @@ namespace Models.Core
                                 childrenDocumented.Add(xypairs);
                                 var xName = words[2];
                                 var yName = words[3].Replace("]", "");
-                                tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                                //tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
                             }
                         }
                     }
@@ -557,7 +558,7 @@ namespace Models.Core
         /// <param name="headingLevel">Heading level</param>
         /// <param name="indent">Indent level</param>
         /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
-        public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
+        public static void DocumentChildren(IModel model, List<ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
         {
             if (model == null)
                 return;
@@ -576,7 +577,7 @@ namespace Models.Core
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         private static List<IModel> DocumentMathFunction(IModel function, char op,
-                                                         List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+                                                         List<ITag> tags, int headingLevel, int indent)
         {
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -590,12 +591,12 @@ namespace Models.Core
                     childrenToDocument.Add(child);
             }
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
+            tags.Add(new Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
 
             // write children
             if (childrenToDocument.Count > 0)
             {
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+                tags.Add(new Paragraph("Where:", indent));
 
                 foreach (IModel child in childrenToDocument)
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
@@ -639,157 +640,12 @@ namespace Models.Core
             return false;
         }
 
-        /// <summary>
-        /// Describes an interface for a auto-doc command.
-        /// </summary>
-        public interface ITag
-        {
-        }
+        
 
-        /// <summary>
-        /// Describes an auto-doc heading command.
-        /// </summary>
-        public class Heading : ITag
-        {
-            /// <summary>The heading text</summary>
-            public string text;
+        
 
-            /// <summary>The heading level</summary>
-            public int headingLevel;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Heading"/> class.
-            /// </summary>
-            /// <param name="text">The heading text.</param>
-            /// <param name="headingLevel">The heading level.</param>
-            public Heading(string text, int headingLevel)
-            {
-                this.text = text;
-                this.headingLevel = headingLevel;
-            }
-        }
-
-        /// <summary>
-        /// Describes an auto-doc paragraph command.
-        /// </summary>
-        public class Paragraph : ITag
-        {
-            /// <summary>The paragraph text.</summary>
-            public string text;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>The bookmark name (optional)</summary>
-            public string bookmarkName;
-
-            /// <summary>Should the paragraph indent all lines except the first?</summary>
-            public bool handingIndent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Paragraph"/> class.
-            /// </summary>
-            /// <param name="text">The paragraph text.</param>
-            /// <param name="indent">The paragraph indent.</param>
-            public Paragraph(string text, int indent)
-            {
-                this.text = text;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc graph and table command.</summary>
-        public class GraphAndTable : ITag
-        {
-            /// <summary>The data to show in graph and table.</summary>
-            public XYPairs xyPairs;
-
-            /// <summary>The graph title</summary>
-            public string title;
-
-            /// <summary>The x axis title.</summary>
-            public string xName;
-
-            /// <summary>The y axis title</summary>
-            public string yName;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="GraphAndTable"/> class.
-            /// </summary>
-            /// <param name="xyPairs">The xy pairs.</param>
-            /// <param name="title">Graph title.</param>
-            /// <param name="xName">The x axis title.</param>
-            /// <param name="yName">The y axis title.</param>
-            /// <param name="indent">The indentation.</param>
-            public GraphAndTable(XYPairs xyPairs, string title, string xName, string yName, int indent)
-            {
-                this.title = title;
-                this.xyPairs = xyPairs;
-                this.xName = xName;
-                this.yName = yName;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc table command.</summary>
-        public class Table : ITag
-        {
-            /// <summary>The data to show in the table.</summary>
-            public DataView data;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public int ColumnWidth { get; private set; }
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public string Style { get; private set; } = "Table";
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataTable data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = new DataView(data);
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataView data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = data;
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-        }
-
-        /// <summary>Descibes an image for the tags system.</summary>
-        public class Image : ITag
-        {
-            /// <summary>The image to put into the doc.</summary>
-            public System.Drawing.Image image;
-
-            /// <summary>Unique name for image. Used to save image to temp folder.</summary>
-            public string name;
-        }
-
+        
+/*
         /// <summary>Describes a new page for the tags system.</summary>
         public class NewPage : ITag
         {
@@ -803,21 +659,7 @@ namespace Models.Core
             /// <summary>Is new page portrait?</summary>
             public bool Portrait { get; set; } = true;
         }
-
-        /// <summary>Describes a model view for the tags system.</summary>
-        public class ModelView : ITag
-        {
-            /// <summary>Model</summary>
-            public IModel model;
-
-            /// <summary>Constructor</summary>
-            /// <param name="modelToDocument">The model to document</param>
-            public ModelView(IModel modelToDocument)
-            {
-                model = modelToDocument;
-            }
-        }
-
+*/
         /// <summary> creates a list of child function names </summary>
         public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
         {

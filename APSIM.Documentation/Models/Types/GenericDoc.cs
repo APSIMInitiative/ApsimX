@@ -34,6 +34,14 @@ namespace APSIM.Documentation.Models.Types
         /// </remarks>
         public virtual IEnumerable<ITag> Document()
         {
+            return DocumentSubSection(new List<ITag>(), 0, 0);
+        }
+
+        /// <summary>
+        /// Document the model as a subsection of another document
+        /// </summary>
+        public virtual IEnumerable<ITag> DocumentSubSection(List<ITag> tags, int headingLevel, int indent)
+        {
             yield return new Section(model.Name, GetModelDescription());
         }
 

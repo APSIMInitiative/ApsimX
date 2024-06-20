@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 
 namespace Models.PMF
@@ -274,11 +275,11 @@ namespace Models.PMF
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public void Document(List<ITag> tags, int headingLevel, int indent)
         {
 
             // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
+            tags.Add(new Heading(Name + " Biomass", headingLevel));
 
             // write description of this class.
             AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
@@ -287,7 +288,7 @@ namespace Models.PMF
             foreach (IModel child in this.FindAllChildren<IModel>())
                 AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
+            tags.Add(new Paragraph(this.Name + " summarises the following biomass objects:", indent));
         }
     }
 }
