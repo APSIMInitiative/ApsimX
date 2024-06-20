@@ -32,7 +32,7 @@ namespace Models
         private ISoilWater soilWater = null;
 
         [Link]
-        private ICalculateEo EoCalculator = null;
+        private ICalculateEo eoCalculator = null;
 
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
@@ -281,7 +281,7 @@ namespace Models
                 zoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
                 zoneMC.CalculateOmega();
                 zoneMC.SetCanopyEnergyTerms();
-                zoneMC.SoilWater.Eo = EoCalculator.Calculate(zoneMC);
+                zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
             }
         }
 

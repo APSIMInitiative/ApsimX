@@ -33,14 +33,19 @@ public class AtmosphericPotentialEvaporation : Model, ICalculateEo
             if (zone.Canopies[j].Canopy != null)
                 coverGreen += (1 - coverGreen) * zone.Canopies[j].Canopy.CoverGreen;
 
-        if (zone.SoilWater != null && zone.SurfaceOM != null)
-            return AtmosphericPotentialEvaporationRate(weather.Radn,
-                                                       weather.MaxT,
-                                                       weather.MinT,
-                                                       zone.SoilWater.Salb,
-                                                       zone.SurfaceOM.Cover,
-                                                       coverGreen);
-        throw new Exception("Cannot calculate atmospheric potential evaporation rate. Missing water balance or surface organic matter models.");
+        if (zone.SoilWater == null)
+            throw new Exception("Cannot calculate atmospheric potential evaporation rate. Missing water balance or surface organic matter models.");
+
+        double residueCover = 0;
+        if (zone.SurfaceOM != null)
+            residueCover = zone.SurfaceOM.Cover;
+
+        return AtmosphericPotentialEvaporationRate(weather.Radn,
+                                                   weather.MaxT,
+                                                   weather.MinT,
+                                                   zone.SoilWater.Salb,
+                                                   residueCover,
+                                                   coverGreen);
     }
 
     /// <summary>
