@@ -79,14 +79,14 @@ namespace Models
             foreach (var error in errors)
             {
                 //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
-                if (error as VersionRequestedError == null && error as HelpRequestedError == null)
+                if (error as VersionRequestedError == null && error as HelpRequestedError == null && error as MissingRequiredOptionError == null)
                 {
                     Console.WriteLine("Console error output: " + error.ToString());
                     Trace.WriteLine("Trace error output: " + error.ToString());
                 }
             }
 
-            if (!(errors.IsHelp() || errors.IsVersion()))
+            if (!(errors.IsHelp() || errors.IsVersion() || errors.Any(e => e is MissingRequiredOptionError)))
                 exitCode = 1;
         }
 
