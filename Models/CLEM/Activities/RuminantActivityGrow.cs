@@ -524,7 +524,7 @@ namespace Models.CLEM.Activities
                 // else
                 //     feedingValue = 2 * (energyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
 
-                feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
+                feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1) - 1;
 
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight.Live / ind.Weight.StandardReferenceWeight);
 
