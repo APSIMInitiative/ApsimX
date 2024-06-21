@@ -14,22 +14,25 @@ namespace APSIM.Server.Commands
     [Serializable]
     public class RunCommand : ICommand
     {
-        private bool runPostSimulationTools;
-        private bool runTests;
-        private IEnumerable<string> simulationNamesToRun;
-        private int numberOfProcessors;
-        private IEnumerable<Override> changes;
+        public bool runPostSimulationTools { get; set; }
+        public bool runTests { get; set; }
+        public List<string> simulationNamesToRun { get; set; }
+        public int numberOfProcessors { get; set; }
+        public List<Override> changes { get; set; }
+
+        public RunCommand() { }
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
-        /// <param name="changes">Changes to be applied to the simulations before being run.</param>
+        /// <param name="changes">Changes to be applied to the simulations before being run.</param>        [Newtonsoft.Json.JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
         public RunCommand(IEnumerable<Override> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
             numberOfProcessors = -1;
-            this.changes = changes;
+            this.changes = changes.ToList<Override>();
             simulationNamesToRun = null;
         }
 
@@ -46,8 +49,8 @@ namespace APSIM.Server.Commands
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;
             numberOfProcessors = numProcessors;
-            this.changes = changes;
-            simulationNamesToRun = simulationNames;
+            this.changes = changes.ToList<Override>();
+            simulationNamesToRun = simulationNames.ToList<string>();
         }
 
         /// <summary>

@@ -86,7 +86,7 @@ namespace Models.PMF
             multiplier = Math.Max(0, Math.Min(1, multiplier));
 
             //sourceAmount ie: Leaf.Carbon.Live.Metabolic
-            double reAllocationsupply = sourceAmount * multiplier * parentOrgan.senescenceRate;
+            double reAllocationsupply = sourceAmount * multiplier * parentOrgan.SenescenceRate;
             if (reAllocationsupply < -1e-12)
                 throw new Exception(this.FullPath + " gave a negative ReAllocation supply");
             return reAllocationsupply;
