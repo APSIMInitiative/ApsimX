@@ -18,8 +18,8 @@ WaterStressRUE_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.8 1),(0 0.
 WaterStressRUE_Fract_Y,0-1,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressLAISenes_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.3 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressLAISenes_Y,0-1,The proportion of LAI senesced each day due to water stress,Stress,(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0)
-FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 30 45),(0 15 30 35),(0 30 45),(0 15 30 45),(0 17 30 45),(0 30 45),(0 30 45),(0 30 45)
-FlowerMaxTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(0 1 1 0),(1 1 0),(0 1 1 0),(0 1 1 0),(1 1 0),(1 1 0),(1 1 1)
+FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 27 30 35),(0 15 30 35),(0 30 45),(0 15 30 45),(0 17 30 45),(0 30 45),(0 30 45),(0 30 45)
+FlowerMaxTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 1 0),(0 1 1 0),(1 1 0),(0 1 1 0),(0 1 1 0),(1 1 0),(1 1 0),(1 1 1)
 FlowerMinTempStress_Temp_X,oC,Minimum temperature at flowering,Stress,(-5 0 1),(-5 0 1),(-5 0 1),(-5 0 1),(0 0),(0 10),(-2 0),(-2 0),(0 10),(0 10),(0 10)
 FlowerMinTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MINIMUM temperature,Stress,(1 1 1),(1 1 1),(1 1 1),(1 1 1),(0 1),(1 1),(0 1),(0 1),(1 1),(1 1),(1 1)
 RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),Stress,(0 1500 1700),(0 1500),(0 1500),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
@@ -34,25 +34,25 @@ TrunkMaxNConc,gN/gDM,Highest N conc of organ,PlantNitrogen,0,0,0,0,0,0,0,0,0,0,0
 TrunkMinNConc,gN/gDM,Lowest N conc of organ,PlantNitrogen,0,0,0,0,0,0,0,0,0,0,0
 Pp_FullCover_02,h,Photoperiod x-values for full cover target thermal-time lengths,Phenology,(11 14 24),(12 17),(14 16),(13 14),(13 15),(10 11),(8 16),(10 11 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_FullCover_02,oCd,Thermal-time duration of full-cover phase at PP x-values (FullCanopy to StartSenescence),Phenology,(0 700 700),(1000 800),(1000 800),(900 800),(400 300),(1167 1167),(1167 1167),(0 450 450),(200 1000),(1300 1300),(1300 1300)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,Phenology,600,1100,660,700,700,100,100,520,200,0,0
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,Phenology,600,1100,660,1000,700,100,100,520,200,0,0
 D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,Phenology,72,280,116,267,60,100,1,70,102,0,0
 T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,Phenology,13,0,7,0,8,0,10,10,10,0,0
 Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,Phenology,700,1500,670,1200,1000,1000,1000,700,450,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),Phenology,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,Phenology,0,0,0,0,100,0,0,0,50,0,0
-D_EndGrowth,DAWS,The last day after winter solstice that the crop may remain acitive before its phenology is reset for next season,Phenology,300,270,300,210,350,350,360,65,350,0,0
+D_EndGrowth,DAWS,The last day after winter solstice that the crop may remain acitive before its phenology is reset for next season,Phenology,300,270,300,240,350,350,360,65,350,0,0
 EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,Phenology,EndCrop,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune
 AC_Dormant_05,oCd,Accumulated chill units (x-value),Phenology,(0 0),(0 0),(0 0),(0 0),(0 100),(0 0),(0 0),(0 0),(0 100),(0.0 30),(0.0 30)
 Tt_Dormant_05,oCd,Thermal-time duration of dormant phase at  accumulated chill unit (y-value),Phenology,(0 0),(0 0),(0 0),(0 0),(600 300),(0 0),(0 0),(0 0),(500 0),(0 0),(0 0)
-VegetativeStartStage,Value,Phenological stage to start accumulating vegetative tt,Phenology,3.01,6.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01,3.01
+VegetativeStartStage,Value,Phenological stage to start accumulating vegetative tt,Phenology,3.01,6.01,3.01,3.9,3.01,3.01,3.01,3.01,3.01,3.01,3.01
 Pp_Vegetative,h,Photoperiod x-values for pre flowering target thermal-time lengths,Phenology,(12.5 24),(12 17),(14 16),(13 14),(13 15),(10 11),(8 16),(8 16),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Vegetative,oCd,Thermal-time duration of pre flowering phase at PP x-values,Phenology,(500 200),(650 500),(800 600),(600 500),(600 600),(1167 1167),(300 300),(80 80),(0 0),(1300 1300),(1300 1300)
-Tt_Flowering,oCd,Thermal time for flowering window,Phenology,500,300,600,600,400,200,200,100,200,200,200
-Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,Phenology,600,800,760,800,900,700,1500,1340,1000,700,700
+Tt_Vegetative,oCd,Thermal-time duration of pre flowering phase at PP x-values,Phenology,(500 200),(650 500),(800 600),(500 400),(600 600),(1167 1167),(300 300),(80 80),(0 0),(1300 1300),(1300 1300)
+Tt_Flowering,oCd,Thermal time for flowering window,Phenology,500,300,600,300,400,200,200,100,200,200,200
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,Phenology,600,800,760,600,900,700,1500,1340,1000,700,700
 Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,Phenology,(0 0 0 0),(-2 -1 16 17),(0 0 0 0),(0 2 8 15),(0 5 20),(0 0 0 0),(0 0 0 0),(0 0 0 0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
 Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,Phenology,(0 0 0 0),(0 1 1 0),(0 0 0 0),(0 1 0.5 0),(1 0.8 0),(0 0 0 0),(0 0 0 0),(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
-TT_Temp_X,oC,Average temperature for thermal time calculation,Phenology,(0   18  26  34  44),(0  26  37),(1.9 26  40),2  30  35,(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
-TT_Acc_Y,oCd,Thermal time accumulation at average temperature,Phenology,(0   10  18  26   0),(0  26  0),(0 24.1 0),0  28  0,(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
+TT_Temp_X,oC,Average temperature for thermal time calculation,Phenology,(0   18  26  34  44),(0  26  37),(1.9 26  40),(2  30  35),(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
+TT_Acc_Y,oCd,Thermal time accumulation at average temperature,Phenology,(0   10  18  26   0),(0  26  0),(0 24.1 0),(0  28  0),(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
 RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),CarbonSupply,1.8,1.2,1.05,1.66,0.9,2.3,1,.9,1.2,1,0.9
 PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmospheric CO2,CarbonSupply,C4,C3,C3,C3,C3,C3,C3,C3,C3,C3,C3
 RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,CarbonSupply,(8 20 35 50),(0 15 25 35),(0 25 30 45),(0  15 25 35),(5 25 30 45),(10  24 26  35),(10 25 30 45),(10 25 33 45),(5 20 30 40),(3 18 25 35),(5 20 25 35)
