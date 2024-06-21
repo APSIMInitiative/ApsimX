@@ -5,7 +5,7 @@ AgeToMaxDimension,Y,Years until plant reaches mature size,Structure,1,1,1,1,6,6,
 AgeAtStartSimulation,Y,How old is the plant at the start of the simulation (needs to be 1 for annuals),Structure,1,1,1,1,6,6,6,6,6,0.3,1
 SeasonalDimensionPattern,0-1,Relative values for seasonal height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,Structure,(0.05 .3 0.3 1),(0.05 .3 0.3 1),(0.05 1 1 1),(0.05 1 1 1),(0 1 1 1),0 1 1 1),(0 1 1 1),(0 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,Structure,0,0,0,0,500,1500,1000,1500,1500,0,0
-MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,2300,2000,2000,2000,2000,2000,600,600
+MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,1600,1100,2000,2300,2000,2000,2000,2000,2000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 ProduceDryMatterFrac,0-1,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
 Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-9 -1),(-4 0 4),(-10 -5),(-5 0),(-5 0),(-5 -2),(-3 0),(-10 -5),(-5 0),(-5 0)
