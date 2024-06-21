@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using APSIM.Documentation;
+using APSIM.Documentation.Models;
 using APSIM.Interop.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
@@ -24,7 +24,6 @@ using Models.Soils;
 using Models.Storage;
 using UserInterface.Commands;
 using Utility;
-using APSIM.Documentation.Models;
 
 namespace UserInterface.Presenters
 {
@@ -1011,7 +1010,7 @@ namespace UserInterface.Presenters
                 }
 
                 ;
-                pdf.Write(fileNameWritten, AutoDocumentationNew.Document(modelToDocument));
+                pdf.Write(fileNameWritten, AutoDocumentation.Document(modelToDocument));
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
 

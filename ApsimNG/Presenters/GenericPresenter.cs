@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using APSIM.Shared.Documentation;
+using APSIM.Documentation.Models;
 using Models.Core;
 using UserInterface.Views;
 
@@ -44,7 +45,7 @@ namespace UserInterface.Presenters
             // It's slightly simpler to generate Markdown for this, but it
             // would be pretty easy to build this directly as HTML
             List<ITag> tags = new List<ITag>();
-            AutoDocumentation.DocumentModel(this.model, tags, 1, 0, false, force: true);
+            AutoDocumentation.Document(this.model, tags, 1, 0, false, force: true);
 
             StringBuilder contents = new StringBuilder();
             foreach (ITag tag in tags)

@@ -22,39 +22,27 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document()
+        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            return DocumentSubSection(new List<ITag>(), 0, 0);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> DocumentSubSection(List<ITag> tags, int headingLevel, int indent)
-        {
-            tags.Add(new Section($"The APSIM {model.Name} Model", GetTags()));
-            return tags;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        private IEnumerable<ITag> GetTags()
-        {
+            if (tags == null)
+                tags = new List<ITag>();
             
+            List<ITag> subTags = new List<ITag>();
+
             // If first child is a memo, document it first.
             Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
             if (introduction != null)
                 foreach (ITag tag in introduction.Document())
-                    yield return tag;
+                    subTags.Add(tag);
 
-            foreach (var tag in GetModelDescription())
-                yield return tag;
+            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(GetType())));
+            
+            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
 
-            yield return new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
+            subTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Table
-            yield return new Paragraph("**List of Plant Model Components.**");
+            subTags.Add(new Paragraph("**List of Plant Model Components.**"));
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
@@ -68,12 +56,15 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            yield return new Table(tableData);
+            subTags.Add(new Table(tableData));
 
             // Document children.
             foreach (IModel child in this.model.Children)
                 if (child != introduction)
-                    yield return new Section(child.Name, child.Document());
+                    subTags.Add(new Section(child.Name, child.Document()));
+
+            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
+            return tags;
         }
     }
 }

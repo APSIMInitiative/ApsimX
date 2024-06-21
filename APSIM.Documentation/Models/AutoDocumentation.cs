@@ -9,9 +9,14 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
 using APSIM.Shared.Documentation;
+using Models;
+using Models.Core;
 using Models.Functions;
+using APSIM.Documentation.Models.Types;
+using Models.PMF;
 
-namespace Models.Core
+
+namespace APSIM.Documentation.Models
 {
 
     /// <summary>
@@ -29,6 +34,43 @@ namespace Models.Core
 
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
+
+        /// <summary>Writes the description of a class to the tags.</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The heading level to use.</param>
+        /// <param name="indent">The indentation level.</param>
+        /// <param name="documentAllChildren">Document all children?</param>
+        /// <param name="force">
+        /// Whether or not to force the generation of documentation,
+        /// regardless of the model's IncludeInDocumentation status.
+        /// </param>
+        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0, bool documentAllChildren = true, bool force = false)
+        {
+            if (tags == null)
+                tags = new List<ITag>();
+                
+            if (model is IPlant)
+                return new PlantDoc(model).Document();
+            else if (model is IClock)
+                return new ClockDoc(model).Document();
+            else if (model is Simulation)
+                return new GenericWithChildrenDoc(model).Document();
+            else if (model is AccumulateFunction)
+                return new AccumulateFunctionDoc(model).Document();
+            else if (model is BiomassArbitrator)
+                return new BiomassArbitratorDoc(model).Document();
+            else if (model is CalculateCarbonFractionFromNConc || model is DeficitDemandFunction || model is MobilisationSupplyFunction || model is PlantPartitionFractions)
+                return new BiomassArbitrationFunctionDoc(model).Document();
+            else if (model is OrganNutrientDelta || model is OrganNutrientsState)
+                return new OrganNutrientDoc(model).Document();
+            else if (model is NutrientDemandFunctions || model is NutrientPoolFunctions || model is MobilisationSupplyFunction || model is NutrientSupplyFunctions)
+                return new UIInterfaceNutrientDoc(model).Document();
+            else if (model is RootUptakesArbitrator)
+                return new RootUptakesArbitratorDoc(model).Document();
+            else
+                return new GenericDoc(model).Document();
+        }
 
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
@@ -77,30 +119,6 @@ namespace Models.Core
             }
 
             return string.Empty;
-        }
-
-
-        /// <summary>Writes the description of a class to the tags.</summary>
-        /// <param name="model">The model to get documentation for.</param>
-        /// <param name="tags">The tags to add to.</param>
-        /// <param name="headingLevel">The heading level to use.</param>
-        /// <param name="indent">The indentation level.</param>
-        /// <param name="documentAllChildren">Document all children?</param>
-        /// <param name="force">
-        /// Whether or not to force the generation of documentation,
-        /// regardless of the model's IncludeInDocumentation status.
-        /// </param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
-        {
-            if (model == null)
-                return;
-            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
-            {
-                // if (model is ICustomDocumentation)
-                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                // else
-                DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
-            }
         }
 
         /// <summary>
@@ -300,7 +318,7 @@ namespace Models.Core
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
-            List<IModel> childrenDocumented = new List<Core.IModel>();
+            List<IModel> childrenDocumented = new List<IModel>();
             int numSpacesStartOfLine = -1;
             string paragraphSoFar = string.Empty;
             if (stringToParse.StartsWith("\r\n"))
@@ -365,7 +383,7 @@ namespace Models.Core
                             paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                         else
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, tags, targetHeadingLevel + 1, indent);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -378,7 +396,7 @@ namespace Models.Core
                         Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
                         foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, tags, targetHeadingLevel + 1, indent);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -421,7 +439,7 @@ namespace Models.Core
                 foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
-                        DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
+                        Document(child, tags, headingLevel + 1, indent, documentAllChildren);
                 }
             }
         }
@@ -565,7 +583,7 @@ namespace Models.Core
             foreach (IModel child in model.Children)
                 if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
-                    DocumentModel(child, tags, headingLevel + 1, indent);
+                    Document(child, tags, headingLevel + 1, indent);
         }
 
         /// <summary>
@@ -599,7 +617,7 @@ namespace Models.Core
                 tags.Add(new Paragraph("Where:", indent));
 
                 foreach (IModel child in childrenToDocument)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                    Document(child, tags, headingLevel + 1, indent + 1);
             }
 
             return childrenToDocument;
@@ -639,42 +657,6 @@ namespace Models.Core
             msg += child.Name;
             return false;
         }
-
-        
-
-        
-
-        
-/*
-        /// <summary>Describes a new page for the tags system.</summary>
-        public class NewPage : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-
-        /// <summary>Page setup tag.</summary>
-        public class PageSetup : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-*/
-        /// <summary> creates a list of child function names </summary>
-        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
-        {
-            string listofKids = "";
-            int count = 0;
-            foreach (IModel F in ChildFunctions)
-            {
-                count += 1;
-                listofKids += ("*" + F.Name + "*");
-                if (count == ChildFunctions.Count() - 1)
-                    listofKids += " and ";
-                else if (count < ChildFunctions.Count() - 1)
-                    listofKids += ", ";
-            }
-            return listofKids;
-        }
     }
+    
 }

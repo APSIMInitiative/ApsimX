@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Models.PMF;
 using APSIM.Shared.Documentation;
 
-using static Models.Core.AutoDocumentation;
-
 namespace Models.Core
 {
     /// <summary>

@@ -136,31 +136,5 @@ namespace Models.PMF
             else
                 return Math.Max(0, deficit);
         }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading
-            tags.Add(new Heading(Name, headingLevel));
-
-            // get description of this class
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-            // write memos
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-            parentOrgan = FindParentOrgan(this.Parent);
-
-            // add a description of the equation for this function
-            tags.Add(new Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
-                + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-            tags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
-                + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
-        }
     }
 }

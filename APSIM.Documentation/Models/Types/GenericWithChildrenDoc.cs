@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
-using Models;
 using Models.Core;
 
 namespace APSIM.Documentation.Models.Types
@@ -9,12 +8,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class ClockDoc : GenericDoc
+    public class GenericWithChildrenDoc : GenericDoc
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericDoc" /> class.
+        /// Initializes a new instance of the <see cref="PlantDoc" /> class.
         /// </summary>
-        public ClockDoc(IModel model): base(model) {}
+        public GenericWithChildrenDoc(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
@@ -23,14 +22,16 @@ namespace APSIM.Documentation.Models.Types
         {
             if (tags == null)
                 tags = new List<ITag>();
-
+            
             List<ITag> subTags = new List<ITag>();
             subTags.Add(new Paragraph(CodeDocumentation.GetSummary(GetType())));
             subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
+
+            foreach (IModel child in model.FindAllChildren())
+                subTags.Add(new Section(child.Name, child.Document()));
+
             tags.Add(new Section(model.Name, subTags));
 
-            tags.Add(new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true)));
-            
             return tags;
         }
     }

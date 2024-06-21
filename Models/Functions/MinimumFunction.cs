@@ -29,49 +29,5 @@ namespace Models.Functions
             }
             return ReturnValue;
         }
-
-        /// <summary>String list of child functions</summary>
-        public string ChildFunctionList
-        {
-            get
-            {
-                return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
-            }
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public static IEnumerable<ITag> DocumentMinMaxFunction(string functionName, string name, IEnumerable<IModel> children)
-        {
-            foreach (var child in children.Where(c => c is Memo))
-                foreach (var tag in child.Document())
-                    yield return tag;
-
-            var writer = new StringBuilder();
-            writer.Append($"*{name}* = {functionName}(");
-
-            bool addComma = false;
-            foreach (var child in children.Where(c => !(c is Memo)))
-            {
-                if (addComma)
-                    writer.Append($", ");
-                writer.Append($"*" + child.Name + "*");
-                addComma = true;
-            }
-            writer.Append(')');
-            yield return new Paragraph(writer.ToString());
-
-            yield return new Paragraph("Where:");
-
-            foreach (var child in children.Where(c => !(c is Memo)))
-                foreach (var tag in child.Document())
-                    yield return tag;
-        }
-
-        /// <summary>Document the model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in DocumentMinMaxFunction("Min", Name, Children))
-                yield return tag;
-        }
     }
 }

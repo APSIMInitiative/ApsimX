@@ -27,35 +27,19 @@ namespace APSIM.Documentation.Models.Types
         }
 
         /// <summary>
-        /// Document the model, and any child models which should be documented.
+        /// Document the model
         /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public virtual IEnumerable<ITag> Document()
+        public virtual IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            return DocumentSubSection(new List<ITag>(), 0, 0);
-        }
+            if (tags == null)
+                tags = new List<ITag>();
 
-        /// <summary>
-        /// Document the model as a subsection of another document
-        /// </summary>
-        public virtual IEnumerable<ITag> DocumentSubSection(List<ITag> tags, int headingLevel, int indent)
-        {
-            yield return new Section(model.Name, GetModelDescription());
-        }
+            List<ITag> subTags = new List<ITag>();
+            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(GetType())));
+            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
 
-        /// <summary>
-        /// Get a description of the model from the summary and remarks
-        /// xml documentation comments in the source code.
-        /// </summary>
-        /// <remarks>
-        /// Note that the returned tags are not inside a section.
-        /// </remarks>
-        protected IEnumerable<ITag> GetModelDescription()
-        {
-            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
-            yield return new Paragraph(CodeDocumentation.GetRemarks(GetType()));
+            tags.Add(new Section(model.Name, subTags));
+            return tags;
         }
 
         /// <summary>
