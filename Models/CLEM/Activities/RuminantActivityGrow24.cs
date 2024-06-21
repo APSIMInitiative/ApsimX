@@ -256,7 +256,6 @@ namespace Models.CLEM.Activities
                 sexEffectME = 1.15;
 
             double conceptusProtein = 0;
-            double conceptusFat = 0;
             double milkProtein = 0;
 
             // calculate here as is also needed in not weaned.. in case consumed feed and milk.
@@ -269,7 +268,7 @@ namespace Models.CLEM.Activities
                 if (ind is RuminantFemale indFemale)
                 {
                     // Determine energy required for fetal development
-                    ind.Energy.ForFetus = CalculatePregnancyEnergy(indFemale, ref conceptusProtein, ref conceptusFat);
+                    ind.Energy.ForFetus = CalculatePregnancyEnergy(indFemale, ref conceptusProtein);
 
                     // calculate energy for lactation
                     // look for milk production calculated before offspring may have been weaned
@@ -659,60 +658,79 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Female individua.l</param>
         /// <param name="conceptusProtein">Protein required by conceptus for time-step(kg).</param>
-        /// <param name="conceptusFat">Fat required by conceptus for time-step (kg).</param>
         /// <returns>Energy required per day for pregnancy</returns>
-        private double CalculatePregnancyEnergy(RuminantFemale ind, ref double conceptusProtein, ref double conceptusFat)
+        private double CalculatePregnancyEnergy(RuminantFemale ind, ref double conceptusProtein)
         {
             if (!ind.IsPregnant)
                 return 0;
 
-            // ToDo: maybe age of conceptus should be calculated half way, or 2/3 etc through large time-steps.
+            double totalMERequired = 0;
+            double conceptusFat = 0;
+            conceptusProtein = 0;
 
-            double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy()))));
-            if (ind.ProportionOfPregnancy() == 0)
-                ind.Weight.Fetus.Set(normalWeightFetus);
+            // smallest allowed interval is 7 days
+            const int smallestInterval = 7;
+            // work out how many loops we need to do
+            int step = Math.Min(events.Interval, smallestInterval);
+            int currentDays = 0;
 
-            // change in normal fetus weight across time-step
-            double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(events.Interval))))) - normalWeightFetus;
-
-            // calculated after growth in time-step to avoild issue of 0 in first step especially for larger time-steps
-            double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
-
-            // get stunting factor
-            double stunt = 1;
-            if(MathUtilities.IsLessThan(ind.Weight.RelativeCondition, 1.0))
+            while (currentDays < events.Interval)
             {
-                stunt = ind.Parameters.Grow24_CP.FetalGrowthPoorCondition_CP14[ind.NumberOfFetuses-1];
+                double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays)))));
+                if (ind.ProportionOfPregnancy(currentDays) == 0)
+                    ind.Weight.Fetus.Set(normalWeightFetus);
+
+                // change in normal fetus weight across time-step
+                int daysToEnd = Math.Min(events.Interval - currentDays, smallestInterval);
+                double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(daysToEnd))))) - normalWeightFetus;
+
+                // calculated after growth in time-step to avoild issue of 0 in first step especially for larger time-steps
+                double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
+
+                // get stunting factor
+                double stunt = 1;
+                if (MathUtilities.IsLessThan(ind.Weight.RelativeCondition, 1.0))
+                {
+                    stunt = ind.Parameters.Grow24_CP.FetalGrowthPoorCondition_CP14[ind.NumberOfFetuses - 1];
+                }
+                double CFPreg = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
+
+                if (MathUtilities.IsGreaterThanOrEqual(ind.Weight.RelativeCondition, 1.0))
+                    ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * (CFPreg + 1)));
+                else
+                    ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((stunt * CFPreg) + 1)));
+
+                ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy(currentDays)))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
+
+                // MJ per day
+                double conceptusME = (ind.Parameters.Grow24_CP.ConceptusEnergyContent_CP8 * (ind.NumberOfFetuses * ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
+                    (ind.Parameters.Grow24_CP.ConceptusEnergyParameter_CP9 * ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) *
+                    Math.Exp(ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.Grow24_CP.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.ProportionOfPregnancy(currentDays)))))) / 0.13;
+
+                totalMERequired += conceptusME * daysToEnd;
+
+                // kg protein per day
+                double conceptusProteinReq = ind.Parameters.Grow24_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
+                    (ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)) + ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)))));
+
+                // protein for time-step (kg)
+                conceptusProtein += conceptusProteinReq * daysToEnd;
+                // fat for time-step (kg)
+                conceptusFat += ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3 * daysToEnd;
+                currentDays += step;
             }
-            double CFPreg = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
 
-            if(MathUtilities.IsGreaterThanOrEqual(ind.Weight.RelativeCondition, 1.0))
-                ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * (CFPreg+1)));
-            else
-                ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((stunt * CFPreg) + 1)));
+            // ToDo: update conceptus weight at end of time step if birth due next time-step so we have the final weight not merely at the start of final time-step
+            // ind.IsBirthDue
+            // recalc fetus norm
+            // recalcy final fetus weight
 
-            ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy()))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
-
-            //ToDo: check that these next lines are truly per day!!
-
-            // MJ per day
-            double conceptusME = (ind.Parameters.Grow24_CP.ConceptusEnergyContent_CP8 * (ind.NumberOfFetuses * ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
-                (ind.Parameters.Grow24_CP.ConceptusEnergyParameter_CP9 * ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) * 
-                Math.Exp(ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.Grow24_CP.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.ProportionOfPregnancy()))))) / 0.13;
-
-            // kg protein per day
-            double conceptusProteinReq = ind.Parameters.Grow24_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.Grow24_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus * 
-                (ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()) + ind.Parameters.Grow24_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.Grow24_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy()))));
-
-            conceptusProtein = conceptusProteinReq;
-            // fat (kg)
-            conceptusFat = ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3;
-
-            //fetal fat and protein
+            //conceptus fat and protein
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
-            ind.Weight.FetusFat.Adjust(conceptusFat/ind.NumberOfFetuses);
+            ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
+            ind.Weight.ConceptusFat.Adjust(conceptusFat);
 
-            return conceptusME/events.Interval;
+            return totalMERequired/events.Interval;
         }
 
         /// <summary>

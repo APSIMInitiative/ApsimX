@@ -465,9 +465,9 @@ namespace Models.CLEM.Resources
             {
                 // Determine the best birth weight to use
                 // RuminantGrow 
-                //   calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
                 // RuminantGrow24
-                //   use the weight of fetus at birth as calculated during pregnancy
+                //   * use the weight of fetus at birth as calculated during pregnancy
 
                 double weight = Weight.Fetus.Amount;
                 if (Weight.Fetus.Amount == 0)
@@ -480,10 +480,10 @@ namespace Models.CLEM.Resources
                 newSucklingRuminant.Mother = this;
                 newSucklingRuminant.Number = 1;
                 newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
-                if (Weight.FetusFat.Amount > 0)
+                if (Weight.ConceptusFat.Amount > 0)
                 {
-                    newSucklingRuminant.Weight.Fat.Set(Weight.FetusFat.Amount);
-                    newSucklingRuminant.Weight.Protein.Set(Weight.FetusProtein);
+                    newSucklingRuminant.Weight.Fat.Set(weight / Weight.Conceptus.Amount *  Weight.ConceptusFat.Amount);
+                    newSucklingRuminant.Weight.Protein.Set(weight / Weight.Conceptus.Amount * Weight.ConceptusFat.Amount);
                 }
 
                 // add attributes inherited from mother
@@ -520,7 +520,7 @@ namespace Models.CLEM.Resources
             }
             base.Weight.Conceptus.Reset();
             base.Weight.Fetus.Reset();
-            base.Weight.FetusFat.Reset();
+            base.Weight.ConceptusFat.Reset();
             BodyConditionParturition = Weight.BodyCondition;
             WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
