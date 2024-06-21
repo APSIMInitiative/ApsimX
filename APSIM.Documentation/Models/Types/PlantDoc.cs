@@ -35,7 +35,7 @@ namespace APSIM.Documentation.Models.Types
                 foreach (ITag tag in introduction.Document())
                     subTags.Add(tag);
 
-            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(GetType())));
+            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             
             subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
 

@@ -35,8 +35,8 @@ namespace APSIM.Documentation.Models.Types
                 tags = new List<ITag>();
 
             List<ITag> subTags = new List<ITag>();
-            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(GetType())));
-            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
+            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
+            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
             tags.Add(new Section(model.Name, subTags));
             return tags;

@@ -50,26 +50,32 @@ namespace APSIM.Documentation.Models
             if (tags == null)
                 tags = new List<ITag>();
                 
-            if (model is IPlant)
-                return new PlantDoc(model).Document();
-            else if (model is IClock)
-                return new ClockDoc(model).Document();
+            IEnumerable<ITag> newTags;
+            if (model is Plant)
+                newTags = new PlantDoc(model).Document();
+            else if (model is Clock)
+                newTags = new ClockDoc(model).Document();
             else if (model is Simulation)
-                return new GenericWithChildrenDoc(model).Document();
+                newTags = new GenericWithChildrenDoc(model).Document();
             else if (model is AccumulateFunction)
-                return new AccumulateFunctionDoc(model).Document();
+                newTags = new AccumulateFunctionDoc(model).Document();
             else if (model is BiomassArbitrator)
-                return new BiomassArbitratorDoc(model).Document();
+                newTags = new BiomassArbitratorDoc(model).Document();
             else if (model is CalculateCarbonFractionFromNConc || model is DeficitDemandFunction || model is MobilisationSupplyFunction || model is PlantPartitionFractions)
-                return new BiomassArbitrationFunctionDoc(model).Document();
+                newTags = new BiomassArbitrationFunctionDoc(model).Document();
             else if (model is OrganNutrientDelta || model is OrganNutrientsState)
-                return new OrganNutrientDoc(model).Document();
+                newTags = new OrganNutrientDoc(model).Document();
             else if (model is NutrientDemandFunctions || model is NutrientPoolFunctions || model is MobilisationSupplyFunction || model is NutrientSupplyFunctions)
-                return new UIInterfaceNutrientDoc(model).Document();
+                newTags = new UIInterfaceNutrientDoc(model).Document();
             else if (model is RootUptakesArbitrator)
-                return new RootUptakesArbitratorDoc(model).Document();
+                newTags = new RootUptakesArbitratorDoc(model).Document();
             else
-                return new GenericDoc(model).Document();
+                newTags = new GenericDoc(model).Document();
+
+            foreach(ITag tag in newTags)
+                tags.Add(tag);
+                
+            return tags;
         }
 
         /// <summary>Gets the units from a declaraion.</summary>
