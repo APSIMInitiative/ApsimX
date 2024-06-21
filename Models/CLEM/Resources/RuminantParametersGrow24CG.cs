@@ -85,12 +85,17 @@ namespace Models.CLEM.Resources
         [Required] public double ConditionMaxEffect_CG7 { get; set; } = 0.97;
 
         /// <summary>
-        /// Intercept parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG8)
+        /// Intercept parameter for calculation of energy needed per kg empty body gain #1 
         /// </summary>
+        /// <details>
+        /// (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG8)
+        /// The 'b' inidcates this is a different value to that reported by Freer et al. 2012 due to the corrected reaggangement of equation 104 based on eqn 1.3 in Freer 2007.
+        /// This value is used to calculate energyEmptyBodyGain in CalculateEnergy(ind)
+        /// </details>
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #1 [CG8]")]
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergyIntercept1_CG8 { get; set; } = 27.0; // B.indicus 23.2
+        public double GrowthEnergyIntercept1_CG8b { get; set; } = 6.7; //ToDo: check that this is now the same value for B.indicus/Charolais from rearrangement by GrassGro
 
         /// <summary>
         /// Intercept Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG9)
@@ -121,10 +126,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// First intercept of equation to determine energy protein mass (kg kg-1, SCA CG12)
         /// </summary>
+        /// <details>
+        /// The 'b' inidcates this is a different value to that reported by Freer et al. 2012 due to the corrected reaggangement of equation 105 based on eqn 1.31 in Freer 2007.
+        /// This value is used to calculate proteinContentOfGain in CalculateEnergy(ind)
+        /// </details>
         [Description("Protein gain intercept #1 [CG12]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double ProteinGainIntercept1_CG12 { get; set; } = 0.072; // B.indicus 0.092 
+        public double ProteinGainIntercept1_CG12b { get; set; } = 0.21; // Same for B.indicus 
 
         /// <summary>
         /// Second intercept of equation to determine energy protein mass (kg kg-1, SCA CG13)
@@ -141,7 +150,7 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope #1 [CG14]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double ProteinGainSlope1_CG14 { get; set; } = 0.008;
+        public double ProteinGainSlope1_CG14b { get; set; } = 0.004;
 
         /// <summary>
         /// Second slope of equation to determine energy protein mass (kg kg-1, SCA CG15)
@@ -194,13 +203,13 @@ namespace Models.CLEM.Resources
                 GainMidpoint_CG5 = GainMidpoint_CG5,
                 ConditionNoEffect_CG6 = ConditionNoEffect_CG6,
                 ConditionMaxEffect_CG7 = ConditionMaxEffect_CG7,
-                GrowthEnergyIntercept1_CG8 = GrowthEnergyIntercept1_CG8,
+                GrowthEnergyIntercept1_CG8b = GrowthEnergyIntercept1_CG8b,
                 GrowthEnergyIntercept2_CG9 = GrowthEnergyIntercept2_CG9,
                 GrowthEnergySlope1_CG10 = GrowthEnergySlope1_CG10,
                 GrowthEnergySlope2_CG11 = GrowthEnergySlope2_CG11,
-                ProteinGainIntercept1_CG12 = ProteinGainIntercept1_CG12,
+                ProteinGainIntercept1_CG12b = ProteinGainIntercept1_CG12b,
                 ProteinGainIntercept2_CG13 = ProteinGainIntercept2_CG13,
-                ProteinGainSlope1_CG14 = ProteinGainSlope1_CG14,
+                ProteinGainSlope1_CG14b = ProteinGainSlope1_CG14b,
                 ProteinGainSlope2_CG15 = ProteinGainSlope2_CG15,
                 BreedGrowthEfficiencyScalar = BreedGrowthEfficiencyScalar,
                 BreedLactationEfficiencyScalar = BreedLactationEfficiencyScalar,

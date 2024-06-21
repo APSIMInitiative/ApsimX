@@ -362,26 +362,10 @@ namespace Models.CLEM.Activities
 
             double proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
-            double energyEmptyBodyGain;
-            double proteinContentOfGain;
-            if (!ind.Parameters.General.UseCorrectedEquations)
-            {
-                // units = mj/kg gain
-                energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel)) + sizeFactor2ForGain * (ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
-                // units = kg protein/kg gain
-                proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel) + sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1);
-            }
-            else
-            {
-                // ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 = NEW value 6.7 for the corrected equations. 
-                // CG9, CG10, CG11 are not changed from previous.
-                // mj/kg gain
-                energyEmptyBodyGain = ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8 + (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 + (ind.Parameters.Grow24_CG.GrowthEnergySlope1_CG10 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.GrowthEnergySlope2_CG11 * (ind.Weight.RelativeCondition - 1));
-                // units = kg protein/kg gain
-                // ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 = NEW value 0.21 (or 5/23.6) for the corrected equations.
-                // CG13, CG14, CG15 are not changed from previous.
-                proteinContentOfGain = ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 - (sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 + (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14 * adjustedFeedingLevel))) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
-            }
+            // units = mj/kg gain
+            double energyEmptyBodyGain = (ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
+            // units = kg protein/kg gain
+            double proteinContentOfGain = (ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12b - (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
 
             // units MJ tissue gain/kg ebg
             double netEnergyForGain = ind.Energy.Kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
@@ -410,11 +394,11 @@ namespace Models.CLEM.Activities
                 double NEG2 = netEnergyForGain + ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 * (checkFemale.Milk.PotentialRate2 - MP);
                 double PG2 = proteinGain1 + (checkFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
                 double ProteinNet2 = PG2 - proteinContentOfGain * (NEG2 / energyEmptyBodyGain);
-                ind.Energy.NetForGain = NEG2 + ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
+                ind.Energy.NetForGain = NEG2 + ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12b * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
             }
             else
             {
-                ind.Energy.NetForGain = netEnergyForGain + ind.BreedDetails.Parameters.Grow24_CG.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
+                ind.Energy.NetForGain = netEnergyForGain + ind.BreedDetails.Parameters.Grow24_CG.ProteinGainIntercept1_CG12b * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
             }
             double emptyBodyGainkg = ind.Energy.NetForGain / energyEmptyBodyGain;
 

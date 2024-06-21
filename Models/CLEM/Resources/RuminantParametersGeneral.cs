@@ -30,13 +30,6 @@ namespace Models.CLEM.Resources
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
         public string Breed { get; set; } = "Bos taurus";
 
-        /// <summary>
-        /// Use corrected equations of animal energy requirement for growth
-        /// </summary>
-        [Category("Breed", "General")]
-        [Description("Use corrected energy equations")]
-        public bool UseCorrectedEquations { get; set; } = true;
-
         #region Age
 
         /// <summary>
