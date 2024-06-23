@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -233,9 +234,9 @@ namespace UserInterface.Presenters
                 }
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                List<List<bool>> isCalculated = new();
+                List<List<SheetDataProviderCellState>> isCalculated = new();
                 for (int i = 0; i < data.Columns.Count; i++)
-                   isCalculated.Add(gridTable.GetIsCalculated(i));
+                   isCalculated.Add(gridTable.GetIsCalculated(i).Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
 
                 // Create instance of DataTableProvider.
                 DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
