@@ -126,7 +126,7 @@ namespace Models.PMF
 
         /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
         [JsonIgnore]
-        public double TotalCFixationSupply { get { return DM.TotalFixationSupply; } }
+        public double TotalDMFixationSupply { get { return DM.TotalFixationSupply; } }
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
