@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -299,7 +300,7 @@ namespace Models.PMF
                         var waterBalance = Z.Soil.FindChild<ISoilWater>();
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
-                        int i = 1;
+                        int i = 0;
                         foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             if (pawc[i] > 0)
@@ -597,8 +598,8 @@ namespace Models.PMF
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        [EventSubscribe("PostPhenology")]
+        protected void OnPostPhenology(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
             {
@@ -647,26 +648,52 @@ namespace Models.PMF
             foreach (NetworkZoneState Z in Zones)
                 TotalRAw += Z.RAw.Sum();
 
-            //if ((parentPlant.IsAlive) && (TotalRAw > 0))
-            //{
-            foreach (NetworkZoneState Z in Zones)
+            if (parentPlant.IsAlive)
             {
-                //if (Depth > 0)
-                //{
-                for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
+                double checkTotalWt = 0;
+                double checkTotalN = 0;
+                foreach (NetworkZoneState Z in Zones)
                 {
-                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(liveRemoved, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(reAllocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(reTranslocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    Z.LayerLive[layer] = OrganNutrientsState.subtract(Z.LayerLive[layer], OrganNutrientsState.multiply(senesced, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    
-                    double fracAlloc = MathUtilities.Divide(Z.RAw[layer], TotalRAw,0);
-                    Z.LayerLive[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Z.LayerLive.Length];
+                    for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
+                    {
+                        Z.LayerLive[layer] = OrganNutrientsState.Subtract(Z.LayerLive[layer], OrganNutrientsState.Multiply(liveRemoved, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        Z.LayerLive[layer] = OrganNutrientsState.Subtract(Z.LayerLive[layer], OrganNutrientsState.Multiply(reAllocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        Z.LayerLive[layer] = OrganNutrientsState.Subtract(Z.LayerLive[layer], OrganNutrientsState.Multiply(reTranslocated, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        Z.LayerLive[layer] = OrganNutrientsState.Subtract(Z.LayerLive[layer], OrganNutrientsState.Multiply(senesced, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
 
-                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(senesced, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(detached, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                    Z.LayerDead[layer] = OrganNutrientsState.add(Z.LayerLive[layer], OrganNutrientsState.multiply(deadRemoved, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        double fracAlloc = MathUtilities.Divide(Z.RAw[layer], TotalRAw, 0);
+                        Z.LayerLive[layer] = OrganNutrientsState.Add(Z.LayerLive[layer], OrganNutrientsState.Multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
+
+                        Z.LayerDead[layer] = OrganNutrientsState.Add(Z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        OrganNutrientsState detachedToday = OrganNutrientsState.Multiply(detached, Z.LayerDeadProportion[layer], parentOrgan.Cconc);
+                        Z.LayerDead[layer] = OrganNutrientsState.Subtract(Z.LayerDead[layer], detachedToday, parentOrgan.Cconc);
+                        Z.LayerDead[layer] = OrganNutrientsState.Subtract(Z.LayerDead[layer], OrganNutrientsState.Multiply(deadRemoved, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        checkTotalWt += (Z.LayerLive[layer].Wt + Z.LayerDead[layer].Wt);
+                        checkTotalN += (Z.LayerLive[layer].N + Z.LayerDead[layer].N);
+
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)(detachedToday.Wt * 10);
+                        fom.N = (float)(detachedToday.N * 10);
+                        fom.C = (float)(0.40 * detachedToday.Wt * 10);
+                        fom.P = 0.0;
+                        fom.AshAlk = 0.0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0.0;
+                        Layer.LabileP = 0.0;
+                        FOMLayers[layer] = Layer;
+                    }
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = parentPlant.PlantType;
+                    FomLayer.Layer = FOMLayers;
+                    Z.nutrient.DoIncorpFOM(FomLayer);
                 }
+               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 2e-12)
+                        throw new Exception("C Mass balance error in root profile partitioning");
+                if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
+                    throw new Exception("C Mass balance error in root profile partitioning");
             }
             //}
             //}

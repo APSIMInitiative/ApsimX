@@ -230,7 +230,7 @@ namespace Models.Core
                 // look for an array specifier e.g. sw[2]
                 //need to do this first as the [ ] will screw up matching to a property
                 string arraySpecifier = null;
-                if (namePathBits[j].Contains("["))
+                if (!onlyModelChildren && namePathBits[j].Contains("["))
                     arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
                 object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], properties, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
@@ -432,8 +432,14 @@ namespace Models.Core
                 
                 // Check if property
                 Type declaringType;
-                if (properties.Any())
+                if (properties.Any()) 
+                {
                     declaringType = properties.Last().DataType;
+                    //Make sure we get the runtime created type of a manager script
+                    if ((relativeToObject.GetType() == typeof(Manager) && name.CompareTo("Script") == 0) || relativeToObject.GetType().GetInterfaces().Contains(typeof(IScript)))
+                        declaringType = properties.Last().Value.GetType();
+                }
+                    
                 else
                     declaringType = relativeToObject.GetType();
                 propertyInfo = declaringType.GetProperty(name);

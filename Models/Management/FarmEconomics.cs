@@ -11,7 +11,6 @@ using Models.Functions;
 // TODO
 // machinery
 // annual overheads & capital repayments
-// table of annual paddock activity
 namespace Models.Management
 {
     /// <summary>
@@ -53,7 +52,8 @@ namespace Models.Management
            public double Rate { get; set; }
            /// <summary> </summary>
            public double Area { get; set; } 
-        }        
+        }
+
         /// <summary> Farm level income</summary>
         //   income {amount 64000.0} {comment "description here"}
         public class FarmIncomeArgs : EventArgs
@@ -66,8 +66,8 @@ namespace Models.Management
            public double Amount  { get; set; } // whole $/farm
         }
         /// <summary> Paddock level income</summary>
-         //   income {category cropprice} {name wheat} {yield 4000} {protein 12.3} {comment "description here"}
-         //   income {category cropprice} {name sorghum} {yield 6000} {comment "description here"}
+        //   income {category cropprice} {name wheat} {yield 4000} {protein 12.3} {comment "description here"}
+        //   income {category cropprice} {name sorghum} {yield 6000} {comment "description here"}
         public class PaddockIncomeArgs : EventArgs
         {
            /// <summary> </summary>
@@ -136,14 +136,19 @@ namespace Models.Management
         public void DoPaddockIncome(object sender, PaddockIncomeArgs e)
         {
            var f = this.FindChild<CostPriceInfo>(e.Name);
-           double price = f?.Price ?? 0.0;
-           double amount = price * e.Yield * e.Area;
+           if (f == null)
+               Summary.WriteMessage(this, $"DoPaddockIncome: {e.Name} ({e.Description}) has no cost/price information", MessageType.Warning);
+           else
+           {
+               double amount = f.Price * e.Yield * e.Area;
             
-           Summary.WriteMessage(this, $"{e.Description} Income = ${amount}", MessageType.Information); 
-           Balance += amount;
-           logIt(Clock.Today, e.Paddock, amount, 0, e.Category, e.Description); 
+               Summary.WriteMessage(this, $"{e.Description} Income = ${amount}", MessageType.Information); 
+               Balance += amount;
+               logIt(Clock.Today, e.Paddock, amount, 0, e.Category, e.Description); 
+           }    
         }
-        /// <summary> Whole farm </summary>
+
+        /// <summary> Whole farm ($) </summary>
         [EventSubscribe("DoFarmIncome")]
         public void DoFarmIncome(object sender, FarmIncomeArgs e)
         {
@@ -151,11 +156,12 @@ namespace Models.Management
            Balance += e.Amount;
            logIt(Clock.Today, "", e.Amount, 0, e.Category, e.Description); 
         }
-        /// <summary> </summary>
+
+        /// <summary> Paddock (area based rate, eg kg/ha)</summary>
         [EventSubscribe("DoPaddockExpenditure")]
         public void DoPaddockExpenditure(object sender, PaddockExpenditureArgs e)
         {
-           double cost = 1;
+           double cost = 0;
            var f = this.FindChild<CostPriceInfo>(e.Name);
            if (f != null) 
               cost = f.VariableCost;
@@ -164,16 +170,20 @@ namespace Models.Management
               var f2 = this.FindChild<CostInfo>(e.Name);
               if (f2 != null) 
                  cost = f2.Cost;
+              else 
+                 Summary.WriteMessage(this, $"DoPaddockExpenditure: {e.Name} ({e.Description}) has no cost/price information", MessageType.Warning);
            }
            double amount = cost * e.Rate * e.Area;
 
+           Summary.WriteMessage(this, $"{e.Description} Expenditure = ${amount}", MessageType.Information); 
            Balance -= amount;
            logIt(Clock.Today, e.Paddock, 0, amount, e.Category, e.Description); 
         }
-        /// <summary> </summary>
+        /// <summary> Whole farm ($) </summary>
         [EventSubscribe("DoFarmExpenditure")]
         public void DoFarmExpenditure(object sender, FarmExpenditureArgs e)
         {
+           Summary.WriteMessage(this, $"{e.Description} Expenditure = ${e.Cost}", MessageType.Information); 
            Balance -= e.Cost;
            logIt(Clock.Today, "", 0, e.Cost, e.Category, e.Description); 
         }
@@ -212,7 +222,7 @@ namespace Models.Management
             {
                 table.Rows.Add(item);
             }
-            storage.Writer.WriteTable(table, deleteAllData: true);
+            storage.Writer.WriteTable(table, deleteAllData: false);
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 174,
   "Name": "Simulations",
   "Children": [
     {
@@ -3441,7 +3441,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Pinus].IndividualTreeStemWt",
+                  "VariableName": "[Eucalyptus].IndividualTreeStemWt",
                   "Name": "Criterion",
                   "Children": [],
                   "IncludeInDocumentation": true,

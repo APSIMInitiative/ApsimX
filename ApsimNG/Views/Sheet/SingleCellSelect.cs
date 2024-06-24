@@ -231,8 +231,8 @@ namespace UserInterface.Views
                 int columnIndex = selectedColumnIndex;
                 foreach (string word in line.Split('\t'))
                 {
-                    if (!sheet.DataProvider.IsColumnReadonly(columnIndex))
-                        sheet.DataProvider.SetCellContents(columnIndex, rowIndex, word);
+                    if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{rowIndex}, new string[] {word});
                     columnIndex++;
                     if (columnIndex == sheet.DataProvider.ColumnCount)
                         break;
@@ -249,7 +249,7 @@ namespace UserInterface.Views
             if (sheet.CellEditor.IsEditing)
                 sheet.CellEditor.EndEdit();
 
-            sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
+            sheet.DataProvider.SetCellContents(new int[1]{selectedColumnIndex}, new int[1]{selectedRowIndex}, new string[1]{""});
         }
 
         /// <summary>Select all cells</summary>

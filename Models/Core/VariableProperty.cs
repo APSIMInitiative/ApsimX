@@ -303,11 +303,6 @@ namespace Models.Core
                     return true;
                 }
 
-                if (this.Metadata.Contains("Estimated") || this.Metadata.Contains("Calculated"))
-                {
-                    return true;
-                }
-
                 return false;
             }
         }

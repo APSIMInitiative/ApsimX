@@ -22,7 +22,7 @@ These skills can not only be used to experiment with sowing fertiliser rates but
 2. Rename the simulation as `Wheat`. 
 3. Save this simulation as `Module4`.
 ![Save the simulation](/images/moduleFourImages/img2.png)
-4. Make sure that `Dalby.met` is the selected met file under the weather node.
+4. Make sure that `AU_Dalby.met` is the selected met file under the weather node.
 5. Set the start and end dates of the simulation as `1/01/1989 - 31/12/1989` under the `Clock` node.
 ![Set dates](/images/moduleFourImages/img3.png)
 6. Set the starting water to 25% full - filled from top. This is under `Soil` then `Water`.
@@ -30,12 +30,14 @@ These skills can not only be used to experiment with sowing fertiliser rates but
 7. Set the `initial values` column of both `NO3` and `NH4` to `kg/ha`.
 	![NO3](/images/moduleFourImages/img5.png)
 	![NH4](/images/moduleFourImages/img6.png)
-8. Now let's make some changes to the `SowingRule` management node.
-9. Change the `SowingFertiliser` parameter `Amount of fertiliser to be applied (kg/ha)` to `0`:
+8. Now let's make some changes to the `Fertilise at sowing` management node.
+9. Change the `Fertilise at sowing` parameter `Amount of fertiliser to be applied (kg/ha)` to `0`:
 ![SowingFertiliser to 0](/images/moduleFourImages/img7.png)
-10. Let's run the simulation and then inspect the `Wheat yield time series` graph.
+10. Let's run the simulation and then inspect the `Graph` graph.
+10. Make sure the x and y axes are set to `Clock.Today` and `Yield` respectively.
+10. Rename the graph to `Wheat Yield Time Series` and its' `Series` to `Wheat Yield`.
 ![Graph](/images/moduleFourImages/img8.png)
-11. We can see with 0 sowing fertiliser we achieved a yield of almost 800 kg/ha.
+11. We can see with 0 sowing fertiliser we achieved a yield of almost 900 kg/ha.
 12. Next we will create an experiment where we alter the sowing fertiliser amount for this year.
 We will see how this affects the yield.
 
@@ -54,7 +56,7 @@ We will see how this affects the yield.
 7. Delete the `Wheat` simulation that is not a child of the experiment node.
 ![Delete wheat](/images/moduleFourImages/img14.png)
 8. Next, we will create several versions of our experiment with varying sowing fertiliser amounts.
-9. To do this, add this line to the `Factor` node: `[SowingFertiliser].Script.Amount = 0 to 60 step 30`
+9. To do this, add this line to the `Factor` node: `[Fertilise at sowing].Script.Amount = 0 to 60 step 30`
 ![Create experiment variations](/images/moduleFourImages/img15.png)
 10. If we click back on the `Experiment` node, you can see 3 differing amounts of sowing fertiliser.
 ![See variations](/images/moduleFourImages/img16.png)

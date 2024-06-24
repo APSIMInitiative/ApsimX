@@ -1280,8 +1280,10 @@ namespace UserInterface.Presenters
                     string contents = File.ReadAllText(file);
                     var converter = Converter.DoConvert(contents, version, file);
                     if (converter.DidConvert)
+                    {
                         File.WriteAllText(file, converter.Root.ToString());
-                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                        view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                    }
                 }
                 view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }

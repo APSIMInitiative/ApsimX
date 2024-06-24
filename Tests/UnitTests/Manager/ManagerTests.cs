@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using UnitTests.Storage;
 using Shared.Utilities;
+using Models.Logging;
 
 namespace UnitTests.ManagerTests
 {
@@ -38,20 +39,51 @@ namespace UnitTests.ManagerTests
                 testManager.Parent = sims;
 
             if (withCompiler)
-                typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });         
+                testManager.SetCompiler(compiler);
 
             string basicCode = "";
             basicCode += "using System.Linq;\n";
             basicCode += "using System;\n";
             basicCode += "using Models.Core;\n";
-            basicCode += "namespace Models {\n";
+            basicCode += "\n";
+            basicCode += "namespace Models\n";
+            basicCode += "{\n";
             basicCode += "\t[Serializable]\n";
-            basicCode += "\tpublic class Script : Model {\n";
+            basicCode += "\tpublic class Script : Model\n";
+            basicCode += "\t{\n";
             basicCode += "\t\t[Description(\"AProperty\")]\n";
-            basicCode += "\t\tpublic string AProperty { get; set; } = \"Hello World\";\n";
-            basicCode += "\t\t\tpublic void Document() { return; }\n";
+            basicCode += "\t\tpublic string AProperty {get; set;} = \"Hello World\";\n";
+            basicCode += "\t\tpublic int AMethod()\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn 0;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int BMethod(int arg1)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int CMethod(int arg1, int arg2)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int DMethod(int arg1, int arg2, int arg3)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic int EMethod(int arg1, int arg2, int arg3, int arg4)\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn arg1;\n";
+            basicCode += "\t\t}\n";
+            basicCode += "\t\t\n";
+            basicCode += "\t\tpublic void Document()\n";
+            basicCode += "\t\t{\n";
+            basicCode += "\t\t\treturn;\n";
+            basicCode += "\t\t}\n";
             basicCode += "\t}\n";
-            basicCode += "}\n";
+            basicCode += "}";
 
             if (withCode)
                 testManager.Code = basicCode;
@@ -66,8 +98,9 @@ namespace UnitTests.ManagerTests
                 {
                     testManager.OnCreated();
                     testManager.GetParametersFromScriptModel();
+                    testManager.RebuildScriptModel();
                 }
-            }
+            } 
                 
 
             return testManager;
@@ -143,11 +176,9 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false);
-
-            Assert.NotNull(errors);
-            Assert.AreEqual(1, errors.Count, "Encountered the wrong number of errors when opening OnCreatedError.apsimx.");
-            Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
+            IModel sims = FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false).NewModel;
+            Manager manager = sims.FindDescendant<Manager>();
+            Assert.Throws<Exception>(() => manager.RebuildScriptModel());
         }
 
         /// <summary>
@@ -238,6 +269,46 @@ namespace UnitTests.ManagerTests
         }
 
         /// <summary>
+        /// Make sure the correct manager script is called and accessed when both script are just class 'Script'
+        /// See issue #8624 where two zones with different scripts had reflection calling the wrong code.
+        /// </summary>
+        [Test]
+        public void CorrectManagerCalledWhenBothHaveSameClassName()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+
+            // Run the file.
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Summary sum = file.FindDescendant<Summary>();
+            bool found = false;
+            foreach (Message message in sum.GetMessages("Simulation"))
+                if (message.Text.Contains("Correct Manager Called"))
+                    found = true;
+
+            Assert.True(found);
+        }
+
+        /// <summary>
+        /// The converter will check that it updates correctly, but this will run the file afterwards to make sure all the 
+        /// connections still connect.
+        /// </summary>
+        [Test]
+        public void TestMultipleScriptsWithSameClassNameConnectStill()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            ConverterReturnType ret = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
+            Simulations file = ret.NewModel as Simulations;
+
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            Assert.Pass();
+        }
+
+        /// <summary>
         /// Specific test for SetCompiler and Compiler
         /// These two work together, so should be tested together.
         /// Should not throw when a compiler is attached to a blank manager using these methods
@@ -248,7 +319,7 @@ namespace UnitTests.ManagerTests
             ScriptCompiler compiler = new ScriptCompiler();
             Manager testManager = new Manager();
 
-            typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });
+            Assert.DoesNotThrow(() => testManager.SetCompiler(compiler));
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("Compiler", reflectionFlagsMethods, null, testManager, null));
         }
 
@@ -273,8 +344,7 @@ namespace UnitTests.ManagerTests
 
             //check if works assigning directly.
             testManager = createManager(false, true, true, false);
-            ScriptCompiler compiler = new ScriptCompiler();
-            typeof(Manager).InvokeMember("SetCompiler", reflectionFlagsMethods, null, testManager, new object[] { compiler });
+            testManager.SetCompiler(new ScriptCompiler());
             Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null));
         }
 
@@ -288,11 +358,6 @@ namespace UnitTests.ManagerTests
         public void OnStartOfSimulationTests()
         {
             Manager testManager;
-
-            //should not throw, but not do anything
-            testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
-            Assert.IsNull(testManager.Parameters);
 
             //should work
             testManager = createManager(true, false, true, true);
@@ -395,11 +460,6 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager;
 
-            //should not throw, but should not compile when Oncreated has been run
-            testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.IsNull(testManager.Parameters);
-
             //should compile and have parameters
             testManager = createManager(true, false, true, true);
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
@@ -427,7 +487,7 @@ namespace UnitTests.ManagerTests
 
             //should throw error if broken code
             testManager = createManager(true, false, true, false);
-            testManager.Code = testManager.Code.Replace("{", "");
+            Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
             Assert.Throws<Exception>(() => testManager.OnCreated());
             Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
             Assert.IsNull(testManager.Parameters);
@@ -450,12 +510,6 @@ namespace UnitTests.ManagerTests
                 tags.Add(tag);
             Assert.AreEqual(1, tags.Count);
 
-            //should not work
-            testManager = createManager(true, false, true, false);
-            tags = new List<ITag>();
-            foreach (ITag tag in testManager.Document())
-                tags.Add(tag);
-            Assert.AreEqual(0, tags.Count);
         }
 
         /// <summary>
@@ -568,6 +622,73 @@ namespace UnitTests.ManagerTests
             testManager = new Manager();
             testManager.Cursor = null;
             Assert.IsNull(testManager.Cursor);
+        }
+
+        /// <summary>
+        /// Specific test for GetErrors
+        /// Check that it stores errors from a bad script
+        /// </summary>
+        [Test]
+        public void GetErrorsTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.Throws<Exception>(() => testManager.Code = "public class Script : Model {}");
+            Assert.Throws<Exception>(() => testManager.OnCreated());
+            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
+            Assert.AreEqual(3, testManager.Errors.Split('\n').Length);
+        }
+
+        /// <summary>
+        /// Specific test for GetProperty
+        /// Check that we can get values from the script of a manager
+        /// </summary>
+        [Test]
+        public void GetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.AreEqual("Hello World", testManager.GetProperty("AProperty"));
+            Assert.IsNull(testManager.GetProperty("BProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for SetProperty
+        /// Check that we can change values of the script from a manager
+        /// </summary>
+        [Test]
+        public void SetPropertyTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.SetProperty("AProperty", "Another World"));
+            Assert.AreEqual("Another World", testManager.GetProperty("AProperty"));
+        }
+
+        /// <summary>
+        /// Specific test for RunMethod
+        /// Check that we can call and run functions in a script from a manager
+        /// </summary>
+        [Test]
+        public void RunMethodTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            Assert.DoesNotThrow(() => testManager.RunMethod("AMethod"));
+            Assert.DoesNotThrow(() => testManager.RunMethod("BMethod", 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("DMethod", 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("EMethod", 1, 1, 1, 1));
+            Assert.DoesNotThrow(() => testManager.RunMethod("CMethod", new object[] {1, 1}));
+        }
+
+        /// <summary>
+        /// Specific test for RunMethod
+        /// Check that we can call and run functions in a script from a manager
+        /// </summary>
+        [Test]
+        public void RunReformatTests()
+        {
+            Manager testManager = createManager(true, true, true, true);
+            string code = testManager.Code;
+            testManager.Reformat();
+            Assert.AreEqual(code, testManager.Code);
         }
 
         /// <summary>

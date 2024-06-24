@@ -1,7 +1,9 @@
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils.NutrientPatching;
 using Models.Surface;
 using System;
 using System.Collections.Generic;
@@ -11,23 +13,24 @@ namespace Models.Soils.Nutrients
 {
 
     /// <summary>
-    /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
+    /// The soil nutrient model includes functionality for simulating pools of organic matter and mineral nitrogen.  The processes for each are described below.
     /// </summary>
     /// <structure>
-    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients. These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
+    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients. These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independently specified, and are described in each case in the documentation for each organic matter pool below.
     /// 
     /// Mineral nutrient pools (e.g. Nitrate, Ammonium, Urea) are described as solutes within the model.  Each pool captures the mass of the nutrient (e.g. N,P) and they may also contain nutrient flows to describe losses or transformations for that particular compound (e.g. denitrification of nitrate, hydrolysis of urea).
     /// </structure>
     /// <pools>
     /// A nutrient pool class is used to encapsulate the carbon and nitrogen within each soil organic matter pool.  Child functions within these classes provide information for initialisation and flows of C and N to other pools, or losses from the system.
     ///
-    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occuring from them.
+    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occurring from them.
     /// </pools>
     /// <solutes>
-    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occuring from them.
+    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occurring from them.
     /// </solutes>
     [Serializable]
     [ScopedModel]
+    [ValidParent(ParentType = typeof(NutrientPatchManager))]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
@@ -59,8 +62,8 @@ namespace Models.Soils.Nutrients
         private readonly IPhysical soilPhysical = null;
 
         /// <summary>The Urea pool.</summary>
-        [Link]
-        private readonly Solute[] solutes = null;
+        [NonSerialized]
+        private IEnumerable<ISolute> solutes = null;
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
@@ -292,6 +295,12 @@ namespace Models.Soils.Nutrients
             nitrifiedN = new double[soilPhysical.Thickness.Length];
             mineralisedN = new double[soilPhysical.Thickness.Length];
 
+            // Try getting solutes from children first. This happens when using NutrientPatchManager.
+            // If not found, use scope to locate solutes.
+            solutes = FindAllChildren<ISolute>();
+            if (!solutes.Any())
+                solutes = FindAllInScope<ISolute>();
+
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");
             Humic = nutrientPools.First(pool => pool.Name == "Humic");
@@ -400,6 +409,27 @@ namespace Models.Soils.Nutrients
 
             organic.Calculate();
             (FOM as CompositeNutrientPool).Calculate();
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, GetModelDescription());
+        }
+
+        /// <summary>
+        /// Get a description of the model from the summary, structure, pools, and solute
+        /// xml documentation comments in the source code.
+        /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are inside sections.
+        /// </remarks>
+        public new IEnumerable<ITag> GetModelDescription()
+        {
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+            yield return new Section("Structure", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"structure")));
+            yield return new Section("Pools", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"pools")));
+            yield return new Section("Solutes", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"solutes")));
         }
     }
 }
