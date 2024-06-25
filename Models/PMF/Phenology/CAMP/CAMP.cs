@@ -46,9 +46,9 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor, ByName = true)]
         Phenology phenology = null;
 
-        /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
-        IFunction haunStage = null;
+        /// <summary>Crop Haun Stage</summary>
+        [Link(ByName = true)]
+        public IFunction HaunStage = null;
 
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
@@ -168,8 +168,8 @@ namespace Models.PMF.Phen
         [JsonIgnore] public CultivarRateParams Params { get; set; }
 
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
-        IFunction basePhyllochron = null;
+        [Link(ByName = true)]
+        public IFunction BasePhyllochron = null;
 
         [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage.Delta")]
         IFunction DHS = null;
@@ -188,7 +188,7 @@ namespace Models.PMF.Phen
                     double EmergeDurationFactor = 1.0;
                     if (phenology.AccumulatedTT > 90) //Calculate EmergenceDurationFactor to slow accumulation of BP if emergence is taking a long time.  This slows Vrn1 expression under slow emergence and strange responses to delayed sowing
                         EmergeDurationFactor = Math.Exp(-0.015 * (phenology.AccumulatedTT - 90));
-                    dHS = tt.Value() / basePhyllochron.Value() * EmergeDurationFactor;
+                    dHS = tt.Value() / BasePhyllochron.Value() * EmergeDurationFactor;
                     RelPp = 0;
                     Vrn2 = 0;
                 }
@@ -201,7 +201,7 @@ namespace Models.PMF.Phen
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 if (isVernalised == false) // do vernalisation calculations if crop not yet vernalised
                 {
-                    VSHS = haunStage.Value();
+                    VSHS = HaunStage.Value();
                     dBaseVrn = Params.BaseDVrnVeg * dHS;
                     dMaxVrn = Params.MaxDVrnVeg * dHS;
                     PpVrn3Fact = Params.PpVrn3FactVeg;
@@ -273,13 +273,13 @@ namespace Models.PMF.Phen
                     isVernalised = true;
                 if (isVernalised == false)
                 {
-                    VSHS = haunStage.Value();
+                    VSHS = HaunStage.Value();
                 }
 
                 if ((isVernalised == true) && (Vrn >= TSThreshold) && (isReproductive == false))
                     isReproductive = true;
                 
-                TSHS = haunStage.Value();
+                TSHS = HaunStage.Value();
                 FLN = IntFLNvsTSHS + 1.1 * TSHS;
             }
         }

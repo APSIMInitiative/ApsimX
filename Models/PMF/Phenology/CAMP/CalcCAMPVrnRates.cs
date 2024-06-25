@@ -21,9 +21,10 @@ namespace Models.PMF.Phen
         /// <summary>The parent CAMP model</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         private CAMP camp = null;
-        /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
-        IFunction basePhyllochron = null;
+
+        /// <summary>The  phyllochron upon which phyllochron changes through the season are based</summary>
+        [Link(ByName = true)]
+        public IFunction BasePhyllochron = null;
 
         /// <summary>
         /// Takes observed (or estimated) final leaf numbers and phyllochron for genotype with (V) and without (N) vernalisation in long (L)
@@ -43,14 +44,11 @@ namespace Models.PMF.Phen
             // Initialise structure to hold vern rate coefficients
             CultivarRateParams Params = new CultivarRateParams();
 
-            // Get some other parameters from phenology
-            double BasePhyllochron = basePhyllochron.Value();
-            
             // Base Phyllochron duration of the Emergence Phase
-            double EmergDurat = EnvData.TtEmerge/BasePhyllochron;
+            double EmergDurat = EnvData.TtEmerge/BasePhyllochron.Value();
 
             //Base Phyllochron duration of vernalisation treatment
-            double VernTreatDurat = (EnvData.VrnTreatTemp * EnvData.VrnTreatDuration) / BasePhyllochron;
+            double VernTreatDurat = (EnvData.VrnTreatTemp * EnvData.VrnTreatDuration) / BasePhyllochron.Value();
 
             // The soonest a wheat plant may exhibit vern saturation
             double MinVS = 1.1;
