@@ -593,6 +593,7 @@ namespace Models.PMF
             if (RootNetworkObject != null)
             {
                 RootNetworkObject.PlantZone.Clear();
+                RootNetworkObject.Depth = 0;
             }
         }
 
