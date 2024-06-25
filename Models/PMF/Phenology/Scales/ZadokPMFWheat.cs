@@ -4,6 +4,7 @@ using System.Data;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
@@ -22,11 +23,9 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>
-        /// The Structure class
-        /// </summary>
-        [Link]
-        Structure Structure = null;
+        /// <summary>The thermal time</summary>
+        [Link(ByName = true)]
+        public IFunction HaunStage = null;
 
         [Link]
         private IPlant plant = null;
@@ -48,7 +47,7 @@ namespace Models.PMF.Phen
                     zadok_stage = 5.0f + 5 * fracInCurrent;
                 else if (Phenology.Stage < 5.3)
                 {
-                    zadok_stage = 10.0f + Structure.LeafTipsAppeared;
+                    zadok_stage = 10.0f + HaunStage.Value();
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
