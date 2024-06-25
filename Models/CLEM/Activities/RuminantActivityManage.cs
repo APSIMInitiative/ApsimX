@@ -788,19 +788,7 @@ namespace Models.CLEM.Activities
                     numberMaleSiresInHerd = nonGrowOutHerd.OfType<RuminantMale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsSire).Count();
                     numberMaleSiresInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsSire).Count();
 
-                    int numberFemaleTotalInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None).Count();
-
-                    numberFemaleInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsBreeder).Count();
-
-                    // these are the breeders already marked for sale
-                    // don't include those marked as max age sale as these can't be considered excess female
-                    int numberFemaleMarkedForSale = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
-
-                    // defined heifers here as weaned and will be a breeder in the next year
-                    // we should not include those individuals > 12 months before reaching breeder age
-                    List<RuminantFemale> preBreeders = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11) & !a.Attributes.Exists("GrowOut")).ToList();
-                    numberFemalePreBreedersInHerd = preBreeders.Count();
-                    int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsPreBreeder).Count();
+                    int numberFemaleTotalInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
 
                     siresPresent = numberMaleSiresInHerd + numberMaleSiresInPurchases;
                     if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
@@ -817,6 +805,18 @@ namespace Models.CLEM.Activities
                     // Number of females needed to check stop simulation rule
                     numberFemaleBreedingInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
 
+                    numberFemaleInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsBreeder).Count();
+
+                    // these are the breeders already marked for sale
+                    // don't include those marked as max age sale as these can't be considered excess female
+                    int numberFemaleMarkedForSale = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
+
+                    // defined heifers here as weaned and will be a breeder in the next year
+                    // we should not include those individuals > 12 months before reaching breeder age
+                    List<RuminantFemale> preBreeders = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11) & !a.Attributes.Exists("GrowOut")).ToList();
+                    numberFemalePreBreedersInHerd = preBreeders.Count();
+                    int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsPreBreeder).Count();
+
                     // prevent runaway population growth in individual based model by a check against max breeders
                     //if (numberFemaleBreedingInHerd > Math.Max(MaximumBreedersKept, MinimumBreedersKept) * MaxBreedersMultiplierToStop)
                     //    throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{Math.Max(MaximumBreedersKept, MinimumBreedersKept)}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
@@ -825,7 +825,7 @@ namespace Models.CLEM.Activities
                     excessBreeders = numberFemaleBreedingInHerd + numberFemaleInPurchases - maxBreeders;
 
                     // IAT-NABSA adjusts to account for the old animals that will be sold in the next year
-                    // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
+                    // This is not required in CLEM as they have been sold in this method, and it won't be until this method is called again that the next lot are sold.
                     // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
                     // Account for whole individuals only.
 
@@ -1270,7 +1270,7 @@ namespace Models.CLEM.Activities
                             foreach (var removeFilter in reduceBreedersFilters)
                                 foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).Take(excessBreeders).ToList())
                                 {
-                                    if(female.Class == "PreBreeder")
+                                    if(female.Class == "PreBreeder" || female.Class == "Weaner")
                                         female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
                                     else
                                         female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -1309,7 +1309,8 @@ namespace Models.CLEM.Activities
                                 {
                                     female.Attributes.Remove("GrowOut"); // in case grow out
                                     female.SaleFlag = HerdChangeReason.None;
-                                    female.Location = grazeStoreBreeders;
+                                    if(grazeStoreBreeders != "")
+                                        female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
                                 }
                         }
