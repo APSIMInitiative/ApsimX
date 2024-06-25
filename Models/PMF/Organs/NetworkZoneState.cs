@@ -218,7 +218,19 @@ namespace Models.PMF.Organs
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
                 LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
-                LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                if ((totalDead.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerDeadProportion[i] = new OrganNutrientsState(carbon:new NutrientPoolsState(1,1,1),
+                                                                     nitrogen:new NutrientPoolsState(1,1,1),
+                                                                     phosphorus:new NutrientPoolsState(1,1,1),
+                                                                     potassium:new NutrientPoolsState(1,1,1),
+                                                                     cconc:1);
+                }
+                else
+                {
+                    LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                }
                 checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
                 checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
             }

@@ -665,7 +665,7 @@ namespace Models.PMF
                         double fracAlloc = MathUtilities.Divide(Z.RAw[layer], TotalRAw, 0);
                         Z.LayerLive[layer] = OrganNutrientsState.Add(Z.LayerLive[layer], OrganNutrientsState.Multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
 
-                        Z.LayerDead[layer] = OrganNutrientsState.Add(Z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        Z.LayerDead[layer] = OrganNutrientsState.Add(Z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, Z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
                         OrganNutrientsState detachedToday = OrganNutrientsState.Multiply(detached, Z.LayerDeadProportion[layer], parentOrgan.Cconc);
                         Z.LayerDead[layer] = OrganNutrientsState.Subtract(Z.LayerDead[layer], detachedToday, parentOrgan.Cconc);
                         Z.LayerDead[layer] = OrganNutrientsState.Subtract(Z.LayerDead[layer], OrganNutrientsState.Multiply(deadRemoved, Z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
