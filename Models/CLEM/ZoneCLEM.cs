@@ -160,9 +160,9 @@ namespace Models.CLEM
                         int index = html.IndexOf("<!-- CLEMZoneBody -->");
                         if (index > 0)
                         {
-                            htmlWriter.Write(html.Substring(0, index - 1));
+                            htmlWriter.Write(html[..(index - 1)]);
                             htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
-                            htmlWriter.Write(html.Substring(index));
+                            htmlWriter.Write(html[index..]);
                             File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                         }
                     }

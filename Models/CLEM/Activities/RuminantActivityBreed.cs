@@ -312,6 +312,10 @@ namespace Models.CLEM.Activities
             // get list of all pregnant females
             List<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList();
 
+            // Need to reset births this time step for all non pregnant.
+            // Find a place where individuals are identified on stime step after births to reset this value.
+            _ = CurrentHerd(true).OfType<RuminantFemale>().Where(a => !a.IsPregnant).Select(a => a.NumberOfBirthsThisTimestep == 0);
+
             // determine all fetus and newborn mortality of all pregnant females.
             bool preglost = false;
             bool birthoccurred = false;
@@ -326,10 +330,10 @@ namespace Models.CLEM.Activities
 
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
-                    preglost=true;
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
                     if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
+                        preglost = true;
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
                         {
@@ -342,7 +346,7 @@ namespace Models.CLEM.Activities
 
                 if (female.BirthDue)
                 {
-                    birthoccurred=true;
+                    birthoccurred = true;
                     int numberOfNewborn = female.CarryingCount;
                     for (int i = 0; i < numberOfNewborn; i++)
                     {

@@ -186,7 +186,7 @@ namespace Models.CLEM
                         AdultEquivalents = group.Sum(a => a.AdultEquivalent),
                         NumberPregnant = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count() : 0,
                         NumberLactating = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
-                        NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
+                        NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => Convert.ToInt16(a.GaveBirthThisTimestep)) : 0,
                         AverageIntakeDMD = group.Average(a => a.DietDryMatterDigestibility),
                         AverageIntakeN = group.Average(a => a.PercentNOfIntake),
                         AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
@@ -225,7 +225,7 @@ namespace Models.CLEM
                             AdultEquivalents = group.Sum(a => a.AdultEquivalent),
                             NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
                             NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
-                            NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
+                            NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => Convert.ToInt16(a.GaveBirthThisTimestep)),
                             AverageIntakeDMD = group.Average(a => a.DietDryMatterDigestibility),
                             AverageIntakeN = group.Average(a => a.PercentNOfIntake),
                             AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
@@ -284,8 +284,8 @@ namespace Models.CLEM
                                 ReportItemGenerated(ReportDetails);
 
                                 // reset birth count
-                                if (sexGroup.Key == Sex.Female)
-                                    ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
+                                //if (sexGroup.Key == Sex.Female)
+                                //    ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
                             }
                         }
                     }

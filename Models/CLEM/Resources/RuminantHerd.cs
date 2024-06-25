@@ -141,8 +141,8 @@ namespace Models.CLEM.Resources
                                 }
 
                                 // add this offspring to birth count
-                                if (suckling.Age == 0)
-                                    breedFemales[0].NumberOfBirthsThisTimestep++;
+                                //if (suckling.Age == 0)
+                                //    breedFemales[0].NumberOfBirthsThisTimestep++;
 
                                 // suckling mother set
                                 suckling.Mother = breedFemales[0];
