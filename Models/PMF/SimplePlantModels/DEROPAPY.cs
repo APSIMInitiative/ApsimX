@@ -183,8 +183,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            saveToCSV(FullFileName, dt);
-
+            //saveToCSV(FullFileName, dt);
             return new DataTable();
         }
 
