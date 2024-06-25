@@ -247,8 +247,8 @@ namespace Models.PMF
         /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double C 
-        { 
+        public double C
+        {
             get
             {
                 return Live.Carbon.Total + Dead.Carbon.Total;
@@ -313,17 +313,17 @@ namespace Models.PMF
             OrganNutrientsState liveExported = OrganNutrientsState.Multiply(Live, liveToRemove, Cconc);
             OrganNutrientsState liveRetained = OrganNutrientsState.Multiply(Live, liveToResidue, Cconc);
             LiveRemoved = OrganNutrientsState.Add(liveExported, liveRetained, Cconc);
-            
+
             OrganNutrientsState deadExported = OrganNutrientsState.Multiply(Dead, deadToRemove, Cconc);
             OrganNutrientsState deadRetained = OrganNutrientsState.Multiply(Dead, deadToResidue, Cconc);
             DeadRemoved = OrganNutrientsState.Add(deadExported, deadRetained, Cconc);
 
-            double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove),0);
-            double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove),0);
+            double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove), 0);
+            double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove), 0);
 
             if (fracDeadToResidue + fracLiveToResidue > 0)
             {
-                OrganNutrientsState totalToResidues = OrganNutrientsState.Add(liveRetained,deadRetained, Cconc);
+                OrganNutrientsState totalToResidues = OrganNutrientsState.Add(liveRetained, deadRetained, Cconc);
                 Biomass toResidues = totalToResidues.ToBiomass;
                 surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
             }
@@ -433,7 +433,7 @@ namespace Models.PMF
                 startDeadC = Dead.C;
                 startLiveWt = Live.Wt;
                 startDeadWt = Dead.Wt;
-                
+
                 //Take away any biomass that was removed by management or phenology triggered event
                 if (removeBiomass)
                 {
@@ -520,7 +520,7 @@ namespace Models.PMF
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");
                 checkMassBalance(startLiveWt, startDeadWt, "Wt");
-                ClearBiomassFlows(); 
+                ClearBiomassFlows();
             }
         }
 
@@ -548,22 +548,52 @@ namespace Models.PMF
 
         }
 
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when plant endcrop is called</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void OnPlantEnding(object sender, EventArgs e)
+        protected void onPlantEnding(object sender, EventArgs e)
+        {
+            reset();
+        }
+
+        /// <summary>Called when Biomass removal event of tyep EndCrop occurs.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndCrop")]
+        protected void onEndCrop(object sender, EventArgs e) 
+        {
+            reset();
+        }
+
+        /// <summary>
+        /// Sends all biomass to residues and zeros variables
+        /// </summary>
+        private void reset()
         {
             if (Wt > 0.0)
             {
-                Detached = OrganNutrientsState.Add(Detached, Live, Cconc);
-                Live = new OrganNutrientsState();
+                Senesced = OrganNutrientsState.Add(Detached, Live, Cconc);
+                Detached = OrganNutrientsState.Add(Detached,Live, Cconc);
                 Detached = OrganNutrientsState.Add(Detached, Dead, Cconc);
+                Live = new OrganNutrientsState();
                 Dead = new OrganNutrientsState();
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
+                if (RootNetworkObject == null)
+                {
+                    surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
+                }
+
+                if (RootNetworkObject != null)
+                {
+                    RootNetworkObject.endRoots();
+                }
             }
 
             Clear();
+            if (RootNetworkObject != null)
+            {
+                RootNetworkObject.PlantZone.Clear();
+            }
         }
 
         private void setNconcs()

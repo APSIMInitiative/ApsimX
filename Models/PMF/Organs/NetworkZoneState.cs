@@ -197,7 +197,7 @@ namespace Models.PMF.Organs
                     else if (layer > 0)
                         RAw[layer] = RAw[layer - 1];
                     else
-                        RAw[layer] = 0;
+                        RAw[layer] = 1;
             }
         }
 
@@ -214,7 +214,19 @@ namespace Models.PMF.Organs
             double checkLiveWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                if ((totalLive.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
+                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
+                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
+                                                                     potassium: new NutrientPoolsState(1, 1, 1),
+                                                                     cconc: 1);
+                }
+                else
+                {
+                    LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                }
                 checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
             }
             if (Math.Abs(checkLiveWtPropn - 1) > 1e-12 && (totalLive.Wt > 0))
@@ -286,6 +298,8 @@ namespace Models.PMF.Organs
                 {
                     LayerLive[i].Clear();
                     LayerDead[i].Clear();
+                    LayerLiveProportion[i].Clear();
+                    LayerDeadProportion[i].Clear();
                 }
             }
         }

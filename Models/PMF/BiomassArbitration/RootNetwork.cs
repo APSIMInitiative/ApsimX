@@ -150,16 +150,6 @@ namespace Models.PMF
         [JsonIgnore]
         public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
-        /*
-        // <summary>Live Biomass in each soil layer</summary>
-        [JsonIgnore]
-        public List<OrganNutrientStates> LayerLive { get { return PlantZone.LayerLive; } }
-
-        /// <summary>Dead Biomass in each soil layer</summary>
-        [JsonIgnore]
-        public List<OrganNutrientStates> LayerDead { get { return PlantZone.LayerDead; } }*/
-
-
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
         public List<NetworkZoneState> Zones { get; set; }
@@ -658,7 +648,6 @@ namespace Models.PMF
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
-                        //z.CalculateRelativeLiveBiomassProportions();
                         z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(liveRemoved, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
                         z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reAllocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
                         z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reTranslocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
@@ -667,7 +656,6 @@ namespace Models.PMF
                         z.LayerLive[layer] = OrganNutrientsState.Add(z.LayerLive[layer], OrganNutrientsState.Multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
 
                         z.LayerDead[layer] = OrganNutrientsState.Add(z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                        //z.CalculateRelativeDeadBiomassProportions();
                         OrganNutrientsState detachedToday = OrganNutrientsState.Multiply(detached, z.LayerDeadProportion[layer], parentOrgan.Cconc);
                         z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], detachedToday, parentOrgan.Cconc);
                         z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], OrganNutrientsState.Multiply(deadRemoved, z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
@@ -697,8 +685,43 @@ namespace Models.PMF
                 if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
                     throw new Exception("C Mass balance error in root profile partitioning");
             }
-            //}
-            //}
+        }
+
+        /// <summary>
+        /// Sets root biomass to zero and passes existing biomass to soil
+        /// </summary>
+        public void endRoots()
+        {
+            if (parentPlant.IsAlive)
+            {
+                foreach (NetworkZoneState z in Zones)
+                {
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
+                    for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
+                    {
+                        OrganNutrientsState detachedToday = OrganNutrientsState.Add(z.LayerLive[layer], z.LayerDead[layer], parentOrgan.Cconc);
+                        z.LayerDead[layer] = new OrganNutrientsState();
+                        z.LayerLive[layer] = new OrganNutrientsState();
+
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)(detachedToday.Wt * 10);
+                        fom.N = (float)(detachedToday.N * 10);
+                        fom.C = (float)(0.40 * detachedToday.Wt * 10);
+                        fom.P = 0.0;
+                        fom.AshAlk = 0.0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0.0;
+                        Layer.LabileP = 0.0;
+                        FOMLayers[layer] = Layer;
+                    }
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = parentPlant.PlantType;
+                    FomLayer.Layer = FOMLayers;
+                    z.nutrient.DoIncorpFOM(FomLayer);
+                }
+            }
         }
 
 
