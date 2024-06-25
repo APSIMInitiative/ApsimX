@@ -175,14 +175,12 @@ namespace UserInterface.Views
             if (scrollV != null)
             {
                 ScrolledWindow scroller = mainWidget as ScrolledWindow;
-                if (scroller.Vadjustment != null) {
-                    scroller.Vadjustment.Configure(scrollV.Value, 
-                                                scrollV.Lower, 
-                                                scrollV.Upper, 
-                                                scrollV.StepIncrement, 
-                                                scrollV.PageIncrement, 
-                                                scrollV.PageSize);
-                }
+                scroller.Vadjustment?.Configure(scrollV.Value, 
+                                            scrollV.Lower, 
+                                            scrollV.Upper, 
+                                            scrollV.StepIncrement, 
+                                            scrollV.PageIncrement, 
+                                            scrollV.PageSize);
             }
         }
 
