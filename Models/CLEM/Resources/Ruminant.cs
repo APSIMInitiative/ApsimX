@@ -1,3 +1,4 @@
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -101,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Individual is suckling, still with mother and not weaned
         /// </summary>
-        public bool IsSucklingWithMother { get { return weaned < 0 && mother != null; } }
+        public bool IsSucklingWithMother { get { return weaned == 0 && mother != null; } }
 
         /// <summary>
         /// Sex of individual
@@ -113,7 +114,7 @@ namespace Models.CLEM.Resources
         /// Has the individual been sterilised (webbed, spayed or castrated)
         /// </summary>
         [FilterByProperty]
-        public abstract bool Sterilised { get; }
+        public abstract bool IsSterilised { get; }
 
         /// <summary>
         /// Marked as a replacement breeder
@@ -165,6 +166,18 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Growth Rate (daily)
+        /// </summary>
+        /// <units>kg day-1</units>
+        [FilterByProperty]
+        public double GrowthRate
+        {
+            get
+            {
+                return (Weight - (BreedParams.SRWBirth * BreedParams.SRWFemale))/ Math.Max(1.0, age*30.4);
+            }
+        }
 
         /// <summary>
         /// Calculate normalised weight from age
@@ -337,24 +350,25 @@ namespace Models.CLEM.Resources
                     return "Weaner";
                 else
                 {
-                    if (this is RuminantFemale)
+                    if (this is RuminantFemale female)
                     {
-                        if ((this as RuminantFemale).IsPreBreeder)
+                        if (female.IsPreBreeder)
                             return "PreBreeder";
-                        else if ((this as RuminantFemale).IsBreeder)
+                        else if (female.IsBreeder)
                             return "Breeder";
                         else
                             return "Sterilized";
                     }
                     else
                     {
-                        if ((this as RuminantMale).IsSire)
+                        var male = this as RuminantMale;
+                        if (male.IsSire)
                             return "Sire";
-                        else if ((this as RuminantMale).IsCastrated)
+                        else if (male.IsCastrated)
                             return "Castrate";
                         else
                         {
-                            if ((this as RuminantMale).IsWildBreeder)
+                            if (male.IsWildBreeder)
                             {
                                 return "Breeder";
                             }
@@ -454,10 +468,21 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (PotentialIntake + MilkPotentialIntake > 0)
-                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                if (MilkPotentialIntake > 0)
+                {
+                    double prop = (MilkIntake / MilkPotentialIntake);
+                    if (MathUtilities.IsGreaterThanOrEqual(PotentialIntake, 0.0))
+                    {
+                        prop += (1 - (MilkIntake / MilkPotentialIntake)) * (Intake / PotentialIntake);
+                    }
+                    return prop;
+                }
                 else
-                    return 0;
+                {
+                    if (MathUtilities.IsGreaterThanOrEqual(PotentialIntake, 0.0))
+                        return Intake / PotentialIntake;
+                }
+                return 0;
             }
         }
 
@@ -674,6 +699,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public bool Weaned { get { return weaned > 0; } }
+
+        /// <summary>
+        /// Weaned individual flag
+        /// </summary>
+        [FilterByProperty]
+        public bool IsWeaned { get { return weaned > 0; } }
 
         /// <summary>
         /// Number of months since weaned

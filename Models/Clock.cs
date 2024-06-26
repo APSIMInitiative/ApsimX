@@ -12,7 +12,7 @@ using System.Data;
 namespace Models
 {
     /// <summary>
-    /// The clock model is resonsible for controlling the daily timestep in APSIM. It
+    /// The clock model is responsible for controlling the daily timestep in APSIM. It
     /// keeps track of the simulation date and loops from the start date to the end
     /// date, publishing events that other models can subscribe to.
     /// </summary>
@@ -102,6 +102,8 @@ namespace Models
         // Public events that we're going to publish.
         /// <summary>Occurs once at the start of the simulation.</summary>
         public event EventHandler StartOfSimulation;
+        /// <summary>Occurs once at the start of the first day of the simulation.</summary>
+        public event EventHandler StartOfFirstDay;
         /// <summary>Occurs at start of each day.</summary>
         public event EventHandler StartOfDay;
         /// <summary>Occurs at start of each month.</summary>
@@ -123,6 +125,8 @@ namespace Models
         /// <summary>Final Initialise event. Occurs once at start of simulation.</summary>
         public event EventHandler FinalInitialise;
 
+        /// <summary>Occurs first each day to allow yesterdays values to be caught</summary>
+        public event EventHandler DoCatchYesterday;
         /// <summary>Occurs each day to calculuate weather</summary>
         public event EventHandler DoWeather;
         /// <summary>Occurs each day to do daily updates to models</summary>
@@ -325,8 +329,14 @@ namespace Models
             if (FinalInitialise != null)
                 FinalInitialise.Invoke(this, args);
 
+            if (StartOfFirstDay != null)
+                StartOfFirstDay.Invoke(this, args);
+
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
+                if (DoCatchYesterday != null)
+                    DoCatchYesterday.Invoke(this, args);
+
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 

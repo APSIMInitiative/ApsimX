@@ -5,16 +5,13 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
-    using Models.Interfaces;
     using Models.Storage;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
-    using UnitTests.Core;
     using UnitTests.Storage;
     using UnitTests.Weather;
 
@@ -26,6 +23,7 @@
         private IClock clock;
         private Report report;
         private MockStorage storage;
+        private MockSummary summary;
         private Runner runner;
 
         /// <summary>
@@ -63,6 +61,7 @@
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
+            summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
         }
@@ -393,22 +392,30 @@
                 VariableNames = new string[0],
                 EventNames = new string[0]
             };
-            var storage = new MockStorage();
-            Utilities.InjectLink(report, "simulation", sim);
-            Utilities.InjectLink(report, "storage", storage);
-            Utilities.InjectLink(report, "clock", new MockClock());
 
-            var events = new Events(report);
-            events.Publish("SubscribeToEvents", new object[] { report, new EventArgs() });
-            Assert.AreEqual(1, storage.tables.Count);
-            Assert.AreEqual(storage.tables[0].TableName, "_Factors");
+            SQLite database = new SQLite();
+            database.OpenDatabase(":memory:", readOnly: false);
+            DataStore storage = new DataStore(database);
 
+            Simulations sims = new Simulations();
+            sims.Children.Add(sim);
+            sims.Children.Add(new Summary());
+            sims.Children.Add(storage);
+            sims.ParentAllDescendants();
 
-            Assert.IsTrue(
-                    Utilities.CreateTable(new string[]                      { "ExperimentName", "SimulationName", "FolderName", "FactorName", "FactorValue" },
-                                          new List<object[]> { new object[] {           "exp1",           "sim1",          "F",   "Cultivar",       "cult1" },
-                                                               new object[] {           "exp1",           "sim1",          "F",          "N",            0 } })
-                   .IsSame(storage.tables[0]));
+            sim.Prepare();
+
+            storage.Writer.WaitForIdle();
+            storage.Reader.Refresh();
+            
+            Assert.IsNotNull(storage.Reader.GetData("_Factors"));
+
+            DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
+                                                    new List<object[]> { new object[] {        "Current",             1,        "",          1,          "exp1",          "F",         "Cultivar",      "cult1"   },
+                                                                         new object[] {        "Current",             1,        "",          1,          "exp1",          "F",             "N",            0      } });
+            DataTable dtActual = storage.Reader.GetData("_Factors");
+
+            Assert.IsTrue(dtExpected.IsSame(dtActual));
         }
 
         /// <summary>
@@ -768,6 +775,26 @@ namespace Models
             report.VariableNames = new[] { variableName };
             List<Exception> errors = runner.Run();
             Assert.AreEqual(1, errors.Count);
+        }
+
+        /// <summary>
+        /// Ensure report puts a warning in the summary file when user reports on StartOfSimulation.
+        /// </summary>
+        [Test]
+        public void TestWriteMessageToSummaryWhenStartOfSimulationIsUsed()
+        {
+            report.EventNames = new string[]
+            {
+                "[Clock].StartOfSimulation",
+            };
+
+            // Run the simulation.
+
+            Utilities.ResolveLinks(simulation);
+            Utilities.CallEventAll(simulation, "SubscribeToEvents");
+
+            var summary = simulation.FindDescendant<MockSummary>();
+            Assert.AreEqual(summary.messages.First(), "WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised.");
         }
     }
 }

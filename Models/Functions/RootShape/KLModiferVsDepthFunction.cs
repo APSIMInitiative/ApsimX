@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using System.Data;
+using Models.Soils;
 
 namespace Models.Functions
 {
@@ -14,7 +15,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("Function returns a KL modifer for a layer of given depth")]
+    [Description("A model to give a general pattern of KL decline over depth.  Assumes values of 1 with depths less than 300 mm and then decreases exponentlly to zero at the crops maximum root depth")]
     public class KLModiferVsDepthFunction : Model, IFunction
     {
         /// <summary>The x value to use for interpolation</summary>
@@ -38,7 +39,7 @@ namespace Models.Functions
             if (depth <= 300)
                 return 1.0;
             else if (depth < maxRootDepth)
-                return Math.Exp(-0.004*(1500/(maxRootDepth - 300)*(depth-300)));
+                return Math.Exp(-0.0015*(1500/(maxRootDepth - 300)*(depth-300)));
             else
                 return 0;
         }

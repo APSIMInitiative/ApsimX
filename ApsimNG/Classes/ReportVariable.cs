@@ -12,6 +12,9 @@ namespace ApsimNG.Classes
 
         /// <summary> Name of report variable.</summary>
         public string Description { get; set; }
+
+        /// <summary> Node the code references.</summary>
+        public string Node { get; set; }
         /// <summary> Code to be used as reporting variable.</summary>
         public string Code { get; set; }
 
@@ -34,9 +37,10 @@ namespace ApsimNG.Classes
 
         public ReportVariable() { }
 
-        public ReportVariable(string variableName, string variableCode, string variableType, string variableUnits)
+        public ReportVariable(string variableName, string variableNode, string variableCode, string variableType, string variableUnits)
         {
             Description = variableName;
+            Node = variableNode;
             Code = variableCode;
             Type = variableType;
             Units = variableUnits;

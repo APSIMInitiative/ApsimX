@@ -66,7 +66,8 @@
             Assert.Throws<SimulationException>(() => simulation.Run());
 
             // Make sure the error was sent to summary.
-            Assert.IsTrue(MockSummary.messages[0].Contains("Intentional exception"));
+            var summary = simulation.FindDescendant<MockSummary>();
+            Assert.IsTrue(summary.messages[0].Contains("Intentional exception"));
         }
 
         /// <summary>Ensures a disable model does NOT participate in the simulation run.</summary>

@@ -1,6 +1,6 @@
-name: "📄 Create a new common report event/variable"
-description: Create a new common report event or variable.
-labels: ["New common report event/variable"]
+name: "📄 Add a Report Event/Variable"
+description: Create a new common report event or variable that appears in the Reporting list
+labels: ["Report Variable/Event"]
 body:
   - type: markdown
     attributes:

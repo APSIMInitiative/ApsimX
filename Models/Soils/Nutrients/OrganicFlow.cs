@@ -67,27 +67,30 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            destinations = new IOrganicPool[DestinationNames.Length];
-
-            for (int i = 0; i < DestinationNames.Length; i++)
-            {
-                IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
-                if (destination == null)
-                    throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
-                destinations[i] = destination;
-            }
             mineralisedN = new double[numberLayers];
             mineralisedP = new double[numberLayers];
             catm = new double[numberLayers];
-            carbonFlowToDestination = new double[destinations.Length];
-            nitrogenFlowToDestination = new double[destinations.Length];
-            phosphorusFlowToDestination = new double[destinations.Length];
+            carbonFlowToDestination = new double[DestinationNames.Length];
+            nitrogenFlowToDestination = new double[DestinationNames.Length];
+            phosphorusFlowToDestination = new double[DestinationNames.Length];
             co2EfficiencyValue = co2Efficiency.Value();
         }
 
         /// <summary>Perform daily flow calculations.</summary>
         public void DoFlow()
         {
+            if (destinations == null)
+            {
+                destinations = new IOrganicPool[DestinationNames.Length];
+                for (int i = 0; i < DestinationNames.Length; i++)
+                {
+                    IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
+                    if (destination == null)
+                        throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
+                    destinations[i] = destination;
+                }
+            }
+
             OrganicPool source = Parent as OrganicPool;
 
             int numLayers = source.C.Count;

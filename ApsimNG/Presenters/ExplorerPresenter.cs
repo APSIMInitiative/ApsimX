@@ -1,18 +1,18 @@
-﻿using APSIM.Shared.Utilities;
-using UserInterface.Commands;
-using UserInterface.Interfaces;
-using Models;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Utility;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
 using UserInterface.Views;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -115,7 +115,7 @@ namespace UserInterface.Presenters
         {
             get
             {
-                return (IModel)ApsimXFile.FindByPath(CurrentNodePath)?.Value;
+                return (IModel)ApsimXFile.FindByPath(CurrentNodePath, LocatorFlags.ModelsOnly)?.Value;
             }
             set
             {
@@ -141,7 +141,7 @@ namespace UserInterface.Presenters
             }
             return GetPathToNode(model.Parent) + "." + model.Name;
         }
-        
+
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
@@ -281,7 +281,7 @@ namespace UserInterface.Presenters
 
                     if (!File.Exists(ApsimXFile.FileName))
                     {
-                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
+                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) +
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
                     else if (FileHasPendingChanges())
@@ -312,8 +312,6 @@ namespace UserInterface.Presenters
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
-            // Need to hide the right hand panel because some views may not have saved
-            // their contents until they get a 'Detach' call.
             try
             {
                 HideRightHandPanel();
@@ -383,7 +381,7 @@ namespace UserInterface.Presenters
         public void SelectNode(string nodePath, bool refreshRightHandPanel = true)
         {
             this.view.Tree.SelectedNode = nodePath;
-            while (GLib.MainContext.Iteration());
+            while (GLib.MainContext.Iteration()) ;
             if (refreshRightHandPanel)
             {
                 this.HideRightHandPanel();
@@ -596,9 +594,9 @@ namespace UserInterface.Presenters
                 view.Tree.ContextMenu = new MenuView();
 
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
-            
+
             // Get the selected model.
-            object selectedModel = this.ApsimXFile.FindByPath(nodePath)?.Value;
+            object selectedModel = this.ApsimXFile.FindByPath(nodePath, LocatorFlags.ModelsOnly)?.Value;
 
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
@@ -761,7 +759,7 @@ namespace UserInterface.Presenters
         {
             if (this.view.Tree.SelectedNode != string.Empty)
             {
-                object model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value;
+                object model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value;
 
                 if (model != null)
                 {
@@ -804,7 +802,7 @@ namespace UserInterface.Presenters
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
             ShowInRightHandPanel(model,
-                                 newView: (ViewBase) Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null),
+                                 newView: (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null),
                                  presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter);
         }
 
@@ -860,9 +858,10 @@ namespace UserInterface.Presenters
         {
             return this.view as ExplorerView;
         }
-        
+
         public void KeepFilter(string columnFilters, string rowFilters)
         {
+            tempColumnAndRowFilters.Clear();
             tempColumnAndRowFilters.Add(columnFilters);
             tempColumnAndRowFilters.Add(rowFilters);
         }
@@ -881,7 +880,7 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            Model parentModel = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
+            Model parentModel = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
             if (parentModel != null)
             {
                 DragObject dragObject = e.DragObject as DragObject;
@@ -894,11 +893,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void DownloadWeather()
         {
-            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
+            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
-                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath)?.Value as IModel;
+                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
                 dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }
         }
@@ -967,7 +966,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Drag arguments</param>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model obj = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
+            Model obj = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
             if (obj != null)
             {
                 string st = FileFormat.WriteToString(obj);
@@ -989,7 +988,7 @@ namespace UserInterface.Presenters
             try
             {
                 string toParentPath = e.NodePath;
-                Model toParent = this.ApsimXFile.FindByPath(toParentPath)?.Value as Model;
+                Model toParent = this.ApsimXFile.FindByPath(toParentPath, LocatorFlags.ModelsOnly)?.Value as Model;
 
                 DragObject dragObject = e.DragObject as DragObject;
                 if (dragObject != null && toParent != null)
@@ -1002,7 +1001,7 @@ namespace UserInterface.Presenters
                     {
                         if (fromParentPath != toParentPath)
                         {
-                            Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
+                            Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
                             if (fromModel != null)
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
@@ -1041,14 +1040,12 @@ namespace UserInterface.Presenters
                 {
                     if (this.IsValidName(e.NewName))
                     {
-                        Model model = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
+                        Model model = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
-                            this.HideRightHandPanel();
                             this.ApsimXFile.Locator.ClearEntry(model.FullPath);
                             RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
-                            this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
                         }
                     }
@@ -1072,7 +1069,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = ApsimXFile.FindByPath(view.Tree.SelectedNode)?.Value as Model;
+                Model model = ApsimXFile.FindByPath(view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {
@@ -1096,7 +1093,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value as Model;
+                Model model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {
@@ -1164,7 +1161,7 @@ namespace UserInterface.Presenters
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
             string resourceNameForImage = null;
-            bool exists =false;
+            bool exists = false;
             if (!string.IsNullOrEmpty(resourceName))
             {
                 (exists, resourceNameForImage) = CheckIfIconExists(resourceName);

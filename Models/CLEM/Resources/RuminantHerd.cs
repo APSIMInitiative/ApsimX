@@ -101,80 +101,75 @@ namespace Models.CLEM.Resources
                         // get list of females of breeding age and condition
                         List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
-                        if (breedFemales.Count == 0)
+                        //if (sucklingList.Any() && !breedFemales.Any())
+                        //{
+                        //    Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned sucklings will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
+                        //    break;
+                        //}
+
+                        // assign calves to cows
+                        int sucklingCount = 0;
+                        int numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                        int previousRuminantID = -1;
+                        foreach (var suckling in sucklingList)
                         {
-                            if (sucklingList.Any())
+                            sucklingCount++;
+                            if (breedFemales.Any())
                             {
-                                Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned sucklings will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
+                                // if next new female set up some details
+                                if (breedFemales[0].ID != previousRuminantID)
+                                {
+                                    //Initialise female milk production in at birth so ready for sucklings to consume
+                                    double milkTime = (suckling.Age * 30.4) + 15; // +15 equivalent to mid month production
+
+                                    // need to calculate normalised animal weight here for milk production
+                                    double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
+                                    breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
+                                    breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
+
+                                    // generalised curve
+                                    // previously * 30.64
+                                    double currentIPI = Math.Pow(breedFemales[0].BreedParams.InterParturitionIntervalIntercept * (breedFemales[0].Weight / breedFemales[0].StandardReferenceWeight), breedFemales[0].BreedParams.InterParturitionIntervalCoefficient);
+                                    // restrict minimum period between births
+                                    currentIPI = Math.Max(currentIPI, breedFemales[0].BreedParams.GestationLength + 2);
+
+                                    //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
+                                    // AL removed the -9 as this would make it conception month not birth month
+                                    breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
+                                    breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                                    breedFemales[0].SetAgeEnteredSimulation(breedFemales[0].AgeAtLastConception);
+                                }
+
+                                // add this offspring to birth count
+                                if (suckling.Age == 0)
+                                    breedFemales[0].NumberOfBirthsThisTimestep++;
+
+                                // suckling mother set
+                                suckling.Mother = breedFemales[0];
+                                // add suckling to suckling offspring of mother.
+                                breedFemales[0].SucklingOffspringList.Add(suckling);
+
+                                // add this suckling to mother's offspring count.
+                                breedFemales[0].NumberOfOffspring++;
+
+                                // check if a twin and if so apply next individual to same mother.
+                                // otherwise remove this mother from the list and change counters
+                                if (numberThisPregnancy == 1)
+                                {
+                                    breedFemales[0].NumberOfBirths++;
+                                    breedFemales[0].NumberOfConceptions = 1;
+                                    breedFemales.RemoveAt(0);
+                                }
+                                else
+                                    numberThisPregnancy--;
+                            }
+                            else
+                            {
+                                Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
                                 break;
                             }
                         }
-                        else
-                        {
-                            // assign calves to cows
-                            int sucklingCount = 0;
-                            int numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
-                            int previousRuminantID = -1;
-                            foreach (var suckling in sucklingList)
-                            {
-                                sucklingCount++;
-                                if (breedFemales.Count > 0)
-                                {
-                                    // if next new female set up some details
-                                    if (breedFemales[0].ID != previousRuminantID)
-                                    {
-                                        //Initialise female milk production in at birth so ready for sucklings to consume
-                                        double milkTime = (suckling.Age * 30.4) + 15; // +15 equivalent to mid month production
 
-                                        // need to calculate normalised animal weight here for milk production
-                                        double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
-                                        breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
-                                        breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
-
-                                        // generalised curve
-                                        // previously * 30.64
-                                        double currentIPI = Math.Pow(breedFemales[0].BreedParams.InterParturitionIntervalIntercept * (breedFemales[0].Weight / breedFemales[0].StandardReferenceWeight), breedFemales[0].BreedParams.InterParturitionIntervalCoefficient);
-                                        // restrict minimum period between births
-                                        currentIPI = Math.Max(currentIPI, breedFemales[0].BreedParams.GestationLength + 2);
-
-                                        //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
-                                        // AL removed the -9 as this would make it conception month not birth month
-                                        breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
-                                        breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
-                                        breedFemales[0].SetAgeEnteredSimulation(breedFemales[0].AgeAtLastConception);
-                                    }
-
-                                    // add this offspring to birth count
-                                    if (suckling.Age == 0)
-                                        breedFemales[0].NumberOfBirthsThisTimestep++;
-
-                                    // suckling mother set
-                                    suckling.Mother = breedFemales[0];
-                                    // add suckling to suckling offspring of mother.
-                                    breedFemales[0].SucklingOffspringList.Add(suckling);
-
-                                    // add this suckling to mother's offspring count.
-                                    breedFemales[0].NumberOfOffspring++;
-
-                                    // check if a twin and if so apply next individual to same mother.
-                                    // otherwise remove this mother from the list and change counters
-                                    if (numberThisPregnancy == 1)
-                                    {
-                                        breedFemales[0].NumberOfBirths++;
-                                        breedFemales[0].NumberOfConceptions = 1;
-                                        breedFemales.RemoveAt(0);
-                                    }
-                                    else
-                                        numberThisPregnancy--;
-                                }
-                                else
-                                {
-                                    Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
-                                    break;
-                                }
-                            }
-
-                        }
                     }
 
                     // gestation interval at smallest size generalised curve

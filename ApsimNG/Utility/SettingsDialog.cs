@@ -1,19 +1,18 @@
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using UserInterface.Classes;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Utility;
+using System.Collections;
+using Models.Core;
+using System.Globalization;
+using System.Runtime.InteropServices;
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Classes;
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Utility;
-    using System.Collections;
-    using Models.Core;
-    using System.Globalization;
-    using Extensions;
-
     /// <summary>
     /// A class for a dialog window for user settings.
     /// </summary>
@@ -77,9 +76,11 @@ namespace UserInterface.Views
 
         private IEnumerable<Property> GetProperties()
         {
+            bool isOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             foreach (PropertyInfo property in typeof(Configuration).GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                if (IsUserInput(property))
-                    yield return GetProperty(property, Configuration.Settings);
+                if (!isOSX || property.Name.CompareTo("DarkTheme") != 0)
+                    if (IsUserInput(property))
+                        yield return GetProperty(property, Configuration.Settings);
         }
 
         private Property GetProperty(PropertyInfo property, object instance)

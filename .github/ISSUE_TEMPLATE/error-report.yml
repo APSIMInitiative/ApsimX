@@ -1,6 +1,6 @@
-name: "\U0001f6d1 Error Report"
+name: "\U0001f6d1 Crash Report"
 description: An Error or Crash has occurred
-labels: ["bug", "crash"]
+labels: ["Bug", "Software"]
 body:
   - type: markdown
     attributes:

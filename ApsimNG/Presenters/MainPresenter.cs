@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
             this.view.Show();
 
             int height = this.view.PanelHeight;
-            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
             if (savedHeight > 0.9 || savedHeight < 0.1)
                 this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
@@ -93,7 +93,7 @@ namespace UserInterface.Presenters
 
             double width = this.view.WindowSize.Width;
             int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
-            if (savedHeight > 0.9 || savedHeight < 0.1)
+            if (savedWidth > 0.9 || savedWidth < 0.1)
                 this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
             else
                 this.view.SplitScreenPosition = (int)Math.Round(width * savedWidth);
@@ -1149,15 +1149,23 @@ namespace UserInterface.Presenters
         /// <param name="leftTab">Should the file be opened in the left tabset?</param>
         public void Import(string fileName)
         {
+            // When an old .apsim file is imported, exceptions can occur when converting the file but the 
+            // file is still converted i.e. exception isn't fatal. Catch these exceptions and show to user
+            // in the 
+
+            List<Exception> importExceptions = new();
             try
             {
                 var importer = new Importer();
-                importer.ProcessFile(fileName);
+                importer.ProcessFile(fileName, e => { importExceptions.Add(e); });
             }
             catch (Exception err)
             {
                 throw new Exception("Error during Import: " + err.Message);
             }
+            string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
+            if (!string.IsNullOrEmpty(importExceptionsAsString))
+                ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
         }
 
         /// <summary>
@@ -1272,8 +1280,10 @@ namespace UserInterface.Presenters
                     string contents = File.ReadAllText(file);
                     var converter = Converter.DoConvert(contents, version, file);
                     if (converter.DidConvert)
+                    {
                         File.WriteAllText(file, converter.Root.ToString());
-                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                        view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
+                    }
                 }
                 view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }
@@ -1327,7 +1337,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (double)this.view.StatusPanelPosition / (double)this.view.PanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
                 if (treeWidth > 0)
                     Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();

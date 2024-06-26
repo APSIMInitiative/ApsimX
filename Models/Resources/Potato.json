@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 168,
+  "Version": 175,
   "Name": "Simulations",
   "Children": [
     {
@@ -75,6 +75,7 @@
               "Start": "Planting",
               "End": "Peeping",
               "Name": "Dormant",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",

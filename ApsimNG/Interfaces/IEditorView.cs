@@ -1,6 +1,7 @@
 ﻿using System;
 using Gtk;
 using UserInterface.EventArguments;
+using Shared.Utilities;
 
 namespace UserInterface.Interfaces
 {
@@ -69,6 +70,11 @@ namespace UserInterface.Interfaces
         string[] Lines { get; set; }
 
         /// <summary>
+        /// Gets or Sets the script as read only (editable)
+        /// </summary>
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
         /// Controls syntax highlighting mode.
         /// </summary>
         EditorType Mode { get; set; }
@@ -86,7 +92,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets or sets the current location of the caret (column and line)
         /// </summary>
-        System.Drawing.Rectangle Location { get; set; }
+        ManagerCursorLocation Location { get; set; }
 
         /// <summary>
         /// Add a separator line to the context menu

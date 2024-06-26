@@ -7,6 +7,9 @@ namespace Models
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
+        /// <summary>Canopy type identifier.</summary>
+        public string CanopyType { get; set; } = "g_range";
+
         /// <summary>
         /// Partition the litter into structural and metabolic components, based on the lignin C to N ratio (PARTLITR in Savanna, kept in DECOMP.F)
         /// </summary>

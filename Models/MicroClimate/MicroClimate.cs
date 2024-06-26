@@ -31,6 +31,9 @@ namespace Models
         [Link]
         private ISoilWater soilWater = null;
 
+        [Link]
+        private ICalculateEo eoCalculator = null;
+
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
 
@@ -267,18 +270,18 @@ namespace Models
                 }
 
             // Light distribution is now complete so calculate remaining micromet equations
-            foreach (var ZoneMC in microClimatesZones)
+            foreach (var zoneMC in microClimatesZones)
             {
-                ZoneMC.CalculateEnergyTerms(soilWater.Salb);
-                ZoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
-                ZoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
-                ZoneMC.CalculateGc(dayLengthEvap);
-                ZoneMC.CalculateGa(ReferenceHeight);
-                ZoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
-                ZoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
-                ZoneMC.CalculateOmega();
-                ZoneMC.SetCanopyEnergyTerms();
-                ZoneMC.CalculateEo();
+                zoneMC.CalculateEnergyTerms(soilWater.Salb);
+                zoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
+                zoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
+                zoneMC.CalculateGc(dayLengthEvap);
+                zoneMC.CalculateGa(ReferenceHeight);
+                zoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
+                zoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
+                zoneMC.CalculateOmega();
+                zoneMC.SetCanopyEnergyTerms();
+                zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
             }
         }
 
@@ -305,7 +308,7 @@ namespace Models
             foreach (MicroClimateCanopy c in tallest.Canopies)
             {
 
-                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width > Wt)
+                if (c.Canopy.CanopyType == "STRUM")
                     TallestIsTree = true;
 
                 if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width <= Wt)
@@ -326,7 +329,7 @@ namespace Models
         /// <param name="alleyZone"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone treeZone, ref MicroClimateZone alleyZone)
         {
-            if (treeZone.DeltaZ.Sum() > 0 && alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if layers are empty
+            if (treeZone.DeltaZ.Sum() > 0 || alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if both layers are empty
             {
                 double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
                 double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
@@ -355,7 +358,9 @@ namespace Models
                 double LAIt = treeZone.LAItotsum.Sum();                       // LAI of trees
                 double LAIa = alleyZone.LAItotsum.Sum();                      // LAI of alley crop
                 double Kt = treeZone.layerKtot[treeZone.layerKtot.Length - 1];  // Extinction Coefficient of trees
-                double Ka = alleyZone.layerKtot[0];                           // Extinction Coefficient of alley crop
+                double Ka = 0;
+                if (alleyZone.layerKtot.Length != 0)
+                    Ka = alleyZone.layerKtot[0];                           // Extinction Coefficient of alley crop
                 double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
                 double Ftbla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;    // View factor for the tree canopy if a black body
                 double Fabla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;  // View factor for the gap between trees in alley if trees a black body

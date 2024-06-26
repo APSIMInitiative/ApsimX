@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [FilterByProperty]
-        public override bool Sterilised { get { return (IsWebbed || IsSpayed); } }
+        public override bool IsSterilised { get { return (IsWebbed || IsSpayed); } }
 
         /// <summary>
         /// Is the female webbed
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) && !Sterilised;
+                return Weaned && !IsPreBreeder && !IsSterilised;
             }
         }
 
@@ -49,6 +49,38 @@ namespace Models.CLEM.Resources
             get
             {
                 return (IsBreeder && !IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a heifer
+        /// Heifer equals less than min breed age and no offspring
+        /// </summary>
+        [FilterByProperty]
+        public bool IsHeifer
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (Weaned && NumberOfBirths == 0);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a weaned but less than age at first mating 
+        /// </summary>
+        [FilterByProperty]
+        public bool IsPreBreeder
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                return (Weaned && ((HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age >= BreedParams.MinimumAge1stMating)) == false);
             }
         }
 
@@ -133,39 +165,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public MatingStyle LastMatingStyle { get; set; }
-
-        /// <summary>
-        /// Indicates if this female is a heifer
-        /// Heifer equals less than min breed age and no offspring
-        /// </summary>
-        [FilterByProperty]
-        public bool IsHeifer
-        {
-            get
-            {
-                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
-                return (Weaned && NumberOfBirths == 0);
-            }
-        }
-
-        /// <summary>
-        /// Indicates if this female is a weaned but less than age at first mating 
-        /// </summary>
-        [FilterByProperty]
-        public bool IsPreBreeder
-        {
-            get
-            {
-                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
-                //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
-                return (Weaned && !IsBreeder && !Sterilised);
-            }
-        }
-
 
         /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates

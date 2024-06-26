@@ -179,7 +179,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
-        public double Height { get { return Structure.Height; } }
+        public double Height 
+        {  get 
+            {
+                if (parentPlant.IsAlive)
+                    return Structure.Height;
+                else
+                    return 0.0;
+            } 
+        }
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
@@ -1346,7 +1354,7 @@ namespace Models.PMF.Organs
                 CohortsAtInitialisation += 1;
                 if (Leaf.Area > 0)
                     TipsAtEmergence += 1;
-                Leaf.DoInitialisation();
+                Leaf.DoInitialisation(CohortParameters);
             }
         }
 
@@ -1362,7 +1370,7 @@ namespace Models.PMF.Organs
             NewLeaf.Age = 0;
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
-            NewLeaf.DoInitialisation();
+            NewLeaf.DoInitialisation(CohortParameters);
             Leaves.Add(NewLeaf);
             needToRecalculateLiveDead = true;
         }
@@ -1396,6 +1404,7 @@ namespace Models.PMF.Organs
                 {
                     L.DoActualGrowth(thermalTime, CohortParameters);
                     needToRecalculateLiveDead = true;
+                    Detached.Add(L.Detached);
                 }
 
                 Structure.UpdateHeight();

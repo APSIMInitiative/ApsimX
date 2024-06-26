@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 168,
+  "Version": 175,
   "Name": "Simulations",
   "Children": [
     {
@@ -322,7 +322,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "BudBurst",
               "End": "FloweringTime",
-              "IsEmerged": false,
+              "IsEmerged": true,
               "Name": "Flowering",
               "ResourceName": null,
               "Children": [
@@ -353,7 +353,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FloweringTime",
               "End": "FruitSet",
-              "IsEmerged": false,
+              "IsEmerged": true,
               "Name": "FruitSetting",
               "ResourceName": null,
               "Children": [
@@ -393,7 +393,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FruitSet",
               "End": "Veraison",
-              "IsEmerged": false,
+              "IsEmerged": true,
               "Name": "BerryDevelopment",
               "ResourceName": null,
               "Children": [
@@ -720,7 +720,7 @@
               "$type": "Models.PMF.Phen.LeafDeathPhase, Models",
               "Start": "Veraison",
               "End": "LeafFall",
-              "IsEmerged": false,
+              "IsEmerged": true,
               "Name": "CanopySenescence",
               "ResourceName": null,
               "Children": [

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
-using FirebirdSql.Data.FirebirdClient;
 
 namespace Models.Storage
 {
@@ -61,35 +60,33 @@ namespace Models.Storage
                 tableDetails.EnsureTableExistsAndHasRequiredColumns(ref dataToWrite);
 
                 connection.BeginTransaction();
-
-                if (deleteExistingRows && connection.TableExists(dataToWrite.TableName))
-                {
-                    // fixme - this assumes that "Current" checkpoint ID is always 1.
-                    // This should always be correct afaik, but it would be better to
-                    // verify this at runtime.
-                    bool tableHasCheckpointID = connection.GetColumns(dataToWrite.TableName).Any(c => c.Item1 == "CheckpointID");
-                    connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}] {(tableHasCheckpointID ? "WHERE \"CheckpointID\" = 1" : "")}");
-                }
-
-                if (connection is Firebird)
-                {
-                    // Treat messages as a special case
-                    // They come in as single-row tables, so writing each
-                    // separately is not very efficient.
-                    if (dataToWrite.TableName == "_Messages")
-                    {
-                        (connection as Firebird).InsertMessageRecord(dataToWrite);
-                        return;
-                    }
-                }
-
                 var query = new InsertQuery(dataToWrite);
-
-                // Get a list of column names.
-                var columnNames = dataToWrite.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
-
                 try
                 {
+                    if (deleteExistingRows && connection.TableExists(dataToWrite.TableName))
+                    {
+                        // fixme - this assumes that "Current" checkpoint ID is always 1.
+                        // This should always be correct afaik, but it would be better to
+                        // verify this at runtime.
+                        bool tableHasCheckpointID = connection.GetColumns(dataToWrite.TableName).Any(c => c.Item1 == "CheckpointID");
+                        connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}] {(tableHasCheckpointID ? "WHERE \"CheckpointID\" = 1" : "")}");
+                    }
+
+                    if (connection is Firebird)
+                    {
+                        // Treat messages as a special case
+                        // They come in as single-row tables, so writing each
+                        // separately is not very efficient.
+                        if (dataToWrite.TableName == "_Messages")
+                        {
+                            (connection as Firebird).InsertMessageRecord(dataToWrite);
+                            return;
+                        }
+                    }
+
+                    // Get a list of column names.
+                    var columnNames = dataToWrite.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
+
                     // Write all rows.
                     foreach (DataRow row in dataToWrite.Rows)
                         query.ExecuteQuery(connection, columnNames, row.ItemArray);

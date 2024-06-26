@@ -1,21 +1,22 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using EventArguments;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models;
-    using Views;
-    using Commands;
-    using Models.Storage;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using UserInterface.EventArguments;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.Core;
+using Models;
+using UserInterface.Views;
+using UserInterface.Commands;
+using Models.Storage;
+using APSIM.Shared.Graphing;
+using Series = Models.Series;
+using Configuration = Utility.Configuration;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// A presenter class for graph series.
     /// </summary>
@@ -47,6 +48,8 @@
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
+
             this.series = model as Series;
             this.seriesView = view as SeriesView;
             this.explorerPresenter = explorerPresenter;
@@ -429,7 +432,7 @@
             {
                 this.SetModelProperty("TableName", this.seriesView.DataSource.SelectedValue);
                 List<string> warnings = PopulateFieldNames();
-                if (warnings != null && warnings.Count > 0)
+                if (warnings != null && warnings.Count > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 {
                     explorerPresenter.MainPresenter.ClearStatusPanel();
                     explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
@@ -553,8 +556,7 @@
             // Populate filter textbox.
             this.seriesView.Filter.Text = series.Filter;
 
-            explorerPresenter.MainPresenter.ClearStatusPanel();
-            if (warnings != null && warnings.Count > 0)
+            if (warnings != null && warnings.Count > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
         }
 

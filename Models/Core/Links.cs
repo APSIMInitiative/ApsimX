@@ -154,7 +154,11 @@ namespace Models.Core
                         else if (link.Type == LinkType.Path)
                         {
                             var locator = new Locator(obj as Model);
-                            object match = locator.Get(link.Path);
+                            object match = null;
+                            if (fieldType.IsSubclassOf(typeof(Model)))
+                                match = locator.Get(link.Path, LocatorFlags.ModelsOnly);
+                            else
+                                match = locator.Get(link.Path);
                             if (match != null)
                                 matches.Add(match);
                         }
@@ -184,8 +188,13 @@ namespace Models.Core
                     }
                     else if (matches.Count == 0)
                     {
+                        string errorMsg = "Cannot find a match for link " + field.Name + " in model " + GetFullName(obj);
+                        if (obj is IScript)
+                            if ((obj as Model).FindAncestor<Folder>() != null)
+                                errorMsg += "\nIf the manager script is within a folder, it's linking scope will be limited to that folder.";
+                                
                         if (throwOnFail && !link.IsOptional)
-                            throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
+                            throw new Exception(errorMsg);
                     }
                     else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));

@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "clean"
+            ]
+        },
+        {
+            "label": "Build Debug",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "--configuration",
+                "Debug",
+                "--verbosity",
+                "minimal",
+                "--nologo",
+                "${workspaceFolder}/ApsimX.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "-c",
+                "Release",
+                "${workspaceFolder}/ApsimX.sln"
+            ]
+        },
+        {
+            "label":"Clean Debug",
+            "dependsOrder": "sequence",
+            "dependsOn":[
+                "Clean",
+                "Build Debug"            
+            ]
+        }
+    ]
+}

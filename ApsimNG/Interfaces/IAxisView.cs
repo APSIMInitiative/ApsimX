@@ -38,6 +38,11 @@
         event EventHandler CrossesAtZeroChanged;
 
         /// <summary>
+        /// Invoked when the user has changed the single line label field
+        /// </summary>
+        public event EventHandler LabelOnOneLineChanged;
+
+        /// <summary>
         /// Gets or sets the title.
         /// </summary>
         string Title { get; set; }
@@ -66,6 +71,11 @@
         /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
         /// </summary>
         bool CrossesAtZero { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        bool LabelOnOneLine { get; set; }
 
         /// <summary>
         /// Sets the text in the minimum textbox.

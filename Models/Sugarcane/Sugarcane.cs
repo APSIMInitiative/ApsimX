@@ -1151,7 +1151,7 @@ namespace Models
         /// The crop
         /// </summary>
         [JsonIgnore]
-        private CropConstants crop;
+        public CropConstants crop;
 
         #endregion
 
@@ -1172,7 +1172,7 @@ namespace Models
         /// The cult
         /// </summary>
         [JsonIgnore]
-        private CultivarConstants cult;
+        public CultivarConstants cult;
 
         #endregion
 
@@ -12132,7 +12132,7 @@ namespace Models
         /// <param name="tillering">tillering method (-1, 0, 1).</param>
         /// <param name="ftn">Fertile Tiller Number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
-            {
+        {
             SowNewPlant(population, depth, cultivar);
         }
 

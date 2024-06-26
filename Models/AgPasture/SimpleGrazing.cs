@@ -442,9 +442,6 @@ namespace Models.AgPasture
             PreGrazeDM = zones.Sum(z => z.TotalDM);
             PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
 
-            foreach (var zone in zones)
-                zone.DoManagement();
-
             // Determine if we can graze today.
             GrazedToday = false;
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -588,11 +585,9 @@ namespace Models.AgPasture
             private Solute urea;
             private IPhysical physical;
             private List<ModelWithDigestibleBiomass> forages;
-            private double areaOfAllZones;
             private double grazedDM;
             private double grazedN;
             private double grazedME;
-            private double preGrazeDM;
             private double amountDungNReturned;
             private double amountDungWtReturned;
             private double amountUrineNReturned;
@@ -608,7 +603,6 @@ namespace Models.AgPasture
             {
                 this.Zone = zone;
                 this.forages = forages;
-                this.areaOfAllZones = areaOfAllZones;
                 surfaceOrganicMatter = zone.FindInScope<SurfaceOrganicMatter>();
                 urea = zone.FindInScope<Solute>("Urea");
                 physical = zone.FindInScope<IPhysical>();
@@ -662,15 +656,6 @@ namespace Models.AgPasture
             }
 
             /// <summary>
-            /// Called at DoManagement event.
-            /// </summary>
-            public void DoManagement()
-            {
-                // Calculate pre-grazed dry matter.
-                preGrazeDM = TotalDM;
-            }
-
-            /// <summary>
             /// Reduce the forage population,
             /// </summary>
             /// <param name="fractionPopulationDecline">The fraction to reduce to population to.</param>
@@ -693,9 +678,11 @@ namespace Models.AgPasture
                 // This is a simple implementation. It proportionally removes biomass from organs.
                 // What about non harvestable biomass?
                 // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
-                double removeAmount = Math.Max(0, preGrazeDM - residual);
+                double preGrazeDM = forages.Sum(f => f.Material.Sum(m => m.Total.Wt * 10));
+                double removeAmount = Math.Max(0, preGrazeDM - residual) / 10; // to g/m2
+
                 dmRemovedToday = removeAmount;
-                if (MathUtilities.IsGreaterThan(removeAmount * 0.1, 0.0))
+                if (MathUtilities.IsGreaterThan(removeAmount, 0.0))
                 {
                     // Remove a proportion of required DM from each species
                     double totalHarvestableWt = 0.0;
@@ -707,14 +694,19 @@ namespace Models.AgPasture
                         totalWeightedHarvestableWt += speciesCutProportions[i] * harvestableWt;
                     }
 
+                    // If a fraction consumable was specified in the forages component by the user then the above calculated
+                    // removeAmount might be > consumable amount. Constrain the removeAmount to the consumable 
+                    // amount so that we don't get an exception thrown in ModelWithDigestibleBiomass.RemoveBiomass method
+                    removeAmount = Math.Min(removeAmount, totalHarvestableWt);
+
                     for (int i = 0; i < forages.Count; i++)
                     {
                         var harvestableWt = forages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                         var proportion = harvestableWt * speciesCutProportions[i] / totalWeightedHarvestableWt;
                         var amountToRemove = removeAmount * proportion;
-                        if (MathUtilities.IsGreaterThan(amountToRemove * 0.1, 0.0))
+                        if (MathUtilities.IsGreaterThan(amountToRemove, 0.0))
                         {
-                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove * 0.1);
+                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove);
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
@@ -725,10 +717,6 @@ namespace Models.AgPasture
                             grazedForages.Add(grazed);
                         }
                     }
-
-                    // Check the amount grazed is the same as requested amount to graze.  THIS IS NOT AN ERROR!!!
-                    //if (!MathUtilities.FloatsAreEqual(grazedDM, removeAmount, 0.0001))
-                    //    throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
                 }
             }
 
@@ -757,51 +745,27 @@ namespace Models.AgPasture
                                     double sendDungElsewhere,
                                     double sendUrineElsewhere)
             {
-                if (grazedForages.Any())
+                var urineDung = UrineDungReturn.CalculateUrineDungReturn(grazedForages,  
+                                                                         GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month),
+                                                                         GetValueFromMonthArray(fractionDefoliatedNToSoil, month),
+                                                                         GetValueFromMonthArray(fractionExcretedNToDung, month),
+                                                                         CNRatioDung,
+                                                                         sendUrineElsewhere,
+                                                                         sendDungElsewhere);
+
+                if (urineDung != null)
                 {
-                    double returnedToSoilWt = 0;
-                    double returnedToSoilN = 0;
-                    foreach (var grazedForage in grazedForages)
-                    {
-                        returnedToSoilWt += GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month) *
-                                            (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                        returnedToSoilN += GetValueFromMonthArray(fractionDefoliatedNToSoil, month) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
-                    }
+                    amountDungNReturned += urineDung.DungNToSoil;
+                    amountDungWtReturned += urineDung.DungWtToSoil;
+                    amountUrineNReturned += urineDung.UrineNToSoil;
 
-                    double dungNReturned;
-                    if (CNRatioDung == 0 || double.IsNaN(CNRatioDung))
-                        dungNReturned = GetValueFromMonthArray(fractionExcretedNToDung, month) * returnedToSoilN;
-                    else
-                    {
-                        const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
-                        dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
-                    }
-
-                    amountDungNReturned += dungNReturned;
-                    amountDungWtReturned += returnedToSoilWt;
-                    amountUrineNReturned += returnedToSoilN - dungNReturned;
-
-                    // We will do the urine and dung return.
-                    // find the layer that the fertilizer is to be added to.
-                    int layer = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depthUrineIsAdded);
-                    var ureaValues = urea.kgha;
-                    ureaValues[layer] += AmountUrineNReturned * (1- sendUrineElsewhere);
-                    urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
-
-                    // Send dung to surface
-                    var SOMData = new BiomassRemovedType();
-                    SOMData.crop_type = "RuminantDung_PastureFed";
-                    SOMData.dm_type = new string[] { SOMData.crop_type };
-                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_p = new float[] { 0.0F };
-                    SOMData.fraction_to_residue = new float[] { 1.0F };
-                    surfaceOrganicMatter.OnBiomassRemoved(SOMData);
+                    UrineDungReturn.DoUrineReturn(urineDung, physical.Thickness, urea, depthUrineIsAdded);
+                    UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
 
                     if (doTrampling)
                     {
                         var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(pastureConsumedAtMaximumRateOfLitterRemoval, dmRemovedToday, 0),
-                                                                   maximumPropLitterMovedToSoil);
+                                                                    maximumPropLitterMovedToSoil);
                         surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
                     }
                 }
@@ -810,7 +774,9 @@ namespace Models.AgPasture
             /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
             private static double GetValueFromMonthArray(double[] arr, int month)
             {
-                if (arr.Length == 1)
+                if (arr == null)
+                    return double.NaN;
+                else if (arr.Length == 1)
                     return arr[0];
                 else
                     return arr[month - 1];

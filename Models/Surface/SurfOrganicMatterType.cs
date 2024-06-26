@@ -67,6 +67,9 @@ namespace Models.Surface
     /// </summary>
     public class ResidueCanopy : ICanopy
     {
+        /// <summary>Canopy type identifier.</summary>
+        public string CanopyType { get; set; } = "Residue";
+
         /// <summary>Albedo.</summary>
         public double Albedo { get; set; }
 

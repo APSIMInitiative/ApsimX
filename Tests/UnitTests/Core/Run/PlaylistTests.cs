@@ -121,7 +121,7 @@ namespace UnitTests.Core
                     List<String> dataStoreNames = dataStore.Reader.SimulationNames;
 
                     //check that the datastore and expected simulations have the same amount of entries
-                    Assert.AreEqual(dataStoreNames.Count, expectedSimulations[i].Length);
+                    Assert.AreEqual(expectedSimulations[i].Length, dataStoreNames.Count);
                     for (int j = 0; j < expectedSimulations[i].Length; j++)
                     {
                         if (!dataStoreNames.Contains(expectedSimulations[i][j]))
@@ -151,15 +151,18 @@ namespace UnitTests.Core
             Playlist playlist = sims.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 
-            Assert.AreEqual(expectedSimulations1, playlist.GetListOfSimulations());
+            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
 
             //now change the name of one of the simulations without clearing the cache,
             //should give the same 4 names if reading from cache correctly.
             sims.FindChild("Sim3").Name = "DifferentName";
-            Assert.AreEqual(expectedSimulations1, playlist.GetListOfSimulations());
+            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
 
             //now clear the cache and run again, should only get 3 sims this time.
             playlist.ClearSearchCache();
+            Assert.AreEqual(expectedSimulations2, playlist.GenerateListOfSimulations());
+
+            //Check that GetListOfSimulations is working, should return the previous result again.
             Assert.AreEqual(expectedSimulations2, playlist.GetListOfSimulations());
         }
     }

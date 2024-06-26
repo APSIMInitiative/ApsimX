@@ -6,7 +6,8 @@ namespace APSIM.Interop.Drawing
     {
         Normal,
         Selected,
-        Insensitive
+        Insensitive,
+        Calculated
     }
 
     public interface IDrawContext

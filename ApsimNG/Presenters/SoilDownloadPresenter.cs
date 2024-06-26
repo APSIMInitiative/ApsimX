@@ -124,8 +124,19 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             var weatherModel = model.FindInScope<IWeather>();
-            latitudeEditBox.Text = weatherModel.Latitude.ToString();
-            longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            if (weatherModel != null)
+            {
+                latitudeEditBox.Text = weatherModel.Latitude.ToString();
+                longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            }
+
+            if(weatherModel == null)
+            {
+                this.explorerPresenter.MainPresenter.
+                    ShowMessage("Tip: To have the latitude and longitude fields auto-filled add a weather node to your simulation.", 
+                    Simulation.MessageType.Warning, 
+                    true);
+            }
             radiusEditBox.Text = "10";
 
             dataView.SortColumn = "Distance (km)";
@@ -317,7 +328,7 @@ namespace UserInterface.Presenters
                 var values = dataView.GetRow(selectedIndex);
                 var soilName = (string)values[0];
                 Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
-
+                matchingSoil.Name = matchingSoil.Name.Trim();
                 if (!matchingSoil.Children.Any(c => c is INutrient))
                     matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
                 ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);

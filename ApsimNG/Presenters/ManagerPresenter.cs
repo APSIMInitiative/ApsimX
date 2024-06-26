@@ -1,18 +1,14 @@
-﻿namespace UserInterface.Presenters
+using System;
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using Models;
+using Models.Core;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using Shared.Utilities;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Models;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Utility;
-
-
-
     /// <summary>
     /// Presenter for the Manager component
     /// </summary>
@@ -27,11 +23,6 @@
         /// The manager object
         /// </summary>
         private Manager manager;
-
-        /// <summary>
-        /// The compiled script model.
-        /// </summary>
-        private IModel scriptModel;
 
         /// <summary>
         /// The view for the manager
@@ -58,16 +49,26 @@
         {
             manager = model as Manager;
             managerView = view as IManagerView;
+
             explorerPresenter = presenter;
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            scriptModel = manager.Children.FirstOrDefault();
+            if (manager.Children.Count == 0)
+            {
+                try
+                {
+                    manager.RebuildScriptModel();
+                }
+                catch(Exception err) {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
+            }
 
             // See if manager script has a description attribute on it's class.
-            if (scriptModel != null)
+            if (manager.Script != null)
             {
-                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(manager.Script.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descriptionName != null)
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
@@ -75,7 +76,7 @@
             propertyPresenter = new PropertyPresenter();
             try
             {
-                propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+                propertyPresenter.Attach(manager.Script, managerView.PropertyEditor, presenter);
             }
             catch (Exception err)
             {
@@ -88,9 +89,12 @@
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
-            managerView.Editor.Location = manager.Location;
-            managerView.TabIndex = manager.ActiveTabIndex;
+            managerView.CursorLocation = manager.Cursor;
+
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+
+            if (manager.Errors != null)
+                explorerPresenter.MainPresenter.ShowError($"Errors found in manager model {manager.Name}{Environment.NewLine}{manager.Errors}");
         }
 
         /// <summary>
@@ -98,31 +102,16 @@
         /// </summary>
         public void Detach()
         {
+            manager.Cursor.TabIndex = managerView.TabIndex;
+            manager.Cursor = managerView.CursorLocation;
+
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
-            managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             managerView.Editor.LeaveEditor -= OnEditorLeave;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-        }
-
-        /// <summary>
-        /// The view is asking for variable names for its intellisense.
-        /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">Context item arguments</param>
-        public void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
-        {
-            try
-            {
-
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
         }
 
         /// <summary>
@@ -132,16 +121,8 @@
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            // explorerPresenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
             if (!intellisense.Visible)
                 BuildScript();
-            if (scriptModel != null)
-                RefreshProperties();
-        }
-
-        private void RefreshProperties()
-        {
-            propertyPresenter.RefreshView(scriptModel);
         }
 
         /// <summary>
@@ -165,9 +146,6 @@
 
             try
             {
-                manager.Location = managerView.Editor.Location;
-                manager.ActiveTabIndex = managerView.TabIndex;
-
                 string code = managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via
@@ -182,16 +160,10 @@
                 }
 
                 explorerPresenter.MainPresenter.ShowMessage("\"" + manager.Name + "\" compiled successfully", Simulation.MessageType.Information);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
 
-            try
-            {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
-                scriptModel = manager.FindChild("Script") as Model;
+                if (manager.Script != null && propertyPresenter != null)
+                    propertyPresenter.RefreshView(manager.Script);
             }
             catch (Exception err)
             {
@@ -208,16 +180,7 @@
         /// <param name="e">Event arguments</param>
         private void OnDoCompile(object sender, EventArgs e)
         {
-            try
-            {
-                BuildScript();
-                if (scriptModel != null)
-                    RefreshProperties();
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
+            BuildScript();
         }
 
         /// <summary>
@@ -229,9 +192,11 @@
         {
             try
             {
-
-                throw new NotImplementedException();
-
+                manager.Reformat();
+                if (managerView.Editor != null)
+                {
+                    managerView.Editor.Text = manager.Code;
+                }
             }
             catch (Exception err)
             {
@@ -257,6 +222,15 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// A rectangle defining the position of the cursor within the editor text
+        /// </summary>
+        public ManagerCursorLocation CursorLocation
+        {
+            get { return managerView.CursorLocation; }
+            set { managerView.CursorLocation = value; }
         }
     }
 }
