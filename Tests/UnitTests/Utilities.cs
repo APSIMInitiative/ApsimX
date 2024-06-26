@@ -79,6 +79,14 @@ namespace UnitTests
             return returnValue;
         }
 
+        /// <summary>Call a private method in a model</summary>
+        public static void SetProperty(object model, string propertyName, object value)
+        {
+            PropertyInfo property = model.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (property != null)
+                property.SetValue(model, value);
+        }        
+
         /// <summary>Call an event in a model and all child models.</summary>
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
         {

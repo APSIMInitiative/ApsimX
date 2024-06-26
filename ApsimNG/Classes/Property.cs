@@ -21,12 +21,14 @@ namespace UserInterface.Classes
         DropDown,
         Checkbox,
         Colour,
+        ColourPicker,
         File,
         Files,
         Directory,
         //Directories,
         Font,
-        Numeric
+        Numeric,
+        Code
     }
 
     /// <summary>
@@ -240,6 +242,12 @@ namespace UserInterface.Classes
                     else
                         DisplayMethod = PropertyType.SingleLineText;
                     break;
+                case DisplayType.Code:
+                    DisplayMethod = PropertyType.Code;
+                    break;
+                case DisplayType.ColourPicker:
+                    DisplayMethod = PropertyType.ColourPicker;
+                    break;
                 case DisplayType.FileName:
                     DisplayMethod = PropertyType.File;
                     break;
@@ -323,6 +331,13 @@ namespace UserInterface.Classes
                     if (plantyy != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
                     break;
+                case DisplayType.PlantOrganList:
+                    DisplayMethod = PropertyType.DropDown;
+                    Zone zone1 = model.FindAncestor<Zone>();
+                    List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
+                    if (plants != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
+                    break;  
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;

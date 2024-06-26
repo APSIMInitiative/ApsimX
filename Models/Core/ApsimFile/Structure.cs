@@ -30,13 +30,17 @@ namespace Models.Core.ApsimFile
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
 
-            parent.Children.Add(modelToAdd);
-
-            // Call OnCreated
+            if(parent.IsChildAllowable(modelToAdd.GetType()))
+            {
+                parent.Children.Add(modelToAdd);
+            }
+            else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
+                       
             modelToAdd.OnCreated();
+
             foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
-            
+
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
@@ -113,7 +117,7 @@ namespace Models.Core.ApsimFile
             EnsureNameIsUnique(clone);
 
             //set the name to whatever was found using the clone.
-            model.Name = clone.Name;
+            model.Name = clone.Name.Trim();
             Apsim.ClearCaches(model);
         }
 
@@ -157,31 +161,30 @@ namespace Models.Core.ApsimFile
             Simulations sims = modelToCheck.FindAncestor<Simulations>();
             if (sims != null)
             {
-                bool badName = true;
-                while (badName && counter < 10000)
+                bool stop = false;
+                while (!stop && counter < 10000)
                 {
+                    bool goodName = true;
+
                     var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                    if (obj == null)
-                    {
-                        badName = false;
+                    if (obj != null) { //found a potential conflict
+                        goodName = false;
+                        if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
+                            if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                                if (modelToCheck.FindSibling(newName) == null)
+                                    goodName = true;
                     }
-                    else if (obj is IVariable variable)
+
+                    if (goodName == false)
                     {
-                        if (variable.DataType.Name.CompareTo(originalName) == 0)
-                        {
-                            badName = false;
-                        } 
-                        else
-                        {
-                            counter++;
-                            newName = originalName + counter.ToString();
-                        }
+                        counter++;
+                        newName = originalName + counter.ToString();
                     }
                     else
                     {
-                        badName = false;
+                        stop = true;
                     }
-                }   
+                }
             }
             if (counter == 10000)
             {

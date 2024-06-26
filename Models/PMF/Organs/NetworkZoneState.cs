@@ -4,6 +4,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
 {
@@ -14,6 +15,8 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
+        /// <summary>The nutrient model</summary>
+        public INutrient nutrient { get; set; }
 
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
@@ -128,6 +131,7 @@ namespace Models.PMF.Organs
             this.Soil = soil;
             this.plant = Plant;
             this.parentNetwork = Plant.FindDescendant<RootNetwork>();
+            nutrient = soil.FindChild<INutrient>(); 
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -193,29 +197,74 @@ namespace Models.PMF.Organs
                     else if (layer > 0)
                         RAw[layer] = RAw[layer - 1];
                     else
-                        RAw[layer] = 0;
+                        RAw[layer] = 1;
             }
         }
 
         /// <summary>
         /// Calculates the proportion of total root biomass in each zone layer
         /// </summary>
-        public void CalculateRelativeBiomassProportions()
+        public void CalculateRelativeLiveBiomassProportions()
         {
-            OrganNutrientsState totalLiveWt = new OrganNutrientsState();
-            OrganNutrientsState totalDeadWt = new OrganNutrientsState();
+            OrganNutrientsState totalLive = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalLiveWt =  OrganNutrientsState.add(totalLiveWt, LayerLive[i],parentNetwork.parentOrgan.Cconc);
-                totalDeadWt =  OrganNutrientsState.add(totalDeadWt, LayerDead[i],parentNetwork.parentOrgan.Cconc);
+                totalLive =  OrganNutrientsState.Add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
             }
+            double checkLiveWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = OrganNutrientsState.divide(LayerLive[i], totalLiveWt, parentNetwork.parentOrgan.Cconc);
-                LayerDeadProportion[i] = OrganNutrientsState.divide(LayerDead[i], totalDeadWt, parentNetwork.parentOrgan.Cconc);
+                if ((totalLive.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
+                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
+                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
+                                                                     potassium: new NutrientPoolsState(1, 1, 1),
+                                                                     cconc: 1);
+                }
+                else
+                {
+                    LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                }
+                checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
             }
+            if (Math.Abs(checkLiveWtPropn - 1) > 1e-12 && (totalLive.Wt > 0))
+                throw new Exception("Error in calculating root LiveWt distribution");
         }
 
+
+        /// <summary>
+        /// Calculates the proportion of total root biomass in each zone layer
+        /// </summary>
+        public void CalculateRelativeDeadBiomassProportions()
+        {
+            OrganNutrientsState totalDead = new OrganNutrientsState();
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                totalDead = OrganNutrientsState.Add(totalDead, LayerDead[i], parentNetwork.parentOrgan.Cconc);
+            }
+            double checkDeadWtPropn = 0;
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                if ((totalDead.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerDeadProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
+                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
+                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
+                                                                     potassium: new NutrientPoolsState(1, 1, 1),
+                                                                     cconc: 1);
+                }
+                else
+                {
+                    LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                }
+                checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
+            }
+            if ((Math.Abs(checkDeadWtPropn - 1) > 1e-12) && (totalDead.Wt > 0))
+                throw new Exception("Error in calculating root DeadWt distribution");
+        }
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -249,6 +298,8 @@ namespace Models.PMF.Organs
                 {
                     LayerLive[i].Clear();
                     LayerDead[i].Clear();
+                    LayerLiveProportion[i].Clear();
+                    LayerDeadProportion[i].Clear();
                 }
             }
         }

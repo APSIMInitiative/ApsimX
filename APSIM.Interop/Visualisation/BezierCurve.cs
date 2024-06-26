@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace APSIM.Interop.Visualisation
 {
-    class BezierCurve
+    public class BezierCurve
     {
         private double[] factorialLookup;
 

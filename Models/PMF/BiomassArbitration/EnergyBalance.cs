@@ -294,7 +294,7 @@ namespace Models.PMF
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == parentPlant)
-                Clear();
+                resetCanopy();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -303,7 +303,16 @@ namespace Models.PMF
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
         {
-            Clear();
+            resetCanopy();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndCrop")]
+        protected void OnEndCrop(object sender, EventArgs e)
+        {
+            resetCanopy();
         }
 
         /// <summary>

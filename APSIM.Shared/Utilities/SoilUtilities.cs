@@ -83,6 +83,22 @@ namespace APSIM.Shared.Utilities
             return depth_of_root_in_layer / thickness[layerIndex];
         }
 
+        
+        /// <summary>Keep the top x mm of soil and zero the rest.</summary>
+        /// <param name="values">The layered values.</param>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="depth">The depth of soil to keep</param>
+        public static double[] KeepTopXmm(IReadOnlyList<double> values, double[] thickness, double depth)
+        {
+            double[] returnValues = values.ToArray();
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                double proportion = ProportionThroughLayer(thickness, i, depth);
+                returnValues[i] *= proportion;
+            }
+            return returnValues;
+        }        
+
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="thickness">Soil layer thickness.</param>
         /// <param name="bd">Bulk density.</param>
@@ -459,5 +475,84 @@ namespace APSIM.Shared.Utilities
             }
             return fromValues;
         }
+
+        /// <summary>
+        /// Fill in missing values in an array, updating metadata to reflect any infilled values.
+        /// </summary>
+        /// <param name="values">The values to check.</param>
+        /// <param name="valuesMetadata">The metadata to update.</param>
+        /// <param name="numValues">The number of values expected.</param>
+        /// <param name="f">The function to call to get a missing value.</param>
+        public static (double[] values, string[] metadata) FillMissingValues(double[] values, string[] valuesMetadata, int numValues, Func<int, double> f)
+        {
+            double[] newValues = values?.ToArray(); // clones
+            newValues ??= Enumerable.Repeat(double.NaN, numValues).ToArray();  // if null, initialises to double.NaN
+            for (int i = 0; i < numValues; i++)
+            {
+                if (double.IsNaN(newValues[i])) 
+                    newValues[i] = f(i);
+            }
+            return (newValues, DetermineMetadata(values, valuesMetadata, newValues, "Calculated"));
+        }
+
+        /// <summary>
+        /// Examine 2 arrays of numbers (values1 and values2) and look for changed values.
+        /// If a value is changed then return null metadata for that value. If a value
+        /// isn't modified then try and return the metadata1 value, otherwise null.
+        /// </summary>
+        /// <remarks>
+        ///     values1  metadata1  values2
+        ///       10         null       10
+        ///       20         calc       25
+        ///       30         calc       30
+        /// 
+        ///     metadata2
+        ///        null
+        ///        null
+        ///        calc
+        ///        
+        /// </remarks>
+        /// <param name="values1">The original values.</param>
+        /// <param name="metadata1">Metadata for the original values.</param>
+        /// <param name="values2">The potentially user modified values.</param>
+        /// <param name="metaDataForModifedValue">The metadata to use for modified values</param>
+        /// <returns>Metadata for values2.</returns>
+        public static string[] DetermineMetadata(double[] values1, string[] metadata1, double[] values2, string metaDataForModifedValue)
+        {
+            if (values1 == null || values2 == null)
+            {
+                if (metaDataForModifedValue == null)
+                    return null; // All data has been modified so metadata is cleared.
+                else
+                    return Enumerable.Repeat(metaDataForModifedValue, values2.Length).ToArray();
+            }
+            else
+            {
+                // Create a return metadata array.
+                List<string> metadataValues = new();
+
+                // Detect if values have been changed and updated metadata accordingly.
+                for (int i = 0; i < values2.Length; i++)
+                {
+                    if (i >= values1.Length)
+                        metadataValues.Add(metaDataForModifedValue);  // Extra value has been added to modified.
+                    else if (!MathUtilities.FloatsAreEqual(values1[i], values2[i], 0.001))
+                        metadataValues.Add(metaDataForModifedValue);  // Value has been changed from original.
+                    else
+                    {
+                        // Value hasn't changed. Try and use existing metadata.
+                        if (i < metadata1?.Length)
+                            metadataValues.Add(metadata1[i]);
+                        else
+                            metadataValues.Add(null);
+                    }
+                }
+                // If all metadata is null, return null.
+                if (!MathUtilities.ValuesInArray(metadataValues))
+                    return null;
+                    
+                return metadataValues.ToArray();
+            }
+        }        
     }
 }

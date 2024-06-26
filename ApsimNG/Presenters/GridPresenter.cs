@@ -54,9 +54,10 @@ namespace UserInterface.Presenters
 
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
-        /// <param name="colIndex">The index of the column that was changed.</param>
-        /// <param name="rowIndex">The index of the row that was changed.</param>
-        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int colIndex, int rowIndex);
+        /// <param name="colIndices">The indices of the columns that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows that were changed.</param>
+        /// <param name="values">The values of the cells changed.</param>
+        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
@@ -225,6 +226,7 @@ namespace UserInterface.Presenters
 
                 DataTable data = gridTable.Data;
 
+                // Assemble column units to pass to DataTableProvider constructor.
                 List<string> units = null;
                 if (gridTable.HasUnits())
                 {
@@ -235,8 +237,16 @@ namespace UserInterface.Presenters
                     }
                     data.Rows.Remove(data.Rows[0]);
                 }
-                DataTableProvider dataProvider = new DataTableProvider(data, units);
 
+                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
+                List<List<bool>> isCalculated = new();
+                for (int i = 0; i < data.Columns.Count; i++)
+                   isCalculated.Add(gridTable.GetIsCalculated(i));
+
+                // Create instance of DataTableProvider.
+                DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
+
+                // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
 
@@ -290,16 +300,20 @@ namespace UserInterface.Presenters
         /// User has changed a cell.
         /// </summary>
         /// <param name="sender">The sender of the event</param>
-        /// <param name="colIndex">The index of the column that was changed.</param>
-        /// <param name="rowIndex">The index of the row that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider sender, int colIndex, int rowIndex)
+        /// <param name="colIndices"></param>
+        /// <param name="rowIndices"></param>
+        /// <param name="values"></param>
+        /// <param name="colIndex">The indices of the column that was changed.</param>
+        /// <param name="rowIndex">The indices of the row that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
         {
             if (CellChanged != null)
             {
                 try
                 {
                     SaveGridToModel();
-                    CellChanged?.Invoke(sender, colIndex, rowIndex);
+                    CellChanged?.Invoke(sender, colIndices, rowIndices, values);
+
                 }
                 catch (Exception err)
                 {
@@ -586,7 +600,9 @@ namespace UserInterface.Presenters
                 grid.Sheet.CellEditor.EndEdit();
                 grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
                 string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-                grid.Sheet.DataProvider.SetCellContents(columnIndex, rowIndex, text + args.ItemSelected);
+                grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
+                                                        new int[] {rowIndex}, 
+                                                        new string[]{text + args.ItemSelected});
                 grid.Sheet.CalculateBounds(columnIndex, rowIndex);
 
                 grid.Sheet.CellEditor.Edit(); //keep editting window open

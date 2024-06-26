@@ -183,8 +183,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            saveToCSV(FullFileName, dt);
-
+            //saveToCSV(FullFileName, dt);
             return new DataTable();
         }
 
@@ -331,7 +330,7 @@ namespace Models.PMF.SimplePlantModels
 
             double AgeAtSimulationStart = Double.Parse(CurrentCropParams["AgeAtStartSimulation"]);
             string cropName = this.Name;
-            double depth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]) * (AgeAtSimulationStart-1) / Double.Parse(CurrentCropParams["AgeToMaxDimension"]), rootDepth);
+            double depth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]) * (AgeAtSimulationStart) / Double.Parse(CurrentCropParams["AgeToMaxDimension"]), rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -353,10 +352,6 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("EndCrop")]
         private void onEndCrop(object sender, EventArgs e)
         {
-            //Set Root Depth back to zero.
-            root.Depth = 0;
-            //ClearCanopy
-            canopy.resetCanopy();
             HasRewondThisSeason = true;
         }
 
@@ -458,7 +453,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TrunkWtAtMaxDimension"] += clean(CurrentCropParams["TrunkWtAtMaxDimension"]);
             double relativeAge = MathUtilities.Divide(Double.Parse(clean(CurrentCropParams["AgeAtStartSimulation"])),
                                                      Double.Parse(clean(CurrentCropParams["AgeToMaxDimension"])), 0);
-            double initialTrunkwt = Double.Parse(clean(CurrentCropParams["TrunkWtAtMaxDimension"])) * relativeAge;
+            double initialTrunkwt = Double.Parse(clean(CurrentCropParams["TrunkWtAtMaxDimension"])) * relativeAge * 0.7; //0.7 assumes we start in winter when trunk has been pruned back below max weight
             thisDero["InitialTrunkWt"] += initialTrunkwt.ToString();
             thisDero["InitialRootWt"] += (200 * relativeAge).ToString();
             thisDero["LeafMaxNConc"] += clean(CurrentCropParams["LeafMaxNConc"]);
@@ -551,9 +546,9 @@ namespace Models.PMF.SimplePlantModels
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
             {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
-            {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalCarbonDemand.PartitionFraction.FixedValue = " },
+            {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"ProductPartitionFrac","[DEROPAPY].Product.TotalCarbonDemand.TotalDMDemand.AllometricDemand.AllometricDemand.Const = " },
-            {"RootPartitionFrac","[DEROPAPY].Root.TotalCarbonDemand.PartitionFraction.FixedValue = " },
+            {"RootPartitionFrac","[DEROPAPY].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"TrunkWtAtMaxDimension","[DEROPAPY].Trunk.MatureWt.FixedValue = "},
             {"InitialTrunkWt","[DEROPAPY].Trunk.InitialWt.FixedValue = "},
             {"InitialRootWt","[DEROPAPY].Root.InitialWt.FixedValue = "},

@@ -247,7 +247,7 @@ namespace Models.Core.ApsimFile
                     {
                         List<Model> children = new List<Model>();
                         foreach (Model child in model.Children) {
-                            if (child != (model as Manager).ScriptModel)
+                            if (child as IScript == null)
                                 children.Add(child);
                         }
                         return children.ToArray();

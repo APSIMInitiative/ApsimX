@@ -1,16 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Shared.Utilities;
+using UserInterface.Classes;
+using UserInterface.EventArguments;
+using Gtk;
+using UserInterface.Interfaces;
+using Utility;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Classes;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using Utility;
-
     /// <summary>
     /// This view will display a list of properties to the user
     /// in a GtkTable, with each row containing a label and an
@@ -70,6 +71,16 @@ namespace UserInterface.Views
         /// </summary>
         private bool isDisposed;
 
+        /// <summary>
+        /// The values for the vertical scrollbar
+        /// </summary>
+        private ScrollerAdjustmentValues scrollV { get; set; } = null;
+        
+        /// <summary>
+        /// List of code editor views that have been created
+        /// </summary>
+        private List<EditorView> codeEditors = new List<EditorView>();
+
         /// <summary>Constructor.</summary>
         public PropertyView() { }
 
@@ -99,6 +110,7 @@ namespace UserInterface.Views
             // property name column taking up half the screen.
 
             propertyTable = new Grid();
+            codeEditors = new List<EditorView>();
 
             box = new Frame();
             box.ShadowType = ShadowType.None;
@@ -156,8 +168,19 @@ namespace UserInterface.Views
             if (row >= 0 && col >= 0)
             {
                 Widget widget = propertyTable.GetChildAt(col, row);
-                if (widget is Entry entry)
-                    entry.GrabFocus();
+                if (widget != null && widget as Entry != null)
+                    (widget as Entry).GrabFocus();
+            }
+
+            if (scrollV != null)
+            {
+                ScrolledWindow scroller = mainWidget as ScrolledWindow;
+                scroller.Vadjustment?.Configure(scrollV.Value, 
+                                            scrollV.Lower, 
+                                            scrollV.Upper, 
+                                            scrollV.StepIncrement, 
+                                            scrollV.PageIncrement, 
+                                            scrollV.PageSize);
             }
         }
 
@@ -272,12 +295,31 @@ namespace UserInterface.Views
                     Frame outline = new Frame();
                     outline.Add(editor);
                     component = outline;
-                    editor.FocusOutEvent += OnEntryFocusOut;
+                    editor.FocusOutEvent += UpdateText;
+                    editor.KeyPressEvent += UpdateText;
+                    break;
+                case PropertyType.Code:
+                    EditorView codeEditor = new EditorView(this);
+                    string code = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.CurrentCulture);
+                    if (code.Length > 0 && code[code.Length - 1] != '\n') //add a line if there is not a blank at the end
+                        code += '\n';
+                    codeEditor.Text = code;
+                    Frame codeOutline = new Frame();
+                    codeEditor.MainWidget.Name = property.ID.ToString();
+                    codeEditor.MainWidget.TooltipText = property.Name;
+                    codeEditor.DisposeEditor += OnEditorChange;
+                    codeOutline.Add(codeEditor.MainWidget);
+                    codeOutline.HeightRequest = 100;
+                    component = codeOutline;
+                    originalEntryText[property.ID] = code;
+                    this.codeEditors.Add(codeEditor);
+                    codeEditor.LeaveEditor += OnEditorChange;
                     break;
                 case PropertyType.SingleLineText:
                     string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
                     Entry textInput = new Entry(entryValue ?? "");
-                    textInput.FocusOutEvent += OnEntryFocusOut;
+                    textInput.FocusOutEvent += UpdateText;
+                    textInput.KeyPressEvent += UpdateText;
                     component = textInput;
                     originalEntryText[property.ID] = textInput.Text;
                     break;
@@ -304,7 +346,7 @@ namespace UserInterface.Views
                     // Add an Entry and a Button inside a VBox.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
-                    fileNameInput.FocusOutEvent += OnEntryFocusOut;
+                    fileNameInput.FocusOutEvent += UpdateText;
                     originalEntryText[property.ID] = fileNameInput.Text;
 
                     Button fileChooserButton = new Button("...");
@@ -331,6 +373,16 @@ namespace UserInterface.Views
                     colourChooser.Changed += OnDropDownChanged;
                     colourChooser.MainWidget.Name = property.ID.ToString();
                     component = colourChooser.MainWidget;
+                    break;
+                case PropertyType.ColourPicker:
+                    ColorButton colourPicker = new ColorButton();
+                    if (property.Value is System.Drawing.Color color)
+                        colourPicker.Rgba = color.ToRGBA();
+                    colourPicker.Xalign = 0;
+                    colourPicker.WidthRequest = 350;
+                    colourPicker.Name = property.ID.ToString();
+                    colourPicker.ColorSet += OnColourChanged;
+                    component = colourPicker;
                     break;
                 case PropertyType.Numeric:
                     SpinButton button = new SpinButton(double.MinValue, double.MaxValue, 1);
@@ -365,6 +417,7 @@ namespace UserInterface.Views
             {
                 if (sender is FontButton btnFont)
                 {
+                    StoreScrollerPosition();
                     Guid id = Guid.Parse(btnFont.Name);
                     PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, btnFont.FontName);
                     PropertyChanged?.Invoke(this, args);
@@ -387,6 +440,7 @@ namespace UserInterface.Views
             {
                 if (sender is SpinButton spinner)
                 {
+                    StoreScrollerPosition();
                     double newValue = spinner.Value;
                     Guid id = Guid.Parse(spinner.Name);
                     var args = new PropertyChangedEventArgs(id, newValue);
@@ -410,6 +464,7 @@ namespace UserInterface.Views
             {
                 if (sender is TextView editor && propertyTable != null)
                 {
+                    StoreScrollerPosition();
                     Widget allocatedEntry = propertyTable.Children.FirstOrDefault(w => w is Entry && w.Allocation.Height > 0);
                     if (allocatedEntry != null)
                         editor.HeightRequest = Math.Max(editor.Allocation.Height, allocatedEntry.Allocation.Height);
@@ -428,26 +483,74 @@ namespace UserInterface.Views
         /// <param name="sender">The entry which has been modified.</param>
         /// <param name="e">Event data.</param>
         [GLib.ConnectBefore]
-        private void OnEntryFocusOut(object sender, EventArgs e)
+        private void UpdateText(object sender, EventArgs e)
         {
             try
             {
-                if (sender is Widget widget)
+                bool doUpdate = false;
+                if (e is KeyPressEventArgs) 
                 {
-                    Guid id = Guid.Parse(widget.Name);
-                    string text;
-                    if (widget is Entry entry)
-                        text = entry.Text;
-                    else if (widget is TextView editor)
-                        text = editor.Buffer.Text;
-                    else
-                        throw new Exception($"Unknown widget type {sender.GetType().Name}");
-                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                    if ((e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
+                        doUpdate = true;
+                }
+                else 
+                {
+                    doUpdate = true;
+                }
+                if (doUpdate) 
+                {
+                    Widget widget = null;
+                    if (sender is Widget)
+                        widget = sender as Widget;
+                    else if (sender is ViewBase)
+                        widget = (sender as ViewBase).MainWidget;
+
+                    if (widget != null)
                     {
-                        var args = new PropertyChangedEventArgs(id, text);
-                        originalEntryText[id] = text;
-                        PropertyChanged?.Invoke(this, args);
+                    	StoreScrollerPosition();
+                        Guid id = Guid.Parse(widget.Name);
+                        string text;
+                        if (widget is Entry entry)
+                            text = entry.Text;
+                        else if (widget is TextView editor)
+                            text = editor.Buffer.Text;
+                        else
+                            throw new Exception($"Unknown widget type {sender.GetType().Name}");
+                        if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                        {
+                            var args = new PropertyChangedEventArgs(id, text);
+                            originalEntryText[id] = text;
+                            PropertyChanged?.Invoke(this, args);
+                        }
                     }
+                }
+                
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a code editor changes texts
+        /// Fires a chagned event if the editor's text has been modified.
+        /// </summary>
+        /// <param name="sender">The entry which has been modified.</param>
+        /// <param name="e">Event data.</param>
+        [GLib.ConnectBefore]
+        private void OnEditorChange(object sender, EventArgs e)
+        {
+            try
+            {
+                Guid id = new Guid((sender as EditorView).MainWidget.Name);
+                string text = (sender as EditorView).Text;
+
+                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                {
+                    var args = new PropertyChangedEventArgs(id, text);
+                    originalEntryText[id] = text;
+                    PropertyChanged?.Invoke(this, args);
                 }
             }
             catch (Exception err)
@@ -467,6 +570,7 @@ namespace UserInterface.Views
             {
                 if (sender is DropDownView dropdown)
                 {
+                    StoreScrollerPosition();
                     ComboBox combo = (ComboBox)dropdown.MainWidget;
                     if (combo.GetActiveIter(out TreeIter iter))
                     {
@@ -478,11 +582,33 @@ namespace UserInterface.Views
                 }
                 else if (sender is ColourDropDownView colourChooser)
                 {
+                    StoreScrollerPosition();
                     var colour = (System.Drawing.Color)colourChooser.SelectedValue;
                     Guid id = Guid.Parse(colourChooser.MainWidget.Name);
                     var args = new PropertyChangedEventArgs(id, colour);
                     PropertyChanged?.Invoke(this, args);
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a colour is picked from the colour picker
+        /// </summary>
+        /// <param name="sender">The GtkComboBox widget which has been changed.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnColourChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var gtkcolour = (sender as ColorButton).Rgba.ToColour().ToGdk();
+                var colour = Utility.Colour.FromGtk(gtkcolour);
+                Guid id = Guid.Parse((sender as ColorButton).Name);
+                var args = new PropertyChangedEventArgs(id, colour);
+                PropertyChanged?.Invoke(this, args);
             }
             catch (Exception err)
             {
@@ -501,6 +627,7 @@ namespace UserInterface.Views
             {
                 if (sender is CheckButton checkButton)
                 {
+                    StoreScrollerPosition();
                     Guid id = Guid.Parse(checkButton.Name);
                     var args = new PropertyChangedEventArgs(id, checkButton.Active);
                     PropertyChanged?.Invoke(this, args);
@@ -550,6 +677,7 @@ namespace UserInterface.Views
         {
             try
             {
+                StoreScrollerPosition();
                 IFileDialog fileChooser = new FileDialog()
                 {
                     FileType = "All files (*.*)|*.*",
@@ -605,6 +733,17 @@ namespace UserInterface.Views
             }
         }
 
+        private void StoreScrollerPosition()
+        {
+            ScrolledWindow scroller = mainWidget as ScrolledWindow;
+            this.scrollV = new ScrollerAdjustmentValues(scroller.Vadjustment.Value,
+                                                        scroller.Vadjustment.Lower,
+                                                        scroller.Vadjustment.Upper,
+                                                        scroller.Vadjustment.StepIncrement,
+                                                        scroller.Vadjustment.PageIncrement,
+                                                        scroller.Vadjustment.PageSize);
+        }
+
         /// <summary>
         /// Called when the main widget is destroyed, which occurs when the
         /// user clicks on another node in the UI, or when the properties
@@ -638,6 +777,23 @@ namespace UserInterface.Views
             // to lose focus and fire off a changed event.
             mainWidget.CanFocus = true;
             mainWidget.GrabFocus();
+        }
+
+        /// <summary>
+        /// Returns a list of all code editor views that have been created.
+        /// Used by the presenter to connect up intellisense events.
+        /// </summary>
+        public List<EditorView> GetAllEditorViews()
+        {
+            return this.codeEditors;
+        }
+
+        /// <summary>
+        /// Clear code editors
+        /// </summary>
+        public void DeleteEditorViews()
+        {
+            codeEditors = new List<EditorView>();
         }
     }
 }

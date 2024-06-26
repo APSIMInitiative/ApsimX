@@ -60,8 +60,8 @@ namespace Models.Grazplan
         [Description("Leaf weight (kg/ha)")]
         public double[] LeafWeight { get; set; } = new double[] { 800.0 };
 
-        /// <summary>Leaf nitrogen concentration (kg/ha)</summary>
-        [Description("Leaf nitrogen concentration (kg/ha)")]
+        /// <summary>Leaf nitrogen concentration (g/g)</summary>
+        [Description("Leaf nitrogen concentration (g/g)")]
         public double[] LeafNConc { get; set; } = new double[] { 0.01 };
 
         /// <summary>Leaf specific area (cm^2/g)</summary>
@@ -76,8 +76,8 @@ namespace Models.Grazplan
         [Description("Stem weight (kg/ha)")]
         public double[] StemWeight { get; set; } = new double[] { 800.0 };
 
-        /// <summary>Stem nitrogen concentration (kg/ha)</summary>
-        [Description("Stem nitrogen concentration (kg/ha)")]
+        /// <summary>Stem nitrogen concentration (g/g)</summary>
+        [Description("Stem nitrogen concentration (g/g)")]
         public double[] StemNConc { get; set; } = new double[] { 0.01 };
 
         /// <summary>Stem specific area (cm^2/g)</summary>

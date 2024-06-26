@@ -252,6 +252,28 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Edit the text of the current node</summary>
+        public void EndRenamingCurrentNode(string newText)
+        {
+            if (isEdittingNodeLabel == true)
+            {
+                textRender.Editable = false;
+                // TreeView.ContextMenuStrip = this.PopupMenu;
+                if (Renamed != null && !string.IsNullOrEmpty(newText))
+                {
+                    NodeRenameArgs args = new NodeRenameArgs()
+                    {
+                        NodePath = this.nodePathBeforeRename,
+                        NewName = newText
+                    };
+                    Renamed(this, args);
+                    if (!args.CancelEdit)
+                        previouslySelectedNodePath = args.NodePath;
+                }
+                isEdittingNodeLabel = false;
+            }
+        }
+
         private TreePath CreatePath(Utility.TreeNode node)
         {
             return new TreePath(node.Indices);
@@ -648,10 +670,12 @@ namespace UserInterface.Views
                     TreePath selPath;
                     TreeViewColumn selCol;
                     treeview1.GetCursor(out selPath, out selCol);
-                    selectionChangedData.NewNodePath = GetFullPath(selPath);
-                    if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
-                        SelectedNodeChanged.Invoke(this, selectionChangedData);
-                    previouslySelectedNodePath = selectionChangedData.NewNodePath;
+                    if (selPath != null) {
+                        selectionChangedData.NewNodePath = GetFullPath(selPath);
+                        if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                            SelectedNodeChanged.Invoke(this, selectionChangedData);
+                        previouslySelectedNodePath = selectionChangedData.NewNodePath;
+                    }
                 }
                 else
                 {
@@ -687,27 +711,34 @@ namespace UserInterface.Views
                 timer.Stop();
                 if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.ButtonPress)
                 {
-                    TreePath path;
-                    TreeViewColumn col;
-                    // Get the clicked location
-                    if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out col))
+                    if(treeview1.IsFocus) 
                     {
-                        // See if the click was on the current selection
-                        TreePath selPath;
-                        TreeViewColumn selCol;
-                        treeview1.GetCursor(out selPath, out selCol);
-                        if (selPath != null && path.Compare(selPath) == 0)
+                        TreePath path;
+                        TreeViewColumn col;
+                        // Get the clicked location
+                        if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out col))
                         {
-                            // Check where on the row we are located, allowing 16 pixels for the image, and 2 for its border
-                            Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
-                            if (e.Event.X > rect.X + 18)
+                            // See if the click was on the current selection
+                            TreePath selPath;
+                            TreeViewColumn selCol;
+                            treeview1.GetCursor(out selPath, out selCol);
+                            if (selPath != null && path.Compare(selPath) == 0)
                             {
-                                // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
-                                timer.Interval = Settings.Default.DoubleClickTime + 10;
-                                timer.AutoReset = false;
-                                timer.Start();
+                                // Check where on the row we are located, allowing 16 pixels for the image, and 2 for its border
+                                Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
+                                if (e.Event.X > rect.X + 18)
+                                {
+                                    // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                    timer.Interval = Settings.Default.DoubleClickTime + 10;
+                                    timer.AutoReset = false;
+                                    timer.Start();
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        treeview1.GrabFocus();
                     }
                 }
             }
@@ -1019,29 +1050,14 @@ namespace UserInterface.Views
         {
             try
             {
-                if (isEdittingNodeLabel == true)
-                {
-                    textRender.Editable = false;
-                    // TreeView.ContextMenuStrip = this.PopupMenu;
-                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
-                    {
-                        NodeRenameArgs args = new NodeRenameArgs()
-                        {
-                            NodePath = this.nodePathBeforeRename,
-                            NewName = e.NewText
-                        };
-                        Renamed(this, args);
-                        if (!args.CancelEdit)
-                            previouslySelectedNodePath = args.NodePath;
-                    }
-                }
+                EndRenamingCurrentNode(e.NewText);
             }
             catch (Exception err)
             {
+                isEdittingNodeLabel = false;
                 ShowError(err);
             }
-
-            isEdittingNodeLabel = false;
+            
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ namespace UserInterface.Classes
     using Models.Core;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.PMF.Phen;
     using Models.PMF.SimplePlantModels;
    
@@ -175,6 +176,21 @@ namespace UserInterface.Classes
                 return Namelist;
             }
             return new string[0];
+        }
+    
+        public static string[] GetPlantOrgans(List<Plant> plants)
+        {
+            List<string> Namelist = new List<string>();
+            foreach (Plant plant in plants) 
+            {
+                foreach (Model m in plant.Children)
+                    if (m is IOrgan)
+                    {
+                        string name = plant.Name+"."+m.Name;
+                        Namelist.Add(name);
+                    }
+            }
+            return Namelist.ToArray();
         }
     }
 }

@@ -137,5 +137,18 @@ namespace Models.Utilities
             if (columnIndex < columns.Count)
                 columns[columnIndex].Units = units;
         }
+
+        /// <summary>
+        /// Get possible units for a given column.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <returns></returns>
+        public List<bool> GetIsCalculated(int columnIndex)
+        {
+            if (columnIndex < columns.Count)
+                return columns[columnIndex].IsCalculated;
+            else
+                return null;
+        }        
     }
 }

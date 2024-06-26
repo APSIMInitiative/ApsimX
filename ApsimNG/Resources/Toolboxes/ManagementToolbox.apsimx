@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 174,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -1380,29 +1380,41 @@
             "        [Separator(\"A model to apply fertiliser days after a variable reaches a threshold\")]",
             "        [Separator(\"Trigger to fertilse on\")]",
             "                 ",
-            "        [Description(\"Name of APSIM variable\")] ",
-            "        public string VariableName { get; set; } ",
+            "        [Description(\"Name of APSIM variable\")]",
+            "        public string VariableName { get; set; }",
             "                ",
-            "        [Description(\"Threshold value to trigger fertilise\")]       ",
+            "        [Description(\"Exact value to trigger fertilise\")]",
             "        public double TriggerValue { get; set; }",
             "        ",
-            "        [Description(\"Number of days to wait after trigger\")] ",
-            "        public int NumDaysToWait { get; set; }  ",
+            "        [Description(\"Number of days to wait after trigger\")]",
+            "        public int NumDaysToWait { get; set; }",
+            "        ",
+            "        [Description(\"Only trigger once per sowing\")] ",
+            "        public bool DoOncePerSowing { get; set; }",
             "               ",
             "        [Separator(\"Amount and type to fertilise\")]",
             "                 ",
-            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
-            "        public double Amount { get; set; }  ",
+            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")]",
+            "        public double Amount { get; set; }",
             "               ",
-            "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }   ",
+            "        [Description(\"Type of fertiliser to apply? \")]",
+            "        public Fertiliser.Types FertiliserType { get; set; }",
             "          ",
-            "        private DateTime FertiliseDate;  ",
+            "        private DateTime FertiliseDate;",
+            "        private Model obj;",
+            "        private bool waitingForFertiliser = false;",
+            "        private bool hasTriggeredPerSowing = true;",
             "               ",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        private void OnStartOfSimulation(object sender, EventArgs e)",
             "        {",
-            "        }               ",
+            "        }",
+            "        ",
+            "        [EventSubscribe(\"Sowing\")]",
+            "        private void OnSowing(object sender, EventArgs e)",
+            "        {",
+            "            hasTriggeredPerSowing = false;",
+            "        }    ",
             "               ",
             "        [EventSubscribe(\"DoManagementCalculations\")]",
             "        private void OnDoManagementCalculations(object sender, EventArgs e)",
@@ -1415,12 +1427,25 @@
             "                value = f.Value();",
             "            else",
             "                throw new Exception($\"Unknown type of variable: {VariableName}\");",
-            "                 ",
-            "            if (MathUtilities.FloatsAreEqual(value, TriggerValue, 0.1))",
-            "                FertiliseDate = clock.Today.AddDays(NumDaysToWait);",
+            "                ",
+            "            bool canTrigger = true;",
+            "            if (waitingForFertiliser)",
+            "                canTrigger = false;",
+            "            if (DoOncePerSowing && hasTriggeredPerSowing)",
+            "                canTrigger = false;",
+            "                    ",
+            "            if (canTrigger && MathUtilities.FloatsAreEqual(value, TriggerValue, 0.1))",
+            "            {",
+            "                waitingForFertiliser = true;",
+            "                hasTriggeredPerSowing = true;",
+            "                FertiliseDate = clock.Today.AddDays(NumDaysToWait);",
+            "            }",
             "",
             "            if (clock.Today == FertiliseDate)",
-            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            {",
+            "                waitingForFertiliser = false;",
+            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            }",
             "        }",
             "    }",
             "}"
@@ -1428,11 +1453,11 @@
           "Parameters": [
             {
               "Key": "VariableName",
-              "Value": "[Wheat].Phenology.Zadok.Stage"
+              "Value": "[Wheat].Phenology.Stage"
             },
             {
               "Key": "TriggerValue",
-              "Value": "11"
+              "Value": "2"
             },
             {
               "Key": "NumDaysToWait",
@@ -1445,6 +1470,10 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
+            },
+            {
+              "Key": "DoOncePerSowing",
+              "Value": "True"
             }
           ],
           "Name": "Fertilise when variable reaches threshold",
@@ -1514,6 +1543,10 @@
           ],
           "Parameters": [
             {
+              "Key": "EventName",
+              "Value": "[Wheat].Phenology.PlantEmerged"
+            },
+            {
               "Key": "NumDaysToWait",
               "Value": "10"
             },
@@ -1524,10 +1557,6 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
-            },
-            {
-              "Key": "EventName",
-              "Value": "[Wheat].Phenology.PlantEmerged"
             }
           ],
           "Name": "Fertilise on event",
@@ -3730,6 +3759,200 @@
             }
           ],
           "Name": "Urine deposition on fixed dates",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using APSIM.Shared.Utilities;",
+            "using Models.Utilities;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System;",
+            "using System.Linq;",
+            "using System.Collections.Generic;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model",
+            "    {",
+            "        ",
+            "        [Link] Clock clock;",
+            "        [Link] private IPlant[] plants;",
+            "",
+            "        [Separator(\"This manager removes one or more species from the simulation using an 'EndCrop' command on the first day of the simulation\")]",
+            "",
+            "        [Description(\"Species to remove from the simulation. Comma delimited, case matters, can be blank\")]",
+            "        public string[] TheSpecies { get; set; }        ",
+            "        ",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            if (clock.Today == clock.StartDate)",
+            "\t\t\t\tforeach (var plant in plants)",
+            "              \t\tif (TheSpecies != null && TheSpecies.Length > 0 && TheSpecies.Contains(plant.Name))",
+            "                \t\tplant.EndCrop();",
+            "        }",
+            "    }",
+            "}",
+            "       "
+          ],
+          "Parameters": [
+            {
+              "Key": "TheSpecies",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            }
+          ],
+          "Name": "Manage species present",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using APSIM.Shared.Utilities;",
+            "using Models.Utilities;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System;",
+            "using System.Linq;",
+            "using System.Collections.Generic;",
+            "using Models.Surface;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model",
+            "    {",
+            "        ",
+            "        [Link] Clock clock;",
+            "        [Link] private IPlant[] plants;",
+            "        [Link] SurfaceOrganicMatter surfaceOrganicMatter;",
+            "",
+            "        [Separator(\"Ending the pasture phase\")]",
+            "",
+            "        [Description(\"Date to kill the pasture\")]",
+            "        public string Date2Kill { get; set; }",
+            "",
+            "        [Description(\"Species to kill/end in the pasture. Comma delimited, case matters, can be blank\")]",
+            "        public string[] TheSpecies2Kill { get; set; }        ",
+            "",
+            "",
+            "        [Separator(\"First cultivation of the field\")]",
+            "",
+            "        [Description(\"Date for first cultivation\")]",
+            "        public string DateCultivation1 { get; set; }",
+            "",
+            "        [Description(\"Fraction of residues to incorporate\")]",
+            "        public double FracResidues1 { get; set; }",
+            "",
+            "        [Description(\"Depth of cultivation (mm)\")]",
+            "        public double CultivationDepth1 { get; set; }",
+            "",
+            "",
+            "        [Separator(\"Second cultivation of the field\")]",
+            "",
+            "        [Description(\"Date for second cultivation\")]",
+            "        public string DateCultivation2 { get; set; }",
+            "",
+            "        [Description(\"Fraction of residues to incorporate\")]",
+            "        public double FracResidues2 { get; set; }",
+            "",
+            "        [Description(\"Depth of cultivation (mm)\")]",
+            "        public double CultivationDepth2 { get; set; }",
+            "",
+            "",
+            "        [Separator(\"Resowing of pasture\")]",
+            "",
+            "        [Description(\"Days from second cultivation to resowing\")]",
+            "        public string DateResow { get; set; }",
+            "",
+            "        [Description(\"Species to resow. Comma delimited, case matters\")]",
+            "        public string[] TheSpecies2Sow { get; set; }        ",
+            "",
+            "",
+            "",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "\t\t\t// kill the pasture",
+            "            if (DateUtilities.WithinDates(Date2Kill, clock.Today, Date2Kill))",
+            "\t\t\t\tforeach (var plant in plants)",
+            "              \t\tif (TheSpecies2Kill != null && TheSpecies2Kill.Length > 0 && TheSpecies2Kill.Contains(plant.Name))",
+            "                \t\tplant.EndCrop();",
+            "",
+            "\t\t\t// first cultivation",
+            "            if (DateUtilities.WithinDates(DateCultivation1, clock.Today, DateCultivation1))",
+            "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues1, CultivationDepth1);",
+            "",
+            "\t\t\t// second cultivation",
+            "            if (DateUtilities.WithinDates(DateCultivation2, clock.Today, DateCultivation2))",
+            "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues2, CultivationDepth2);",
+            "",
+            "            if (DateUtilities.WithinDates(DateResow, clock.Today, DateResow))",
+            "\t\t\t\tforeach (var plant in plants)",
+            "              \t\tif (TheSpecies2Sow != null && TheSpecies2Sow.Length > 0 && TheSpecies2Sow.Contains(plant.Name))",
+            "                \t\tplant.Sow(cultivar: plant.Name, population: 100.0, depth: 5.0, rowSpacing: 75.0);",
+            "        }",
+            "        ",
+            "",
+            "",
+            "",
+            "    }",
+            "}",
+            "       "
+          ],
+          "Parameters": [
+            {
+              "Key": "Date2Kill",
+              "Value": "5-Oct-1980"
+            },
+            {
+              "Key": "TheSpecies2Kill",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            },
+            {
+              "Key": "TheSpecies2Sow",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            },
+            {
+              "Key": "FracResidues2",
+              "Value": "0.5"
+            },
+            {
+              "Key": "CultivationDepth2",
+              "Value": "10"
+            },
+            {
+              "Key": "DateCultivation1",
+              "Value": "8-Oct-1980"
+            },
+            {
+              "Key": "FracResidues1",
+              "Value": "0.7"
+            },
+            {
+              "Key": "CultivationDepth1",
+              "Value": "20"
+            },
+            {
+              "Key": "DateCultivation2",
+              "Value": "15-Oct-1980"
+            },
+            {
+              "Key": "DateResow",
+              "Value": "17-Oct-1980"
+            }
+          ],
+          "Name": "RenewPasture",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
