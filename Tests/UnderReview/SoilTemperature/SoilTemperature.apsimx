@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 175,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -196,7 +196,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "WeatherFiles\\ForestHill.met",
+                      "FileName": "WeatherFiles/ForestHill.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -242,7 +242,7 @@
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2928,7 +2928,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "WeatherFiles\\ForestHill.met",
+                          "FileName": "WeatherFiles/ForestHill.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "ResourceName": null,
@@ -2955,7 +2955,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -6559,7 +6559,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%\\Tests\\Validation\\Eucalyptus\\wwepp.met",
+                  "FileName": "%root%/Tests/Validation/Eucalyptus/wwepp.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -7194,7 +7194,7 @@
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -7989,7 +7989,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "WeatherFiles\\Kurrowah_Norwin comp.met",
+                  "FileName": "WeatherFiles/Kurrowah_Norwin comp.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -8016,7 +8016,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -9066,7 +9066,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -10541,7 +10541,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -14295,7 +14295,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "%root%\\Tests\\Validation\\System\\LincolnRotation2017\\lincoln.met",
+                      "FileName": "%root%/Tests/Validation/System/LincolnRotation2017/lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -14314,7 +14314,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -16701,7 +16701,7 @@
               "NightInterceptionFraction": 0.0,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -17333,7 +17333,7 @@
               "NightInterceptionFraction": 0.0,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -18823,7 +18823,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -18842,7 +18842,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -20848,7 +20848,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -20867,7 +20867,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -22617,7 +22617,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -22636,7 +22636,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -24387,7 +24387,7 @@
                   "NightInterceptionFraction": 0.0,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -25611,7 +25611,7 @@
                   "NightInterceptionFraction": 0.0,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -26934,7 +26934,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
+                  "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -26961,7 +26961,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -27734,7 +27734,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
+                  "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
@@ -27761,7 +27761,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -28935,7 +28935,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -28971,7 +28971,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -30342,7 +30342,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "ResourceName": null,
@@ -30378,7 +30378,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -32187,7 +32187,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -33210,7 +33210,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
