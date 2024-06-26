@@ -10,7 +10,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IRootGeometryData
+    public class NetworkZoneState : Model
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -75,24 +75,11 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double RootLength { get { return Depth - plant.SowingData.Depth; } }
 
-        /// <summary>Gets the RootFront</summary>
-        public double RootFront { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double RootSpread { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double LeftDist { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double RightDist { get; set; }
-
         /// <summary>Gets the RootProportions</summary>
         public double[] RootProportions { get; set; }
 
         /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
         public double[] LLModifier { get; set; }
-
-        /// <summary>Soil area occipied by roots</summary>
-        [Units("m2")]
-        public double RootArea { get; set; }
 
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
@@ -169,7 +156,6 @@ namespace Models.PMF.Organs
         {
             Clear();
             Depth = depth;
-            RootFront = depth;
             SetMaxDepthFromXF();
             CalculateRAw();
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
@@ -343,21 +329,6 @@ namespace Models.PMF.Organs
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(parentNetwork.MaximumRootDepth, MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
-
-            //RootFront - needed by sorghum
-            if (parentNetwork.RootFrontCalcSwitch?.Value() == 1)
-            {
-                var dltRootFront = rootfrontvelocity * xf[RootLayer] * parentNetwork.RootDepthStressFactor.Value();
-
-                double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
-                dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront += dltRootFront;
-            }
-            else
-            {
-                RootFront = Depth;
-            }
-            parentNetwork.RootShape.CalcRootProportionInLayers(this);
         }
     }
 }
