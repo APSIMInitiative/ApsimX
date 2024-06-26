@@ -9,6 +9,8 @@ namespace Models.Management
     /// </summary>
     public enum BiomassRemovalType
     {
+        /// <summary>No biomass is removed</summary>
+        None,
         /// <summary>Biomass is cut</summary>
         Cutting,
         /// <summary>Biomass is grazed</summary>
@@ -16,7 +18,9 @@ namespace Models.Management
         /// <summary>Biomass is harvested</summary>
         Harvesting,
         /// <summary>Biomass is pruned</summary>
-        Pruning
+        Pruning,
+        /// <summary>Biomass is Allremoved</summary>
+        EndCrop
     }
 
     /// <summary>Stores a row of Biomass Removal Fractions</summary>
