@@ -70,5 +70,5 @@ LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,
 LAIAnnualGrowth,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),Canopy,6,7,7,6,6,2,2,2,8,6,3
 ExtCoeff,0-1,Extinction coefficient for diffuse light across canopy,Canopy,.75,0.75,0.96,0.55,.7,.6,.7,.7,0.7,0.5,0.8
 RelSlowLAI,0-1,Releative progress through Growing Phase when LAI reaches 10% of its maximum (3.1 - 3.8),Canopy,3.5,3.5,3.5,3.5,3.2,3.2,3.2,3.2,3.2,3.2,3.2
-Gsmax350,m/s,Maximum stomatal conductance at 350 ppm co2,Transpiration,0.011,0.011,0.011,0.011,0.005,0.005,0.005,0.005,0.005,0.005,0.005
-R50,MJ/m2,Net radiation levels at which gs is half gsmax,Transpiration,150,150,150,150,200,200,200,200,200,200,200
+Gsmax350,m/s,Maximum stomatal conductance at 350 ppm co2,Transpiration,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011
+R50,MJ/m2,Net radiation levels at which gs is half gsmax,Transpiration,150,150,150,150,150,150,150,150,150,150,150
