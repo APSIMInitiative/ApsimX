@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 176,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -218,7 +218,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -450,14 +449,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CultivarParameters",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Sorghum",
               "ResourceName": null,
               "Children": [
@@ -619,14 +616,12 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "CombinedResults",
           "ResourceName": null,
           "Children": [
@@ -1206,7 +1201,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Hermitage",
           "ResourceName": null,
           "Children": [
@@ -1669,7 +1663,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2227,7 +2221,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -2725,7 +2718,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -3283,7 +3276,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -3673,7 +3665,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -4231,7 +4223,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -4667,7 +4658,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -5225,7 +5216,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -5740,7 +5730,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -6298,7 +6288,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -6723,7 +6712,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -7281,7 +7270,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -7712,7 +7700,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -8270,7 +8258,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -8701,7 +8688,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -9259,7 +9246,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -9289,7 +9275,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Icrisat",
           "ResourceName": null,
           "Children": [
@@ -9804,7 +9789,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": false,
                           "ReadOnly": false
@@ -10443,7 +10428,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -10964,7 +10948,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": false,
                           "ReadOnly": false
@@ -11549,7 +11533,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -11579,7 +11562,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Lawes",
           "ResourceName": null,
           "Children": [
@@ -12503,7 +12485,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": false,
                           "ReadOnly": false
@@ -12980,7 +12962,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -13494,7 +13475,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -13971,7 +13952,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -14505,7 +14485,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -14982,7 +14962,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -15436,7 +15415,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -16028,7 +16007,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -16760,7 +16738,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -17237,7 +17215,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -18167,7 +18144,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": false,
                           "ReadOnly": false
@@ -18699,7 +18676,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -19196,7 +19172,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -19673,7 +19649,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
