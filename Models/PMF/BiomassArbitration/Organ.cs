@@ -113,6 +113,7 @@ namespace Models.PMF
         private double startDeadWt { get; set; }
 
         private bool removeBiomass { get; set; }
+        private bool resetOrganTomorrow { get; set; }
 
 
         ///3. The Constructor
@@ -344,6 +345,7 @@ namespace Models.PMF
             LiveRemoved = new OrganNutrientsState();
             DeadRemoved = new OrganNutrientsState();
             removeBiomass = false;
+            resetOrganTomorrow = false;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -554,7 +556,7 @@ namespace Models.PMF
         [EventSubscribe("PlantEnding")]
         protected void onPlantEnding(object sender, EventArgs e)
         {
-            reset();
+            resetOrganTomorrow = true;
         }
 
         /// <summary>Called when Biomass removal event of tyep EndCrop occurs.</summary>
@@ -563,7 +565,20 @@ namespace Models.PMF
         [EventSubscribe("EndCrop")]
         protected void onEndCrop(object sender, EventArgs e) 
         {
-            reset();
+            resetOrganTomorrow = true;
+        }
+
+        /// <summary>
+        /// Called at the start of the day to clear up yesterdays flags.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("DoCatchYesterday")]
+        protected void onDoCatchYesterday(object sender, EventArgs e)
+        {
+            if (resetOrganTomorrow == true)
+                reset();
+            resetOrganTomorrow = false;
         }
 
         /// <summary>
