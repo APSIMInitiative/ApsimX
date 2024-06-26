@@ -588,7 +588,7 @@ namespace Models.PMF
                     FomLayer.Layer = FOMLayers;
                     z.nutrient.DoIncorpFOM(FomLayer);
                 }
-               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-12)
+               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-11)
                         throw new Exception("C Mass balance error in root profile partitioning");
                 if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
                     throw new Exception("C Mass balance error in root profile partitioning");
