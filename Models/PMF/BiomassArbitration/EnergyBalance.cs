@@ -309,7 +309,7 @@ namespace Models.PMF
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndingCrop")]
+        [EventSubscribe("EndCrop")]
         protected void OnEndCrop(object sender, EventArgs e)
         {
             resetCanopy();
