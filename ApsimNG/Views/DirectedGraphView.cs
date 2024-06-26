@@ -463,16 +463,13 @@ namespace UserInterface.Views
                 arcs[i].Selected = false;
 
             //Look through nodes that are in rectangle
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < nodes.Count && (!single || SelectedObjects.Count == 0); i++)
                 if (nodes[i].HitTest(selectionRect.GetRectangle()))
-                    if (!single || (single && SelectedObjects.Count == 0))
-                        SelectedObjects.Add(nodes[i]);
+                    SelectedObjects.Add(nodes[i]);
 
-            if (!single || (single && SelectedObjects.Count == 0))
-                // Look through arcs for the click point
-                for (int i = 0; i < arcs.Count; i++)
-                    if (arcs[i].HitTest(selectionRect.GetRectangle()))
-                        SelectedObjects.Add(arcs[i]);
+            for (int i = 0; i < arcs.Count && (!single || SelectedObjects.Count == 0); i++)
+                if (arcs[i].HitTest(selectionRect.GetRectangle()))
+                    SelectedObjects.Add(arcs[i]);
 
             for (int i = 0; i < SelectedObjects.Count; i++)
                 SelectedObjects[i].Selected = true;

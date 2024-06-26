@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
@@ -84,6 +85,12 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
+        /// List enabled simulation names without running them.
+        /// </summary>
+        [Option('e', "list-enabled-simulations", HelpText = "List enabled simulation names without running them.")]
+        public bool ListEnabledSimulationNames { get; set; }
+
+        /// <summary>
         /// List all files that are referenced by an .apsimx file(s) with absolute paths.
         /// </summary>
         [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s) as an absolute path.")]
@@ -143,6 +150,12 @@ namespace Models
         /// </summary>
         [Option("in-memory-db", HelpText = "Sets datastore to use memory instead of database." )]
         public bool InMemoryDB {get; set;}
+
+        /// <summary>
+        /// Allows the use of a batch file which specifies a series of changes to make to an apsimx file. Used in conjunction with --apply switch.
+        /// </summary>
+        [Option('b', "batch", HelpText="Allows the use of a batch file which specifies a series of changes to make to an apsimx file. To be used with the --apply switch.")]
+        public string Batch{ get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.

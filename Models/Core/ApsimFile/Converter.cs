@@ -28,7 +28,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 175; } }
+        public static int LatestVersion { get { return 176; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5529,17 +5529,33 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Add ResourceName to MicroClimate
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion175(JObject root, string fileName)
+        {
+            foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
+                microClimate["ResourceName"] = "MicroClimate";
+        }
+
+        /// <summary>
         /// Add new parameters to tillering and area calculation classes.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion175(JObject root, string _)
+        private static void UpgradeToVersion176(JObject root, string _)
         {
             JObject parametersFolder = FindParametersFolder(root);
             UpdateTillering(root, parametersFolder, "DynamicTillering");
             UpdateTillering(root, parametersFolder, "FixedTillering");
         }
 
+        /// <summary>
+        /// Searches for the Parameters folder and if it can be found, return the JObject, otherwise default/null.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns>The Parameters Folder as a JObject, or null.</returns>
         private static JObject FindParametersFolder(JObject root)
         {
             foreach (var folders in JsonUtilities.ChildrenOfType(root, "Folder"))
@@ -5550,6 +5566,12 @@ namespace Models.Core.ApsimFile
             return default;
         }
 
+        /// <summary>
+        /// Updates the supplied tillering object.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="parametersFolder"></param>
+        /// <param name="name"></param>
         private static void UpdateTillering(
             JObject root, 
             JObject parametersFolder, 
@@ -5579,6 +5601,16 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Adds the variable reference to the supplied root. If the Parameters folder exists, it is added
+        /// as a variable reference, otherwise a constant.
+        /// </summary>
+        /// <param name="parametersFolder"></param>
+        /// <param name="root"></param>
+        /// <param name="children"></param>
+        /// <param name="variableName"></param>
+        /// <param name="name"></param>
+        /// <param name="leafParamFixedValue"></param>
         private static void AddVariableRef(
             JObject parametersFolder,
             JObject root,

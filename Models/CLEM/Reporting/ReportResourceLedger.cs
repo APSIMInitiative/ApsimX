@@ -217,6 +217,16 @@ namespace Models.CLEM.Reporting
         [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
         public bool IncludeRuminantWeight { get; set; }
 
+        /// <summary>
+        /// Include daily growth rate from birth
+        /// </summary>
+        [Summary]
+        [Description("Include daily growth rate from birth")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantGrowthRate { get; set; }
+
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -298,7 +308,8 @@ namespace Models.CLEM.Reporting
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.HerdName as RelatesTo");
                         if (IncludeRuminantChangeDirection)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.PopulationChangeDirection as Change");
-
+                        if (IncludeRuminantGrowthRate)
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.GrowthRate as GrowthRate");
                         // ToDo: add pricing for ruminants including buy and sell pricing
                         // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
                     }
