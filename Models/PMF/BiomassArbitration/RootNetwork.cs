@@ -176,6 +176,11 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>
+        /// The kl being used daily in each layer
+        /// </summary>
+        public double[] klByLayer { get; set; }
+
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
         [JsonIgnore]
@@ -351,43 +356,20 @@ namespace Models.PMF
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
 
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            double[] ll = soilCrop.LL;
+
+            double[] supply = new double[myZone.Physical.Thickness.Length];
+            LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+            for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
             {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer <= currentLayer; layer++)
+                if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                 {
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
+                    supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
                 }
-
-                return supply;
             }
-            else
-            {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
-                {
-                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
-                    {
-                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
-                    }
-                }
-                return supply;
-            }
+            return supply;
         }
 
         /// <summary>Computes root total water supply.</summary>
@@ -419,7 +401,6 @@ namespace Models.PMF
         public double PlantAvailableWaterSupply()
         {
             double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
             double[] available = new double[PlantZone.Physical.Thickness.Length];
@@ -444,9 +425,8 @@ namespace Models.PMF
             {
                 if (layer <= currentLayer)
                 {
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        PlantZone.RootProportions[layer]);
-
+                    supply[layer] = Math.Max(0.0, available[layer] * klByLayer[layer] * PlantZone.RootProportions[layer]);
+                    
                     supplyTotal += supply[layer];
                 }
             }
@@ -601,6 +581,12 @@ namespace Models.PMF
                     z.CalculateRelativeLiveBiomassProportions();
                     z.CalculateRelativeDeadBiomassProportions();
                 }
+                
+                double[] KL = soilCrop.KL;
+                for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
+                {
+                    klByLayer[layer] = KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer);
+                }
             }
         }
 
@@ -612,7 +598,7 @@ namespace Models.PMF
             Clear();
             RootFrontVelocity = rootFrontVelocity.Value();
             MaximumRootDepth = maximumRootDepth.Value();
-
+            
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {
@@ -753,6 +739,8 @@ namespace Models.PMF
                     Zones.Add(newZone);
                 }
             }
+
+            klByLayer = new double[Zones[0].Physical.Thickness.Length];
         }
 
         /// <summary>Clears this instance.</summary>
