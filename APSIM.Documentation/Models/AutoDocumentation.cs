@@ -8,9 +8,15 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Shared.Documentation;
+using Models;
+using Models.Core;
 using Models.Functions;
+using APSIM.Documentation.Models.Types;
+using Models.PMF;
 
-namespace Models.Core
+
+namespace APSIM.Documentation.Models
 {
 
     /// <summary>
@@ -28,6 +34,49 @@ namespace Models.Core
 
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
+
+        /// <summary>Writes the description of a class to the tags.</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The heading level to use.</param>
+        /// <param name="indent">The indentation level.</param>
+        /// <param name="documentAllChildren">Document all children?</param>
+        /// <param name="force">
+        /// Whether or not to force the generation of documentation,
+        /// regardless of the model's IncludeInDocumentation status.
+        /// </param>
+        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0, bool documentAllChildren = true, bool force = false)
+        {
+            if (tags == null)
+                tags = new List<ITag>();
+                
+            IEnumerable<ITag> newTags;
+            if (model is Plant)
+                newTags = new PlantDoc(model).Document();
+            else if (model is Clock)
+                newTags = new ClockDoc(model).Document();
+            else if (model is Simulation)
+                newTags = new GenericWithChildrenDoc(model).Document();
+            else if (model is AccumulateFunction)
+                newTags = new AccumulateFunctionDoc(model).Document();
+            else if (model is BiomassArbitrator)
+                newTags = new BiomassArbitratorDoc(model).Document();
+            else if (model is CalculateCarbonFractionFromNConc || model is DeficitDemandFunction || model is MobilisationSupplyFunction || model is PlantPartitionFractions)
+                newTags = new BiomassArbitrationFunctionDoc(model).Document();
+            else if (model is OrganNutrientDelta || model is OrganNutrientsState)
+                newTags = new OrganNutrientDoc(model).Document();
+            else if (model is NutrientDemandFunctions || model is NutrientPoolFunctions || model is MobilisationSupplyFunction || model is NutrientSupplyFunctions)
+                newTags = new UIInterfaceNutrientDoc(model).Document();
+            else if (model is RootUptakesArbitrator)
+                newTags = new RootUptakesArbitratorDoc(model).Document();
+            else
+                newTags = new GenericDoc(model).Document();
+
+            foreach(ITag tag in newTags)
+                tags.Add(tag);
+                
+            return tags;
+        }
 
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
@@ -76,30 +125,6 @@ namespace Models.Core
             }
 
             return string.Empty;
-        }
-
-
-        /// <summary>Writes the description of a class to the tags.</summary>
-        /// <param name="model">The model to get documentation for.</param>
-        /// <param name="tags">The tags to add to.</param>
-        /// <param name="headingLevel">The heading level to use.</param>
-        /// <param name="indent">The indentation level.</param>
-        /// <param name="documentAllChildren">Document all children?</param>
-        /// <param name="force">
-        /// Whether or not to force the generation of documentation,
-        /// regardless of the model's IncludeInDocumentation status.
-        /// </param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
-        {
-            if (model == null)
-                return;
-            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
-            {
-                // if (model is ICustomDocumentation)
-                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                // else
-                DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
-            }
         }
 
         /// <summary>
@@ -299,7 +324,7 @@ namespace Models.Core
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
-            List<IModel> childrenDocumented = new List<Core.IModel>();
+            List<IModel> childrenDocumented = new List<IModel>();
             int numSpacesStartOfLine = -1;
             string paragraphSoFar = string.Empty;
             if (stringToParse.StartsWith("\r\n"))
@@ -364,7 +389,7 @@ namespace Models.Core
                             paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                         else
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, tags, targetHeadingLevel + 1, indent);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -377,7 +402,7 @@ namespace Models.Core
                         Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
                         foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, tags, targetHeadingLevel + 1, indent);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -395,7 +420,7 @@ namespace Models.Core
                                 childrenDocumented.Add(xypairs);
                                 var xName = words[2];
                                 var yName = words[3].Replace("]", "");
-                                tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                                //tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
                             }
                         }
                     }
@@ -420,7 +445,7 @@ namespace Models.Core
                 foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
-                        DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
+                        Document(child, tags, headingLevel + 1, indent, documentAllChildren);
                 }
             }
         }
@@ -557,14 +582,14 @@ namespace Models.Core
         /// <param name="headingLevel">Heading level</param>
         /// <param name="indent">Indent level</param>
         /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
-        public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
+        public static void DocumentChildren(IModel model, List<ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
         {
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
                 if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
-                    DocumentModel(child, tags, headingLevel + 1, indent);
+                    Document(child, tags, headingLevel + 1, indent);
         }
 
         /// <summary>
@@ -576,7 +601,7 @@ namespace Models.Core
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         private static List<IModel> DocumentMathFunction(IModel function, char op,
-                                                         List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+                                                         List<ITag> tags, int headingLevel, int indent)
         {
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -590,15 +615,15 @@ namespace Models.Core
                     childrenToDocument.Add(child);
             }
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
+            tags.Add(new Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
 
             // write children
             if (childrenToDocument.Count > 0)
             {
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+                tags.Add(new Paragraph("Where:", indent));
 
                 foreach (IModel child in childrenToDocument)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                    Document(child, tags, headingLevel + 1, indent + 1);
             }
 
             return childrenToDocument;
@@ -638,201 +663,6 @@ namespace Models.Core
             msg += child.Name;
             return false;
         }
-
-        /// <summary>
-        /// Describes an interface for a auto-doc command.
-        /// </summary>
-        public interface ITag
-        {
-        }
-
-        /// <summary>
-        /// Describes an auto-doc heading command.
-        /// </summary>
-        public class Heading : ITag
-        {
-            /// <summary>The heading text</summary>
-            public string text;
-
-            /// <summary>The heading level</summary>
-            public int headingLevel;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Heading"/> class.
-            /// </summary>
-            /// <param name="text">The heading text.</param>
-            /// <param name="headingLevel">The heading level.</param>
-            public Heading(string text, int headingLevel)
-            {
-                this.text = text;
-                this.headingLevel = headingLevel;
-            }
-        }
-
-        /// <summary>
-        /// Describes an auto-doc paragraph command.
-        /// </summary>
-        public class Paragraph : ITag
-        {
-            /// <summary>The paragraph text.</summary>
-            public string text;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>The bookmark name (optional)</summary>
-            public string bookmarkName;
-
-            /// <summary>Should the paragraph indent all lines except the first?</summary>
-            public bool handingIndent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Paragraph"/> class.
-            /// </summary>
-            /// <param name="text">The paragraph text.</param>
-            /// <param name="indent">The paragraph indent.</param>
-            public Paragraph(string text, int indent)
-            {
-                this.text = text;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc graph and table command.</summary>
-        public class GraphAndTable : ITag
-        {
-            /// <summary>The data to show in graph and table.</summary>
-            public XYPairs xyPairs;
-
-            /// <summary>The graph title</summary>
-            public string title;
-
-            /// <summary>The x axis title.</summary>
-            public string xName;
-
-            /// <summary>The y axis title</summary>
-            public string yName;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="GraphAndTable"/> class.
-            /// </summary>
-            /// <param name="xyPairs">The xy pairs.</param>
-            /// <param name="title">Graph title.</param>
-            /// <param name="xName">The x axis title.</param>
-            /// <param name="yName">The y axis title.</param>
-            /// <param name="indent">The indentation.</param>
-            public GraphAndTable(XYPairs xyPairs, string title, string xName, string yName, int indent)
-            {
-                this.title = title;
-                this.xyPairs = xyPairs;
-                this.xName = xName;
-                this.yName = yName;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc table command.</summary>
-        public class Table : ITag
-        {
-            /// <summary>The data to show in the table.</summary>
-            public DataView data;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public int ColumnWidth { get; private set; }
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public string Style { get; private set; } = "Table";
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataTable data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = new DataView(data);
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataView data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = data;
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-        }
-
-        /// <summary>Descibes an image for the tags system.</summary>
-        public class Image : ITag
-        {
-            /// <summary>The image to put into the doc.</summary>
-            public System.Drawing.Image image;
-
-            /// <summary>Unique name for image. Used to save image to temp folder.</summary>
-            public string name;
-        }
-
-        /// <summary>Describes a new page for the tags system.</summary>
-        public class NewPage : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-
-        /// <summary>Page setup tag.</summary>
-        public class PageSetup : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-
-        /// <summary>Describes a model view for the tags system.</summary>
-        public class ModelView : ITag
-        {
-            /// <summary>Model</summary>
-            public IModel model;
-
-            /// <summary>Constructor</summary>
-            /// <param name="modelToDocument">The model to document</param>
-            public ModelView(IModel modelToDocument)
-            {
-                model = modelToDocument;
-            }
-        }
-
-        /// <summary> creates a list of child function names </summary>
-        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
-        {
-            string listofKids = "";
-            int count = 0;
-            foreach (IModel F in ChildFunctions)
-            {
-                count += 1;
-                listofKids += ("*" + F.Name + "*");
-                if (count == ChildFunctions.Count() - 1)
-                    listofKids += " and ";
-                else if (count < ChildFunctions.Count() - 1)
-                    listofKids += ", ";
-            }
-            return listofKids;
-        }
     }
+    
 }

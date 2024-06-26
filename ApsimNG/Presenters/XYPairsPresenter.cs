@@ -7,6 +7,7 @@ using APSIM.Shared.Graphing;
 using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
+using APSIM.Documentation.Models;
 
 namespace UserInterface.Presenters
 {

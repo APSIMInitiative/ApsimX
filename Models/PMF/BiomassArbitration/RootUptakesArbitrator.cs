@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
@@ -266,24 +267,6 @@ namespace Models.PMF
                     u.DoNitrogenUptake(zones);
                 }
             }
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-            // write children.
-            foreach (IModel child in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
         }
     }
 }
