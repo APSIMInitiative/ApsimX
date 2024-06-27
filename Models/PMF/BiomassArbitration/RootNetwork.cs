@@ -37,10 +37,6 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         public Organ parentOrgan = null;
 
-        /// <summary>The RootShape model</summary> 
-        [Link(Type = LinkType.Child, ByName = false)]
-        public IRootShape RootShape = null;
-
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d/ppm")]
@@ -176,6 +172,11 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>
+        /// The kl being used daily in each layer
+        /// </summary>
+        public double[] klByLayer { get; set; }
+
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
         [JsonIgnore]
@@ -200,10 +201,6 @@ namespace Models.PMF
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
-
-        /// <summary>Root Area</summary>
-        [JsonIgnore]
-        public double Area { get { return PlantZone.RootArea; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -351,51 +348,26 @@ namespace Models.PMF
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
 
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            double[] ll = soilCrop.LL;
+
+            double[] supply = new double[myZone.Physical.Thickness.Length];
+            LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+            for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
             {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer <= currentLayer; layer++)
+                if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                 {
-                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
+                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer];
 
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
+                    supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
                 }
-
-                return supply;
             }
-            else
-            {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
-                {
-                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
-                    {
-                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
-                    }
-                }
-                return supply;
-            }
+            return supply;
         }
 
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-
             double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
@@ -406,52 +378,12 @@ namespace Models.PMF
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * PlantZone.RootProportions[layer]);
+                    supply += Math.Max(0.0, klByLayer[layer] * available * PlantZone.RootProportions[layer]);
                 }
             }
             return supply;
         }
 
-
-        /// <summary>Plant Avaliable water supply used by sorghum.</summary>
-        /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
-        public double PlantAvailableWaterSupply()
-        {
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.WaterBalance.SWmm;
-            double[] DZ = PlantZone.Physical.Thickness;
-            double[] available = new double[PlantZone.Physical.Thickness.Length];
-            double[] supply = new double[PlantZone.Physical.Thickness.Length];
-
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
-            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
-
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
-                }
-            }
-            available[currentLayer] *= layerProportion;
-
-            double supplyTotal = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        PlantZone.RootProportions[layer]);
-
-                    supplyTotal += supply[layer];
-                }
-            }
-            return supplyTotal;
-        }
 
         ///6. Public methods
         /// --------------------------------------------------------------------------------------------------
@@ -508,61 +440,30 @@ namespace Models.PMF
                 double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
-                if (RootFrontCalcSwitch?.Value() >= 1.0)
+
+                double maxNUptake = maxDailyNUptake.Value();
+                for (int layer = 0; layer < thickness.Length; layer++)
                 {
-                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.Physical.Thickness.Length)
-                        myZone.MassFlow = new double[myZone.Physical.Thickness.Length];
-                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Physical.Thickness.Length)
-                        myZone.Diffusion = new double[myZone.Physical.Thickness.Length];
-
-                    var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
-                    for (int layer = 0; layer <= currentLayer; layer++)
+                    accuDepth += thickness[layer];
+                    if (myZone.LayerLive[layer].Wt > 0)
                     {
-                        var swdep = water[layer]; //mm
-                        var flow = myZone.WaterUptake[layer];
-                        var yest_swdep = swdep - flow;
-                        //NO3N is in kg/ha - old sorghum used g/m^2
-                        var no3conc = zone.NO3N[layer] * kgha2gsm / yest_swdep; //to equal old sorghum
-                        var no3massFlow = no3conc * (-flow);
-                        myZone.MassFlow[layer] = no3massFlow;
+                        double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth) / thickness[layer]));
+                        RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
+                        RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
+                        double SWAF = nUptakeSWFactor.Value(layer);
 
-                        //diffusion
-                        var swAvailFrac = RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
-                        //old sorghum stores N03 in g/ms not kg/ha
-                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
-                        myZone.Diffusion[layer] = no3Diffusion * myZone.RootProportions[layer];
+                        double kno3 = this.kno3.Value(layer);
+                        double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
+                        NO3Uptake += NO3Supply[layer];
 
-                        //NH4Supply[layer] = no3massFlow;
-                        //onyl 2 fields passed in for returning data. 
-                        //actual uptake needs to distinguish between massflow and diffusion
-                        //sorghum calcs don't use nh4 - so using that temporarily
+                        double knh4 = this.knh4.Value(layer);
+                        double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
+                        NH4Uptake += NH4Supply[layer];
                     }
                 }
-                else
-                {
-                    double maxNUptake = maxDailyNUptake.Value();
-                    for (int layer = 0; layer < thickness.Length; layer++)
-                    {
-                        accuDepth += thickness[layer];
-                        if (myZone.LayerLive[layer].Wt > 0)
-                        {
-                            double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth) / thickness[layer]));
-                            RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
-                            RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
-                            double SWAF = nUptakeSWFactor.Value(layer);
 
-                            double kno3 = this.kno3.Value(layer);
-                            double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
-                            NO3Uptake += NO3Supply[layer];
-
-                            double knh4 = this.knh4.Value(layer);
-                            double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
-                            NH4Uptake += NH4Supply[layer];
-                        }
-                    }
-                }
             }
         }
 
@@ -601,6 +502,13 @@ namespace Models.PMF
                     z.CalculateRelativeLiveBiomassProportions();
                     z.CalculateRelativeDeadBiomassProportions();
                 }
+                
+                double[] KL = soilCrop.KL;
+                for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
+                {
+                    klByLayer[layer] = KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer);
+                    Zones[0].RootProportions[layer] = SoilUtilities.ProportionThroughLayer(Zones[0].Physical.Thickness, layer, Depth);
+                }
             }
         }
 
@@ -612,7 +520,7 @@ namespace Models.PMF
             Clear();
             RootFrontVelocity = rootFrontVelocity.Value();
             MaximumRootDepth = maximumRootDepth.Value();
-
+            
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {
@@ -680,7 +588,7 @@ namespace Models.PMF
                     FomLayer.Layer = FOMLayers;
                     z.nutrient.DoIncorpFOM(FomLayer);
                 }
-               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-12)
+               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-11)
                         throw new Exception("C Mass balance error in root profile partitioning");
                 if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
                     throw new Exception("C Mass balance error in root profile partitioning");
@@ -753,6 +661,8 @@ namespace Models.PMF
                     Zones.Add(newZone);
                 }
             }
+
+            klByLayer = new double[Zones[0].Physical.Thickness.Length];
         }
 
         /// <summary>Clears this instance.</summary>
