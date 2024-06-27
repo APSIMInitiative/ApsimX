@@ -23,9 +23,9 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>The thermal time</summary>
-        [Link(ByName = true)]
-        public IFunction HaunStage = null;
+        /// <summary>Haun stage is used for zadok stages 10 to 30</summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
+        IFunction haunStage = null;
 
         [Link]
         private IPlant plant = null;
@@ -47,7 +47,7 @@ namespace Models.PMF.Phen
                     zadok_stage = 5.0f + 5 * fracInCurrent;
                 else if (Phenology.Stage < 5.3)
                 {
-                    zadok_stage = 10.0f + HaunStage.Value();
+                    zadok_stage = 10.0f + haunStage.Value();
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
