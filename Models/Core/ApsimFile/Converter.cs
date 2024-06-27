@@ -5532,6 +5532,27 @@ namespace Models.Core.ApsimFile
             foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
                 microClimate["ResourceName"] = "MicroClimate";
         }
+
+        /// <summary>
+        /// Rename Wheat Report Variables
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion176(JObject root, string fileName)
+        {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.AppearedCohortNo", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Phyllochron", "[Wheat].Phenology.Phyllochron");
+            }
+        }
     }
 }
 
