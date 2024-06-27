@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Interop.Drawing;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// This is the engine for a sheet (grid) widget. It can display a table (rows and columns)
@@ -38,6 +38,14 @@ namespace UserInterface.Views
 
         private bool recalculateWidths = true;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Sheet()
+        {
+
+        }
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -58,6 +66,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the sheet needs a redraw.</summary>
         public event EventHandler RedrawNeeded;
+
+        /// <summary>Invoked when the sheet needs a redraw.</summary>
+        public Action<Exception> OnException;
 
         /// <summary>The provider of data for the sheet.</summary>
         public ISheetDataProvider DataProvider { get; set; }
@@ -330,7 +341,7 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
+                //if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
 
                 if (recalculateWidths)
@@ -358,7 +369,7 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ViewBase.MasterView.ShowError(err);
+                OnException(err);
             }
 
             return true;
@@ -392,7 +403,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
             return true;
         }
@@ -408,7 +419,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
 
             return true;
@@ -431,7 +442,7 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ViewBase.MasterView.ShowError(err);
+                OnException(err);
             }
             return true;
         }
@@ -613,7 +624,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
         }
     }

@@ -1,9 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using static Gtk.Sheet.ISheetDataProvider;
 
 namespace UserInterface.Views
 {
@@ -98,6 +100,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when the paging has ended.</summary>
         public event EventHandler PagingEnd;
 
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event CellChangedDelegate CellChanged;        
+
         /// <summary>Number of heading rows.</summary>
         public int NumHeadingRows { get; set; }
 
@@ -143,6 +148,7 @@ namespace UserInterface.Views
         /// <param name="values">The values</param>
         public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
+            CellChanged?.Invoke(this, columnIndices, rowIndices, values);
             throw new NotImplementedException();
         }
 

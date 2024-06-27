@@ -3,6 +3,7 @@
     using NUnit.Framework;
     using System.Collections.Generic;
     using UserInterface.Views;
+    using Gtk.Sheet;
 
     [TestFixture]
     class SheetTests

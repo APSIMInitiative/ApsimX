@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;

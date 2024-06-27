@@ -1,4 +1,5 @@
 ﻿using Gtk;
+using Gtk.Sheet;
 using Models.CLEM.Reporting;
 using Models.Storage;
 using System;
@@ -53,7 +54,7 @@ namespace UserInterface.Presenters
             {
                 // Create the grid to display data in
                 container = new ContainerView(clemPresenter.View as ViewBase);
-                grid = new SheetWidget();
+                grid = new SheetWidget((err) => ViewBase.MasterView.ShowError(err));
                 grid.Sheet = new Sheet();
                 grid.Sheet.DataProvider = new DataTableProvider(new DataTable());
                 grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);

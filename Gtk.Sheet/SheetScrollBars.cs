@@ -1,7 +1,7 @@
 ﻿using Gtk;
 using System;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Implements scroll bars for a sheet widget.</summary>
     public class SheetScrollBars

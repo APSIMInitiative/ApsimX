@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Implements single cell selection for the sheet widget.</summary>
     public class SingleCellSelect : ISheetSelection

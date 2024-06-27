@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -166,7 +167,7 @@ namespace UserInterface.Presenters
 
         public void SetupSheet(ISheetDataProvider dataProvider)
         {
-            grid = new SheetWidget();
+            grid = new SheetWidget((err) => ViewBase.MasterView.ShowError(err));
             grid.Sheet = new Sheet();
             grid.Sheet.DataProvider = dataProvider;
             grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
@@ -293,7 +294,7 @@ namespace UserInterface.Presenters
             this.model = model;
             intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
-            grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
+            //grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
         }
 
         /// <summary>

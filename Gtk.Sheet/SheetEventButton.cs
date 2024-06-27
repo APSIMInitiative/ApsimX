@@ -1,4 +1,4 @@
-﻿namespace UserInterface.Views
+﻿namespace Gtk.Sheet
 {
     public class SheetEventButton
     {

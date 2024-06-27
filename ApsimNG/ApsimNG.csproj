@@ -31,6 +31,7 @@
     <ProjectReference Include="..\APSIM.Interop\APSIM.Interop.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\APSIM.Server\V1\APSIM.Server.csproj" />
+    <ProjectReference Include="..\Gtk.Sheet\Gtk.Sheet.csproj" />
 	
     <!-- Shared package references -->
     <PackageReference Include="ClosedXML" Version="0.100.3" />

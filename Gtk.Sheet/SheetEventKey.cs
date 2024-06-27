@@ -1,4 +1,4 @@
-﻿namespace UserInterface.Views
+﻿namespace Gtk.Sheet
 {
     /// <summary>Keys enumeration.</summary>
     public enum Keys

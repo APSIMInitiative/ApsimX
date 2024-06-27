@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Encapsulates the xy pixel bounds of a sheet cell.</summary>
     public class CellBounds
