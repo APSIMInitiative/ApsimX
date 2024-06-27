@@ -21,6 +21,9 @@ namespace UserInterface.Presenters
         /// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
         private Model model;
 
+        /// <summary>The data provider.</summary>
+        private ISheetDataProvider dataProvider;
+
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
 
@@ -79,9 +82,6 @@ namespace UserInterface.Presenters
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
-            //this allows a data provider to be passed in instead of a model.
-            //For example, the datastore presenter uses this to fill out the table.
-            ISheetDataProvider dataProvider = null;
             if (model as ISheetDataProvider != null)
             {  
                 // e.g. DataStorePresenter goes through here.
@@ -96,7 +96,9 @@ namespace UserInterface.Presenters
             }
             else
             {
-                throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
+                var viewBase = v as ViewBase;
+                sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
             }
 
             //we are receiving a container from another presenter to put the grid into
@@ -130,6 +132,8 @@ namespace UserInterface.Presenters
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (dataProvider != null)
+                dataProvider.CellChanged += OnCellChanged;
 
             //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
@@ -143,7 +147,7 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
-            if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
+            if (dataProvider != null)
                 dataProvider.CellChanged -= OnCellChanged;
 
             SaveGridToModel();
@@ -168,7 +172,7 @@ namespace UserInterface.Presenters
             grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
             grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
             //we don't want an editor on grids that are linked to a dataProvider instead of a model
-            if (dataProvider == null)
+            //if (dataProvider == null)
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
 
             if (gridTable != null)
@@ -244,8 +248,6 @@ namespace UserInterface.Presenters
                 // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
-
-                dataProvider.CellChanged += OnCellChanged;
             }
 
             UpdateScrollBars();

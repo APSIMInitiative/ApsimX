@@ -19,16 +19,8 @@ namespace UserInterface.Views
         /// <summary>A matrix of cell booleans to indicate if a cell is calculated (rather than measured).</summary>
         private List<List<SheetDataProviderCellState>> cellStates;
 
-        /// <summary>Delegate for a CellChanged event.</summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="colIndices">The indices of the columns that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows that were changed.</param>
-        /// <param name="values">The values of the cells changed.</param>
-
-        public delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
-
         /// <summary>An event invoked when a cell changes.</summary>
-        public event CellChangedDelegate CellChanged;
+        public event ISheetDataProvider.CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>

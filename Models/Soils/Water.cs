@@ -5,7 +5,6 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -18,7 +17,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IGridModel
+    public class Water : Model
     {
         private double[] volumetric;
 
@@ -27,6 +26,7 @@ namespace Models.Soils
 
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -55,7 +55,6 @@ namespace Models.Soils
         /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
-        [Display(Format = "N1")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
         /// <summary>Amount water (mm)</summary>
@@ -181,23 +180,6 @@ namespace Models.Soils
             if (InitialValues == null)
                 throw new Exception("No initial soil water specified.");
             Volumetric = (double[])InitialValues.Clone();
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
         }
 
         [JsonIgnore]

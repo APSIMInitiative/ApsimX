@@ -19,13 +19,19 @@ class PropertySheetDataProvider : ISheetDataProvider
     public PropertySheetDataProvider(List<PropertyMetadata> properties)
     {
         this.properties = properties;
-    
-        // Determine number of heading rows.
-        numHeadingRows = properties.Any(p => !string.IsNullOrEmpty(p.Units)) ? 2 : 1;
 
-        // Determine the number of rows the grid should have. 
-        RowCount = properties.Max(p => p.Values.Count) + numHeadingRows;
+        if (properties.Any())
+        {
+            // Determine number of heading rows.
+            numHeadingRows = properties.Any(p => !string.IsNullOrEmpty(p.Units)) ? 2 : 1;
+
+            // Determine the number of rows the grid should have. 
+            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count) + numHeadingRows;
+        }
     }
+
+    /// <summary>An event invoked when a cell changes.</summary>
+    public event ISheetDataProvider.CellChangedDelegate CellChanged;
 
     /// <summary>Gets the number of columns of data.</summary>
     public int ColumnCount => properties.Count;
@@ -98,11 +104,14 @@ class PropertySheetDataProvider : ISheetDataProvider
 
         if (valueIndicies.Count > 0)
         {
+            // Set property values.
             foreach (var colIndex in colIndices)
                 properties[colIndex].SetValues(valueIndicies.ToArray(), values);
 
             // Update the number of rows.
             RowCount = properties.Max(p => p.Values.Count) + numHeadingRows;
+
+            CellChanged?.Invoke(this, colIndices, rowIndices, values);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Views;
 
@@ -26,6 +25,9 @@ namespace UserInterface.Presenters
 
         /// <summary>The model.</summary>
         private IModel model;
+
+        /// <summary>The data provider.</summary>
+        private ISheetDataProvider dataProvider;
 
         /// <summary>The physical model.</summary>
         private Physical physical;
@@ -61,10 +63,11 @@ namespace UserInterface.Presenters
                 physical.InFill();
                 water = soilNode.FindChild<Water>();
             }
+            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
 
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach(dataProvider, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             var propertyView = view.GetControl<PropertyView>("properties");
@@ -159,7 +162,7 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
                     }
 
                     numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";

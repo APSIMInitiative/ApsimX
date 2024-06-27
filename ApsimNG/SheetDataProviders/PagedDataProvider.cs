@@ -98,6 +98,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when the paging has ended.</summary>
         public event EventHandler PagingEnd;
 
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event ISheetDataProvider.CellChangedDelegate CellChanged;
+
         /// <summary>Number of heading rows.</summary>
         public int NumHeadingRows { get; set; }
 
@@ -143,6 +146,7 @@ namespace UserInterface.Views
         /// <param name="values">The values</param>
         public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
+            CellChanged?.Invoke(this, columnIndices, rowIndices, values);
             throw new NotImplementedException();
         }
 
@@ -364,7 +368,7 @@ namespace UserInterface.Views
         /// <param name="rowIndex">Row index of cell.</param>
         public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
         {
-            return SheetDataProviderCellState.Normal;
+            return SheetDataProviderCellState.ReadOnly;
         }
 
         /// <summary>Set the cell state.</summary>

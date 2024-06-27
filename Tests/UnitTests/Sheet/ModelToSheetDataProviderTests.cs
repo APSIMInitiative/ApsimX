@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using NUnit.Framework;
+using UnitTests.Interop.Documentation.TagRenderers;
 using UserInterface.Views;
 
 namespace UnitTests.Sheet;
@@ -92,7 +93,7 @@ class ModelToSheetDataProviderTests
         [Display()]
         public double[] Value { get; set; } = new double[] { 1.0, 2.0 };
 
-        public string[] ValueMetadata { get; } = new string[] { "Calculated", null };
+        public string[] ValueMetadata { get; set; } = new string[] { "Calculated", null };
 
     }
     
@@ -119,6 +120,21 @@ class ModelToSheetDataProviderTests
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithAlias());
         Assert.AreEqual("Alias", dataProvider.GetCellContents(0, 0));
     }     
+
+    class ModelWithNull : Model
+    {
+        [Display]
+        public double[] Value { get; set; } = null;
+    }
+    
+    /// <summary>Ensure a null property can be handled.</summary>
+    [Test]
+    public void TestNullProperty()
+    {
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithNull());
+        Assert.AreEqual(1, dataProvider.RowCount);
+        Assert.AreEqual("Value", dataProvider.GetCellContents(0, 0));
+    }         
     
     /// <summary>Ensure cannot change the value of a readonly property.</summary>
     [Test]
@@ -168,5 +184,52 @@ class ModelToSheetDataProviderTests
         Assert.AreEqual("100-200", dataProvider.GetCellContents(0, 3));
         Assert.AreEqual("ZZZZ", dataProvider.GetCellContents(0, 4));
         Assert.AreEqual(new string[] { "0-100", "100-200", "ZZZZ" }, model.Depth);
-    }       
+    } 
+
+    /// <summary>Ensure 'calculated' metadata properties change when data is set.</summary>
+    [Test]
+    public void TestSetValueWithNullProperty()
+    {
+        ModelWithMetadata model = new();
+        model.Value = null;
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+        dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
+                                     rowIndices: new int[] { 1, 2 },
+                                     values: new string[] { "3.0", "4.0" });
+        Assert.AreEqual(SheetDataProviderCellState.ReadOnly, dataProvider.GetCellState(0, 0));
+        Assert.AreEqual(SheetDataProviderCellState.Normal, dataProvider.GetCellState(0, 1));
+        Assert.AreEqual(SheetDataProviderCellState.Normal, dataProvider.GetCellState(0, 2));
+        Assert.AreEqual(new string[] { null, null }, model.ValueMetadata);
+    }      
+
+    /// <summary>Ensure 'calculated' metadata properties change when data is set.</summary>
+    [Test]
+    public void TestSetValueChangesMetadata()
+    {
+        ModelWithMetadata model = new();
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+        dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
+                                     rowIndices: new int[] { 1, 2 },
+                                     values: new string[] { "3.0", "4.0" });
+        Assert.AreEqual(SheetDataProviderCellState.ReadOnly, dataProvider.GetCellState(0, 0));
+        Assert.AreEqual(SheetDataProviderCellState.Normal, dataProvider.GetCellState(0, 1));
+        Assert.AreEqual(SheetDataProviderCellState.Normal, dataProvider.GetCellState(0, 2));
+        Assert.AreEqual(new string[] { null, null }, model.ValueMetadata);
+    }    
+
+    /// <summary>Ensure the CellChanged event is invoked when data is changed.</summary>
+    [Test]
+    public void TestSetValueInvokesDataChangedNotification()
+    {
+        ModelWithUnits model = new();
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+        bool invoked = false;
+        dataProvider.CellChanged += (s, c, r, v) => invoked = true;
+
+        dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
+                                     rowIndices: new int[] { 2 },
+                                     values: new string[] { "ZZZZ" });
+
+        Assert.IsTrue(invoked);
+    }
 }

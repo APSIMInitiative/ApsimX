@@ -20,6 +20,9 @@ namespace UserInterface.Presenters
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>Data provider for sheet.</summary>
+        private ISheetDataProvider dataProvider;
+
         /// <summary>The base view.</summary>
         private ViewBase view = null;
 
@@ -61,8 +64,10 @@ namespace UserInterface.Presenters
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
 
             this.explorerPresenter = explorerPresenter;
+            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(water);
+
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach(dataProvider, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
