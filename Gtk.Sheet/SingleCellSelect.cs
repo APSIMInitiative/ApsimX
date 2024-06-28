@@ -5,7 +5,7 @@ using System.Text;
 namespace Gtk.Sheet
 {
     /// <summary>Implements single cell selection for the sheet widget.</summary>
-    public class SingleCellSelect : ISheetSelection
+    internal class SingleCellSelect : ISheetSelection
     {
         /// <summary>The sheet.</summary>
         protected Sheet sheet;

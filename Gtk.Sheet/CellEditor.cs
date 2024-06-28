@@ -3,7 +3,7 @@ using System;
 
 namespace Gtk.Sheet
 {
-    public class CellEditor : ISheetEditor
+    internal class CellEditor : ISheetEditor
     {
         /// <summary>The sheet.</summary>
         private readonly Sheet sheet;

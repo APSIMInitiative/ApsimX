@@ -1,6 +1,6 @@
 ﻿namespace Gtk.Sheet
 {
-    public class SheetEventButton
+    internal class SheetEventButton
     {
         public int X { get; set; }
         public int Y { get; set; }

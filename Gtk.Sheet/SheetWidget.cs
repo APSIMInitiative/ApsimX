@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Cairo;
+using CommandLine;
 using Gdk;
 using Gtk;
 using System;
@@ -31,15 +32,83 @@ namespace Gtk.Sheet
         private const int mouseWheelScrollRows = 10;
 
         /// <summary>Constructor</summary>
-        public SheetWidget(Action<Exception> onException)
+        public SheetWidget(Container container,
+                           ISheetDataProvider dataProvider, 
+                           bool multiSelect,
+                           int numberFrozenColumns = 0,
+                           int numberFrozenRows = -1,
+                           int[] columnWidths = null,
+                           Action<Exception> onException = null)
         {
             this.onException = onException;
             CanFocus = true;
+
+            Sheet = new Sheet(dataProvider,
+                              numberFrozenColumns,
+                              numberFrozenRows,
+                              columnWidths);
+
+            if (multiSelect)
+                Sheet.CellSelector = new MultiCellSelect(Sheet, this);
+            else
+                Sheet.CellSelector = new SingleCellSelect(Sheet, this);
+
+            SetDataProvider(dataProvider);
+
+            Sheet.ScrollBars = new SheetScrollBars(Sheet, this);
+            Sheet.CellPainter = new DefaultCellPainter(Sheet, this);
+            if (container != null)
+                AddChild(container, Sheet.ScrollBars.MainWidget);
+
             AddEvents((int)EventMask.ScrollMask);
         }
 
+        /// <summary>The number of rows in the grid.</summary>
+        public int RowCount
+        {
+            get
+            {
+                return Sheet.RowCount;
+            }
+            set
+            {
+                Sheet.RowCount = value;
+            }
+        }
+        
+
+        /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
+        public int NumberFrozenRows { get; set; }              
+
+        /// <summary>
+        /// Set a new data provider for the sheet.
+        /// </summary>
+        /// <param name="dataProvider">The data provider.</param>
+        public void SetDataProvider(ISheetDataProvider dataProvider)
+        {
+            Sheet.DataProvider = dataProvider;
+            if (dataProvider != null)
+            {
+                bool hasUnits = false;
+                for (int colIndex = 0; colIndex < dataProvider.ColumnCount; colIndex++)
+                    hasUnits = hasUnits || dataProvider.GetColumnUnits(colIndex) != null;
+            
+                // Set the number of frozen rows
+                if (Sheet.NumberFrozenRows == -1)
+                {
+                    if (hasUnits)
+                        Sheet.NumberFrozenRows = 2;
+                    else
+                        Sheet.NumberFrozenRows = 1;
+                }
+
+                if (!dataProvider.IsReadOnly && Sheet.CellEditor == null)
+                    Sheet.CellEditor = new CellEditor(Sheet, this);
+            }
+        }
+
         /// <summary>The instance that contains the look and behaviour of the widget.</summary>
-        public Sheet Sheet
+        private Sheet Sheet
         {
             get => _sheet;
             set
@@ -70,6 +139,104 @@ namespace Gtk.Sheet
             return cb.WaitForText();
         }
 
+        /// <summary>Return true if a xy pixel coordinates are in a specified cell.</summary>
+        /// <param name="pixelX">X pixel coordinate.</param>
+        /// <param name="pixelY">Y pixel coordinate.</param>
+        public bool CellHitTest(int pixelX, int pixelY, out int columnIndex, out int rowIndex)
+        {
+            return Sheet.CellHitTest(pixelX, pixelY, out columnIndex, out rowIndex);
+        }
+
+        /// <summary>Calculates the bounds of a cell if it is visible (wholly or partially) to the user.</summary>
+        /// <param name="columnIndex">The cell column index.</param>
+        /// <param name="rowIndex">The cell row index.</param>
+        /// <returns>The bounds if visible or null if not visible.</returns>
+        public System.Drawing.Rectangle CalculateBounds(int columnIndex, int rowIndex)
+        {
+            return Sheet.CalculateBounds(columnIndex, rowIndex);
+        }        
+
+        /// <summary>Return true if col/row coordinate denotes a readonly cell.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        /// <param name="rowIndex">Row index.</param>
+        public bool IsCellReadOnly(int columnIndex, int rowIndex)
+        {
+            return columnIndex < Sheet.NumberFrozenColumns || rowIndex < Sheet.NumberFrozenRows;
+        }
+
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        public void Cut()
+        {
+            Sheet.CellSelector.Cut();
+        }
+
+        /// <summary>
+        /// User has selected copy.
+        /// </summary>
+        public void Copy()
+        {
+            Sheet.CellSelector.Copy();
+        }
+
+        /// <summary>
+        /// User has selected paste.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Paste()
+        {
+            Sheet.CellSelector.Paste();
+        }
+
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        public void Delete()
+        {
+            Sheet.CellSelector.Delete();
+        }
+
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        public void SelectAll()
+        {
+            Sheet.CellSelector.SelectAll();
+        }   
+
+        /// <summary>Clean up the sheet components.</summary>
+        public void Cleanup()
+        {
+            (Sheet.CellSelector as SingleCellSelect)?.Cleanup();
+             Sheet.ScrollBars.Cleanup();
+        }
+
+        /// <summary>Scroll the sheet to the right one column.</summary>
+        public void ScrollRight()
+        {
+            Sheet.ScrollRight();
+        }        
+
+        /// <summary>Scroll the sheet to the left one column.</summary>
+        public void ScrollLeft()
+        {
+            Sheet.ScrollLeft();
+        }
+
+        /// <summary>Scroll the sheet up one row.</summary>
+        public void ScrollUp()
+        {
+            Sheet.ScrollUp();
+        }
+
+        /// <summary>Scroll the sheet down one row.</summary>
+        public void ScrollDown()
+        {
+            Sheet.ScrollDown();
+        }
+
         private void OnRedrawNeeded(object sender, EventArgs e)
         {
             QueueDraw();
@@ -98,6 +265,21 @@ namespace Gtk.Sheet
             return true;
         }
 
+        /// <summary>
+        /// Add a GTK widget to a GTK container.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="child"></param>
+        private static void AddChild(Container container, Widget child)
+        {
+            if (container.Children.Length > 0)
+                container.Remove(container.Children[0]);
+            if (container is Box box)
+                box.PackStart(child, true, true, 0);
+            else
+                container.Add(child);
+            container.ShowAll();
+        }
 
         /// <summary>Initialise the widget.</summary>
         /// <param name="cr">The drawing context.</param>
@@ -106,10 +288,7 @@ namespace Gtk.Sheet
 
             Sheet.Width = this.AllocatedWidth;
             Sheet.Height = this.AllocatedHeight;
-
-            if (cr != null)
-                Sheet.Initialise(new CairoContext(cr, this));
-
+            Sheet.Initialise(new CairoContext(cr, this));
         }
 
         protected override void OnSizeAllocated(Gdk.Rectangle allocation)

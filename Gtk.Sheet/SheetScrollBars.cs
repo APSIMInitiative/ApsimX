@@ -4,7 +4,7 @@ using System;
 namespace Gtk.Sheet
 {
     /// <summary>Implements scroll bars for a sheet widget.</summary>
-    public class SheetScrollBars
+    internal class SheetScrollBars
     {
         /// <summary>The sheet widget.</summary>
         private Sheet sheet;

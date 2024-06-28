@@ -26,9 +26,10 @@ namespace UserInterface.Views
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
+        /// <param name="isReadOnly">Is the data readonly?</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
-        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
+        public DataTableProvider(DataTable dataSource,bool isReadOnly, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
         {
             if (dataSource == null)
                 Data = new DataTable();
@@ -36,6 +37,7 @@ namespace UserInterface.Views
                 Data = dataSource;
             units = columnUnits;
             this.cellStates = cellStates;
+            IsReadOnly = isReadOnly;
             if (units == null)
                 numHeadingRows = 1;
             else
@@ -50,6 +52,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets the number of rows of data.</summary>
         public int RowCount => Data.Rows.Count + numHeadingRows;
+
+        /// <summary>Is the data readonly?</summary>
+        public bool IsReadOnly { get; }        
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>

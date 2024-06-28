@@ -1,5 +1,4 @@
-﻿using System;
-using Gdk;
+﻿using Gdk;
 
 namespace Gtk.Sheet
 {

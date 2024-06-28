@@ -113,7 +113,7 @@ namespace UserInterface.Presenters
             statusLabel = view.GetControl<LabelView>("statusLabel");
 
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
+            gridPresenter.Attach(new DataTableProvider(new DataTable(), isReadOnly: true), sheetContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
 
             tableDropDown.IsEditable = false;

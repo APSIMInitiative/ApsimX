@@ -6,7 +6,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace Gtk.Sheet
 {
     /// <summary>Implements single cell selection for the sheet widget.</summary>
-    public class MultiCellSelect : SingleCellSelect
+    internal class MultiCellSelect : SingleCellSelect
     {
         /// <summary>The index of the selected right column.</summary>
         private int selectedColumnIndexRight;

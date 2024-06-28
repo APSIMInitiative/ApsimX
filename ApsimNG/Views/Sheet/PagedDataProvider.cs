@@ -115,6 +115,9 @@ namespace UserInterface.Views
         /// <summary>Gets the number of rows of data.</summary>
         public int RowCount { get; private set; }
 
+        /// <summary>Is the data readonly?</summary>
+        public bool IsReadOnly => true;
+
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="columnIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>

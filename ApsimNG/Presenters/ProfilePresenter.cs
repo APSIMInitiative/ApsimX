@@ -163,7 +163,7 @@ namespace UserInterface.Presenters
                         PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()} layers";
                 }
                 finally
                 {

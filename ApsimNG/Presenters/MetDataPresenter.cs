@@ -67,7 +67,7 @@ namespace UserInterface.Presenters
             ContainerView sheetContainer = this.weatherDataView.container;
 
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
+            gridPresenter.Attach(new DataTableProvider(new DataTable(), isReadOnly: true), sheetContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
@@ -931,7 +931,7 @@ namespace UserInterface.Presenters
         public void PopulateData(DataTable data)
         {
             //fill the grid with data
-            DataTableProvider provider = new DataTableProvider(data);
+            DataTableProvider provider = new DataTableProvider(data, isReadOnly: true);
             gridPresenter.PopulateWithDataProvider(provider, 0, 1);
         }
 

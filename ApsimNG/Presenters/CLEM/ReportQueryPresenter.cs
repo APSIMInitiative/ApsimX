@@ -54,13 +54,10 @@ namespace UserInterface.Presenters
             {
                 // Create the grid to display data in
                 container = new ContainerView(clemPresenter.View as ViewBase);
-                grid = new SheetWidget((err) => ViewBase.MasterView.ShowError(err));
-                grid.Sheet = new Sheet();
-                grid.Sheet.DataProvider = new DataTableProvider(new DataTable());
-                grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-                grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-                grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-                container.Add(grid.Sheet.ScrollBars.MainWidget);
+                grid = new SheetWidget(container.Widget,
+                                       dataProvider: new DataTableProvider(new DataTable(), isReadOnly: true),
+                                       multiSelect: true,
+                                       onException: (err) => ViewBase.MasterView.ShowError(err));
 
                 clem = clemPresenter.View as CLEMView;
                 query = clemPresenter.ClemModel as ReportQuery;
@@ -83,7 +80,7 @@ namespace UserInterface.Presenters
 
         /// <inehritdoc/>
         public void Refresh() {
-            grid.Sheet.DataProvider = new DataTableProvider(query.RunQuery());
+            grid.SetDataProvider(new DataTableProvider(query.RunQuery(), isReadOnly: true));
         }
     }
 }
