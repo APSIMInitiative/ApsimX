@@ -79,7 +79,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Mesophyll conductance at the current leaf temperature (mol CO2 m^-2 ground s^-1 bar^-1)
         /// </summary>
-        public double GmT => ValueOptimum(temperature, rateAt25.Gm, pathway.MesophyllCO2ConductanceParams);
+        public double GmT => Value(temperature, rateAt25.Gm, pathway.MesophyllCO2ConductanceParams.Factor);
 
         /// <summary>
         /// Michaelis-Menten constant of Rubsico for CO2 (microbar)

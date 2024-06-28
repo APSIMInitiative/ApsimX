@@ -127,6 +127,7 @@ namespace Models.PMF.Arbitrator
                 ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
                 if (myZone != null)
                 {
+                    //update the MassFlow and Diffusion variabes in myZone
                     CalculateNitrogenSupply(myZone, zone);
 
                     double[] diffnAvailable = new double[myZone.Diffusion.Length];

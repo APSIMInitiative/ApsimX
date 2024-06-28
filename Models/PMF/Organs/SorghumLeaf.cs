@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
+﻿using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -12,6 +9,9 @@ using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Models.Utilities;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
@@ -137,6 +137,7 @@ namespace Models.PMF.Organs
         private double nDeadLeaves;
         private double dltDeadLeaves;
         private int leafIndex;
+        private bool flag = true;
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
@@ -170,7 +171,7 @@ namespace Models.PMF.Organs
         [Description("Fertile Tiller Number")]
         public double FertileTillerNumber
         {
-            get => culms.FertileTillerNumber;
+            get => culms?.FertileTillerNumber ?? 0.0; 
             set
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
@@ -178,6 +179,22 @@ namespace Models.PMF.Organs
                 //setting it after sowing will produce unexpected results
                 culms.FertileTillerNumber = value;
             }
+        }
+
+        /// <summary>Determined by the tillering method chosen.</summary>
+        [JsonIgnore]
+        [Description("Calculated Tiller Number")]
+        public double CalculatedTillerNumber
+        {
+            get => culms?.CalculatedTillerNumber ?? 0;
+        }
+
+        /// <summary>Maximum SLA for tiller cessation.</summary>
+       // [JsonIgnore]
+        [Description("Maximum SLA for tiller cessation")]
+        public double MaxSLA
+        {
+            get => culms?.MaxSLA ?? 0;
         }
 
         /// <summary>Determined by the tillering method chosen.</summary>
@@ -305,9 +322,13 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double LAITotal => LAI + LAIDead;
 
-        /// <summary>Gets the LAI</summary>
+        /// <summary>Gets the SLN</summary>
         [JsonIgnore]
         public double SLN { get; set; }
+
+        /// <summary>Gets the SLA</summary>
+        [JsonIgnore]
+        public double SLA { get; set; }
 
         /// <summary>Used in metabolic ndemand calc.</summary>
         [JsonIgnore]
@@ -398,7 +419,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Leaf number.</summary>
         [JsonIgnore]
-        public double LeafNo => culms?.LeafNo ?? 0;
+        public double LeafNo => culms?.LeafNo > 1 ? culms.LeafNo : 0;
 
         /// <summary> /// Sowing Density (Population). /// </summary>
         [JsonIgnore]
@@ -542,6 +563,113 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
+        #region LeafSizes
+        /// <summary>The leaf sizes on the main culm.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesMain
+        {
+            get
+            {
+                return GetLeafSizesForTiller(0);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 1.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller1 
+        { 
+            get
+            {
+                return GetLeafSizesForTiller(1);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 2.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller2
+        {
+            get
+            {
+                return GetLeafSizesForTiller(2);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 3.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller3
+        {
+            get
+            {
+                return GetLeafSizesForTiller(3);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 4.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller4
+        {
+            get
+            {
+                return GetLeafSizesForTiller(4);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 5.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller5
+        {
+            get
+            {
+                return GetLeafSizesForTiller(5);
+            }
+        }
+
+        /// <summary>Gets the leaf sizes for the the specific culm.</summary>
+        private List<double> GetLeafSizesForTiller(int culmNumber)
+        {
+            if (culms.Culms.Count > culmNumber)
+            {
+                return culms.Culms[culmNumber].LeafSizes;
+            }
+
+            return new();           
+        }
+
+        /// <summary>Gets the LAI for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerLeafArea
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.LeafArea);
+                return result;
+            }
+        }
+        /// <summary>Gets the proportion for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerPropn
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.Proportion);
+                return result;
+            }
+        }
+        /// <summary>Gets the proportion for all culms.</summary>
+        [JsonIgnore]
+        public List<double> TillerLAI
+        {
+            get
+            {
+                List<double> result = new List<double>();
+                foreach (Culm c in culms.Culms) result.Add(c.TotalLAI);
+                return result;
+            }
+        }
+        #endregion
+
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -562,6 +690,7 @@ namespace Models.PMF.Organs
 
             LAI = 0;
             SLN = 0;
+            SLA = 0;
             SLN0 = 0;
             Live.StructuralN = 0;
             Live.StorageN = 0;
@@ -592,6 +721,9 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
 
             SowingDensity = 0;
+            // Default the stage number to 0 for Sorghum.
+            phenology.Stage = 0;
+            flag = true;
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
@@ -881,6 +1013,7 @@ namespace Models.PMF.Organs
             //Should not include any retranloocated biomass
             // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
             double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
+            SLA = MathUtilities.Divide(laiToday, Live.Wt, 0.0) * 10000; // m2/g?
             double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
 
             // This is equivalent to dividing by slaToday
@@ -1061,7 +1194,6 @@ namespace Models.PMF.Organs
             nDeadLeaves = 0;
             var organNames = Arbitrator.OrganNames;
             leafIndex = organNames.IndexOf(Name);
-
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -1071,16 +1203,23 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (plant.IsEmerged)
+            {
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-            if (leafInitialised)
+            }
+
+            if (leafInitialised && flag)
+            {
+                flag = false;
+            }
+            else if (leafInitialised && !flag)
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
-                DltPotentialLAI = culms.dltPotentialLAI;
-                DltStressedLAI = culms.dltStressedLAI;
+                DltPotentialLAI = culms.DltPotentialLAI;
+                DltStressedLAI = culms.DltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
-                //this is done at staet of the day
+                //this is done at start of the day
                 BiomassRUE = photosynthesis.Value();
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = potentialBiomassTEFunction.Value();
@@ -1108,8 +1247,10 @@ namespace Models.PMF.Organs
 
             LAI += DltLAI - DltSenescedLai;
 
-            int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
-            if (phenology.Stage >= flag)
+            // TODO Revisit.
+            int flagLeafStage = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+
+            if (phenology.Stage >= flagLeafStage)
             {
                 if (LAI - DltSenescedLai < 0.1)
                 {
@@ -1169,9 +1310,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
-            DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
-            DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            DMDemand.Structural = 0;
+            DMDemand.Metabolic = 0;
+            DMDemand.Storage = 0;
+
+            if (!culms.AreAllLeavesFullyExpanded())
+            {
+                DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
+            }
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>

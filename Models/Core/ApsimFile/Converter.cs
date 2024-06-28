@@ -1,18 +1,23 @@
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
+using MathNet.Numerics.Financial;
+using Models.Climate;
+using Models.Factorial;
+using Models.Functions;
+using Models.PMF;
+using Models.PMF.Organs;
+using Models.Soils;
+using Newtonsoft.Json.Linq;
+using PdfSharpCore.Pdf.Filters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
-using APSIM.Shared.Utilities;
-using Models.Climate;
-using Models.Factorial;
-using Models.Functions;
-using Models.PMF;
-using Models.Soils;
-using Newtonsoft.Json.Linq;
 
 namespace Models.Core.ApsimFile
 {
@@ -23,7 +28,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 175; } }
+        public static int LatestVersion { get { return 176; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1542,6 +1547,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
             {
+
                 VariableReference varRef = new VariableReference();
                 varRef.Name = "XValue";
                 varRef.VariableName = linint["XProperty"].ToString();
@@ -5531,6 +5537,115 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
                 microClimate["ResourceName"] = "MicroClimate";
+        }
+
+        /// <summary>
+        /// Add new parameters to tillering and area calculation classes.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion176(JObject root, string _)
+        {
+            JObject parametersFolder = FindParametersFolder(root);
+            UpdateTillering(root, parametersFolder, "DynamicTillering");
+            UpdateTillering(root, parametersFolder, "FixedTillering");
+        }
+
+        /// <summary>
+        /// Searches for the Parameters folder and if it can be found, return the JObject, otherwise default/null.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns>The Parameters Folder as a JObject, or null.</returns>
+        private static JObject FindParametersFolder(JObject root)
+        {
+            foreach (var folders in JsonUtilities.ChildrenOfType(root, "Folder"))
+            {
+                var parametersFolder = JsonUtilities.DescendantWithName(folders, "Parameters");
+                if (parametersFolder != null) return parametersFolder;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Updates the supplied tillering object.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="parametersFolder"></param>
+        /// <param name="name"></param>
+        private static void UpdateTillering(
+            JObject root, 
+            JObject parametersFolder, 
+            string name
+        )
+        {
+            foreach (var tillering in JsonUtilities.ChildrenOfType(root, name))
+            {
+                var tilleringChildren = JsonUtilities.Children(tillering);
+
+                // Setting slaLeafNoCoefficient to zero, disables the tillering SLA limitation routine (CalcCarbonLimitation)
+                // in DynamicTillering from reducing the SLA.
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient", 0.0);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition", 0.325);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment", 0.0);
+
+                var findAreaCalc = tilleringChildren.Find(c => JsonUtilities.Name(c).Equals("AreaCalc", StringComparison.OrdinalIgnoreCase));
+
+                if (findAreaCalc != null)
+                {
+                    var areaCalcChildren = JsonUtilities.Children(findAreaCalc);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.A2", "A2", -0.1293);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.B2", "B2", -0.11);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0I", "aX0I", 3.58);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0S", "aX0S", 0.60);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the variable reference to the supplied root. If the Parameters folder exists, it is added
+        /// as a variable reference, otherwise a constant.
+        /// </summary>
+        /// <param name="parametersFolder"></param>
+        /// <param name="root"></param>
+        /// <param name="children"></param>
+        /// <param name="variableName"></param>
+        /// <param name="name"></param>
+        /// <param name="leafParamFixedValue"></param>
+        private static void AddVariableRef(
+            JObject parametersFolder,
+            JObject root,
+            List<JObject> children,
+            string variableName,
+            string name,
+            double leafParamFixedValue
+        )
+        {
+            if (root is null) return;
+            if (children is null || !children.Any()) return;
+            if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
+
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // root object.
+            if (parametersFolder is null)
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(root, name, leafParamFixedValue);
+            }
+            // The parameters folder exists, so add the constant there and have a variable
+            // reference that points to it.
+            else
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(parametersFolder, name, leafParamFixedValue);
+                var find = children.Find(c => JsonUtilities.Name(c).Equals(name, StringComparison.OrdinalIgnoreCase));
+
+                if (find is null)
+                {
+                    JsonUtilities.AddModel(root, new VariableReference()
+                    {
+                        VariableName = variableName,
+                        Name = name
+                    });
+                }
+            }
         }
     }
 }

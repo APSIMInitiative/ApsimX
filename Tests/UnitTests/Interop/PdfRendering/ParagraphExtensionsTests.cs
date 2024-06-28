@@ -89,7 +89,9 @@ namespace UnitTests.Interop.PdfRendering
             paragraph.AddText(text1);
             paragraph.AddText(text2);
 
-            string expected = $"{text0}{text1}{text2}";
+            // "\n" will be interpreted as a SymbolName.LineBreak and therefore converted
+            // to an Environment.NewLine.
+            string expected = $"{text0}{Environment.NewLine}{text2}";
             Assert.AreEqual(expected, paragraph.GetRawText());
         }
 
