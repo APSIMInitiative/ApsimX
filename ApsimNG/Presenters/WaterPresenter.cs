@@ -72,6 +72,7 @@ namespace UserInterface.Presenters
             pawEdit = view.GetControl<EditView>("pawEdit");
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
+            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             Refresh();
         }
@@ -133,9 +134,10 @@ namespace UserInterface.Presenters
 
         /// <summary>Invoked when a grid cell has changed.</summary>
         /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
 
             if (water.AreInitialValuesWithinPhysicalBoundaries(water.InitialValues))
@@ -324,7 +326,16 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+
             graph.Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            graph.ExportToClipboard();
         }
     }
 }

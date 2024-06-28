@@ -68,7 +68,7 @@ namespace Utility
         [Tooltip("Should the file be automatically saved to disk before running simulations?")]
         public bool AutoSave { get; set; } = true;
 
-        /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        /// <summary>If true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
         public bool Muted { get; set; } = true;
 
@@ -81,6 +81,10 @@ namespace Utility
         [Input("Use faster file closing algorithm")]
         [Tooltip("This will mostly eliminate the pause when closing a file, but it may cause apsim to fail to prompt to save the file in some cases.")]
         public bool UseFastFileClose { get; set; }
+
+        [Input("Enable graph debugging output")]
+        [Tooltip("Outputs messages in the status bar if data is missing, is outside axis bounds or is NaN. Useful for debugging Observed/Predicted graphs.")]
+        public bool EnableGraphDebuggingMessages { get; set; } = false;
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName

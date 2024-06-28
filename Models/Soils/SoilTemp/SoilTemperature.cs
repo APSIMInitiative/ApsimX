@@ -796,7 +796,7 @@ namespace Models.Soils.SoilTemp
             BoundCheck(physical.ParticleSizeClay.Length, numLayers, numLayers, "clay layers");
             clay = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             for (int layer = 1; layer <= numLayers; layer++)
-                clay[layer] = physical.ParticleSizeSilt[layer - 1];
+                clay[layer] = physical.ParticleSizeClay[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
                 clay[layer] = clay[numLayers];                 
 

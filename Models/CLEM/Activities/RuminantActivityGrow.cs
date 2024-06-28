@@ -56,6 +56,12 @@ namespace Models.CLEM.Activities
         public string MethaneStoreName { get; set; }
 
         /// <summary>
+        /// Use the corrected energy equation 
+        /// </summary>
+        [Description("Use the corrected energy equation (27_5_24)")]
+        public bool UseFixedEnergyConversionEquation { get; set; } = true;
+
+        /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
         [JsonIgnore]
@@ -470,11 +476,18 @@ namespace Models.CLEM.Activities
                 ind.EnergyMilk = 0;
 
                 double feedingValue;
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
+                if (!UseFixedEnergyConversionEquation)
+                {
+                    if (MathUtilities.IsPositive(ind.EnergyBalance))
+                        feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
+                    else
+                        //(from Hirata model)
+                        feedingValue = 2 * ind.EnergyBalance / (0.85 * energyMaintenance) - 1;
+                }
                 else
-                    //(from Hirata model)
-                    feedingValue = 2 * ind.EnergyBalance / (0.85 * energyMaintenance) - 1;
+                {
+                    feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
+                }
 
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight / ind.NormalisedAnimalWeight - 0.4)));
 
@@ -533,11 +546,18 @@ namespace Models.CLEM.Activities
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyMilk;
 
-                // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
+                if (!UseFixedEnergyConversionEquation)
+                {
+                    // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
+                    if (MathUtilities.IsPositive(ind.EnergyBalance))
+                        feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
+                    else
+                        feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                }
                 else
-                    feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                {
+                    feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
+                }
 
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight / ind.StandardReferenceWeight);
 

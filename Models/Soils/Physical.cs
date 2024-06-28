@@ -5,6 +5,7 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Factorial;
 using Models.Interfaces;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -206,7 +207,10 @@ namespace Models.Soils
         {
             get
             {
-                bool waterNodePresent = FindInScope<Water>() != null;
+
+                bool waterNodePresent = FindSibling<Water>() != null;
+                bool ancestorIsExperiment = FindAncestor<Experiment>() != null;
+
                 var columns = new List<GridTableColumn>();
 
                 columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
@@ -220,7 +224,14 @@ namespace Models.Soils
                 columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL")), metadata: new VariableProperty(this, GetType().GetProperty("DULMetadata"))));
                 columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT")), metadata: new VariableProperty(this, GetType().GetProperty("SATMetadata"))));
                 if (waterNodePresent)
+                {
                     columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
+                }
+                if (!waterNodePresent && ancestorIsExperiment)
+                {
+                    Water experimentSimWater = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
+                    columns.Add(new GridTableColumn("SW", new VariableProperty(experimentSimWater, experimentSimWater.GetType().GetProperty("InitialValues")), readOnly: true));
+                }
                 columns.Add(new GridTableColumn("KS", new VariableProperty(this, GetType().GetProperty("KS")), metadata: new VariableProperty(this, GetType().GetProperty("KSMetadata"))));
 
                 foreach (var soilCrop in FindAllChildren<SoilCrop>())
@@ -272,19 +283,51 @@ namespace Models.Soils
             if (KS != null && KS.Length > 0)
                 KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
 
+            ParticleSizeClay ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeSilt ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeSand ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
+            ParticleSizeClayMetadata ??= new string[Thickness.Length];
+            ParticleSizeSiltMetadata ??= new string[Thickness.Length];
+            ParticleSizeSandMetadata ??= new string[Thickness.Length];
+
             // Fill in missing particle size values.
-            var (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSand, ParticleSizeSandMetadata, Thickness.Length, (i) => 5.0);
-            ParticleSizeSand = values;
-            ParticleSizeSandMetadata = metadata;   
-            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeSilt, ParticleSizeSiltMetadata, Thickness.Length, (i) => 65.0);
-            ParticleSizeSilt = values;
-            ParticleSizeSiltMetadata = metadata;
-            (values, metadata) = SoilUtilities.FillMissingValues(ParticleSizeClay, ParticleSizeClayMetadata, Thickness.Length, (i) => 30.0);
-            ParticleSizeClay = values;
-            ParticleSizeClayMetadata = metadata;
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                bool clayIsSupplied = !double.IsNaN(ParticleSizeClay[i]);
+                bool siltIsSupplied = !double.IsNaN(ParticleSizeSilt[i]);
+                bool sandIsSupplied = !double.IsNaN(ParticleSizeSand[i]);
+
+                if (!clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 30);
+                    SetDefaultSilt(i, 65);
+                    SetDefaultSand(i, 5);
+                }
+                else if (clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultSilt(i, 0.65 * (100 - ParticleSizeClay[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (siltIsSupplied && !clayIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (sandIsSupplied && !clayIsSupplied && !siltIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                }
+                else if (clayIsSupplied && siltIsSupplied && !sandIsSupplied)
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                else if (clayIsSupplied && sandIsSupplied && !siltIsSupplied)
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                else if (siltIsSupplied && sandIsSupplied && !clayIsSupplied)
+                    SetDefaultClay(i, 100 - ParticleSizeSilt[i] - ParticleSizeSand[i]);
+            }
 
             // Fill in missing rocks.
-            (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) => 
+            var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) =>
             {
                 double particleDensity = 2.65;
                 double totalPorosity = (1 - BD[i] / particleDensity) * 0.93;
@@ -297,6 +340,34 @@ namespace Models.Soils
             Rocks = values;
             RocksMetadata = metadata;
         }
+
+        /// <summary>Set the default clay content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultClay(int i, double value)
+        {
+            ParticleSizeClay[i] = value;
+            ParticleSizeClayMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default silt content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSilt(int i, double value)
+        {
+            ParticleSizeSilt[i] = value;
+            ParticleSizeSiltMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default sand content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSand(int i, double value)
+        {
+            ParticleSizeSand[i] = value;
+            ParticleSizeSandMetadata[i] = "Calculated";
+        }
+
 
         private Water WaterNode
         {
@@ -621,7 +692,7 @@ namespace Models.Soils
                         // if a crop parameterisation already exists for this crop then don't add a predicted one.
                         if (crops.Find(c => c.Name.Equals(cropName + "Soil", StringComparison.InvariantCultureIgnoreCase)) == null)
                             Structure.Add(PredictedCrop(soil, cropName), water);
-                            //water.Children.Add(PredictedCrop(soil, cropName));
+                        //water.Children.Add(PredictedCrop(soil, cropName));
                     }
                 }
             }
@@ -801,7 +872,7 @@ namespace Models.Soils
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());                        
+                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());
                     for (int i = 0; i < Thickness.Length; i++)
                         crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }

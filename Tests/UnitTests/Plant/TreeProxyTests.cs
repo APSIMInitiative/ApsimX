@@ -49,54 +49,54 @@ namespace UnitTests.Core
             List<GridTable> tables = treeProxy.Tables;
             Assert.AreEqual(2, tables.Count);
 
-            DataTable dtSpatial = tables[0].Data;
-            DataTable dtSpatial2 = new DataTable("TreeProxySpatial");
-            dtSpatial2.Columns.Add("Date");
-            dtSpatial2.Columns.Add("Height");
-            dtSpatial2.Columns.Add("NDemand");
-            dtSpatial2.Columns.Add("ShadeModifier");
-            dtSpatial2.Rows.Add(null, "m", "g/m2", "(>=0)");
-            dtSpatial2.Rows.Add("1900/01/01", "1", "0.100", "1.000");
-            dtSpatial2.Rows.Add("1900/03/01", "2", "0.100", "1.000");
-            dtSpatial2.Rows.Add("1900/06/01", "3", "0.100", "1.000");
-            dtSpatial2.Rows.Add("1900/09/01", "4", "0.100", "1.000");
-            dtSpatial2.Rows.Add("1900/12/31", "5", "0.100", "1.000");
-            for (int i = 0; i < dtSpatial2.Rows.Count; i++)
-            {
-                for (int j = 0; j < dtSpatial2.Columns.Count; j++)
-                {
-                    Assert.AreEqual(dtSpatial2.Rows[i].ItemArray[j], dtSpatial.Rows[i].ItemArray[j]);
-                }
-            }
-
-            DataTable dtTemporal = tables[1].Data;
-            DataTable dtTemporal2 = new DataTable("TreeProxyTemporal");
-            dtTemporal2.Columns.Add("Parameter");
-            dtTemporal2.Columns.Add("0");
-            dtTemporal2.Columns.Add("0.5h");
-            dtTemporal2.Columns.Add("1h");
-            dtTemporal2.Columns.Add("1.5h");
-            dtTemporal2.Columns.Add("2h");
-            dtTemporal2.Columns.Add("2.5h");
-            dtTemporal2.Columns.Add("3h");
-            dtTemporal2.Columns.Add("4h");
-            dtTemporal2.Columns.Add("5h");
-            dtTemporal2.Columns.Add("6h");
-            dtTemporal2.Rows.Add("Shade (%)", "60", "50", "40", "30", "20", "0", "0", "0", "0", "0");
-            dtTemporal2.Rows.Add("Root Length Density (cm/cm3)", null, null, null, null, null, null, null, null, null, null);
-            dtTemporal2.Rows.Add("Depth (cm)", null, null, null, null, null, null, null, null, null, null);
-            dtTemporal2.Rows.Add("0-15", "6", "6", "5", "4", "3", "2", "1", "0", "0", "0");
-            dtTemporal2.Rows.Add("15-30", "5", "5", "4", "3", "2", "1", ".5", "0", "0", "0");
-            dtTemporal2.Rows.Add("30-60", "4", "4", "3.5", "3", "2", "1", ".2", "0", "0", "0");
-            dtTemporal2.Rows.Add("60-90", "2", "2", "2", "1.5", "1", "0", "0", "0", "0", "0");
-            dtTemporal2.Rows.Add("90-120", "1.5", "1.5", "1.5", "1", "0", "0", "0", "0", "0", "0");
-            dtTemporal2.Rows.Add("120-150", "1", "1", "1", "1", "0", "0", "0", "0", "0", "0");
-            dtTemporal2.Rows.Add("150-180", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+            DataTable dtTemporal = tables[0].Data;
+            DataTable dtTemporal2 = new DataTable("TreeProxySpatial");
+            dtTemporal2.Columns.Add("Date");
+            dtTemporal2.Columns.Add("Height");
+            dtTemporal2.Columns.Add("NDemand");
+            dtTemporal2.Columns.Add("ShadeModifier");
+            dtTemporal2.Rows.Add(null, "m", "g/m2", "(>=0)");
+            dtTemporal2.Rows.Add("1900/01/01", "1", "0.100", "1.000");
+            dtTemporal2.Rows.Add("1900/03/01", "2", "0.100", "1.000");
+            dtTemporal2.Rows.Add("1900/06/01", "3", "0.100", "1.000");
+            dtTemporal2.Rows.Add("1900/09/01", "4", "0.100", "1.000");
+            dtTemporal2.Rows.Add("1900/12/31", "5", "0.100", "1.000");
             for (int i = 0; i < dtTemporal2.Rows.Count; i++)
             {
                 for (int j = 0; j < dtTemporal2.Columns.Count; j++)
                 {
                     Assert.AreEqual(dtTemporal2.Rows[i].ItemArray[j], dtTemporal.Rows[i].ItemArray[j]);
+                }
+            }
+
+            DataTable dtSpatial = tables[1].Data;
+            DataTable dtSpatial2 = new DataTable("TreeProxyTemporal");
+            dtSpatial2.Columns.Add("Parameter");
+            dtSpatial2.Columns.Add("0");
+            dtSpatial2.Columns.Add("0.5h");
+            dtSpatial2.Columns.Add("1h");
+            dtSpatial2.Columns.Add("1.5h");
+            dtSpatial2.Columns.Add("2h");
+            dtSpatial2.Columns.Add("2.5h");
+            dtSpatial2.Columns.Add("3h");
+            dtSpatial2.Columns.Add("4h");
+            dtSpatial2.Columns.Add("5h");
+            dtSpatial2.Columns.Add("6h");
+            dtSpatial2.Rows.Add("Shade (%)", "60", "50", "40", "30", "20", "0", "0", "0", "0", "0");
+            dtSpatial2.Rows.Add("Root Length Density (cm/cm3)", null, null, null, null, null, null, null, null, null, null);
+            dtSpatial2.Rows.Add("Depth (cm)", null, null, null, null, null, null, null, null, null, null);
+            dtSpatial2.Rows.Add("0-15", "6", "6", "5", "4", "3", "2", "1", "0", "0", "0");
+            dtSpatial2.Rows.Add("15-30", "5", "5", "4", "3", "2", "1", ".5", "0", "0", "0");
+            dtSpatial2.Rows.Add("30-60", "4", "4", "3.5", "3", "2", "1", ".2", "0", "0", "0");
+            dtSpatial2.Rows.Add("60-90", "2", "2", "2", "1.5", "1", "0", "0", "0", "0", "0");
+            dtSpatial2.Rows.Add("90-120", "1.5", "1.5", "1.5", "1", "0", "0", "0", "0", "0", "0");
+            dtSpatial2.Rows.Add("120-150", "1", "1", "1", "1", "0", "0", "0", "0", "0", "0");
+            dtSpatial2.Rows.Add("150-180", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+            for (int i = 0; i < dtSpatial2.Rows.Count; i++)
+            {
+                for (int j = 0; j < dtSpatial2.Columns.Count; j++)
+                {
+                    Assert.AreEqual(dtSpatial2.Rows[i].ItemArray[j], dtSpatial.Rows[i].ItemArray[j]);
                 }
             }
 

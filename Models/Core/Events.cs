@@ -217,7 +217,7 @@ namespace Models.Core
 
         private Dictionary<string, List<Subscriber>> GetAllSubscribers(string name, IModel relativeTo, ScopingRules scope)
         {
-            IModel[] allModels = scope.FindAll(relativeTo);
+            IEnumerable<IModel> allModels = scope.FindAll(relativeTo);
             Dictionary<string, List<Subscriber>> subscribers = new Dictionary<string, List<Subscriber>>();
 
             foreach (IModel modelNode in allModels)

@@ -168,19 +168,19 @@ namespace UserInterface.Views
             if (row >= 0 && col >= 0)
             {
                 Widget widget = propertyTable.GetChildAt(col, row);
-                if (widget is Entry entry)
-                    entry.GrabFocus();
+                if (widget != null && widget as Entry != null)
+                    (widget as Entry).GrabFocus();
             }
 
             if (scrollV != null)
             {
                 ScrolledWindow scroller = mainWidget as ScrolledWindow;
-                scroller.Vadjustment.Configure(scrollV.Value, 
-                                                scrollV.Lower, 
-                                                scrollV.Upper, 
-                                                scrollV.StepIncrement, 
-                                                scrollV.PageIncrement, 
-                                                scrollV.PageSize);
+                scroller.Vadjustment?.Configure(scrollV.Value, 
+                                            scrollV.Lower, 
+                                            scrollV.Upper, 
+                                            scrollV.StepIncrement, 
+                                            scrollV.PageIncrement, 
+                                            scrollV.PageSize);
             }
         }
 
