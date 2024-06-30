@@ -2,8 +2,11 @@ using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Mapsui;
 using Mapsui.Layers;
-using Mapsui.Projection;
+using Mapsui.Projections;
+using Mapsui.Nts;
 using Mapsui.Styles;
+using Mapsui.Tiling;
+using Mapsui.Tiling.Layers;
 using Mapsui.Utilities;
 using System;
 using System.Collections.Generic;
@@ -11,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using MapTag = Models.Mapping.MapTag;
+using Mapsui.Extensions;
+using Mapsui.Providers;
 
 namespace APSIM.Interop.Mapping
 {
@@ -52,17 +57,18 @@ namespace APSIM.Interop.Mapping
         public static SkiaSharp.SKImage ToImage(this MapTag map, int width)
         {
             Map exported = map.ToMapsuiMap();
-            Viewport viewport = new Viewport();
-            Mapsui.Geometries.Point centerMetric = Mapsui.Projection.SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
-            viewport.SetCenter(centerMetric.X, centerMetric.Y);
-            viewport.SetSize(width, width);
+            Navigator navigator = new Navigator();
+            var center = Mapsui.Projections.SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
+            Mapsui.MPoint centerMetric = new MPoint(center.x, center.y);
+            navigator.CenterOn(centerMetric);
+            navigator.SetSize(width, width);
             // Compat check for old zoom units. Should really have used a converter...
             double zoom = map.Zoom - 1.0;
             if (zoom >= 60.0 || zoom < 0.0) // Convert any "old" zoom levels into whole-world maps
                 zoom = 0.0;
             // map.Zoom = map.MaximumZoom / Math.Pow(MapRenderer.GetZoomStepFactor(), setValue);
             double resolution = (78271.51696401953125 * 512 / width) / Math.Pow(MapRenderer.GetZoomStepFactor(), zoom);
-            viewport.SetResolution(resolution);
+            navigator.ZoomTo(resolution);
 
             SkiaSharp.SKImage result = null;
             TileLayer osmLayer = exported.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as TileLayer;
@@ -81,7 +87,9 @@ namespace APSIM.Interop.Mapping
                         if (countryLayer != null)
                         {
                             countryLayer.Enabled = true;
-                            countryLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+                            MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
+                            FetchInfo fetchInfo = new FetchInfo(mSection);
+                            countryLayer.RefreshData(fetchInfo);
                             // Give the "country" layer time to be loaded, if necessary.
                             // Seven seconds should be way more than enough...
                             int nSleeps = 0;
@@ -89,7 +97,7 @@ namespace APSIM.Interop.Mapping
                                 System.Threading.Thread.Sleep(10);
                         }
                     }
-                    MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(viewport, exported.Layers, exported.BackColor);
+                    MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(navigator.Viewport, exported.Layers, exported.BackColor);
                     bitmap.Seek(0, SeekOrigin.Begin);
                     result = SkiaSharp.SKImage.FromEncodedData(bitmap);
                 }
@@ -101,7 +109,9 @@ namespace APSIM.Interop.Mapping
                 osmLayer.AbortFetch();
                 osmLayer.ClearCache();
                 osmLayer.DataChanged += changedHandler;
-                osmLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+                MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
+                FetchInfo fetchInfo = new FetchInfo(mSection);
+                osmLayer.RefreshData(fetchInfo);
             }
             // Allow ourselves up to 30 seconds to get a map.
             int nSleeps = 0;
@@ -122,21 +132,20 @@ namespace APSIM.Interop.Mapping
         {
             Map result = InitMap();
 
-            Mapsui.Layers.MemoryLayer markerLayer = new Mapsui.Layers.MemoryLayer("Markers")
+            GenericCollectionLayer<List<IFeature>> markerLayer = new GenericCollectionLayer<List<IFeature>>
             {
-                Transformation = new MinimalTransformation(),
-                CRS = "EPSG:3857"
+                Name = "Markers"
             };
-
             Stream markerStream = APSIM.Shared.Documentation.Image.GetStreamFromResource("Marker.png");
             int bitmapId = BitmapRegistry.Instance.Register(markerStream);
             markerLayer.Style = new SymbolStyle { BitmapId = bitmapId, SymbolScale = 1.0, SymbolOffset = new Offset(0.0, 0.5, true) };
 
-            List<Mapsui.Geometries.Point> locations = map.Markers.Select(c => Mapsui.Projection.SphericalMercator.FromLonLat(c.Longitude, c.Latitude)).ToList<Mapsui.Geometries.Point>();
-            markerLayer.DataSource = new Mapsui.Providers.MemoryProvider(locations)
-            {
-                CRS = "EPSG:3857"
-            };
+            var locs = map.Markers.Select(c => SphericalMercator.FromLonLat(c.Longitude, c.Latitude));
+            foreach (var loc in locs)
+                markerLayer.Features.Add(new GeometryFeature 
+                { 
+                    Geometry = new NetTopologySuite.Geometries.Point(loc.x, loc.y) 
+                });
             result.Layers.Add(markerLayer);
 
             return result;
@@ -157,12 +166,11 @@ namespace APSIM.Interop.Mapping
         {
             Map result = new Map
             {
-                CRS = "EPSG:3857",
-                Transformation = new MinimalTransformation()
+                CRS = "EPSG:3857"
             };
             result.BackColor = Mapsui.Styles.Color.FromString("LightBlue");
 
-            Mapsui.Layers.TileLayer osmLayer = OpenStreetMap.CreateTileLayer("APSIM Next Generation");
+            Mapsui.Tiling.Layers.TileLayer osmLayer = OpenStreetMap.CreateTileLayer("APSIM Next Generation");
             if (osmLayer.TileSource is BruTile.Web.HttpTileSource)
             {
                 BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
@@ -177,16 +185,16 @@ namespace APSIM.Interop.Mapping
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
             if (File.Exists(shapeFileName))
             {
-                Mapsui.Layers.Layer layWorld = new Mapsui.Layers.Layer
+                Layer layWorld = new Layer("Countries");
+                Mapsui.Nts.Providers.Shapefile.ShapeFile shapeFile = new Mapsui.Nts.Providers.Shapefile.ShapeFile(shapeFileName, true)
                 {
-                    Name = "Countries",
-                    CRS = "EPSG:3857",
-                    Transformation = new MinimalTransformation()
-                };                
-                layWorld.DataSource = new Mapsui.Providers.Shapefile.ShapeFile(shapeFileName, true) 
-                { 
-                    CRS = "EPSG:4326" 
+                    CRS = "EPSG:4326"
                 };
+                ProjectingProvider provider = new ProjectingProvider(shapeFile)
+                { 
+                    CRS = "EPSG:3857" 
+                };
+                layWorld.DataSource = provider;
                 layWorld.Style = new Mapsui.Styles.VectorStyle
                 {
                     Outline = new Mapsui.Styles.Pen { Color = Mapsui.Styles.Color.Black },
