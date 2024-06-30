@@ -386,7 +386,14 @@
             "[Arbitrator].N.TotalPlantDemand as TotalPlantNDemand",
             "[Phenology].DltTT.Stress as stress",
             "[Arbitrator].NitrogenUptakeMethod.NDiffusionSupply as NDiffusionSupply",
-            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply"
+            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply",
+            "",
+            "[DCaPST].DcapstModel.ActualBiomass",
+            "[DCaPST].DcapstModel.PotentialBiomass",
+            "[DCaPST].DcapstModel.IntervalResults",
+            "[DCaPST].DcapstModel.Reduction",
+            "[DCaPST].DcapstModel.WaterDemanded",
+            "[DCaPST].DcapstModel.WaterSupplied"
           ],
           "EventNames": [
             "[Clock].DoReport"

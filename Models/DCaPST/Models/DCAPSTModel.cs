@@ -96,6 +96,15 @@ namespace Models.DCAPST
         private readonly double end = 18.0;
         private readonly double timestep = 1.0;
 
+        // Seconds in an hour
+        private const double SECONDS_IN_HOUR = 3600;
+
+        // 1,000,000 mmol to mol
+        private const double MMOL_TO_MOL = 1000000;
+
+        // 44 mol wt CO2
+        private const double MOL_WT_CO2 = 44;
+
         /// <summary>
         /// 
         /// </summary>
@@ -135,7 +144,7 @@ namespace Models.DCAPST
             double lai,
             double sln,
             double soilWater,
-            double RootShootRatio
+            double rootShootRatio
         )
         {
             var steps = (end - start) / timestep;
@@ -149,14 +158,13 @@ namespace Models.DCAPST
             Solar.Initialise();
             Canopy.InitialiseDay(lai, sln);
 
-            // UNLIMITED POTENTIAL CALCULATIONS
+            // Unlimited potential calculations
             // Note: In the potential case, we assume unlimited water and therefore supply = demand
             transpiration.Limited = false;
             var potential = CalculatePotential();
             var waterDemands = Intervals.Select(i => i.Sunlit.Water + i.Shaded.Water).ToList();
 
-            // BIO-LIMITED CALCULATIONS
-
+            // Bio-limited calculations
             transpiration.Limited = true;
 
             // Check if the plant is biologically self-limiting
@@ -177,23 +185,23 @@ namespace Models.DCAPST
                 potential = CalculateLimited(waterDemands);
             }
 
-            // ACTUAL CALCULATIONS
+            // Actual calculations
             var totalDemand = waterDemands.Sum();
             var limitedSupply = CalculateWaterSupplyLimits(soilWater, waterDemands);
 
             var actual = (soilWater > totalDemand) ? potential : CalculateActual(limitedSupply.ToArray());
 
-            var hrs_to_seconds = 3600;
-
-            // 1,000,000 mmol to mol
-            // 44 mol wt CO2
-            var mmolToMol = 1000000;
-            var molWtCO2 = 44;
-
-            ActualBiomass = actual * hrs_to_seconds / mmolToMol * molWtCO2 * B / (1 + RootShootRatio);
-            PotentialBiomass = potential * hrs_to_seconds / mmolToMol * molWtCO2 * B / (1 + RootShootRatio);
+            ActualBiomass = CalculateBiomass(actual, rootShootRatio);
+            PotentialBiomass = CalculateBiomass(potential, rootShootRatio);
             WaterDemanded = totalDemand;
             WaterSupplied = (soilWater < totalDemand) ? limitedSupply.Sum() : waterDemands.Sum();
+        }
+
+        private double CalculateBiomass(double biomass, double rootShootRatio)
+        {
+            var biomassConversionFactor = biomass * SECONDS_IN_HOUR / MMOL_TO_MOL * MOL_WT_CO2 * B;
+            var calculatedBiomass = biomassConversionFactor / (1 + rootShootRatio);
+            return calculatedBiomass;
         }
 
         /// <summary>
@@ -326,8 +334,14 @@ namespace Models.DCAPST
                 if (!TryInitiliase(interval)) continue;
 
                 transpiration.MaxRate = waterSupply[i];
-                double total = sunlitDemand[i] + shadedDemand[i];
-                DoTimestepUpdate(interval, sunlitDemand[i] / total, shadedDemand[i] / total);
+
+                double intervalSunlitDemand = sunlitDemand[i];
+                double intervalShadedDemand = shadedDemand[i];
+                double intervalTotalDemand = intervalSunlitDemand + intervalShadedDemand;
+                double intervalSunFraction = intervalSunlitDemand / intervalTotalDemand;
+                double intervalShadeFraction = intervalShadedDemand / intervalTotalDemand;
+
+                DoTimestepUpdate(interval, intervalSunFraction, intervalShadeFraction);
             }
 
             return Intervals.Select(i => i.Sunlit.A + i.Shaded.A).Sum();
