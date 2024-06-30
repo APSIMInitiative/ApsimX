@@ -63,36 +63,35 @@ namespace UserInterface.Views
         {
             if (MainWidget != null)
             {
-                Box box = (MainWidget as Box);
-                if (box.Children.Length > 0)
+                Container cont = container;
+                if (MainWidget is Box box && box.Children.Length > 0)
+                    cont = (Container)box.Children[0];
+                
+                if (verticalBar)
                 {
-                    Container container = (Container)box.Children[0];
-                    if (verticalBar)
+                    if (cont.Children.Length > 0)
                     {
-                        if (container.Children.Length > 0)
+                        Container cont2 = (Gtk.Container)cont.Children[0];
+                        if (cont2.Children.Length > 1)
                         {
-                            Container container2 = (Gtk.Container)container.Children[0];
-                            if (container2.Children.Length > 1)
-                            {
-                                VScrollbar verticalScrollBar = (VScrollbar)container2.Children[1];
-                                if (visible)
-                                    verticalScrollBar.Show();
-                                else
-                                    verticalScrollBar.Hide();
-                            }
-                        }
-                        
-                    }
-                    else
-                    {
-                        if (container.Children.Length > 1)
-                        {
-                            HScrollbar horizontalScrollBar = (HScrollbar)container.Children[1];
+                            VScrollbar verticalScrollBar = (VScrollbar)cont2.Children[1];
                             if (visible)
-                                horizontalScrollBar.Show();
+                                verticalScrollBar.Show();
                             else
-                                horizontalScrollBar.Hide();
+                                verticalScrollBar.Hide();
                         }
+                    }
+                    
+                }
+                else
+                {
+                    if (cont.Children.Length > 1)
+                    {
+                        HScrollbar horizontalScrollBar = (HScrollbar)cont.Children[1];
+                        if (visible)
+                            horizontalScrollBar.Show();
+                        else
+                            horizontalScrollBar.Hide();
                     }
                 }
             }

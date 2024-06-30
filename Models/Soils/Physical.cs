@@ -18,12 +18,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical, IGridModel
+    public class Physical : Model, IPhysical
     {
         // Water node.
         private Water waterNode = null;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Units("mm")]
         [Summary]
         [JsonIgnore]
@@ -66,23 +67,27 @@ namespace Models.Soils
         [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Particle size clay.</summary>
-        [Summary]
-        [Units("%")]
-        public double[] ParticleSizeClay { get; set; }
-
         /// <summary>Particle size sand.</summary>
         [Summary]
+        [Display(DisplayName = "Sand", Format = "N3")]
         [Units("%")]
         public double[] ParticleSizeSand { get; set; }
 
         /// <summary>Particle size silt.</summary>
         [Summary]
+        [Display(DisplayName = "Silt", Format = "N3")]
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
 
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Display(DisplayName = "Clay", Format = "N3")]
+        [Units("%")]
+        public double[] ParticleSizeClay { get; set; }
+
         /// <summary>Rocks.</summary>
         [Summary]
+        [Display(Format = "N3")]
         [Units("%")]
         public double[] Rocks { get; set; }
 
@@ -92,19 +97,19 @@ namespace Models.Soils
         /// <summary>Bulk density (g/cc).</summary>
         [Summary]
         [Units("g/cc")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] BD { get; set; }
 
         /// <summary>Air dry - volumetric (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] AirDry { get; set; }
 
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] LL15 { get; set; }
 
         /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
@@ -114,7 +119,7 @@ namespace Models.Soils
         /// <summary>Drained upper limit (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] DUL { get; set; }
 
         /// <summary>Drained upper limit (mm).</summary>
@@ -124,7 +129,7 @@ namespace Models.Soils
         /// <summary>Saturation (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] SAT { get; set; }
 
         /// <summary>Saturation (mm).</summary>
@@ -134,7 +139,7 @@ namespace Models.Soils
         /// <summary>Initial soil water (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         [JsonIgnore]
         public double[] SW
         {
@@ -156,7 +161,7 @@ namespace Models.Soils
         /// <summary>KS (mm/day).</summary>
         [Summary]
         [Units("mm/day")]
-        [Display(Format = "N1")]
+        [Display(Format = "N3")]
         public double[] KS { get; set; }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
@@ -165,7 +170,6 @@ namespace Models.Soils
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
         public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
 
         /// <summary>Gets or sets the bd metadata.</summary>
@@ -200,55 +204,6 @@ namespace Models.Soils
 
         /// <summary>Particle size clay metadata.</summary>
         public string[] ParticleSizeClayMetadata { get; set; }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                bool waterNodePresent = FindSibling<Water>() != null;
-                bool ancestorIsExperiment = FindAncestor<Experiment>() != null;
-
-                var columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand")), metadata: new VariableProperty(this, GetType().GetProperty("ParticleSizeSandMetadata"))));
-                columns.Add(new GridTableColumn("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt")), metadata: new VariableProperty(this, GetType().GetProperty("ParticleSizeSiltMetadata"))));
-                columns.Add(new GridTableColumn("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay")), metadata: new VariableProperty(this, GetType().GetProperty("ParticleSizeClayMetadata"))));
-                columns.Add(new GridTableColumn("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks")), metadata: new VariableProperty(this, GetType().GetProperty("RocksMetadata"))));
-                columns.Add(new GridTableColumn("BD", new VariableProperty(this, GetType().GetProperty("BD")), metadata: new VariableProperty(this, GetType().GetProperty("BDMetadata"))));
-                columns.Add(new GridTableColumn("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry")), metadata: new VariableProperty(this, GetType().GetProperty("AirDryMetadata"))));
-                columns.Add(new GridTableColumn("LL15", new VariableProperty(this, GetType().GetProperty("LL15")), metadata: new VariableProperty(this, GetType().GetProperty("LL15Metadata"))));
-                columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL")), metadata: new VariableProperty(this, GetType().GetProperty("DULMetadata"))));
-                columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT")), metadata: new VariableProperty(this, GetType().GetProperty("SATMetadata"))));
-                if (waterNodePresent)
-                {
-                    columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
-                }
-                if (!waterNodePresent && ancestorIsExperiment)
-                {
-                    Water experimentSimWater = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
-                    columns.Add(new GridTableColumn("SW", new VariableProperty(experimentSimWater, experimentSimWater.GetType().GetProperty("InitialValues")), readOnly: true));
-                }
-                columns.Add(new GridTableColumn("KS", new VariableProperty(this, GetType().GetProperty("KS")), metadata: new VariableProperty(this, GetType().GetProperty("KSMetadata"))));
-
-                foreach (var soilCrop in FindAllChildren<SoilCrop>())
-                {
-                    var cropName = soilCrop.Name.Replace("Soil", "");
-                    columns.Add(new GridTableColumn($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL")), metadata: new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LLMetadata"))));
-                    columns.Add(new GridTableColumn($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL")), metadata: new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KLMetadata"))));
-                    columns.Add(new GridTableColumn($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF")), metadata: new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XFMetadata"))));
-                    columns.Add(new GridTableColumn($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
-                }
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
-        }
 
         /// <summary>Called to infill data if necessary.</summary>
         public void InFill()
@@ -375,6 +330,8 @@ namespace Models.Soils
             {
                 if (waterNode == null)
                     waterNode = FindInScope<Water>();
+                if (waterNode == null)
+                    waterNode = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
                 if (waterNode == null)
                     throw new Exception("Cannot find water node in simulation");
                 return waterNode;

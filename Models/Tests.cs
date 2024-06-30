@@ -17,8 +17,8 @@ namespace Models
     /// Test interface.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
+    [ViewName("UserInterface.Views.PropertyAndGridView")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
     public class Tests : Model, ITestable, IGridModel
     {
@@ -31,7 +31,6 @@ namespace Models
         /// <summary>
         /// A collection of validated stats.
         /// </summary>
-        [Models.Core.Description("An array of validated regression stats.")]
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>
@@ -56,7 +55,8 @@ namespace Models
         /// Use our stored DataTable instead
         /// </summary>
         public DataTable ConvertModelToDisplay(DataTable dt)
-        {
+        {       
+            Test(false, true);
             return Table;
         }
 

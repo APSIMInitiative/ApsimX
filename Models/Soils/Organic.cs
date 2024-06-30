@@ -14,7 +14,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Organic : Model, IGridModel
+    public class Organic : Model
     {
         /// <summary>
         /// An enumeration for specifying organic carbon units
@@ -31,6 +31,7 @@ namespace Models.Soils
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -59,13 +60,14 @@ namespace Models.Soils
         /// <summary>Carbon concentration</summary>
         [Summary]
         [Bounds(Lower = 0.1, Upper = 10.0)]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] Carbon { get; set; }
 
         /// <summary>The units of organic carbon.</summary>
         public CarbonUnitsEnum CarbonUnits { get; set; }
 
         /// <summary>Carbon:nitrogen ratio.</summary>
+        [Display(Format = "N3")]
         [Summary]
         [Units("g/g")]
         [Bounds(Lower = 5.0, Upper = 30.0)]
@@ -104,27 +106,6 @@ namespace Models.Soils
 
         /// <summary>FOM metadata</summary>
         public string[] FOMMetadata { get; set; }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))));
-                columns.Add(new GridTableColumn("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))));
-                columns.Add(new GridTableColumn("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))));
-                columns.Add(new GridTableColumn("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))));
-                columns.Add(new GridTableColumn("FOM", new VariableProperty(this, GetType().GetProperty("FOM"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
-        }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>
         /// <param name="targetThickness">Target thickness.</param>

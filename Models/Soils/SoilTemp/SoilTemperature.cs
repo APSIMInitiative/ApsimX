@@ -28,7 +28,7 @@ namespace Models.Soils.SoilTemp
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class SoilTemperature : Model, ISoilTemperature, IGridModel
+    public class SoilTemperature : Model, ISoilTemperature
     {
         [Link]
         private IWeather weather = null;
@@ -342,6 +342,7 @@ namespace Models.Soils.SoilTemp
 
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -359,25 +360,6 @@ namespace Models.Soils.SoilTemp
         [Display(Format = "N2")]
         [Units("oC")]
         public double[] InitialValues { get; set; }
-
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                return new List<GridTable>()
-                {
-                    new(Name, new List<GridTableColumn>()
-                    {
-                        new("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                        new("Initial temperature", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-                    },
-                    this)
-                };
-            }
-        }
 
         #region outputs
 

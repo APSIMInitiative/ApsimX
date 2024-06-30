@@ -25,6 +25,7 @@ namespace Models.Soils
 
         /// <summary>Crop lower limit (mm/mm)</summary>
         [Summary]
+        [Display(Format = "N3")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
 
@@ -44,7 +45,7 @@ namespace Models.Soils
         /// <summary>The KL value.</summary>
         [Summary]
         [Units("/day")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] KL { get; set; }
 
         /// <summary>The exploration factor</summary>
@@ -64,7 +65,6 @@ namespace Models.Soils
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
         [Units("mm/mm")]
-        [Display(Format = "N2")]
         public double[] PAWC
         {
             get
@@ -77,6 +77,7 @@ namespace Models.Soils
         }
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
+        [Display(DisplayName = "PAWC", Format = "N1")]
         [Units("mm")]
         public double[] PAWCmm
         {
@@ -91,7 +92,6 @@ namespace Models.Soils
 
         /// <summary>Return the plant available water (SW-CLL).</summary>
         [Units("mm/mm")]
-        [Display(Format = "N2")]
         public double[] PAW
         {
             get

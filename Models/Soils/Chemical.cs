@@ -13,7 +13,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Chemical : Model, IGridModel
+    public class Chemical : Model
     {
         /// <summary>An enumeration for specifying PH units.</summary>
         public enum PHUnitsEnum
@@ -28,6 +28,7 @@ namespace Models.Soils
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -56,14 +57,17 @@ namespace Models.Soils
         public PHUnitsEnum PHUnits { get; set; }
 
         /// <summary>Gets or sets the ec.</summary>
+        [Display(Format = "N3")]
         [Summary]
         public double[] EC { get; set; }
 
         /// <summary>Gets or sets the esp.</summary>
+        [Display(Format = "N3")]
         [Summary]
         public double[] ESP { get; set; }
 
         /// <summary>CEC.</summary>
+        [Display(Format = "N3")]
         [Summary]
         [Units("cmol+/kg")]
         public double[] CEC { get; set; }
@@ -80,49 +84,16 @@ namespace Models.Soils
         /// <summary>PH metadata</summary>
         public string[] PHMetadata { get; set; }
 
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get {
-                var solutes = GetStandardisedSolutes();
-
-                var columns = new List<GridTableColumn>();
-
-                var depthColumns = new List<VariableProperty>();
-                depthColumns.Add(new VariableProperty(this, GetType().GetProperty("Depth")));
-                foreach (var solute in solutes)
-                {
-                    if (MathUtilities.AreEqual(solute.Thickness, Thickness))
-                        depthColumns.Add(new VariableProperty(solute, solute.GetType().GetProperty("Depth")));
-                }
-                columns.Add(new GridTableColumn("Depth", depthColumns));
-
-                foreach (var solute in solutes)
-                    columns.Add(new GridTableColumn(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
-
-                columns.Add(new GridTableColumn("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
-                columns.Add(new GridTableColumn("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
-                columns.Add(new GridTableColumn("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
-                columns.Add(new GridTableColumn("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
-        }
-
         /// <summary>Get all solutes with standardised layer structure.</summary>
         /// <returns></returns>
-        public IEnumerable<Solute> GetStandardisedSolutes()
+        public static IEnumerable<Solute> GetStandardisedSolutes(Chemical chemical)
         {
             List<Solute> solutes = new List<Solute>();
 
             // Add in child solutes.
-            foreach (Solute solute in Parent.FindAllChildren<Solute>())
+            foreach (Solute solute in chemical.Parent.FindAllChildren<Solute>())
             {
-                if (MathUtilities.AreEqual(Thickness, solute.Thickness))
+                if (MathUtilities.AreEqual(chemical.Thickness, solute.Thickness))
                     solutes.Add(solute);
                 else
                 {
@@ -131,10 +102,10 @@ namespace Models.Soils
                         standardisedSolute.Parent = solute.Parent;
 
                     if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
-                        standardisedSolute.InitialValues = SoilUtilities.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
+                        standardisedSolute.InitialValues = SoilUtilities.MapMass(solute.InitialValues, solute.Thickness, chemical.Thickness, false);
                     else
-                        standardisedSolute.InitialValues = SoilUtilities.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
-                    standardisedSolute.Thickness = Thickness;
+                        standardisedSolute.InitialValues = SoilUtilities.MapConcentration(solute.InitialValues, solute.Thickness, chemical.Thickness, 1.0);
+                    standardisedSolute.Thickness = chemical.Thickness;
                     solutes.Add(standardisedSolute);
                 }
             }

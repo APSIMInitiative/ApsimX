@@ -17,24 +17,16 @@ namespace UserInterface.Views
         private int numHeadingRows;
 
         /// <summary>A matrix of cell booleans to indicate if a cell is calculated (rather than measured).</summary>
-        private List<List<bool>> cellStates;
-
-        /// <summary>Delegate for a CellChanged event.</summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="colIndices">The indices of the columns that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows that were changed.</param>
-        /// <param name="values">The values of the cells changed.</param>
-
-        public delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
+        private List<List<SheetDataProviderCellState>> cellStates;
 
         /// <summary>An event invoked when a cell changes.</summary>
-        public event CellChangedDelegate CellChanged;
+        public event ISheetDataProvider.CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
-        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
+        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<SheetDataProviderCellState>> cellStates = null)
         {
             if (dataSource == null)
                 Data = new DataTable();
@@ -156,10 +148,11 @@ namespace UserInterface.Views
         /// <param name="rowIndex">Row index of cell.</param>
         public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
         {
-            if (Data.Columns[colIndex].ReadOnly)
+            if (Data.Columns[colIndex].ReadOnly || 
+                rowIndex < numHeadingRows)
                 return SheetDataProviderCellState.ReadOnly;
             else if (cellStates != null && colIndex < cellStates.Count && cellStates[colIndex] != null && rowIndex < cellStates[colIndex].Count)
-                return cellStates[colIndex][rowIndex] ? SheetDataProviderCellState.Calculated : SheetDataProviderCellState.Normal;
+                return cellStates[colIndex][rowIndex];
             else
                 return SheetDataProviderCellState.Normal;
         }

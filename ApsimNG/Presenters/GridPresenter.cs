@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -19,6 +20,9 @@ namespace UserInterface.Presenters
     {
         /// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
         private Model model;
+
+        /// <summary>The data provider.</summary>
+        private ISheetDataProvider dataProvider;
 
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
@@ -78,30 +82,23 @@ namespace UserInterface.Presenters
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
-            //this allows a data provider to be passed in instead of a model.
-            //For example, the datastore presenter uses this to fill out the table.
-            ISheetDataProvider dataProvider = null;
             if (model as ISheetDataProvider != null)
-            {
+            {  
+                // e.g. DataStorePresenter goes through here.
                 dataProvider = model as ISheetDataProvider;
                 gridTable = null;
             }
-            //else we are receiving a model with IGridTable that we should get our GridTable from
-            else if (model as IGridModel != null)
-            {
-                this.model = (model as Model);
-                IGridModel m = (model as IGridModel);
-                gridTable = m.Tables[0];
-            }
             //else we are receiving a GridTable that was created by another presenter
             else if (model as GridTable != null)
-            {
+            {  
+                // e.g. PropertyAndGridPresenter goes through here.
                 gridTable = (model as GridTable);
             }
-
             else
             {
-                throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
+                var viewBase = v as ViewBase;
+                sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
             }
 
             //we are receiving a container from another presenter to put the grid into
@@ -135,6 +132,8 @@ namespace UserInterface.Presenters
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (dataProvider != null)
+                dataProvider.CellChanged += OnCellChanged;
 
             //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
@@ -148,7 +147,7 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
-            if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
+            if (dataProvider != null)
                 dataProvider.CellChanged -= OnCellChanged;
 
             SaveGridToModel();
@@ -173,7 +172,7 @@ namespace UserInterface.Presenters
             grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
             grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
             //we don't want an editor on grids that are linked to a dataProvider instead of a model
-            if (dataProvider == null)
+            //if (dataProvider == null)
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
 
             if (gridTable != null)
@@ -239,9 +238,9 @@ namespace UserInterface.Presenters
                 }
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                List<List<bool>> isCalculated = new();
+                List<List<SheetDataProviderCellState>> isCalculated = new();
                 for (int i = 0; i < data.Columns.Count; i++)
-                   isCalculated.Add(gridTable.GetIsCalculated(i));
+                   isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
 
                 // Create instance of DataTableProvider.
                 DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
@@ -249,8 +248,6 @@ namespace UserInterface.Presenters
                 // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
-
-                dataProvider.CellChanged += OnCellChanged;
             }
 
             UpdateScrollBars();
@@ -520,14 +517,17 @@ namespace UserInterface.Presenters
                 if (grid.Sheet.DataProvider != null)
                 {
                     var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
-                    List<string> unitsRow = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                        unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
+                    if (gridTable.HasUnits())
+                    {
+                        List<string> unitsRow = new List<string>();
+                        for (int i = 0; i < data.Columns.Count; i++)
+                            unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
 
-                    DataRow row = data.NewRow();
-                    row.ItemArray = unitsRow.ToArray();
+                        DataRow row = data.NewRow();
+                        row.ItemArray = unitsRow.ToArray();
 
-                    data.Rows.InsertAt(row, 0);
+                        data.Rows.InsertAt(row, 0);
+                    }
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
             }

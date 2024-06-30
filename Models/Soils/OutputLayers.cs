@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils.Nutrients;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -18,7 +16,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class OutputLayers : Model, IGridModel
+    public class OutputLayers : Model
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -35,6 +33,7 @@ namespace Models.Soils
         public double[] Thickness { get; set; }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -283,22 +282,6 @@ namespace Models.Soils
                 }
 
                 return SoilUtilities.MapConcentration(modelOC, waterBalanceModel.Thickness, Thickness, double.NaN);
-            }
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
             }
         }
     }

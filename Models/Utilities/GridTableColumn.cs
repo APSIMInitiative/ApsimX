@@ -64,6 +64,8 @@ namespace Models.Utilities
         {
             Name = name;
             this.properties = properties;
+            if (properties != null)
+                IsReadOnly = properties.First().IsReadOnly;
         }
 
         /// <summary>Name of column.</summary>
@@ -119,13 +121,16 @@ namespace Models.Utilities
                 var propertyValue = property.Value;
                 if (propertyValue != null)
                 {
+                    string format = "F3";
+                    if (!string.IsNullOrEmpty(property.Format))
+                        format = property.Format;
                     if (propertyValue is Array)
                     {
                         string[] values = null;
                         if (property.DataType == typeof(string[]))
-                            values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
+                            values = ((string[])propertyValue).Select(v => v?.ToString()).ToArray();
                         else if (property.DataType == typeof(double[]))
-                            values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
+                            values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToArray();
                         else if (property.DataType == typeof(bool[]))
                             values = ((bool[])propertyValue).Select(v => v.ToString()).ToArray();
                         else if (property.DataType == typeof(int[]))
