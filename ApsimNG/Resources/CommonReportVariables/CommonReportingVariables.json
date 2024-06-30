@@ -380,28 +380,28 @@
   {
     "node": "Nutrient",
     "description": "Mineralisation",
-    "code": "[OrganicFlow].MineralisedN",
+    "code": "[Nutrient].MineralisedN",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Nutrient",
     "description": "Organic carbon",
-    "code": "sum([OrganicPool].C) as OrganicC",
+    "code": "sum([Nutrient].Organic.C) as OrganicC",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Nutrient",
     "description": "Carbon lost to the atmosphere",
-    "code": "[OrganicPool].Catm",
+    "code": "[Nutrient].Catm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Nutrient",
     "description": "Organic nitrogen",
-    "code": "sum([OrganicPool].N) as OrganicN",
+    "code": "sum([Nutrient].Organic.N) as OrganicN",
     "type": "Double[]",
     "units": "kg/ha"
   },
@@ -415,7 +415,7 @@
   {
     "node": "Nutrient",
     "description": "Total nitrogen",
-    "code": "sum([OrganicPool].N + [Urea].kgha + [NO3].kgha + [NH4].kgha) as TotalNitrogen",
+    "code": "sum([Nutrient].Organic.N + [Urea].kgha + [NO3].kgha + [NH4].kgha) as TotalNitrogen",
     "type": "Double[]",
     "units": "kg/ha"
   },

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,33 +11,16 @@ namespace Models.Climate
 {
 
     /// <summary>
-    /// Allow random resampling of whole years of weather data from a met file.
+    /// Allow random sampling of whole years of weather data from a weather file.
     /// </summary>
-    /// <remarks>
-    /// Parameters / inputs
-    ///     * read in a met file
-    ///     * parameter setting the 'start' of the year as dd-mmm-yyyy (e.g. "01-jun-3000") where the
-    ///     dd-mmm part sets the start of all sampling years and the full dd-mmm-yyyy sets the start
-    ///     date of the simulation (end date is the start plus the number of years listed below)
-    ///     * read in either:
-    ///         - a list of years in order to sample (e.g. "1997,2014,2000"); or
-    ///         - the number of years required and "random"; or
-    ///         - the number of years required and "pseudo-random" and a seed value
-    ///     * ? an add-on to the existing met file?
-    ///     * needs to be able to be used as a factor in an experiment
-    /// What it does
-    ///     * sets the (fake) start date of the simulation (here 01-jun-3000) along with the weather data
-    ///     to be used with the "sampling_date" (here the first one would be 01-jun-1997 for example) being outputable
-    ///     * leap years - ignores 29-feb in the sampling data and pads an extra final day in the year if needed
-    ///     (want the same weather regardless of the simulation year - hope that makes sense!)
-    ///     * in the example above, by the time the simulation gets to 31-may-3001, sampling_date is 31-may-1998.
-    ///     Then on simulation date 01-jun-3001 the sampling_date is 01-jun-2014. Equivalent behaviour for
-    ///     randomly generated weather years.
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
+    [Description("This model samples a weather file. There are three sampling methods.\r\n" +
+                 "1. RandomSample - all years of weather data will be sampled randomly.\r\n" +
+                 "2. SpecificYears - specific years can be specified. Weather data will be drawn from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year.\r\n" +
+                 "3. RandomChooseFirstYear - randomly choose a year in the weather record. Once simulation is running, weather data is drawn sequentially from the chosen year.")]
     public class WeatherSampler : Model, IWeather
     {
         /// <summary>A data table of all weather data.</summary>
@@ -48,17 +32,29 @@ namespace Models.Climate
         /// <summary>The current index into the Years array.</summary>
         private int currentYearIndex;
 
+        /// <summary>The first date in the weather file.</summary>
+        private DateTime firstDateInFile;
+
+        /// <summary>The last date in the weather file.</summary>
+        private DateTime lastDateInFile;
+
         [Link]
         private IClock clock = null;
+
+        [Link]
+        private Simulation simulation = null;
 
         /// <summary>Type of randomiser enum for drop down.</summary>
         public enum RandomiserTypeEnum
         {
             /// <summary>Specify years manually.</summary>
-            SpecifyYears,
+            SpecificYears,
 
             /// <summary>Random sampler.</summary>
-            RandomSampler
+            RandomSample,
+
+            /// <summary>Random choose the first year to draw weather data from.</summary>
+            RandomChooseFirstYear
         }
 
 
@@ -67,40 +63,35 @@ namespace Models.Climate
         [Description("Weather file name")]
         public string FileName { get; set; }
 
-        /// <summary>The start date of the simulation.</summary>
-        [Summary]
-        [Description("Start date")]
-        public string StartDateOfSimulation { get; set; }
-
         /// <summary>Type of year sampling.</summary>
         [Description("Type of sampling")]
         public RandomiserTypeEnum TypeOfSampling { get; set; }
 
         /// <summary>The sample years.</summary>
         [Summary]
-        [Description("Years to sample from the weather file.")]
-        [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
-        public double[] Years { get; set; }
-
-
-        /// <summary>The number of lead in years before weather sampling begins.</summary>
-        [Summary]
-        [Description("Number of lead in years before weather sampling begins.")]
-        [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
-        public int NumberOfLeadInYears { get; set; }
+        [Description("Seed to pass to random number generator. Leave blank for random. Provide value for repeatable simulation results.")]
+        [Display(VisibleCallback = "IsRandomEnabled")]
+        public string Seed { get; set; }
 
         /// <summary>The sample years.</summary>
         [Summary]
-        [Description("Number of years to sample from the weather file.")]
-        [Display(EnabledCallback = "IsRandomSamplerEnabled")]
-        public int NumYears { get; set; }
+        [Description("Years to sample from the weather file.")]
+        [Display(VisibleCallback = "IsSpecifyYearsEnabled")]
+        public int[] Years { get; set; }
 
+
+        /// <summary>Is random enabled?</summary>
+        public bool IsRandomEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSample || TypeOfSampling == RandomiserTypeEnum.RandomChooseFirstYear; } }
 
         /// <summary>Is 'specify years' enabled?</summary>
-        public bool IsSpecifyYearsEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecifyYears; } }
+        public bool IsSpecifyYearsEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecificYears; } }
 
-        /// <summary>Is 'Random Sampler' enabled?</summary>
-        public bool IsRandomSamplerEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSampler; } }
+        /// <summary>The date when years tick over.</summary>
+        [Summary]
+        [Description("The date marking the start of sampling years (d-mmm). Leave blank for 1-Jan")]
+        public string SplitDate { get; set; }
+
+
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
@@ -111,10 +102,10 @@ namespace Models.Climate
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>The start date of the weather file.</summary>
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate => clock.StartDate;
 
         /// <summary>The end date of the weather file.</summary>
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate => clock.EndDate;
 
         /// <summary>The maximum temperature (oc).</summary>
         [Units("°C")]
@@ -226,12 +217,10 @@ namespace Models.Climate
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // Open the weather file and read its contents.
-            DateTime firstDateInFile;
-            DateTime lastDateInFile;
             var file = new ApsimTextFile();
             try
             {
-                file.Open(FileName);
+                file.Open(PathUtilities.GetAbsolutePath(FileName, simulation.FileName));
                 data = file.ToTable();
                 firstDateInFile = file.FirstDate;
                 lastDateInFile = file.LastDate;
@@ -256,47 +245,57 @@ namespace Models.Climate
             if (data.Rows.Count == 0)
                 throw new Exception($"No weather data found in file {FileName}");
 
-            // Parse the user input start date into a StartDate.
-            DateTime date;
-            if (DateTime.TryParse(StartDateOfSimulation, out date))
-                StartDate = date;
-            else
-                throw new Exception($"Invalid start date specified in WeatherRandomiser {StartDateOfSimulation}");
-
             // If sampling method is random then create an array of random years.
-            if (TypeOfSampling == RandomiserTypeEnum.RandomSampler)
+            if (IsRandomEnabled)
             {
-                // Make sure user has entered number of years.
-                if (NumYears <= 0)
-                    throw new Exception("The number of years to sample from the weather file hasn't been speciifed.");
+                // Determine the number of years to extract out of the weather file.
+                int numYears = clock.EndDate.Year - clock.StartDate.Year + 1;
 
-                // Determine the year range to sample from.
+                // Determine the year range to sample from. Only sample from years that have a full record i.e. 1-jan to 31-dec
                 var firstYearToSampleFrom = firstDateInFile.Year;
-                var lastYearToSampleFrom = lastDateInFile.Year - 1;
-                if (firstDateInFile > StartDate)
+                var lastYearToSampleFrom = lastDateInFile.Year;
+                if (firstDateInFile.DayOfYear > 1)
                     firstYearToSampleFrom++;
+                if (lastDateInFile.Month != 12 && lastDateInFile.Day != 31)
+                    lastYearToSampleFrom--;
 
-                // Randomly sample from the weather record for the required number of years.
-                Years = new double[NumYears];
-                var random = new Random();
-                for (int i = 0; i < NumYears; i++)
-                    Years[i] = random.Next(firstYearToSampleFrom, lastYearToSampleFrom);
-            }
-            else if (NumberOfLeadInYears > 0)
-            {
-                // Use lead in years.
-                var yearsWithLeadIn = new List<double>(Years);
-                for (int i = 0; i < NumberOfLeadInYears; i++)
-                    yearsWithLeadIn.Insert(0, Years[0]);
-                Years = yearsWithLeadIn.ToArray();
-            }
+                Random random;
+                if (string.IsNullOrEmpty(Seed))
+                    random = new();
+                else
+                    random = new Random(Convert.ToInt32(Seed));
+
+                if (TypeOfSampling == RandomiserTypeEnum.RandomSample)
+                {
+                    // Randomly sample from the weather record for the required number of years.
+                    Years = new int[numYears];
+
+                    for (int i = 0; i < numYears; i++)
+                        Years[i] = random.Next(firstYearToSampleFrom, lastYearToSampleFrom);
+                }
+                else if (TypeOfSampling == RandomiserTypeEnum.RandomChooseFirstYear)
+                {
+                    // Randomly choose a year to draw weather data from.
+                    // The year chosen can't be at the end of the weather record because there needs to be sufficient years of 
+                    // consecutive weather data after the chosen year for the length of simulation. Limit the random number generator to 
+                    // allow for this.
+                    var lastYearForRandomNumberGenerator = lastYearToSampleFrom - numYears + 1;
+                    if (lastYearForRandomNumberGenerator < firstYearToSampleFrom)
+                        throw new Exception("There is insufficient weather data for the length of simulation (clock enddate-startdate). Cannot randomly sample the start date.");
+                    firstYearToSampleFrom = random.Next(firstYearToSampleFrom, lastYearForRandomNumberGenerator);
+                    Years = Enumerable.Range(firstYearToSampleFrom, numYears).ToArray();
+                }
+            }            
 
             if (Years == null || Years.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
 
-            EndDate = StartDate.AddYears(Years.Length).AddDays(-1);
+            if (string.IsNullOrEmpty(SplitDate)) {
+                SplitDate = "1-jan";
+            }
 
-            currentYearIndex = -1;
+            currentYearIndex = 0;
+            currentRowIndex = FindRowForDate(new DateTime(Years[currentYearIndex], clock.StartDate.Month, clock.StartDate.Day));
         }
 
         /// <summary>An event handler for the daily DoWeather event.</summary>
@@ -305,20 +304,34 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (currentRowIndex >= data.Rows.Count)
-                throw new Exception("Have run out of weather data");
-            var dateInFile = DataTableUtilities.GetDateFromRow(data.Rows[currentRowIndex]);
-            if (currentYearIndex == -1 || (dateInFile.Day == StartDate.Day && dateInFile.Month == StartDate.Month))
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
-                if (currentYearIndex < Years.Length)
-                {
-                    var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
-                    currentRowIndex = FindRowForDate(dateToFind);
-                }
+                if (currentYearIndex == Years.Length)
+                    currentYearIndex = 0;
+                
+                var dateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
+                currentRowIndex = FindRowForDate(dateToFind);
             }
 
+            var dateInFile = DataTableUtilities.GetDateFromRow(data.Rows[currentRowIndex]);
+            if (dateInFile.Day == 29 && dateInFile.Month == 2 && clock.Today.Day == 1 && clock.Today.Month == 3)
+            {
+                // Leap day in weather data but not clock - skip the leap day.
+                currentRowIndex++;
+            }
+            else if (dateInFile.Day == 1 && dateInFile.Month == 3 && clock.Today.Day == 29 && clock.Today.Month == 2)
+            {
+                // Leap day in clock but not weather data.
+                currentRowIndex--;
+            }
+            else
+            {
+                // Make sure date in file matches the clock.
+                if (clock.Today.Day != dateInFile.Day || clock.Today.Month != dateInFile.Month)
+                    throw new Exception($"Non contiguous weather data found at date {dateInFile}");
+            }
             MaxT = Convert.ToDouble(data.Rows[currentRowIndex]["MaxT"]);
             MinT = Convert.ToDouble(data.Rows[currentRowIndex]["MinT"]);
             Radn = Convert.ToDouble(data.Rows[currentRowIndex]["Radn"]);

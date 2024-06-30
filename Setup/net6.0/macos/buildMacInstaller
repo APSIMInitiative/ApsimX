@@ -32,7 +32,7 @@ cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
 # need to build Models last. The problem also occurs if we just publish
 # the solution file, as Models will be one of the first proejcts to be
 # built/copied, as it's a dependency for several others.
-projects=(ApsimNG APSIM.Server Models)
+projects=(ApsimNG Models)
 for project in ${projects[@]}
 do
     dotnet publish --nologo -f net6.0 -c Release -r osx-x64 $project

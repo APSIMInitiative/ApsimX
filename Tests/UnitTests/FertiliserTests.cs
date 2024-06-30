@@ -108,8 +108,9 @@
             simulation.Run();
 
             var soil = simulation.Children[2] as MockSoil;
+            var summary = simulation.FindDescendant<MockSummary>();
             Assert.AreEqual(soil.NO3, new double[] { 1, 2, 103 });
-            Assert.AreEqual(MockSummary.messages[0], "100.0 kg/ha of NO3N added at depth 300 layer 3");
+            Assert.AreEqual(summary.messages[0], "100.0 kg/ha of NO3N added at depth 300 layer 3");
         }
 
         /// <summary>Ensure the the apply method works over a depth range.</summary>

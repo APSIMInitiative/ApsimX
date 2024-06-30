@@ -30,12 +30,6 @@ namespace Models.GrazPlan
         /// <summary></summary>
         protected double[] FLayerProfile;               // [1..  [0] is unused
 
-        /// <summary></summary>
-        protected int FNoInputLayers;                   // Temporary arrays
-
-        /// <summary>Layer thicknesses</summary>
-        protected double[] FInputProfile = null;        // [1..
-
         /// <summary>
         /// Set the layer count and thicknesses
         /// </summary>
@@ -99,7 +93,9 @@ namespace Models.GrazPlan
 
         private double FIntercepted = 0.0;  // Precipitation intercepted by herbage.  Default is 0.0
 
+        /// <summary>kg/ha</summary>
         private double[] mySoilNH4Available;    // [0..
+        /// <summary>kg/ha</summary>
         private double[] mySoilNO3Available;
         private double[] mySoilWaterAvailable;
         private double[] myTotalWater;
@@ -787,7 +783,7 @@ namespace Models.GrazPlan
         /// Nutrient uptake for the specified nutrient
         /// </summary>
         /// <param name="nutr">Nutrient. pnNO3...</param>
-        /// <returns></returns>
+        /// <returns>Nutrient uptake for each soil layer in kg/ha</returns>
         private SoilLayer[] NutrUptake(TPlantNutrient nutr)
         {
             string sUnit = PastureModel.MassUnit;
@@ -1165,15 +1161,10 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-
                 double result = WeightAverage(PastureModel.Digestibility(GrazType.sgGREEN, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
                                      PastureModel.Digestibility(GrazType.sgDRY, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
-
-                PastureModel.MassUnit = sUnit;
 
                 return result;
             }
@@ -1185,15 +1176,10 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-
                 double result = WeightAverage(PastureModel.CrudeProtein(GrazType.sgGREEN, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
                                      PastureModel.CrudeProtein(GrazType.sgDRY, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
-
-                PastureModel.MassUnit = sUnit;
 
                 return result;
             }
@@ -1337,12 +1323,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
             }
         }
 
@@ -1352,12 +1333,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
             }
         }
 
@@ -1367,12 +1343,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
             }
         }
 
@@ -1397,7 +1368,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average nitrogen content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileN
+        public double[] RootProfileN
         {
             get
             {
@@ -1416,7 +1387,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average phosphorus content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileP
+        public double[] RootProfileP
         {
             get
             {
@@ -1435,7 +1406,7 @@ namespace Models.GrazPlan
 
         /// <summary>Average sulphur content of roots in each soil layer</summary>
         [Units("kg/ha")]
-        public double[] RootDMProfileS
+        public double[] RootProfileS
         {
             get
             {
@@ -1490,15 +1461,7 @@ namespace Models.GrazPlan
         [Units("mm")]
         public double RootDep
         {
-            get
-            {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
-            }
+            get { return PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS); }
         }
 
         /// <summary>Average radius of all roots</summary>
@@ -1556,12 +1519,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.SeedCrudeProtein(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.SeedCrudeProtein(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
             }
         }
 
@@ -1571,12 +1529,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
             }
         }
 
@@ -1586,12 +1539,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
             }
         }
 
@@ -1601,12 +1549,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
             }
         }
 
@@ -1616,12 +1559,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.EstablishIndex();
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.EstablishIndex();
             }
         }
 
@@ -1631,12 +1569,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.SeedlingStress();
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return PastureModel.SeedlingStress();
             }
         }
 
@@ -1646,12 +1579,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                string sUnit = PastureModel.MassUnit;
-                PastureModel.MassUnit = "kg/ha";
-                double[] result = LayerArray2Value(PastureModel.Transpiration(GrazType.sgGREEN), PastureModel.SoilLayerCount);
-                PastureModel.MassUnit = sUnit;
-
-                return result;
+                return LayerArray2Value(PastureModel.Transpiration(GrazType.sgGREEN), PastureModel.SoilLayerCount);
             }
         }
 
@@ -1890,7 +1818,7 @@ namespace Models.GrazPlan
         /// Get the plant nutrient uptake from each soil layer
         /// </summary>
         /// <param name="nutr">Plant nutrient</param>
-        /// <returns>Array of layer values for nutrient uptake</returns>
+        /// <returns>Array of layer values for nutrient uptake kg/ha</returns>
         private double[] UptakeByLayer(TPlantNutrient nutr)
         {
             string sUnit = PastureModel.MassUnit;
@@ -2204,7 +2132,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Get average nutrient content of a plant
+        /// Get average nutrient content of a plant (g/g)
         /// </summary>
         /// <param name="comp">Herbage</param>
         /// <param name="part">Plant part</param>
@@ -2212,12 +2140,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         private double GetPlantNutr(int comp, int part, TPlantElement elem)
         {
-            string sUnit = PastureModel.MassUnit;
-            PastureModel.MassUnit = "kg/ha";
-            double result = PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
-            PastureModel.MassUnit = sUnit;
-
-            return result;
+            return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
 
         /// <summary>
@@ -2627,7 +2550,7 @@ namespace Models.GrazPlan
 
             // initialise the 3D array. This is the FSupply calculated by the arbitrator being sent for uptake.
             int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
-            double[][][] fSupply = new double[x][][];
+            double[][][] fSupply = new double[x][][];   // g/m^2
             for (int i = 0; i < x; i++)
             {
                 fSupply[i] = new double[MAXNUTRAREAS][];
@@ -2639,9 +2562,9 @@ namespace Models.GrazPlan
                 for (int layer = 1; layer <= FNoLayers; layer++)
                 {
                     if (i == (int)TPlantNutrient.pnNO3)
-                        fSupply[i][0][layer] = mySoilNO3UptakeAvail[layer - 1];
+                        fSupply[i][0][layer] = mySoilNO3UptakeAvail[layer - 1] * KGHA_GM2;
                     else if (i == (int)TPlantNutrient.pnNH4)
-                        fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1];
+                        fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1] * KGHA_GM2;
                 }
             }
 
@@ -2691,20 +2614,20 @@ namespace Models.GrazPlan
             for (int Idx = 1; Idx <= 3; Idx++)
                 removed.FOMTypes[Idx-1] = sFOMTypes[Idx];
 
-            removed.Layers = new double[FNoLayers];
+            removed.Layers = new double[FNoLayers + 1];
             for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
-                removed.Layers[Ldx-1] = FLayerProfile[Ldx]; // [1..
+                removed.Layers[Ldx] = FLayerProfile[Ldx]; // [1..
 
-            removed.FOM = new OrganicMatter[FNoLayers][];
-            removed.FOM[0] = new OrganicMatter[3];          // surface
+            removed.FOM = new OrganicMatter[FNoLayers+1][];
+            removed.FOM[1] = new OrganicMatter[3];          // first layer has space for leaf and stem residue
             for (int i = 0; i < 3; i++)
-                removed.FOM[0][i] = new OrganicMatter();
+                removed.FOM[1][i] = new OrganicMatter();
 
             for (int Ldx = 2; Ldx <= FNoLayers; Ldx++)
             {
-                // root layers
-                removed.FOM[Ldx - 1] = new OrganicMatter[1];
-                removed.FOM[Ldx-1][0] = new OrganicMatter();
+                // further root layers
+                removed.FOM[Ldx] = new OrganicMatter[1];
+                removed.FOM[Ldx][0] = new OrganicMatter();
             }
 
             if (PastureModel != null)
@@ -2713,52 +2636,43 @@ namespace Models.GrazPlan
                 PastureModel.MassUnit = "kg/ha";
                 for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)                                                 // Root residues
                 {
-                    DMPool2Value(PastureModel.GetResidueFlux(ptROOT, Ldx), ref removed.FOM[Ldx - 1][0]);
+                    DMPool2Value(PastureModel.GetResidueFlux(ptROOT, Ldx), ref removed.FOM[Ldx][0]);
                 }
-                DMPool2Value(PastureModel.GetResidueFlux(ptLEAF), ref removed.FOM[0][1]);       // Surface residues all go into the first soil layer
-                DMPool2Value(PastureModel.GetResidueFlux(ptSTEM), ref removed.FOM[0][2]);
+
+                // Surface residues all go into the first soil layer
+                DMPool2Value(PastureModel.GetResidueFlux(ptLEAF), ref removed.FOM[1][1]);       // leaf
+                DMPool2Value(PastureModel.GetResidueFlux(ptSTEM), ref removed.FOM[1][2]);       // stem
 
                 PastureModel.MassUnit = sPrevUnit;
 
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = this.Species;
+                FOMData.Layer = new FOMLayerLayerType[FNoLayers];
+
                 // Fill a FOMLayerType and do the Incorp
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[FNoLayers];
 
                 // root layers
-                for (int layer = 1; layer < FNoLayers; layer++)
+                for (int layer = 0; layer < FNoLayers; layer++)
                 {
-                    FOMType fomData = new FOMType();
-                    fomData.amount = removed.FOM[layer][0].Weight;
-                    fomData.N = removed.FOM[layer][0].N;
-                    fomData.C = fomData.amount * carbonFractionInDM;
-                    fomData.P = removed.FOM[layer][0].P;
-                    fomData.AshAlk = removed.FOM[layer][0].AshAlk;
+                    FOMData.Layer[layer] = new FOMLayerLayerType();
+                    FOMData.Layer[layer].FOM = new FOMType();
+                    FOMData.Layer[layer].FOM.amount = removed.FOM[layer + 1][0].Weight;
+                    FOMData.Layer[layer].FOM.N = removed.FOM[layer + 1][0].N;
+                    FOMData.Layer[layer].FOM.C = FOMData.Layer[layer].FOM.amount * carbonFractionInDM;
+                    FOMData.Layer[layer].FOM.P = removed.FOM[layer + 1][0].P;
+                    FOMData.Layer[layer].FOM.AshAlk = removed.FOM[layer + 1][0].AshAlk;
 
-                    FOMLayerLayerType layerData = new FOMLayerLayerType();
-                    layerData.FOM = fomData;
-                    layerData.CNR = 0.0;        // not used here
-                    layerData.LabileP = 0.0;    // not used here
-
-                    FOMdataLayer[layer] = layerData;
+                    FOMData.Layer[layer].CNR = 0.0;        // not used here
+                    FOMData.Layer[layer].LabileP = 0.0;    // not used here
                 }
 
                 // surface residues into first layer
-                FOMType fom0Data = new FOMType();
-                fom0Data.amount = removed.FOM[0][1].Weight + removed.FOM[0][2].Weight;
-                fom0Data.N = removed.FOM[0][1].N + removed.FOM[0][2].N;
-                fom0Data.C = fom0Data.amount * carbonFractionInDM;
-                fom0Data.P = removed.FOM[0][1].P + removed.FOM[0][2].P;
-                fom0Data.AshAlk = removed.FOM[0][1].AshAlk + removed.FOM[0][2].AshAlk; // ?
+                FOMData.Layer[0].FOM.amount += removed.FOM[1][1].Weight + removed.FOM[1][2].Weight;
+                FOMData.Layer[0].FOM.N += removed.FOM[1][1].N + removed.FOM[1][2].N;
+                FOMData.Layer[0].FOM.C = FOMData.Layer[0].FOM.amount * carbonFractionInDM;
+                FOMData.Layer[0].FOM.P += removed.FOM[1][1].P + removed.FOM[1][2].P;
+                FOMData.Layer[0].FOM.AshAlk += removed.FOM[1][1].AshAlk + removed.FOM[1][2].AshAlk; // ?
 
-                FOMLayerLayerType layer0Data = new FOMLayerLayerType();
-                layer0Data.FOM = fom0Data;
-                layer0Data.CNR = 0.0;        // not used here
-                layer0Data.LabileP = 0.0;    // not used here
-
-                FOMdataLayer[0] = layer0Data;
-
-                FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = this.Species;
-                FOMData.Layer = FOMdataLayer;
                 nutrient.DoIncorpFOM(FOMData);
             }
         }
@@ -2766,7 +2680,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the litter dry matter that is going to SOM
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Biomass removed in kg/ha</returns>
         private BiomassRemoved TransferLitter()
         {
             string[] sPartName = { "", "leaf", "stem" };
@@ -2808,7 +2722,7 @@ namespace Models.GrazPlan
         /// Store the nutrient from a layer array (kg/ha) in a SoilNutrientDistn
         /// </summary>
         /// <param name="LayerA_mass"></param>
-        /// <param name="Nutrient"></param>
+        /// <param name="Nutrient">Dist of soil nutrients</param>
         private void LayerArrayMass2SoilNutrient(double[] LayerA_mass, ref TSoilNutrientDistn Nutrient)
         {
             Nutrient = new TSoilNutrientDistn();
@@ -2892,59 +2806,13 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="layers"></param>
-        /// <param name="LayerA"></param>
-        /// <param name="bLayersOuter"></param>
-        /// <param name="iDataField"></param>
-        protected void Layers2LayerArray(SoilLayer[] layers, ref double[] LayerA, bool bLayersOuter = false, int iDataField = 2)
-        {
-            int Ldx;
-            SoilLayer soilLayer;
-            double[] FLayerValues = new double[layers.Length + 1]; //[1..
-
-            if (FInputProfile == null)
-                FInputProfile = new double[layers.Length + 1];
-            if (bLayersOuter)
-            {
-                FNoInputLayers = layers.Length;
-                for (Ldx = 0; Ldx < FNoInputLayers; Ldx++)
-                {
-                    soilLayer = layers[Ldx];
-                    FInputProfile[Ldx + 1] = soilLayer.thickness;
-                    if (iDataField == 2)
-                        FLayerValues[Ldx + 1] = soilLayer.amount;
-                }
-            }
-            else
-            {   //// TODO: check if unused - uses layer[], value[]
-                ////setInputProfile(aValue[1]);
-                ////Value2LayerArray(aValue[2], ref FLayerValues);
-            }
-            Input2LayerProfile(FLayerValues, true, ref LayerA);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="Values1"></param>
-        /// <param name="bAsAverage"></param>
-        /// <param name="Values2"></param>
-        protected void Input2LayerProfile(double[] Values1, bool bAsAverage, ref double[] Values2)
-        {
-            if (bAsAverage)
-                MakeLayersAsAverage(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
-            else
-                MakeLayersAsFlow(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
-        }
-
         /// <summary></summary>
         protected const double EPS = 1.0E-5;
 
-        /// <summary>Conversion gm/m^2 to kg/ha</summary>
+        /// <summary>Conversion g/m^2 to kg/ha. 1 g/m^2 = 10 kg/ha</summary>
         protected const double GM2_KGHA = 10.0;
+        /// <summary>Conversion kg/ha to g/m^2</summary>
+        protected const double KGHA_GM2 = 0.1;
 
         /// <summary>
         ///
@@ -3077,18 +2945,6 @@ namespace Models.GrazPlan
                         FSoilPropn[iComp][layer] = 1.0;
         }
 
-        /// <summary>
-        /// Set the layer thickness profile array
-        /// </summary>
-        /// <param name="aValue"></param>
-        protected void setInputProfile(double[] aValue)
-        {
-            this.FNoInputLayers = aValue.Length;
-            if (FInputProfile == null)
-                FInputProfile = new double[this.FNoLayers + 1];
-            Value2LayerArray(aValue, ref FInputProfile);
-        }
-
         #endregion
 
         #region Arbitration functions ==============================================
@@ -3148,8 +3004,8 @@ namespace Models.GrazPlan
                 double[][][] fSupply = PastureModel.ComputeNutrientUptake2(iComp, TPlantElement.N, myZone);
                 for (int iLayer = 0; iLayer < FNoLayers; iLayer++)
                 {
-                    this.mySoilNH4Available[iLayer] += fSupply[(int)TPlantNutrient.pnNH4][0][iLayer + 1];
-                    this.mySoilNO3Available[iLayer] += fSupply[(int)TPlantNutrient.pnNO3][0][iLayer + 1];
+                    this.mySoilNH4Available[iLayer] += fSupply[(int)TPlantNutrient.pnNH4][0][iLayer + 1] * GM2_KGHA;
+                    this.mySoilNO3Available[iLayer] += fSupply[(int)TPlantNutrient.pnNO3][0][iLayer + 1] * GM2_KGHA;
                 }
             }
         }
@@ -3163,8 +3019,8 @@ namespace Models.GrazPlan
             if (IsAlive)
             {
                 // Calculate the demand
-                double maxDemand = 0;
-                double critDemand = 0;
+                double maxDemand = 0;   // g/m^2
+                double critDemand = 0;  // g/m^2
                 PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand, myWaterDemand);
 
                 double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
@@ -3178,8 +3034,8 @@ namespace Models.GrazPlan
 
                     EvaluateSoilNitrogenAvailability(zone); // get the N amount available in the soil
 
-                    UptakeDemands.NO3N = mySoilNO3Available;    // kg/ha
-                    UptakeDemands.NH4N = mySoilNH4Available;
+                    UptakeDemands.NO3N = this.mySoilNO3Available;    // kg/ha
+                    UptakeDemands.NH4N = this.mySoilNH4Available;
                     UptakeDemands.Water = new double[zone.NO3N.Length];
 
                     NSupply += (this.mySoilNH4Available.Sum() + this.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
@@ -3328,7 +3184,7 @@ namespace Models.GrazPlan
         /// <param name="rate">Amount of seed sown. kg/ha</param>
         public void Sow(double rate)
         {
-            PastureModel.Sow(rate / GM2_KGHA);      // Convert kg/ha to g/m^2
+            PastureModel.Sow(rate * KGHA_GM2);      // Convert kg/ha to g/m^2
         }
 
         /// <summary>
@@ -3438,9 +3294,9 @@ namespace Models.GrazPlan
             double[] SeedRemoved = new double[GrazType.RIPE + 1];
 
             for (int Idx = 1; Idx <= GrazType.DigClassNo; Idx++)
-                HerbageRemoved[Idx] = removing.herbage[Idx - 1] / GM2_KGHA;
+                HerbageRemoved[Idx] = removing.herbage[Idx - 1] * KGHA_GM2;
             for (int Idx = UNRIPE; Idx <= RIPE; Idx++)
-                SeedRemoved[Idx] = removing.seed[Idx - 1] / GM2_KGHA;
+                SeedRemoved[Idx] = removing.seed[Idx - 1] * KGHA_GM2;
 
             PastureModel.PassRemoval(HerbageRemoved, SeedRemoved);
         }

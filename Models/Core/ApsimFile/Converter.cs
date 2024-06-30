@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 171; } }
+        public static int LatestVersion { get { return 176; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -128,6 +128,7 @@ namespace Models.Core.ApsimFile
                     if (initWater == null)
                         initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
+
                     if (sample == null)
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
@@ -145,30 +146,47 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(initWater);
                         res = true;
                     }
-                    if (sample == null && soilNitrogenSample == null) //no solutes on Soil Nitrogen, don't add them
+
+                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    bool hasPhysical = false;
+                    int nLayers = 1;
+
+                    if (physical != null)
+                    {
+                        nLayers = physical["Thickness"].Count();
+                        hasPhysical = true;
+                    }
+
+                    if (initWater["Thickness"] == null && hasPhysical)
+                    {
+                        initWater["Thickness"] = physical["Thickness"];
+                        initWater["InitialValues"] = physical["DUL"];
+                    }
+
+                    if (sample == null && soilNitrogenSample == null)
                     {
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NO3",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 3 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "NH4",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 1 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
 
                         soilChildren.Add(new JObject
                         {
                             ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "Urea",
-                            ["Thickness"] = new JArray(new double[] { 1800 }),
-                            ["InitialValues"] = new JArray(new double[] { 0.0 })
+                            ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                         });
                         res = true;
                     }
@@ -176,6 +194,7 @@ namespace Models.Core.ApsimFile
                     var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
                     var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
                     var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+
                     if (soilNitrogenSample != null)
                     {
                         if (soilNitrogenNO3Sample == null)
@@ -184,8 +203,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
                                 ["Name"] = "NO3",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 3 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -194,8 +213,8 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
                                 ["Name"] = "NH4",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 1 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                         if (soilNitrogenNO3Sample == null)
@@ -204,13 +223,25 @@ namespace Models.Core.ApsimFile
                             {
                                 ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
                                 ["Name"] = "Urea",
-                                ["Thickness"] = new JArray(new double[] { 1800 }),
-                                ["InitialValues"] = new JArray(new double[] { 0.0 })
+                                ["Thickness"] = hasPhysical ? physical["Thickness"] : new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(Enumerable.Repeat(0.0, nLayers).ToArray())
                             });
                         }
                     }
 
+                    // Add a soil temperature model.
+                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                    if (soilTemperature == null)
+                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
 
+                    // Add a nutrient model.
+                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                    if (nutrient == null)
+                    {
+                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                        nutrient["ResourceName"] = "Nutrient";
+                    }
 
                     return res;
                 }
@@ -1220,7 +1251,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
                     {
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
@@ -1229,7 +1260,7 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
                     {
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
@@ -1238,10 +1269,24 @@ namespace Models.Core.ApsimFile
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
-                        if (values.Length < physicalThickness.Length)
+                        if (values.Length != chemicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
                         var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
+                    }
+
+                    if (chemical["Rocks"] != null && chemical["Rocks"].HasValues)
+                    {
+                        //Some soils from APSoil have NaN in their rock values
+                        var values = chemical["Rocks"].Values<double>().ToArray();
+                        for (int i = 0; i < values.Length; i++) {
+                            if (double.IsNaN(values[i]))
+                                values[i] = 0;
+                        }
+                        if (values.Length != chemicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                        physical["Rocks"] = new JArray(mappedValues);
                     }
 
                     // convert ph units
@@ -4267,10 +4312,12 @@ namespace Models.Core.ApsimFile
                         if (initWater["RelativeTo"] != null)
                             relativeTo = initWater["RelativeTo"].ToString();
                         double[] thickness = physical["Thickness"].Values<double>().ToArray();
+                        double[] airdry = physical["AirDry"].Values<double>().ToArray();
                         double[] ll15 = physical["LL15"].Values<double>().ToArray();
                         double[] dul = physical["DUL"].Values<double>().ToArray();
                         double[] ll;
                         double[] xf = null;
+                        double[] sat = physical["SAT"].Values<double>().ToArray();
                         if (relativeTo == "LL15")
                             ll = ll15;
                         else
@@ -4311,9 +4358,9 @@ namespace Models.Core.ApsimFile
                         else
                         {
                             if (filledFromTop)
-                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, ll, dul, xf));
+                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, airdry, ll, dul, sat, xf));
                             else
-                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, ll, dul));
+                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
                         }
                         water["Thickness"] = new JArray(thickness);
                         water["FilledFromTop"] = filledFromTop;
@@ -4363,6 +4410,9 @@ namespace Models.Core.ApsimFile
                 else
                     swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
+
+            foreach (JObject swimWT in JsonUtilities.ChildrenRecursively(root, "SwimWaterTable"))
+                swimWT.Remove();
 
             // Make sure all solutes have the new $type
             foreach (JObject solute in JsonUtilities.ChildrenRecursively(root, "Solute"))
@@ -5132,7 +5182,7 @@ namespace Models.Core.ApsimFile
                 // check for an existing Nutrient node. If it exists, do not add another one.
                 JObject parentObject = parent.ToObject<JObject>();
                 var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
-                if (existingNutrient == null)
+                if (existingNutrient.Count == 0)
                 {
                     var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
                     nutrient["ResourceName"] = "Nutrient";
@@ -5311,7 +5361,7 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion169(JObject root, string _)
         {
-            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
             {
                 rotationManager["TopLevel"] = true;
             }
@@ -5344,22 +5394,177 @@ namespace Models.Core.ApsimFile
                 manager.Save();
             }
         }
+
         /// <summary>
-        /// Change Maize model to use simple leaf class
+        /// Add minimum germination temperature to GerminatingPhase under Phenology.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion171(JObject root, string _)
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion171(JObject root, string fileName)
         {
-
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "GerminatingPhase"))
             {
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Structure.LeafTipsAppeared", "[Maize].Leaf.Tips");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Leaf.ExpandedCohortNo", "[Maize].Leaf.Ligules");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Structure.Height", "[Maize].Leaf.Height");
+                //check if child already has a MinSoilTemperature
+                if (JsonUtilities.ChildWithName(NNP, "MinSoilTemperature") == null)
+                {
+                    Constant value = new Constant();
+                    value.Name = "MinSoilTemperature";
+                    value.FixedValue = 0.0;
+                    JsonUtilities.AddModel(NNP, value);
+                }
             }
         }
 
+		/// <summary>
+		/// Changes example met file names in Weather.FileName to conform to new naming.
+		/// </summary>
+		/// <param name="root"></param>
+		/// <param name="fileName"></param>
+		private static void UpgradeToVersion172(JObject root, string fileName)
+		{
+			Dictionary<string, string> newWeatherFileNames = new()
+			{
+				{"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
+				{"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
+				{"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
+				{"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
+				{"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
+				{"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
+				{"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
+				{"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
+				{"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
+				{"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
+				{"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
+				{"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
+				{"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
+				{"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
+				{"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
+				{"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
+				{"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
+				{"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
+				{"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
+			};
+
+			List<string> splits = new List<string>();
+			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
+			{
+				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
+				{
+					if(weather["FileName"] != null)
+					{
+                        string fixedFileNameString = weather["FileName"].ToString();
+                        fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace("\\", "/");
+                        fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
+                        weather["FileName"] = fixedFileNameString;
+					}
+				}
+			}
+		}
+
+        /// <summary>
+        /// Change references to ScriptModel to Script in manager scripts
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion173(JObject root, string fileName)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                //rename uses of ScriptModel to Script
+                bool changeMade = manager.Replace(".ScriptModel as ", ".Script as ", true);
+                if (changeMade)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Change name based system to id based system in directed graphs
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion174(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                //give each node an id
+                int id = 0;
+                foreach (var node in rotationManager["Nodes"])
+                {
+                    id += 1;
+                    node["ID"] = id;
+                    node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
+                }
+
+                //give each arc an id
+                foreach (var arc in rotationManager["Arcs"])
+                {
+                    id += 1;
+                    arc["ID"] = id;
+                    arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
+
+                    //connect up arc source/dest with ids instead of names
+                    string sourceName = arc["SourceName"].ToString();
+                    int sourceID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == sourceName)
+                            sourceID = (int)node["ID"];
+
+                    string destinationName = arc["DestinationName"].ToString();
+                    int destinationID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == destinationName)
+                            destinationID = (int)node["ID"];
+
+                    arc["SourceID"] = sourceID;
+                    arc["DestinationID"] = destinationID;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add ResourceName to MicroClimate
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion175(JObject root, string fileName)
+        {
+            foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
+                microClimate["ResourceName"] = "MicroClimate";
+        }
+
+        /// <summary>
+        /// Rename Wheat Report Variables
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion176(JObject root, string fileName)
+        {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.AppearedCohortNo", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Phyllochron", "[Wheat].Phenology.Phyllochron");
+            }
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.AppearedCohortNo", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.ExpandedCohortNo", "Wheat.Leaf.Ligules");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Height", "Wheat.Leaf.Height");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Phyllochron", "Wheat.Phenology.Phyllochron");
+            }
+        }
     }
 }
 

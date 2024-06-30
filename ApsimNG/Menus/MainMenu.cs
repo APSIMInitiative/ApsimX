@@ -165,7 +165,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/");
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/");
             }
             catch (Exception err)
             {
@@ -195,6 +195,9 @@ namespace UserInterface.Presenters
                 // Write .apsimx file to disk.
                 if (Configuration.Settings.AutoSave)
                     explorer.Save();
+
+                if (string.IsNullOrEmpty(explorer.ApsimXFile.FileName))
+                     throw new InvalidOperationException("Please save before running simulation.");
 
                 IModel model = FindRunnable(explorer.CurrentNode);
                 if (model == null)

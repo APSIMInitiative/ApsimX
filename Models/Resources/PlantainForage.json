@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -104,6 +104,16 @@
                   "$type": "Models.Memo, Models",
                   "Text": "Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil ([ReedEtAl_2008]; [DouglasEtAl_2013]; [LeeEtAlYields_2015]).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ",
                   "Name": "Description",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "MinSoilTemperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

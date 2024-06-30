@@ -22,6 +22,7 @@ namespace Models.Functions
 
         /// <summary>The start stage name</summary>
         [Description("StartStageName")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
 
         /// <summary>The child function to return a delta for</summary>

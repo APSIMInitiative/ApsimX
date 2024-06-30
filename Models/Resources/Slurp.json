@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -40,6 +40,7 @@
               "Start": "Initialisation",
               "End": "Sowing",
               "Name": "Initial",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",

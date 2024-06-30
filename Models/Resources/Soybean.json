@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -535,7 +535,18 @@
               "End": "Germination",
               "Name": "Germinating",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "MinSoilTemperature",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },

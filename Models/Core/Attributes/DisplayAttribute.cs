@@ -31,9 +31,19 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
-        /// A phase name selector.
+        /// A stage name selector.
         /// </summary>
         CropStageName,
+
+        /// <summary>
+        /// A list of crops parameterised as columns in a csv input file
+        /// </summary>
+        CSVCrops,
+
+        /// <summary>
+        /// A phase name selector.
+        /// </summary>
+        CropPhaseName,
 
         /// <summary>
         /// A LifePhase name editor.
@@ -102,7 +112,22 @@ namespace Models.Core
         /// <summary>
         /// This is a list of SCRUMcrop model harvest stages.
         /// </summary>
-        ScrumHarvestStages
+        ScrumHarvestStages,
+
+        /// <summary>
+        /// List of plant organs that have damagable organs returned in plant.organ format.
+        /// </summary>
+        PlantOrganList,
+
+		/// <summary>
+        /// Provides a EditorView object for display
+        /// </summary>
+        Code,
+
+         /// <summary>
+        /// Provides a GTK Colour Picker dialog
+        /// </summary>
+        ColourPicker
     }
 
     /// <summary>

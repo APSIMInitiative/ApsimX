@@ -31,7 +31,7 @@
         },
         {
           "$type": "Models.Weather, Models",
-          "FileName": "%root%\\Examples\\WeatherFiles\\Curvelo.met",
+          "FileName": "%root%/Examples/WeatherFiles/Curvelo.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],

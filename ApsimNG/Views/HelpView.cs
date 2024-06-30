@@ -111,7 +111,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com");
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app");
             }
             catch (Exception err)
             {

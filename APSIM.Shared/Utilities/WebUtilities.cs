@@ -1,19 +1,17 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Globalization;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Net.Sockets;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
-
-
     /// <summary>
     /// A class containing some web utilities
     /// </summary>
@@ -142,6 +140,10 @@
                 
                 MemoryStream memStream = new MemoryStream();
                 result.CopyTo(memStream);
+
+                if (Encoding.UTF8.GetString(memStream.ToArray()).Contains("503 Service Unavailable"))
+                    throw new Exception();
+
                 return memStream;
             }
             catch (OperationCanceledException)

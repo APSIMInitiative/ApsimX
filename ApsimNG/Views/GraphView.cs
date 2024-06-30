@@ -1,31 +1,31 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using APSIM.Interop.Graphing.CustomSeries;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Gtk;
+using MathNet.Numerics.Statistics;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using Utility;
+using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+
+namespace UserInterface.Views
 {
-    using APSIM.Interop.Graphing.CustomSeries;
-    using APSIM.Interop.Graphing.Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using MathNet.Numerics.Statistics;
-    using OxyPlot;
-    using OxyPlot.Annotations;
-    using OxyPlot.Axes;
-    using OxyPlot.GtkSharp;
-    using OxyPlot.Series;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using Utility;
-    using LegendPlacement = OxyPlot.Legends.LegendPlacement;
-    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
-    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-
-
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -105,6 +105,8 @@
         private EventBox captionEventBox = null;
         private Label label2 = null;
         private Menu popup = new Menu();
+        private List<string> unselectedSeriesNames = new List<string>();
+        private List<string> UnselectedSeriesNames { get { return unselectedSeriesNames; } set { unselectedSeriesNames = value; } }
 
         /// <summary>Default constructor.</summary>
         public GraphView() { }
@@ -124,8 +126,10 @@
             Initialise(owner, vbox1);
         }
 
+   
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
+            this.owner = ownerView;
             vbox1 = gtkControl as Box;
             mainWidget = vbox1;
 
@@ -151,6 +155,8 @@
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
+            plot1.Model.MouseLeave += OnChartMouseMove;
+            plot1.Model.Updated += OnModelUpdated;
 #pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
@@ -174,6 +180,45 @@
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
+        private void OnModelUpdated(object sender, EventArgs e)
+        {
+            if ((sender as PlotModel).Series.Count > 0)
+            {
+                if ((sender as PlotModel).Legends.Count() > 0 && (sender as PlotModel).Series.First() is INameableSeries)
+                {
+                    // Get the series in the changed model.
+                    // Get the series with false 'isVisible' property.
+                    List<string> reselectedSeriesNames = new();
+                    List<string> newUnselectedSeriesNames = new();
+                    foreach (OxyPlot.Series.Series series in (sender as PlotModel).Series)
+                    {
+                        if (series is INameableSeries seriesNameable) 
+                        {
+                            bool seriesNamePreviouslyUnselected = false;
+                            List<string> matchingNames = new();
+
+                            if (UnselectedSeriesNames.Any())
+                                matchingNames = UnselectedSeriesNames.Where(seriesname => seriesname.Equals(seriesNameable.Name)).ToList();
+                            if (matchingNames.Any())
+                                seriesNamePreviouslyUnselected = true;
+                            if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
+                                newUnselectedSeriesNames.Add(seriesNameable.Name);
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && 
+                                    (series as OxyPlot.Series.Series).Title != null && 
+                                    seriesNamePreviouslyUnselected)
+                                reselectedSeriesNames.Add(seriesNameable.Name);
+                        }
+                        
+                    }
+                    UnselectedSeriesNames = newUnselectedSeriesNames;
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out LegendPosition legendPosition);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out LegendOrientation legendOrientation);
+                    // Reformat the legend without the matching unselectedSeries.
+                    FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
+                }
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
@@ -182,6 +227,8 @@
                 plot1.Model.MouseDown -= OnChartClick;
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
+                plot1.Model.MouseLeave -= OnChartMouseMove;
+                plot1.Model.Updated -= OnModelUpdated;
 #pragma warning restore CS0618
                 if (captionEventBox != null)
                     captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
@@ -227,11 +274,6 @@
         /// Invoked when the user clicks on the annotation.
         /// </summary>
         public event EventHandler OnAnnotationClick;
-
-        /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>Invoked when the user single clicks on the graph</summary>
         public event EventHandler SingleClick;
@@ -349,9 +391,6 @@
         /// </summary>
         public void Clear()
         {
-            foreach (OxyPlot.Series.Series series in this.plot1.Model.Series)
-                if (series is Utility.LineSeriesWithTracker)
-                    (series as Utility.LineSeriesWithTracker).OnHoverOverPoint -= OnHoverOverPoint;
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
@@ -442,8 +481,17 @@
             Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                series = new Utility.LineSeriesWithTracker();
-                series.OnHoverOverPoint += OnHoverOverPoint;
+                series = new Utility.LineSeriesWithTracker(title);
+                if (x.Count() > 0)
+                    series.XType = x.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.XType = null;
+
+                if (y.Count() > 0)
+                    series.YType = y.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.YType = null;
+
                 if (showOnLegend)
                 {
                     if (String.IsNullOrEmpty(title))
@@ -611,7 +659,18 @@
             Color colour,
             bool showOnLegend)
         {
-            AreaSeries series = new AreaSeries();
+            AreaSeriesWithTracker series = new AreaSeriesWithTracker();
+            series.TooltipTitle = title;
+            if (x1.Count() > 0)
+                series.XType = x1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.XType = null;
+
+            if (y1.Count() > 0)
+                series.YType = y1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.YType = null;
+
             series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
@@ -820,7 +879,7 @@
                     else
                         series.Title = title;
                 }
-                    
+
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -1120,10 +1179,24 @@
                     oxyAxis.StartPosition = 0;
                     oxyAxis.EndPosition = 1;
                 }
+
+                double min = minimum;
                 if (!double.IsNaN(minimum))
                     oxyAxis.Minimum = minimum;
+                else
+                    min = AxisMinimum(axisType);
+
+                double max = maximum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
+                else
+                    max = AxisMaximum(axisType);
+
+                if (max <= min)
+                    max = min + 1;
+
+                oxyAxis.AbsoluteMinimum = min;
+                oxyAxis.AbsoluteMaximum = max;
 
                 if (oxyAxis is DateTimeAxis)
                 {
@@ -1142,12 +1215,13 @@
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
+        /// <param name="namesOfSeriesToRemove">Names of Series to remove.</param>
+        /// <param name="reselectedSeriesNames">Names of series to reenable.</param>
+        public void FormatLegend(LegendPosition legendPositionType, LegendOrientation orientation, List<string> namesOfSeriesToRemove=null, List<string> reselectedSeriesNames=null)
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
-            OxyLegendPosition oxyLegendPosition;
-            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out OxyLegendPosition oxyLegendPosition))
             {
                 this.plot1.Model.SetLegendFont(Font);
                 this.plot1.Model.SetLegendFontSize(FontSize);
@@ -1157,48 +1231,34 @@
             }
 
             this.plot1.Model.SetLegendSymbolLength(30);
+            // Sort the list of series by this view's line or marker type.
 
-            // If 2 series have the same title then remove their titles (this will
-            // remove them from the legend) and create a new series solely for the
-            // legend that has line type and marker type combined.
-            var newSeriesToAdd = new List<OxyPlot.Series.LineSeries>();
             foreach (var series in plot1.Model.Series)
             {
-                if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
+                if (series is INameableSeries)
                 {
-                    var matchingSeries = FindMatchingSeries(series);
-                    if (matchingSeries != null)
-                    {
-                        var newFakeSeries = new OxyPlot.Series.LineSeries();
-                        newFakeSeries.Title = series.Title;
-                        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
-                        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
-                        if (newFakeSeries.LineStyle == LineStyle.None)
-                            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
-                        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                    // Reenable legend items if previously unselected but reselected.
+                    if (reselectedSeriesNames != null)
+                        if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
-                        }
-                        else
-                        {
-                            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
+                            series.Title = (series as INameableSeries).Name;
+                            series.IsVisible = true;
                         }
 
-                        newSeriesToAdd.Add(newFakeSeries);
-
-                        series.Title = null;          // remove from legend.
-                        matchingSeries.Title = null;  // remove from legend.
-                    }
+                    // Remove series that match list of names to remove.
+                    if (namesOfSeriesToRemove != null)
+                        foreach (var nameToRemove in namesOfSeriesToRemove)
+                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                                series.IsVisible = false;
                 }
+                // Tidy up duplicate names.
+                var matchingSeries = FindMatchingSeries(series);
+                if (matchingSeries != null)
+                    // Make it so it doesn't show in legend.
+                    matchingSeries.Title = null;
             }
-            newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
         }
+
 
         /// <summary>
         /// Format the title.
@@ -1322,7 +1382,7 @@
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        item.DetachHandler("activate");
+                        _ = item.DetachHandler("activate");
                     }
                 }
             }
@@ -1351,6 +1411,22 @@
             foreach (var s in plot1.Model.Series)
             {
                 if (s != series && s.Title == series.Title)
+                    return s;
+
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Find a graph series that has the same title as the specified series.
+        /// </summary>
+        /// <param name="series">The series to match.</param>
+        /// <returns>The series or null if not found.</returns>
+        private INameableSeries FindMatchingSeries(INameableSeries series)
+        {
+            foreach (INameableSeries s in plot1.Model.Series)
+            {
+                if (s != series && s.Name == series.Name)
                     return s;
             }
             return null;
@@ -1426,16 +1502,6 @@
                     int numDecimalPlaces = st.Length - pos - 1;
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
                 }
-
-                if (axis.PlotModel.Series[0] is BoxPlotSeries &&
-                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
-                    axis.PlotModel.Series?.Count > 0)
-                {
-                    // Need to put a bit of extra space on the x axis.
-                    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-                    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
-
-                }
             }
         }
 
@@ -1457,9 +1523,10 @@
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
 
                 // Create data points
                 for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
@@ -1494,11 +1561,12 @@
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
-                double[] xErrorValues = GetDataPointValues(xError?.GetEnumerator(), xAxisType);
-                double[] yErrorValues = GetDataPointValues(yError?.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator(), xError?.GetEnumerator(), yError?.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType, xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
+                double[] xErrorValues = arrays[2];
+                double[] yErrorValues = arrays[3];
 
                 if (xValues.Length == yValues.Length)
                 {
@@ -1534,63 +1602,126 @@
             return null;
         }
 
-        /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="enumerator">The enumumerator</param>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Shared.Graphing.AxisPosition axisType)
+        private List<double[]> GetDataPointValues(List<IEnumerator> enumerators, List<APSIM.Shared.Graphing.AxisPosition> axisTypes)
         {
-            List<double> dataPointValues = new List<double>();
-            double x; // Used only as an out parameter, to maintain backward
-                      // compatibility with older versions VS/C#.
-            if (enumerator == null || !enumerator.MoveNext())
-                return new double[0];
-            if (enumerator.Current.GetType() == typeof(DateTime))
-            {
-                this.EnsureAxisExists(axisType, typeof(DateTime));
-                smallestDate = DateTime.MaxValue;
-                largestDate = DateTime.MinValue;
-                do
-                {
-                    DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
-                }
-                while (enumerator.MoveNext());
-            }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
-            {
-                this.EnsureAxisExists(axisType, typeof(double));
-                do
-                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
-                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
-                while (enumerator.MoveNext());
-            }
-            else
-            {
-                this.EnsureAxisExists(axisType, typeof(string));
-                CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                if (axis != null)
-                {
-                    do
-                    {
-                        int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        if (index == -1)
-                        {
-                            axis.Labels.Add(enumerator.Current.ToString());
-                            index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        }
+            //NOTE: This function only looks at the first element of each enumerator to get the type, 
+            //      this could lead to mistakes if there is a mix of types in a column of data.
+            List<List<double>> output = new List<List<double>>();
+            List<int> indiciesToRemove = new List<int>();
 
-                        dataPointValues.Add(index);
+            for(int i = 0; i < enumerators.Count; i++)
+            {
+                IEnumerator enumerator = enumerators[i];
+                APSIM.Shared.Graphing.AxisPosition axisType = axisTypes[i];
+                List<double> values = new List<double>();
+                int index = 0;
+                bool hasValues = true;
+                if (enumerator == null || !enumerator.MoveNext()) //moves to first value, returns false if can't
+                    hasValues = false;
+                    
+                if (hasValues)
+                {
+                    bool isDate = false;
+                    bool isDouble = false;
+                    bool isString = false;
+                    if (enumerator.Current.GetType() == typeof(DateTime)) {
+                        isDate = true;
                     }
-                    while (enumerator.MoveNext());
+                    if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+                    {
+                        isDouble = true;
+                    }
+                    if (!isDate && !isDouble)
+                    {
+                        //check if double stored as a string
+                        if (double.TryParse(enumerator.Current.ToString(), out double parseOut)) 
+                            isDouble = true;
+
+                        isString = true;
+                    }
+                    enumerator.Reset();//reset poition so the while loops work in the next section
+                    if (isDate)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(DateTime));
+                        DateTime defaultDate = new DateTime();
+                        smallestDate = DateTime.MaxValue;
+                        largestDate = DateTime.MinValue;
+                        while (enumerator.MoveNext())
+                        {
+                            DateTime date = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
+                            if (date != defaultDate)
+                            {
+                                values.Add(DateTimeAxis.ToDouble(date));
+                                if (date < smallestDate)
+                                    smallestDate = date;
+                                if (date > largestDate)
+                                    largestDate = date;
+                            }
+                            else 
+                            {
+                                MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
+                                values.Add(0); //leave a 0 in this entry so that the indexs line up still for later.
+                                indiciesToRemove.Add(index);
+                            }
+                            index += 1;
+                        }
+                    }
+                    else if (isDouble)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(double));
+                        while (enumerator.MoveNext())
+                        {
+                            double value = 0;
+                            if (isString)
+                                double.TryParse(enumerator.Current.ToString(), out value);
+                            else
+                                value = Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture);
+
+                            values.Add(value);
+                            index += 1;
+                        }
+                    }
+                    else if (isString)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(string));
+                        CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
+                        if (axis != null)
+                        {
+                            while (enumerator.MoveNext())
+                            {
+                                int axisIndex = axis.Labels.IndexOf(enumerator.Current.ToString());
+                                if (axisIndex == -1)
+                                    axis.Labels.Add(enumerator.Current.ToString());
+
+                                values.Add(index);
+                                index += 1;
+                            }
+                        }
+                    }
+                }
+                output.Add(values);
+            }
+
+            int length = output[0].Count;
+            for (int i = 0; i < output.Count; i++)
+            {
+                if (output[i].Count > 0 && output[i].Count != length) //we need to check if more than 0 so that empty axis are skipped (like null error axis)
+                    throw new Exception("XY point pairs are misaligned. Array of X values and array of Y values have different lengths.");
+
+                for (int j = output[i].Count-1; j >= 0; j--)
+                {
+                    if (indiciesToRemove.Contains(j))
+                        output[i].RemoveAt(j);
                 }
             }
 
-            return dataPointValues.ToArray();
+            List<double[]> outputArrays = new List<double[]>();
+            for (int i = 0; i < output.Count; i++)
+            {
+                outputArrays.Add(output[i].ToArray());
+            }
+
+            return outputArrays;
         }
 
         /// <summary>

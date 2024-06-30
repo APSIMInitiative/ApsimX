@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -718,6 +718,21 @@
             {
               "$type": "Models.Surface.ResidueType, Models",
               "fom_type": "soybean",
+              "derived_from": "base_type",
+              "fraction_C": 0.0,
+              "po4ppm": 0.0,
+              "nh4ppm": 0.0,
+              "no3ppm": 0.0,
+              "specific_area": 0.0002,
+              "cf_contrib": 0,
+              "pot_decomp_rate": 0.0,
+              "fr_c": null,
+              "fr_n": null,
+              "fr_p": null
+            },
+            {
+              "$type": "Models.Surface.ResidueType, Models",
+              "fom_type": "Sesame",
               "derived_from": "base_type",
               "fraction_C": 0.0,
               "po4ppm": 0.0,

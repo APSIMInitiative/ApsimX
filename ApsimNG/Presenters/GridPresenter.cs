@@ -1,14 +1,12 @@
-﻿using UserInterface.Interfaces;
-using Models.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UserInterface.Views;
 using System.Data;
-using Models.Interfaces;
-using UserInterface.EventArguments;
 using Models.Core;
-using Gtk;
-using DocumentFormat.OpenXml.Wordprocessing;
+using Models.Interfaces;
+using Models.Utilities;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -56,9 +54,10 @@ namespace UserInterface.Presenters
 
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
-        /// <param name="colIndex">The index of the column that was changed.</param>
-        /// <param name="rowIndex">The index of the row that was changed.</param>
-        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int colIndex, int rowIndex);
+        /// <param name="colIndices">The indices of the columns that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows that were changed.</param>
+        /// <param name="values">The values of the cells changed.</param>
+        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
@@ -95,7 +94,7 @@ namespace UserInterface.Presenters
                 gridTable = m.Tables[0];
             }
             //else we are receiving a GridTable that was created by another presenter
-            else if(model as GridTable != null)
+            else if (model as GridTable != null)
             {
                 gridTable = (model as GridTable);
             }
@@ -162,7 +161,7 @@ namespace UserInterface.Presenters
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
                 intellisense.ContextItemsNeeded -= OnIntellisenseNeedContextItems;
             }
-            
+
         }
 
         public void SetupSheet(ISheetDataProvider dataProvider)
@@ -227,6 +226,7 @@ namespace UserInterface.Presenters
 
                 DataTable data = gridTable.Data;
 
+                // Assemble column units to pass to DataTableProvider constructor.
                 List<string> units = null;
                 if (gridTable.HasUnits())
                 {
@@ -237,8 +237,16 @@ namespace UserInterface.Presenters
                     }
                     data.Rows.Remove(data.Rows[0]);
                 }
-                DataTableProvider dataProvider = new DataTableProvider(data, units);
 
+                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
+                List<List<bool>> isCalculated = new();
+                for (int i = 0; i < data.Columns.Count; i++)
+                   isCalculated.Add(gridTable.GetIsCalculated(i));
+
+                // Create instance of DataTableProvider.
+                DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
+
+                // Give DataTableProvider to grid sheet.
                 grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
                 grid.Sheet.DataProvider = dataProvider;
 
@@ -278,13 +286,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Adds options to the right-click context menu, valid options are:
-        /// Cut - Any Editable Cell
-        /// Copy - Any Cell
-        /// Paste - Any Editable Cell
-        /// Delete - Any Editable Cell
-        /// Select All - Any Cell
-        /// Units - Change Units on Solute grids, only on row == 1
+        /// Adds intellisense to the grid. 
         /// </summary>
         public void AddIntellisense(Model model)
         {
@@ -298,16 +300,20 @@ namespace UserInterface.Presenters
         /// User has changed a cell.
         /// </summary>
         /// <param name="sender">The sender of the event</param>
-        /// <param name="colIndex">The index of the column that was changed.</param>
-        /// <param name="rowIndex">The index of the row that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider sender, int colIndex, int rowIndex)
+        /// <param name="colIndices"></param>
+        /// <param name="rowIndices"></param>
+        /// <param name="values"></param>
+        /// <param name="colIndex">The indices of the column that was changed.</param>
+        /// <param name="rowIndex">The indices of the row that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
         {
             if (CellChanged != null)
             {
                 try
                 {
                     SaveGridToModel();
-                    CellChanged?.Invoke(sender, colIndex, rowIndex);
+                    CellChanged?.Invoke(sender, colIndices, rowIndices, values);
+
                 }
                 catch (Exception err)
                 {
@@ -514,6 +520,14 @@ namespace UserInterface.Presenters
                 if (grid.Sheet.DataProvider != null)
                 {
                     var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
+                    List<string> unitsRow = new List<string>();
+                    for (int i = 0; i < data.Columns.Count; i++)
+                        unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
+
+                    DataRow row = data.NewRow();
+                    row.ItemArray = unitsRow.ToArray();
+
+                    data.Rows.InsertAt(row, 0);
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
             }
@@ -532,7 +546,7 @@ namespace UserInterface.Presenters
                     sheetContainer.SetScrollbarVisible(false, true);
                 else
                     sheetContainer.SetScrollbarVisible(false, false);
-            } 
+            }
             else
             {
                 sheetContainer.SetScrollbarVisible(false, false);
@@ -546,7 +560,7 @@ namespace UserInterface.Presenters
                     sheetContainer.SetScrollbarVisible(true, true);
                 else
                     sheetContainer.SetScrollbarVisible(true, false);
-            } 
+            }
             else
             {
                 sheetContainer.SetScrollbarVisible(true, false);
@@ -586,8 +600,12 @@ namespace UserInterface.Presenters
                 grid.Sheet.CellEditor.EndEdit();
                 grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
                 string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-                grid.Sheet.DataProvider.SetCellContents(columnIndex, rowIndex, text + args.ItemSelected);
+                grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
+                                                        new int[] {rowIndex}, 
+                                                        new string[]{text + args.ItemSelected});
                 grid.Sheet.CalculateBounds(columnIndex, rowIndex);
+
+                grid.Sheet.CellEditor.Edit(); //keep editting window open
             }
             catch (Exception err)
             {

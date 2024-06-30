@@ -121,7 +121,7 @@ namespace UnitTests.Core
                     List<String> dataStoreNames = dataStore.Reader.SimulationNames;
 
                     //check that the datastore and expected simulations have the same amount of entries
-                    Assert.AreEqual(dataStoreNames.Count, expectedSimulations[i].Length);
+                    Assert.AreEqual(expectedSimulations[i].Length, dataStoreNames.Count);
                     for (int j = 0; j < expectedSimulations[i].Length; j++)
                     {
                         if (!dataStoreNames.Contains(expectedSimulations[i][j]))

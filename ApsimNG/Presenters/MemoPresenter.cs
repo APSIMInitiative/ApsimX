@@ -75,7 +75,7 @@
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/memo/");
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/memo/");
             }
             catch (Exception err)
             {

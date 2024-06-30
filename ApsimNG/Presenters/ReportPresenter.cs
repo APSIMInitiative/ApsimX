@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Extensions;
 using ApsimNG.Classes;
+using Shared.Utilities;
 using Gtk;
 using Markdig.Helpers;
 using Models;
@@ -17,6 +18,7 @@ using Newtonsoft.Json;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -439,9 +441,15 @@ namespace UserInterface.Presenters
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.EventList.Text = modifiedText;
                 if (plantVariableLines.Count > 0)
+                {
                     // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                    view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber + (plantVariableLines.Count - 1), X = StoredDragObject.Code.Length }; // TODO: Highlighted line needs to be correctly set.
-                else view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber, X = StoredDragObject.Code.Length }; StoredDragObject = null;
+                    view.EventList.Location = new ManagerCursorLocation(StoredDragObject.Code.Length, view.EventList.CurrentLineNumber + (plantVariableLines.Count - 1)); // TODO: Highlighted line needs to be correctly set.
+                }
+                else
+                {
+                    view.EventList.Location = new ManagerCursorLocation(StoredDragObject.Code.Length, view.EventList.CurrentLineNumber);
+                    StoredDragObject = null;
+                }
             }
         }
 
@@ -690,7 +698,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                string currentLine = StringUtilities.GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender;
                 if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
@@ -699,31 +707,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Gets a specific line of text, preserving empty lines.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <param name="lineNo">0-indexed line number.</param>
-        /// <returns>String containing a specific line of text.</returns>
-        private string GetLine(string text, int lineNo)
-        {
-            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
-            // to use unix-style line endings, so every second element from the returned array is an empty string.
-            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
-
-            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
-            string currentLine;
-            using (System.IO.StringReader reader = new System.IO.StringReader(text))
-            {
-                int i = 0;
-                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
-                {
-                    i++;
-                }
-            }
-            return currentLine;
         }
 
         /// <summary>The variable names have changed in the view.</summary>
@@ -845,8 +828,9 @@ namespace UserInterface.Presenters
             // Makes the selected line the newly added variable's line.
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
-            else view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
+                view.VariableList.Location = new ManagerCursorLocation( variableCode.Length, currentReportVariablesLineNumber + (plantVariableLines.Count - 1));
+            else 
+                view.VariableList.Location = new ManagerCursorLocation ( variableCode.Length, currentReportVariablesLineNumber);
         }
 
 
@@ -880,8 +864,9 @@ namespace UserInterface.Presenters
             view.EventList.Text = modifiedText;
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
-            else view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
+                view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1) );
+            else 
+                view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber);
         }
 
         /// <summary>

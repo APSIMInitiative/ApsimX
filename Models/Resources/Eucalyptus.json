@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 171,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -133,6 +133,16 @@
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "MinSoilTemperature",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3431,7 +3441,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Pinus].IndividualTreeStemWt",
+                  "VariableName": "[Eucalyptus].IndividualTreeStemWt",
                   "Name": "Criterion",
                   "Children": [],
                   "IncludeInDocumentation": true,

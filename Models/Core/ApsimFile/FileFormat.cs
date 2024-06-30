@@ -244,7 +244,14 @@ namespace Models.Core.ApsimFile
                 private IEnumerable<IModel> ChildrenToSerialize(IModel model)
                 {
                     if (model is Manager)
-                        return new Model[0];
+                    {
+                        List<Model> children = new List<Model>();
+                        foreach (Model child in model.Children) {
+                            if (child as IScript == null)
+                                children.Add(child);
+                        }
+                        return children.ToArray();
+                    }
 
                     // Serialise all child if ResourceName is empty.
                     if (string.IsNullOrEmpty(model.ResourceName))

@@ -20,6 +20,7 @@ namespace Models.Functions
 
         /// <summary>The set event</summary>
         [Description("Phenological stage at which value stops updating and is held constant")]
+        [Display(Type = DisplayType.CropStageName)]
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>

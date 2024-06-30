@@ -81,12 +81,13 @@
         public void StructureTests_EnsureAPSOILSoilHasInitWaterAdded()
         {
             Simulation simulation = new Simulation();
-
+            Zone zone = new Zone();
             string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.StructureTestsAPSoilSoil.xml");
-            Structure.Add(soilXml, simulation);
+            Structure.Add(soilXml, zone);
+            Structure.Add(zone, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
-            Soil soil = simulation.Children[0] as Soil;
-            Assert.AreEqual(9, soil.Children.Count);
+            Soil soil = simulation.Children[0].Children[0] as Soil;
+            Assert.AreEqual(11, soil.Children.Count);
             Assert.IsTrue(soil.Children[5] is Water);
             Assert.IsTrue(soil.Children[6] is Solute);
             Assert.IsTrue(soil.Children[7] is Solute);
@@ -145,12 +146,14 @@
             // Get official wheat model.
             string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
             Simulations file = new Simulations();
-            Structure.Add(json, file);
+            Folder folder = new Folder();
+            Structure.Add(json, folder);
+            Structure.Add(folder, file);
 
             // Should have 1 child, of type replacements.
-            Assert.NotNull(file.Children);
-            Assert.AreEqual(1, file.Children.Count);
-            Assert.AreEqual(typeof(Models.PMF.Plant), file.Children[0].GetType());
+            Assert.NotNull(folder.Children);
+            Assert.AreEqual(1, folder.Children.Count);
+            Assert.AreEqual(typeof(Models.PMF.Plant), folder.Children[0].GetType());
         }
 
         [Serializable]

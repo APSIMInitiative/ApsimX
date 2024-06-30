@@ -5,6 +5,7 @@ namespace UserInterface.Classes
     using Models.Core;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.PMF.Phen;
     using Models.PMF.SimplePlantModels;
    
@@ -100,15 +101,37 @@ namespace UserInterface.Classes
                         Namelist[i] = p.Start;
                         i++;
                     }
-                    Namelist[i] = p.End;
-                    i++;
-                    
+                    if (p.End != null)
+                    {
+                        Namelist[i] = p.End;
+                        i++;
+                    }
                 }
                 return Namelist;
             }
             return new string[0];
         }
 
+        /// <summary>Get a list of life phases for the plant.</summary>
+        /// <param name="plant">The the plant.</param>
+        /// <returns>A list of phases.</returns>
+        public static string[] GetCropPhaseNames(Plant plant)
+        {
+            List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
+            if (phases.Count > 0)
+            {
+                string[] Namelist = new string[phases.Count + 1];
+                int i = 0;
+                foreach (IPhase p in phases)
+                {
+                    Namelist[i] = p.Name;
+                    i += 1;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+		
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
@@ -153,6 +176,21 @@ namespace UserInterface.Classes
                 return Namelist;
             }
             return new string[0];
+        }
+    
+        public static string[] GetPlantOrgans(List<Plant> plants)
+        {
+            List<string> Namelist = new List<string>();
+            foreach (Plant plant in plants) 
+            {
+                foreach (Model m in plant.Children)
+                    if (m is IOrgan)
+                    {
+                        string name = plant.Name+"."+m.Name;
+                        Namelist.Add(name);
+                    }
+            }
+            return Namelist.ToArray();
         }
     }
 }

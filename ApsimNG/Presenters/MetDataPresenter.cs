@@ -11,6 +11,7 @@ using UserInterface.Commands;
 using Models.Climate;
 using Models.Core;
 using UserInterface.Views;
+using System.Linq;
 
 namespace UserInterface.Presenters
 {
@@ -355,6 +356,9 @@ namespace UserInterface.Presenters
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
             }
 
+            foreach (string validationMessage in weatherData.Validate())
+                summary.AppendLine($"WARNING: {validationMessage}");
+
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
             summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
@@ -390,8 +394,8 @@ namespace UserInterface.Presenters
 
                 double[] yearlyRainfall = DataTableUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
                 double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMaxT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMinT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMaxT = DataTableUtilities.AverageMonthlyAverages(table, "maxt", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMinT = DataTableUtilities.AverageMonthlyAverages(table, "mint", this.dataFirstDate, this.dataLastDate);
 
                 // what do we do if the date range is less than 1 year.
                 // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
@@ -704,9 +708,17 @@ namespace UserInterface.Presenters
                                                      MarkerSize.Normal,
                                                      1,
                                                      true);
-            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Bottom, "Month", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false, false);
+
+            double startDate = 0;
+            double endDate = months.Length;
+            double minTemp = MathUtilities.Min(monthlyMinT);
+            double maxTemp = MathUtilities.Max(monthlyMaxT);
+            double minRain = 0;
+            double maxRain = MathUtilities.Max(monthlyRain);
+
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Bottom, "Month", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minRain, maxRain, double.NaN, false, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Right, "Temperature (oC)", false, minTemp, maxTemp, double.NaN, false, false);
             this.weatherDataView.GraphSummary.FormatTitle(title);
             this.weatherDataView.GraphSummary.Refresh();
         }
@@ -727,8 +739,13 @@ namespace UserInterface.Presenters
                                                        Color.LightSkyBlue,
                                                        false);
 
-            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false, false);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minVal = 0;
+            double maxVal = MathUtilities.Max(rain);
+
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphRainfall.FormatTitle(title);
             this.weatherDataView.GraphRainfall.Refresh();
         }
@@ -777,8 +794,13 @@ namespace UserInterface.Presenters
                                                  true);
             }
 
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false, false);
+            double startDate = 0;
+            double endDate = months.Length;
+            double minVal = 0;
+            double maxVal = MathUtilities.Max(avgMonthlyRain);
+
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatTitle(title);
             this.weatherDataView.GraphMonthlyRainfall.Refresh();
         }
@@ -827,8 +849,13 @@ namespace UserInterface.Presenters
                                                      1,
                                                      true);
 
-            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false, false);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minVal = MathUtilities.Min(minTemps);
+            double maxVal = MathUtilities.Max(maxTemps);
+
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Left, "Temperature (oC)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphTemperature.FormatTitle(title);
             this.weatherDataView.GraphTemperature.Refresh();
         }
@@ -885,9 +912,16 @@ namespace UserInterface.Presenters
                                                      1,
                                                      true);
 
-            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false, false);
-            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false, false);
+            double startDate = dates.Min<DateTime>().ToOADate();
+            double endDate = dates.Max<DateTime>().ToOADate();
+            double minRad = MathUtilities.Min(radn);
+            double maxRad = MathUtilities.Max(radn);
+            double minRain = 0;
+            double maxRain = MathUtilities.Max(rain);
+
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minRain, maxRain, double.NaN, false, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Right, "Radiation (mJ/m2)", false, minRad, maxRad, double.NaN, false, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
         }

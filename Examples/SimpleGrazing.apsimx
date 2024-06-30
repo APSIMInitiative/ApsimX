@@ -43,7 +43,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -1467,7 +1467,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -2890,7 +2890,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -4360,7 +4360,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -5783,7 +5783,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "ResourceName": null,

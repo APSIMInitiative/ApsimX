@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Models.Climate
 {
@@ -115,6 +116,13 @@ namespace Models.Climate
         private LinkedList<WeatherRecordEntry> weatherCache = new LinkedList<WeatherRecordEntry>();
 
         /// <summary>
+        /// Stores the CO2 value from either the default 350 or from a column in met file. Public property can then also check
+        /// if this value was supplied by a constant
+        /// </summary>
+        [JsonIgnore]
+        private double co2Value { get; set; }
+
+        /// <summary>
         /// Allows to specify a second file which contains constants such as lat, long,
         /// tav, amp, etc. Really only used when the actual met data is in a .csv file.
         /// </summary>
@@ -161,7 +169,7 @@ namespace Models.Climate
             get
             {
                 Simulation simulation = FindAncestor<Simulation>();
-                if (simulation != null)
+                if (simulation != null && simulation.FileName != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
                 {
@@ -169,7 +177,7 @@ namespace Models.Climate
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
                     else
-                        return this.FileName;
+                        return PathUtilities.GetAbsolutePath(this.FileName, "");
                 }
             }
             set
@@ -350,12 +358,23 @@ namespace Models.Climate
         [JsonIgnore]
         public double DayLength { get; set; }
 
-
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
         [JsonIgnore]
-        public double CO2 { get; set; }
+        public double CO2 { 
+            get
+            {
+                if (this.reader == null || this.reader.Constant("co2") == null)
+                    return co2Value;
+                else
+                    return this.reader.ConstantAsDouble("co2");
+            }
+            set 
+            {
+                co2Value = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
@@ -547,6 +566,17 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Check values in weather and return a collection of warnings.
+        /// </summary>
+        public IEnumerable<string> Validate()
+        {
+            if (Amp > 20)
+            {
+                yield return $"The value of Weather.AMP ({Amp}) is > 20 oC. Please check the value.";
+            }
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
         [EventSubscribe("Commencing")]
@@ -563,8 +593,6 @@ namespace Models.Climate
             this.co2Index = -1;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
-            if (CO2 == 0)
-                this.CO2 = 350;
             if (AirPressure == 0)
                 this.AirPressure = 1010;
             if (DiffuseFraction == 0)
@@ -587,6 +615,9 @@ namespace Models.Climate
                 FirstDateOfSpring = FirstDateOfAutumn;
                 FirstDateOfAutumn = temp;
             }
+
+            foreach (var message in Validate())
+                summary.WriteMessage(this, message, MessageType.Warning);
         }
 
         /// <summary>
@@ -653,8 +684,7 @@ namespace Models.Climate
             this.Wind = TodaysMetData.Wind;
             this.DiffuseFraction = TodaysMetData.DiffuseFraction;
             this.DayLength = TodaysMetData.DayLength;
-            if (co2Index != -1)
-                CO2 = TodaysMetData.CO2;
+            this.CO2 = TodaysMetData.CO2;
 
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
@@ -782,7 +812,9 @@ namespace Models.Climate
             else
                 readMetData.Wind = Convert.ToSingle(readMetData.Raw[this.windIndex], CultureInfo.InvariantCulture);
 
-            if (co2Index != -1)
+            if (co2Index == -1)
+                readMetData.CO2 = 350;
+            else
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
@@ -893,7 +925,7 @@ namespace Models.Climate
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
-                    co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
+                    this.co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {
@@ -1038,8 +1070,8 @@ namespace Models.Climate
             double yearlySumAmp = 0;
             for (int y = 0; y < nyears; y++)
             {
-                maxMean = -999;
-                minMean = 999;
+                maxMean = double.MinValue;
+                minMean = double.MaxValue;
                 sumOfMeans = 0;
                 for (int m = 0; m < 12; m++)
                 {
@@ -1052,8 +1084,11 @@ namespace Models.Climate
                     }
                 }
 
-                yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
-                yearlySumAmp += maxMean - minMean;          // accum the amp of means
+                if (maxMean != double.MinValue && minMean != double.MaxValue)
+                {
+                    yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
+                    yearlySumAmp += maxMean - minMean;          // accum the amp of means
+                }
             }
 
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means

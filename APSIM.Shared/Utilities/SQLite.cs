@@ -1,13 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+using System.Threading;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Runtime.InteropServices;
-    using System.Linq;
-    using System.Text;
-    using System.Globalization;
-
     /// <summary>
     /// A custom marshaler that allows us to pass strings to the native SQLite DLL as
     /// the UTF-8 it expects. The default marshaling to a "string" mangles Unicode text
@@ -391,16 +392,39 @@ namespace APSIM.Shared.Utilities
         /// <summary>Return true if the database is in-memory</summary>
         public bool IsInMemory { get; private set; } = false;
 
-        /// <summary>Begin a transaction.</summary>
+        /// <summary>A lock object to prevent multiple threads from starting a transaction at the same time</summary>
+        private readonly object transactionLock = new object();
+
+        /// <summary>Begin a transaction. Any code between begin and end needs to be in a try-finally so that the lock
+        /// is unlocked if there is an exception thrown.</summary>
         public void BeginTransaction()
         {
-            ExecuteNonQuery("BEGIN");
+            Monitor.Enter(transactionLock);
+            try {
+                ExecuteNonQuery("BEGIN");
+            }
+            catch(Exception ex)
+            {
+                EndTransaction();
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>End a transaction.</summary>
         public void EndTransaction()
         {
-            ExecuteNonQuery("END");
+            try
+            {
+                ExecuteNonQuery("END");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                Monitor.Exit(transactionLock);
+            }
         }
 
         /// <summary>Opens or creates SQLite database with the specified path</summary>
