@@ -1,21 +1,18 @@
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Layers;
-using Mapsui.Projections;
 using Mapsui.Nts;
+using Mapsui.Projections;
+using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.Tiling.Layers;
-using Mapsui.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using MapTag = Models.Mapping.MapTag;
-using Mapsui.Extensions;
-using Mapsui.Providers;
 
 namespace APSIM.Interop.Mapping
 {
@@ -58,9 +55,8 @@ namespace APSIM.Interop.Mapping
         {
             Map exported = map.ToMapsuiMap();
             Navigator navigator = new Navigator();
-            var center = Mapsui.Projections.SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
-            Mapsui.MPoint centerMetric = new MPoint(center.x, center.y);
-            navigator.CenterOn(centerMetric);
+            var center = SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
+            navigator.CenterOn(new MPoint(center.x, center.y));
             navigator.SetSize(width, width);
             // Compat check for old zoom units. Should really have used a converter...
             double zoom = map.Zoom - 1.0;
@@ -88,8 +84,7 @@ namespace APSIM.Interop.Mapping
                         {
                             countryLayer.Enabled = true;
                             MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                            FetchInfo fetchInfo = new FetchInfo(mSection);
-                            countryLayer.RefreshData(fetchInfo);
+                            countryLayer.RefreshData(new FetchInfo(mSection));
                             // Give the "country" layer time to be loaded, if necessary.
                             // Seven seconds should be way more than enough...
                             int nSleeps = 0;
@@ -140,12 +135,8 @@ namespace APSIM.Interop.Mapping
             int bitmapId = BitmapRegistry.Instance.Register(markerStream);
             markerLayer.Style = new SymbolStyle { BitmapId = bitmapId, SymbolScale = 1.0, SymbolOffset = new Offset(0.0, 0.5, true) };
 
-            var locs = map.Markers.Select(c => SphericalMercator.FromLonLat(c.Longitude, c.Latitude));
-            foreach (var loc in locs)
-                markerLayer.Features.Add(new GeometryFeature 
-                { 
-                    Geometry = new NetTopologySuite.Geometries.Point(loc.x, loc.y) 
-                });
+            foreach (var loc in map.Markers.Select(c => SphericalMercator.FromLonLat(c.Longitude, c.Latitude)))
+                markerLayer.Features.Add(new GeometryFeature(new NetTopologySuite.Geometries.Point(loc.x, loc.y)));
             result.Layers.Add(markerLayer);
 
             return result;
@@ -166,9 +157,9 @@ namespace APSIM.Interop.Mapping
         {
             Map result = new Map
             {
-                CRS = "EPSG:3857"
+                CRS = "EPSG:3857",
+                BackColor = Mapsui.Styles.Color.FromString("LightBlue")
             };
-            result.BackColor = Mapsui.Styles.Color.FromString("LightBlue");
 
             Mapsui.Tiling.Layers.TileLayer osmLayer = OpenStreetMap.CreateTileLayer("APSIM Next Generation");
             if (osmLayer.TileSource is BruTile.Web.HttpTileSource)

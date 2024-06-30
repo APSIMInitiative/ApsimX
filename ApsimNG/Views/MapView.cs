@@ -235,8 +235,7 @@ namespace UserInterface.Views
                     osmLayer.ClearCache();
                     osmLayer.DataChanged += OsmLayer_DataChanged;
                     MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                    FetchInfo fetchInfo = new FetchInfo(mSection);
-                    osmLayer.RefreshData(fetchInfo); 
+                    osmLayer.RefreshData(new FetchInfo(mSection)); 
                 }
             }
         }
@@ -267,8 +266,7 @@ namespace UserInterface.Views
                     {
                         countryLayer.Enabled = true;
                         MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                        FetchInfo fetchInfo = new FetchInfo(mSection);
-                        countryLayer.RefreshData(fetchInfo); 
+                        countryLayer.RefreshData(new FetchInfo(mSection)); 
                         // Give the "country" layer time to be loaded, if necessary.
                         // Seven seconds should be way more than enough...
                         int nSleeps = 0;
