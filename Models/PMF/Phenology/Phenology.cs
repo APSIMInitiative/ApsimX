@@ -48,7 +48,7 @@ namespace Models.PMF.Phen
         /// <summary>This lists all the stages that are pased on this day</summary>
         private List<string> stagesPassedToday = new List<string>();
 
-
+        
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ namespace Models.PMF.Phen
         public event EventHandler<PhaseChangedType> PhaseChanged;
 
         /// <summary>Occurs when phase is set externally.</summary>
-        public event EventHandler StageWasReset;
+        public event EventHandler<StageSetType> StageWasReset;
 
         /// <summary>Occurs when emergence phase completed</summary>
         public event EventHandler PlantEmerged;
@@ -169,6 +169,9 @@ namespace Models.PMF.Phen
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
         public double Zadok { get { return zadok?.Stage ?? 0; } }
 
+        /// <summary>flag set to true is a phase does a stage set that increments currentPhaseNumber</summary>
+        private bool currentPhaseNumberIncrementedByPhaseTimeStep { get; set; } = false;
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -222,6 +225,7 @@ namespace Models.PMF.Phen
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
+            currentPhaseNumberIncrementedByPhaseTimeStep = true;
             int oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             stagesPassedToday.Clear();
 
@@ -244,7 +248,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind))
+                    if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind) && !(phase is StartGrowthPhase))
                     { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -258,6 +262,7 @@ namespace Models.PMF.Phen
                 }
                 AccumulatedTT = Math.Max(0, AccumulatedTT);
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
+
             }
             else
             {
@@ -291,6 +296,7 @@ namespace Models.PMF.Phen
                         else
                         {
                             AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                            PhaseSkipped.ProgressThroughPhase = PhaseSkipped.Target;
                         }
                     }
                     
@@ -311,7 +317,9 @@ namespace Models.PMF.Phen
             if ((phases[currentPhaseIndex] is PhotoperiodPhase) || (phases[currentPhaseIndex] is LeafDeathPhase))
                 stagesPassedToday.Add(phases[currentPhaseIndex].Start);
 
-            StageWasReset?.Invoke(this, new EventArgs());
+            StageSetType StageSetData = new StageSetType();
+            StageSetData.StageNumber = newStage;
+            StageWasReset?.Invoke(this, StageSetData);
         }
 
         /// <summary>Allows setting of age if phenology has an age child</summary>
@@ -509,13 +517,18 @@ namespace Models.PMF.Phen
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
 
                 // Calculate progression through current phase
+                currentPhaseNumberIncrementedByPhaseTimeStep = false;
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                 while (incrementPhase)
                 {
                     stagesPassedToday.Add(CurrentPhase.End);
-                    currentPhaseIndex = currentPhaseIndex + 1;
+                    if (currentPhaseNumberIncrementedByPhaseTimeStep == false)
+                    { //Phase index does not need to be incrementd if prior phase was go to as it will have set the correct phase index in the setStage call it makes
+                        currentPhaseIndex = currentPhaseIndex + 1;
+                    }
+                    currentPhaseNumberIncrementedByPhaseTimeStep = false;
 
                     if (currentPhaseIndex >= phases.Count)
                         throw new Exception("Cannot transition to the next phase. No more phases exist");
@@ -528,6 +541,9 @@ namespace Models.PMF.Phen
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = CurrentPhase.Start;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
+
+                    if ((CurrentPhase is GotoPhase) || (CurrentPhase is GrazeAndRewind)) //If new phase is one that sets a new stage, do them now
+                        CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
