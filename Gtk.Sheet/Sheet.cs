@@ -352,7 +352,7 @@ namespace Gtk.Sheet
             try
             {
                 // Do initialisation
-                //if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
+                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
 
                 if (recalculateWidths)

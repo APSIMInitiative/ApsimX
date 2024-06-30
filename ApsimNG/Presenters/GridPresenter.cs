@@ -238,7 +238,7 @@ namespace UserInterface.Presenters
                 dataProvider.CellChanged += OnCellChanged;
             }
 
-            UpdateScrollBars();
+            grid.UpdateScrollBars();
         }
 
         /// <summary>The number of rows of data in the grid.</summary>
@@ -307,28 +307,6 @@ namespace UserInterface.Presenters
                 }
             }
         }
-
-        // /// <summary>
-        // /// User has changed a cell.
-        // /// </summary>
-        // /// <param name="sender">sender</param>
-        // /// <param name="e">event</param>
-        // private void OnRedraw(object sender, EventArgs e)
-        // {
-        //     UpdateScrollBars();
-
-        //     int row = 0;
-        //     int column = 0;
-        //     (sender as Sheet).CellSelector.GetSelection(out row, out column);
-
-        //     if (selectedRow != row || selectedColumn != column)
-        //     {
-        //         selectedRow = row;
-        //         selectedColumn = column;
-        //         if (SelectedCellChanged != null)
-        //             SelectedCellChanged?.Invoke(selectedRow, selectedColumn);
-        //     }
-        // }
 
         /// <summary>
         /// User has right clicked - display popup menu.
@@ -500,41 +478,6 @@ namespace UserInterface.Presenters
                 }
             }
         }
-
-        private void UpdateScrollBars()
-        {
-            // int width = grid.Sheet.Width;
-            // int column_widths = 0;
-            // if (grid.Sheet.ColumnWidths != null && width > 0)
-            // {
-            //     for (int i = 0; i < grid.Sheet.ColumnWidths.Length; i++)
-            //         column_widths += grid.Sheet.ColumnWidths[i];
-
-            //     if (column_widths > width)
-            //         sheetContainer.SetScrollbarVisible(false, true);
-            //     else
-            //         sheetContainer.SetScrollbarVisible(false, false);
-            // }
-            // else
-            // {
-            //     sheetContainer.SetScrollbarVisible(false, false);
-            // }
-
-            // int height = grid.Sheet.Height;
-            // int row_heights = grid.Sheet.RowHeight * (grid.Sheet.RowCount + 1); //plus 1 for the empty row
-            // if (height > 0)
-            // {
-            //     if (row_heights > height)
-            //         sheetContainer.SetScrollbarVisible(true, true);
-            //     else
-            //         sheetContainer.SetScrollbarVisible(true, false);
-            // }
-            // else
-            // {
-            //     sheetContainer.SetScrollbarVisible(true, false);
-            // }
-        }
-
 
         /// <summary>
         /// Invoked when the user types a . into the editter.

@@ -92,6 +92,20 @@ namespace Gtk.Sheet
             verticalScrollbar.Adjustment.Lower = 0;
         }
 
+        /// <summary>Set the visibility of the horizontal scroll bar.</summary>
+        /// <param name="visible">Is the scroll bar visible?</param>
+        public void SetHorizontalScrollbarVisibility(bool visible)
+        {
+            horizontalScrollbar.Visible = visible;
+        }        
+
+        /// <summary>Set the visibility of the vertical scroll bar.</summary>
+        /// <param name="visible">Is the scroll bar visible?</param>
+        public void SetVerticalScrollbarVisibility(bool visible)
+        {
+            verticalScrollbar.Visible = visible;
+        }        
+
         /// <summary>Invoked when the sheet has been scrolled.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="args">The event arguments.</param>

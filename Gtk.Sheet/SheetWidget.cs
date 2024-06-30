@@ -61,6 +61,7 @@ namespace Gtk.Sheet
                 AddChild(container, Sheet.ScrollBars.MainWidget);
 
             AddEvents((int)EventMask.ScrollMask);
+            Sheet.RedrawNeeded += (sender, e) => UpdateScrollBars();
         }
 
         /// <summary>The number of rows in the grid.</summary>
@@ -236,6 +237,36 @@ namespace Gtk.Sheet
         {
             Sheet.ScrollDown();
         }
+
+        public void UpdateScrollBars()
+        {
+            int width = Sheet.Width;
+            int column_widths = 0;
+            if (Sheet.ColumnWidths != null && width > 0)
+            {
+                for (int i = 0; i < Sheet.ColumnWidths.Length; i++)
+                    column_widths += Sheet.ColumnWidths[i];
+
+                if (column_widths > width)
+                    Sheet.ScrollBars.SetHorizontalScrollbarVisibility(true);
+                else
+                    Sheet.ScrollBars.SetHorizontalScrollbarVisibility(false);
+            }
+            else
+                Sheet.ScrollBars.SetHorizontalScrollbarVisibility(false);
+
+            int height = Sheet.Height;
+            int row_heights = Sheet.RowHeight * (Sheet.RowCount + 1); //plus 1 for the empty row
+            if (height > 0)
+            {
+                if (row_heights > height)
+                    Sheet.ScrollBars.SetVerticalScrollbarVisibility(true);
+                else
+                    Sheet.ScrollBars.SetVerticalScrollbarVisibility(false);
+            }
+            else
+                Sheet.ScrollBars.SetVerticalScrollbarVisibility(false);
+        }        
 
         private void OnRedrawNeeded(object sender, EventArgs e)
         {
