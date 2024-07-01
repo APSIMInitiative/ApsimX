@@ -18456,6 +18456,165 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -26003,6 +26162,165 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -31627,6 +31945,165 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "ResourceName": "MicroClimate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -37352,6 +37829,165 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -39449,6 +40085,165 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -41311,6 +42106,165 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportSensitivity",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -46281,6 +47235,165 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "Report",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 1,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.3,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.3,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Grazing",
+                      "LiveToRemove": 1.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnDefoliate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 2,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.0,
+                      "DeadToResidue": 0.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "Harvesting",
+                      "LiveToRemove": 0.8,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 0.2,
+                      "DeadToResidue": 0.0
+                    }
+                  ],
+                  "Name": "OnHarvestAndPrune",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalEvents, Models",
+                  "RemovalType": 4,
+                  "StageToSet": null,
+                  "RemovalDatesInput": null,
+                  "BiomassRemovals": [
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Leaf",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Root",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Trunk",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    },
+                    {
+                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
+                      "PlantName": "DEROPAPY",
+                      "OrganName": "Product",
+                      "TypeString": "EndCrop",
+                      "LiveToRemove": 0.0,
+                      "DeadToRemove": 0.0,
+                      "LiveToResidue": 1.0,
+                      "DeadToResidue": 1.0
+                    }
+                  ],
+                  "Name": "OnEndCrop",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
