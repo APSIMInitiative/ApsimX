@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Gtk.Sheet;
+using static Gtk.Sheet.ISheetDataProvider;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// Wraps a .NET DataTable as a data provider for a sheet widget.
@@ -24,6 +26,7 @@ namespace UserInterface.Views
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
+        /// <param name="isReadOnly">Is the data readonly?</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
         public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<SheetDataProviderCellState>> cellStates = null)
@@ -48,6 +51,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets the number of rows of data.</summary>
         public int RowCount => Data.Rows.Count + numHeadingRows;
+
+        /// <summary>Is the data readonly?</summary>
+        public bool IsReadOnly { get; }        
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
@@ -148,8 +154,7 @@ namespace UserInterface.Views
         /// <param name="rowIndex">Row index of cell.</param>
         public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
         {
-            if (Data.Columns[colIndex].ReadOnly || 
-                rowIndex < numHeadingRows)
+            if (Data.Columns[colIndex].ReadOnly)
                 return SheetDataProviderCellState.ReadOnly;
             else if (cellStates != null && colIndex < cellStates.Count && cellStates[colIndex] != null && rowIndex < cellStates[colIndex].Count)
                 return cellStates[colIndex][rowIndex];
@@ -170,7 +175,7 @@ namespace UserInterface.Views
         public string GetColumnUnits(int colIndex)
         {
             if (units == null)
-                return "";
+                return null;
             else
                 return units[colIndex];
         }

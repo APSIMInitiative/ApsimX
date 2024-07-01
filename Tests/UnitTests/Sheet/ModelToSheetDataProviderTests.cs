@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using UnitTests.Interop.Documentation.TagRenderers;
 using UserInterface.Views;
+using Gtk.Sheet;
 
 namespace UnitTests.Sheet;
 

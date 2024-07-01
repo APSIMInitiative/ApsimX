@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Gtk.Sheet;
 
 namespace UserInterface.Views;
 
@@ -38,6 +39,9 @@ class PropertySheetDataProvider : ISheetDataProvider
 
     /// <summary>Gets the number of rows of data.</summary>
     public int RowCount { get; private set; }
+
+    /// <summary>Is the data readonly?</summary>
+    public bool IsReadOnly => false;
 
     /// <summary>Get the cell state.</summary>
     /// <param name="colIndex">Column index of cell.</param>

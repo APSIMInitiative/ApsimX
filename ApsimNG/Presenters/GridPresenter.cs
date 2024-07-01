@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -18,8 +19,8 @@ namespace UserInterface.Presenters
     /// </summary>
     class GridPresenter : IPresenter
     {
-        /// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
-        private Model model;
+        ///// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
+        //private Model model;
 
         /// <summary>The data provider.</summary>
         private ISheetDataProvider dataProvider;
@@ -30,11 +31,11 @@ namespace UserInterface.Presenters
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
 
-        /// <summary>Currently Selected Row. Used to detect when a cell is slected</summary>
-        private int selectedRow = -1;
+        // /// <summary>Currently Selected Row. Used to detect when a cell is slected</summary>
+        // private int selectedRow = -1;
 
-        /// <summary>Currently Selected Column. Used to detect when a cell is slected</summary>
-        private int selectedColumn = -1;
+        // /// <summary>Currently Selected Column. Used to detect when a cell is slected</summary>
+        // private int selectedColumn = -1;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -71,8 +72,8 @@ namespace UserInterface.Presenters
         /// <param name="rowIndex">The index of the row that was changed.</param>
         public delegate void SelectedCellChangedDelegate(int colIndex, int rowIndex);
 
-        /// <summary>An event invoked when a cell changes.</summary>
-        public event SelectedCellChangedDelegate SelectedCellChanged;
+        ///// <summary>An event invoked when a cell changes.</summary>
+        //public event SelectedCellChangedDelegate SelectedCellChanged;
 
         /// <summary>
         /// Attach the model to the view.
@@ -152,12 +153,12 @@ namespace UserInterface.Presenters
 
             SaveGridToModel();
 
-            CleanupSheet();
+            grid.Cleanup();
 
             if (intellisense != null)
             {
                 intellisense.Cleanup();
-                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                //intellisense.ItemSelected -= OnIntellisenseItemSelected;
                 intellisense.ContextItemsNeeded -= OnIntellisenseNeedContextItems;
             }
 
@@ -165,27 +166,10 @@ namespace UserInterface.Presenters
 
         public void SetupSheet(ISheetDataProvider dataProvider)
         {
-            grid = new SheetWidget();
-            grid.Sheet = new Sheet();
-            grid.Sheet.DataProvider = dataProvider;
-            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-            //we don't want an editor on grids that are linked to a dataProvider instead of a model
-            //if (dataProvider == null)
-                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
-
-            if (gridTable != null)
-            {
-                if (gridTable.HasUnits())
-                    grid.Sheet.NumberFrozenRows = 2;
-                else
-                    grid.Sheet.NumberFrozenRows = 1;
-            }
-
-            //Add the sheet's scrollbar widget to the view. (sheet sits within the scrollbar objects)
-            sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
-            grid.Sheet.RedrawNeeded += OnRedraw;
+            grid = new SheetWidget(sheetContainer.Widget,  
+                                   dataProvider, 
+                                   multiSelect: true,
+                                   onException: (err) => ViewBase.MasterView.ShowError(err));
 
             contextMenu = new MenuView();
             contextMenuHelper = new ContextMenuHelper(grid);
@@ -205,11 +189,8 @@ namespace UserInterface.Presenters
         {
             if (gridTable == null)
             {
-                CleanupSheet();
+                grid.Cleanup();
                 SetupSheet(dataProvider);
-                grid.Sheet.ScrollBars.SetScrollbarAdjustments(dataProvider.ColumnCount, dataProvider.RowCount);
-                grid.Sheet.NumberFrozenColumns = frozenColumns;
-                grid.Sheet.NumberFrozenRows = frozenRows;
             }
             else
                 throw new Exception($"PopulateWithDataProvider cannot be used on a presenter that has supplied a Model");
@@ -220,8 +201,8 @@ namespace UserInterface.Presenters
         {
             if (gridTable != null)
             {
-                if (grid.Sheet.DataProvider != null)
-                    (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
+                if (dataProvider != null)
+                    (dataProvider as DataTableProvider).CellChanged -= OnCellChanged;
 
                 DataTable data = gridTable.Data;
 
@@ -243,20 +224,24 @@ namespace UserInterface.Presenters
                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
 
                 // Create instance of DataTableProvider.
-                DataTableProvider dataProvider = new DataTableProvider(data, units, isCalculated);
+                dataProvider = new DataTableProvider(data, units, isCalculated);
 
                 // Give DataTableProvider to grid sheet.
-                grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
-                grid.Sheet.DataProvider = dataProvider;
+                grid.SetDataProvider(dataProvider);
+
+                // Add an extra empty row to the grid so that new rows can be created.
+                grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
+
+                dataProvider.CellChanged += OnCellChanged;
             }
 
-            UpdateScrollBars();
+            grid.UpdateScrollBars();
         }
 
-        public int NumRows()
+        /// <summary>The number of rows of data in the grid.</summary>
+        public int RowCount()
         {
-            var provider = grid.Sheet.DataProvider as DataTableProvider;
-            return grid.Sheet.DataProvider.RowCount - grid.Sheet.NumberFrozenRows;
+            return grid.RowCount - grid.NumberFrozenRows;
         }
 
         /// <summary>
@@ -287,10 +272,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void AddIntellisense(Model model)
         {
-            this.model = model;
-            intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
-            grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
+            // this.model = model;
+            // intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
+            // intellisense.ItemSelected += OnIntellisenseItemSelected;
+            //grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
         }
 
         /// <summary>
@@ -320,44 +305,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// User has changed a cell.
-        /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">event</param>
-        private void OnRedraw(object sender, EventArgs e)
-        {
-            UpdateScrollBars();
-
-            int row = 0;
-            int column = 0;
-            (sender as Sheet).CellSelector.GetSelection(out row, out column);
-
-            if (selectedRow != row || selectedColumn != column)
-            {
-                selectedRow = row;
-                selectedColumn = column;
-                if (SelectedCellChanged != null)
-                    SelectedCellChanged?.Invoke(selectedRow, selectedColumn);
-            }
-        }
-
-        /// <summary>
         /// User has right clicked - display popup menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
-            bool validCell = grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex);
+            bool validCell = grid.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex);
 
             if (validCell)
             {
-                bool isReadOnly = false;
-                if (columnIndex < grid.Sheet.NumberFrozenColumns)
-                    isReadOnly = true;
-                if (rowIndex < grid.Sheet.NumberFrozenRows)
-                    isReadOnly = true;
-
+                bool isReadOnly = grid.IsCellReadOnly(columnIndex, rowIndex);
                 var menuItems = new List<MenuDescriptionArgs>();
 
                 foreach (string option in contextMenuOptions)
@@ -426,16 +384,13 @@ namespace UserInterface.Presenters
                         }
                         if (option.CompareTo("select all") == 0)
                         {
-                            if (grid.Sheet.CellSelector is MultiCellSelect)
+                            MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
                             {
-                                MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
-                                {
-                                    Name = "Select All",
-                                    ShortcutKey = ""
-                                };
-                                menuItem.OnClick += OnSelectAll;
-                                menuItems.Add(menuItem);
-                            }
+                                Name = "Select All",
+                                ShortcutKey = ""
+                            };
+                            menuItem.OnClick += OnSelectAll;
+                            menuItems.Add(menuItem);
                         }
                     }
                 }
@@ -453,7 +408,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnCut(object sender, EventArgs e)
         {
-            grid.Sheet.CellSelector.Cut();
+            grid.Cut();
         }
 
         /// <summary>
@@ -461,7 +416,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnCopy(object sender, EventArgs e)
         {
-            grid.Sheet.CellSelector.Copy();
+            grid.Copy();
         }
 
         /// <summary>
@@ -471,7 +426,7 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         private void OnPaste(object sender, EventArgs e)
         {
-            grid.Sheet.CellSelector.Paste();
+            grid.Paste();
         }
 
         /// <summary>
@@ -479,7 +434,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnDelete(object sender, EventArgs e)
         {
-            grid.Sheet.CellSelector.Delete();
+            grid.Delete();
         }
 
         /// <summary>
@@ -487,17 +442,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnSelectAll(object sender, EventArgs e)
         {
-            grid.Sheet.CellSelector.SelectAll();
-        }
-
-        /// <summary>Clean up the sheet components.</summary>
-        private void CleanupSheet()
-        {
-            if (grid != null && grid.Sheet.CellSelector != null)
-            {
-                (grid.Sheet.CellSelector as SingleCellSelect).Cleanup();
-                grid.Sheet.ScrollBars.Cleanup();
-            }
+            grid.SelectAll();
         }
 
         /// <summary>
@@ -514,14 +459,13 @@ namespace UserInterface.Presenters
         {
             if (gridTable != null)
             {
-                if (grid.Sheet.DataProvider != null)
+                if (dataProvider != null)
                 {
-                    var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
-                    if (gridTable.HasUnits())
+                    var data = (dataProvider as DataTableProvider).Data;
+                    List<string> unitsRow = new List<string>();
+                    for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        List<string> unitsRow = new List<string>();
-                        for (int i = 0; i < data.Columns.Count; i++)
-                            unitsRow.Add(grid.Sheet.DataProvider.GetColumnUnits(i));
+                        unitsRow.Add(dataProvider.GetColumnUnits(i));
 
                         DataRow row = data.NewRow();
                         row.ItemArray = unitsRow.ToArray();
@@ -533,41 +477,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        private void UpdateScrollBars()
-        {
-            int width = grid.Sheet.Width;
-            int column_widths = 0;
-            if (grid.Sheet.ColumnWidths != null && width > 0)
-            {
-                for (int i = 0; i < grid.Sheet.ColumnWidths.Length; i++)
-                    column_widths += grid.Sheet.ColumnWidths[i];
-
-                if (column_widths > width)
-                    sheetContainer.SetScrollbarVisible(false, true);
-                else
-                    sheetContainer.SetScrollbarVisible(false, false);
-            }
-            else
-            {
-                sheetContainer.SetScrollbarVisible(false, false);
-            }
-
-            int height = grid.Sheet.Height;
-            int row_heights = grid.Sheet.RowHeight * (grid.Sheet.RowCount + 1); //plus 1 for the empty row
-            if (height > 0)
-            {
-                if (row_heights > height)
-                    sheetContainer.SetScrollbarVisible(true, true);
-                else
-                    sheetContainer.SetScrollbarVisible(true, false);
-            }
-            else
-            {
-                sheetContainer.SetScrollbarVisible(true, false);
-            }
-        }
-
-
         /// <summary>
         /// Invoked when the user types a . into the editter.
         /// Inserts the selected item at the caret.
@@ -576,42 +485,42 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private void OnIntellisenseNeedContextItems(object sender, NeedContextItemsArgs args)
         {
-            try
-            {
-                if (intellisense.GenerateGridCompletions(args.Code, args.Code.Length, model, true, false, false, false))
-                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
+            // try
+            // {
+            //     if (intellisense.GenerateGridCompletions(args.Code, args.Code.Length, model, true, false, false, false))
+            //         intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            // }
+            // catch (Exception err)
+            // {
+            //     explorerPresenter.MainPresenter.ShowError(err);
+            // }
         }
 
-        /// <summary>
-        /// Invoked when the user selects an item in the intellisense.
-        /// Inserts the selected item at the caret.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
-        {
-            try
-            {
-                grid.Sheet.CellEditor.EndEdit();
-                grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
-                string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-                grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
-                                                        new int[] {rowIndex}, 
-                                                        new string[]{text + args.ItemSelected});
-                grid.Sheet.CalculateBounds(columnIndex, rowIndex);
+        // /// <summary>
+        // /// Invoked when the user selects an item in the intellisense.
+        // /// Inserts the selected item at the caret.
+        // /// </summary>
+        // /// <param name="sender">Sender object.</param>
+        // /// <param name="args">Event arguments.</param>
+        // private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        // {
+        //     try
+        //     {
+        //         grid.Sheet.CellEditor.EndEdit();
+        //         grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
+        //         string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
+        //         grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
+        //                                                 new int[] {rowIndex}, 
+        //                                                 new string[]{text + args.ItemSelected});
+        //         grid.Sheet.CalculateBounds(columnIndex, rowIndex);
 
-                grid.Sheet.CellEditor.Edit(); //keep editting window open
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
+        //         grid.Sheet.CellEditor.Edit(); //keep editting window open
+        //     }
+        //     catch (Exception err)
+        //     {
+        //         explorerPresenter.MainPresenter.ShowError(err);
+        //     }
+        // }
     }
 
 }

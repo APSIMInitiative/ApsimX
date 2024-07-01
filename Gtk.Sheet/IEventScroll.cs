@@ -1,6 +1,6 @@
-﻿namespace UserInterface.Views
+﻿namespace Gtk.Sheet
 {
-    public interface IEventScroll
+    internal interface IEventScroll
     {
         object Direction { get; }
         bool DirectionIsSmooth { get; }

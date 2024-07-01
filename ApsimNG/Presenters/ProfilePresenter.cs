@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Core;
 using Models.Soils;
 using UserInterface.Views;
@@ -136,10 +137,13 @@ namespace UserInterface.Presenters
                 {
                     if (water != null && (model is Physical || model is Water || model is SoilCrop))
                     {
+                        if (water.Thickness.Length != physical.Thickness.Length)
+                            throw new Exception("There is a mismatch between the number of soil layers on the physical node and water nodes. Cannot create greaph");
+                            
                         string llsoilName = null;
                         double[] llsoil = null;
 
-                        if (model is SoilCrop)
+                        if (model is SoilCrop soilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
                             string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
@@ -165,7 +169,7 @@ namespace UserInterface.Presenters
                         PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()} layers";
                 }
                 finally
                 {

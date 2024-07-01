@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
 
     public enum SheetDataProviderCellState
@@ -23,6 +23,9 @@ namespace UserInterface.Views
 
         /// <summary>An event invoked when a cell changes.</summary>
         event CellChangedDelegate CellChanged;
+
+        /// <summary>Is the data readonly?</summary>
+        bool IsReadOnly { get; }
 
         /// <summary>Gets the number of columns of data.</summary>
         int ColumnCount { get;  }
