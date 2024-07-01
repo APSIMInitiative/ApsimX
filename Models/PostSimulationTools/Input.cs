@@ -112,16 +112,19 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
-            foreach (string fileName in FullFileNames)
+            if (FullFileNames != null)
             {
-                if (string.IsNullOrEmpty(fileName))
-                    continue;
-
-                DataTable data = GetTable(fileName);
-                if (data != null)
+                foreach (string fileName in FullFileNames)
                 {
-                    data.TableName = Name;
-                    storage.Writer.WriteTable(data);
+                    if (string.IsNullOrEmpty(fileName))
+                        continue;
+
+                    DataTable data = GetTable(fileName);
+                    if (data != null)
+                    {
+                        data.TableName = Name;
+                        storage.Writer.WriteTable(data);
+                    }
                 }
             }
         }
@@ -132,9 +135,9 @@ namespace Models.PostSimulationTools
         /// <returns></returns>
         public DataTable GetTable()
         {
-            if (FullFileNames.Length > 0)
-                if (!String.IsNullOrEmpty(FullFileNames[0])) 
-                    return GetTable(FullFileNames[0]);
+            if (FullFileNames != null)
+                if (FullFileNames.Length > 0 && !String.IsNullOrEmpty(FullFileNames[0])) 
+                        return GetTable(FullFileNames[0]);
             return null;
         }
 
