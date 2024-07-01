@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 175,
+  "Version": 176,
   "Name": "Simulations",
   "Children": [
     {
@@ -32,7 +32,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -75,7 +74,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -119,7 +117,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -138,7 +135,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -165,7 +161,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -3029,7 +3024,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.SoilWaterScale, Models",
-                      "LLModel": "LL",
+                      "LLModel": 0,
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -3070,6 +3065,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -5205,6 +5201,60 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].LeafTipsAppeared",
+              "Name": "Tips",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].ExpandedCohortNo",
+              "Name": "Ligules",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].FinalLeafNumber",
+              "Name": "FinalLeafNumber",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].TotalStemPopn",
+              "Name": "StemPopulation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].BranchNumber",
+              "Name": "StemNumberPerPlant",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Plant].SowingData.Population",
+              "Name": "MainStemPopulation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -7009,14 +7059,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "New Zealand",
               "ResourceName": null,
               "Children": [
@@ -7562,7 +7610,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Australia",
               "ResourceName": null,
               "Children": [
@@ -8394,7 +8441,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Turkey",
               "ResourceName": null,
               "Children": [
@@ -8426,7 +8472,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "China",
               "ResourceName": null,
               "Children": [
@@ -8452,7 +8497,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "USA",
               "ResourceName": null,
               "Children": [
@@ -8547,7 +8591,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Europe",
               "ResourceName": null,
               "Children": [
@@ -8632,7 +8675,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Africa",
               "ResourceName": null,
               "Children": [
@@ -8660,7 +8702,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Iran",
               "ResourceName": null,
               "Children": [
@@ -8686,7 +8727,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Just Added",
               "ResourceName": null,
               "Children": [
