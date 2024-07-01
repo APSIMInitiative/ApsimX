@@ -90,13 +90,13 @@ namespace Gtk.Sheet
                     sheet.CellEditor.Edit('.');
                 sheet.Refresh();
             }
-            else if (sheet.CellEditor == null && evnt.KeyValue > 0 && evnt.KeyValue < 255)
+            else if (evnt.KeyValue > 0 && evnt.KeyValue < 255)
             {
                 if (evnt.KeyValue == 'c' && evnt.Control)
                     Copy();
                 else if (evnt.KeyValue == 'v' && evnt.Control)
                     Paste();
-                else
+                else if (sheet.CellEditor != null)
                     sheet.CellEditor.Edit(evnt.KeyValue);
             }
         }

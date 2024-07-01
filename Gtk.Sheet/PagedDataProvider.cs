@@ -7,7 +7,7 @@ using System.Data;
 using System.Linq;
 using static Gtk.Sheet.ISheetDataProvider;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// Provides paged access to a table in the DataStore.

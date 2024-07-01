@@ -5,7 +5,7 @@ using System.Linq;
 using Gtk.Sheet;
 using static Gtk.Sheet.ISheetDataProvider;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// Wraps a .NET DataTable as a data provider for a sheet widget.
