@@ -81,18 +81,14 @@ namespace Models.PMF.Phen
 
                 First = false;
             }
-            int progressDAWS = DAWStoProgress; 
-            if (progressDAWS >= 365) // Gets stuck in a loop if DAWStoProgress == 365
-            {
-                progressDAWS = 366;
-            }
-
-            if ((met.DaysSinceWinterSolstice >= progressDAWS) ||
-                ((progressDAWS >= 365) & (met.DaysSinceWinterSolstice == 0)))
+            
+            if (((met.DaysSinceWinterSolstice >= DAWStoProgress) && (met.DaysSinceWinterSolstice < 365))||
+                ((met.DaysSinceWinterSolstice == 0) && (DAWStoProgress >= 365)))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
             }
+            
             return proceedToNextPhase;
         }
 
