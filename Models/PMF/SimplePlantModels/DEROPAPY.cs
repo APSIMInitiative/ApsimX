@@ -502,6 +502,25 @@ namespace Models.PMF.SimplePlantModels
             Regex sWhitespace = new Regex(@"\s+");
             return sWhitespace.Replace(ret, ",");
         }
+
+        /// <summary>
+        /// Method to extract a value from an array of parameter inputs for DEROPAPY.  Inputs as comma seperated string
+        /// </summary>
+        /// <param name="vect"></param>
+        /// <param name="pos"></param>
+        /// <returns>The number you want</returns>
+        public double GetValueFromStringVector(string vect, int pos)
+        {
+            string cleaned = clean(vect);
+            string[] strung = cleaned.Split(',');
+            double[] doubles = new double[strung.Length];
+            for (int i = 0; i < strung.Length; i++) 
+            {
+                doubles[i] = Double.Parse(strung[i]);
+            }
+            return doubles[pos];
+        }
+
         /// <summary>
         /// Base dictionary with DEROPAPY parameters and the locations they map to in the DEROPAPY.json model.
         /// </summary>
