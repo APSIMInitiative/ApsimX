@@ -229,11 +229,11 @@ namespace UserInterface.Presenters
                 // Create instance of DataTableProvider.
                 dataProvider = new DataTableProvider(data, isReadOnly: false, units, isCalculated);
 
-                // Add an extra empty row to the grid so that new rows can be created.
-                grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
-
                 // Give DataTableProvider to grid sheet.
                 grid.SetDataProvider(dataProvider);
+
+                // Add an extra empty row to the grid so that new rows can be created.
+                grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
 
                 dataProvider.CellChanged += OnCellChanged;
             }
@@ -275,7 +275,6 @@ namespace UserInterface.Presenters
         /// </summary>
         public void AddIntellisense(Model model)
         {
-            throw new NotImplementedException();
             // this.model = model;
             // intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
             // intellisense.ItemSelected += OnIntellisenseItemSelected;

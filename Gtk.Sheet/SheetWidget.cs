@@ -79,7 +79,7 @@ namespace Gtk.Sheet
         
 
         /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
-        public int NumberFrozenRows { get; set; }              
+        public int NumberFrozenRows => Sheet.NumberFrozenRows;              
 
         /// <summary>
         /// Set a new data provider for the sheet.

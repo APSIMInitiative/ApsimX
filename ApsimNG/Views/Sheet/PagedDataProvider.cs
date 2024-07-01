@@ -152,7 +152,6 @@ namespace UserInterface.Views
         public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
             CellChanged?.Invoke(this, columnIndices, rowIndices, values);
-            throw new NotImplementedException();
         }
 
         /// <summary>Get data to show in grid.</summary>

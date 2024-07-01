@@ -176,7 +176,7 @@ namespace UserInterface.Views
         public string GetColumnUnits(int colIndex)
         {
             if (units == null)
-                return "";
+                return null;
             else
                 return units[colIndex];
         }
