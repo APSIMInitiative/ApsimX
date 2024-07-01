@@ -131,7 +131,8 @@ namespace UserInterface.Presenters
             }
 
             //Create the sheet widget here.
-            SetupSheet(dataProvider);
+            if (dataProvider != null)
+                SetupSheet(dataProvider);
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -219,8 +220,9 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (gridTable != null)
+            if (gridTable != null && grid != null)
             {
+
                 if (grid.Sheet.DataProvider != null)
                     (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
 
@@ -240,6 +242,10 @@ namespace UserInterface.Presenters
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
                 List<List<bool>> isCalculated = new();
+
+                if (data == null)
+                    throw new Exception("Unable to refresh. Grid table has no data.");
+
                 for (int i = 0; i < data.Columns.Count; i++)
                    isCalculated.Add(gridTable.GetIsCalculated(i));
 
@@ -535,36 +541,40 @@ namespace UserInterface.Presenters
 
         private void UpdateScrollBars()
         {
-            int width = grid.Sheet.Width;
-            int column_widths = 0;
-            if (grid.Sheet.ColumnWidths != null && width > 0)
+            if (grid != null)
             {
-                for (int i = 0; i < grid.Sheet.ColumnWidths.Length; i++)
-                    column_widths += grid.Sheet.ColumnWidths[i];
+                int width = grid.Sheet.Width;
+                int column_widths = 0;
+                if (grid.Sheet.ColumnWidths != null && width > 0)
+                {
+                    for (int i = 0; i < grid.Sheet.ColumnWidths.Length; i++)
+                        column_widths += grid.Sheet.ColumnWidths[i];
 
-                if (column_widths > width)
-                    sheetContainer.SetScrollbarVisible(false, true);
+                    if (column_widths > width)
+                        sheetContainer.SetScrollbarVisible(false, true);
+                    else
+                        sheetContainer.SetScrollbarVisible(false, false);
+                }
                 else
+                {
                     sheetContainer.SetScrollbarVisible(false, false);
-            }
-            else
-            {
-                sheetContainer.SetScrollbarVisible(false, false);
+                }
+
+                int height = grid.Sheet.Height;
+                int row_heights = grid.Sheet.RowHeight * (grid.Sheet.RowCount + 1); //plus 1 for the empty row
+                if (height > 0)
+                {
+                    if (row_heights > height)
+                        sheetContainer.SetScrollbarVisible(true, true);
+                    else
+                        sheetContainer.SetScrollbarVisible(true, false);
+                }
+                else
+                {
+                    sheetContainer.SetScrollbarVisible(true, false);
+                }
             }
 
-            int height = grid.Sheet.Height;
-            int row_heights = grid.Sheet.RowHeight * (grid.Sheet.RowCount + 1); //plus 1 for the empty row
-            if (height > 0)
-            {
-                if (row_heights > height)
-                    sheetContainer.SetScrollbarVisible(true, true);
-                else
-                    sheetContainer.SetScrollbarVisible(true, false);
-            }
-            else
-            {
-                sheetContainer.SetScrollbarVisible(true, false);
-            }
         }
 
 

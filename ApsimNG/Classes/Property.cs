@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -316,6 +317,13 @@ namespace UserInterface.Classes
                     Plant planty = model.FindInScope<Plant>();
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
+                    break;
+                case DisplayType.CSVCrops:
+                    DisplayMethod = PropertyType.DropDown;
+                    PropertyInfo namesPropInfo = model.GetType().GetProperty("CropNames");
+                    string[] names = namesPropInfo?.GetValue(model) as string[] ;
+                    if (names != null)
+                        DropDownOptions = names;
                     break;
                 case DisplayType.CropPhaseName:
                     DisplayMethod = PropertyType.DropDown;
