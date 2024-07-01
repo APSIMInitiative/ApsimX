@@ -169,7 +169,7 @@ namespace UserInterface.Presenters
                         PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.RowCount()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
                 }
                 finally
                 {

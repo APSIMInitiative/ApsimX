@@ -103,6 +103,8 @@ namespace Gtk.Sheet
                         Sheet.NumberFrozenRows = 1;
                 }
 
+                Sheet.RowCount = dataProvider.RowCount + 1;   // +1 for empty row at bottom of sheet.
+
                 if (!dataProvider.IsReadOnly && Sheet.CellEditor == null)
                     Sheet.CellEditor = new CellEditor(Sheet, this);
             }

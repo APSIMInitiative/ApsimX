@@ -393,9 +393,6 @@ namespace Gtk.Sheet
             if (cr != null)
                 CalculateColumnWidths(cr);
 
-            if (RowCount == 0)
-                RowCount = DataProvider.RowCount + 1;
-
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
                 MaximumNumberHiddenRows = DataProvider.RowCount - Height/RowHeight; 
