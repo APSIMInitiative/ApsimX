@@ -19,9 +19,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 0,
@@ -68,9 +66,7 @@
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
 
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 0,
@@ -117,9 +113,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 0,
@@ -169,9 +163,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 1,
@@ -219,9 +211,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 1,
@@ -270,9 +260,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            Gtk.Application.Init();
-            var container = new Gtk.Box(Gtk.Orientation.Vertical, 0);
-            var sheet = new SheetWidget(container,
+            var sheet = new SheetWidget(null,
                                         dataProvider: new DataTableProvider(data, isReadOnly: true, units),
                                         multiSelect: false,
                                         numberFrozenColumns: 1,
