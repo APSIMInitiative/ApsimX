@@ -36,7 +36,7 @@ Pp_FullCover_02,h,Photoperiod x-values for full cover target thermal-time length
 Tt_FullCover_02,oCd,Thermal-time duration of full-cover phase at PP x-values (FullCanopy to StartSenescence),Phenology,(0 700 700),(1000 800),(1000 800),(900 800),(400 300),(1167 1167),(1167 1167),(0 450 450),(200 1000),(1300 1300),(1300 1300)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,Phenology,600,1100,660,1000,700,100,100,520,200,0,0
 D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,Phenology,72,280,116,267,60,100,1,70,102,0,0
-T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,Phenology,13,0,7,0,8,0,10,10,10,0,0
+T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,Phenology,13,0,7,0,12,0,10,10,10,0,0
 Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,Phenology,700,1500,670,1200,1000,1000,1000,700,450,300,300
 DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),Phenology,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,Graze,Graze
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,Phenology,0,0,0,0,100,0,0,0,50,0,0
