@@ -453,9 +453,9 @@ namespace Models.PMF.SimplePlantModels
             thisDero["TrunkWtAtMaxDimension"] += clean(CurrentCropParams["TrunkWtAtMaxDimension"]);
             double relativeAge = MathUtilities.Divide(Double.Parse(clean(CurrentCropParams["AgeAtStartSimulation"])),
                                                      Double.Parse(clean(CurrentCropParams["AgeToMaxDimension"])), 0);
-            double initialTrunkwt = Double.Parse(clean(CurrentCropParams["TrunkWtAtMaxDimension"])) * relativeAge * 0.7; //0.7 assumes we start in winter when trunk has been pruned back below max weight
+            double initialTrunkwt = Double.Parse(clean(CurrentCropParams["TrunkWtAtMaxDimension"])) * relativeAge;
             thisDero["InitialTrunkWt"] += initialTrunkwt.ToString();
-            thisDero["InitialRootWt"] += (200 * relativeAge).ToString();
+            thisDero["InitialRootWt"] += (50 * relativeAge).ToString();
             thisDero["LeafMaxNConc"] += clean(CurrentCropParams["LeafMaxNConc"]);
             thisDero["LeafMinNConc"] += clean(CurrentCropParams["LeafMinNConc"]);
             thisDero["ProductMaxNConc"] += clean(CurrentCropParams["ProductMaxNConc"]);
