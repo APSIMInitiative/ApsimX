@@ -29,7 +29,6 @@ namespace Models.Management
         /// Crop to remove biomass from
         /// </summary>
         [Description("Crop to remove biomass from")]
-        [JsonIgnore]
         public IPlant PlantToRemoveFrom
         {
             get { return _plant; }
