@@ -135,6 +135,8 @@ namespace UserInterface.Presenters
                     {
                         string llsoilName = null;
                         double[] llsoil = null;
+                        string cllName = "LL15";
+                        double[] relativeLL = physical.LL15;
 
                         if (model is SoilCrop)
                         {
@@ -142,10 +144,12 @@ namespace UserInterface.Presenters
                             string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
                             llsoilName = cropName + " LL";
                             llsoil = (model as SoilCrop).LL;
+                            cllName = llsoilName;
+                            relativeLL = (model as SoilCrop).LL;
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                          "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
+                                                          cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
                     }
 
                     else if (model is Organic organic)
