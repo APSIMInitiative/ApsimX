@@ -146,7 +146,7 @@ namespace Models.CLEM.Activities
             {
                 // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
                 ind.Intake.MilkDaily.Expected = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays + (events.Interval / 2.0), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
-                double milkactual = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate / ind.Mother.SucklingOffspringList.Count());
+                double milkactual = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate / ind.Mother.SucklingOffspringList.Count);
                 // calculate YF
                 // ToDo check that this is the potential milk calculation needed.
                 yf = (1 - (milkactual / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 * (ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4)));
@@ -260,18 +260,21 @@ namespace Models.CLEM.Activities
             // these energy in gain values apply to all cattle except large lean breeds of cattle like Charolais, Limousin, and Simmental etc
 
             double R = (MEI / MEMaint) - 2;
-            double E = (6.7 + R + (20.3 - R) / (1 + Math.Exp(-6 * (Z - 0.4))));
+            double E = (6.7 + R + ((20.3 - R) / (1 + Math.Exp(-6 * (Z - 0.4)))));
 
             double dEBWdt = NEG / E;
-            double dprotdt = dEBWdt * ((5 - 0.1 * R) - (3.3 - 0.1 * R) / (1 + Math.Exp(-6 * (Z - 0.4))));
-            double dfdt = dEBWdt * (1.7 + 1.1 * R + (23.6 - 1.1 * R) / (1 + Math.Exp(-6 * (Z - 0.4)))); //the 23.6 here for prt stays but otherwise will stick to 23.8
+            double dprotdt = dEBWdt * ((5 - 0.1 * R) - ((3.3 - 0.1 * R) / (1 + Math.Exp(-6 * (Z - 0.4)))));
+            double dfdt = dEBWdt * (1.7 + 1.1 * R + ((23.6 - 1.1 * R) / (1 + Math.Exp(-6 * (Z - 0.4))))); //the 23.6 here for prt stays but otherwise will stick to 23.8
             // othewise biases bc of how we est IVs
 
-            // update weight, protein and fat
-            ind.Weight.Adjust(dEBWdt * events.Interval, ind); // kg
             ind.Energy.Protein.Adjust(dprotdt * events.Interval); //mj
             ind.Energy.Fat.Adjust(dfdt * events.Interval); // mj
-    
+            ind.Weight.Protein.Adjust(dprotdt / 23.6 * events.Interval); 
+            ind.Weight.Fat.Adjust(dfdt / 39.3 * events.Interval);
+
+            // update weight, protein and fat
+            ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind); // kg
+
             //age << -age + dt / 365
             //double SCAHP = -MEI - (dprotdt + dfdt); // units MJ/d
 

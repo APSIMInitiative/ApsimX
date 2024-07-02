@@ -540,7 +540,7 @@ namespace Models.CLEM.Activities
             }
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
-            ind.Weight.Adjust(energyPredictedBodyMassChange, ind);
+            ind.Weight.AdjustByWeightChange(energyPredictedBodyMassChange, ind);
         }
 
         /// <summary>
