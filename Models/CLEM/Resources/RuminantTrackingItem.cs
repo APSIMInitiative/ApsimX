@@ -29,6 +29,16 @@ namespace Models.CLEM.Resources
         public double Previous { get { return Amount - Change; }  }
 
         /// <summary>
+        /// Amount unused last step
+        /// </summary>
+        public double ChangeWasted { get; set; }
+
+        /// <summary>
+        /// Amount remobilised in last step
+        /// </summary>
+        public double ChangeRemobilised { get; set; }
+
+        /// <summary>
         /// Adjust this tracking item with change.
         /// </summary>
         /// <param name="change">Amount to change by.</param>
@@ -57,6 +67,8 @@ namespace Models.CLEM.Resources
         {
             Change = 0-Amount;
             Amount = 0;
+            ChangeWasted = 0;
+            ChangeRemobilised = 0;
         }
     }
 }

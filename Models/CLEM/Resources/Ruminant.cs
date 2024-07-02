@@ -438,13 +438,22 @@ namespace Models.CLEM.Resources
             // return StandardReferenceWeight - ((1 - Parameters.General.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar)));
 
             // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
-            double normMax = Weight.StandardReferenceWeight - (Weight.StandardReferenceWeight - Weight.AtBirth) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(Weight.StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
-            // CP15Y is determined at birth based on the number of siblings from the values provided in the params 
-            // Table6 of SCA
+            // ========================================================================================================================
+            // Equation 1
+            // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
+            // CP15Y is determined at birth based on the number of siblings from the values provided in the params - Table 6 of SCA
+            // ========================================================================================================================
+
+            double normMax = Weight.StandardReferenceWeight - (Weight.StandardReferenceWeight - Weight.AtBirth) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(Weight.StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
             // ToDo: ensure this is appropriate for intervals greater than 1 day as cummulative effect should be considered.
             // ToDo: check that this needs to use Previous weight and not weight before modified
+
+            // ========================================================================================================================
+            // Equation 1a
+            // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
+            // ========================================================================================================================
             double normWeight = normMax;
             if (!forceNormMax && Weight.HighestAttained < normMax) // was weight previous but zero at start
                 normWeight = Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * Weight.HighestAttained;
@@ -465,6 +474,11 @@ namespace Models.CLEM.Resources
                 return Math.Max(Parameters.General.BCScoreRange[0], Math.Min(bcscore, Parameters.General.BCScoreRange[2]));
             }
         }
+
+        /// <summary>
+        /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
+        /// </summary>
+        public abstract double ProteinRequiredBeforeGrowth();
 
         #endregion
 
@@ -717,7 +731,7 @@ namespace Models.CLEM.Resources
             }
 
             // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
-            Weight.Adjust(setWeight, this);
+            Weight.AdjustByWeightChange(setWeight, this);
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1 * setAge);

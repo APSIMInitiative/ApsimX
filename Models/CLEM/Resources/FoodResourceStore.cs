@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
         /// Store quality and quantity details.
         /// </summary>
         [JsonIgnore]
-        public FoodResourcePacket Details { get; set; } = new FoodResourcePacket();
+        public FoodResourcePacket Details { get; private set; } = new();
 
         /// <summary>
         /// Total crude protein in the store.
@@ -36,6 +36,15 @@ namespace Models.CLEM.Resources
         public double UndegradableCrudeProtein { get { return CrudeProtein - DegradableCrudeProtein; } }
 
         /// <summary>
+        /// Constructor for a FoodResourceStore.
+        /// </summary>
+        /// <param name="foodResourcePacket">The food resource packet to initialise the resource with values</param>
+        public FoodResourceStore(FoodResourcePacket foodResourcePacket)
+        {
+            Details.TypeOfFeed = foodResourcePacket.TypeOfFeed;
+        }
+
+        /// <summary>
         /// Adds a FoodResourcePacket to this store and adjusts pool qualtities.
         /// </summary>
         /// <param name="packet">Packet to add.</param>
@@ -49,7 +58,6 @@ namespace Models.CLEM.Resources
             Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.AcidDetergentInsoluableProtein = ((Details.AcidDetergentInsoluableProtein * Details.Amount) + (packet.AcidDetergentInsoluableProtein * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
-
             Details.Amount += packet.Amount;
 
             CrudeProtein += packet.CrudeProtein;

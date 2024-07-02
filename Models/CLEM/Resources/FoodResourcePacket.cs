@@ -1,8 +1,5 @@
-﻿using Docker.DotNet.Models;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Models.CLEM.Resources
 {
@@ -163,6 +160,7 @@ namespace Models.CLEM.Resources
             MetabolisableEnergyContent = 0;
             RumenDegradableProteinContent = 0;
             AcidDetergentInsoluableProtein = 0;
+            GrossEnergyContent = 0;
         }
 
         /// <summary>

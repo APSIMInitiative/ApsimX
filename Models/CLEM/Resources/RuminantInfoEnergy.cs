@@ -1,4 +1,5 @@
-﻿using Models.Interfaces;
+﻿using DocumentFormat.OpenXml.Vml.Office;
+using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,17 +88,22 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy available after wool demands
         /// </summary>
-        public double AfterWool { get { return ForLactation - ForWool; } }
+        public double AfterWool { get { return AfterLactation - ForWool; } }
 
         /// <summary>
         /// Energy available for growth
         /// </summary>
-        public double NetForGain { get; set; }
+        public double Net { get { return FromIntake - AfterWool; } }
 
         /// <summary>
         /// Energy available for growth
         /// </summary>
-        public double AvailableForGain { get; set; }
+        public double AvailableForGain { get { return AfterWool; } }
+
+        /// <summary>
+        /// Energy for gain after accounting for efficiency
+        /// </summary>
+        public double ForGain { get; set; }
 
         /// <summary>
         /// Energy used for protein
@@ -134,10 +140,10 @@ namespace Models.CLEM.Resources
             ForHPViscera = 0;
             ForFetus = 0;
             ForLactation = 0;
-            NetForGain = 0;
             ForWool = 0;
             ToMove = 0;
             ToGraze = 0;
+            ForGain = 0;
         }
 
     }

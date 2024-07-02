@@ -48,7 +48,7 @@ namespace Models.CLEM.Resources
 
                 if (!feedTypeStoreDict.TryGetValue(packet.TypeOfFeed, out FoodResourceStore frs))
                 {
-                    frs = new FoodResourceStore();
+                    frs = new FoodResourceStore(packet);
                     feedTypeStoreDict[packet.TypeOfFeed] = frs;
                 }
                 frs.Add(packet);
@@ -69,6 +69,10 @@ namespace Models.CLEM.Resources
             if (ind.Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
                 return;
 
+            // ========================================================================================================================
+            // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
+            // Equations 14-21
+            // ========================================================================================================================
             double sumFs = 0;
             double iReduction = 0;
 
@@ -355,7 +359,7 @@ namespace Models.CLEM.Resources
         public double RDPRequired { get; set; }
 
         /// <summary>
-        /// Digestible Protein Leaving the Sotmach.
+        /// Digestible Protein Leaving the Stomach.
         /// </summary>
         public double DPLS
         {

@@ -277,8 +277,8 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if birth is due this month
-        /// Knows whether the feotus(es) have survived
+        /// Indicates if birth is due this time-step. 
+        /// Knows whether the fetus(es) have survived
         /// </summary>
         public bool IsBirthDue
         {
@@ -484,6 +484,9 @@ namespace Models.CLEM.Resources
                 {
                     newSucklingRuminant.Weight.Fat.Set(weight / Weight.Conceptus.Amount *  Weight.ConceptusFat.Amount);
                     newSucklingRuminant.Weight.Protein.Set(weight / Weight.Conceptus.Amount * Weight.ConceptusFat.Amount);
+                    // set fat and protein energy based on initial amounts
+                    newSucklingRuminant.Energy.Fat.Set(newSucklingRuminant.Weight.Fat.Change * 39.3);
+                    newSucklingRuminant.Energy.Protein.Set(newSucklingRuminant.Weight.Protein.Change * 23.6);
                 }
 
                 // add attributes inherited from mother
@@ -521,6 +524,7 @@ namespace Models.CLEM.Resources
             base.Weight.Conceptus.Reset();
             base.Weight.Fetus.Reset();
             base.Weight.ConceptusFat.Reset();
+            base.Weight.ConceptusProtein.Reset();
             BodyConditionParturition = Weight.BodyCondition;
             WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
@@ -556,6 +560,14 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         [FilterByProperty]
         public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
+
+        /// <summary>
+        /// Report protein required for maintenance pregnancy and lactationsaved from reduced lactation (kg)
+        /// </summary>
+        public override double ProteinRequiredBeforeGrowth()
+        {
+            return Weight.ProteinForMaintenence + Weight.ProteinForPregnancy + Milk.Protein; 
+        }
 
         /// <summary>
         /// The body condition score at birth.

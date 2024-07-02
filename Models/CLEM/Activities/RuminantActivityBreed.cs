@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
                                 }
                                 else
                                 {
-                                    male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                    male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count - 1)];
                                     female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
 
                                     // randomly select male

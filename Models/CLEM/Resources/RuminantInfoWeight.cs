@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,18 +65,43 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem Cashmere { get; set; } = new();
 
         /// <summary>
+        /// Report protein for maintenance (kg)
+        /// </summary>
+        public double ProteinForMaintenence { get; set; }
+
+        /// <summary>
+        /// Report protein for pregnancy (kg)
+        /// </summary>
+        public double ProteinForPregnancy { get; set; }
+
+        /// <summary>
+        /// Report protein required for growth (kg)
+        /// </summary>
+        public double ProteinRequiredForGrowth { get; set; }
+
+        /// <summary>
+        /// Report protein avalable after leaving stomach and accounting for other protein use (kg)
+        /// </summary>
+        public double ProteinAvailableForGrowth { get; set; }
+
+        /// <summary>
+        /// Performs the resetting of time-step tracking stores
+        /// </summary>
+        public void Reset()
+        {
+            ProteinForMaintenence = 0;
+            ProteinForPregnancy = 0;
+            ProteinRequiredForGrowth = 0;
+            ProteinAvailableForGrowth = 0;
+        }
+
+        /// <summary>
         /// Current weight of individual  (kg)
         /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
         /// This should be true as these are either doen early (birth) on activitiy (shear) or in the growth model before weight gain.
         /// </summary>
         [FilterByProperty]
         public double Live { get { return live; } }
-
-        /// <summary>
-        /// The empty body mass of the individual (kg)
-        /// </summary>
-        [FilterByProperty]
-        public double EmptyBodyMass { get; private set; }
 
         /// <summary>
         /// Previous weight of individual  (kg)
@@ -87,11 +113,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public double Gain { get { return Live - Previous; } }
-
-        /// <summary>
-        /// Empty body mass change  (kg)
-        /// </summary>
-        public double EmptyBodyMassChange { get; private set; }
 
         /// <summary>
         /// Highest weight attained  (kg)
@@ -195,23 +216,53 @@ namespace Models.CLEM.Resources
         public bool IsStillGrowing { get { return MathUtilities.IsLessThanOrEqual(RelativeSizeByHighWeight, 0.9); } }
 
         /// <summary>
+        /// The empty body mass of the individual (kg)
+        /// </summary>
+        [FilterByProperty]
+        public double EmptyBodyMass { get; private set; }
+
+        /// <summary>
+        /// Empty body mass change  (kg)
+        /// </summary>
+        public double EmptyBodyMassChange { get; private set; }
+
+        /// <summary>
         /// Adjust weight
         /// </summary>
         /// <param name="wtChange">Change in weight (kg)</param>
         /// <param name="individual">THe individual to change</param>
-        public void Adjust(double wtChange, Ruminant individual)
+        public void AdjustByWeightChange(double wtChange, Ruminant individual)
         {
-            EmptyBodyMassChange = wtChange / individual.Parameters.General?.EBW2LW_CG18 ?? 1.09;
+            EmptyBodyMassChange = wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09);
             EmptyBodyMass += EmptyBodyMassChange;
-
             Base.Adjust(wtChange);
 
             UpdateLiveWeight();
             
-            if (individual.Sex == Sex.Female)
+            if (individual is RuminantFemale female)
             {
-                (individual as RuminantFemale).UpdateHighWeightWhenNotPregnant(Live);
+                female.UpdateHighWeightWhenNotPregnant(Live);
             }
+
+            AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
+            HighestAttained = Math.Max(HighestAttained, Live);
+        }
+
+        /// <summary>
+        /// Adjust empty body weight. All other weight will also be adjusted accordingly
+        /// </summary>
+        /// <param name="ebmChangeFatProtein">Change in empty body weight using fat and protein gain approach (kg)</param>
+        /// <param name="individual">THe individual to change</param>
+        public void AdjustByEBMChange(double ebmChangeFatProtein, Ruminant individual)
+        {
+            EmptyBodyMassChange = ebmChangeFatProtein;
+            EmptyBodyMass += EmptyBodyMassChange;
+            Base.Adjust(EmptyBodyMassChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+
+            UpdateLiveWeight();
+
+            if (individual is RuminantFemale female)
+                female.UpdateHighWeightWhenNotPregnant(Live);
 
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
             HighestAttained = Math.Max(HighestAttained, Live);
@@ -288,6 +339,10 @@ namespace Models.CLEM.Resources
             {
                 individual.Weight.Protein.Set(0.22 * (individual.Weight.EmptyBodyMass - individual.Weight.Fat.Amount));
             }
+
+            // set fat and protein energy based on initial amounts
+            individual.Energy.Fat.Set(individual.Weight.Fat.Change * 39.3);
+            individual.Energy.Protein.Set(individual.Weight.Protein.Change * 23.6);
         }
     }
 }

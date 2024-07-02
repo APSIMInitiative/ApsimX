@@ -54,6 +54,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Protein { get; set; }
         /// <summary>
+        /// Total protein required for lactation
+        /// </summary>
+        public double ProteinBeforeReduction { get; set; }
+
+        /// <summary>
+        /// Protein shortfall reduction proportion
+        /// </summary>
+        public double ProteinShortfallReduction { get; set; }
+        /// <summary>
         /// Lag term for milk production
         /// </summary>
         public double Lag { get; set; }
