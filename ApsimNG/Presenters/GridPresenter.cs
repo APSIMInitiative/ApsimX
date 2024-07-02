@@ -134,8 +134,7 @@ namespace UserInterface.Presenters
             }
 
             //Create the sheet widget here.
-            if (dataProvider != null)
-                SetupSheet(dataProvider);
+            SetupSheet(dataProvider);
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -225,25 +224,25 @@ namespace UserInterface.Presenters
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
                 List<List<bool>> isCalculated = new();
 
-                if (data == null)
-                    throw new Exception("Unable to refresh. Grid table has no data.");
+                if (data != null)
+                {
+                    for (int i = 0; i < data.Columns.Count; i++)
+                    isCalculated.Add(gridTable.GetIsCalculated(i));
 
-                for (int i = 0; i < data.Columns.Count; i++)
-                   isCalculated.Add(gridTable.GetIsCalculated(i));
+                    // Create instance of DataTableProvider.
+                    dataProvider = new DataTableProvider(data, isReadOnly: false, units, isCalculated);
+                
+                    // Give DataTableProvider to grid sheet.
+                    grid.SetDataProvider(dataProvider);
 
-                // Create instance of DataTableProvider.
-                dataProvider = new DataTableProvider(data, isReadOnly: false, units, isCalculated);
+                    // Add an extra empty row to the grid so that new rows can be created.
+                    grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
 
-                // Give DataTableProvider to grid sheet.
-                grid.SetDataProvider(dataProvider);
-
-                // Add an extra empty row to the grid so that new rows can be created.
-                grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
-
-                dataProvider.CellChanged += OnCellChanged;
+                    dataProvider.CellChanged += OnCellChanged;
+                }
             }
 
-            grid.UpdateScrollBars();
+            grid?.UpdateScrollBars();
         }
 
         /// <summary>The number of rows of data in the grid.</summary>
