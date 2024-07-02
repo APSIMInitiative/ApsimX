@@ -1,34 +1,32 @@
 using System;
 using Models.Climate;
 using Models.Core;
+using Models.Functions;
 using Newtonsoft.Json;
 
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
+    /// Proceeds On a specific day of the year.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class DAWSPhase : Model, IPhase
+    public class StartGrowthPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction MovingAverageTemp = null;
 
         [Link]
-        Weather met = null;
+        private Weather weather = null;
 
-        [Link]
-        private IClock clock = null;
-
-        //2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
-
-        private int StartDAWS = 0;
-        private bool First = true;
+        /// <summary>Occurs when a New grpwth phase starts.</summary>
+        public event EventHandler NewGrowthPhaseStarting;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -47,7 +45,11 @@ namespace Models.PMF.Phen
 
         /// <summary>Days after winter solstice to progress from phase</summary>
         [Description("DAWStoProgress")]
-        public int DAWStoProgress { get; set; }
+        public int DOYtoProgress { get; set; }
+
+        /// <summary>Moving Average temperature required to start growth</summary>
+        [Description("Moving average temperature to Progress")]
+        public int TemptoProgress { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
@@ -55,10 +57,21 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Math.Min(1.0, ((double)met.DaysSinceWinterSolstice - (double)StartDAWS) / ((double)DAWStoProgress - (double)StartDAWS));
+                if (yearcomplete == false)
+                {
+                    double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
+                    double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value() / TemptoProgress));
+                    return Math.Min(daysFrac, tempFrac);
+                }
+                else
+                {
+                    return 0.0;
+                }
             }
         }
 
+        private bool startedThisYear = false;
+        private bool yearcomplete = false;
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -66,42 +79,37 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            if (First)
+            // not already started this season  && Past the ealiest date to start growth      && Warm enough               
+             if ((startedThisYear==false)&&(weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
             {
-                
-                if (clock.Today.DayOfYear < met.WinterSolsticeDOY)
-                {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
-                    else
-                        StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
-                }
-                else
-                    StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
-
-                First = false;
-            }
-            
-            if (((met.DaysSinceWinterSolstice >= DAWStoProgress) && (met.DaysSinceWinterSolstice < 365))||
-                ((met.DaysSinceWinterSolstice == 0) && (DAWStoProgress >= 365)))
-            {
+                startedThisYear = true;
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
+                NewGrowthPhaseStarting?.Invoke(this, EventArgs.Empty);
             }
-            
             return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            First = true;
-            StartDAWS = 0;
+            yearcomplete = true;
+        }
+
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (weather.DaysSinceWinterSolstice == 0)
+            {
+                startedThisYear = false;
+                yearcomplete = false;
+            }
+
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e) { }
     }
 }
 
