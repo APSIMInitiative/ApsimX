@@ -529,6 +529,9 @@ namespace Gtk.Sheet
         {
             if (autoCalculateColumnWidths)
             {
+                if (DataProvider == null)
+                    throw new Exception("Unable to calculate column widths as DataProvider was null.");
+                
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
                 if (visibleRows >= DataProvider.RowCount)
                     visibleRows = DataProvider.RowCount - 1;

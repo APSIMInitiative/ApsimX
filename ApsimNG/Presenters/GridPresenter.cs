@@ -134,7 +134,8 @@ namespace UserInterface.Presenters
             }
 
             //Create the sheet widget here.
-            SetupSheet(dataProvider);
+            if (dataProvider != null)
+                SetupSheet(dataProvider);
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -202,7 +203,7 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (gridTable != null)
+            if (gridTable != null && grid != null)
             {
                 if (dataProvider != null)
                     (dataProvider as DataTableProvider).CellChanged -= OnCellChanged;
@@ -223,6 +224,10 @@ namespace UserInterface.Presenters
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
                 List<List<bool>> isCalculated = new();
+
+                if (data == null)
+                    throw new Exception("Unable to refresh. Grid table has no data.");
+
                 for (int i = 0; i < data.Columns.Count; i++)
                    isCalculated.Add(gridTable.GetIsCalculated(i));
 
