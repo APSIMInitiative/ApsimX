@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 168,
+  "Version": 176,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [],
@@ -66,7 +65,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
+          "FileName": "%root%/Examples/WeatherFiles/KE_MajiMoto.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -2004,7 +2003,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2319,7 +2318,7 @@
                 "ReadOnly": false
               },
               "RemovalType": 0,
-              "StageToSet": "4.1",
+              "StageToSet": "EndJuvenile",
               "RemovalDatesInput": "17/05/2004",
               "BiomassRemovals": [
                 {
@@ -2474,6 +2473,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2484,6 +2484,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2627,6 +2628,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2637,6 +2639,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2780,6 +2783,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2790,6 +2794,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2933,6 +2938,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -2943,6 +2949,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -3050,7 +3057,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/-225_36025.met",
+          "FileName": "%root%/Examples/WeatherFiles/KE_MajiMoto.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -4988,7 +4995,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -5252,6 +5259,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5262,6 +5270,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5347,6 +5356,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5357,6 +5367,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5442,6 +5453,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5452,6 +5464,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5537,6 +5550,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -5547,6 +5561,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
