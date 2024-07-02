@@ -55,12 +55,6 @@ namespace Models.PMF
         [Link]
         public Plant parentPlant = null;
 
-        /// <summary>
-        /// clock
-        /// </summary>
-        [Link]
-        public Clock clock = null;
-
         /// <summary>The surface organic matter model</summary>
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
