@@ -187,6 +187,22 @@ namespace Models.CLEM.Resources
         public double RelativeConditionEffect_CI20 { get; set; } = 1.5;
 
         /// <summary>
+        /// Effect of quality on intake substitution for non-lactating animals CR11
+        /// </summary>
+        [Category("Breed", "Intake")]
+        [Description("Effect quality on intake substitution [CR11]")]
+        [Required, GreaterThanValue(0)]
+        public double QualityIntakeSubsititutionFactorNonLactating_CR11 { get; set; } = 10.5;
+
+        /// <summary>
+        /// Effect of quality on intake substitution for lactating animals CR11
+        /// </summary>
+        [Category("Breed", "Intake")]
+        [Description("Effect quality on intake substitution for lactating [CR20]")]
+        [Required, GreaterThanValue(0)]
+        public double QualityIntakeSubsititutionFactorLactating_CR20 { get; set; } = 11.5;
+
+        /// <summary>
         /// Create copy of this class
         /// </summary>
         /// <returns></returns>
