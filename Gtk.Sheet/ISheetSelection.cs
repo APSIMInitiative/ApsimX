@@ -1,4 +1,4 @@
-﻿namespace UserInterface.Views
+﻿namespace Gtk.Sheet
 {
     /// <summary>Describes the public interface of a class that supports sheet cell selection.</summary>
     public interface ISheetSelection

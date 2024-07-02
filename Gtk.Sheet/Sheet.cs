@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using APSIM.Interop.Drawing;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// This is the engine for a sheet (grid) widget. It can display a table (rows and columns)
@@ -16,7 +17,7 @@ namespace UserInterface.Views
     /// NB: All GTK use has been abstracted behind interfaces. This class does NOT
     /// reference GTK.
     /// </remarks>
-    public class Sheet
+    internal class Sheet
     {
         /// <summary>The width of the grid lines in pixels.</summary>
         private const double lineWidth = 0.2;
@@ -38,6 +39,23 @@ namespace UserInterface.Views
 
         private bool recalculateWidths = true;
 
+        private bool autoCalculateColumnWidths;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Sheet(ISheetDataProvider dataProvider, 
+                     int numberFrozenColumns,
+                     int numberFrozenRows,
+                     int[] columnWidths)
+        {
+            DataProvider = dataProvider;
+            NumberFrozenColumns = numberFrozenColumns;
+            NumberFrozenRows = numberFrozenRows;
+            ColumnWidths = columnWidths;
+            autoCalculateColumnWidths = ColumnWidths == null;
+        }
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -58,6 +76,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the sheet needs a redraw.</summary>
         public event EventHandler RedrawNeeded;
+
+        /// <summary>Invoked when the sheet needs a redraw.</summary>
+        public Action<Exception> OnException;
 
         /// <summary>The provider of data for the sheet.</summary>
         public ISheetDataProvider DataProvider { get; set; }
@@ -126,7 +147,8 @@ namespace UserInterface.Views
         {
             if (allocationWidth != Width || allocationHeight != Height)
             {
-                ColumnWidths = null;
+                if (autoCalculateColumnWidths)
+                    ColumnWidths = null;
                 MaximumNumberHiddenRows = 0;
                 RedrawNeeded?.Invoke(this, new EventArgs());
             }
@@ -135,7 +157,7 @@ namespace UserInterface.Views
 
         public void InvokeKeyPress(SheetEventKey key)
         {
-            KeyPress.Invoke(this, key);
+                KeyPress.Invoke(this, key);
         }
 
         public void InvokeButtonPress(SheetEventButton button)
@@ -202,7 +224,7 @@ namespace UserInterface.Views
         /// <param name="columnIndex">The cell column index.</param>
         /// <param name="rowIndex">The cell row index.</param>
         /// <returns>The bounds if visible or null if not visible.</returns>
-        public CellBounds CalculateBounds(int columnIndex, int rowIndex)
+        public Rectangle CalculateBounds(int columnIndex, int rowIndex)
         {
             // Convert rowIndex that is relative to all rows to 
             // an index that is relative to the visible rows.
@@ -210,7 +232,7 @@ namespace UserInterface.Views
             if (rowIndex >= NumberFrozenRows)
             {
                 if (rowIndex < NumberHiddenRows + NumberFrozenRows)
-                    return null;
+                    return Rectangle.Empty;
 
                 visibleRowIndex -= NumberHiddenRows;
             }
@@ -228,10 +250,10 @@ namespace UserInterface.Views
                 int width = ColumnWidths[columnIndex];
                 int height = RowHeight;
 
-                return new CellBounds(left, top, width, height);
+                return new Rectangle(left, top, width, height);
             }
             else
-                return null; // cell isn't visible.
+                return Rectangle.Empty; // cell isn't visible.
         }
 
         /// <summary>Scroll the sheet to the right one column.</summary>
@@ -330,7 +352,7 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
+                //if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
 
                 if (recalculateWidths)
@@ -358,7 +380,7 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ViewBase.MasterView.ShowError(err);
+                OnException(err);
             }
 
             return true;
@@ -392,7 +414,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
             return true;
         }
@@ -408,7 +430,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
 
             return true;
@@ -431,7 +453,7 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ViewBase.MasterView.ShowError(err);
+                OnException(err);
             }
             return true;
         }
@@ -505,23 +527,26 @@ namespace UserInterface.Views
         /// <param name="cr">The current draing context.</param>
         private void CalculateColumnWidths(IDrawContext cr)
         {
-            if (DataProvider == null)
-                throw new Exception("Unable to calculate column widths as DataProvider was null.");
-                
-            int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
-            if (visibleRows >= DataProvider.RowCount)
-                visibleRows = DataProvider.RowCount - 1;
-
-            ColumnWidths = new int[DataProvider.ColumnCount];
-            for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
+            if (autoCalculateColumnWidths)
             {
-                int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
-                for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
-                    columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
+                if (DataProvider == null)
+                    throw new Exception("Unable to calculate column widths as DataProvider was null.");
+                
+                int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
+                if (visibleRows >= DataProvider.RowCount)
+                    visibleRows = DataProvider.RowCount - 1;
 
-                ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
+                ColumnWidths = new int[DataProvider.ColumnCount];
+                for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
+                {
+                    int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
+                    for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
+                        columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
+
+                    ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
+                }
+                RedrawNeeded?.Invoke(this, new EventArgs());
             }
-            RedrawNeeded?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -564,17 +589,17 @@ namespace UserInterface.Views
                 
 
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
-                if (cellBounds != null)
+                if (cellBounds != Rectangle.Empty)
                 {
                     if (text == null)
                         text = string.Empty;
 
-                    cr.Rectangle(cellBounds.Clip(Width-20, Height).ToRectangle());
+                    cr.Rectangle(cellBounds.Clip(Width-20, Height));
                     cr.Clip();
 
                     cr.SetLineWidth(lineWidth);
 
-                    cr.Rectangle(cellBounds.ToRectangle());
+                    cr.Rectangle(cellBounds);
                     if (CellPainter.PaintCell(columnIndex, rowIndex))
                     {
                         // Draw the filled in cell.
@@ -586,7 +611,7 @@ namespace UserInterface.Views
                         // Draw cell outline.
                         if (ShowLines)
                         {
-                            cr.Rectangle(cellBounds.ToRectangle());
+                            cr.Rectangle(cellBounds);
                             cr.Stroke();
                         }
 
@@ -616,7 +641,7 @@ namespace UserInterface.Views
             }
             catch (Exception ex)
             {
-                MainView.MasterView.ShowError(ex);
+                OnException(ex);
             }
         }
     }

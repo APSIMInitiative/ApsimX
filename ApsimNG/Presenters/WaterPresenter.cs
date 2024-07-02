@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Commands;

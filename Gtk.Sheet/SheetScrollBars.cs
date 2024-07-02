@@ -1,10 +1,10 @@
 ﻿using Gtk;
 using System;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Implements scroll bars for a sheet widget.</summary>
-    public class SheetScrollBars
+    internal class SheetScrollBars
     {
         /// <summary>The sheet widget.</summary>
         private Sheet sheet;
@@ -91,6 +91,20 @@ namespace UserInterface.Views
             verticalScrollbar.Adjustment.Upper = rows + 2;
             verticalScrollbar.Adjustment.Lower = 0;
         }
+
+        /// <summary>Set the visibility of the horizontal scroll bar.</summary>
+        /// <param name="visible">Is the scroll bar visible?</param>
+        public void SetHorizontalScrollbarVisibility(bool visible)
+        {
+            horizontalScrollbar.Visible = visible;
+        }        
+
+        /// <summary>Set the visibility of the vertical scroll bar.</summary>
+        /// <param name="visible">Is the scroll bar visible?</param>
+        public void SetVerticalScrollbarVisibility(bool visible)
+        {
+            verticalScrollbar.Visible = visible;
+        }        
 
         /// <summary>Invoked when the sheet has been scrolled.</summary>
         /// <param name="sender">The sender of the event</param>

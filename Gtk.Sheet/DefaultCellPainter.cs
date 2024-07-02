@@ -1,14 +1,13 @@
 ﻿using System.Drawing;
-using Utility;
 using APSIM.Interop.Drawing;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// This cell painter will colour the column headings of a sheet and any selected cells.
     /// It will also tell the sheet not to paint a cell that is being edited.
     /// </summary>
-    public class DefaultCellPainter : ISheetCellPainter
+    internal class DefaultCellPainter : ISheetCellPainter
     {
         /// <summary>The sheet to paint.</summary>
         Sheet sheet;

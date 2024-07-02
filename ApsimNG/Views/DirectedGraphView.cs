@@ -7,6 +7,7 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
+using Gtk.Sheet;
 
 namespace UserInterface.Views
 {

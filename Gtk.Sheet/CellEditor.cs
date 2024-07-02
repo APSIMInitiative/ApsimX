@@ -1,10 +1,9 @@
 ﻿using Gtk;
 using System;
-using UserInterface.EventArguments;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
-    class CellEditor : ISheetEditor
+    internal class CellEditor : ISheetEditor
     {
         /// <summary>The sheet.</summary>
         private readonly Sheet sheet;
@@ -18,8 +17,8 @@ namespace UserInterface.Views
         /// <summary>The gtk fixed positioning container for the entry box used when editing a sheet cell.</summary>
         private Fixed fix = new Fixed();
 
-        /// <summary></summary>
-        public event EventHandler<NeedContextItemsArgs> ShowIntellisense;
+        ///// <summary></summary>
+        //public event EventHandler<NeedContextItemsArgs> ShowIntellisense;
 
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
@@ -180,21 +179,21 @@ namespace UserInterface.Views
                             sheet.CellSelector.MoveDown(key.Shift);
                     }
                 }
-                if (key.Key == Keys.Period)
-                {
-                    NeedContextItemsArgs contextArgs = new NeedContextItemsArgs()
-                    {
-                        Coordinates = GetPositionOfCursor(),
-                        Code = entry.Text,
-                        Offset = 0,
-                        ControlSpace = false,
-                        ControlShiftSpace = false,
-                        LineNo = 0,
-                        ColNo = 0
-                    };
+                // if (key.Key == Keys.Period)
+                // {
+                //     NeedContextItemsArgs contextArgs = new NeedContextItemsArgs()
+                //     {
+                //         Coordinates = GetPositionOfCursor(),
+                //         Code = entry.Text,
+                //         Offset = 0,
+                //         ControlSpace = false,
+                //         ControlShiftSpace = false,
+                //         LineNo = 0,
+                //         ColNo = 0
+                //     };
 
-                    ShowIntellisense?.Invoke(sender, contextArgs);
-                }
+                //     ShowIntellisense?.Invoke(sender, contextArgs);
+                // }
             }
         }
 

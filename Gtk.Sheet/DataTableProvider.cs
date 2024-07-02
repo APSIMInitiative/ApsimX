@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Gtk.Sheet;
+using static Gtk.Sheet.ISheetDataProvider;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// Wraps a .NET DataTable as a data provider for a sheet widget.
@@ -19,22 +21,15 @@ namespace UserInterface.Views
         /// <summary>A matrix of cell booleans to indicate if a cell is calculated (rather than measured).</summary>
         private List<List<bool>> cellStates;
 
-        /// <summary>Delegate for a CellChanged event.</summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="colIndices">The indices of the columns that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows that were changed.</param>
-        /// <param name="values">The values of the cells changed.</param>
-
-        public delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
-
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
+        /// <param name="isReadOnly">Is the data readonly?</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
-        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
+        public DataTableProvider(DataTable dataSource,bool isReadOnly, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
         {
             if (dataSource == null)
                 Data = new DataTable();
@@ -42,6 +37,7 @@ namespace UserInterface.Views
                 Data = dataSource;
             units = columnUnits;
             this.cellStates = cellStates;
+            IsReadOnly = isReadOnly;
             if (units == null)
                 numHeadingRows = 1;
             else
@@ -56,6 +52,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets the number of rows of data.</summary>
         public int RowCount => Data.Rows.Count + numHeadingRows;
+
+        /// <summary>Is the data readonly?</summary>
+        public bool IsReadOnly { get; }        
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
@@ -177,7 +176,7 @@ namespace UserInterface.Views
         public string GetColumnUnits(int colIndex)
         {
             if (units == null)
-                return "";
+                return null;
             else
                 return units[colIndex];
         }

@@ -1,7 +1,7 @@
-﻿namespace UserInterface.Views
+﻿namespace Gtk.Sheet
 {
     /// <summary>Keys enumeration.</summary>
-    public enum Keys
+    internal enum Keys
     {
         None,
         Right,
@@ -18,7 +18,7 @@
         Period
     }
 
-    public class SheetEventKey
+    internal class SheetEventKey
     {
         public Keys Key = Keys.None;
         public char KeyValue;

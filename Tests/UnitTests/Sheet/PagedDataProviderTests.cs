@@ -8,7 +8,8 @@
     using System.IO;
     using System.Reflection;
     using UserInterface.Views;
-
+    using Gtk.Sheet;
+    
     [TestFixture]
     class PagedDataTableTests
     {
