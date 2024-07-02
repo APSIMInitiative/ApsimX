@@ -179,7 +179,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
-        public double Height { get { return Structure.Height; } }
+        public double Height 
+        {  get 
+            {
+                if (parentPlant.IsAlive)
+                    return Structure.Height;
+                else
+                    return 0.0;
+            } 
+        }
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]

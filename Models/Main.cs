@@ -79,14 +79,14 @@ namespace Models
             foreach (var error in errors)
             {
                 //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
-                if (error as VersionRequestedError == null && error as HelpRequestedError == null)
+                if (error as VersionRequestedError == null && error as HelpRequestedError == null && error as MissingRequiredOptionError == null)
                 {
                     Console.WriteLine("Console error output: " + error.ToString());
                     Trace.WriteLine("Trace error output: " + error.ToString());
                 }
             }
 
-            if (!(errors.IsHelp() || errors.IsVersion()))
+            if (!(errors.IsHelp() || errors.IsVersion() || errors.Any(e => e is MissingRequiredOptionError)))
                 exitCode = 1;
         }
 
@@ -123,6 +123,13 @@ namespace Models
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
+                else if (options.ListEnabledSimulationNames)
+                {
+                    foreach (string file in files)
+                    {
+                        ListSimulationNames(file, options.SimulationNameRegex, true);
+                    }
+                }
                 else if (options.ListReferencedFileNames)
                 {
                     foreach (string file in files)
@@ -474,6 +481,7 @@ namespace Models
 
                 if (string.IsNullOrWhiteSpace(lastSaveFilePath))
                 {
+                    tempSim.Write(filePath);
                     File.Copy(filePath, originalFilePath, true);
                     lastSaveFilePath = originalFilePath;
                 }
@@ -668,13 +676,20 @@ namespace Models
                 File.WriteAllText(file, converter.Root.ToString());
         }
 
-        private static void ListSimulationNames(string fileName, string simulationNameRegex)
+        private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
-            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
-
+            if (showEnabledOnly)
+            {
+                List<Simulation> enabledSims = file.FindAllDescendants<Simulation>().Where(sim => sim.Enabled == true).ToList();
+                enabledSims.ForEach(sim => Console.WriteLine(sim.Name));
+            }
+            else
+            {
+                SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+                jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+            }
         }
 
         private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
@@ -708,7 +723,9 @@ namespace Models
                 string fileName = Path.ChangeExtension(group.FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
                 Report.WriteAllTables(storage, fileName);
-                Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+                if (File.Exists(Path.ChangeExtension(fileName, ".csv")))
+                    Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+                else Console.WriteLine("Unable to make csv file for " + Path.ChangeExtension(fileName, ".csv"));
             }
         }
 

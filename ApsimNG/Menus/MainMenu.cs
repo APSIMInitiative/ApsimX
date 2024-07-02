@@ -196,6 +196,9 @@ namespace UserInterface.Presenters
                 if (Configuration.Settings.AutoSave)
                     explorer.Save();
 
+                if (string.IsNullOrEmpty(explorer.ApsimXFile.FileName))
+                     throw new InvalidOperationException("Please save before running simulation.");
+
                 IModel model = FindRunnable(explorer.CurrentNode);
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");

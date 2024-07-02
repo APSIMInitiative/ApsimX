@@ -31,15 +31,20 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
-        /// A phase name selector.
+        /// A stage name selector.
         /// </summary>
         CropStageName,
+
+        /// <summary>
+        /// A list of crops parameterised as columns in a csv input file
+        /// </summary>
+        CSVCrops,
 
         /// <summary>
         /// A phase name selector.
         /// </summary>
         CropPhaseName,
-        
+
         /// <summary>
         /// A LifePhase name editor.
         /// </summary>

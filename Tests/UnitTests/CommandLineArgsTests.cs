@@ -1016,5 +1016,19 @@ run";
             Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).NewModel as Simulations).FindChild<Simulation>();
             Assert.AreEqual("SpecialSimulation", newSim.Name);
         }
+
+        [Test]
+        public void Test_ListEnabledSimulationNames_OnlyShowsEnabledSimulations()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.TwodisabledSimsOneEnabled.apsimx");
+            Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
+            sims.FileName = "TwodisabledSimsOneEnabled.apsimx";
+            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), sims.FileName);
+            File.WriteAllText(tempSimsFilePath, json);
+            var actual = Utilities.RunModels($"{tempSimsFilePath} -e");
+            string expected = $"Simulation{Environment.NewLine}";
+            Assert.AreEqual(expected, actual);
+        }
+
     }
 }
