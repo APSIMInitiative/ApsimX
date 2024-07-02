@@ -42,7 +42,7 @@
     "core-js": "^3.33.1",
     "fitty": "^2.3.7",
     "glob": "^10.3.10",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-connect": "^5.7.0",
