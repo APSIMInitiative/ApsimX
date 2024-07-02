@@ -63,6 +63,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
+        [Display(Type = DisplayType.MultiLineText)]
         public string[] SheetNames
         {
             get

@@ -340,7 +340,6 @@ namespace UserInterface.Views
                     component = dropDown.MainWidget;
                     break;
                 case PropertyType.File:
-                case PropertyType.Files:
                 case PropertyType.Directory:
                     //case PropertyType.Directories:
                     // Add an Entry and a Button inside a VBox.
@@ -353,8 +352,6 @@ namespace UserInterface.Views
                     fileChooserButton.Name = property.ID.ToString();
                     if (property.DisplayMethod == PropertyType.File)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, false);
-                    else if (property.DisplayMethod == PropertyType.Files)
-                        fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
                     else if (property.DisplayMethod == PropertyType.Directory)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, true);
 
@@ -362,6 +359,32 @@ namespace UserInterface.Views
                     container.PackStart(fileNameInput, true, true, 0);
                     container.PackStart(fileChooserButton, false, false, 0);
                     component = container;
+                    break;
+                case PropertyType.Files:
+                    string filenamesText = property.Value?.ToString();
+                    filenamesText = filenamesText.Replace(',', '\n');
+                    if (!filenamesText.EndsWith('\n'))
+                        filenamesText += '\n';
+
+                    TextView filenamesEditor = new TextView();
+                    filenamesEditor.SizeAllocated += OnTextViewSizeAllocated;
+                    filenamesEditor.WrapMode = WrapMode.Word;
+                    filenamesEditor.Buffer.Text = filenamesText ?? "";
+                    originalEntryText[property.ID] = filenamesText;
+                    filenamesEditor.Name = property.ID.ToString();
+                    filenamesEditor.FocusOutEvent += UpdateText;
+
+                    Frame filenamesOutline = new Frame();
+                    filenamesOutline.Add(filenamesEditor);
+
+                    Button filesChooserButton = new Button("...");
+                    filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
+
+                    Box filenamesContainer = new HBox();
+                    filenamesContainer.PackStart(filenamesOutline, true, true, 0);
+                    filenamesContainer.PackStart(filesChooserButton, false, false, 0);
+                    component = filenamesContainer;
+
                     break;
                 case PropertyType.Colour:
                     ColourDropDownView colourChooser = new ColourDropDownView(this);
@@ -490,7 +513,7 @@ namespace UserInterface.Views
                 bool doUpdate = false;
                 if (e is KeyPressEventArgs) 
                 {
-                    if ((e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
+                    if (!(sender is TextView) && (e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
                         doUpdate = true;
                 }
                 else 
@@ -530,6 +553,36 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Called when a multiline filenames has been modified.
+        /// </summary>
+        /// <param name="sender">The entry which has been modified.</param>
+        /// <param name="e">Event data.</param>
+        [GLib.ConnectBefore]
+        private void UpdateFilenamesText(object sender, EventArgs e)
+        {
+           /* try
+            {
+                Widget widget = sender as Widget;
+                if (widget != null)
+                {
+                    StoreScrollerPosition();
+                    Guid id = Guid.Parse(widget.Name);
+                    string text = editor.Buffer.Text;
+                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                    {
+                        var args = new PropertyChangedEventArgs(id, text);
+                        originalEntryText[id] = text;
+                        PropertyChanged?.Invoke(this, args);
+                    }
+                }                
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }*/
         }
 
         /// <summary>
