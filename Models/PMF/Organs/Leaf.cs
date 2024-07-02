@@ -800,6 +800,10 @@ namespace Models.PMF.Organs
         [Units("mm^2/g")]
         public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt, 0); } }
 
+        /// <summary>Gets the specific area of the overall canopy</summary>
+        [Units("m2/g")]
+        public double SpecificAreaCanopy { get { return MathUtilities.Divide(LAI, Live.Wt, 0); } }
+
         /// <summary>
         /// Returns the relative expansion of the next leaf to produce its ligule
         /// </summary>
