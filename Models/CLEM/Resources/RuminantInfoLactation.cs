@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Presentation;
+﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Presentation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,14 +55,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Protein { get; set; }
         /// <summary>
-        /// Total protein required for lactation
+        /// Protein saved by lactation reduction
         /// </summary>
-        public double ProteinBeforeReduction { get; set; }
-
+        public double ProteinReduced { get; set; }
         /// <summary>
-        /// Protein shortfall reduction proportion
+        /// The proportion of the protein remaining after accounting for protein limited milk production
         /// </summary>
-        public double ProteinShortfallReduction { get; set; }
+        public double ProteinToReducedProteinScalar 
+        {
+            get
+            {
+                if (MathUtilities.FloatsAreEqual(Protein, 0.0))
+                    return 0.0;
+                return ProteinReduced / Protein; 
+            }
+        }
         /// <summary>
         /// Lag term for milk production
         /// </summary>
@@ -121,6 +129,7 @@ namespace Models.CLEM.Resources
             Available = 0;
             Milked = 0;
             Suckled = 0;
+            ProteinReduced = 0;
         }
     }
 }

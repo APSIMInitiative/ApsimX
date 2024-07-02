@@ -75,14 +75,14 @@ namespace Models.CLEM.Resources
         public double ProteinForPregnancy { get; set; }
 
         /// <summary>
-        /// Report protein required for growth (kg)
+        /// Report protein required for kg gain defined from net energy (kg)
         /// </summary>
-        public double ProteinRequiredForGrowth { get; set; }
+        public double ProteinForGain { get; set; }
 
         /// <summary>
         /// Report protein avalable after leaving stomach and accounting for other protein use (kg)
         /// </summary>
-        public double ProteinAvailableForGrowth { get; set; }
+        public double ProteinAvailableForGain { get; set; }
 
         /// <summary>
         /// Performs the resetting of time-step tracking stores
@@ -91,8 +91,8 @@ namespace Models.CLEM.Resources
         {
             ProteinForMaintenence = 0;
             ProteinForPregnancy = 0;
-            ProteinRequiredForGrowth = 0;
-            ProteinAvailableForGrowth = 0;
+            ProteinForGain = 0;
+            ProteinAvailableForGain = 0;
         }
 
         /// <summary>

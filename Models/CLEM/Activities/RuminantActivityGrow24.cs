@@ -365,6 +365,10 @@ namespace Models.CLEM.Activities
             double proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain);
             //double proteinNet = proteinAvailableForGain - proteinNeededForGrowth;
 
+            ind.Weight.ProteinForGain = proteinNeededForGrowth;
+            ind.Weight.ProteinAvailableForGain = proteinAvailableForGain;
+            ind.Energy.ForGain = energyAvailableForGain;
+
             if (MathUtilities.IsNegative(proteinAvailableForGain) && ind is RuminantFemale indFemale && MathUtilities.IsPositive(indFemale.Milk.Protein))  // *** should this be the protein available for gain or the net avail - growth.. not the same thing
             {
                 // Equations 75-76   ==================================================  Freer et al. (2012) The GRAZPLAN animal biology model
@@ -378,7 +382,6 @@ namespace Models.CLEM.Activities
                 indFemale.Milk.Produced = indFemale.Milk.Available;
 
                 // recalulate protein needed for milk
-                indFemale.Milk.ProteinShortfallReduction = MP / indFemale.Milk.PotentialRate2;
                 indFemale.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * (MP / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
                 milkProtein = indFemale.Milk.Protein;
 
@@ -397,8 +400,8 @@ namespace Models.CLEM.Activities
                 proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
                 // Equation 112  ================
                 // Here we adjust proteinAvailableForGain (PG1) rather than use PG2 from report as we can do these equations where Female object known in this if statement and Pg2 is set to PG1 if there are no lactation limits.
-                double savedprotein = (indFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
-                proteinAvailableForGain += (indFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6); // this will only add thus reducing the deficit
+                indFemale.Milk.ProteinReduced = (indFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
+                proteinAvailableForGain += indFemale.Milk.ProteinReduced;
             }
 
             // Equation 113  ================  PNET1 and PNET2
@@ -412,9 +415,6 @@ namespace Models.CLEM.Activities
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.
 
-            ind.Weight.ProteinRequiredForGrowth = proteinNeededForGrowth;
-            ind.Weight.ProteinAvailableForGrowth = proteinAvailableForGain;
-            ind.Energy.ForGain = energyAvailableForGain;
 
             double finalprotein;
             if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation
@@ -646,7 +646,6 @@ namespace Models.CLEM.Activities
 
             // Equation 76  ================================================== 0.032
             ind.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * MP2 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
-            ind.Milk.ProteinBeforeReduction = ind.Milk.Protein;
 
             ind.Milk.PotentialRate = MP2;
             ind.Milk.Available = MP2 * events.Interval;
