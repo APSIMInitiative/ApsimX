@@ -19,15 +19,12 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 0,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 30, 40, 50, 60 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 80, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
+            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units), 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 30, 40, 50, 60 });
+            sheet.Width = 80;
+            sheet.Height = 80;
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
             // Row 0
@@ -64,18 +61,14 @@
                                                            new object[] {   "a2", "b2",  "c2", "d2" },
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
-
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 0,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 20, 20, 20, 20 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 60, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
-                                        
+            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units), 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 20, 20, 20, 20 });
+            sheet.Width = 60;
+            sheet.Height = 80;
+
             sheet.ScrollRight();
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
@@ -113,15 +106,12 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 0,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 10, 20, 20, 20 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 80, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
+            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units), 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 10, 20, 20, 20 });
+            sheet.Width = 80;
+            sheet.Height = 80;
 
             sheet.ScrollRight();
 
@@ -163,15 +153,12 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 1,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 10, 20, 30, 40 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 80, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
+            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units), 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 1,
+                                  columnWidths: new int[] { 10, 20, 30, 40 });
+            sheet.Width = 80;
+            sheet.Height = 80;
 
             sheet.ScrollRight(); // This will have to scroll right 2 columns because column indexes 1,2,3 won't fit into a width of 80 pixels.
 
@@ -211,15 +198,12 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 1,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 10, 20, 30, 40 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 80, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
+            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units), 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 1,
+                                  columnWidths: new int[] { 10, 20, 30, 40 });
+            sheet.Width = 80;
+            sheet.Height = 80;
 
             sheet.ScrollRight(); // This will have to scroll right 2 columns because column indexes 1,2,3 won't fit into a width of 80 pixels.
             sheet.ScrollLeft();
@@ -260,16 +244,14 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget(null,
-                                        dataProvider: new DataTableProvider(data, isReadOnly: true, units),
-                                        multiSelect: false,
-                                        numberFrozenColumns: 1,
-                                        numberFrozenRows: 1,
-                                        columnWidths: new int[] { 30, 40, 50, 60 },
-                                        onException: null);
-            Utilities.CallMethod(sheet, "OnSizeAllocated", new object[] { new Gdk.Rectangle(x:0, y:0, width: 80, height: 80) });
-            Utilities.CallMethod(sheet, "Initialise", new object[] { null });
-
+            var dataProvider = new DataTableProvider(data, isReadOnly: true, units);
+            var sheet = new Sheet(dataProvider, 
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 1,
+                                  columnWidths: new int[] { 30, 40, 50, 60 });
+            sheet.Width = 80;
+            sheet.Height = 80;
+            sheet.RowCount = dataProvider.RowCount + 1;
             sheet.ScrollDown();
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
