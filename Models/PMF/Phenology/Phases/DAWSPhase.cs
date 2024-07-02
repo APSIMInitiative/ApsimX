@@ -68,7 +68,7 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             if (First)
             {
-                //StartDAWS = met.DaysSinceWinterSolstice;
+                
                 if (clock.Today.DayOfYear < met.WinterSolsticeDOY)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
@@ -81,13 +81,14 @@ namespace Models.PMF.Phen
 
                 First = false;
             }
-
-            if ((met.DaysSinceWinterSolstice == DAWStoProgress) ||
-                ((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
+            
+            if (((met.DaysSinceWinterSolstice >= DAWStoProgress) && (met.DaysSinceWinterSolstice < 365))||
+                ((met.DaysSinceWinterSolstice == 0) && (DAWStoProgress >= 365)))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
             }
+            
             return proceedToNextPhase;
         }
 
