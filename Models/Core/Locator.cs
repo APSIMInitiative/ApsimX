@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using Models.Soils.Nutrients;
 
 namespace Models.Core
 {
@@ -561,6 +562,11 @@ namespace Models.Core
                 else if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType) && modelInfo.GetType().Name == "Series")
                 {
                     return modelInfo;
+                }
+                //Special case for Nutrient which has a CNRF child and an array property. The check below isn't returning a value for the array
+                else if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType) && propertyInfo.Name == "CNRF" && relativeToObject.GetType() == typeof(Nutrient))
+                {
+                    return propertyInfo;
                 }
                 else
                 {
