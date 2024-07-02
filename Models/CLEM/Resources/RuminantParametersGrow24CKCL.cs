@@ -104,7 +104,7 @@ namespace Models.CLEM.Resources
         /// Energy content of milk (MJ kg-1, SCA CL6)
         /// </summary>
         [Category("Farm", "Lactation")]
-        [Description("Energy content of milk [CL6]")]
+        [Description("Energy content of milk (%) [CL6]")]
         [Required, GreaterThanValue(0)]
         public double EnergyContentMilk_CL6 { get; set; } = 3.1;
 
@@ -148,7 +148,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Protein content of milk [CL15]")]
         [Required, GreaterThanValue(0)]
-        public double ProteinContentMilk_CL15 { get; set; } = 0.032;
+        public double ProteinContentMilk_CL15 { get; set; } = 0.0032;
 
         /// <summary>
         /// Adjustment of potential lactation yield reduction (CL16 in SCA)

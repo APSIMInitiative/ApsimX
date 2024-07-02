@@ -123,14 +123,22 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double GrowthEnergySlope2_CG11 { get; set; } = 13.8;
 
+        ///// <summary>
+        ///// First intercept of equation to determine energy protein mass (kg kg-1, Freer et al. (2012) GrazPlan CG12)
+        ///// </summary>
+        //[Description("Protein gain intercept #1 [CG12]")]
+        //[Category("Breed", "Growth")]
+        //[Required, GreaterThanValue(0)]
+        //public double ProteinGainIntercept1_CG12 { get; set; } = 0.072; // Same for B.indicus 
+
         /// <summary>
-        /// First intercept of equation to determine energy protein mass (kg kg-1, SCA CG12)
+        /// The adjusted intercept of equation to determine energy protein mass (kg kg-1) based on corrected equation to calculate proteinContentOfGain Dougherty 2024, Freer et al., 2012
         /// </summary>
         /// <details>
-        /// The 'b' inidcates this is a different value to that reported by Freer et al. 2012 due to the corrected reaggangement of equation 105 based on eqn 1.31 in Freer 2007.
+        /// The 'b' indicates this is a different value to that reported by Freer et al. 2012 due to the corrected reaggangement of equation 105 based on eqn 1.31 in Freer 2007.
         /// This value is used to calculate proteinContentOfGain in CalculateEnergy(ind)
         /// </details>
-        [Description("Protein gain intercept #1 [CG12]")]
+        [Description("Adjusted Protein gain intercept #1 [CG12]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         public double ProteinGainIntercept1_CG12b { get; set; } = 0.21; // Same for B.indicus 

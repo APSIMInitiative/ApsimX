@@ -78,9 +78,17 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanEqualValue(0)]
         public double UpperBoundsPregnancyDystocia_CD7 { get; set; } = 0.0;
 
-        // Add dystocia for cattle at some stage.
+        /// <summary>
+        /// Critical ratio of fat to EBM content for survival 
+        /// </summary>
+        [Category("Breed", "Survival")]
+        [Description("Critical fat to EBM proportion for survival")]
+        [Required, GreaterThanValue(0), Proportion]
+        public double CriticalFatToEBMForSurvival { get; set; } = 0.05;
 
-        // CD8 -CD11 Chilling effect - not implemented
+        // ToDo: Add dystocia for cattle at some stage.
+
+        // CD8-CD11 Chilling effect - not implemented
 
         /// <summary>
         /// Relative difference in weight of dying animals
