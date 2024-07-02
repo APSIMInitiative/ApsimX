@@ -135,7 +135,7 @@ namespace UserInterface.Presenters
                     if (water != null && (model is Physical || model is Water || model is SoilCrop))
                     {
                         if (water.Thickness.Length != physical.Thickness.Length)
-                            throw new Exception("There is a mismatch between the number of soil layers on the physical node and water nodes. Cannot create greaph");
+                            throw new Exception("There is a mismatch between the number of soil layers on the physical node and water nodes. Cannot create graph");
                             
                         string llsoilName = null;
                         double[] llsoil = null;
