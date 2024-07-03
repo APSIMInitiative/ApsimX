@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
                     // reset actual expected containers as expected determined during CalculatePotentialIntake
                     ind.Intake.SolidsDaily.Reset();
                     ind.Intake.MilkDaily.Reset();
-                    ind.Weight.Reset();
+                    ind.Weight.Protein.TimeStepReset();
 
                     CalculatePotentialIntake(ind);
                     // Perform after potential intake calculation as it needs MEContent from previous month for Lactation energy calculation.
@@ -224,6 +224,37 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Calculate growth efficiency based on lactation
+        /// </summary>
+        /// <param name="ind"></param>
+        /// <returns></returns>
+        private void CalculateGrowthEfficiency(Ruminant ind)
+        {
+            if (ind.Energy.ForLactation > 0)
+            {
+                if (ind.Energy.AfterLactation >= 0)
+                {
+                    ind.Energy.Kg = 0.95 * kl;
+                }
+                else
+                {
+                    ind.Energy.Kg = kl / 0.84; // represents tissue mobilisation
+                }
+            }
+            else
+            {
+                if (ind.Energy.AfterLactation >= 0)
+                {
+                    ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
+                }
+                else
+                {
+                    ind.Energy.Kg = ind.Energy.Km / 0.8; // represents tissue mobilisation
+                }
+            }
+        }
+
+        /// <summary>
         /// Function to calculate energy from intake and subsequent growth.
         /// </summary>
         /// <remarks>
@@ -263,28 +294,30 @@ namespace Models.CLEM.Activities
                     ind.Energy.ForLactation = CalculateLactationEnergy(female);
                 }
 
-                if(ind.Energy.ForLactation > 0)
-                {
-                    if(ind.Energy.AfterLactation >= 0)
-                    {
-                        ind.Energy.Kg = 0.95 * kl;
-                    }
-                    else
-                    {
-                        ind.Energy.Kg = kl / 0.84; // represents tissue mobilisation
-                    }
-                }
-                else
-                {
-                    if (ind.Energy.AfterLactation >= 0)
-                    {
-                        ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
-                    }
-                    else
-                    {
-                        ind.Energy.Kg = ind.Energy.Km / 0.8; // represents tissue mobilisation
-                    }
-                }
+                CalculateGrowthEfficiency(ind);
+
+                //if(ind.Energy.ForLactation > 0)
+                //{
+                //    if(ind.Energy.AfterLactation >= 0)
+                //    {
+                //        ind.Energy.Kg = 0.95 * kl;
+                //    }
+                //    else
+                //    {
+                //        ind.Energy.Kg = kl / 0.84; // represents tissue mobilisation
+                //    }
+                //}
+                //else
+                //{
+                //    if (ind.Energy.AfterLactation >= 0)
+                //    {
+                //        ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
+                //    }
+                //    else
+                //    {
+                //        ind.Energy.Kg = ind.Energy.Km / 0.8; // represents tissue mobilisation
+                //    }
+                //}
             }
             else // Unweaned
             {
@@ -299,7 +332,7 @@ namespace Models.CLEM.Activities
                 ind.Mother?.Milk.Take(received*events.Interval, MilkUseReason.Suckling);
 
                 milkPacket.MetabolisableEnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
-                milkPacket.CrudeProteinContent = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * 100.0;
+                milkPacket.CrudeProteinContent = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / 100.0;
                 milkPacket.Amount = received;
                 // Intake.AddFeed expects the daily amount.
                 ind.Intake.AddFeed(milkPacket);
@@ -342,7 +375,7 @@ namespace Models.CLEM.Activities
             // Equation 103   ==================================================
             // efficiency of using DPLS
             double kDPLS = (ind.IsWeaned)? ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
-            ind.Weight.ProteinForMaintenence = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
+            ind.Weight.Protein.ForMaintenence = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
@@ -350,7 +383,7 @@ namespace Models.CLEM.Activities
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
-            double proteinAvailableForGain = kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth() / kDPLS));
+            double proteinAvailableForGain = kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth / kDPLS));
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
             // Equation 105  units = kg protein/kg gain
@@ -363,17 +396,14 @@ namespace Models.CLEM.Activities
                 energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
             // Equation 109  - the amount of protein required for the growth based on energy available
             double proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain);
-            //double proteinNet = proteinAvailableForGain - proteinNeededForGrowth;
 
-            ind.Weight.ProteinForGain = proteinNeededForGrowth;
-            ind.Weight.ProteinAvailableForGain = proteinAvailableForGain;
-            ind.Energy.ForGain = energyAvailableForGain;
+            ind.Weight.Protein.ForGain = proteinNeededForGrowth;
+            ind.Weight.Protein.AvailableForGain = proteinAvailableForGain;
 
             if (MathUtilities.IsNegative(proteinAvailableForGain) && ind is RuminantFemale indFemale && MathUtilities.IsPositive(indFemale.Milk.Protein))  // *** should this be the protein available for gain or the net avail - growth.. not the same thing
             {
                 // Equations 75-76   ==================================================  Freer et al. (2012) The GRAZPLAN animal biology model
                 // ind.Milk.PotentialRate2 replaces MP2 in equations 75 and 76 as determined in CalculateLactationEnergy
-                // ie it recalculates ME for lactation and protein for lactation
 
                 // Reduce milk production (MP) to handle shortfall.
                 // Equation 110 Modified  ================
@@ -382,25 +412,26 @@ namespace Models.CLEM.Activities
                 indFemale.Milk.Produced = indFemale.Milk.Available;
 
                 // recalulate protein needed for milk
-                indFemale.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * (MP / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
+                indFemale.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * (MP / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6) / 100.0;
                 milkProtein = indFemale.Milk.Protein;
 
                 // Equation 75  ================
                 ind.Energy.ForLactation = MP / (0.94 * kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;
 
                 // if lactation has been turned off due to protein defecit, then we need the other kg (efficiency of gain)
-                if (!MathUtilities.IsNegative(ind.Energy.AfterLactation))
-                {
-                    ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
-                    energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
-                }
+                CalculateGrowthEfficiency(ind);
+                //if (!MathUtilities.IsNegative(ind.Energy.AfterLactation))
+                //    ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
+                energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
+                if (MathUtilities.IsPositive(energyAvailableForGain))
+                    energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
 
                 // Equation 111  ================ Adjusted NEG1 based on the protein saved from reduced milk
-                energyAvailableForGain += ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 * (indFemale.Milk.PotentialRate2 - MP);
+                //energyAvailableForGain += ind.Parameters.Grow24_CKCL.MetabolisabilityOfMilk_CL5 * (indFemale.Milk.PotentialRate2 - MP);
                 proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
                 // Equation 112  ================
                 // Here we adjust proteinAvailableForGain (PG1) rather than use PG2 from report as we can do these equations where Female object known in this if statement and Pg2 is set to PG1 if there are no lactation limits.
-                indFemale.Milk.ProteinReduced = (indFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
+                indFemale.Milk.ProteinReduced = (indFemale.Milk.PotentialRate2 - MP) * (ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6) / 100.0;
                 proteinAvailableForGain += indFemale.Milk.ProteinReduced;
             }
 
@@ -415,6 +446,7 @@ namespace Models.CLEM.Activities
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.
 
+            ind.Energy.ForGain = energyAvailableForGain;
 
             double finalprotein;
             if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation
@@ -458,11 +490,11 @@ namespace Models.CLEM.Activities
             ind.Weight.AdjustByEBMChange(((ind.Weight.Protein.Change / ProteinContentOfFatFreeTissueGainWetBasis) + ind.Weight.Fat.Change) * events.Interval, ind);
 
             // Equations 118-120   ==================================================
-            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.ProteinForPregnancy + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
+            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
             // Total fecal protein
             double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.Grow24_CACRD.MicrobialProteinDigestibility_CA7 * ind.Parameters.Grow24_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
             // Total urinary protein
-            double TUP = ind.Intake.CrudeProtein - (ind.Weight.ProteinForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;
+            double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;
             ind.Output.NitrogenExcreted = (TFP + TUP) * events.Interval;
             ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
             ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;
@@ -490,7 +522,7 @@ namespace Models.CLEM.Activities
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
             km *= ind.Parameters.Grow24_CG.BreedMainenanceEfficiencyScalar;
 
-            // Note: Energy.ToMove and Energy.ToGraze are calulated in Grazing Activity.
+            // Note: Energy.ToMove and Energy.ToGraze are calulated in Grazing and Move activities.
             ind.Energy.ToMove /= km;
             ind.Energy.ToGraze /= km;
 
@@ -644,8 +676,8 @@ namespace Models.CLEM.Activities
                 ind.Milk.PotentialRate2 = MP2;
             }
 
-            // Equation 76  ================================================== 0.032
-            ind.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * MP2 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
+            // Equation 76  ================================================== 0.032 -- All milk production is in MJ/day
+            ind.Milk.Protein = ind.Parameters.Grow24_CKCL.ProteinContentMilk_CL15 * MP2 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 / 100.0;
 
             ind.Milk.PotentialRate = MP2;
             ind.Milk.Available = MP2 * events.Interval;
@@ -728,7 +760,7 @@ namespace Models.CLEM.Activities
 
             //conceptus fat and protein
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
-            ind.Weight.ProteinForPregnancy = conceptusProtein;
+            ind.Weight.Protein.ForPregnancy = conceptusProtein;
             ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
 

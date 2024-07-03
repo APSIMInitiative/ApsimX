@@ -478,7 +478,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
         /// </summary>
-        public abstract double ProteinRequiredBeforeGrowth();
+        public abstract double ProteinRequiredBeforeGrowth { get; }
 
         #endregion
 

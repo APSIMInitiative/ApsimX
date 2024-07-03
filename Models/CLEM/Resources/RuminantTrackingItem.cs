@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Office2016.Drawing.Command;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Ruminant tracking item
     /// </summary>
-    public class RuminantTrackingItem
+    public class RuminantTrackingItem : IRuminantTrackingItem
     {
         /// <summary>
         /// Current amount
@@ -26,7 +27,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Previous amount
         /// </summary>
-        public double Previous { get { return Amount - Change; }  }
+        public double Previous { get { return Amount - Change; } }
 
         /// <summary>
         /// Amount unused last step
@@ -65,7 +66,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            Change = 0-Amount;
+            Change = 0 - Amount;
             Amount = 0;
             ChangeWasted = 0;
             ChangeRemobilised = 0;

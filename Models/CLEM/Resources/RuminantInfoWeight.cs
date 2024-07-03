@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Track protein weight (kg)
         /// </summary>
-        public RuminantTrackingItem Protein { get; set; } = new();
+        public RuminantTrackingItemProtein Protein { get; set; } = new();
 
         /// <summary>
         /// Track fat weight (kg)
@@ -63,37 +63,6 @@ namespace Models.CLEM.Resources
         /// Track wool weight (kg)
         /// </summary>
         public RuminantTrackingItem Cashmere { get; set; } = new();
-
-        /// <summary>
-        /// Report protein for maintenance (kg)
-        /// </summary>
-        public double ProteinForMaintenence { get; set; }
-
-        /// <summary>
-        /// Report protein for pregnancy (kg)
-        /// </summary>
-        public double ProteinForPregnancy { get; set; }
-
-        /// <summary>
-        /// Report protein required for kg gain defined from net energy (kg)
-        /// </summary>
-        public double ProteinForGain { get; set; }
-
-        /// <summary>
-        /// Report protein avalable after leaving stomach and accounting for other protein use (kg)
-        /// </summary>
-        public double ProteinAvailableForGain { get; set; }
-
-        /// <summary>
-        /// Performs the resetting of time-step tracking stores
-        /// </summary>
-        public void Reset()
-        {
-            ProteinForMaintenence = 0;
-            ProteinForPregnancy = 0;
-            ProteinForGain = 0;
-            ProteinAvailableForGain = 0;
-        }
 
         /// <summary>
         /// Current weight of individual  (kg)

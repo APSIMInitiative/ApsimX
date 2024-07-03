@@ -564,10 +564,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Report protein required for maintenance pregnancy and lactationsaved from reduced lactation (kg)
         /// </summary>
-        public override double ProteinRequiredBeforeGrowth()
-        {
-            return Weight.ProteinForMaintenence + Weight.ProteinForPregnancy + Milk.Protein; 
-        }
+        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein + Weight.Protein.ForWool; } }
 
         /// <summary>
         /// The body condition score at birth.
