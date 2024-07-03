@@ -1,12 +1,11 @@
 ﻿using Cairo;
 using Gtk;
-using Utility;
 using APSIM.Interop.Drawing;
 using Rectangle = System.Drawing.Rectangle;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
-    internal class CairoContext : IDrawContext
+    public class CairoContext : IDrawContext
     {
         private Context cr;
         private Widget layoutGenerator;

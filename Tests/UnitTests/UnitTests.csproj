@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\Models\Models.csproj" />
     <ProjectReference Include="..\..\APSIM.Server\V1\APSIM.Server.csproj" />
     <ProjectReference Include="..\..\APSIM.Interop\APSIM.Interop.csproj" />
+    <ProjectReference Include="..\..\Gtk.Sheet\Gtk.Sheet.csproj" />
 
     <!-- nuget -->
     <PackageReference Include="NUnit" Version="3.13.3" />
