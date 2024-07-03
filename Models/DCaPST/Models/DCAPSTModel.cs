@@ -68,12 +68,22 @@ namespace Models.DCAPST
         public double B { get; set; } = 0.409;
 
         /// <summary>
-        /// Potential total daily biomass
+        /// Total Potential daily biomass (Above ground + Roots)
+        /// </summary>
+        public double TotalPotentialBiomass { get; private set; }
+
+        /// <summary>
+        /// Total Actual daily biomass (Above ground + Roots)
+        /// </summary>
+        public double TotalActualBiomass { get; private set; }
+
+        /// <summary>
+        /// Potential total daily biomass (Above ground)
         /// </summary>
         public double PotentialBiomass { get; private set; }
 
         /// <summary>
-        /// Actual total daily biomass 
+        /// Actual total daily biomass (Above ground)
         /// </summary>
         public double ActualBiomass { get; private set; }
 
@@ -86,6 +96,11 @@ namespace Models.DCAPST
         /// Daily water supplied
         /// </summary>
         public double WaterSupplied { get; private set; }
+
+        /// <summary>
+        /// The root shoot ratio used
+        /// </summary>
+        public double RootShootRatio { get; private set; }        
 
         /// <summary>
         /// Daily intercepted radiation
@@ -147,6 +162,8 @@ namespace Models.DCAPST
             double rootShootRatio
         )
         {
+            RootShootRatio = rootShootRatio;
+
             var steps = (end - start) / timestep;
             if (steps % 1 == 0) steps++;
 
@@ -161,7 +178,7 @@ namespace Models.DCAPST
             // Unlimited potential calculations
             // Note: In the potential case, we assume unlimited water and therefore supply = demand
             transpiration.Limited = false;
-            var potential = CalculatePotential();
+            TotalPotentialBiomass = CalculatePotential();
             var waterDemands = Intervals.Select(i => i.Sunlit.Water + i.Shaded.Water).ToList();
 
             // Bio-limited calculations
@@ -182,25 +199,25 @@ namespace Models.DCAPST
                     waterDemands = waterDemands.Select(w => Math.Min(w, Biolimit)).ToList();
                 }
 
-                potential = CalculateLimited(waterDemands);
+                TotalPotentialBiomass = CalculateLimited(waterDemands);
             }
 
             // Actual calculations
             var totalDemand = waterDemands.Sum();
             var limitedSupply = CalculateWaterSupplyLimits(soilWater, waterDemands);
 
-            var actual = (soilWater > totalDemand) ? potential : CalculateActual(limitedSupply.ToArray());
+            TotalActualBiomass = (soilWater > totalDemand) ? TotalPotentialBiomass : CalculateActual(limitedSupply.ToArray());
 
-            ActualBiomass = CalculateBiomass(actual, rootShootRatio);
-            PotentialBiomass = CalculateBiomass(potential, rootShootRatio);
+            ActualBiomass = CalculateBiomass(TotalActualBiomass);
+            PotentialBiomass = CalculateBiomass(TotalPotentialBiomass);
             WaterDemanded = totalDemand;
             WaterSupplied = (soilWater < totalDemand) ? limitedSupply.Sum() : waterDemands.Sum();
         }
 
-        private double CalculateBiomass(double biomass, double rootShootRatio)
+        private double CalculateBiomass(double biomass)
         {
             var biomassConversionFactor = biomass * SECONDS_IN_HOUR / MMOL_TO_MOL * MOL_WT_CO2 * B;
-            var calculatedBiomass = biomassConversionFactor / (1 + rootShootRatio);
+            var calculatedBiomass = biomassConversionFactor / (1 + RootShootRatio);
             return calculatedBiomass;
         }
 
@@ -287,7 +304,7 @@ namespace Models.DCAPST
             {
                 if (!TryInitiliase(I)) continue;
 
-                InterceptedRadiation += Radiation.Total * Canopy.GetInterceptedRadiation() * 3600;
+                InterceptedRadiation += Radiation.Total * Canopy.GetInterceptedRadiation() * SECONDS_IN_HOUR;
 
                 DoTimestepUpdate(I);
             }
