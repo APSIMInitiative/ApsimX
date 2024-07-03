@@ -8,7 +8,7 @@ TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached
 MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,2300,3000,3000,3000,3000,2000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 ProduceDryMatterFrac,0-1,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
-Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-15 -10),(-4 0),(-15 -10),(-1 2),(-5 0),(-5 -2),(-6 0),(-10 -5),(-5 0),(-5 0)
+Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-15 -10),(-4 0),(-15 -10),(-1 2),(-5 0),(-5 -2),(-3 0),(-10 -5),(-5 0),(-5 0)
 Frost_Frac_Y,0-1,Frost damage at x-axes temperaure,Stress,(1 0),(0 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
 WaterStressLAI_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressLAI_Frac_Y,0-1,Fractional multiplier of LAI expansion rates,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
