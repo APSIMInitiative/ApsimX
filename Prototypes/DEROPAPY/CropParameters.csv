@@ -8,7 +8,7 @@ TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached
 MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,2300,3000,3000,3000,3000,2000,600,600
 RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 ProduceDryMatterFrac,0-1,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,0.2,0.2,0.29,0.2,0.2,0.2
-Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-15 -10),(-4 0),(-15 -10),(-5 1),(-5 0),(-5 -2),(-3 0),(-10 -5),(-5 0),(-5 0)
+Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-15 -10),(-4 0),(-15 -10),(-1 2),(-5 0),(-5 -2),(-6 0),(-10 -5),(-5 0),(-5 0)
 Frost_Frac_Y,0-1,Frost damage at x-axes temperaure,Stress,(1 0),(0 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
 WaterStressLAI_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressLAI_Frac_Y,0-1,Fractional multiplier of LAI expansion rates,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
@@ -17,7 +17,7 @@ WaterStressExtCoeff_Frac_Y,0-1,Fractional multiplier of extinction coefficient,S
 WaterStressRUE_Fw_X,0-1,Fractional degree of water stress,Stress,(0 0.8 1),(0 0.8 1),(0 0.5 1),(0 0.8 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 1 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
 WaterStressRUE_Fract_Y,0-1,Fractional multiplier of extinction coefficient,Stress,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
 WaterStressLAISenes_X,0-1,Fractional degree of water stress,Stress,(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1),(0 0.3 1)
-WaterStressLAISenes_Y,0-1,The proportion of LAI senesced each day due to water stress,Stress,(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(0.3 0 0),(0.3 0 0),(0.3 0 0),(0.3 0 0),(1 0 0),(1 0 0)
+WaterStressLAISenes_Y,0-1,The proportion of LAI senesced each day due to water stress,Stress,(1 0 0),(1 0 0),(1 0 0),(1 0 0),(1 0 0),(0.3 0 0),(0.3 0 0),(0.1 0 0),(0.3 0 0),(1 0 0),(1 0 0)
 FlowerMaxTempStress_Temp_X,oC,Maximum temperature at flowering,Stress,(0 35 45),(0 28 45),(0 30 45),(0 27 30 35),(7 17 35 45),(0 30 45),(0 15 30 45),(0 17 30 45),(0 30 45),(0 30 45),(0 30 45)
 FlowerMaxTempStress_Factor_Y,0-1,Multiplier of potential flower number at threshold MAXIMUM temperature,Stress,(1 1 0),(1 1 0),(1 1 0),(1 1 1 0),(0 1 1 0),(1 1 0),(0 1 1 0),(0 1 1 0),(1 1 0),(1 1 0),(1 1 1)
 FlowerMinTempStress_Temp_X,oC,Minimum temperature at flowering,Stress,(0 1),(0 1),(0 1),(0 1),(0 1),(0 10),(-2 0),(-2 0),(-2 0),(0 10),(0 10)
