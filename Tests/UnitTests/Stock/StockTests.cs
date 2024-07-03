@@ -38,12 +38,12 @@
             genotypes.ReadPRM(xml);
             var animalParamSet = genotypes.Get("sheep");
 
-            Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
-            Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
-            Assert.IsFalse(animalParamSet.bDairyBreed);
-            Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
-            Assert.AreEqual(new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0 }, animalParamSet.IntakeC);
-            Assert.AreEqual(new double[] { 0.999, 1.1, 0.004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, animalParamSet.WoolC);
+            Assert.That(animalParamSet.sEditor, Is.EqualTo("Andrew Moore"));
+            Assert.That(animalParamSet.sEditDate, Is.EqualTo("30 Jan 2013"));
+            Assert.That(animalParamSet.bDairyBreed, Is.False);
+            Assert.That(animalParamSet.SRWScalars, Is.EqualTo(new double[] { 1.2, 1.4 }));
+            Assert.That(animalParamSet.IntakeC, Is.EqualTo(new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0 }));
+            Assert.That(animalParamSet.WoolC, Is.EqualTo(new double[] { 0.999, 1.1, 0.004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
         }
 
         /// <summary>Test that a genotype can be extracted from the stock resource file.</summary>
@@ -52,11 +52,11 @@
         {
             var genotypes = new Genotypes();
             var friesian = genotypes.Get("Friesian");
-            Assert.AreEqual(550,  friesian.BreedSRW, 550);
-            Assert.AreEqual(0.05, friesian.SelfWeanPropn);
-            Assert.IsTrue(friesian.bDairyBreed);
-            Assert.AreEqual(new double[] { 0.85, 0.577, 0.9, 0.0 },       friesian.IntakeLactC);
-            Assert.AreEqual(new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 }, friesian.GrowthC);
+            Assert.That(friesian.BreedSRW, Is.EqualTo(550));
+            Assert.That(friesian.SelfWeanPropn, Is.EqualTo(0.05));
+            Assert.That(friesian.bDairyBreed, Is.True);
+            Assert.That(friesian.IntakeLactC, Is.EqualTo(new double[] { 0.85, 0.577, 0.9, 0.0 }));
+            Assert.That(friesian.GrowthC, Is.EqualTo(new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 }));
         }
 
         /// <summary>Ensure that a user supplied genotype overrides a standard one.</summary>
@@ -77,7 +77,7 @@
             // Now ask for friesian again. This time it should return the user genotype, not the standard one.
             friesian = genotypes.Get("Friesian");
 
-            Assert.AreEqual(1, friesian.BreedSRW);
+            Assert.That(friesian.BreedSRW, Is.EqualTo(1));
         }
 
         /// <summary>Ensure there are no dot characters in genotype names.</summary>
@@ -86,7 +86,7 @@
         {
             var genotypes = new Genotypes();
             foreach (var genotypeName in genotypes.All.Select(genotype => genotype.Name))
-                Assert.IsFalse(genotypeName.Contains("."));
+                Assert.That(genotypeName.Contains("."), Is.False);
         }
 
         /// <summary>Ensure we can get a list of all animal types represented in the genotypes.</summary>
@@ -97,7 +97,7 @@
             var genotypes = new Genotypes();
             var animalTypes = genotypes.All.Select(genotype=>genotype.AnimalType).Distinct();
 
-            Assert.AreEqual(animalTypes.ToArray(), new string[] { "Cattle", "Goats", "Sheep" });
+            Assert.That(animalTypes.ToArray(), Is.EqualTo(new string[] { "Cattle", "Goats", "Sheep" }));
         }
 
         /// <summary>Ensure we can get a list of all genotype names for an animal type.</summary>
@@ -109,13 +109,13 @@
             var genotypeNames = genotypes.All.Where(genotype => genotype.AnimalType == "Cattle")
                                              .Select(genotype => genotype.Name);
 
-            Assert.AreEqual(genotypeNames.ToArray().OrderBy(x => x), new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
+            Assert.That(genotypeNames.ToArray().OrderBy(x => x), Is.EqualTo(new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
                                                                     "Dairy Shorthorn", "Friesian", "Guernsey", "Holstein",  "Jersey",
                                                                     "British x Brahman", "British x Charolais", "British x Friesian", "British x Holstein",
                                                                     "Charolais x Friesian", "Charolais x Holstein", "Charolais", "Chianina",
                                                                     "Limousin", "Simmental", "Brahman", "Ujimqin Cattle",
                                                                     "Ujimqin x Angus (1st cross)", "Ujimqin x Angus (2nd cross)",
-                                                                    "Ujimqin x Charolais (1st cross)", "Ujimqin x Charolais (2nd cross)"}.OrderBy(x => x));
+                                                                    "Ujimqin x Charolais (1st cross)", "Ujimqin x Charolais (2nd cross)"}.OrderBy(x => x)));
 
         }
 
@@ -142,15 +142,15 @@
             var animalParamSet = stock.Genotypes.Get("NewGenotype");
 
             // Make sure we can retrieve the new genotype.
-            Assert.IsNotNull(animalParamSet);
+            Assert.That(animalParamSet, Is.Not.Null);
 
-            Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
-            Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
-            Assert.AreEqual("NewGenotype", animalParamSet.Name);
-            Assert.IsTrue(animalParamSet.bDairyBreed);
-            Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
-            Assert.AreEqual(new double[] { 0, 0.025, 1.7, 0.22, 60, 0.02, 25, 22, 81, 1.7, 0.6, 0.05, 0.15, 0.005, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0.7 }, animalParamSet.IntakeC);
-            Assert.AreEqual(new double[] { 0, 285, 2.2, 1.77, 0.33, 1.8, 2.42, 1.16, 4.11, 343.5, 0.0164, 0.134, 6.22, 0.747 }, animalParamSet.PregC);
+            Assert.That(animalParamSet.sEditor, Is.EqualTo("Andrew Moore"));
+            Assert.That(animalParamSet.sEditDate, Is.EqualTo("30 Jan 2013"));
+            Assert.That(animalParamSet.Name, Is.EqualTo("NewGenotype"));
+            Assert.That(animalParamSet.bDairyBreed, Is.True);
+            Assert.That(animalParamSet.SRWScalars, Is.EqualTo(new double[] { 1.2, 1.4 }));
+            Assert.That(animalParamSet.IntakeC, Is.EqualTo(new double[] { 0, 0.025, 1.7, 0.22, 60, 0.02, 25, 22, 81, 1.7, 0.6, 0.05, 0.15, 0.005, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0.7 }));
+            Assert.That(animalParamSet.PregC, Is.EqualTo(new double[] { 0, 285, 2.2, 1.77, 0.33, 1.8, 2.42, 1.16, 4.11, 343.5, 0.0164, 0.134, 6.22, 0.747 }));
         }
 
         /// <summary>Ensure we can create and initialise an animal cross as user would in GUI.</summary>
@@ -178,16 +178,16 @@
             // Get the cross.
             var animalParamSet = stock.Genotypes.Get("NZFriesianCross");
 
-            Assert.AreEqual("NZFriesianCross", animalParamSet.Name);
-            Assert.IsTrue(animalParamSet.bDairyBreed);
-            Assert.AreEqual(550, animalParamSet.BreedSRW);
-            Assert.AreEqual(27.5, animalParamSet.PeakMilk);
-            Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[0]);
-            Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[1]);
-            Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[2]);
-            Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[3]);
-            Assert.AreEqual(1, animalParamSet.FleeceYield);
-            Assert.AreEqual(new double[] { 0, 0.00061074716558540132, 5.53E-05 }, animalParamSet.MortRate);
+            Assert.That(animalParamSet.Name, Is.EqualTo("NZFriesianCross"));
+            Assert.That(animalParamSet.bDairyBreed, Is.True);
+            Assert.That(animalParamSet.BreedSRW, Is.EqualTo(550));
+            Assert.That(animalParamSet.PeakMilk, Is.EqualTo(27.5));
+            Assert.That(animalParamSet.ConceiveSigs[0], Is.EqualTo(new double[] { 0, 0 }));
+            Assert.That(animalParamSet.ConceiveSigs[1], Is.EqualTo(new double[] { 10, 5.89 }));
+            Assert.That(animalParamSet.ConceiveSigs[2], Is.EqualTo(new double[] { 10, 5.89 }));
+            Assert.That(animalParamSet.ConceiveSigs[3], Is.EqualTo(new double[] { 0, 0 }));
+            Assert.That(animalParamSet.FleeceYield, Is.EqualTo(1));
+            Assert.That(animalParamSet.MortRate, Is.EqualTo(new double[] { 0, 0.00061074716558540132, 5.53E-05 }));
         }
 
         /// <summary>Ensure a user can add an animal group to STOCK.</summary>
@@ -243,37 +243,37 @@
             // Get the animal group
             var animalGroup = stock.StockModel.Animals[1];
 
-            Assert.AreEqual(100, animalGroup.AgeDays);
-            Assert.AreEqual(GrazType.AgeType.Weaner, animalGroup.AgeClass);
-            Assert.AreEqual(GrazType.AnimalType.Cattle, animalGroup.Animal);
-            Assert.AreEqual(0, animalGroup.AnimalsPerHa);  // I would not expect zero here.
-            Assert.AreEqual(2.791845743237555, animalGroup.BirthCondition);
-            Assert.AreEqual(290, animalGroup.BaseWeight);
-            Assert.AreEqual(2.791845743237555, animalGroup.BodyCondition);
-            Assert.AreEqual(0, animalGroup.ConceptusWeight);
-            Assert.AreEqual(0, animalGroup.DrySheepEquivs);
-            Assert.AreEqual(50, animalGroup.FemaleNo);
-            Assert.AreEqual(290, animalGroup.FemaleWeight);
-            Assert.AreEqual("Jersey", animalGroup.Genotype.Name);
-            Assert.AreEqual(1, animalGroup.IntakeModifier);
-            Assert.AreEqual(0, animalGroup.Lactation);
-            Assert.AreEqual(290, animalGroup.LiveWeight);
-            Assert.AreEqual(0, animalGroup.MaleNo);
-            Assert.AreEqual(0, animalGroup.MaleWeight);
-            Assert.AreEqual("Friesian", animalGroup.MatedTo.Name);
-            Assert.AreEqual(0, animalGroup.MaxMilkYield);
-            Assert.AreEqual(300, animalGroup.MaxPrevWeight);
-            Assert.AreEqual(50, animalGroup.NoAnimals);
-            Assert.AreEqual(0, animalGroup.NoFoetuses);
-            Assert.AreEqual(0, animalGroup.NoOffspring);
-            Assert.AreEqual(1, animalGroup.PaddSteep);
-            Assert.AreEqual(-26.97964272287771, animalGroup.PotIntake);
-            Assert.AreEqual(0.25968483457802222, animalGroup.RelativeSize);
-            Assert.AreEqual(GrazType.ReproType.Empty, animalGroup.ReproState);
-            Assert.AreEqual(400, animalGroup.StdReferenceWt);
-            Assert.AreEqual(0, animalGroup.WaterLogging);
-            Assert.AreEqual(0, animalGroup.WeightChange);
-            Assert.IsNull(animalGroup.Young);
+            Assert.That(animalGroup.AgeDays, Is.EqualTo(100));
+            Assert.That(animalGroup.AgeClass, Is.EqualTo(GrazType.AgeType.Weaner));
+            Assert.That(animalGroup.Animal, Is.EqualTo(GrazType.AnimalType.Cattle));
+            Assert.That(animalGroup.AnimalsPerHa, Is.EqualTo(0));  // I would not expect zero here.
+            Assert.That(animalGroup.BirthCondition, Is.EqualTo(2.791845743237555));
+            Assert.That(animalGroup.BaseWeight, Is.EqualTo(290));
+            Assert.That(animalGroup.BodyCondition, Is.EqualTo(2.791845743237555));
+            Assert.That(animalGroup.ConceptusWeight, Is.EqualTo(0));
+            Assert.That(animalGroup.DrySheepEquivs, Is.EqualTo(0));
+            Assert.That(animalGroup.FemaleNo, Is.EqualTo(50));
+            Assert.That(animalGroup.FemaleWeight, Is.EqualTo(290));
+            Assert.That(animalGroup.Genotype.Name, Is.EqualTo("Jersey"));
+            Assert.That(animalGroup.IntakeModifier, Is.EqualTo(1));
+            Assert.That(animalGroup.Lactation, Is.EqualTo(0));
+            Assert.That(animalGroup.LiveWeight, Is.EqualTo(290));
+            Assert.That(animalGroup.MaleNo, Is.EqualTo(0));
+            Assert.That(animalGroup.MaleWeight, Is.EqualTo(0));
+            Assert.That(animalGroup.MatedTo.Name, Is.EqualTo("Friesian"));
+            Assert.That(animalGroup.MaxMilkYield, Is.EqualTo(0));
+            Assert.That(animalGroup.MaxPrevWeight, Is.EqualTo(300));
+            Assert.That(animalGroup.NoAnimals, Is.EqualTo(50));
+            Assert.That(animalGroup.NoFoetuses, Is.EqualTo(0));
+            Assert.That(animalGroup.NoOffspring, Is.EqualTo(0));
+            Assert.That(animalGroup.PaddSteep, Is.EqualTo(1));
+            Assert.That(animalGroup.PotIntake, Is.EqualTo(-26.97964272287771));
+            Assert.That(animalGroup.RelativeSize, Is.EqualTo(0.25968483457802222));
+            Assert.That(animalGroup.ReproState, Is.EqualTo(GrazType.ReproType.Empty));
+            Assert.That(animalGroup.StdReferenceWt, Is.EqualTo(400));
+            Assert.That(animalGroup.WaterLogging, Is.EqualTo(0));
+            Assert.That(animalGroup.WeightChange, Is.EqualTo(0));
+            Assert.That(animalGroup.Young, Is.Null);
         }
 
         /// <summary>Ensure a user can add a fixed grazing component to a simulation.</summary>
@@ -349,7 +349,7 @@
             // The animal group should have moved to field 2.
             var animalGroup = stock.StockModel.Animals[1];
 
-            Assert.AreEqual("Field2", animalGroup.PaddOccupied.Name);
+            Assert.That(animalGroup.PaddOccupied.Name, Is.EqualTo("Field2"));
         }
 
         /// <summary>Ensure a user can add a draft (flexible) grazing component to a simulation.</summary>
@@ -467,9 +467,9 @@
             var animalGroup1 = stock.StockModel.Animals[1];
             var animalGroup2 = stock.StockModel.Animals[2];
             var animalGroup3 = stock.StockModel.Animals[3];
-            Assert.AreEqual("Field1", animalGroup1.PaddOccupied.Name);
-            Assert.AreEqual("Field2", animalGroup2.PaddOccupied.Name);
-            Assert.AreEqual("Field3", animalGroup3.PaddOccupied.Name);
+            Assert.That(animalGroup1.PaddOccupied.Name, Is.EqualTo("Field1"));
+            Assert.That(animalGroup2.PaddOccupied.Name, Is.EqualTo("Field2"));
+            Assert.That(animalGroup3.PaddOccupied.Name, Is.EqualTo("Field3"));
         }
 
         /// <summary>Ensure a user can call Stock.Add method creating a cohort of animals.</summary>
@@ -523,12 +523,12 @@
                     YoungCondScore = 1.98,
                     YoungWt = 40
                 });
-            Assert.AreEqual(7, stock.StockModel.Animals.Count);  // stock.AnimalList.Animals[0] is a temporary animal group.
+            Assert.That(stock.StockModel.Animals.Count, Is.EqualTo(7));  // stock.AnimalList.Animals[0] is a temporary animal group.
 
             var json = ReflectionUtilities.JsonSerialise(stock.StockModel.Animals, false);
             var expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Stock.AddAnimalCohort.json");
 
-            Assert.AreEqual(expectedJson, json);
+            Assert.That(json, Is.EqualTo(expectedJson));
         }
 
         /// <summary>Ensure a user can sell animals by tag.</summary>
@@ -581,12 +581,12 @@
             stock.Sell(50, tag2Animals);
 
             var groups = stock.AnimalGroups;
-            Assert.AreEqual(50, groups.First().NoAnimals);
-            Assert.AreEqual(100, groups.Last().NoAnimals);
+            Assert.That(groups.First().NoAnimals, Is.EqualTo(50));
+            Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
             var summary = stock.FindDescendant<MockSummary>();
-            Assert.AreEqual("Sold 50 animals", summary.messages[0]);
+            Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
         /// <summary>Ensure a user can sell animals by weight.</summary>
@@ -639,12 +639,12 @@
             stock.Sell(50, males);
 
             var groups = stock.AnimalGroups;
-            Assert.AreEqual(50, groups.First().NoAnimals);
-            Assert.AreEqual(100, groups.Last().NoAnimals);
+            Assert.That(groups.First().NoAnimals, Is.EqualTo(50));
+            Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
             var summary = stock.FindDescendant<MockSummary>();
-            Assert.AreEqual("Sold 50 animals", summary.messages[0]);
+            Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
         /// <summary>Ensure a user can shear animals.</summary>
@@ -695,11 +695,11 @@
 
             // Shear all animals
             var cfw = stock.Shear(true, true);
-            Assert.AreEqual(70, cfw);
+            Assert.That(cfw, Is.EqualTo(70));
 
             // Make sure summary file was written to.
             var summary = stock.FindDescendant<MockSummary>();
-            Assert.AreEqual("Shearing animals", summary.messages[0]);
+            Assert.That(summary.messages[0], Is.EqualTo("Shearing animals"));
         }
 
         /// <summary>Ensure a user can move animals between paddocks.</summary>
@@ -752,7 +752,7 @@
             // Move the cattle into field 2
             var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             stock.Move("Field2", cattle);
-            Assert.AreEqual("Field2", cattle.PaddOccupied.Name);
+            Assert.That(cattle.PaddOccupied.Name, Is.EqualTo("Field2"));
         }
 
         /// <summary>Ensure a user can mate animals.</summary>
@@ -811,8 +811,8 @@
                 ewes.Age(1, ref newGroups);
 
             // Ewes should now be pregnant.
-            Assert.AreEqual(3, newGroups.Count, 3);
-            Assert.AreEqual(1, newGroups[2].Pregnancy);
+            Assert.That(newGroups.Count, Is.EqualTo(3));
+            Assert.That(newGroups[2].Pregnancy, Is.EqualTo(1));
         }
 
         /// <summary>Ensure a user can castrate animals.</summary>
@@ -871,7 +871,7 @@
             stock.Castrate(100, cattle);
 
             // Young should now be castrated.
-            Assert.AreEqual(GrazType.ReproType.Castrated, cattle.Young.ReproState);
+            Assert.That(cattle.Young.ReproState, Is.EqualTo(GrazType.ReproType.Castrated));
         }
 
         /// <summary>Ensure a user can wean animals.</summary>
@@ -930,8 +930,8 @@
             stock.Wean(150, weanMales:true, weanFemales:true, group: cattle);
 
             // Young should now be weaned
-            Assert.IsNull(cattle.Young);
-            Assert.AreEqual(4, stock.AnimalGroups.Count());
+            Assert.That(cattle.Young, Is.Null);
+            Assert.That(stock.AnimalGroups.Count(), Is.EqualTo(4));
         }
 
         /// <summary>Ensure a user can dryoff animals.</summary>
@@ -988,7 +988,7 @@
             stock.DryOff(150, cattle);
 
             // Young should now be weaned
-            Assert.AreEqual(0, cattle.Lactation);
+            Assert.That(cattle.Lactation, Is.EqualTo(0));
         }
 
         /// <summary>Ensure a user can split an animal group by age.</summary>
@@ -1031,12 +1031,12 @@
             var newGroups = stock.SplitByAge(100, cattle);
 
             // One new group should have been created.
-            Assert.AreEqual(1, newGroups.Count());
+            Assert.That(newGroups.Count(), Is.EqualTo(1));
 
             // There should now be a second group with all 150 females in it.
-            Assert.AreEqual(2, stock.AnimalGroups.Count());
-            Assert.AreEqual(0, stock.AnimalGroups.First().FemaleNo);
-            Assert.AreEqual(150, stock.AnimalGroups.Last().FemaleNo);
+            Assert.That(stock.AnimalGroups.Count(), Is.EqualTo(2));
+            Assert.That(stock.AnimalGroups.First().FemaleNo, Is.EqualTo(0));
+            Assert.That(stock.AnimalGroups.Last().FemaleNo, Is.EqualTo(150));
         }
 
         /// <summary>Ensure a user can split an animal group by weight.</summary>
@@ -1079,12 +1079,12 @@
             var newGroups = stock.SplitByWeight(500, cattle);
 
             // One new group should have been created.
-            Assert.AreEqual(1, newGroups.Count());
+            Assert.That(newGroups.Count(), Is.EqualTo(1));
 
             // There should now be a second group with 7 of the females in it.
-            Assert.AreEqual(2, stock.AnimalGroups.Count());
-            Assert.AreEqual(143, stock.AnimalGroups.First().FemaleNo);
-            Assert.AreEqual(7, stock.AnimalGroups.Last().FemaleNo);
+            Assert.That(stock.AnimalGroups.Count(), Is.EqualTo(2));
+            Assert.That(stock.AnimalGroups.First().FemaleNo, Is.EqualTo(143));
+            Assert.That(stock.AnimalGroups.Last().FemaleNo, Is.EqualTo(7));
         }
 
         /// <summary>Ensure a user can split an animal group by young animals.</summary>
@@ -1127,12 +1127,12 @@
             var newGroups = stock.SplitByYoung(cattle);
 
             // One new group should have been created.
-            Assert.AreEqual(1, newGroups.Count());
+            Assert.That(newGroups.Count(), Is.EqualTo(1));
 
             // There should now be a second group with 7 of the females in it.
-            Assert.AreEqual(2, stock.AnimalGroups.Count());
-            Assert.AreEqual(75, stock.AnimalGroups.First().FemaleNo);
-            Assert.AreEqual(75, stock.AnimalGroups.Last().FemaleNo);
+            Assert.That(stock.AnimalGroups.Count(), Is.EqualTo(2));
+            Assert.That(stock.AnimalGroups.First().FemaleNo, Is.EqualTo(75));
+            Assert.That(stock.AnimalGroups.Last().FemaleNo, Is.EqualTo(75));
         }
 
         /// <summary>Ensure a user can sort animals by tag.</summary>
@@ -1188,8 +1188,8 @@
             stock.Sort();
 
             // Young should now be weaned
-            Assert.AreEqual(1, stock.AnimalGroups.First().Tag);
-            Assert.AreEqual(2, stock.AnimalGroups.Last().Tag);
+            Assert.That(stock.AnimalGroups.First().Tag, Is.EqualTo(1));
+            Assert.That(stock.AnimalGroups.Last().Tag, Is.EqualTo(2));
         }
     }
 }

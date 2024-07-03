@@ -17,7 +17,7 @@ namespace UnitTests.APSIMShared
             double[] newThickness = new double[] { 30, 60, 90, 120 };
             double[] newValues = SoilUtilities.MapInterpolation(fromValues, fromThickness, newThickness, allowMissingValues: true);
 
-            Assert.IsTrue(MathUtilities.AreEqual(new double[] { 1, 1.46666666, 2.35, 3.4000000 }, newValues));
+            Assert.That(MathUtilities.AreEqual(new double[] { 1, 1.46666666, 2.35, 3.4000000 }, newValues), Is.True);
         }
 
         /// <summary>Ensure metadata determined correctly when input metadata is null.</summary>
@@ -29,7 +29,7 @@ namespace UnitTests.APSIMShared
             double[] values2 = new double[] { 10, 25, 30 };
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
-            Assert.AreEqual(new string[] { null, null, null}, metadata2);
+            Assert.That(metadata2, Is.EqualTo(new string[] { null, null, null}));
         }
 
         /// <summary>Ensure metadata determined correctly when input metadata is not null.</summary>
@@ -41,7 +41,7 @@ namespace UnitTests.APSIMShared
             double[] values2 = new double[] { 10, 25, 30 };
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
-            Assert.AreEqual(new string[] { null, null, "Calculated"}, metadata2);
+            Assert.That(metadata2, Is.EqualTo(new string[] { null, null, "Calculated"}));
         }        
 
         /// <summary>Ensure metadata determined correctly when new data is added.</summary>
@@ -53,7 +53,7 @@ namespace UnitTests.APSIMShared
             double[] values2 = new double[] { 10, 20, 30, 40 };
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
-            Assert.AreEqual(new string[] { null, null, null, null}, metadata2);
+            Assert.That(metadata2, Is.EqualTo(new string[] { null, null, null, null}));
         }        
 
         /// <summary>Ensure metadata determined correctly when new data is added.</summary>
@@ -65,7 +65,7 @@ namespace UnitTests.APSIMShared
             double[] values2 = new double[] { 10, 20 };
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
-            Assert.AreEqual(new string[] { null, null}, metadata2);
+            Assert.That(metadata2, Is.EqualTo(new string[] { null, null}));
         }          
 
         /// <summary>Ensure infilling works when input metadata is null.</summary>
@@ -76,8 +76,8 @@ namespace UnitTests.APSIMShared
             string[] metadata1 = null;
             var result = SoilUtilities.FillMissingValues(values, metadata1, 3, (i) => 25);
 
-            Assert.AreEqual(new double[] { 10, 25, 30}, result.values);
-            Assert.AreEqual(new string[] { null, "Calculated", null}, result.metadata);
+            Assert.That(result.values, Is.EqualTo(new double[] { 10, 25, 30}));
+            Assert.That(result.metadata, Is.EqualTo(new string[] { null, "Calculated", null}));
         }        
 
         /// <summary>Ensure infilling works when input metadata is not null.</summary>
@@ -88,9 +88,8 @@ namespace UnitTests.APSIMShared
             string[] metadata1 = new string[] { null, null, "Measured" };
             var result = SoilUtilities.FillMissingValues(values, metadata1, 3, (i) => 25);
 
-            Assert.AreEqual(new double[] { 10, 25, 30}, result.values);
-            Assert.AreEqual(new string[] { null, "Calculated", "Measured"}, result.metadata);
+            Assert.That(result.values, Is.EqualTo(new double[] { 10, 25, 30}));
+            Assert.That(result.metadata, Is.EqualTo(new string[] { null, "Calculated", "Measured"}));
         }
-       
     }
 }

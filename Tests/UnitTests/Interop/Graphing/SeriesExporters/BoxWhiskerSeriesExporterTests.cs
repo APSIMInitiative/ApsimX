@@ -30,37 +30,37 @@ namespace UnitTests.Graphing.SeriesExporters
             BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Red, true, x, y, line, marker, "", "");
             var oxySeries = exporter.Export(series, AxisLabelCollection.Empty()).Result;
 
-            Assert.NotNull(oxySeries);
-            Assert.True(oxySeries is BoxPlotSeries);
+            Assert.That(oxySeries, Is.Not.Null);
+            Assert.That(oxySeries is BoxPlotSeries, Is.True);
             BoxPlotSeries boxPlot = (BoxPlotSeries)oxySeries;
 
             // Line style
-            Assert.AreEqual(OxyPlot.LineStyle.Solid, boxPlot.LineStyle);
-            Assert.AreEqual(0.5, boxPlot.StrokeThickness);
+            Assert.That(boxPlot.LineStyle, Is.EqualTo(OxyPlot.LineStyle.Solid));
+            Assert.That(boxPlot.StrokeThickness, Is.EqualTo(0.5));
 
             // Marker style
-            Assert.AreEqual(OxyPlot.MarkerType.Square, boxPlot.OutlierType);
-            Assert.AreEqual(7, boxPlot.OutlierSize);
+            Assert.That(boxPlot.OutlierType, Is.EqualTo(OxyPlot.MarkerType.Square));
+            Assert.That(boxPlot.OutlierSize, Is.EqualTo(7));
 
             // Colours
-            Assert.AreEqual(OxyColors.Transparent, boxPlot.Stroke);
-            Assert.AreEqual(OxyColors.Red, boxPlot.Fill);
+            Assert.That(boxPlot.Stroke, Is.EqualTo(OxyColors.Transparent));
+            Assert.That(boxPlot.Fill, Is.EqualTo(OxyColors.Red));
 
             // Title
-            Assert.AreEqual("Title", boxPlot.Title);
+            Assert.That(boxPlot.Title, Is.EqualTo("Title"));
 
             // Contents of series.
-            Assert.AreEqual(1, boxPlot.Items.Count);
+            Assert.That(boxPlot.Items.Count, Is.EqualTo(1));
             BoxPlotItem item = boxPlot.Items[0];
-            Assert.NotNull(item);
+            Assert.That(item, Is.Not.Null);
 
             // Test box plot whisker values.
-            Assert.AreEqual(0, item.X);
-            Assert.AreEqual(0, item.LowerWhisker);
-            Assert.AreEqual(1, item.BoxBottom);
-            Assert.AreEqual(2, item.Median);
-            Assert.AreEqual(3, item.BoxTop);
-            Assert.AreEqual(4, item.UpperWhisker);
+            Assert.That(item.X, Is.EqualTo(0));
+            Assert.That(item.LowerWhisker, Is.EqualTo(0));
+            Assert.That(item.BoxBottom, Is.EqualTo(1));
+            Assert.That(item.Median, Is.EqualTo(2));
+            Assert.That(item.BoxTop, Is.EqualTo(3));
+            Assert.That(item.UpperWhisker, Is.EqualTo(4));
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace UnitTests.Graphing.SeriesExporters
                 BoxPlotSeries oxySeries = (BoxPlotSeries)exporter.Export(series, AxisLabelCollection.Empty()).Result;
 
                 // Because marker type is "filled", series should be filled with colour.
-                Assert.AreEqual(OxyColors.Green, oxySeries.Fill);
+                Assert.That(oxySeries.Fill, Is.EqualTo(OxyColors.Green));
             }
 
             foreach (MarkerType markerType in nonFilledMarkers)
@@ -114,5 +114,5 @@ namespace UnitTests.Graphing.SeriesExporters
                 // Assert.AreEqual(OxyColors.Transparent, oxySeries.Fill);
             }
         }
-    }
+    }   
 }
