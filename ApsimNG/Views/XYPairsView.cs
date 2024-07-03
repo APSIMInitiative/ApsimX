@@ -1,5 +1,6 @@
 ﻿using Gtk;
 using System;
+using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -9,7 +10,7 @@ namespace UserInterface.Views
     /// </summary>
     public partial class XYPairsView : ViewBase
     {
-        private VPaned vpaned;
+        private HPaned hpaned;
 
         private GridView gridView;
 
@@ -23,12 +24,12 @@ namespace UserInterface.Views
         /// </summary>
         public XYPairsView(ViewBase owner) : base(owner)
         {
-            vpaned = new VPaned();
-            mainWidget = vpaned;
+            hpaned = new HPaned();
+            mainWidget = hpaned;
             gridView = new GridView(this);
             graphView = new GraphView(this);
-            vpaned.Pack1(gridView.MainWidget, true, false);
-            vpaned.Pack2(graphView.MainWidget, true, false);
+            hpaned.Pack1(gridView.MainWidget, true, false);
+            hpaned.Pack2(graphView.MainWidget, true, false);
             graphView.Height = 200;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -60,7 +61,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets the initial water graph.
         /// </summary>
-        public Views.GridView VariablesGrid
+        public GridView VariablesGrid
         {
             get
             {
