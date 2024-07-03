@@ -27,7 +27,7 @@ namespace UnitTests.DCaPST
         {
             var expected = 20.731383108171876;
             var actual = solar.SolarDeclination * 180 / Math.PI;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace UnitTests.DCaPST
         {
             var expected = 97.190868688685228;
             var actual = solar.SunsetAngle * 180 / Math.PI;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace UnitTests.DCaPST
         {
             var expected = 12.958782491824698;
             var actual = solar.DayLength;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace UnitTests.DCaPST
         {
             var expected = 5.5206087540876512;
             var actual = solar.Sunrise;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -59,14 +59,14 @@ namespace UnitTests.DCaPST
         {
             var expected = 18.47939124591235;
             var actual = solar.Sunset;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [TestCaseSource(typeof(SolarGeometryTestData), "SunAngleTestCases")]
+        [TestCaseSource(typeof(SolarGeometryTestData), nameof(SolarGeometryTestData.SunAngleTestCases))]
         public void SunAngleTest(double hour, double expected)
         {
             var actual = solar.SunAngle(hour) * 180 / Math.PI;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

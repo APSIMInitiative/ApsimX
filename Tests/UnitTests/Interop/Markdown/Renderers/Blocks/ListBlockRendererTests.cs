@@ -65,7 +65,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             renderer.Write(pdfBuilder, sampleBlock);
 
             // Document should contain 2 paragraphs.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             pdfBuilder.AppendText("existing p/graph", TextStyle.Normal);
 
             // Document should contain 2 paragraphs.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -94,10 +94,10 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             ListBlock block = CreateOrderedListBlock("item1", "item2");
             renderer.Write(pdfBuilder, block);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
             string expected = " 1. item1\n 2. item2\n";
-            Assert.AreEqual(expected, paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo(expected));
         }
 
         /// <summary>
@@ -112,10 +112,10 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             ListBlock block = CreateListBlock(bulletType, "first item", "second item");
             renderer.Write(pdfBuilder, block);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
             string expected = $" {bulletType} first item\n {bulletType} second item\n";
-            Assert.AreEqual(expected, paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo(expected));
         }
 
         /// <summary>
@@ -143,17 +143,17 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
 
             renderer.Write(pdfBuilder, block);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
 
             // Paragraph should have 3 elements: bullet, content, and linefeed.
-            Assert.AreEqual(3, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(3));
             FormattedText text = paragraph.Elements[1] as FormattedText;
-            Assert.NotNull(text);
+            Assert.That(text, Is.Not.Null);
 
             var textStyle = document.Styles[text.Style];
-            Assert.True(textStyle.Font.Italic);
-            Assert.AreEqual($" 1. {item}\n", paragraph.GetRawText());
+            Assert.That(textStyle.Font.Italic, Is.True);
+            Assert.That(paragraph.GetRawText(), Is.EqualTo($" 1. {item}\n"));
         }
 
         /// <summary>
@@ -165,13 +165,13 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             ListBlock block = CreateListBlock('-', "x0", "x1");
             renderer.Write(pdfBuilder, block);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(6, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(6));
             Character linefeed = (Character)paragraph.Elements[2];
-            Assert.AreEqual(SymbolName.LineBreak, linefeed.SymbolName);
+            Assert.That(linefeed.SymbolName, Is.EqualTo(SymbolName.LineBreak));
             linefeed = (Character)paragraph.Elements[5];
-            Assert.AreEqual(SymbolName.LineBreak, linefeed.SymbolName);
+            Assert.That(linefeed.SymbolName, Is.EqualTo(SymbolName.LineBreak));
         }
 
         /// <summary>

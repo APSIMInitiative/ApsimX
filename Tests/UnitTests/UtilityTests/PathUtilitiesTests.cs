@@ -20,19 +20,19 @@ namespace UnitTests.UtilityTests
             // string rel = "Bin/a";
             string rel = Path.Combine(Path.GetFileName(Path.GetDirectoryName(assembly)), "a");
 
-            Assert.AreEqual("a", PathUtilities.GetRelativePath(subDir, assembly));
+            Assert.That(PathUtilities.GetRelativePath(subDir, assembly), Is.EqualTo("a"));
             // Passing in a directory name as relative path will give a different
             // result to passing the name of a file inside that directory.
-            Assert.AreEqual(rel, PathUtilities.GetRelativePath(subDir, binDir));
+            Assert.That(PathUtilities.GetRelativePath(subDir, binDir), Is.EqualTo(rel));
 
-            Assert.AreEqual(subDir, PathUtilities.GetRelativePath(subDir, null));
-            Assert.AreEqual(subDir, PathUtilities.GetRelativePath(subDir, ""));
-            Assert.AreEqual(null, PathUtilities.GetRelativePath(null, binDir));
-            Assert.AreEqual(null, PathUtilities.GetRelativePath(null, null));
-            Assert.AreEqual(null, PathUtilities.GetRelativePath(null, ""));
-            Assert.AreEqual("", PathUtilities.GetRelativePath("", binDir));
-            Assert.AreEqual("", PathUtilities.GetRelativePath("", null));
-            Assert.AreEqual("", PathUtilities.GetRelativePath("", ""));
+            Assert.That(PathUtilities.GetRelativePath(subDir, null), Is.EqualTo(subDir));
+            Assert.That(PathUtilities.GetRelativePath(subDir, ""), Is.EqualTo(subDir));
+            Assert.That(PathUtilities.GetRelativePath(null, binDir), Is.Null);
+            Assert.That(PathUtilities.GetRelativePath(null, null), Is.Null);
+            Assert.That(PathUtilities.GetRelativePath(null, ""), Is.Null);
+            Assert.That(PathUtilities.GetRelativePath("", binDir), Is.EqualTo(""));
+            Assert.That(PathUtilities.GetRelativePath("", null), Is.EqualTo(""));
+            Assert.That(PathUtilities.GetRelativePath("", ""), Is.EqualTo(""));
         }
 
         [Test]
@@ -44,21 +44,21 @@ namespace UnitTests.UtilityTests
             string apsimxDir = new DirectoryInfo(Path.Combine(bin, "..", "..", "..")).FullName;
             // string rel = "Bin/a";
 
-            Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", assembly));
-            Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", bin));
+            Assert.That(PathUtilities.GetAbsolutePath("a", assembly), Is.EqualTo(subDir));
+            Assert.That(PathUtilities.GetAbsolutePath("a", bin), Is.EqualTo(subDir));
 
-            Assert.AreEqual("a", PathUtilities.GetAbsolutePath("a", null));
-            Assert.AreEqual("a", PathUtilities.GetAbsolutePath("a", ""));
-            Assert.AreEqual(null, PathUtilities.GetAbsolutePath(null, subDir));
-            Assert.AreEqual(null, PathUtilities.GetAbsolutePath(null, null));
-            Assert.AreEqual(null, PathUtilities.GetAbsolutePath(null, ""));
-            Assert.AreEqual("", PathUtilities.GetAbsolutePath("", subDir));
-            Assert.AreEqual("", PathUtilities.GetAbsolutePath("", null));
-            Assert.AreEqual("", PathUtilities.GetAbsolutePath("", ""));
-            Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", bin));
-            Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", null));
-            Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", ""));
-            Assert.AreEqual(Path.Combine(apsimxDir, "bin"), PathUtilities.GetAbsolutePath("%root%\\bin", ""));
+            Assert.That(PathUtilities.GetAbsolutePath("a", null), Is.EqualTo("a"));
+            Assert.That(PathUtilities.GetAbsolutePath("a", ""), Is.EqualTo("a"));
+            Assert.That(PathUtilities.GetAbsolutePath(null, subDir), Is.Null);
+            Assert.That(PathUtilities.GetAbsolutePath(null, null), Is.Null);
+            Assert.That(PathUtilities.GetAbsolutePath(null, ""), Is.Null);
+            Assert.That(PathUtilities.GetAbsolutePath("", subDir), Is.EqualTo(""));
+            Assert.That(PathUtilities.GetAbsolutePath("", null), Is.EqualTo(""));
+            Assert.That(PathUtilities.GetAbsolutePath("", ""), Is.EqualTo(""));
+            Assert.That(PathUtilities.GetAbsolutePath("%root%", bin), Is.EqualTo(apsimxDir));
+            Assert.That(PathUtilities.GetAbsolutePath("%root%", null), Is.EqualTo(apsimxDir));
+            Assert.That(PathUtilities.GetAbsolutePath("%root%", ""), Is.EqualTo(apsimxDir));
+            Assert.That(PathUtilities.GetAbsolutePath("%root%\\bin", ""), Is.EqualTo(Path.Combine(apsimxDir, "bin")));
         }
     }
 }

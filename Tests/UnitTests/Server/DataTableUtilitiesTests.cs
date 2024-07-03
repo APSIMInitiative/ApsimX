@@ -33,16 +33,16 @@ namespace UnitTests.Server
         [Test]
         public void TestMergeNull()
         {
-            Assert.AreEqual(null, DataTableUtilities.Merge(null));
+            Assert.That(DataTableUtilities.Merge(null), Is.Null);
         }
 
         [Test]
         public void TestMergeNothing()
         {
             DataTable result = DataTableUtilities.Merge(Enumerable.Empty<DataTable>());
-            Assert.AreEqual("", result.TableName);
-            Assert.AreEqual(0, result.Rows.Count);
-            Assert.AreEqual(0, result.Columns.Count);
+            Assert.That(result.TableName, Is.EqualTo(""));
+            Assert.That(result.Rows.Count, Is.EqualTo(0));
+            Assert.That(result.Columns.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace UnitTests.Server
 
             // Ensure that merge worked correctly.
             string expectedName = tables.FirstOrDefault()?.TableName ?? "";
-            Assert.AreEqual(expectedName, merged.TableName);
+            Assert.That(merged.TableName, Is.EqualTo(expectedName));
 
             int i = 0;
             foreach (DataTable table in tables)
@@ -65,7 +65,7 @@ namespace UnitTests.Server
                 foreach (DataRow row in table.Rows)
                 {
                     for (int j = 0; j < table.Columns.Count; j++)
-                        Assert.AreEqual(row[j], merged.Rows[i][j]);
+                        Assert.That(merged.Rows[i][j], Is.EqualTo(row[j]));
                     i++;
                 }
             }

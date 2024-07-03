@@ -109,8 +109,8 @@
 
             var soil = simulation.Children[2] as MockSoil;
             var summary = simulation.FindDescendant<MockSummary>();
-            Assert.AreEqual(soil.NO3, new double[] { 1, 2, 103 });
-            Assert.AreEqual(summary.messages[0], "100.0 kg/ha of NO3N added at depth 300 layer 3");
+            Assert.That(soil.NO3, Is.EqualTo(new double[] { 1, 2, 103 }));
+            Assert.That(summary.messages[0], Is.EqualTo("100.0 kg/ha of NO3N added at depth 300 layer 3"));
         }
 
         /// <summary>Ensure the the apply method works over a depth range.</summary>
@@ -159,9 +159,9 @@
             simulation.Run();
 
             var soil = simulation.Children[2] as MockSoil;
-            Assert.AreEqual(6.56, soil.NO3[0], 0.01);
-            Assert.AreEqual(24.2, soil.NO3[1], 0.1);
-            Assert.AreEqual(25.2, soil.NO3[2], 0.1);
+            Assert.That(soil.NO3[0], Is.EqualTo(6.56).Within(0.01));
+            Assert.That(soil.NO3[1], Is.EqualTo(24.2).Within(0.1));
+            Assert.That(soil.NO3[2], Is.EqualTo(25.2).Within(0.1));
         }
     }
 }
