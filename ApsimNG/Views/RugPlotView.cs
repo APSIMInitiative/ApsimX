@@ -14,6 +14,7 @@
     using APSIM.Shared.Graphing;
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
+    using Gtk.Sheet;
 
 
     /// <summary>

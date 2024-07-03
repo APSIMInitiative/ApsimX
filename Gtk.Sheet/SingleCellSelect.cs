@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Implements single cell selection for the sheet widget.</summary>
-    public class SingleCellSelect : ISheetSelection
+    internal class SingleCellSelect : ISheetSelection
     {
         /// <summary>The sheet.</summary>
         protected Sheet sheet;
@@ -90,13 +90,13 @@ namespace UserInterface.Views
                     sheet.CellEditor.Edit('.');
                 sheet.Refresh();
             }
-            else if (sheet.CellEditor != null && evnt.KeyValue > 0 && evnt.KeyValue < 255)
+            else if (evnt.KeyValue > 0 && evnt.KeyValue < 255)
             {
                 if (evnt.KeyValue == 'c' && evnt.Control)
                     Copy();
                 else if (evnt.KeyValue == 'v' && evnt.Control)
                     Paste();
-                else
+                else if (sheet.CellEditor != null)
                     sheet.CellEditor.Edit(evnt.KeyValue);
             }
         }
