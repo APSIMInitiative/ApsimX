@@ -93,7 +93,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Peak lactation intake day (SCA CI8)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Peak lactation intake day [CI8]")]
         [Required, GreaterThanValue(0)]
         public double PeakLactationIntakeDay_CI8 { get; set; } = 62;
@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Lactation response curvature (SCA CI9)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Lactation response curvature [CI9]")]
         [Required, GreaterThanValue(0)]
         public double LactationResponseCurvature_CI9 { get; set; } = 1.7;
@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Effect of levels of milk prodiction on intake -  Dairy cows  (SCA CI10)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "    ")]
         [Description("Effect of levels of milk prodiction on intake [CI10]")]
         [Required, GreaterThanValue(0)]
         public double EffectLevelsMilkProdOnIntake_CI10 { get; set; } = 0.6;
@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Basal milk relative to SRW - Dairy cows  (SCA CI11)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Basal milk relative to SRW [CI11]")]
         [Required, GreaterThanValue(0)]
         public double BasalMilkRelSRW_CI11 { get; set; } = 0.05;
@@ -125,7 +125,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Lactation Condition Loss Adjustment (SCA CI12)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Lactation Condition Loss Adjustment [CI12]")]
         [Required, GreaterThanValue(0)]
         public double LactationConditionLossAdjustment_CI12 { get; set; } = 0.15;
@@ -133,7 +133,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Lactation Condition Loss Threshold (SCA CI13)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Lactation Condition Loss Threshold [CI13]")]
         [Required, GreaterThanValue(0)]
         public double LactationConditionLossThreshold_CI13 { get; set; } = 0.005;
@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Lactation condition loss threshold decay (SCA CI14)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Lactation condition loss threshold decay [CI14]")]
         [Required, GreaterThanValue(0)]
         public double LactationConditionLossThresholdDecay_CI14 { get; set; } = 0.002;
@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Condition at parturition adjustment (SCA CI15)
         /// </summary>
-        [Category("Breed", "Lactation")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Condition at parturition adjustment [CI15]")]
         [Required, GreaterThanValue(0)]
         public double ConditionAtParturitionAdjustment_CI15 { get; set; } = 0.5;
@@ -173,7 +173,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Peak lactation intake level (SCA CI19)
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm", "Lactation-Intake")]
         [Description("Peak lactation intake level [CI19]")]
         [Required, GreaterThanValue(0)]
         public double[] PeakLactationIntakeLevel_CI19 { get; set; } = new double[] { 0.416, 0.416 };
@@ -181,7 +181,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative condition effect (SCA CI20)
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm", "Lactation-Intake")]
         [Description("Relative condition effect [CI20] 1=off")]
         [Required, GreaterThanEqualValue(1)]
         public double RelativeConditionEffect_CI20 { get; set; } = 1.5;
