@@ -19,7 +19,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
                                   columnWidths: new int[] { 30, 40, 50, 60 }); 
@@ -62,7 +62,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
                                   columnWidths: new int[] { 20, 20, 20, 20 });
@@ -106,7 +106,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                       numberFrozenRows: 1,
                       numberFrozenColumns: 0,
                       columnWidths: new int[] { 10, 20, 20, 20 });
@@ -153,7 +153,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
                                   columnWidths: new int[] { 10, 20, 30, 40 });
@@ -198,7 +198,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
                                   columnWidths: new int[] { 10, 20, 30, 40 });
@@ -244,7 +244,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var dataProvider = new DataTableProvider(data, isReadOnly: true, units);
+            var dataProvider = new DataTableProvider(data, units);
             var sheet = new Sheet(dataProvider,
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
