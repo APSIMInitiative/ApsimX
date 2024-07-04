@@ -29,6 +29,9 @@ namespace Models.PMF.Organs
         private Plant plant = null;
 
         [Link]
+        private Root root = null;
+
+        [Link]
         private ISummary summary = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
@@ -353,6 +356,18 @@ namespace Models.PMF.Organs
         public double Height { get; set; }
 
         /// <summary>Sets the actual water demand.</summary>
+        [JsonIgnore]
+        [Units("mm")]
+        public double Evapotranspiration 
+        {
+            get
+            {
+                // TODO_JS Add Evaporation here.
+                return WaterDemand + 0.0;
+            }
+        }
+
+        /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
 
@@ -366,6 +381,10 @@ namespace Models.PMF.Organs
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         [JsonIgnore]
         public double BiomassTE { get; set; }
+
+        /// <summary>The transpiration efficiency.</summary>
+        [JsonIgnore]
+        public double TranspirationEfficiency { get; set; }
 
         /// <summary>Gets or sets the Extinction Coefficient (Dead).</summary>
         public double KDead { get; set; }
@@ -1112,6 +1131,7 @@ namespace Models.PMF.Organs
         {
             BiomassRUE = 0;
             BiomassTE = 0;
+            TranspirationEfficiency = 0;
             DltLAI = 0;
             DltSenescedLai = 0;
             DltSenescedLaiAge = 0;
@@ -1224,6 +1244,11 @@ namespace Models.PMF.Organs
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = potentialBiomassTEFunction.Value();
 
+                if (root.WaterUptake > 0)
+                {
+                    TranspirationEfficiency = Math.Min(BiomassRUE, BiomassTE) / root.WaterUptake;
+                }
+
                 Height = heightFunction.Value();
                 LAIDead = SenescedLai;
             }
@@ -1246,9 +1271,7 @@ namespace Models.PMF.Organs
             dltDeadLeaves = 0;
 
             LAI += DltLAI - DltSenescedLai;
-
-            // TODO Revisit.
-            int flagLeafStage = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+            int flagLeafStage = 6;
 
             if (phenology.Stage >= flagLeafStage)
             {
@@ -1256,7 +1279,6 @@ namespace Models.PMF.Organs
                 {
                     string message = "Crop failed due to loss of leaf area \r\n";
                     summary.WriteMessage(this, message, MessageType.Diagnostic);
-                    //scienceAPI.write(" ********** Crop failed due to loss of leaf area ********");
                     plant.EndCrop();
                     return;
                 }

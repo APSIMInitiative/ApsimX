@@ -178,7 +178,7 @@ namespace Models.DCAPST
             // Unlimited potential calculations
             // Note: In the potential case, we assume unlimited water and therefore supply = demand
             transpiration.Limited = false;
-            TotalPotentialBiomass = CalculatePotential();
+            var totalPotentialBiomass = CalculatePotential();
             var waterDemands = Intervals.Select(i => i.Sunlit.Water + i.Shaded.Water).ToList();
 
             // Bio-limited calculations
@@ -199,26 +199,36 @@ namespace Models.DCAPST
                     waterDemands = waterDemands.Select(w => Math.Min(w, Biolimit)).ToList();
                 }
 
-                TotalPotentialBiomass = CalculateLimited(waterDemands);
+                totalPotentialBiomass = CalculateLimited(waterDemands);
             }
 
             // Actual calculations
             var totalDemand = waterDemands.Sum();
             var limitedSupply = CalculateWaterSupplyLimits(soilWater, waterDemands);
 
-            TotalActualBiomass = (soilWater > totalDemand) ? TotalPotentialBiomass : CalculateActual(limitedSupply.ToArray());
+            var totalActualBiomass = (soilWater > totalDemand) ? totalPotentialBiomass : CalculateActual(limitedSupply.ToArray());
 
-            ActualBiomass = CalculateBiomass(TotalActualBiomass);
-            PotentialBiomass = CalculateBiomass(TotalPotentialBiomass);
+            CalculateActualBiomass(totalActualBiomass);
+            CalculatePotentiallBiomass(totalPotentialBiomass);
             WaterDemanded = totalDemand;
             WaterSupplied = (soilWater < totalDemand) ? limitedSupply.Sum() : waterDemands.Sum();
         }
 
-        private double CalculateBiomass(double biomass)
+        private void CalculateActualBiomass(double totalActualBiomass)
         {
-            var biomassConversionFactor = biomass * SECONDS_IN_HOUR / MMOL_TO_MOL * MOL_WT_CO2 * B;
-            var calculatedBiomass = biomassConversionFactor / (1 + RootShootRatio);
-            return calculatedBiomass;
+            TotalActualBiomass = GetBiomassConversionFactor(totalActualBiomass);
+            ActualBiomass = TotalActualBiomass / (1 + RootShootRatio);
+        }
+
+        private void CalculatePotentiallBiomass(double totalPotentialBiomass)
+        {
+            TotalPotentialBiomass = GetBiomassConversionFactor(totalPotentialBiomass);
+            PotentialBiomass = TotalPotentialBiomass / (1 + RootShootRatio);
+        }
+
+        private double GetBiomassConversionFactor(double biomass)
+        {
+            return biomass * SECONDS_IN_HOUR / MMOL_TO_MOL * MOL_WT_CO2 * B;
         }
 
         /// <summary>

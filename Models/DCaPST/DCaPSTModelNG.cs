@@ -308,8 +308,7 @@ namespace Models.DCAPST
                         AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
                 };
-
-                canopy.PotentialEP = DcapstModel.WaterDemanded;
+                
                 canopy.WaterDemand = DcapstModel.WaterDemanded;
             }
         }
@@ -331,6 +330,7 @@ namespace Models.DCAPST
                 if (DcapstModel.WaterSupplied > 0)
                 {
                     sorghumLeaf.BiomassTE = DcapstModel.ActualBiomass;
+                    sorghumLeaf.TranspirationEfficiency = DcapstModel.ActualBiomass / DcapstModel.WaterSupplied;
                 }
             }
             else if (leaf is Leaf complexLeaf)
