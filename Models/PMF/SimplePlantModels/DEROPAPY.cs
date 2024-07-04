@@ -118,7 +118,7 @@ namespace Models.PMF.SimplePlantModels
         private EnergyBalance canopy = null;
 
         [Link(Type = LinkType.Scoped, ByName = true)]
-        private Organ Leaf = null;
+        private Organ leaf = null;
 
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
@@ -136,6 +136,7 @@ namespace Models.PMF.SimplePlantModels
         {
             DataTable readData = new DataTable();
             readData = ApsimTextFile.ToTable(FullFileName);
+            
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
             if ((CurrentCropName != null)&&(CurrentCropName != ""))
@@ -183,59 +184,10 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            //saveToCSV(FullFileName, dt);
+            //TextWriter writer = new StreamWriter(FullFileName, false);
+            //DataTableUtilities.DataTableToText(dt, startColumnIndex: 0, delimiter: ",", showHeadings: true,writer:writer);
+            //writer.Close();
             return new DataTable();
-        }
-
-        /// <summary>
-        /// Writes the data from the grid to the csv file
-        /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="dt"></param>
-        /// <exception cref="Exception"></exception>
-        private void saveToCSV(string filepath, DataTable dt)
-        {
-            try
-            {
-                string contents = "";
-
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (!Convert.IsDBNull(dt.Columns[i].ColumnName))
-                    {
-                        contents += dt.Columns[i].ColumnName.ToString();
-                    }
-                    if (i < dt.Columns.Count - 1)
-                    {
-                        contents += ",";
-                    }
-                }
-                contents += "\n";
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 0; i < dt.Columns.Count; i++)
-                    {
-                        if (!Convert.IsDBNull(dr[i]))
-                        {
-                            contents += dr[i].ToString();
-                        }
-                        if (i < dt.Columns.Count - 1)
-                        {
-                            contents += ",";
-                        }
-                    }
-                    contents += "\n";
-                }
-
-                StreamWriter s = new StreamWriter(filepath, false);
-                s.Write(contents);
-                s.Close();
-            }
-            catch
-            {
-                throw new Exception("Error Writing File");
-            }
         }
 
         /// <summary>
@@ -379,7 +331,7 @@ namespace Models.PMF.SimplePlantModels
             //Reset leaf biomass so it is ready for new growth
             if (CurrentCropParams["DefoliateOrDevelop"] == "FullCover")
             {
-                Leaf.initialiseBiomass();
+                leaf.initialiseBiomass();
                 HasRewondThisSeason = false;
                 HasStartedGrowthhisSeason = true;
             }
