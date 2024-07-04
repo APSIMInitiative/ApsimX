@@ -76,9 +76,9 @@
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
-            Assert.AreEqual(physical.Thickness, targetThickness);
-            Assert.AreEqual(soilOrganicMatter.Thickness, targetThickness);
-            Assert.AreEqual(water.Thickness, targetThickness);
+            Assert.That(physical.Thickness, Is.EqualTo(targetThickness));
+            Assert.That(soilOrganicMatter.Thickness, Is.EqualTo(targetThickness));
+            Assert.That(water.Thickness, Is.EqualTo(targetThickness));
         }
 
         /// <summary>Ensure a LayerStructure is used for mapping.</summary>
@@ -150,9 +150,9 @@
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
-            Assert.AreEqual(physical.Thickness, targetThickness);
-            Assert.AreEqual(soilOrganicMatter.Thickness, targetThickness);
-            Assert.AreEqual(water.Thickness, targetThickness);
+            Assert.That(physical.Thickness, Is.EqualTo(targetThickness));
+            Assert.That(soilOrganicMatter.Thickness, Is.EqualTo(targetThickness));
+            Assert.That(water.Thickness, Is.EqualTo(targetThickness));
         }
 
         /// <summary>Ensure a single initial conditions sample is created.</summary>
@@ -169,15 +169,15 @@
             var water = soil.FindChild<Water>();
             var solutes = soil.FindAllChildren<Solute>().ToArray();
 
-            Assert.AreEqual(soil.FindAllChildren<Water>().Count(), 1);
-            Assert.AreEqual(water.Name, "Water");
-            Assert.AreEqual(water.Volumetric, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(organic.Carbon, new double[] { 2.0, 0.9 });
-            Assert.AreEqual(chemical.PH, new double[] { 6.65, 7.0 });
-            Assert.AreEqual(chemical.EC, new double[] { 150, 200 });
+            Assert.That(soil.FindAllChildren<Water>().Count(), Is.EqualTo(1));
+            Assert.That(water.Name, Is.EqualTo("Water"));
+            Assert.That(water.Volumetric, Is.EqualTo(new double[] { 0.1, 0.2 }));
+            Assert.That(organic.Carbon, Is.EqualTo(new double[] { 2.0, 0.9 }));
+            Assert.That(chemical.PH, Is.EqualTo(new double[] { 6.65, 7.0 }));
+            Assert.That(chemical.EC, Is.EqualTo(new double[] { 150, 200 }));
 
-            Assert.AreEqual(solutes[0].InitialValues, new double[] { 21.5, 0.0 });  // NO3 kg/ha
-            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.0, 0.0 }); // NH4 kg/ha
+            Assert.That(solutes[0].InitialValues, Is.EqualTo(new double[] { 21.5, 0.0 }));  // NO3 kg/ha
+            Assert.That(solutes[1].InitialValues, Is.EqualTo(new double[] { 1.0, 0.0 })); // NH4 kg/ha
         }
 
         [Test]
@@ -202,7 +202,7 @@
             // Run the simulation - this shouldn't fail, because the soil is disabled.
             var runner = new Models.Core.Run.Runner(sims);
             List<Exception> errors = runner.Run();
-            Assert.AreEqual(0, errors.Count, "There should be no errors - the faulty soil is disabled");
+            Assert.That(errors.Count, Is.EqualTo(0), "There should be no errors - the faulty soil is disabled");
         }
 
         private Soil CreateSimpleSoil()

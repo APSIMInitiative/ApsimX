@@ -58,7 +58,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             pdfBuilder.AppendText("some previous content in this paragraph", TextStyle.Normal);
             renderer.Write(pdfBuilder, inline);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, inline);
             pdfBuilder.AppendText("content added after the inline", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, inline);
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text plainText = (Text)formatted.Elements[0];
-            Assert.AreEqual(inline.Content.ToString(), plainText.Content);
+            Assert.That(plainText.Content, Is.EqualTo(inline.Content.ToString()));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             Mock<PdfBuilder> buidler = new Mock<PdfBuilder>(document, PdfOptions.Default);
             buidler.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
-                   .Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Normal, style));
+                   .Callback<string, TextStyle>((_, style) => Assert.That(style, Is.EqualTo(TextStyle.Normal)));
             renderer.Write(buidler.Object, inline);
         }
     }

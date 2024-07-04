@@ -1,13 +1,12 @@
 ﻿using Gtk;
 using System;
-using UserInterface.EventArguments;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>Describes the public interface of a class that supports editing sheet cells.</summary>
     public interface ISheetEditor
     {
-        event EventHandler<NeedContextItemsArgs> ShowIntellisense;
+        //event EventHandler<NeedContextItemsArgs> ShowIntellisense;
 
         /// <summary>Returns true if the editor is currently editing a cell.</summary>
         bool IsEditing { get; }

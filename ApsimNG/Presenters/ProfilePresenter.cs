@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
@@ -79,11 +80,12 @@ namespace UserInterface.Presenters
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
-            Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
             if (model is Physical)
             {
+                Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
                 ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
                 redValuesWarningLbl.UseMarkup = true;
+                redValuesWarningLbl.Wrap = true;
                 redValuesWarningLbl.Visible = true;
             }
 
@@ -133,12 +135,15 @@ namespace UserInterface.Presenters
                 {
                     if (water != null && (model is Physical || model is Water || model is SoilCrop))
                     {
+                        if (water.Thickness.Length != physical.Thickness.Length)
+                            throw new Exception("There is a mismatch between the number of soil layers on the physical node and water nodes. Cannot create graph");
+                            
                         string llsoilName = null;
                         double[] llsoil = null;
                         string cllName = "LL15";
                         double[] relativeLL = physical.LL15;
 
-                        if (model is SoilCrop)
+                        if (model is SoilCrop soilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
                             string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
@@ -166,7 +171,7 @@ namespace UserInterface.Presenters
                         PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()} layers";
                 }
                 finally
                 {

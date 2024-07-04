@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
 
     public enum SheetDataProviderCellState
@@ -13,6 +13,20 @@ namespace UserInterface.Views
     /// <summary>An interface used by the sheet widget to get and set the contents of a sheet cell.</summary>
     public interface ISheetDataProvider
     {
+        /// <summary>Delegate for a CellChanged event.</summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="colIndices">The indices of the columns that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows that were changed.</param>
+        /// <param name="values">The values of the cells changed.</param>
+
+        delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
+
+        /// <summary>An event invoked when a cell changes.</summary>
+        event CellChangedDelegate CellChanged;
+
+        /// <summary>Is the data readonly?</summary>
+        bool IsReadOnly { get; }
+
         /// <summary>Gets the number of columns of data.</summary>
         int ColumnCount { get;  }
 

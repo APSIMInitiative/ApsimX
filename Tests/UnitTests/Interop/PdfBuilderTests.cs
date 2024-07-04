@@ -111,16 +111,16 @@ namespace UnitTests.Interop
             string linkText = "this is a hyperlink";
             builder.SetLinkState(linkUri);
             builder.AppendText(linkText, TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(linkUri, link.Name);
-            Assert.AreEqual(1, link.Elements.Count);
+            Assert.That(link.Name, Is.EqualTo(linkUri));
+            Assert.That(link.Elements.Count, Is.EqualTo(1));
             FormattedText text = (FormattedText)link.Elements[0];
-            Assert.AreEqual(1, text.Elements.Count);
+            Assert.That(text.Elements.Count, Is.EqualTo(1));
             Text rawText = (Text)text.Elements[0];
-            Assert.AreEqual(linkText, rawText.Content);
+            Assert.That(rawText.Content, Is.EqualTo(linkText));
         }
 
         /// <summary>
@@ -144,13 +144,13 @@ namespace UnitTests.Interop
             builder.SetLinkState("this is a link");
             builder.ClearLinkState();
             builder.AppendText("some text", TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
 
             // This hyperlink is empty - arguably it shouldn't be inserted at all.
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.True(paragraph.Elements[0] is Hyperlink);
-            Assert.True(paragraph.Elements[1] is FormattedText);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0] is Hyperlink, Is.True);
+            Assert.That(paragraph.Elements[1] is FormattedText, Is.True);
         }
 
         /// <summary>
@@ -174,11 +174,11 @@ namespace UnitTests.Interop
         {
             string bullet = bulletChar.ToString();
             builder.StartListItem(bullet);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             Text text = (Text)paragraph.Elements[0];
-            Assert.AreEqual(bullet, text.Content);
+            Assert.That(text.Content, Is.EqualTo(bullet));
         }
 
         /// <summary>
@@ -192,15 +192,15 @@ namespace UnitTests.Interop
             builder.StartListItem(bullet);
             string text = "list item contents";
             builder.AppendText(text, TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
             Text bulletElement = (Text)paragraph.Elements[0];
-            Assert.AreEqual(bullet, bulletElement.Content);
+            Assert.That(bulletElement.Content, Is.EqualTo(bullet));
             FormattedText insertedText = (FormattedText)paragraph.Elements[1];
-            Assert.AreEqual(1, insertedText.Elements.Count);
+            Assert.That(insertedText.Elements.Count, Is.EqualTo(1));
             Text rawText = (Text)insertedText.Elements[0];
-            Assert.AreEqual(text, rawText.Content);
+            Assert.That(rawText.Content, Is.EqualTo(text));
         }
 
         /// <summary>
@@ -232,29 +232,29 @@ namespace UnitTests.Interop
             builder.FinishListItem();
             builder.AppendText(serialText, TextStyle.Normal);
 
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(4, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(4));
 
             // First element is the bullet.
             Text insertedBullet = (Text)paragraph.Elements[0];
-            Assert.AreEqual(bullet, insertedBullet.Content);
+            Assert.That(insertedBullet.Content, Is.EqualTo(bullet));
 
             // Second element is the list item text.
             FormattedText listItem = (FormattedText)paragraph.Elements[1];
-            Assert.AreEqual(1, listItem.Elements.Count);
+            Assert.That(listItem.Elements.Count, Is.EqualTo(1));
             Text listItemText = (Text)listItem.Elements[0];
-            Assert.AreEqual(bulletText, listItemText.Content);
+            Assert.That(listItemText.Content, Is.EqualTo(bulletText));
 
             // Third element is a newline character.
             Character newline = (Character)paragraph.Elements[2];
-            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
+            Assert.That(newline.SymbolName, Is.EqualTo(SymbolName.LineBreak));
 
             // Fourth element is the text inserted after the list item.
             FormattedText serialContent = (FormattedText)paragraph.Elements[3];
-            Assert.AreEqual(1, serialContent.Elements.Count);
+            Assert.That(serialContent.Elements.Count, Is.EqualTo(1));
             Text rawText = (Text)serialContent.Elements[0];
-            Assert.AreEqual(serialText, rawText.Content);
+            Assert.That(rawText.Content, Is.EqualTo(serialText));
         }
 
         /// <summary>
@@ -286,37 +286,37 @@ namespace UnitTests.Interop
             builder.AppendText(listItem1, TextStyle.Normal);
             builder.FinishListItem();
 
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(6, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(6));
 
             // 1. Bullet.
             Text insertedBullet = (Text)paragraph.Elements[0];
-            Assert.AreEqual(bullet, insertedBullet.Content);
+            Assert.That(insertedBullet.Content, Is.EqualTo(bullet));
 
             // 2. List item 0.
             FormattedText listItem = (FormattedText)paragraph.Elements[1];
-            Assert.AreEqual(1, listItem.Elements.Count);
+            Assert.That(listItem.Elements.Count, Is.EqualTo(1));
             Text listItemText = (Text)listItem.Elements[0];
-            Assert.AreEqual(listItem0, listItemText.Content);
+            Assert.That(listItemText.Content, Is.EqualTo(listItem0));
 
             // 3. Newline.
             Character newline = (Character)paragraph.Elements[2];
-            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
+            Assert.That(newline.SymbolName, Is.EqualTo(SymbolName.LineBreak));
 
             // 4. Another bullet.
             insertedBullet = (Text)paragraph.Elements[3];
-            Assert.AreEqual(bullet, insertedBullet.Content);
+            Assert.That(insertedBullet.Content, Is.EqualTo(bullet));
 
             // 5. List item 1.
             listItem = (FormattedText)paragraph.Elements[4];
-            Assert.AreEqual(1, listItem.Elements.Count);
+            Assert.That(listItem.Elements.Count, Is.EqualTo(1));
             listItemText = (Text)listItem.Elements[0];
-            Assert.AreEqual(listItem1, listItemText.Content);
+            Assert.That(listItemText.Content, Is.EqualTo(listItem1));
 
             // 6. Another newline.
             newline = (Character)paragraph.Elements[5];
-            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
+            Assert.That(newline.SymbolName, Is.EqualTo(SymbolName.LineBreak));
         }
 
         /// <summary>
@@ -328,13 +328,13 @@ namespace UnitTests.Interop
         {
             string message = "This is a plaintext message.";
             builder.AppendText(message, TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text plain = (Text)formatted.Elements[0];
-            Assert.AreEqual(message, plain.Content);
+            Assert.That(plain.Content, Is.EqualTo(message));
         }
 
         /// <summary>
@@ -353,14 +353,14 @@ namespace UnitTests.Interop
         public void TestAppendTextStyle(TextStyle style)
         {
             builder.AppendText("some text", style);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
             if (style == TextStyle.Normal)
-                Assert.AreEqual(doc.Styles.Normal.Name, formatted.Style);
+                Assert.That(formatted.Style, Is.EqualTo(doc.Styles.Normal.Name));
             else
-                Assert.AreNotEqual(doc.Styles.Normal.Name, formatted.Style);
+                Assert.That(formatted.Style, Is.Not.EqualTo(doc.Styles.Normal.Name));
         }
 
         /// <summary>
@@ -377,17 +377,17 @@ namespace UnitTests.Interop
             doc.AddSection().AddParagraph(existingText);
             builder.AppendText(addedText, TextStyle.Normal);
 
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
 
             Text text = (Text)paragraph.Elements[0];
-            Assert.AreEqual(existingText, text.Content);
+            Assert.That(text.Content, Is.EqualTo(existingText));
 
             FormattedText formatted = (FormattedText)paragraph.Elements[1];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text plain = (Text)formatted.Elements[0];
-            Assert.AreEqual(addedText, plain.Content);
+            Assert.That(plain.Content, Is.EqualTo(addedText));
         }
 
         /// <summary>
@@ -400,9 +400,9 @@ namespace UnitTests.Interop
             doc.AddSection().AddParagraph("paragraph 1");
             doc.LastSection.AddParagraph("paragraph 2");
             builder.AppendText("new text", TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.True(doc.LastSection.Elements[0] is Paragraph);
-            Assert.True(doc.LastSection.Elements[1] is Paragraph);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0] is Paragraph, Is.True);
+            Assert.That(doc.LastSection.Elements[1] is Paragraph, Is.True);
         }
 
         /// <summary>
@@ -413,8 +413,8 @@ namespace UnitTests.Interop
         public void TestAppendTextNewParagraph()
         {
             builder.AppendText("new paragraph", TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
-            Assert.True(doc.LastSection.Elements[0] is Paragraph);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
+            Assert.That(doc.LastSection.Elements[0] is Paragraph, Is.True);
         }
 
         /// <summary>
@@ -427,12 +427,12 @@ namespace UnitTests.Interop
             using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, 2)))
             {
                 builder.AppendImage(image);
-                Assert.AreEqual(1, doc.LastSection.Elements.Count);
+                Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
                 Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-                Assert.AreEqual(1, paragraph.Elements.Count);
+                Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
                 MigraDocImage inserted = (MigraDocImage)paragraph.Elements[0];
-                Assert.AreEqual(image.Width, inserted.Source.Width);
-                Assert.AreEqual(image.Height, inserted.Source.Height);
+                Assert.That(inserted.Source.Width, Is.EqualTo(image.Width));
+                Assert.That(inserted.Source.Height, Is.EqualTo(image.Height));
             }
         }
 
@@ -466,8 +466,8 @@ namespace UnitTests.Interop
 
                 // The image we inserted is 20x20. However, the page size is
                 // 10x10. The image would have been resized to fit this.
-                Assert.AreEqual(expectedWidth, inserted.Source.Width);
-                Assert.AreEqual(expectedHeight, inserted.Source.Height);
+                Assert.That(inserted.Source.Width, Is.EqualTo(expectedWidth));
+                Assert.That(inserted.Source.Height, Is.EqualTo(expectedHeight));
             }
         }
 
@@ -482,11 +482,11 @@ namespace UnitTests.Interop
             doc.AddSection().AddParagraph("some text is already in the paragraph");
             using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, 2)))
                 builder.AppendImage(image);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.True(paragraph.Elements[0] is Text);
-            Assert.True(paragraph.Elements[1] is MigraDocImage);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0] is Text, Is.True);
+            Assert.That(paragraph.Elements[1] is MigraDocImage, Is.True);
         }
 
         /// <summary>
@@ -497,10 +497,10 @@ namespace UnitTests.Interop
         public void TestAppendHR()
         {
             builder.AppendHorizontalRule();
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(0, paragraph.Elements.Count);
-            Assert.AreEqual(1, paragraph.Format.Borders.Bottom.Width.Point);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(0));
+            Assert.That(paragraph.Format.Borders.Bottom.Width.Point, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -513,7 +513,7 @@ namespace UnitTests.Interop
             builder.AppendText("existing paragraph", TextStyle.Normal);
             builder.AppendHorizontalRule();
             builder.AppendText("additional text.", TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -529,13 +529,13 @@ namespace UnitTests.Interop
             string text = "this should be in a new paragraph";
             builder.AppendText(text, TextStyle.Normal);
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text plain = (Text)formatted.Elements[0];
-            Assert.AreEqual(text, plain.Content);
+            Assert.That(plain.Content, Is.EqualTo(text));
         }
 
         /// <summary>
@@ -556,9 +556,9 @@ namespace UnitTests.Interop
         [Test]
         public void TestIncrementFigureCount()
         {
-            Assert.AreEqual(0, builder.FigureNumber);
+            Assert.That(builder.FigureNumber, Is.EqualTo(0));
             builder.IncrementFigureNumber();
-            Assert.AreEqual(1, builder.FigureNumber);
+            Assert.That(builder.FigureNumber, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -575,8 +575,8 @@ namespace UnitTests.Interop
             builder.GetPageSize(out double width, out double height);
 
             // fixme: should probably find a better way to test this...
-            Assert.AreEqual(288, width);
-            Assert.AreEqual(384, height);
+            Assert.That(width, Is.EqualTo(288));
+            Assert.That(height, Is.EqualTo(384));
         }
 
         /// <summary>
@@ -596,8 +596,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(432, width);
-            Assert.AreEqual(480, height);
+            Assert.That(width, Is.EqualTo(432));
+            Assert.That(height, Is.EqualTo(480));
         }
 
         /// <summary>
@@ -608,8 +608,8 @@ namespace UnitTests.Interop
         public void TestGetPageSizeNoSections()
         {
             builder.GetPageSize(out double width, out double height);
-            Assert.AreEqual(defaultWidth, width);
-            Assert.AreEqual(defaultHeight, height);
+            Assert.That(width, Is.EqualTo(defaultWidth));
+            Assert.That(height, Is.EqualTo(defaultHeight));
         }
 
         /// <summary>
@@ -633,8 +633,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(defaultWidth, width);
-            Assert.AreEqual(defaultHeight, height);
+            Assert.That(width, Is.EqualTo(defaultWidth));
+            Assert.That(height, Is.EqualTo(defaultHeight));
         }
 
         /// <summary>
@@ -652,8 +652,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(672, width);
-            Assert.AreEqual(852, height);
+            Assert.That(width, Is.EqualTo(672));
+            Assert.That(height, Is.EqualTo(852));
         }
 
         /// <summary>
@@ -670,8 +670,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(672, width);
-            Assert.AreEqual(864, height);
+            Assert.That(width, Is.EqualTo(672));
+            Assert.That(height, Is.EqualTo(864));
         }
 
         /// <summary>
@@ -688,8 +688,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(576, width);
-            Assert.AreEqual(864, height);
+            Assert.That(width, Is.EqualTo(576));
+            Assert.That(height, Is.EqualTo(864));
         }
 
         /// <summary>
@@ -706,8 +706,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(960, width);
-            Assert.AreEqual(768, height);
+            Assert.That(width, Is.EqualTo(960));
+            Assert.That(height, Is.EqualTo(768));
         }
 
         /// <summary>
@@ -724,8 +724,8 @@ namespace UnitTests.Interop
 
             builder.GetPageSize(out double width, out double height);
 
-            Assert.AreEqual(1056, width);
-            Assert.AreEqual(1056, height);
+            Assert.That(width, Is.EqualTo(1056));
+            Assert.That(height, Is.EqualTo(1056));
         }
 
         /// <summary>
@@ -776,7 +776,7 @@ namespace UnitTests.Interop
         private void EnsureCanRenderTag(ITag tag)
         {
             Assert.DoesNotThrow(() => builder.Write(tag));
-            Assert.Greater(doc.LastSection.Elements.Count, 0);
+            Assert.That(doc.LastSection.Elements.Count, Is.GreaterThan(0));
         }
     }
 }
