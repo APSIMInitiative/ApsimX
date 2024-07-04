@@ -80,11 +80,12 @@ namespace UserInterface.Presenters
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
-            Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
             if (model is Physical)
             {
+                Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
                 ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
                 redValuesWarningLbl.UseMarkup = true;
+                redValuesWarningLbl.Wrap = true;
                 redValuesWarningLbl.Visible = true;
             }
 
