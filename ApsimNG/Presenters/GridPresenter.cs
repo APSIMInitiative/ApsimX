@@ -199,7 +199,7 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (gridTable != null)
+            if (gridTable != null && grid != null)
             {
                 if (dataProvider != null)
                     (dataProvider as DataTableProvider).CellChanged -= OnCellChanged;
@@ -219,23 +219,26 @@ namespace UserInterface.Presenters
                 }
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                List<List<SheetDataProviderCellState>> isCalculated = new();
-                for (int i = 0; i < data.Columns.Count; i++)
-                   isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
+                if (data != null)
+                {
+                    List<List<SheetDataProviderCellState>> isCalculated = new();
+                    for (int i = 0; i < data.Columns.Count; i++)
+                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
 
-                // Create instance of DataTableProvider.
-                dataProvider = new DataTableProvider(data, units, isCalculated);
+                    // Create instance of DataTableProvider.
+                    dataProvider = new DataTableProvider(data, units, isCalculated);
 
-                // Give DataTableProvider to grid sheet.
-                grid.SetDataProvider(dataProvider);
+                    // Give DataTableProvider to grid sheet.
+                    grid.SetDataProvider(dataProvider);
 
-                // Add an extra empty row to the grid so that new rows can be created.
-                grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
+                    // Add an extra empty row to the grid so that new rows can be created.
+                    grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
 
-                dataProvider.CellChanged += OnCellChanged;
+                    dataProvider.CellChanged += OnCellChanged;
+                }
             }
 
-            grid.UpdateScrollBars();
+            grid?.UpdateScrollBars();
         }
 
         /// <summary>The number of rows of data in the grid.</summary>

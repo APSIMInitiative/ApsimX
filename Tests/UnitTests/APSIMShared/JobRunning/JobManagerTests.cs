@@ -14,9 +14,9 @@
 
             var enumerator = jobs.GetJobs().GetEnumerator();
             
-            Assert.IsTrue(enumerator.MoveNext());
-            Assert.IsTrue(enumerator.MoveNext());
-            Assert.IsFalse(enumerator.MoveNext());
+            Assert.That(enumerator.MoveNext(), Is.True);
+            Assert.That(enumerator.MoveNext(), Is.True);
+            Assert.That(enumerator.MoveNext(), Is.False);
         }
     }
 }
