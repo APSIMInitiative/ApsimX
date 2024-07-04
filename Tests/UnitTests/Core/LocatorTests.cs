@@ -322,7 +322,7 @@ namespace UnitTests.Core
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
             ILocator locator = sims.GetLocatorService(sims);
-            Assert.AreEqual(nutrient.CNRF, locator.Get("[Nutrient].CNRF"));
+            Assert.That(nutrient.CNRF, Is.EqualTo(locator.Get("[Nutrient].CNRF")));
 
             //check that the child still exists as well
             Model cnrfChild = null;
