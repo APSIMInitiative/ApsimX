@@ -37,7 +37,7 @@
             simulation.Run();
 
             // Check that clock ticked.
-            Assert.AreEqual((simulation.Children[0] as Clock).Today, new DateTime(1980, 01, 02));
+            Assert.That((simulation.Children[0] as Clock).Today, Is.EqualTo(new DateTime(1980, 01, 02)));
         }
 
         /// <summary>Ensures a simulation with exceptions throws.</summary>
@@ -67,7 +67,7 @@
 
             // Make sure the error was sent to summary.
             var summary = simulation.FindDescendant<MockSummary>();
-            Assert.IsTrue(summary.messages[0].Contains("Intentional exception"));
+            Assert.That(summary.messages[0].Contains("Intentional exception"), Is.True);
         }
 
         /// <summary>Ensures a disable model does NOT participate in the simulation run.</summary>
@@ -99,7 +99,7 @@
             simulation.Run();
 
             // Check that clock ticked.
-            Assert.AreEqual(new DateTime(1980, 01, 02), (simulation.Children[0] as Clock).Today);
+            Assert.That((simulation.Children[0] as Clock).Today, Is.EqualTo(new DateTime(1980, 01, 02)));
         }
 
         [Serializable]
@@ -143,7 +143,7 @@
             simulation.Run();
 
             // Should get to here and NOT throw in the call to Run above.
-            Assert.IsTrue(true);
+            Assert.That(true);
         }
     }
 }
