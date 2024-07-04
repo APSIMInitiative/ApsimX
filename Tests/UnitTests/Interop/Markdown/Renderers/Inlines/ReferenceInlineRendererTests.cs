@@ -82,15 +82,15 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             ReferenceInline inline = new ReferenceInline(reference);
             renderer.Write(builder, inline);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(1, link.Elements.Count);
+            Assert.That(link.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)link.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text text = (Text)formatted.Elements[0];
-            Assert.AreEqual(inText, text.Content);
+            Assert.That(text.Content, Is.EqualTo(inText));
         }
 
         /// <summary>
@@ -103,10 +103,10 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             Mock<PdfBuilder> mockBuilder = new Mock<PdfBuilder>(document, new PdfOptions("", new Mock<ICitationHelper>().Object));
             mockBuilder.Setup(b => b.AppendReference(It.IsAny<string>(), It.IsAny<TextStyle>())).Callback<string, TextStyle>((r, style) =>
             {
-                Assert.AreEqual(referenceName, r);
+                Assert.That(r, Is.EqualTo(referenceName));
             });
             renderer.Write(mockBuilder.Object, new ReferenceInline(referenceName));
-            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -118,10 +118,10 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             Mock<PdfBuilder> mockBuilder = new Mock<PdfBuilder>(document, new PdfOptions("", new Mock<ICitationHelper>().Object));
             mockBuilder.Setup(b => b.AppendReference(It.IsAny<string>(), It.IsAny<TextStyle>())).Callback<string, TextStyle>((s, style) =>
             {
-                Assert.AreEqual(TextStyle.Normal, style);
+                Assert.That(style, Is.EqualTo(TextStyle.Normal));
             });
             renderer.Write(mockBuilder.Object, new ReferenceInline(""));
-            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(1));
         }
     }
 }

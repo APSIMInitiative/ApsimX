@@ -12,16 +12,12 @@
 
 
 // Include theme-specific fonts
-@import url(../../lib/font/league-gothic/league-gothic.css);
+@import url(./fonts/league-gothic/league-gothic.css);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
 
 /**
  * Solarized colors by Ethan Schoonover
  */
-html * {
-	color-profile: sRGB;
-	rendering-intent: auto;
-}
 
 // Solarized colors
 $base03:    #002b36;
@@ -50,7 +46,8 @@ $linkColor: $blue;
 $linkColorHover: lighten( $linkColor, 20% );
 $selectionBackgroundColor: $magenta;
 
-
+// Change text colors against light slide backgrounds
+@include light-bg-text-color(#222);
 
 // Theme template ------------------------------
 @import "../template/theme";

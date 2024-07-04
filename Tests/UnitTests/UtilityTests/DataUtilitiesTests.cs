@@ -29,12 +29,12 @@ namespace UnitTests.UtilityTests
             //ISO - test ISO format sperately
             string isoTest1 = $"2000-01-01T00:00:00";
             string isoTest2 = $"2000-01-01";
-            Assert.AreEqual(DateTime.Parse(isoTest1, null, DateTimeStyles.RoundtripKind), DateUtilities.GetDate(isoTest1));
-            Assert.AreEqual(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind), DateUtilities.GetDate(isoTest2));
+            Assert.That(DateUtilities.GetDate(isoTest1), Is.EqualTo(DateTime.Parse(isoTest1, null, DateTimeStyles.RoundtripKind)));
+            Assert.That(DateUtilities.GetDate(isoTest2), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
 
             //check dates are trimmed
             string trimTest = $" 2000-01-01 ";
-            Assert.AreEqual(DateTime.Parse(trimTest, null, DateTimeStyles.RoundtripKind), DateUtilities.GetDate(trimTest));
+            Assert.That(DateUtilities.GetDate(trimTest), Is.EqualTo(DateTime.Parse(trimTest, null, DateTimeStyles.RoundtripKind)));
 
             foreach (char seperator in DateUtilities.VALID_SEPERATORS)
             {
@@ -59,61 +59,61 @@ namespace UnitTests.UtilityTests
 
                             //Day-Month-Year
                             DateTime parsed = DateUtilities.GetDate(ddmmyyyy);
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
 
                             //day of year
                             parsed = DateUtilities.GetDate(date.DayOfYear, int.Parse(fullYear));
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
 
                             //day/month with date for year
                             parsed = DateUtilities.GetDate(ddmm, date);
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
                             //with year in string
                             parsed = DateUtilities.GetDate(ddmmyyyy, date);
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
 
                             //3 Ints
                             parsed = DateUtilities.GetDate(day, monthNum, int.Parse(fullYear));
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
 
                             //now we do all the date checking that will use a default year
                             date = new DateTime(DateUtilities.DEFAULT_YEAR, monthNum, day);
 
                             //day/month with mismatched year in string
                             parsed = DateUtilities.GetDate(ddmm + seperator.ToString() + DateUtilities.DEFAULT_YEAR.ToString(), date);
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
                             //with int year instead of date
                             parsed = DateUtilities.GetDate(ddmm, DateUtilities.DEFAULT_YEAR);
-                            Assert.AreEqual(date, parsed);
+                            Assert.That(parsed, Is.EqualTo(date));
 
                             if (months[month].Length > 2)
                             { //we don't want to do these when month is a number, that should fail
                                 //Month-Day-Year
                                 parsed = DateUtilities.GetDate(mmdd + seperator.ToString() + year.ToString());
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 //Day-Month
                                 parsed = DateUtilities.GetDate(ddmm);
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 //Month-Day
                                 parsed = DateUtilities.GetDate(mmdd);
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 //DayMonth
                                 parsed = DateUtilities.GetDate(day.ToString() + months[month]);
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 //MonthDay
                                 parsed = DateUtilities.GetDate(months[month] + day.ToString());
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 //Replace Year
                                 parsed = DateUtilities.GetDateReplaceYear(ddmm, DateUtilities.DEFAULT_YEAR);
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
 
                                 parsed = DateUtilities.GetDateReplaceYear(ddmmyyyy, DateUtilities.DEFAULT_YEAR);
-                                Assert.AreEqual(date, parsed);
+                                Assert.That(parsed, Is.EqualTo(date));
                             }
                         }
                     }
@@ -160,60 +160,60 @@ namespace UnitTests.UtilityTests
             DateTime date = new DateTime(year, 1, day);
 
             //Compares
-            Assert.Zero(DateUtilities.CompareDates(ddmmyyyy, date));
-            Assert.Positive(DateUtilities.CompareDates(ddmmyyyy, date.AddDays(1)));
-            Assert.Negative(DateUtilities.CompareDates(ddmmyyyy, date.AddDays(-1)));
+            Assert.That(DateUtilities.CompareDates(ddmmyyyy, date), Is.Zero);
+            Assert.That(DateUtilities.CompareDates(ddmmyyyy, date.AddDays(1)), Is.Positive);
+            Assert.That(DateUtilities.CompareDates(ddmmyyyy, date.AddDays(-1)), Is.Negative);
 
             //DayMonth comparisions
-            Assert.IsTrue(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-10"));
-            Assert.IsFalse(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-11"));
+            Assert.That(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-10"), Is.True);
+            Assert.That(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-11"), Is.False);
 
-            Assert.IsTrue(DateUtilities.DayMonthIsEqual(ddmmyyyy, date));
-            Assert.IsFalse(DateUtilities.DayMonthIsEqual(ddmmyyyy, date.AddDays(1)));
-            Assert.IsTrue(DateUtilities.DayMonthIsEqual(date, date.AddYears(1)));
+            Assert.That(DateUtilities.DayMonthIsEqual(ddmmyyyy, date), Is.True);
+            Assert.That(DateUtilities.DayMonthIsEqual(ddmmyyyy, date.AddDays(1)), Is.False);
+            Assert.That(DateUtilities.DayMonthIsEqual(date, date.AddYears(1)), Is.True);
 
             //WithinDates
             string ddmmyyyy_5 = $"{day + 5}-{month}-{year}";
             string ddmmyyyy_10 = $"{day + 10}-{month}-{year}";
-            Assert.IsTrue(DateUtilities.WithinDates(ddmmyyyy, new DateTime(2000, 1, 12), ddmmyyyy_5)); //between
-            Assert.IsFalse(DateUtilities.WithinDates(ddmmyyyy_5, new DateTime(2000, 1, 12), ddmmyyyy_10)); //not between
-            Assert.IsTrue(DateUtilities.WithinDates(ddmmyyyy_10, date, ddmmyyyy_5)); //between, wrap around year
-            Assert.IsFalse(DateUtilities.WithinDates(ddmmyyyy_10, new DateTime(2000, 1, 12), ddmmyyyy)); //not between, wrap around year
-            Assert.IsTrue(DateUtilities.WithinDates(ddmmyyyy, date, ddmmyyyy)); //on same date
+            Assert.That(DateUtilities.WithinDates(ddmmyyyy, new DateTime(2000, 1, 12), ddmmyyyy_5), Is.True); //between
+            Assert.That(DateUtilities.WithinDates(ddmmyyyy_5, new DateTime(2000, 1, 12), ddmmyyyy_10), Is.False); //not between
+            Assert.That(DateUtilities.WithinDates(ddmmyyyy_10, date, ddmmyyyy_5), Is.True); //between, wrap around year
+            Assert.That(DateUtilities.WithinDates(ddmmyyyy_10, new DateTime(2000, 1, 12), ddmmyyyy), Is.False); //not between, wrap around year
+            Assert.That(DateUtilities.WithinDates(ddmmyyyy, date, ddmmyyyy), Is.True); //on same date
 
             //DatesAreEqual
-            Assert.IsTrue(DateUtilities.DatesAreEqual(ddmmyyyy, date));
-            Assert.IsFalse(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddDays(1)));
-            Assert.IsFalse(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddMonths(1)));
-            Assert.IsFalse(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddYears(1)));
+            Assert.That(DateUtilities.DatesAreEqual(ddmmyyyy, date), Is.True);
+            Assert.That(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddDays(1)), Is.False);
+            Assert.That(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddMonths(1)), Is.False);
+            Assert.That(DateUtilities.DatesAreEqual(ddmmyyyy, date.AddYears(1)), Is.False);
 
             //IsEndOfMonth
             string ddmmyyyy_endMonth = $"31-Jan-2000";
-            Assert.IsTrue(DateUtilities.IsEndOfMonth(DateUtilities.GetDate(ddmmyyyy_endMonth)));
-            Assert.IsFalse(DateUtilities.IsEndOfMonth(DateUtilities.GetDate(ddmmyyyy)));
+            Assert.That(DateUtilities.IsEndOfMonth(DateUtilities.GetDate(ddmmyyyy_endMonth)), Is.True);
+            Assert.That(DateUtilities.IsEndOfMonth(DateUtilities.GetDate(ddmmyyyy)), Is.False);
 
             //IsEndOfYear
             string ddmmyyyy_endYear = $"31-Dec-2000";
-            Assert.IsTrue(DateUtilities.IsEndOfYear(DateUtilities.GetDate(ddmmyyyy_endYear)));
-            Assert.IsFalse(DateUtilities.IsEndOfYear(DateUtilities.GetDate(ddmmyyyy)));
+            Assert.That(DateUtilities.IsEndOfYear(DateUtilities.GetDate(ddmmyyyy_endYear)), Is.True);
+            Assert.That(DateUtilities.IsEndOfYear(DateUtilities.GetDate(ddmmyyyy)), Is.False);
 
             //ValidateDateString
-            Assert.AreEqual(yyyymmdd, DateUtilities.ValidateDateString("10/January/2000"));
-            Assert.AreEqual(ddmm, DateUtilities.ValidateDateString("10 January"));
-            Assert.AreEqual(ddmm, DateUtilities.ValidateDateString("January 10"));
+            Assert.That(DateUtilities.ValidateDateString("10/January/2000"), Is.EqualTo(yyyymmdd));
+            Assert.That(DateUtilities.ValidateDateString("10 January"), Is.EqualTo(ddmm));
+            Assert.That(DateUtilities.ValidateDateString("January 10"), Is.EqualTo(ddmm));
 
-            Assert.Null(DateUtilities.ValidateDateString("FakeMonth 10"));
+            Assert.That(DateUtilities.ValidateDateString("FakeMonth 10"), Is.Null);
 
             //ValidateDateStringWithYear
-            Assert.AreEqual(yyyymmdd, DateUtilities.ValidateDateStringWithYear("10/January/2000"));
-            Assert.Null(DateUtilities.ValidateDateStringWithYear("10 January"));
+            Assert.That(DateUtilities.ValidateDateStringWithYear("10/January/2000"), Is.EqualTo(yyyymmdd));
+            Assert.That(DateUtilities.ValidateDateStringWithYear("10 January"), Is.Null);
 
             //GetNextDate
-            Assert.AreEqual(DateUtilities.GetDate("2-Jan-2001"), DateUtilities.GetNextDate("2-Jan", date)); //2-Jan is before date
-            Assert.AreEqual(DateUtilities.GetDate("20-Jan-2000"), DateUtilities.GetNextDate("20-Jan", date)); //20-Jan is after date
-            Assert.AreEqual(DateUtilities.GetDate("2-Jan-2001"), DateUtilities.GetNextDate("2-Jan-2000", date)); //With year
-            Assert.AreEqual(DateUtilities.GetDate("20-Jan-2000"), DateUtilities.GetNextDate("20-Jan-2000", date)); //With year
-            Assert.AreEqual(DateUtilities.GetDate("2-Jan-2001"), DateUtilities.GetNextDate("2-Jan-1996", date)); //With multiple years
+            Assert.That(DateUtilities.GetNextDate("2-Jan", date), Is.EqualTo(DateUtilities.GetDate("2-Jan-2001"))); //2-Jan is before date
+            Assert.That(DateUtilities.GetNextDate("20-Jan", date), Is.EqualTo(DateUtilities.GetDate("20-Jan-2000"))); //20-Jan is after date
+            Assert.That(DateUtilities.GetNextDate("2-Jan-2000", date), Is.EqualTo(DateUtilities.GetDate("2-Jan-2001"))); //With year
+            Assert.That(DateUtilities.GetNextDate("20-Jan-2000", date), Is.EqualTo(DateUtilities.GetDate("20-Jan-2000"))); //With year
+            Assert.That(DateUtilities.GetNextDate("2-Jan-1996", date), Is.EqualTo(DateUtilities.GetDate("2-Jan-2001"))); //With multiple years
         }
     }
 }

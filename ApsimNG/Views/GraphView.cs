@@ -1690,10 +1690,12 @@ namespace UserInterface.Views
                             while (enumerator.MoveNext())
                             {
                                 int axisIndex = axis.Labels.IndexOf(enumerator.Current.ToString());
-                                if (axisIndex == -1)
+                                if (axisIndex == -1) {
                                     axis.Labels.Add(enumerator.Current.ToString());
-
-                                values.Add(index);
+                                    axisIndex = axis.Labels.Count - 1;
+                                }
+                                
+                                values.Add(axisIndex);
                                 index += 1;
                             }
                         }

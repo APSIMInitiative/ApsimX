@@ -146,15 +146,15 @@ namespace UnitTests.Core
             var undos = Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             foreach (var report in sims1.FindAllInScope<Models.Report>())
-                Assert.AreEqual(new[] { "x", "y", "z" }, report.VariableNames);
+                Assert.That(report.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
             var reports = sims1.FindAllInScope<Models.Report>().ToArray();
-            Assert.AreEqual(new[] { "AA" }, reports[0].VariableNames);
-            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
-            Assert.AreEqual(new[] { "CC" }, reports[2].VariableNames);
-            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
+            Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "AA" }));
+            Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
+            Assert.That(reports[2].VariableNames, Is.EqualTo(new[] { "CC" }));
+            Assert.That(reports[3].VariableNames, Is.EqualTo(new[] { "DD" }));
         }
 
         /// <summary>Set an array property in specific models (match on name), supplying a csv string.</summary>
@@ -165,22 +165,22 @@ namespace UnitTests.Core
 
             // It should have changed all Report1 models.
             foreach (var report1 in sims1.FindAllInScope<Models.Report>("Report1"))
-                Assert.AreEqual(new[] { "x", "y", "z" }, report1.VariableNames);
+                Assert.That(report1.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
 
             // It should not have changed Report2 and Report3
             var reports = sims1.FindAllInScope<Models.Report>().ToArray();
 
-            Assert.AreEqual(new[] { "x", "y", "z" }, reports[0].VariableNames);
-            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
-            Assert.AreEqual(new[] { "x", "y", "z" }, reports[2].VariableNames);
-            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
+            Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
+            Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
+            Assert.That(reports[2].VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
+            Assert.That(reports[3].VariableNames, Is.EqualTo(new[] { "DD" }));
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
-            Assert.AreEqual(new[] { "AA" }, reports[0].VariableNames);
-            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
-            Assert.AreEqual(new[] { "CC" }, reports[2].VariableNames);
-            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
+            Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "AA" }));
+            Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
+            Assert.That(reports[2].VariableNames, Is.EqualTo(new[] { "CC" }));
+            Assert.That(reports[3].VariableNames, Is.EqualTo(new[] { "DD" }));
         }
 
         /// <summary>Set a date property, supplying dates in different formats.</summary>
@@ -190,11 +190,11 @@ namespace UnitTests.Core
             var undos = Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
-            Assert.AreEqual(new DateTime(2000, 01, 01), clock.StartDate);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2000, 01, 01)));
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
-            Assert.AreEqual(new DateTime(2017, 1, 1), clock.StartDate);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2017, 1, 1)));
         }
 
         /// <summary>Set a model from and external file (finds the first matching model).</summary>
@@ -204,7 +204,7 @@ namespace UnitTests.Core
             Overrides.Apply(sims1, "[Clock]", extFile, Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
-            Assert.AreEqual(new DateTime(2020, 01, 01), clock.StartDate);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2020, 01, 01)));
         }
 
         /// <summary>Set a model from and external file (finds a specific model).</summary>
@@ -214,7 +214,7 @@ namespace UnitTests.Core
             Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]", Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
-            Assert.AreEqual(new DateTime(2021, 01, 01), clock.StartDate);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2021, 01, 01)));
         }
 
         /// <summary>Replace a model using name (not type matching)</summary>
@@ -228,26 +228,26 @@ namespace UnitTests.Core
             var reports = sims1.FindAllInScope<Models.Report>().ToArray();
 
             // The names should still be the same.
-            Assert.AreEqual(4, reports.Length);
-            Assert.AreEqual("Report1", reports[0].Name);
-            Assert.AreEqual("Report2", reports[1].Name);
-            Assert.AreEqual("Report1", reports[2].Name);
-            Assert.AreEqual("Report3", reports[3].Name);
+            Assert.That(reports.Length, Is.EqualTo(4));
+            Assert.That(reports[0].Name, Is.EqualTo("Report1"));
+            Assert.That(reports[1].Name, Is.EqualTo("Report2"));
+            Assert.That(reports[2].Name, Is.EqualTo("Report1"));
+            Assert.That(reports[3].Name, Is.EqualTo("Report3"));
 
             // The variablenames property should be different.
-            Assert.AreEqual(newVariableNames, reports[0].VariableNames);
-            Assert.AreEqual(new string[] { "BB" }, reports[1].VariableNames);
-            Assert.AreEqual(newVariableNames, reports[2].VariableNames);
-            Assert.AreEqual(new string[] { "DD" }, reports[3].VariableNames);
+            Assert.That(reports[0].VariableNames, Is.EqualTo(newVariableNames));
+            Assert.That(reports[1].VariableNames, Is.EqualTo(new string[] { "BB" }));
+            Assert.That(reports[2].VariableNames, Is.EqualTo(newVariableNames));
+            Assert.That(reports[3].VariableNames, Is.EqualTo(new string[] { "DD" }));
 
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
             reports = sims1.FindAllInScope<Models.Report>().ToArray();
-            Assert.AreEqual(new string[] { "AA" }, reports[0].VariableNames);
-            Assert.AreEqual(new string[] { "BB" }, reports[1].VariableNames);
-            Assert.AreEqual(new string[] { "CC" }, reports[2].VariableNames);
-            Assert.AreEqual(new string[] { "DD" }, reports[3].VariableNames);
+            Assert.That(reports[0].VariableNames, Is.EqualTo(new string[] { "AA" }));
+            Assert.That(reports[1].VariableNames, Is.EqualTo(new string[] { "BB" }));
+            Assert.That(reports[2].VariableNames, Is.EqualTo(new string[] { "CC" }));
+            Assert.That(reports[3].VariableNames, Is.EqualTo(new string[] { "DD" }));
         }
 
         [Test]
@@ -269,19 +269,19 @@ namespace UnitTests.Core
 
             var stringList = (ListClass<string>)sims1.FindInScope<ListClass<string>>();
 
-            Assert.AreEqual(new List<string>(new[]
+            Assert.That(stringList.Data, Is.EqualTo(new List<string>(new[]
             {
                 "6",
                 "x",
                 "xyz",
                 "xyz",
                 "0.5"
-            }), stringList.Data);
+            })));
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
 
-            Assert.AreEqual(0, stringList.Data.Count);
+            Assert.That(stringList.Data.Count, Is.EqualTo(0));
         }
     }
 }

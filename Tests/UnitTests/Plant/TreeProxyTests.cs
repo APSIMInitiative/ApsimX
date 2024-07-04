@@ -47,7 +47,7 @@ namespace UnitTests.Core
             TreeProxy treeProxy = sim.FindDescendant<TreeProxy>();
             //Pull grid data for tree proxy to make sure it's working
             List<GridTable> tables = treeProxy.Tables;
-            Assert.AreEqual(2, tables.Count);
+            Assert.That(tables.Count, Is.EqualTo(2));
 
             DataTable dtTemporal = tables[0].Data;
             DataTable dtTemporal2 = new DataTable("TreeProxySpatial");
@@ -65,7 +65,7 @@ namespace UnitTests.Core
             {
                 for (int j = 0; j < dtTemporal2.Columns.Count; j++)
                 {
-                    Assert.AreEqual(dtTemporal2.Rows[i].ItemArray[j], dtTemporal.Rows[i].ItemArray[j]);
+                    Assert.That(dtTemporal.Rows[i].ItemArray[j], Is.EqualTo(dtTemporal2.Rows[i].ItemArray[j]));
                 }
             }
 
@@ -96,7 +96,7 @@ namespace UnitTests.Core
             {
                 for (int j = 0; j < dtSpatial2.Columns.Count; j++)
                 {
-                    Assert.AreEqual(dtSpatial2.Rows[i].ItemArray[j], dtSpatial.Rows[i].ItemArray[j]);
+                    Assert.That(dtSpatial.Rows[i].ItemArray[j], Is.EqualTo(dtSpatial2.Rows[i].ItemArray[j]));
                 }
             }
 
@@ -109,11 +109,11 @@ namespace UnitTests.Core
             treeProxy.GetNitrogenUptakeEstimates(soilState);
 
             // Make sure NUptake wasn't set.
-            Assert.IsNull(treeProxy.NUptake);
+            Assert.That(treeProxy.NUptake, Is.Null);
 
             // Once SetActualNitrogenUptakes is called, NUptake should be set.
             treeProxy.SetActualNitrogenUptakes(soilState.Zones);
-            Assert.IsNotNull(treeProxy.NUptake);
+            Assert.That(treeProxy.NUptake, Is.Not.Null);
         }
     }
 }
