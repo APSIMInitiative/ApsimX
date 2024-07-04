@@ -49,7 +49,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void EnsureEmptyParagraphNotWritten(string empty)
         {
             renderer.Render(new Paragraph(empty), pdfBuilder);
-            Assert.AreEqual(0, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -64,16 +64,16 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(new Paragraph(italics), pdfBuilder);
 
             // Ensure that the paragraph was inserted.
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             MigraDocParagraph paragraph = document.LastSection.Elements[0] as MigraDocParagraph;
-            Assert.NotNull(paragraph);
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph, Is.Not.Null);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText insertedText = paragraph.Elements[0] as FormattedText;
-            Assert.NotNull(insertedText);
+            Assert.That(insertedText, Is.Not.Null);
 
             // Ensure that the inserted raw text matches and is italic.
-            Assert.AreEqual(rawText, ((Text)insertedText.Elements[0]).Content);
-            Assert.True(document.Styles[insertedText.Style].Font.Italic);
+            Assert.That(((Text)insertedText.Elements[0]).Content, Is.EqualTo(rawText));
+            Assert.That(document.Styles[insertedText.Style].Font.Italic, Is.True);
         }
 
         /// <summary>
@@ -89,15 +89,15 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(new Paragraph(rawText), pdfBuilder);
 
             // Ensure that the paragraph was inserted.
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             MigraDocParagraph paragraph = document.LastSection.Elements[0] as MigraDocParagraph;
-            Assert.NotNull(paragraph);
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph, Is.Not.Null);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText insertedText = paragraph.Elements[0] as FormattedText;
-            Assert.NotNull(insertedText);
+            Assert.That(insertedText, Is.Not.Null);
 
             // Ensure that the inserted raw text matches and is italic.
-            Assert.AreEqual(rawText, ((Text)insertedText.Elements[0]).Content);
+            Assert.That(((Text)insertedText.Elements[0]).Content, Is.EqualTo(rawText));
         }
     }
 }

@@ -35,7 +35,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void TestCanRender()
         {
             ITagRenderer renderer = new Renderer();
-            Assert.True(renderer.CanRender(new TagBase()));
+            Assert.That(renderer.CanRender(new TagBase()), Is.True);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void TestCanRenderSubclass()
         {
             ITagRenderer renderer = new Renderer();
-            Assert.True(renderer.CanRender(new SubTag()));
+            Assert.That(renderer.CanRender(new SubTag()), Is.True);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void TestCannotRenderOtherClass()
         {
             ITagRenderer renderer = new Renderer();
-            Assert.False(renderer.CanRender(new MockTag(p => { })));
+            Assert.That(renderer.CanRender(new MockTag(p => { })), Is.False);
         }
 
         /// <summary>

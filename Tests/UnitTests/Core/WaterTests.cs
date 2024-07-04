@@ -36,13 +36,13 @@ namespace UnitTests.Core
                         for (int k = -27; k <= 478; k++)
                         {
                             waterModel.InitialPAWmm = k;
-                            Assert.AreEqual(k, waterModel.InitialPAWmm, 0.5);
+                            Assert.That(k, Is.EqualTo(waterModel.InitialPAWmm).Within(0.5));
                         }
                         for (int k = -7; k <= 132; k++)
                         {
                             double percent = i / 100.0;
                             waterModel.FractionFull = percent;
-                            Assert.AreEqual(percent, waterModel.FractionFull, 0.001);
+                            Assert.That(waterModel.FractionFull, Is.EqualTo(percent).Within(0.001));
                         }
                     }
                     else
@@ -51,19 +51,19 @@ namespace UnitTests.Core
                         for (int k = -142; k <= 363; k++)
                         {
                             waterModel.InitialPAWmm = k;
-                            Assert.AreEqual(k, waterModel.InitialPAWmm, 0.5);
+                            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(k).Within(0.5));
                         }
                         for (int k = -58; k <= 147; k++)
                         {
                             double percent = i / 100.0;
                             waterModel.FractionFull = percent;
-                            Assert.AreEqual(percent, waterModel.FractionFull, 0.001);
+                            Assert.That(waterModel.FractionFull, Is.EqualTo(percent).Within(0.001));
                         }
                     }
                     for (int k = 0; k <= 1800; k++)
                     {
                         waterModel.DepthWetSoil = k;
-                        Assert.AreEqual(k, waterModel.DepthWetSoil, 0.5);
+                        Assert.That(waterModel.DepthWetSoil, Is.EqualTo(k).Within(0.5));
                     }
                 }
             }
@@ -77,9 +77,9 @@ namespace UnitTests.Core
         {
             Water waterModel = GetSoilModel().FindChild<Water>();
             waterModel.InitialValues[0] = 0.300;
-            Assert.AreEqual(waterModel.InitialPAWmm, 327.9207228741369, 1.0);
-            Assert.AreEqual(waterModel.FractionFull, 0.91, 0.1);
-            Assert.AreEqual(waterModel.DepthWetSoil, 1672.0, 1.0);
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(327.9207228741369).Within(1.0));
+            Assert.That(waterModel.FractionFull, Is.EqualTo(0.91).Within(0.1));
+            Assert.That(waterModel.DepthWetSoil, Is.EqualTo(1672.0).Within(1.0));
         }
 
         /// <summary>
@@ -99,9 +99,9 @@ namespace UnitTests.Core
                     0.358,
                     0.356 };
             for (int i = 0; i < expectedInitialValues.Length; i++)
-                Assert.AreEqual(waterModel.InitialValues[i], expectedInitialValues[i], 0.001);
-            Assert.AreEqual(waterModel.FractionFull, 0.44, 0.01);
-            Assert.AreEqual(waterModel.DepthWetSoil, 797.24, 0.01);
+                Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
+            Assert.That(waterModel.FractionFull, Is.EqualTo(0.44).Within(0.01));
+            Assert.That(waterModel.DepthWetSoil, Is.EqualTo(797.24).Within(0.01));
         }
 
         /// <summary>
@@ -121,9 +121,9 @@ namespace UnitTests.Core
                 0.418,
                 0.414};
             for (int i = 0; i < expectedInitialValues.Length; i++)
-                Assert.AreEqual(waterModel.InitialValues[i], expectedInitialValues[i], 0.001);
-            Assert.AreEqual(waterModel.InitialPAWmm, 281.771, 0.001);
-            Assert.AreEqual(waterModel.DepthWetSoil, 1404);
+                Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(281.771).Within(0.001));       
+            Assert.That(waterModel.DepthWetSoil, Is.EqualTo(1404));
         }
 
 
@@ -145,9 +145,9 @@ namespace UnitTests.Core
                 0.28
             };
             for (int i = 0; i < expectedInitialValues.Length; i++)
-                Assert.AreEqual(waterModel.InitialValues[i], expectedInitialValues[i], 0.001);
-            Assert.AreEqual(waterModel.InitialPAWmm, 76.32927712586311);
-            Assert.AreEqual(waterModel.FractionFull, 0.21129479058703288);
+                Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(76.32927712586311));
+            Assert.That(waterModel.FractionFull, Is.EqualTo(0.21129479058703288));
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace UnitTests.Core
                 0.28
             };
             for (int i = 0; i < expectedInitialValues.Length; i++)
-                Assert.AreEqual(waterModel.InitialValues[i], expectedInitialValues[i], 0.001);
-            Assert.AreEqual(waterModel.DepthWetSoil, 1106.0319, 0.001);
+                Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
+            Assert.That(waterModel.DepthWetSoil, Is.EqualTo(1106.0319).Within(0.001));
         }
 
 
@@ -192,10 +192,10 @@ namespace UnitTests.Core
             };
             for (int i = 0; i < expectedInitialValues.Length; i++)
             {
-                Assert.AreEqual(waterModel.InitialValues[i], expectedInitialValues[i], 0.001);
+                Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
             }
-            Assert.AreEqual(waterModel.InitialPAWmm, 162.376, 0.001);
-            Assert.AreEqual(waterModel.DepthWetSoil, 735.036, 0.001);
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(162.376).Within(0.001));
+            Assert.That(waterModel.DepthWetSoil, Is.EqualTo(735.036).Within(0.001));
         }
 
         /// <summary>
