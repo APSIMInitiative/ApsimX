@@ -250,8 +250,8 @@ namespace Models.PMF.SimplePlantModels
 
             double rootDepth = Math.Min(Double.Parse(CurrentCropParams["MaxRootDepth"]), soilDepthMax);
 
-            bool RootThyNeighbour = bool.Parse(CurrentCropParams["RootTheNeighboursZone"]);
-            if (RootThyNeighbour)
+            bool RootsInNeighbourZone = bool.Parse(CurrentCropParams["RootsInNeighbourZone"]);
+            if (RootsInNeighbourZone)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
                 List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
