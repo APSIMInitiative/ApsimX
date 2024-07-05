@@ -266,13 +266,6 @@ namespace Models.DCAPST
         private void OnDoDCaPST(object sender, EventArgs args)
         {
             SetUpPlant();
-
-            // 0. Get SLN, LAI, total avail SW, root shoot ratio
-            // 1. Perform internal calculations
-            // 2. Set biomass production in leaf
-            // 3. Set water demand and potential EP via ICanopy
-            double rootShootRatio = GetRootShootRatio();
-
             CalculateDcapstTrigger();
 
             if (!ShouldRunDcapstModel())
@@ -294,9 +287,8 @@ namespace Models.DCAPST
             );
 
             double sln = GetSln();
-            double soilWaterValue = GetSoilWater();
 
-            DcapstModel.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
+            DcapstModel.DailyRun(leaf.LAI, sln);
 
             // Outputs
             foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
@@ -321,6 +313,10 @@ namespace Models.DCAPST
         {
             if (DcapstModel is null) return;
 
+            double rootShootRatio = GetRootShootRatio();
+            double soilWaterValue = GetSoilWaterAvailable();
+            DcapstModel.CalculateBiomass(soilWaterValue, rootShootRatio);
+
             if (leaf is SorghumLeaf sorghumLeaf)
             {
                 if (DcapstModel.InterceptedRadiation > 0)
@@ -341,6 +337,19 @@ namespace Models.DCAPST
             {
                 throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
             }
+        }
+
+        private double GetSoilWaterAvailable()
+        {
+            double soilWaterAvailable = soilWater.SW.Sum();
+
+            if (leaf is SorghumLeaf &&
+                waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
+            {
+                soilWaterAvailable = c4WaterUptakeMethod.WatSupply;
+            }
+
+            return soilWaterAvailable;
         }
 
         private bool ShouldRunDcapstModel()
@@ -389,19 +398,6 @@ namespace Models.DCAPST
             if (variable.Value is not IFunction function) return null;
 
             return function;
-        }
-
-        private double GetSoilWater()
-        {
-            double soilWaterValue = soilWater.SW.Sum();
-
-            if (leaf is SorghumLeaf &&
-                waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
-            {
-                soilWaterValue = c4WaterUptakeMethod.WatSupply;
-            }
-
-            return soilWaterValue;
         }
 
         private void CalculateDcapstTrigger()

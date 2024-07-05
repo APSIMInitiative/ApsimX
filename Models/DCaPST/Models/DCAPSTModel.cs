@@ -107,6 +107,21 @@ namespace Models.DCAPST
         /// </summary>
         public double InterceptedRadiation { get; private set; }
 
+        /// <summary>
+        /// The water demands, taken from the sunlit and shaded areas.
+        /// </summary>
+        public List<double> WaterDemands { get; private set; } = new();
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public double CalculatedTotalPotentialBiomass { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IntervalValues[] Intervals;
+
         private readonly double start = 6.0;
         private readonly double end = 18.0;
         private readonly double timestep = 1.0;
@@ -120,10 +135,6 @@ namespace Models.DCAPST
         // 44 mol wt CO2
         private const double MOL_WT_CO2 = 44;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public IntervalValues[] Intervals;
 
         /// <summary>
         /// 
@@ -157,12 +168,10 @@ namespace Models.DCAPST
         /// </summary>
         public void DailyRun(
             double lai,
-            double sln,
-            double soilWater,
-            double rootShootRatio
+            double sln
         )
         {
-            RootShootRatio = rootShootRatio;
+            WaterDemands.Clear();
 
             var steps = (end - start) / timestep;
             if (steps % 1 == 0) steps++;
@@ -171,15 +180,14 @@ namespace Models.DCAPST
                 .Select(i => new IntervalValues() { Time = start + i * timestep })
                 .ToArray();
 
-
             Solar.Initialise();
             Canopy.InitialiseDay(lai, sln);
 
             // Unlimited potential calculations
             // Note: In the potential case, we assume unlimited water and therefore supply = demand
             transpiration.Limited = false;
-            var totalPotentialBiomass = CalculatePotential();
-            var waterDemands = Intervals.Select(i => i.Sunlit.Water + i.Shaded.Water).ToList();
+            CalculatedTotalPotentialBiomass = CalculatePotential();
+            WaterDemands = Intervals.Select(i => i.Sunlit.Water + i.Shaded.Water).ToList();
 
             // Bio-limited calculations
             transpiration.Limited = true;
@@ -190,39 +198,47 @@ namespace Models.DCAPST
                 // Percentile reduction
                 if (Reduction > 0)
                 {
-                    waterDemands = waterDemands.Select(w => ReductionFunction(w, Biolimit, Reduction)).ToList();
+                    WaterDemands = WaterDemands.Select(w => ReductionFunction(w, Biolimit, Reduction)).ToList();
                 }
                 // Truncation
                 else
                 {
                     // Reduce to the flat biological limit
-                    waterDemands = waterDemands.Select(w => Math.Min(w, Biolimit)).ToList();
+                    WaterDemands = WaterDemands.Select(w => Math.Min(w, Biolimit)).ToList();
                 }
 
-                totalPotentialBiomass = CalculateLimited(waterDemands);
+                CalculatedTotalPotentialBiomass = CalculateLimited(WaterDemands);
             }
 
-            // Actual calculations
-            var totalDemand = waterDemands.Sum();
-            var limitedSupply = CalculateWaterSupplyLimits(soilWater, waterDemands);
-
-            var totalActualBiomass = (soilWater > totalDemand) ? totalPotentialBiomass : CalculateActual(limitedSupply.ToArray());
-
-            CalculateActualBiomass(totalActualBiomass);
-            CalculatePotentiallBiomass(totalPotentialBiomass);
-            WaterDemanded = totalDemand;
-            WaterSupplied = (soilWater < totalDemand) ? limitedSupply.Sum() : waterDemands.Sum();
+            WaterDemanded = WaterDemands.Sum();
         }
 
-        private void CalculateActualBiomass(double totalActualBiomass)
+        /// <summary>
+        /// Calculates the biomass, using the supply that was calculated from the soil and
+        /// the demand that was calculated by dcapst (CalculateDemand).
+        /// </summary>
+        /// <param name="soilWaterAvailable"></param>
+        /// <param name="rootShootRatio"></param>
+        public void CalculateBiomass(double soilWaterAvailable, double rootShootRatio)
         {
-            TotalActualBiomass = GetBiomassConversionFactor(totalActualBiomass);
+            RootShootRatio = rootShootRatio;
+
+            // Initialise the water supply and actual biomass to their potential values.
+            WaterSupplied = WaterDemanded;
+            var calculatedTotalActualBiomass = CalculatedTotalPotentialBiomass;            
+            
+            // If we are limited by the soil water available.
+            if (soilWaterAvailable < WaterDemanded)
+            {
+                var limitedSupply = CalculateWaterSupplyLimits(soilWaterAvailable, WaterDemands);
+                calculatedTotalActualBiomass = CalculateActual(limitedSupply.ToArray());
+                WaterSupplied = limitedSupply.Sum();
+            }
+
+            // Now perform the biomass calculations.
+            TotalActualBiomass = GetBiomassConversionFactor(calculatedTotalActualBiomass);
             ActualBiomass = TotalActualBiomass / (1 + RootShootRatio);
-        }
-
-        private void CalculatePotentiallBiomass(double totalPotentialBiomass)
-        {
-            TotalPotentialBiomass = GetBiomassConversionFactor(totalPotentialBiomass);
+            TotalPotentialBiomass = GetBiomassConversionFactor(CalculatedTotalPotentialBiomass);
             PotentialBiomass = TotalPotentialBiomass / (1 + RootShootRatio);
         }
 
@@ -237,7 +253,6 @@ namespace Models.DCAPST
         private static double RatioFunction(double A, double B)
         {
             var total = A + B;
-
             return A / total;
         }
 
@@ -271,15 +286,12 @@ namespace Models.DCAPST
             var sunAngle = Solar.SunAngle(I.Time);
             Canopy.DoSolarAdjustment(sunAngle);
 
-            if (IsSensible())
-                return true;
-            else
-            {
-                I.Sunlit = new AreaValues();
-                I.Shaded = new AreaValues();
+            if (IsSensible()) return true;
 
-                return false;
-            }
+            I.Sunlit = new AreaValues();
+            I.Shaded = new AreaValues();
+
+            return false;
         }
 
         /// <summary>
@@ -299,16 +311,15 @@ namespace Models.DCAPST
             bool invalidTemp = tempConditions.Any(b => b == true);
             bool invalidRadn = Radiation.Total <= double.Epsilon;
 
-            if (invalidTemp || invalidRadn)
-                return false;
-            else
-                return true;
+            if (invalidTemp || invalidRadn) return false;
+            
+            return true;
         }
 
         /// <summary>
         /// Determine the total potential biomass for the day under ideal conditions
         /// </summary>
-        public double CalculatePotential()
+        private double CalculatePotential()
         {
             foreach (var I in Intervals)
             {
@@ -326,7 +337,7 @@ namespace Models.DCAPST
         /// Calculates the potential biomass in the case where a plant has a biological limit
         /// on transpiration rate
         /// </summary>
-        public double CalculateLimited(IEnumerable<double> demands)
+        private double CalculateLimited(IEnumerable<double> demands)
         {
             var ratios = Intervals.Select(i => RatioFunction(i.Sunlit.Water, i.Shaded.Water));
             double[] sunlitDemand = demands.Zip(ratios, (d, ratio) => d * ratio).ToArray();
@@ -349,7 +360,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Determine the total biomass that can be assimilated under the actual conditions 
         /// </summary>
-        public double CalculateActual(double[] waterSupply)
+        private double CalculateActual(double[] waterSupply)
         {
             double[] sunlitDemand = Intervals.Select(i => i.Sunlit.Water).ToArray();
             double[] shadedDemand = Intervals.Select(i => i.Shaded.Water).ToArray();
@@ -377,7 +388,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Updates the model to a new timestep
         /// </summary>
-        public void DoTimestepUpdate(IntervalValues interval, double sunFraction = 0, double shadeFraction = 0)
+        private void DoTimestepUpdate(IntervalValues interval, double sunFraction = 0, double shadeFraction = 0)
         {
             Canopy.DoTimestepAdjustment(Radiation);
 
@@ -401,7 +412,7 @@ namespace Models.DCAPST
         /// <param name="area">The area to run photosynthesis for</param>
         /// <param name="gbh">The boundary heat conductance</param>
         /// <param name="fraction">Fraction of water allowance</param>
-        public void PerformPhotosynthesis(IAssimilationArea area, double gbh, double fraction)
+        private void PerformPhotosynthesis(IAssimilationArea area, double gbh, double fraction)
         {
             transpiration.BoundaryHeatConductance = gbh;
             transpiration.Fraction = fraction;
@@ -448,31 +459,5 @@ namespace Models.DCAPST
             }
             return demand.Select(d => d > averageDemandRate ? averageDemandRate : d);
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class IntervalValues
-    {
-        /// <summary>
-        /// The time of the interval
-        /// </summary>
-        public double Time { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AirTemperature { get; set; }
-
-        /// <summary>
-        /// Area values for the sunlit canopy
-        /// </summary>
-        public AreaValues Sunlit { get; set; }
-
-        /// <summary>
-        /// Area values for the shaded canopy
-        /// </summary>
-        public AreaValues Shaded { get; set; }
     }
 }
