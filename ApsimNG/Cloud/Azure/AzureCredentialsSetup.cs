@@ -100,7 +100,7 @@ namespace ApsimNG.Cloud.Azure
             btnHelp = new Button("Help");
             btnHelp.Clicked += ProvideHelp;
 
-            HBox buttonContainer = new HBox();
+            Box buttonContainer = new Box(Orientation.Horizontal, 0);
             buttonContainer.PackStart(btnLoad, false, false, 0);
             buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);

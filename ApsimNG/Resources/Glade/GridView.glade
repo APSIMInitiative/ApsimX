@@ -8,7 +8,8 @@
 		<property name="hscrollbar_policy">automatic</property>
 		<property name="vscrollbar_policy">automatic</property>
 		<child>
-			<object class="GtkVPaned" id="vpaned1">
+			<object class="GtkPaned" id="vpaned1">
+				<property name="orientation">vertical</property>
 				<property name="visible">True</property>
 				<property name="can_focus">False</property>
 				<child>
@@ -25,15 +26,18 @@
 					</packing>
 				</child>
 				<child>
-					<object class="GtkHPaned" id="vpaned2">
+					<object class="GtkPaned" id="vpaned2">
+						<property name="orientation">horizontal</property>
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
 						<child>
-							<object class="GtkVPaned" id="vpaned3">
+							<object class="GtkPaned" id="vpaned3">
+								<property name="orientation">vertical</property>
 							</object>
 						</child>
 						<child>
-							<object class="GtkVPaned" id="vpaned4">
+							<object class="GtkPaned" id="vpaned4">
+								<property name="orientation">vertical</property>
 							</object>
 						</child>
 					</object>

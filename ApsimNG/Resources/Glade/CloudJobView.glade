@@ -2,12 +2,14 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkVBox" id="vbox">
-    <property name="visible">True</property>
+  <object class="GtkBox" id="vbox">
+	<property name="orientation">vertical</property>
+	<property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkHBox" id="buttonBar">
-        <property name="visible">True</property>
+      <object class="GtkBox" id="buttonBar">
+		<property name="orientation">horizontal</property>
+		<property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
           <object class="GtkButton" id="refreshButton">

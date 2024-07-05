@@ -2,8 +2,9 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkVBox" id="vbox1">
-    <property name="visible">True</property>
+  <object class="GtkBox" id="vbox1">
+	<property name="orientation">vertical</property>
+	<property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="spacing">10</property>
     <child>
@@ -162,8 +163,9 @@
       </packing>
     </child>
     <child>
-      <object class="GtkHBox" id="grid">
-        <property name="visible">True</property>
+      <object class="GtkBox" id="grid">
+		<property name="orientation">horizontal</property>
+		<property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
           <placeholder/>

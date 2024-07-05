@@ -15,8 +15,8 @@ namespace UserInterface.Views
     {
 
         private Notebook notebook1 = null;
-        private HPaned reportVariablesVPaned = null;
-        private HPaned reportFrequencyVPaned = null;
+        private Paned reportVariablesVPaned = null;
+        private Paned reportFrequencyVPaned = null;
         private Box variablesBox = null;
         private Box frequencyBox = null;
         private Box commonVariablesBox = null;
@@ -28,7 +28,7 @@ namespace UserInterface.Views
         private IListView commonReportVariableList;
         private IListView commonReportFrequencyVariableList;
         private ViewBase dataStoreView1;
-        private VPaned panel;
+        private Paned panel;
         private EditView groupByEdit;
         private Button submitButton;
 
@@ -42,8 +42,8 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
-            reportVariablesVPaned = (HPaned)builder.GetObject("reportVariablesBox");
-            reportFrequencyVPaned = (HPaned)builder.GetObject("reportFrequencyBox");
+            reportVariablesVPaned = (Paned)builder.GetObject("reportVariablesBox");
+            reportFrequencyVPaned = (Paned)builder.GetObject("reportFrequencyBox");
             variablesBox = (Box)builder.GetObject("variablesBox");
             frequencyBox = (Box)builder.GetObject("frequencyBox");
             commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
@@ -52,7 +52,7 @@ namespace UserInterface.Views
             submitButton = (Button)builder.GetObject("submitBtn");
 
 
-            panel = (VPaned)builder.GetObject("vpaned1");
+            panel = (Paned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
 
             groupByEdit = new EditView(owner,

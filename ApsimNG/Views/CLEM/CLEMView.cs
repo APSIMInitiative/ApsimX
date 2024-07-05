@@ -113,7 +113,7 @@ namespace UserInterface.Views
             {
                 EventBox frame = new EventBox();
 
-                HBox hbox = new HBox();
+                Box hbox = new Box(Orientation.Horizontal, 0);
 
                 ViewBase view = (ViewBase)control;
                 hbox.Add(view.MainWidget);

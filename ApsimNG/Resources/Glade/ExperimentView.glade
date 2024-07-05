@@ -47,8 +47,9 @@
       </object>
     </child>
   </object>
-  <object class="GtkVBox" id="vbox">
-    <property name="visible">True</property>
+  <object class="GtkBox" id="vbox">
+	<property name="orientation">vertical</property>
+	<property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="spacing">10</property>
     <child>
@@ -89,8 +90,9 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
-            <property name="visible">True</property>
+          <object class="GtkBox" id="hbox1">
+			<property name="orientation">horizontal</property>
+			<property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkLabel" id="label3">

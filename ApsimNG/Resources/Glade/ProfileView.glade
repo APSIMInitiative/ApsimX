@@ -82,13 +82,15 @@
                             </packing>
                         </child>
                         <child>
-                            <object class="GtkHBox" id="layeredVariables">
-                                <property name="visible">True</property>
+                            <object class="GtkBox" id="layeredVariables">
+								<property name="orientation">horizontal</property>
+								<property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="spacing">10</property>
                                 <child>
-                                    <object class="GtkHBox" id="grid">
-                                        <property name="visible">True</property>
+                                    <object class="GtkBox" id="grid">
+										<property name="orientation">horizontal</property>
+										<property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <child>
                                             <placeholder/>
@@ -135,7 +137,8 @@
                     </packing>
                 </child>
 				<child>
-					<object class="GtkVBox" id="graph">
+					<object class="GtkBox" id="graph">
+						<property name="orientation">vertical</property>
 						<property name="visible">True</property>
 						<property name="can-focus">False</property>
 						<child>

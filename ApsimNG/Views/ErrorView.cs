@@ -79,11 +79,11 @@ namespace UserInterface.Views
                 copyButton
             };
 
-            HBox buttonContainer = new HBox();
+            Box buttonContainer = new Box(Orientation.Horizontal, 0);
             buttonContainer.PackStart(alignCopyButton, false, false, 0);
             buttonContainer.PackEnd(alignCloseButton, false, false, 0);
 
-            VBox primaryContainer = new VBox()
+            Box primaryContainer = new Box(Orientation.Vertical, 0)
             {
                 Name = "primaryContainer",
                 BorderWidth = 20

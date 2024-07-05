@@ -2,13 +2,15 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkHBox" id="top">
-    <property name="visible">True</property>
+  <object class="GtkBox" id="top">
+	<property name="orientation">horizontal</property>
+	<property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="spacing">10</property>
     <child>
-      <object class="GtkHBox" id="grid">
-        <property name="width-request">350</property>
+      <object class="GtkBox" id="grid">
+		<property name="orientation">horizontal</property>
+		<property name="width-request">350</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
@@ -22,8 +24,9 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="vbox">
-        <property name="visible">True</property>
+      <object class="GtkBox" id="vbox">
+		<property name="orientation">vertical</property>
+		<property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
           <!-- n-columns=2 n-rows=5 -->
@@ -160,8 +163,9 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="graph">
-            <property name="visible">True</property>
+          <object class="GtkBox" id="graph">
+			<property name="orientation">vertical</property>
+			<property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
               <placeholder/>

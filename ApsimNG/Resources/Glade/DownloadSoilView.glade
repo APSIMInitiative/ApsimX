@@ -10,12 +10,14 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="GtkVBox" id="vbox">
-            <property name="visible">True</property>
+          <object class="GtkBox" id="vbox">
+			<property name="orientation">vertical</property>
+			<property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkVBox" id="vbox1">
-                <property name="visible">True</property>
+              <object class="GtkBox" id="vbox1">
+				<property name="orientation">vertical</property>
+				<property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">5</property>
                 <child>
@@ -36,8 +38,9 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="hbox1">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="hbox1">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label6">
@@ -95,8 +98,9 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="latlongBox">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="latlongBox">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label1">
@@ -175,8 +179,9 @@ place name below</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="placeBox">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="placeBox">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label7">
@@ -213,8 +218,9 @@ place name below</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="hbox3">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="hbox3">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label4">
@@ -265,8 +271,9 @@ place name below</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="hbox2">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="hbox2">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label5">

@@ -20,24 +20,24 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private VBox rightHandView;
+        private Box rightHandView;
         private Gtk.TreeView treeviewWidget;
         private MarkdownView descriptionView;
-        private HPaned hpaned;
+        private Paned hpaned;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            mainWidget = (VBox)builder.GetObject("vbox1");
+            mainWidget = (Box)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
-            hpaned = (HPaned)builder.GetObject("hpaned1");
+            hpaned = (Paned)builder.GetObject("hpaned1");
             hpaned.AddNotification(OnDividerNotified);
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
-            rightHandView = (VBox)builder.GetObject("vbox2");
+            rightHandView = (Box)builder.GetObject("vbox2");
             //rightHandView.ShadowType = ShadowType.EtchedOut;
 
             mainWidget.Destroyed += OnDestroyed;

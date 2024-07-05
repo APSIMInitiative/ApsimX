@@ -11,12 +11,14 @@
     <property name="visible">True</property>
     <property name="can-focus">True</property>
     <child>
-      <object class="GtkVPaned" id="vpaned1">
-        <property name="visible">True</property>
+      <object class="GtkPaned" id="vpaned1">
+		<property name="orientation">vertical</property>
+		<property name="visible">True</property>
         <property name="can-focus">True</property>
         <child>
-          <object class="GtkHPaned" id="reportVariablesBox">
-            <property name="visible">True</property>
+          <object class="GtkPaned" id="reportVariablesBox">
+			<property name="orientation">horizontal</property>
+			<property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="wide-handle">True</property>
             <child>
@@ -92,8 +94,9 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHPaned" id="reportFrequencyBox">
-            <property name="visible">True</property>
+          <object class="GtkPaned" id="reportFrequencyBox">
+			<property name="orientation">horizontal</property>
+			<property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="position">1</property>
             <property name="wide-handle">True</property>

@@ -160,7 +160,7 @@ namespace UserInterface.Views
         {
             try
             {
-                window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.Window.Cursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
@@ -338,7 +338,7 @@ namespace UserInterface.Views
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.Window.Cursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Watch);
 
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
@@ -370,7 +370,7 @@ namespace UserInterface.Views
 
                             var cancellationToken = new System.Threading.CancellationTokenSource();
                             FileStream file = new FileStream(tempSetupFileName, FileMode.Create, System.IO.FileAccess.Write);
-                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*");
+                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*").Wait();
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 cancellationToken.Cancel();
 

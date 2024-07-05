@@ -12,7 +12,7 @@
 
         private Grid table1;
 
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Label label4 = null;
         private Label label5 = null;
 
@@ -41,7 +41,7 @@
         public SeriesView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
 
             Widget table = (Widget)builder.GetObject("table1");
             vbox1.Remove(table);
@@ -90,7 +90,7 @@
             helpBox = new EventBox();
             helpBox.Add(helpImage);
             helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
-            HBox filterBox = new HBox();
+            Box filterBox = new Box(Orientation.Horizontal, 0);
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 

@@ -46,7 +46,7 @@ namespace UserInterface.Views
         public event BrowseDelegate ConstantsFileSelected;
 
         private Label labelFileName = null;
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Notebook notebook1 = null;
         private TextView textview1 = null;
         private Alignment alignSummary = null;
@@ -55,16 +55,16 @@ namespace UserInterface.Views
         private Alignment alignRainMonthly = null;
         private Alignment alignTemp = null;
         private Alignment alignRadn = null;
-        private VBox vboxRainChart = null;
-        private VBox vboxRainMonthly = null;
-        private VBox vboxTemp = null;
-        private VBox vboxRadn = null;
-        private HBox hboxOptions = null;
+        private Box vboxRainChart = null;
+        private Box vboxRainMonthly = null;
+        private Box vboxTemp = null;
+        private Box vboxRadn = null;
+        private Box hboxOptions = null;
         private SpinButton spinStartYear = null;
         private SpinButton spinNYears = null;
         private Button button1 = null;
-        private VPaned vpaned1 = null;
-        private HBox hbox2 = null;
+        private Paned vpaned1 = null;
+        private Box hbox2 = null;
         private Alignment alignment10 = null;
         private DropDownView worksheetCombo;
         private Button constantsFileSelector;
@@ -76,7 +76,7 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
             labelFileName = (Label)builder.GetObject("labelFileName");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             textview1 = (TextView)builder.GetObject("textview1");
             alignSummary = (Alignment)builder.GetObject("alignSummary");
@@ -85,16 +85,16 @@ namespace UserInterface.Views
             alignRainMonthly = (Alignment)builder.GetObject("alignRainMonthly");
             alignTemp = (Alignment)builder.GetObject("alignTemp");
             alignRadn = (Alignment)builder.GetObject("alignRadn");
-            vboxRainChart = (VBox)builder.GetObject("vboxRainChart");
-            vboxRainMonthly = (VBox)builder.GetObject("vboxRainMonthly");
-            vboxTemp = (VBox)builder.GetObject("vboxTemp");
-            vboxRadn = (VBox)builder.GetObject("vboxRadn");
-            hboxOptions = (HBox)builder.GetObject("hboxOptions");
+            vboxRainChart = (Box)builder.GetObject("vboxRainChart");
+            vboxRainMonthly = (Box)builder.GetObject("vboxRainMonthly");
+            vboxTemp = (Box)builder.GetObject("vboxTemp");
+            vboxRadn = (Box)builder.GetObject("vboxRadn");
+            hboxOptions = (Box)builder.GetObject("hboxOptions");
             spinStartYear = (SpinButton)builder.GetObject("spinStartYear");
             spinNYears = (SpinButton)builder.GetObject("spinNYears");
             button1 = (Button)builder.GetObject("button1");
-            vpaned1 = (VPaned)builder.GetObject("vpaned1");
-            hbox2 = (HBox)builder.GetObject("hbox2");
+            vpaned1 = (Paned)builder.GetObject("vpaned1");
+            hbox2 = (Box)builder.GetObject("hbox2");
             alignment10 = (Alignment)builder.GetObject("alignment10");
             constantsFileSelector = (Button)builder.GetObject("button2");
             constantsFileSelector.Clicked += OnChooseConstantsFile;

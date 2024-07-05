@@ -2,8 +2,9 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkVBox" id="vbox1">
-    <property name="visible">True</property>
+  <object class="GtkBox" id="vbox1">
+	<property name="orientation">vertical</property>
+	<property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
       <object class="GtkToolbar" id="toolStrip">
@@ -19,8 +20,9 @@
       </packing>
     </child>
     <child>
-      <object class="GtkHPaned" id="hpaned1">
-        <property name="visible">True</property>
+      <object class="GtkPaned" id="hpaned1">
+		<property name="orientation">horizontal</property>
+		<property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="position">200</property>
         <child>
@@ -54,8 +56,9 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkVBox" id="vbox2">
-                    <property name="visible">True</property>
+                  <object class="GtkBox" id="vbox2">
+					<property name="orientation">vertical</property>
+					<property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
                       <placeholder/>

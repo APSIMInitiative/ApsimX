@@ -2,15 +2,18 @@
 <interface>
 	<requires lib="gtk+" version="2.24"/>
 	<!-- interface-naming-policy project-wide -->
-	<object class="GtkVPaned" id="main_widget">
+	<object class="GtkPaned" id="main_widget">
+		<property name="orientation">vertical</property>
 		<property name="visible">True</property>
 		<property name="can_focus">False</property>
 		<child>
-			<object class="GtkHPaned" id="top_paned">
+			<object class="GtkPaned" id="top_paned">
+				<property name="orientation">horizontal</property>
 				<property name="visible">True</property>
 				<property name="can_focus">True</property>
 				<child>
-					<object class="GtkHBox" id="chart_box">
+					<object class="GtkBox" id="chart_box">
+						<property name="orientation">horizontal</property>
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
 					</object>
@@ -19,7 +22,8 @@
 					</packing>
 				</child>
 				<child>
-					<object class="GtkHBox" id="instructions_box">
+					<object class="GtkBox" id="instructions_box">
+						<property name="orientation">horizontal</property>
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
 					</object>
@@ -31,17 +35,20 @@
 			
 		</child>
 		<child>
-			<object class="GtkHPaned" id="settings_paned">
+			<object class="GtkPaned" id="settings_paned">
+				<property name="orientation">horizontal</property>
 				<property name="visible">True</property>
 				<property name="can_focus">True</property>
 				<child>
-					<object class="GtkHBox" id="properties_box">
+					<object class="GtkBox" id="properties_box">
+						<property name="orientation">horizontal</property>
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
 					</object>
 				</child>
 				<child>
-					<object class="GtkHBox" id="object_box">
+					<object class="GtkBox" id="object_box">
+						<property name="orientation">horizontal</property>
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
 					</object>

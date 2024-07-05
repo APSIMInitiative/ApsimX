@@ -45,9 +45,9 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
             ScrolledWindow temporalDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             ScrolledWindow spatialDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow2");
-            VPaned mainPanel = (VPaned)builder.GetObject("vpaned1");
+            Paned mainPanel = (Paned)builder.GetObject("vpaned1");
             Alignment constantsTab = (Alignment)builder.GetObject("alignment1");
-            HBox graphContainer = (HBox)builder.GetObject("hbox1");
+            Box graphContainer = (Box)builder.GetObject("hbox1");
             mainWidget = mainPanel;
 
             TemporalDataGrid = new ContainerView(owner);

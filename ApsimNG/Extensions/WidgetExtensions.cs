@@ -39,7 +39,7 @@ namespace UserInterface.Extensions
         /// <param name="image">Image to be displayed on the menu item.</param>
         public static MenuItem CreateImageMenuItem(string text, Image image)
         {
-            HBox container = new HBox();
+            Box container = new Box(Orientation.Horizontal, 0);
             Label label = new Label(text);
             MenuItem imageItem = new MenuItem();
 
