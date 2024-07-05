@@ -546,10 +546,20 @@ namespace UserInterface.Views
                 Guid id = new Guid((sender as EditorView).MainWidget.Name);
                 string text = (sender as EditorView).Text;
 
-                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                //trim each line of the text and remove empty lines
+                string[] lines = text.Split('\n');
+                string trimmed = "";
+                foreach (string line in lines) 
                 {
-                    var args = new PropertyChangedEventArgs(id, text);
-                    originalEntryText[id] = text;
+                    string output = line.Trim();
+                    if (output.Length > 0)
+                        trimmed += line + "\n";
+                }
+
+                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], trimmed, StringComparison.CurrentCulture))
+                {
+                    var args = new PropertyChangedEventArgs(id, trimmed);
+                    originalEntryText[id] = trimmed;
                     PropertyChanged?.Invoke(this, args);
                 }
             }
