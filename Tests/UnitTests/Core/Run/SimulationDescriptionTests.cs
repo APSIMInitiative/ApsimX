@@ -39,7 +39,7 @@
             var newSim = simulationDescription.ToSimulation();
 
             var weather = newSim.Children[0] as MockWeather;
-            Assert.AreEqual(weather.MaxT, 2);
+            Assert.That(weather.MaxT, Is.EqualTo(2));
         }
 
         /// <summary>Ensure a model override work.</summary>
@@ -72,13 +72,13 @@
             simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
 
             var newSim = simulationDescription.ToSimulation();
-            Assert.AreEqual(newSim.Name, "CustomName");
+            Assert.That(newSim.Name, Is.EqualTo("CustomName"));
 
             var weather = newSim.Children[0] as MockWeather;
-            Assert.AreEqual(weather.MaxT, 2);
+            Assert.That(weather.MaxT, Is.EqualTo(2));
 
             // The name of the new model should be the same as the original model.
-            Assert.AreEqual(weather.Name, "Weather");
+            Assert.That(weather.Name, Is.EqualTo("Weather"));
         }
 
         /// <summary>Ensure a model replacement override work.</summary>
@@ -125,13 +125,13 @@
 
             var newSim = simulationDescription.ToSimulation();
             var weather = newSim.Children[0] as MockWeather;
-            Assert.AreEqual(weather.MaxT, 2);
+            Assert.That(weather.MaxT, Is.EqualTo(2));
 
             // Make sure any property overrides happens after a model replacement.
             simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 3, Overrides.Override.MatchTypeEnum.NameAndType));
             newSim = simulationDescription.ToSimulation();
             weather = newSim.Children[0] as MockWeather;
-            Assert.AreEqual(weather.MaxT, 3);
+            Assert.That(weather.MaxT, Is.EqualTo(3));
 
         }
 
@@ -181,7 +181,7 @@
             var weather = newSim.Children[0] as MockWeather;
 
             // Name ('Dummy name') didn't match so property should still be 1.
-            Assert.AreEqual(weather.MaxT, 1);
+            Assert.That(weather.MaxT, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -260,8 +260,8 @@
             var water = newSim.Children[0].Children[4] as Water;
 
             // Make sure layer structures have been standardised.
-            Assert.AreEqual(physical.Thickness, originalWater.Thickness, "soilwat thickness is incorrect");
-            Assert.AreEqual(soilOrganicMatter.Thickness, originalSoilOM.Thickness, "soil OM thickness is incorrect");
+            Assert.That(physical.Thickness, Is.EqualTo(originalWater.Thickness), "soilwat thickness is incorrect");
+            Assert.That(soilOrganicMatter.Thickness, Is.EqualTo(originalSoilOM.Thickness), "soil OM thickness is incorrect");
         }
 
         /// <summary>
@@ -281,8 +281,8 @@
             // The above should throw. The simulations contains a replacements node which
             // replaces wheat's cultivars folder, giving axe an invalid parameter. We sow
             // axe in this sim, so we should get an error when the plant is sown.
-            Assert.NotNull(errors);
-            Assert.AreEqual(1, errors.Count);
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(1));
         }
     }
 }

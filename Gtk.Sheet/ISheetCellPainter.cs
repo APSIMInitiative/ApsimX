@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using APSIM.Interop.Drawing;
 
-namespace UserInterface.Views
+namespace Gtk.Sheet
 {
     /// <summary>
     /// An interface for a class that paints a cell in a sheet widget.

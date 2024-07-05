@@ -40,25 +40,25 @@ namespace UnitTests.Graphing.SeriesExporters
             ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr, "", "");
             var output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
 
-            Assert.NotNull(output);
-            Assert.True(output is ScatterErrorSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is ScatterErrorSeries, Is.True);
             ScatterErrorSeries errorSeries = (ScatterErrorSeries)output;
-            Assert.AreEqual("asdf", errorSeries.Title);
-            Assert.AreEqual(3, errorSeries.ItemsSource.Count());
+            Assert.That(errorSeries.Title, Is.EqualTo("asdf"));
+            Assert.That(errorSeries.ItemsSource.Count(), Is.EqualTo(3));
 
             // Marker style
-            Assert.AreEqual(OxyPlot.MarkerType.Cross, errorSeries.MarkerType);
-            Assert.AreEqual(7, errorSeries.MarkerSize);
+            Assert.That(errorSeries.MarkerType, Is.EqualTo(OxyPlot.MarkerType.Cross));
+            Assert.That(errorSeries.MarkerSize, Is.EqualTo(7));
 
             // Line style TBI
 
             // Bar style
-            Assert.AreEqual(0.25, errorSeries.ErrorBarStrokeThickness);
+            Assert.That(errorSeries.ErrorBarStrokeThickness, Is.EqualTo(0.25));
 
             // TBI: stopper thickness
 
             // Colours
-            Assert.AreEqual(OxyColors.Blue, errorSeries.ErrorBarColor);
+            Assert.That(errorSeries.ErrorBarColor, Is.EqualTo(OxyColors.Blue));
         }
 
         /// <summary>
@@ -212,12 +212,12 @@ namespace UnitTests.Graphing.SeriesExporters
             ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr, "", "");
             var output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
 
-            Assert.NotNull(output);
-            Assert.True(output is ScatterErrorSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is ScatterErrorSeries, Is.True);
             ScatterErrorSeries series = (ScatterErrorSeries)output;
 
             int n = x.Count();
-            Assert.AreEqual(n, series.ItemsSource.Count());
+            Assert.That(series.ItemsSource.Count(), Is.EqualTo(n));
             IEnumerable<ScatterErrorPoint> points = series.ItemsSource.Cast<ScatterErrorPoint>();
             bool havexError = xerr != null && xerr.Any();
             bool haveyError = yerr != null && yerr.Any();
@@ -232,16 +232,16 @@ namespace UnitTests.Graphing.SeriesExporters
                 (!haveyError || enumeratorYErr.MoveNext()))
             {
                 ScatterErrorPoint point = seriesEnumerator.Current;
-                Assert.AreEqual(enumeratorX.Current, point.X);
-                Assert.AreEqual(enumeratorY.Current, point.Y);
+                Assert.That(point.X, Is.EqualTo(enumeratorX.Current));
+                Assert.That(point.Y, Is.EqualTo(enumeratorY.Current));
                 double expectedXerr = havexError ? enumeratorXErr.Current : 0;
                 double expectedYerr = haveyError ? enumeratorYErr.Current : 0;
-                Assert.AreEqual(expectedXerr, point.ErrorX);
-                Assert.AreEqual(expectedYerr, point.ErrorY);
+                Assert.That(point.ErrorX, Is.EqualTo(expectedXerr));
+                Assert.That(point.ErrorY, Is.EqualTo(expectedYerr));
             }
-            Assert.False(enumeratorX.MoveNext(), "X input has more data");
-            Assert.False(enumeratorY.MoveNext(), "Y input has more data");
-            Assert.False(seriesEnumerator.MoveNext(), "Series has more data");
+            Assert.That(enumeratorX.MoveNext(), Is.False, "X input has more data");
+            Assert.That(enumeratorY.MoveNext(), Is.False, "Y input has more data");
+            Assert.That(seriesEnumerator.MoveNext(), Is.False, "Series has more data");
         }
 
         /// <summary>

@@ -71,8 +71,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
                 Inline = new ContainerInline().AppendChild(new LiteralInline(text))
             };
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
-            Assert.AreEqual(text, ((Paragraph)document.LastSection.Elements[0]).GetRawText());
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
+            Assert.That(((Paragraph)document.LastSection.Elements[0]).GetRawText(), Is.EqualTo(text));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace UnitTests.Factorial
         /// </remarks>
         [TestCase("x = 0 to 10 step -1")]
         [TestCase("x = 0 to -10 step 1")]
-        [Timeout(1_000)]
+        [CancelAfter(1_000)]
         public void TestUnboundedStep(string spec)
         {
             Factor factor = new Factor();
