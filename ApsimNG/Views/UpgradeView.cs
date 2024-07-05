@@ -370,7 +370,7 @@ namespace UserInterface.Views
 
                             var cancellationToken = new System.Threading.CancellationTokenSource();
                             FileStream file = new FileStream(tempSetupFileName, FileMode.Create, System.IO.FileAccess.Write);
-                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*").Wait();
+                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*").Start();
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 cancellationToken.Cancel();
 
