@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return "Rewind phase has no end";//phenology?.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return "Rewind phase has no end";
             }
         }
 
