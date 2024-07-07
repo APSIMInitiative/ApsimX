@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Reporting;
 using Models.Core;
@@ -216,6 +217,39 @@ namespace Models.CLEM.Resources
         public MatingStyle LastMatingStyle { get; set; } = MatingStyle.NotMated;
 
         /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        [FilterByProperty]
+        public ConceptionStatus LastConceptionStatus { get; set; } = ConceptionStatus.NotAvailable;
+
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override string BreedingStatus
+        {
+            get
+            {
+                if (IsPregnant)
+                    return "Pregnant";
+                else if (IsLactating)
+                    return "Lactating";
+                else
+                {
+                    switch (LastConceptionStatus)
+                    {
+                        case ConceptionStatus.Failed:
+                        case ConceptionStatus.Unsuccessful:
+                        case ConceptionStatus.NotMated:
+                        case ConceptionStatus.NotReady:
+                        case ConceptionStatus.NotAvailable:
+                            return LastConceptionStatus.ToString();
+                        default:
+                            return "NotReady";
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates
         /// </summary>
         /// <returns></returns>
@@ -285,7 +319,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return MathUtilities.IsGreaterThanOrEqual(DaysSince(RuminantTimeSpanTypes.Conceived, 0.0), Parameters.General.GestationLength.InDays);
+                    return MathUtilities.IsGreaterThan(DaysSince(RuminantTimeSpanTypes.Conceived, 0.0), Parameters.General.GestationLength.InDays);
                 return false;
             }
         }
@@ -452,9 +486,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Give birth to all fetuses
         /// </summary>
-        /// <param name="herd">A link to the CLEM herd to place newborn</param>
+        /// <param name="herd">A link to the ruminant herd to place newborn</param>
         /// <param name="events">A link to the CLEM event timer model</param>
-        /// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
+        /// <param name="conceptionArgs">A link to standard conception args to use for reporting</param>
         /// <param name="activity">A link to the activity model calling this method for reporting</param>
         public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
         {

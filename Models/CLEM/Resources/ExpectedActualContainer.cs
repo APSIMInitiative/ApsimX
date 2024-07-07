@@ -73,9 +73,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Clear values
         /// </summary>
-        public void Reset()
+        /// <param name="isSuckling">Determine if suckling and therefore not to reset Expected value provided by mother</param>
+        public void Reset(bool isSuckling = false)
         {
-            Expected = 0;
+            if(!isSuckling)
+                Expected = 0;
             Received = 0;
             Unneeded = 0;
         }

@@ -57,6 +57,7 @@ namespace Models.CLEM.Reporting
         {
             Status = status;
             Female = female;
+            Female.LastConceptionStatus = status;
             UpdateConceptionDate(date, offspring?.AgeInDays, calculateFromAge);
         }
 

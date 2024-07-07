@@ -203,6 +203,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// A state of breeding readiness for reporting
+        /// </summary>
+        public abstract string BreedingStatus { get; }
+
+        /// <summary>
         /// Has the individual been sterilised (webbed, spayed or castrated)
         /// </summary>
         [FilterByProperty]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.CLEM.Reporting;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -90,6 +91,19 @@ namespace Models.CLEM.Resources
         /// Is this individual a valid breeder and in condition
         /// </summary>
         public override bool IsAbleToBreed {  get { return !IsSterilised && ((Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)); } }
+
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override string BreedingStatus
+        {
+            get
+            {
+                if (IsAbleToBreed)
+                    return "Ready";
+                else
+                    return "NotReady";
+            }
+        }
 
         /// <summary>
         /// Constructor
