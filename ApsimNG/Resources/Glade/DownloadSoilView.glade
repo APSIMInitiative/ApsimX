@@ -312,8 +312,9 @@ place name below</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHButtonBox" id="hbuttonbox1">
-                    <property name="visible">True</property>
+                  <object class="GtkButtonBox" id="hbuttonbox1">
+					<property name="orientation">horizontal</property>
+					<property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="layout-style">start</property>
                     <child>
