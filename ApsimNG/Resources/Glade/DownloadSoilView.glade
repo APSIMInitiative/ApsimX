@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk+" version="3.22"/>
   <object class="GtkScrolledWindow" id="scrolledwindow1">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -11,14 +11,14 @@
         <property name="can-focus">False</property>
         <child>
           <object class="GtkBox" id="vbox">
-			<property name="orientation">vertical</property>
-			<property name="visible">True</property>
+            <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox" id="vbox1">
-				<property name="orientation">vertical</property>
-				<property name="visible">True</property>
+                <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkLabel" id="label2">
@@ -39,8 +39,7 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="hbox1">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label6">
@@ -64,7 +63,6 @@
                         <property name="receives-default">True</property>
                         <property name="has-tooltip">True</property>
                         <property name="relief">none</property>
-                        <property name="xalign">0</property>
                         <property name="uri">https://www.apsim.info/apsim-model/apsoil/</property>
                       </object>
                       <packing>
@@ -81,7 +79,6 @@
                         <property name="receives-default">True</property>
                         <property name="has-tooltip">True</property>
                         <property name="relief">none</property>
-                        <property name="xalign">0</property>
                         <property name="uri">https://www.isric.org/explore/soilgrids</property>
                       </object>
                       <packing>
@@ -99,8 +96,7 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="latlongBox">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label1">
@@ -180,8 +176,7 @@ place name below</property>
                 </child>
                 <child>
                   <object class="GtkBox" id="placeBox">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label7">
@@ -219,8 +214,7 @@ place name below</property>
                 </child>
                 <child>
                   <object class="GtkBox" id="hbox3">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label4">
@@ -272,8 +266,7 @@ place name below</property>
                 </child>
                 <child>
                   <object class="GtkBox" id="hbox2">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label5">
@@ -313,8 +306,7 @@ place name below</property>
                 </child>
                 <child>
                   <object class="GtkButtonBox" id="hbuttonbox1">
-					<property name="orientation">horizontal</property>
-					<property name="visible">True</property>
+                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="layout-style">start</property>
                     <child>
@@ -323,7 +315,6 @@ place name below</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -338,7 +329,6 @@ place name below</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
