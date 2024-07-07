@@ -32,28 +32,28 @@ namespace Models.CLEM.Interfaces
         double DryMatterDigestibility { get; set; }
 
         /// <summary>
-        /// Fat content (%)
+        /// Percent fat content (ether extract) (%)
         /// </summary>
-        [Description("Fat content (%)")]
-        double FatContent { get; set; }
+        [Description("Fat percent (%)")]
+        double FatPercent { get; set; }
 
         /// <summary>
-        /// Nitrogen content (%)
+        /// Percent nitrogen content (%)
         /// </summary>
-        [Description("Nitrogen content (%)")]
-        double NitrogenContent { get; set; }
+        [Description("Nitrogen percent (%)")]
+        double NitrogenPercent { get; set; }
 
         /// <summary>
-        /// Crude protein content (%)
+        /// Percent crude protein content (%)
         /// </summary>
-        [Description("Crude protein content (%)")]
-        double CrudeProteinContent { get; set; }
+        [Description("Crude protein percent (%)")]
+        double CrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Rumen Degradable Protein (g/g DM) (1-Rumen Undegradable Protein)
+        /// Percent rumen Degradable protein as percent (g/g CP * 100) (100-Rumen Undegradable Protein)
         /// </summary>
-        [Description("Degradable protein content (g/g DM)")]
-        public double RumenDegradableProteinContent { get; set; }
+        [Description("Degradable protein percent (%, g/g CP * 100)")]
+        public double RumenDegradableProteinPercent { get; set; }
 
         /// <summary>
         /// Acid detergent insoluable protein

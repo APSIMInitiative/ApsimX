@@ -52,12 +52,12 @@ namespace Models.CLEM.Resources
         {
             Details.GrossEnergyContent = ((Details.GrossEnergyContent * Details.Amount) + (packet.GrossEnergyContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.FatContent = ((Details.FatContent * Details.Amount) + (packet.FatContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.NitrogenContent = ((Details.NitrogenContent * Details.Amount) + (packet.NitrogenContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.CrudeProteinContent = ((Details.CrudeProteinContent * Details.Amount) + (packet.CrudeProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.FatPercent = ((Details.FatPercent * Details.Amount) + (packet.FatPercent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.NitrogenPercent = ((Details.NitrogenPercent * Details.Amount) + (packet.NitrogenPercent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.CrudeProteinPercent = ((Details.CrudeProteinPercent * Details.Amount) + (packet.CrudeProteinPercent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.AcidDetergentInsoluableProtein = ((Details.AcidDetergentInsoluableProtein * Details.Amount) + (packet.AcidDetergentInsoluableProtein * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.RumenDegradableProteinPercent = ((Details.RumenDegradableProteinPercent * Details.Amount) + (packet.RumenDegradableProteinPercent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.Amount += packet.Amount;
 
             CrudeProtein += packet.CrudeProtein;
@@ -78,8 +78,8 @@ namespace Models.CLEM.Resources
                 return;
             }
             Details.Amount -= amount;
-            CrudeProtein -= (Details.CrudeProteinContent/100.0) * amount;
-            DegradableCrudeProtein = CrudeProtein * Details.RumenDegradableProteinContent; // / 100.0) * amount;
+            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * amount;
+            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace Models.CLEM.Resources
                 {
                     FeedType.HaySilage or 
                     FeedType.PastureTemperate or
-                    FeedType.PastureTropical => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
-                    FeedType.Concentrate => 0.9 * (1 - (MathUtilities.IsGreaterThan(Details.UndegradableCrudeProteinContent, 0)?Details.AcidDetergentInsoluableProtein / Details.UndegradableCrudeProteinContent:0)),
+                    FeedType.PastureTropical => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinPercent - 0.178, 0.85)),
+                    FeedType.Concentrate => 0.9 * (1 - (MathUtilities.IsGreaterThan(Details.UndegradableCrudeProteinPercent, 0)?Details.AcidDetergentInsoluableProtein / (Details.UndegradableCrudeProteinPercent / 100.0):0)),
                     _ => 0,
                 };
             }
@@ -113,7 +113,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Metabolisable energy.
         /// </summary>
-        public double ME { get { return Details.MEContent * Details.Amount; } }
+        public double ME 
+        { 
+            get 
+            { 
+                if (Details.Amount == 0)
+                    return 0;
+                return Details.MEContent * Details.Amount; 
+            } 
+        }
 
         /// <summary>
         /// Fermentable metabolisable energy.

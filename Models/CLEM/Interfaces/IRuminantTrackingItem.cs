@@ -17,13 +17,9 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         double Change { get; }
         /// <summary>
-        /// Amount remobilised in last step
+        /// Amount extra offered to other sources
         /// </summary>
-        double ChangeRemobilised { get; set; }
-        /// <summary>
-        /// Amount unused last step
-        /// </summary>
-        double ChangeWasted { get; set; }
+        double Extra { get; set; }
         /// <summary>
         /// Previous amount
         /// </summary>

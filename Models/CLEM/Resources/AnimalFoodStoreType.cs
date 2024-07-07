@@ -35,11 +35,10 @@ namespace Models.CLEM.Resources
         public FeedType TypeOfFeed { get; set; }
 
         /// <inheritdoc/>
-        [System.ComponentModel.DefaultValueAttribute(18.4)]
         [Required, GreaterThanValue(0)]
         [Description("Gross energy content")]
         [Units("MJ/kg DM")]
-        public double GrossEnergyContent { get; set; }
+        public double GrossEnergyContent { get; set; } = 18.4;
 
         /// <inheritdoc/>
         [Required, GreaterThanValue(0)]
@@ -48,11 +47,10 @@ namespace Models.CLEM.Resources
         public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
-        [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Fat content")]
+        [Description("Fat percent (ether extract)")]
         [Required, Percentage, GreaterThanEqualValue(0)]
         [Units("%")]
-        public double FatContent { get; set; }
+        public double FatPercent { get; set; }
 
         /// <inheritdoc/>
         [Description("Dry Matter Digestibility")]
@@ -64,40 +62,40 @@ namespace Models.CLEM.Resources
         /// Style of providing the crude protein content
         /// </summary>
         [Description("Style of providing crude protein")]
-        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Required]
         public CrudeProteinContentStyle CPContentStyle { get; set; } = CrudeProteinContentStyle.SpecifyCrudeProteinContent;
 
         /// <inheritdoc/>
-        [Description("Nitrogen content"),]
+        [Description("Nitrogen percent"),]
         [Core.Display(VisibleCallback = "NitrogenPropertiesVisible")]
         [Required, Percentage, GreaterThanEqualValue(0)]
         [Units("%")]
-        public double UserNitrogenContent { get; set; }
+        public double UserNitrogenPercent { get; set; }
 
         /// <summary>
         /// Crude protein content (%)
         /// </summary>
-        [Description("Crude protein content")]
+        [Description("Crude protein percent")]
         [Core.Display(VisibleCallback = "CrudeProteinPropertiesVisible")]
         [Required, Percentage, GreaterThanEqualValue(0)]
         [Units("%")]
-        public double UserCrudeProteinContent { get; set; }
+        public double UserCrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Crude protein content
+        /// Crude protein content (%)
         /// </summary>
-        public double CrudeProteinContent { get; set; }
+        public double CrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Nitrogen content
+        /// Nitrogen content (%)
         /// </summary>
-        public double NitrogenContent { get; set; }
+        public double NitrogenPercent { get; set; }
 
         /// <inheritdoc/>
-        [Description("Degradable protein content")]
-        [Required, GreaterThanEqualValue(0), Proportion]
-        [Units("g/g CP")]
-        public double RumenDegradableProteinContent { get; set; } = 0.7;
+        [Description("Rumen degradable protein percent")]
+        [Required, GreaterThanEqualValue(0), Percentage]
+        [Units("%")]
+        public double RumenDegradableProteinPercent { get; set; } = 70.0;
 
         /// <inheritdoc/>
         [Description("Acid detergent insoluable protein")]
@@ -176,13 +174,13 @@ namespace Models.CLEM.Resources
         {
             if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
             {
-                NitrogenContent = UserNitrogenContent;
-                CrudeProteinContent = UserNitrogenContent * FoodResourcePacket.FeedProteinToNitrogenFactor;
+                NitrogenPercent = UserNitrogenPercent;
+                CrudeProteinPercent = UserNitrogenPercent * FoodResourcePacket.FeedProteinToNitrogenFactor;
             }
             else
             {
-                NitrogenContent = UserCrudeProteinContent / FoodResourcePacket.FeedProteinToNitrogenFactor;
-                CrudeProteinContent = UserCrudeProteinContent;
+                NitrogenPercent = UserCrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
+                CrudeProteinPercent = UserCrudeProteinPercent;
             }
 
             // initialise the current state and details of this store
@@ -224,9 +222,9 @@ namespace Models.CLEM.Resources
             if (addAmount > 0)
             {
                 // update quality details to allow mixed feed inputs
-                CurrentStoreDetails.NitrogenContent = ((CurrentStoreDetails.NitrogenContent * Amount) + (foodPacket.NitrogenContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.NitrogenPercent = ((CurrentStoreDetails.NitrogenPercent * Amount) + (foodPacket.NitrogenPercent * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * Amount) + (foodPacket.DryMatterDigestibility * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.FatContent = ((CurrentStoreDetails.FatContent * Amount) + (foodPacket.FatContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.FatPercent = ((CurrentStoreDetails.FatPercent * Amount) + (foodPacket.FatPercent * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.MetabolisableEnergyContent = ((CurrentStoreDetails.MetabolisableEnergyContent * Amount) + (foodPacket.MetabolisableEnergyContent * addAmount)) / (Amount + addAmount);
 
                 this.amount += addAmount;
@@ -287,7 +285,7 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new StringWriter();
             htmlWriter.Write("<div class=\"activityentry\">");
-            htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent:0.###}%</span>");
+            htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenPercent:0.###}%</span>");
             if (DryMatterDigestibility > 0)
                 htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility:0.###}%</span>");
             else

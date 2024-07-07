@@ -53,15 +53,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Interest rate (%) charged on negative balance
         /// </summary>
-        [Description("Interest rate (%) charged on negative balance")]
+        [Description("Interest rate charged on negative balance")]
         [Required, Percentage]
+        [Units("%")]
         public double InterestRateCharged { get; set; }
 
         /// <summary>
         /// Interest rate (%) paid on positive balance
         /// </summary>
-        [Description("Interest rate (%) paid on positive balance")]
+        [Description("Interest rate paid on positive balance")]
         [Required, Percentage]
+        [Units("%")]
         public double InterestRatePaid { get; set; }
 
         /// <summary>

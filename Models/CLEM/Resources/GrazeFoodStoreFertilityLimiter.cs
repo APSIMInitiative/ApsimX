@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
         public double GetProportionNitrogenLimited(double newGrowthKgHa)
         {
             // calculate proportion of new growth above the cutoff to adjust N reduction accordingly
-            double nRequired = newGrowthKgHa * parentPasture.GreenNitrogen / 100;
+            double nRequired = newGrowthKgHa * parentPasture.GreenNitrogenPercent / 100;
             double reduction;
 
             if (timingPresent && this.TimingOK)
@@ -159,8 +159,8 @@ namespace Models.CLEM.Resources
                 if (AnnualNitrogenSupply > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (parentPasture.GreenNitrogen > 0)
-                        htmlWriter.Write($"This equates to <span class=\"setvalue\">{AnnualNitrogenSupply / (parentPasture.GreenNitrogen / 100)}</span> kg per hectare of pasture production given the new growth nitrogen content of <span class=\"setvalue\">{parentPasture.GreenNitrogen}%</span>.");
+                    if (parentPasture.GreenNitrogenPercent > 0)
+                        htmlWriter.Write($"This equates to <span class=\"setvalue\">{AnnualNitrogenSupply / (parentPasture.GreenNitrogenPercent / 100)}</span> kg per hectare of pasture production given the new growth nitrogen content of <span class=\"setvalue\">{parentPasture.GreenNitrogenPercent}%</span>.");
                     else
                         htmlWriter.Write($"This equates to <span class=\"errorlink\">Undefined</span> kg per hectare of pasture production given the green growth nitrogen content of <span class=\"errorlink\">Not set</span>.");
 

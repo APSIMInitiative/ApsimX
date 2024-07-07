@@ -72,12 +72,12 @@ namespace Models.CLEM.Activities
         public double BurningEfficiency { get; set; }
 
         /// <summary>
-        /// Carbon content
+        /// Percent carbon of fuel (g/g DM * 100)
         /// </summary>
         [Description("Carbon content of fuel")]
-        [System.ComponentModel.DefaultValue(0.46)]
-        [Required, GreaterThanValue(0)]
-        public double CarbonContent { get; set; }
+        [Required, GreaterThanValue(0), Percentage]
+        [Units("%")]
+        public double CarbonPercent { get; set; } = 46.0;
 
         /// <summary>
         /// Constructor
@@ -180,7 +180,7 @@ namespace Models.CLEM.Activities
                 );
 
                 // add emissions
-                double burnkg = pastureToDo * BurningEfficiency * CarbonContent; // burnkg * burning efficiency * carbon content
+                double burnkg = pastureToDo * BurningEfficiency * (CarbonPercent / 100.0); // burnkg * burning efficiency * carbon content
                                                                                  //TODO change emissions for green material
                 methaneStore?.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
 
@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Burn {DisplaySummaryResourceTypeSnippet(PaddockName, "Pasture Not Set", nullGeneralYards: false)}");
             htmlWriter.Write($" if less than {DisplaySummaryValueSnippet(MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green.");
             htmlWriter.Write($" with a burning efficiency of {DisplaySummaryValueSnippet(BurningEfficiency, warnZero: true)} and ");
-            htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonContent, warnZero: true)}");
+            htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonPercent, warnZero: true)}%");
             htmlWriter.Write("</div>");
 
             htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");

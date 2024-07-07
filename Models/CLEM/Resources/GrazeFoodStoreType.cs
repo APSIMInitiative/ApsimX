@@ -42,11 +42,10 @@ namespace Models.CLEM.Resources
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
 
         /// <inheritdoc/>
-        [System.ComponentModel.DefaultValueAttribute(18.4)]
         [Description("Gross energy content")]
         [Units("MJ/kg digestible DM")]
         [Required]
-        public double GrossEnergyContent { get; set; }
+        public double GrossEnergyContent { get; set; } = 18.4;
 
         /// <inheritdoc/>
         [Required, GreaterThanEqualValue(0)]
@@ -55,8 +54,8 @@ namespace Models.CLEM.Resources
         public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
-        [Required, Proportion, GreaterThanEqualValue(0)]
-        public double RumenDegradableProteinContent { get; set; }
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double RumenDegradableProteinPercent { get; set; }
 
         /// <inheritdoc/>
         [Required, Proportion, GreaterThanEqualValue(0)]
@@ -68,13 +67,13 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double NitrogenContent { get; set; }
+        public double NitrogenPercent { get; set; }
 
         /// <inheritdoc/>
-        public double CrudeProteinContent { get; set; }
+        public double CrudeProteinPercent { get; set; }
 
         /// <inheritdoc/>
-        public double FatContent { get; set; } = 0;
+        public double FatPercent { get; set; } = 0;
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -109,24 +108,27 @@ namespace Models.CLEM.Resources
         /// Nitrogen of new growth (%)
         /// </summary>
         [Category("Farm", "Quality")]
-        [Description("Nitrogen content of new growth (%)")]
+        [Description("Percent nitrogen of new growth")]
+        [Units("%")]
         [Required, Percentage]
-        public double GreenNitrogen { get; set; }
+        public double GreenNitrogenPercent { get; set; }
 
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
         [Category("Farm", "Decay")]
-        [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
-        [Required, GreaterThanEqualValue(0)]
+        [Description("Loss of Nitrogen percent from pools (note: amount as %N not proportion)")]
+        [Required, GreaterThanEqualValue(0), Percentage]
+        [Units("%")]
         public double DecayNitrogen { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
         [Category("Farm", "Decay")]
-        [Description("Minimum nitrogen %")]
+        [Description("Minimum nitrogen")]
         [Required, Percentage]
+        [Units("%")]
         public double MinimumNitrogen { get; set; }
 
         /// <summary>
@@ -138,11 +140,12 @@ namespace Models.CLEM.Resources
         public double DecayDMD { get; set; }
 
         /// <summary>
-        /// Minimum Dry Matter Digestibility
+        /// Minimum Dry Matter Digestibility (%)
         /// </summary>
         [Category("Farm", "Decay")]
         [Description("Minimum Dry Matter Digestibility")]
         [Required, Percentage]
+        [Units("%")]
         public double MinimumDMD { get; set; }
 
         /// <summary>
@@ -181,7 +184,8 @@ namespace Models.CLEM.Resources
         /// Initial pasture biomass
         /// </summary>
         [Category("Farm", "Initial biomass")]
-        [Description("Initial biomass (kg per ha)")]
+        [Description("Initial biomass (kg/ha)")]
+        [Units("kg/ha")]
         public double StartingAmount { get; set; }
 
         /// <summary>
@@ -348,15 +352,15 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Calculated total pasture (all pools) Nitrogen (%)
+        /// Calculated total pasture (all pools) percent nitrogen (%)
         /// </summary>
-        public double SwardNitrogenContent
+        public double SwardNitrogenPercent
         {
             get
             {
                 double n = 0;
                 if (this.Amount > 0)
-                    n = Pools.Sum(a => a.Amount * a.NitrogenContent) / this.Amount;
+                    n = Pools.Sum(a => a.Amount * a.NitrogenPercent) / this.Amount;
 
                 return Math.Max(MinimumNitrogen, n);
             }
@@ -409,14 +413,14 @@ namespace Models.CLEM.Resources
                     break;
                 case "Nitrogen":
                     if (age < 0)
-                        return SwardNitrogenContent;
+                        return SwardNitrogenPercent;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
                         if(pools.Count() == 1)
-                            valueToUse = pools.FirstOrDefault().NitrogenContent;
+                            valueToUse = pools.FirstOrDefault().NitrogenPercent;
                         else
-                            valueToUse = pools.Sum(a => a.NitrogenContent * a.Amount) / pools.Sum(a => a.Amount);
+                            valueToUse = pools.Sum(a => a.NitrogenPercent * a.Amount) / pools.Sum(a => a.Amount);
                     }
                     return valueToUse;
                 case "DMD":
@@ -545,7 +549,7 @@ namespace Models.CLEM.Resources
                 foreach (var pool in Pools)
                 {
                     // N is a loss of N% (x = x -loss)
-                    pool.NitrogenContent = Math.Max(pool.NitrogenContent - DecayNitrogen, MinimumNitrogen);
+                    pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - DecayNitrogen, MinimumNitrogen);
                     // DMD is a proportional loss (x = x*(1-proploss))
                     pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - DecayDMD), MinimumDMD);
 
@@ -621,7 +625,7 @@ namespace Models.CLEM.Resources
             int monthCount = 0;
             int includedMonthCount = 0;
             double propBiomass = 1.0;
-            double currentN = GreenNitrogen;
+            double currentN = GreenNitrogenPercent;
             // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
             double currentDMD = currentN * NToDMDCoefficient + NToDMDIntercept;
             currentDMD = Math.Max(MinimumDMD, currentDMD);
@@ -660,7 +664,7 @@ namespace Models.CLEM.Resources
                     newPools.Add(new GrazeFoodStorePool()
                     {
                         Age = monthCount,
-                        NitrogenContent = currentN,
+                        NitrogenPercent = currentN,
                         DryMatterDigestibility = currentDMD,
                         StartingAmount = propBiomass
                     });
@@ -713,8 +717,8 @@ namespace Models.CLEM.Resources
             {
                 MetabolisableEnergyContent = MetabolisableEnergyContent,
                 CPDegradability = CPDegradability,
-                FatContent = FatContent,
-                NitrogenContent = 0,
+                FatPercent = FatPercent,
+                NitrogenPercent = 0,
                 DryMatterDigestibility = 0
             };
 
@@ -725,19 +729,19 @@ namespace Models.CLEM.Resources
                     GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
                     if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
-                        pool.NitrogenContent = Math.Max(MinimumNitrogen, incomingPool.NitrogenContent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
+                        pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
                     break;
                 case FoodResourcePacket _:
                     // coming from the CropActivityManage
                     FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                     pool.Set(packet.Amount);
-                    pool.NitrogenContent = packet.NitrogenContent;
+                    pool.NitrogenPercent = packet.NitrogenPercent;
                     pool.DryMatterDigestibility = packet.DryMatterDigestibility;
                     break;
                 case double _:
                     // add amount at current rates
                     pool.Set((double)resourceAmount);
-                    pool.NitrogenContent = this.SwardNitrogenContent;
+                    pool.NitrogenPercent = this.SwardNitrogenPercent;
                     pool.DryMatterDigestibility = SwardDryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
@@ -799,7 +803,7 @@ namespace Models.CLEM.Resources
                     double amountToRemove = Math.Min(request.Required * pool.Limit, Math.Min(pool.Pool.Amount, amountRequired));
                     // update DMD and N based on pool utilised
                     thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
-                    thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
+                    thisBreed.N += pool.Pool.NitrogenPercent * amountToRemove;
 
                     amountRequired -= amountToRemove;
 
@@ -830,7 +834,7 @@ namespace Models.CLEM.Resources
 
                         // update DMD and N based on pool utilised
                         thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
-                        thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
+                        thisBreed.N += pool.Pool.NitrogenPercent * amountToRemove;
                         amountTakenDuringSecondTake += amountToRemove;
                         // remove resource from pool
                         pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
@@ -867,7 +871,7 @@ namespace Models.CLEM.Resources
                     double amountToRemove = pool.Amount * useproportion;
                     amountCollected += amountToRemove;
                     dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
-                    nitrogen += pool.NitrogenContent * amountToRemove;
+                    nitrogen += pool.NitrogenPercent * amountToRemove;
                     pool.Remove(amountToRemove, this, "Cut and Carry");
                 }
                 request.Provided = amountCollected;
@@ -925,10 +929,10 @@ namespace Models.CLEM.Resources
             using StringWriter htmlWriter = new StringWriter();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
             htmlWriter.Write("This pasture has an initial green nitrogen content of ");
-            if (this.GreenNitrogen == 0)
+            if (this.GreenNitrogenPercent == 0)
                 htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
             else
-                htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogen:0.###}%</span>");
+                htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogenPercent:0.###}%</span>");
 
             if (DecayNitrogen > 0)
                 htmlWriter.Write($" and will decline by <span class=\"setvalue\">{DecayNitrogen:0.###}%</span> per month to a minimum nitrogen of <span class=\"setvalue\">{MinimumNitrogen:0.###}%</span>");

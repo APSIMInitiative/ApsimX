@@ -35,13 +35,13 @@ namespace Models.CLEM.Resources
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        public double FatContent { get; set; }
+        public double FatPercent { get; set; }
 
         /// <inheritdoc/>
-        public double NitrogenContent { get; set; }
+        public double NitrogenPercent { get; set; }
 
         /// <inheritdoc/>
-        public double RumenDegradableProteinContent { get; set; }
+        public double RumenDegradableProteinPercent { get; set; }
 
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
                     FeedType.HaySilage or
                     FeedType.PastureTemperate or
                     FeedType.PastureTropical => ((0.172 * DryMatterDigestibility) - 1.707),
-                    FeedType.Concentrate => ((0.134 * DryMatterDigestibility) + (0.235 * FatContent) + 1.23),
+                    FeedType.Concentrate => ((0.134 * DryMatterDigestibility) + (0.235 * FatPercent) + 1.23),
                     _ => throw new NotImplementedException($"Cannot provide MEContent for the TypeOfFeed: {TypeOfFeed}."),
                 };
             }
@@ -98,29 +98,29 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Calculate Crude Protein from nitrogen content and amount
+        /// Calculate Crude Protein from nitrogen content and amount (g/g DM)
         /// </summary>
         public double CrudeProtein
         {
             get
             {
-                return (CrudeProteinContent/100.0) * Amount;
+                return (CrudeProteinPercent / 100.0) * Amount;
             }
         }
 
         /// <summary>
         /// Calculate Crude Protein percentage from nitrogen content (%)
         /// </summary>
-        public double CrudeProteinContent { get; set; }
+        public double CrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Calculate Undegradable Crude Protein content
+        /// Calculate Undegradable Crude Protein percent (CP% - RDP%)
         /// </summary>
-        public double UndegradableCrudeProteinContent
+        public double UndegradableCrudeProteinPercent
         {
             get
             {
-                return CrudeProteinContent - RumenDegradableProteinContent;
+                return 100.0 - RumenDegradableProteinPercent;
             }
         }
 
@@ -132,7 +132,7 @@ namespace Models.CLEM.Resources
             get
             {
                 // Return from non-concetrate is taken from APSIM
-                // It assumes we don't know RDPCOntent for non-concentrates and will estimate based on DMD
+                // It assumes we don't know RDPContent for non-concentrates and will estimate based on DMD
                 // New approach assumes RDPContent is 0.7 (used in concentrate and may be user altered)
 
                 return TypeOfFeed switch
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
                     FeedType.HaySilage or
                     FeedType.PastureTemperate or
                     FeedType.PastureTropical or //=> CrudeProtein * Math.Min(0.84 * (DryMatterDigestibility/100.0) + 0.33, 1),
-                    FeedType.Concentrate => RumenDegradableProteinContent * CrudeProtein,
+                    FeedType.Concentrate => (RumenDegradableProteinPercent / 100.0) * CrudeProtein,
                     FeedType.Milk => 0,
                     _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),
                 };
@@ -153,12 +153,12 @@ namespace Models.CLEM.Resources
         public void Reset()
         {
             DryMatterDigestibility = 0;
-            FatContent = 0;
-            NitrogenContent = 0;
-            CrudeProteinContent = 0;
+            FatPercent = 0;
+            NitrogenPercent = 0;
+            CrudeProteinPercent = 0;
             Amount = 0;
             MetabolisableEnergyContent = 0;
-            RumenDegradableProteinContent = 0;
+            RumenDegradableProteinPercent = 0;
             AcidDetergentInsoluableProtein = 0;
             GrossEnergyContent = 0;
         }
@@ -192,10 +192,10 @@ namespace Models.CLEM.Resources
             TypeOfFeed = packet.TypeOfFeed;
             MetabolisableEnergyContent = packet.MetabolisableEnergyContent;
             DryMatterDigestibility = packet.DryMatterDigestibility;
-            FatContent = packet.FatContent;
-            NitrogenContent = packet.NitrogenContent;
-            CrudeProteinContent = packet.CrudeProteinContent;
-            RumenDegradableProteinContent = packet.RumenDegradableProteinContent;
+            FatPercent = packet.FatPercent;
+            NitrogenPercent = packet.NitrogenPercent;
+            CrudeProteinPercent = packet.CrudeProteinPercent;
+            RumenDegradableProteinPercent = packet.RumenDegradableProteinPercent;
             AcidDetergentInsoluableProtein = packet.AcidDetergentInsoluableProtein;
             GrossEnergyContent = packet.GrossEnergyContent;
         }

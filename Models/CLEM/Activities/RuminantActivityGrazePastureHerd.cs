@@ -332,7 +332,7 @@ namespace Models.CLEM.Activities
                 foodDetails = new FoodResourcePacket()
                 {
                     DryMatterDigestibility = DMD, 
-                    NitrogenContent = N
+                    NitrogenPercent = N
                 };
 
                 foreach (Ruminant ind in herd)

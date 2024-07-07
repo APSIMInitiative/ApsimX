@@ -550,7 +550,7 @@ namespace Models.CLEM.Activities
                         {
                             if (LinkedResourceItem is GrazeFoodStoreType)
                                 // grazed pasture with no N read assumes the green biomass N content
-                                percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
+                                percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogenPercent;
                         }
                         else
                             percentN = harvests.current.Npct;
@@ -566,10 +566,10 @@ namespace Models.CLEM.Activities
                             FoodResourcePacket packet = new()
                             {
                                 Amount = AmountHarvested,
-                                NitrogenContent = percentN
+                                NitrogenPercent = percentN
                             };
                             if (LinkedResourceItem is GrazeFoodStoreType)
-                                packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenContent);
+                                packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);
                             LinkedResourceItem.Add(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));

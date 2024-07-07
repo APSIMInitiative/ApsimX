@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
         /// Peak yield lactation scalar (SCA CL0) 
         /// </summary>
         [Category("Breed", "Lactation")]
-        [Description("Peak lactation yield scalar (CL0)")]
+        [Description("Peak lactation yield scalar [CL0]")]
         [Required, MinLength(1)]
         public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375, 0.375 };
 
@@ -104,9 +104,9 @@ namespace Models.CLEM.Resources
         /// Energy content of milk (MJ kg-1, SCA CL6)
         /// </summary>
         [Category("Farm", "Lactation")]
-        [Description("Energy content of milk (%) [CL6]")]
+        [Description("Energy content of milk [CL6]")]
         [Required, GreaterThanValue(0)]
-        public double EnergyContentMilk_CL6 { get; set; } = 3.1;
+        public double EnergyContentMilk_CL6 { get; set; } = 0.031;
 
         /// <summary>
         /// Lactation energy deficit (CL7 in SCA)
@@ -143,12 +143,13 @@ namespace Models.CLEM.Resources
         public double MilkConsumptionLimit3_CL14 { get; set; } = 0.036;
 
         /// <summary>
-        /// Protein content of milk (kg kg-1, SCA CL15)
+        /// Protein content of milk as percent (%, SCA CL15)
         /// </summary>
         [Category("Farm", "Lactation")]
-        [Description("Protein content of milk [CL15]")]
+        [Description("Protein percent of milk [CL15]")]
         [Required, GreaterThanValue(0)]
-        public double ProteinContentMilk_CL15 { get; set; } = 0.0032;
+        [Units("%")]
+        public double ProteinPercentMilk_CL15 { get; set; } = 3.2;
 
         /// <summary>
         /// Adjustment of potential lactation yield reduction (CL16 in SCA)
@@ -246,7 +247,7 @@ namespace Models.CLEM.Resources
                 MilkConsumptionLimit1_CL12 = MilkConsumptionLimit1_CL12,
                 MilkConsumptionLimit2_CL13 = MilkConsumptionLimit2_CL13,
                 MilkConsumptionLimit3_CL14 = MilkConsumptionLimit3_CL14,
-                ProteinContentMilk_CL15 = ProteinContentMilk_CL15,
+                ProteinPercentMilk_CL15 = ProteinPercentMilk_CL15,
                 AdjustmentOfPotentialYieldReduction_CL16 = AdjustmentOfPotentialYieldReduction_CL16,
                 PotentialYieldReduction_CL17 = PotentialYieldReduction_CL17,
                 PotentialYieldReduction2_CL18 = PotentialYieldReduction2_CL18,

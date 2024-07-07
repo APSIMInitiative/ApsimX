@@ -55,15 +55,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Nitrogen of common land pasture (%)
         /// </summary>
-        [Description("Nitrogen of common land pasture (%)")]
+        [Description("Nitrogen of common land pasture")]
         [Required, Percentage]
+        [Units("%")]
         public double Nitrogen { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Description("Minimum Nitrogen %")]
+        [Description("Minimum Nitrogen")]
         [Required, Percentage]
+        [Units("%")]
         public double MinimumNitrogen { get; set; }
 
         /// <summary>
@@ -71,6 +73,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Minimum Dry Matter Digestibility")]
         [Required, Percentage]
+        [Units("%")]
         public double MinimumDMD { get; set; }
 
         /// <summary>
@@ -140,7 +143,7 @@ namespace Models.CLEM.Resources
                 switch (pasture.GetType().ToString())
                 {
                     case "AnimalFoodStoreType":
-                        Nitrogen = (pasture as AnimalFoodStoreType).NitrogenContent;
+                        Nitrogen = (pasture as AnimalFoodStoreType).NitrogenPercent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -148,7 +151,7 @@ namespace Models.CLEM.Resources
                         dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
                     case "GrazeFoodStoreType":
-                        Nitrogen = (pasture as GrazeFoodStoreType).NitrogenContent;
+                        Nitrogen = (pasture as GrazeFoodStoreType).NitrogenPercent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -254,7 +257,7 @@ namespace Models.CLEM.Resources
                 pool = new GrazeFoodStorePool();
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                 pool.Set(packet.Amount);
-                pool.NitrogenContent = packet.NitrogenContent;
+                pool.NitrogenPercent = packet.NitrogenPercent;
                 pool.DryMatterDigestibility = packet.DryMatterDigestibility;
             }
 
@@ -279,7 +282,7 @@ namespace Models.CLEM.Resources
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket
             {
-                NitrogenContent = this.Nitrogen,
+                NitrogenPercent = this.Nitrogen,
                 DryMatterDigestibility = this.dryMatterDigestibility,
                 Amount = request.Required
             };

@@ -193,7 +193,7 @@ namespace Models.CLEM
                         NumberLactating = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
                         NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
                         AverageIntakeDMD = group.Average(a => a.Intake.DMD),
-                        AverageIntakeN = group.Average(a => a.Intake.NitrogenContent),
+                        AverageIntakeN = group.Average(a => a.Intake.NitrogenPercent),
                         AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
                     }
                 });
@@ -232,7 +232,7 @@ namespace Models.CLEM
                             NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
                             NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
                             AverageIntakeDMD = group.Average(a => a.Intake.DMD),
-                            AverageIntakeN = group.Average(a => a.Intake.NitrogenContent),
+                            AverageIntakeN = group.Average(a => a.Intake.NitrogenPercent),
                             AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
                         }
                     });

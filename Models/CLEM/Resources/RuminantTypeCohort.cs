@@ -92,6 +92,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Provide initial fat and protein percentage of EBW (fat, protein)")]
         [Percentage]
+        [Units("%")]
         public double[] ProvideInitialFatProteinPercentage { get; set; }
 
         /// <summary>

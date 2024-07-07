@@ -22,13 +22,13 @@ namespace Models.CLEM.Resources
         public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
-        public double FatContent { get; set; }
+        public double FatPercent { get; set; }
 
         /// <inheritdoc/>
-        public double NitrogenContent { get; set; }
+        public double NitrogenPercent { get; set; }
 
         /// <inheritdoc/>
-        public double CrudeProteinContent { get; set; }
+        public double CrudeProteinPercent { get; set; }
 
         /// <inheritdoc/>
         public double CPDegradability { get; set; }
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        public double RumenDegradableProteinContent { get; set; }
+        public double RumenDegradableProteinPercent { get; set; }
 
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
@@ -134,11 +134,11 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenContent != pool.NitrogenContent)
+                if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenPercent != pool.NitrogenPercent)
                 {
                     //TODO: run calculation passed others.
                     DryMatterDigestibility = ((DryMatterDigestibility * Amount) + (pool.DryMatterDigestibility * pool.Amount)) / (Amount + pool.Amount);
-                    NitrogenContent = ((NitrogenContent * Amount) + (pool.NitrogenContent * pool.Amount)) / (Amount + pool.Amount);
+                    NitrogenPercent = ((NitrogenPercent * Amount) + (pool.NitrogenPercent * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
                 Growth += pool.Growth;

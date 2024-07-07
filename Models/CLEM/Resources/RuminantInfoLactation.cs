@@ -15,38 +15,38 @@ namespace Models.CLEM.Resources
     public class RuminantInfoLactation
     {
         /// <summary>
-        /// Production rate (L/day)
+        /// Production rate (MJ/day)
         /// </summary>
         public double ProductionRate { get; set; }
         /// <summary>
-        /// Maximum production rate (L/day)
+        /// Maximum production rate (MJ/day)
         /// </summary>
         public double MaximumRate { get; set; }
         /// <summary>
-        /// Potential milk production (L/day)
+        /// Potential milk production (MJ/day)
         /// </summary>
         public double PotentialRate { get; set; }
         /// <summary>
-        /// Potential milk production MP2 (L/day)
+        /// Potential milk production MP2 (MJ/day)
         /// </summary>
         public double PotentialRate2 { get; set; }
         /// <summary>
-        /// Amount produced (L)
+        /// Amount produced (MJ)
         /// </summary>
         [FilterByProperty]
         public double Produced { get; set; }
         /// <summary>
-        /// Amount currently available (L)
+        /// Amount currently available (MJ)
         /// </summary>
         [FilterByProperty]
         public double Available { get; set; }
         /// <summary>
-        /// Amount milked (L)
+        /// Amount milked (MJ)
         /// </summary>
         [FilterByProperty]
         public double Milked { get; set; }
         /// <summary>
-        /// Amount suckled (L)
+        /// Amount suckled (MJ)
         /// </summary>
         [FilterByProperty]
         public double Suckled { get; set; }
@@ -130,6 +130,7 @@ namespace Models.CLEM.Resources
             Milked = 0;
             Suckled = 0;
             ProteinReduced = 0;
+            Protein = 0;
         }
     }
 }

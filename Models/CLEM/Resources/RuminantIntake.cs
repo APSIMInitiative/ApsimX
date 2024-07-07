@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         public ExpectedActualContainer SolidsDaily { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
-        /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
+        /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy on daily basis.
         /// </summary>
         /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
         /// <param name="bypassPotIntakeLimits">A switch to force animals to eat the amount provided.</param>
@@ -303,14 +303,14 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Calculate Nitrogen content of solid (non-milk) intake.
+        /// Calculate Nitrogen content of solid (non-milk) intake as percentage.
         /// </summary>
-        public double NitrogenContent
+        public double NitrogenPercent
         {
             get
             {
                 var total = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.Amount);
-                var totalN = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.NitrogenContent * a.Value.Details.Amount);
+                var totalN = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.NitrogenPercent * a.Value.Details.Amount);
                 if(total > 0)
                     return totalN / total;
                 return 0;
@@ -366,6 +366,22 @@ namespace Models.CLEM.Resources
             get
             {
                 return dpls;
+            }
+        }
+
+        /// <summary>
+        /// Efficiency of use of digestible protein leaving the stomach
+        /// </summary>
+        public double kDPLS { get; set; }
+
+        /// <summary>
+        /// Digestible Protein Leaving the Stomach times the kDPLS efficiency term.
+        /// </summary>
+        public double UseableDPLS
+        {
+            get
+            {
+                return dpls * kDPLS;
             }
         }
 
