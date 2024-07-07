@@ -22,10 +22,7 @@ namespace Models.CLEM.Resources
         public double Previous { get { return Amount - Change; } }
 
         /// <inheritdoc/>
-        public double ChangeWasted { get; set; }
-
-        /// <inheritdoc/>
-        public double ChangeRemobilised { get; set; }
+        public double Extra { get; set; }
 
         /// <summary>
         /// Report protein for maintenance (kg)
@@ -66,8 +63,7 @@ namespace Models.CLEM.Resources
         {
             Amount = 0;
             Change = 0;
-            ChangeWasted = 0;
-            ChangeRemobilised = 0;
+            Extra = 0;
         }
 
         /// <summary>
