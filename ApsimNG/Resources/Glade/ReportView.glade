@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk+" version="3.22"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -12,13 +12,12 @@
     <property name="can-focus">True</property>
     <child>
       <object class="GtkPaned" id="vpaned1">
-		<property name="orientation">vertical</property>
-		<property name="visible">True</property>
+        <property name="visible">True</property>
         <property name="can-focus">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkPaned" id="reportVariablesBox">
-			<property name="orientation">horizontal</property>
-			<property name="visible">True</property>
+            <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="wide-handle">True</property>
             <child>
@@ -95,8 +94,7 @@
         </child>
         <child>
           <object class="GtkPaned" id="reportFrequencyBox">
-			<property name="orientation">horizontal</property>
-			<property name="visible">True</property>
+            <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="position">1</property>
             <property name="wide-handle">True</property>
@@ -240,7 +238,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkAlignment" id="alignment1">
+      <object class="GtkBox" id="alignment1">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>

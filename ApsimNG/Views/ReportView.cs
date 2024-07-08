@@ -21,7 +21,7 @@ namespace UserInterface.Views
         private Box frequencyBox = null;
         private Box commonVariablesBox = null;
         private Box commonFrequencyBox = null;
-        private Alignment alignment1 = null;
+        private Box alignment1 = null;
 
         private IEditorView variableEditor;
         private IEditorView frequencyEditor;
@@ -48,7 +48,7 @@ namespace UserInterface.Views
             frequencyBox = (Box)builder.GetObject("frequencyBox");
             commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
             commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
-            alignment1 = (Alignment)builder.GetObject("alignment1");
+            alignment1 = (Box)builder.GetObject("alignment1");
             submitButton = (Button)builder.GetObject("submitBtn");
 
 
