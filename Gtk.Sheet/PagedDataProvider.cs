@@ -154,6 +154,13 @@ namespace Gtk.Sheet
             CellChanged?.Invoke(this, columnIndices, rowIndices, values);
         }
 
+        /// <summary>Delete the specified rows.</summary>
+        /// <param name="rowIndices">Row indexes of cell.</param>
+        public void DeleteRows(int[] rowIndices)
+        {
+            
+        }
+
         /// <summary>Get data to show in grid.</summary>
         /// <param name="startRowIndex">The row index to start getting data from.</param>
         /// <param name="orderBy">Column to order by</param>

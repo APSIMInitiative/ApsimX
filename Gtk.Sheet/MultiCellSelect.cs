@@ -17,7 +17,7 @@ namespace Gtk.Sheet
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
         /// <param name="sheetWidget">The sheet widget.</param>
-        public MultiCellSelect(Sheet sheet, SheetWidget sheetWidget) : base(sheet, sheetWidget)
+        public MultiCellSelect(Sheet sheet) : base(sheet)
         {
             selectedColumnIndexRight = selectedColumnIndex;
             selectedRowIndexBottom = selectedRowIndex;
@@ -31,6 +31,50 @@ namespace Gtk.Sheet
         {
             return columnIndex >= selectedColumnIndex && columnIndex <= selectedColumnIndexRight && 
                    rowIndex >= selectedRowIndex && rowIndex <= selectedRowIndexBottom;
+        }
+
+        /// <summary>
+        /// Sets the cells to select
+        /// </summary>
+        /// <param name="columnIndex1">Top left column to select.</param>
+        /// <param name="rowIndex1">Top left row to select.</param>
+        /// <param name="columnIndex2">Bottom right column to select.</param>
+        /// <param name="rowIndex2">Bottom right row to select.</param>
+        public void SetSelection(int columnIndex1, int rowIndex1, int columnIndex2, int rowIndex2)
+        {
+            base.SetSelection(columnIndex1, rowIndex1);
+            selectedColumnIndexRight = columnIndex2;
+            selectedRowIndexBottom = rowIndex2;
+        }
+
+        /// <summary>Get selected cell contents.</summary>
+        /// <param name="columnIndex">The index of the current selected column.</param>
+        /// <param name="rowIndex">The index of the current selected row</param>
+        public override string GetSelectedContents()
+        {
+            if (sheet.CellEditor != null)
+                if (sheet.CellEditor.IsEditing)
+                    sheet.CellEditor.EndEdit();
+
+            if (selectedColumnIndexRight == selectedColumnIndex &&
+                selectedRowIndexBottom == selectedRowIndex)
+                return base.GetSelectedContents();
+            else
+            {
+                StringBuilder textToCopy = new StringBuilder();
+                for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
+                {
+                    for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
+                    {
+                        var cellText = sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
+                        textToCopy.Append(cellText);
+                        if (columnIndex != selectedColumnIndexRight)
+                            textToCopy.Append('\t');
+                    }
+                    textToCopy.AppendLine();
+                }
+                return textToCopy.ToString();
+            }
         }
 
         /// <summary>Invoked when the user clicks a mouse button.</summary>
@@ -171,48 +215,13 @@ namespace Gtk.Sheet
             selectedRowIndexBottom = sheet.NumberFrozenRows + difference;
         }
 
-        /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
-        public override void Cut()
-        {
-            Copy();
-            Delete();
-        }
-
-        /// <summary>Copy cells to clipboard.</summary>
-        public override void Copy()
-        {
-            if (sheet.CellEditor != null)
-                if (sheet.CellEditor.IsEditing)
-                    sheet.CellEditor.EndEdit();
-
-            if (selectedColumnIndexRight == selectedColumnIndex &&
-                selectedRowIndexBottom == selectedRowIndex)
-                base.Copy();
-            else
-            {
-                StringBuilder textToCopy = new StringBuilder();
-                for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
-                {
-                    for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
-                    {
-                        var cellText = sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-                        textToCopy.Append(cellText);
-                        if (columnIndex != selectedColumnIndexRight)
-                            textToCopy.Append('\t');
-                    }
-                    textToCopy.AppendLine();
-                }
-                sheetWidget.SetClipboard(textToCopy.ToString());
-            }
-        }
-
         /// <summary>Delete contents of cells.</summary>
         public override void Delete()
         {
             if (sheet.CellEditor != null)
                 if (sheet.CellEditor.IsEditing)
                     sheet.CellEditor.EndEdit();
-                    
+
             int i = 0;
             int length = (selectedRowIndexBottom - selectedRowIndex + 1) * (selectedColumnIndexRight - selectedColumnIndex + 1);
             int[] rowIndices = new int[length];
@@ -224,11 +233,16 @@ namespace Gtk.Sheet
                 {
                     rowIndices[i] = rowIndex;
                     columnIndices[i] = columnIndex;
-                    values[i] = "";
+                    values[i] = string.Empty;
                     i++;
                 }
             }
-            sheet.DataProvider.SetCellContents(columnIndices, rowIndices, values);
+
+            // Detect when the entire row is selected.
+            if (selectedColumnIndexRight - selectedColumnIndex + 1 == sheet.DataProvider.ColumnCount)
+                sheet.DataProvider.DeleteRows(rowIndices.Distinct().ToArray());
+            else
+                sheet.DataProvider.SetCellContents(columnIndices, rowIndices, values);
         }
 
         /// <summary>Select all cells</summary>

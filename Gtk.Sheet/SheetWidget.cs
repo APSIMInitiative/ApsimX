@@ -51,9 +51,9 @@ namespace Gtk.Sheet
                               columnWidths);
 
             if (multiSelect)
-                Sheet.CellSelector = new MultiCellSelect(Sheet, this);
+                Sheet.CellSelector = new MultiCellSelect(Sheet);
             else
-                Sheet.CellSelector = new SingleCellSelect(Sheet, this);
+                Sheet.CellSelector = new SingleCellSelect(Sheet);
 
             SetDataProvider(dataProvider);
 
@@ -174,7 +174,8 @@ namespace Gtk.Sheet
         /// </summary>
         public void Cut()
         {
-            Sheet.CellSelector.Cut();
+            Copy();
+            Sheet.CellSelector.Delete();
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace Gtk.Sheet
         /// </summary>
         public void Copy()
         {
-            Sheet.CellSelector.Copy();
+            SetClipboard(Sheet.CellSelector.GetSelectedContents());
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace Gtk.Sheet
         /// <param name="e"></param>
         public void Paste()
         {
-            Sheet.CellSelector.Paste();
+            Sheet.CellSelector.SetSelectedContents(GetClipboard());
         }
 
         /// <summary>
@@ -349,7 +350,17 @@ namespace Gtk.Sheet
             try
             {
                 SheetEventKey keyParams = evnt.ToSheetEventKey();
-                Sheet.InvokeKeyPress(keyParams);
+                if (evnt.KeyValue > 0 && evnt.KeyValue < 255)
+                {
+                    if (evnt.KeyValue == 'c' && keyParams.Control)
+                        Copy();
+                    else if (evnt.KeyValue == 'v' && keyParams.Control)
+                        Paste();
+                    else if (Sheet.CellEditor != null)
+                        Sheet.CellEditor.Edit((char)evnt.KeyValue);
+                }
+                else
+                    Sheet.InvokeKeyPress(keyParams);
             }
             catch (Exception ex)
             {
@@ -363,6 +374,8 @@ namespace Gtk.Sheet
         /// <returns></returns>
         protected override bool OnButtonPressEvent(EventButton evnt)
         {
+            GrabFocus();
+
             try
             {
                 if (evnt.Type == EventType.ButtonPress)

@@ -118,4 +118,24 @@ class PropertySheetDataProvider : ISheetDataProvider
             CellChanged?.Invoke(this, colIndices, rowIndices, values);
         }
     }
+
+    /// <summary>Delete the specified rows.</summary>
+    /// <param name="rowIndices">Row indexes of cell.</param>
+    public void DeleteRows(int[] rowIndices)
+    {
+        if (rowIndices.Length > 0)
+        {
+            // Convert rowIndicies to valueIndicies.
+             var valueIndices = rowIndices.Select(r => r - numHeadingRows).ToArray();
+
+            // Delete row in each property.
+            foreach (var property in properties)
+                property.DeleteValues(valueIndices);
+
+            // Determine the number of rows the grid should have. 
+            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count) + numHeadingRows;
+
+            CellChanged?.Invoke(this, null, rowIndices, null);
+        }
+    }
 }

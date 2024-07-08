@@ -10,9 +10,6 @@ namespace Gtk.Sheet
         /// <summary>The sheet.</summary>
         protected Sheet sheet;
 
-        /// <summary>The sheet widget.</summary>
-        protected SheetWidget sheetWidget;
-
         /// <summary>The index of the current selected column.</summary>
         protected int selectedColumnIndex;
 
@@ -22,10 +19,9 @@ namespace Gtk.Sheet
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
         /// <param name="sheetWidget">The sheet widget.</param>
-        public SingleCellSelect(Sheet sheet, SheetWidget sheetWidget)
+        public SingleCellSelect(Sheet sheet)
         {
             this.sheet = sheet;
-            this.sheetWidget = sheetWidget;
             selectedColumnIndex = 0;
             selectedRowIndex = sheet.NumberFrozenRows;
             sheet.KeyPress += OnKeyPressEvent;
@@ -48,13 +44,58 @@ namespace Gtk.Sheet
             return selectedColumnIndex == columnIndex && selectedRowIndex == rowIndex;
         }
 
-        /// <summary>Gets the currently selected cell..</summary>
+        /// <summary>Gets the currently selected cell.</summary>
         /// <param name="columnIndex">The index of the current selected column.</param>
         /// <param name="rowIndex">The index of the current selected row</param>
         public void GetSelection(out int columnIndex, out int rowIndex)
         {
             columnIndex = selectedColumnIndex;
             rowIndex = selectedRowIndex;
+        }
+
+        /// <summary>
+        /// Sets the cell to select
+        /// </summary>
+        /// <param name="columnIndex">Top left column to select.</param>
+        /// <param name="rowIndex">Top left row to select.</param>
+        public virtual void SetSelection(int columnIndex, int rowIndex)
+        {
+            selectedColumnIndex = columnIndex;
+            selectedRowIndex = rowIndex;
+        }
+
+        /// <summary>Get selected cell contents.</summary>
+        /// <param name="columnIndex">The index of the current selected column.</param>
+        /// <param name="rowIndex">The index of the current selected row</param>
+        public virtual string GetSelectedContents()
+        {
+            return sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
+        }
+
+        /// <summary>Set selected cell contents.</summary>
+        /// <param name="contents">The contents to set the selected cell to.</param>
+        public virtual void SetSelectedContents(string contents)
+        {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
+            int rowIndex = selectedRowIndex;
+
+            foreach (string line in contents.Split("\n", StringSplitOptions.RemoveEmptyEntries))
+            {
+                int columnIndex = selectedColumnIndex;
+                foreach (string word in line.Split('\t'))
+                {
+                    if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{rowIndex}, new string[] {word});
+                    columnIndex++;
+                    if (columnIndex == sheet.DataProvider.ColumnCount)
+                        break;
+                }
+
+                rowIndex++;
+            }
+            sheet.Refresh();
         }
 
         /// <summary>Invoked when the user presses a key.</summary>
@@ -92,11 +133,7 @@ namespace Gtk.Sheet
             }
             else if (evnt.KeyValue > 0 && evnt.KeyValue < 255)
             {
-                if (evnt.KeyValue == 'c' && evnt.Control)
-                    Copy();
-                else if (evnt.KeyValue == 'v' && evnt.Control)
-                    Paste();
-                else if (sheet.CellEditor != null)
+                if (sheet.CellEditor != null)
                     sheet.CellEditor.Edit(evnt.KeyValue);
             }
         }
@@ -121,7 +158,6 @@ namespace Gtk.Sheet
                     sheet.CellEditor?.EndEdit();
                     selectedColumnIndex = colIndex;
                     selectedRowIndex = rowIndex;
-                    sheetWidget.GrabFocus();
                     sheet.Refresh();
                 }
             }
@@ -203,44 +239,6 @@ namespace Gtk.Sheet
         {
             selectedRowIndex = sheet.NumberFrozenRows;
             sheet.NumberHiddenRows = 0;
-        }
-
-        /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
-        public virtual void Cut()
-        {
-            Copy();
-            Delete();
-        }
-
-        /// <summary>Copy cells to clipboard.</summary>
-        public virtual void Copy()
-        {
-            sheetWidget.SetClipboard(sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex));
-        }
-
-        /// <summary>Paste cells from clipboard.</summary>
-        public virtual void Paste()
-        {
-            if (sheet.CellEditor.IsEditing)
-                sheet.CellEditor.EndEdit();
-
-            int rowIndex = selectedRowIndex;
-
-            foreach (string line in sheetWidget.GetClipboard().Split("\n", StringSplitOptions.RemoveEmptyEntries))
-            {
-                int columnIndex = selectedColumnIndex;
-                foreach (string word in line.Split('\t'))
-                {
-                    if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
-                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{rowIndex}, new string[] {word});
-                    columnIndex++;
-                    if (columnIndex == sheet.DataProvider.ColumnCount)
-                        break;
-                }
-
-                rowIndex++;
-            }
-            sheet.Refresh();
         }
 
         /// <summary>Delete contents of cells.</summary>

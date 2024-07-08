@@ -5,6 +5,7 @@
     using UserInterface.Views;
     using Gtk.Sheet;
     using System.Drawing;
+    using Models.Core;
 
     [TestFixture]
     class SheetTests
@@ -280,5 +281,89 @@
             Assert.That(sheet.CalculateBounds(2, 3), Is.EqualTo(new Rectangle(70, 70, 50, 35)));
             Assert.That(sheet.CalculateBounds(3, 3), Is.EqualTo(Rectangle.Empty));
         }
+
+        /// <summary>Ensure can delete entire row of grid with data table as backend..</summary>
+        [Test]
+        public void DeleteEntireRowOfSheetDataTable()
+        {
+            var data = Utilities.CreateTable(new string[] { "A", "B", "C", "D" },
+                                      new List<object[]> { new object[] {   "a1", "b1",  "c1", "d1" },
+                                                           new object[] {   "a2", "b2",  "c2", "d2" },
+                                                           new object[] {   "a3", "b3",  "c3", "d3" },
+                                                           new object[] {   "a4", "b4",  "c4", "d4" }});
+            var dataProvider = new DataTableProvider(data, null);
+            var sheet = new Sheet(dataProvider,
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 30, 40, 50, 60 });
+            sheet.RowCount = sheet.DataProvider.RowCount;
+            var multiCellSelector = new MultiCellSelect(sheet);
+            sheet.CellSelector = multiCellSelector;
+
+            // select the 2nd and 3rd rows
+            multiCellSelector.SetSelection(0, 2, 3, 3); 
+
+            // delete the selection.
+            multiCellSelector.Delete(); 
+            
+            Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
+            Assert.That(dataProvider.RowCount, Is.EqualTo(3));
+            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a1"));
+            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b1"));
+            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c1"));
+            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d1"));
+            Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("a4"));
+            Assert.That(dataProvider.GetCellContents(1, 2), Is.EqualTo("b4"));
+            Assert.That(dataProvider.GetCellContents(2, 2), Is.EqualTo("c4"));
+            Assert.That(dataProvider.GetCellContents(3, 2), Is.EqualTo("d4"));
+        }
+
+        class ModelWithABProperties : Model
+        {
+            [Display()]
+            public string[] A { get; set; } = new string[] { "a1", "a2", "a3", "a4" };
+
+            [Display()]
+            public string[] B { get; set; } = new string[] { "b1", "b2", "b3", "b4" };
+
+            [Display()]
+            public string[] C { get; set; } = new string[] { "c1", "c2", "c3", "c4" };
+
+            [Display()]
+            public string[] D { get; set; } = new string[] { "d1", "d2", "d3", "d4" };
+            }
+
+        /// <summary>Ensure can delete entire row of grid with a property data provider as backend.</summary>
+        [Test]
+        public void DeleteEntireRowOfSheetProperties()
+        {
+            var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithABProperties());
+        
+            var sheet = new Sheet(dataProvider,
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 30, 40, 50, 60 });
+            sheet.RowCount = sheet.DataProvider.RowCount;
+            var multiCellSelector = new MultiCellSelect(sheet);
+            sheet.CellSelector = multiCellSelector;
+
+            // select the 2nd and 3rd rows
+            multiCellSelector.SetSelection(0, 2, 3, 3); 
+
+            // delete the selection.
+            multiCellSelector.Delete(); 
+            
+            Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
+            Assert.That(dataProvider.RowCount, Is.EqualTo(3));
+            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a1"));
+            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b1"));
+            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c1"));
+            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d1"));
+            Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("a4"));
+            Assert.That(dataProvider.GetCellContents(1, 2), Is.EqualTo("b4"));
+            Assert.That(dataProvider.GetCellContents(2, 2), Is.EqualTo("c4"));
+            Assert.That(dataProvider.GetCellContents(3, 2), Is.EqualTo("d4"));
+        }
+
     }
 }

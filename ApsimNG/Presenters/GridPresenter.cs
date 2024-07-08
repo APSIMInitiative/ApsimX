@@ -231,12 +231,13 @@ namespace UserInterface.Presenters
                     // Give DataTableProvider to grid sheet.
                     grid.SetDataProvider(dataProvider);
 
-                    // Add an extra empty row to the grid so that new rows can be created.
-                    grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
-
                     dataProvider.CellChanged += OnCellChanged;
                 }
             }
+
+            // Add an extra empty row to the grid so that new rows can be created.
+            if (dataProvider != null)
+                grid.RowCount = dataProvider.RowCount + 1;
 
             grid?.UpdateScrollBars();
         }
@@ -298,7 +299,7 @@ namespace UserInterface.Presenters
                 {
                     SaveGridToModel();
                     CellChanged?.Invoke(sender, colIndices, rowIndices, values);
-
+                    Refresh();
                 }
                 catch (Exception err)
                 {

@@ -149,6 +149,21 @@ namespace Gtk.Sheet
             CellChanged?.Invoke(this, colIndices, rowIndices, values);
         }
 
+        /// <summary>Delete the specified rows.</summary>
+        /// <param name="rowIndices">Row indexes of cell.</param>
+        public void DeleteRows(int[] rowIndices)
+        {
+            if (!IsReadOnly)
+            {
+                // Convert rowIndicies to valueIndicies.
+                var valueIndices = rowIndices.Select(r => r - numHeadingRows).ToArray();
+
+                foreach (int valueIndex in valueIndices.Reverse())
+                    Data.Rows[valueIndex].Delete();
+                CellChanged?.Invoke(this, null, rowIndices, null);
+            }
+        }
+
         /// <summary>Is the column readonly?</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>

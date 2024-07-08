@@ -96,9 +96,35 @@ class PropertyMetadata
         if (dataWasChanged)
         {
             SetValues();
-            metadataProperty?.SetValue(obj, Metadata.Select(m => m == SheetDataProviderCellState.Calculated ? "Calculated" : null).ToArray());
+            SetMetadata();
         }
     }
+
+    /// <summary>
+    /// Delete specific elements of values.
+    /// </summary>
+    /// <param name="valueIndices">The indicies of the rows to delete</param>
+    public void DeleteValues(int[] valueIndices)
+    {
+        bool dataWasChanged = false;
+        foreach (var i in valueIndices.Reverse())
+        {
+            if (i < values.Count)
+            {
+                values.RemoveAt(i);
+                dataWasChanged = true;
+            }
+
+            if (Metadata != null && i < Metadata.Count)
+                Metadata.RemoveAt(i);
+        }
+
+        if (dataWasChanged)
+        {
+            SetValues();
+            SetMetadata();
+        }
+    }    
 
     /// <summary>
     /// Get formatted values for the property.
@@ -132,14 +158,33 @@ class PropertyMetadata
         if (property.PropertyType == typeof(string[]))
             newValues = values.ToArray();
         else if (property.PropertyType == typeof(double[]))
-            newValues = values.Select(v => Convert.ToDouble(v)).ToArray();
+        {
+            newValues = values.Select(v => 
+            {
+                if (Double.TryParse(v, out double d))
+                    return d;
+                return double.NaN;
+            }).ToArray();
+        }
         else if (property.PropertyType == typeof(int[]))
-            newValues = values.Select(v => Convert.ToInt32(v)).ToArray();
+            newValues = values.Select(v => 
+            {
+                if (Int32.TryParse(v, out int i))
+                    return i;
+                return Int32.MaxValue;
+
+            }).ToArray();
         else if (property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
         else
             throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {property.PropertyType}");
 
-        property.SetValue(obj, newValues);
-    }    
+        if (property.CanWrite)
+            property.SetValue(obj, newValues);
+    }
+
+    private void SetMetadata()
+    {
+        metadataProperty?.SetValue(obj, Metadata.Select(m => m == SheetDataProviderCellState.Calculated ? "Calculated" : null).ToArray());    
+    }
 }

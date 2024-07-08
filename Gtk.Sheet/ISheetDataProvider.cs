@@ -44,6 +44,10 @@ namespace Gtk.Sheet
         /// <param name="values">The value.</param>
         void SetCellContents(int[] colIndices, int[] rowIndices, string[] values);
 
+        /// <summary>Delete the specified rows.</summary>
+        /// <param name="rowIndices">Row indexes of cell.</param>
+        void DeleteRows(int[] rowIndices);
+
         /// <summary>Get the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>

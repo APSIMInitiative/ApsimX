@@ -233,4 +233,20 @@ class ModelToSheetDataProviderTests
 
         Assert.That(invoked, Is.True);
     }
+
+    /// <summary>
+    /// Ensure data provider can handle setting a value to a blank. This is what the sheet control does
+    /// when the user hits 'Delete' on a cell.
+    /// </summary>
+    [Test]
+    public void TestCanSetValueToBlank()
+    {
+        ModelWithFormat model = new();
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+        dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
+                                     rowIndices: new int[] { 2 },
+                                     values: new string[] { "" });
+
+        Assert.That(model.Value[1], Is.NaN);
+    }
 }
