@@ -294,9 +294,9 @@ namespace Models.Management
                     summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentStateName}", null);
-                Transition?.Invoke(this, EventArgs.Empty);
 
                 CurrentStateId = transition.DestinationID;
+                Transition?.Invoke(this, EventArgs.Empty);
 
                 foreach (string action in transition.Actions)
                 {
