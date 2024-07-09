@@ -217,7 +217,7 @@ namespace Models.Soils
                 if (crop.KL == null)
                     FillInKLForCrop(crop);
 
-                var (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.LL, crop.LLMetadata, Thickness.Length, (i) => LL15[i]);
+                var (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.LL, crop.LLMetadata, Thickness.Length, (i) => i < LL15.Length ? LL15[i] : LL15.Last());
                 crop.LL = cropValues;
                 crop.LLMetadata = cropMetadata;
 
@@ -238,12 +238,12 @@ namespace Models.Soils
             if (KS != null && KS.Length > 0)
                 KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
 
-            ParticleSizeClay ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
-            ParticleSizeSilt ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
-            ParticleSizeSand ??= Enumerable.Repeat(double.NaN, Thickness.Length).ToArray();
-            ParticleSizeClayMetadata ??= new string[Thickness.Length];
-            ParticleSizeSiltMetadata ??= new string[Thickness.Length];
-            ParticleSizeSandMetadata ??= new string[Thickness.Length];
+            ParticleSizeClay = MathUtilities.SetArrayOfCorrectSize(ParticleSizeClay, Thickness.Length);
+            ParticleSizeClayMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeClayMetadata, Thickness.Length);
+            ParticleSizeSand = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSand, Thickness.Length);
+            ParticleSizeSandMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSandMetadata, Thickness.Length);
+            ParticleSizeSilt = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSilt, Thickness.Length);
+            ParticleSizeSiltMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSiltMetadata, Thickness.Length);
 
             // Fill in missing particle size values.
             for (int i = 0; i < Thickness.Length; i++)
@@ -282,11 +282,15 @@ namespace Models.Soils
             }
 
             // Fill in missing rocks.
+            Rocks = MathUtilities.SetArrayOfCorrectSize(Rocks, Thickness.Length);
+            RocksMetadata = MathUtilities.SetArrayOfCorrectSize(RocksMetadata, Thickness.Length);
             var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) =>
             {
+                double bd = i < BD.Length ? BD[i] : BD.Last();
+                double sat = i < SAT.Length ? SAT[i] : SAT.Last();
                 double particleDensity = 2.65;
-                double totalPorosity = (1 - BD[i] / particleDensity) * 0.93;
-                double rocksFraction = 1 - SAT[i] / totalPorosity;
+                double totalPorosity = (1 - bd / particleDensity) * 0.93;
+                double rocksFraction = 1 - sat / totalPorosity;
                 if (rocksFraction > 0.1)
                     return rocksFraction;
                 else

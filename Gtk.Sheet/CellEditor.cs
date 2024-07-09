@@ -132,7 +132,7 @@ namespace Gtk.Sheet
                 {
                     sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
                     sheet.DataProvider.SetCellContents(new int[]{selectedColumnIndex}, 
-                                                        new int[]{selectedRowIndex}, 
+                                                        new int[]{selectedRowIndex - sheet.NumberFrozenRows}, 
                                                         new string[]{entry.Text});
                     sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }

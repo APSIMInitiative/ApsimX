@@ -69,7 +69,8 @@ namespace Gtk.Sheet
         /// <param name="rowIndex">The index of the current selected row</param>
         public virtual string GetSelectedContents()
         {
-            return sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
+            int dataRowIndex = selectedRowIndex - sheet.NumberFrozenRows;
+            return sheet.DataProvider.GetCellContents(selectedColumnIndex, dataRowIndex);
         }
 
         /// <summary>Set selected cell contents.</summary>
@@ -86,8 +87,9 @@ namespace Gtk.Sheet
                 int columnIndex = selectedColumnIndex;
                 foreach (string word in line.Split('\t'))
                 {
-                    if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
-                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{rowIndex}, new string[] {word});
+                    int dataRowIndex = rowIndex - sheet.NumberFrozenRows;
+                    if (sheet.DataProvider.GetCellState(columnIndex, dataRowIndex) != SheetDataProviderCellState.ReadOnly)
+                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{dataRowIndex}, new string[] {word});
                     columnIndex++;
                     if (columnIndex == sheet.DataProvider.ColumnCount)
                         break;

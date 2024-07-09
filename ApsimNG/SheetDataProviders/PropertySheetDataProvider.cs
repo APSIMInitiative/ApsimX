@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gtk.Sheet;
@@ -10,7 +11,6 @@ namespace UserInterface.Views;
 class PropertySheetDataProvider : ISheetDataProvider
 {
     private readonly List<PropertyMetadata> properties;
-    private int numHeadingRows;
 
     /// <summary>
     /// Constructor.
@@ -23,11 +23,8 @@ class PropertySheetDataProvider : ISheetDataProvider
 
         if (properties.Any())
         {
-            // Determine number of heading rows.
-            numHeadingRows = properties.Any(p => !string.IsNullOrEmpty(p.Units)) ? 2 : 1;
-
             // Determine the number of rows the grid should have. 
-            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count) + numHeadingRows;
+            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count);
         }
     }
 
@@ -40,23 +37,42 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <summary>Gets the number of rows of data.</summary>
     public int RowCount { get; private set; }
 
-    /// <summary>Is the data readonly?</summary>
-    public bool IsReadOnly => false;
+    /// <summary>Get the name of a column.</summary>
+    /// <param name="columnIndex">Column index.</param>
+    public string GetColumnName(int columnIndex)
+    {
+        if (columnIndex < ColumnCount)
+            return properties[columnIndex].Alias;
+        throw new Exception($"Invalid column index: {columnIndex}");
+    }
+
+    /// <summary>Get the units of a column.</summary>
+    /// <param name="columnIndex">Column index.</param>
+    public string GetColumnUnits(int columnIndex)
+    {
+        if (columnIndex < ColumnCount)
+            return properties[columnIndex].Units;
+        throw new Exception($"Invalid column index: {columnIndex}");
+    }
+
+    /// <summary>Get the allowable units of a column.</summary>
+    /// <param name="columnIndex">Column index.</param>
+    public IReadOnlyList<string> GetColumnValidUnits(int columnIndex)
+    {
+        if (columnIndex < ColumnCount)
+            return properties[columnIndex].ValidUnits;
+        throw new Exception($"Invalid column index: {columnIndex}");            
+    }        
 
     /// <summary>Get the cell state.</summary>
     /// <param name="colIndex">Column index of cell.</param>
     /// <param name="rowIndex">Row index of cell.</param>
     public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
     {
-        if (rowIndex < numHeadingRows)
-            return SheetDataProviderCellState.ReadOnly;
-
-        int valuesIndex = rowIndex - numHeadingRows;
-
-        if (properties[colIndex].Metadata == null || valuesIndex >= properties[colIndex].Metadata.Count)
+        if (properties[colIndex].Metadata == null || rowIndex >= properties[colIndex].Metadata.Count)
             return SheetDataProviderCellState.Normal;
         else
-            return properties[colIndex].Metadata[valuesIndex];
+            return properties[colIndex].Metadata[rowIndex];
     }
 
     /// <summary>Set the cell state.</summary>
@@ -65,14 +81,7 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <param name="state">The cell state</param>
     public void SetCellState(int colIndex, int rowIndex)
     {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>Get the Units assigned to this column</summary>
-    /// <param name="colIndex">Column index of cell.</param>
-    public string GetColumnUnits(int colIndex)
-    {
-        return properties[colIndex].Units;
+        throw new System.NotImplementedException("Cannot change the state of a cell in a properties grid.");
     }
 
     /// <summary>Get the contents of a cell.</summary>
@@ -80,17 +89,10 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <param name="rowIndex">Row index of cell.</param>
     public string GetCellContents(int colIndex, int rowIndex)
     {
-        if (rowIndex == 0)
-            return properties[colIndex].Alias;
-        if (rowIndex == 1 && numHeadingRows == 2)
-            return properties[colIndex].Units;
-        
-        int valuesIndex = rowIndex - numHeadingRows;
-
-        if (properties[colIndex].Values == null || valuesIndex >= properties[colIndex].Values.Count)
+        if (properties[colIndex].Values == null || rowIndex >= properties[colIndex].Values.Count)
             return null;
         else
-            return properties[colIndex].Values[valuesIndex];
+            return properties[colIndex].Values[rowIndex];
     }
 
     /// <summary>Set the contents of a cell.</summary>
@@ -99,24 +101,14 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <param name="values">The value.</param>
     public void SetCellContents(int[] colIndices, int[] rowIndices, string[] values)
     {
-        var valueIndicies = new List<int>();
-        for (int i = 0; i < rowIndices.Length; i++)
-        {
-            if (rowIndices[i] >= numHeadingRows)
-                valueIndicies.Add(rowIndices[i] - numHeadingRows);
-        }
+        // Set property values.
+        foreach (var colIndex in colIndices)
+            properties[colIndex].SetValues(rowIndices, values);
 
-        if (valueIndicies.Count > 0)
-        {
-            // Set property values.
-            foreach (var colIndex in colIndices)
-                properties[colIndex].SetValues(valueIndicies.ToArray(), values);
+        // Update the number of rows.
+        RowCount = properties.Max(p => p.Values.Count);
 
-            // Update the number of rows.
-            RowCount = properties.Max(p => p.Values.Count) + numHeadingRows;
-
-            CellChanged?.Invoke(this, colIndices, rowIndices, values);
-        }
+        CellChanged?.Invoke(this, colIndices, rowIndices, values);
     }
 
     /// <summary>Delete the specified rows.</summary>
@@ -125,15 +117,12 @@ class PropertySheetDataProvider : ISheetDataProvider
     {
         if (rowIndices.Length > 0)
         {
-            // Convert rowIndicies to valueIndicies.
-             var valueIndices = rowIndices.Select(r => r - numHeadingRows).ToArray();
-
             // Delete row in each property.
             foreach (var property in properties)
-                property.DeleteValues(valueIndices);
+                property.DeleteValues(rowIndices);
 
             // Determine the number of rows the grid should have. 
-            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count) + numHeadingRows;
+            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count);
 
             CellChanged?.Invoke(this, null, rowIndices, null);
         }

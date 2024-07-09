@@ -4,6 +4,7 @@ using System.Reflection;
 using Models.Core;
 using Models.Soils;
 using Gtk.Sheet;
+using System;
 
 namespace UserInterface.Views;
 
@@ -47,7 +48,7 @@ public class ModelToSheetDataProvider
         foreach (var soilCrop in physical.FindAllChildren<SoilCrop>())
         {
             string plantName = soilCrop.Name.Replace("Soil", string.Empty);
-            foreach (var soilCropProperty in DiscoverProperties(soilCrop))
+            foreach (var soilCropProperty in DiscoverProperties(soilCrop).Where(sc => sc.Alias != "Depth"))
             {
                 if (soilCropProperty.Alias == "PAWC")
                     soilCropProperty.Units = $"{soilCrop.PAWCmm.Sum():0.0} mm";
@@ -116,6 +117,7 @@ public class ModelToSheetDataProvider
                 if (displayAttribute != null)
                 {
                     string units = null;
+                    string[] validUnits = null;
                     if (unitsAttribute != null)
                         units = unitsAttribute.ToString();
                     else
@@ -123,13 +125,18 @@ public class ModelToSheetDataProvider
                         // Look for a dynamic unit property.
                         var unitsProperty = model.GetType().GetProperty($"{property.Name}Units", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
                         units = unitsProperty?.GetValue(model, null).ToString();
+
+                        if (unitsProperty != null && unitsProperty.PropertyType.IsEnum)
+                            validUnits = Enum.GetNames(unitsProperty.PropertyType).ToArray();
+                        else
+                            validUnits = new string[] { units };
                     }
 
                     // Look for a dynamic metadata property.
                     var metaDataProperty = model.GetType().GetProperty($"{property.Name}Metadata", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
                     
                     // Create a new instance of PropertyMetadata and add to the return list of properties.
-                    properties.Add(new PropertyMetadata(model, property, metaDataProperty, displayAttribute.DisplayName, units, displayAttribute.Format));
+                    properties.Add(new PropertyMetadata(model, property, metaDataProperty, displayAttribute.DisplayName, units, validUnits, displayAttribute.Format));
                 }
             }
         }

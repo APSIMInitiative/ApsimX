@@ -3,11 +3,12 @@ using NUnit.Framework;
 using UnitTests.Interop.Documentation.TagRenderers;
 using UserInterface.Views;
 using Gtk.Sheet;
+using UnitTests.Core.ApsimFile;
 
 namespace UnitTests.Sheet;
 
 [TestFixture]
-class ModelToSheetDataProviderTests
+class PropertySheetDataProviderTests
 {
     class ModelWithUnits : Model
     {
@@ -22,15 +23,13 @@ class ModelToSheetDataProviderTests
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithUnits());
         Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(4));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Depth"));
-        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("mm"));
-        Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("0-100"));
-        Assert.That(dataProvider.GetCellContents(0, 3), Is.EqualTo("100-200"));
-        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
-        Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.Normal));
-        Assert.That(dataProvider.GetCellState(0, 3), Is.EqualTo(SheetDataProviderCellState.Normal));
+        Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+        Assert.That(dataProvider.GetColumnName(0), Is.EqualTo("Depth"));
+        Assert.That(dataProvider.GetColumnUnits(0), Is.EqualTo("mm"));
+        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("0-100"));
+        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("100-200"));
+        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.Normal));
+        Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Normal));
     }
 
     class ModelWithDynamicUnits : Model
@@ -47,9 +46,32 @@ class ModelToSheetDataProviderTests
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithDynamicUnits());
         Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(4));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Depth"));
-        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("mm"));
+        Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+        Assert.That(dataProvider.GetColumnName(0), Is.EqualTo("Depth"));
+        Assert.That(dataProvider.GetColumnUnits(0), Is.EqualTo("mm"));
+    }
+
+    class ModelWithValidUnits : Model
+    {
+        public enum UnitsEnum
+        {
+            X,
+            Y
+        }
+
+        [Display]
+        public string[] Depth { get; set; } = new string[] { "0-100", "100-200" };
+
+        public UnitsEnum DepthUnits => UnitsEnum.X;
+    }
+
+    /// <summary>Ensure valid units are found.</summary>
+    [Test]
+    public void TestValidUnits()
+    {
+        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithValidUnits());
+        Assert.That(dataProvider.GetColumnUnits(0), Is.EqualTo("X"));
+        Assert.That(dataProvider.GetColumnValidUnits(0), Is.EqualTo(new string[] { "X", "Y" }));
     }    
 
     class ModelWithFormat : Model
@@ -64,13 +86,13 @@ class ModelToSheetDataProviderTests
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithFormat());
         Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(3));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Value"));
-        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("1.00"));
-        Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("2.00"));
-        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
+        Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+        Assert.That(dataProvider.GetColumnName(0), Is.EqualTo("Value"));
+        Assert.That(dataProvider.GetColumnUnits(0), Is.Null);
+        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("1.00"));
+        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("2.00"));
+        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.Normal));
         Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Normal));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.Normal));
     }
 
     class ModelWithReadonly : Model
@@ -86,7 +108,6 @@ class ModelToSheetDataProviderTests
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithReadonly());
         Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
         Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
     }    
 
     class ModelWithMetadata : Model
@@ -103,9 +124,8 @@ class ModelToSheetDataProviderTests
     public void TestMetadata()
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithMetadata());
-        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
-        Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Calculated));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.Normal));
+        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.Calculated));
+        Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Normal));
     }       
 
     class ModelWithAlias : Model
@@ -119,7 +139,7 @@ class ModelToSheetDataProviderTests
     public void TestDisplayName()
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithAlias());
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Alias"));
+        Assert.That(dataProvider.GetColumnName(0), Is.EqualTo("Alias"));
     }     
 
     class ModelWithNull : Model
@@ -133,23 +153,21 @@ class ModelToSheetDataProviderTests
     public void TestNullProperty()
     {
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithNull());
-        Assert.That(dataProvider.RowCount, Is.EqualTo(1));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Value"));
+        Assert.That(dataProvider.RowCount, Is.EqualTo(0));
+        Assert.That(dataProvider.GetCellContents(0, 0), Is.Null);
     }         
     
     /// <summary>Ensure cannot change the value of a readonly property.</summary>
     [Test]
     public void TestSetValuesDoesntChangeReadonlyProperties()
     {
-        ModelWithUnits model = new();
+        ModelWithReadonly model = new();
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
 
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 0 },   // Try changing the header cell.
+                                     rowIndices: new int[] { 0 },
                                      values: new string[] { "ZZZZ" });
-        Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(4));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Depth"));
+        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("1"));
     }      
 
     /// <summary>Ensure can change the value of a property.</summary>
@@ -160,10 +178,8 @@ class ModelToSheetDataProviderTests
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
 
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 2 },
+                                     rowIndices: new int[] { 0 },
                                      values: new string[] { "ZZZZ" });
-        Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(4));
         Assert.That(model.Depth, Is.EqualTo(new string[] { "ZZZZ", "100-200" }));
     }   
 
@@ -175,48 +191,30 @@ class ModelToSheetDataProviderTests
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
 
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 4 },
+                                     rowIndices: new int[] { 2 },
                                      values: new string[] { "ZZZZ" });
         Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
-        Assert.That(dataProvider.RowCount, Is.EqualTo(5));
-        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("Depth"));
-        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("mm"));
-        Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("0-100"));
-        Assert.That(dataProvider.GetCellContents(0, 3), Is.EqualTo("100-200"));
-        Assert.That(dataProvider.GetCellContents(0, 4), Is.EqualTo("ZZZZ"));
+        Assert.That(dataProvider.RowCount, Is.EqualTo(3));
+        Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("0-100"));
+        Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("100-200"));
+        Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("ZZZZ"));
         Assert.That(model.Depth, Is.EqualTo(new string[] { "0-100", "100-200", "ZZZZ" }));
     } 
-
-    /// <summary>Ensure 'calculated' metadata properties change when data is set.</summary>
-    [Test]
-    public void TestSetValueWithNullProperty()
-    {
-        ModelWithMetadata model = new();
-        model.Value = null;
-        var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
-        dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 1, 2 },
-                                     values: new string[] { "3.0", "4.0" });
-        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
-        Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Normal));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.Normal));
-        Assert.That(model.ValueMetadata, Is.EqualTo(new string[] { null, null }));
-    }      
 
     /// <summary>Ensure 'calculated' metadata properties change when data is set.</summary>
     [Test]
     public void TestSetValueChangesMetadata()
     {
         ModelWithMetadata model = new();
+        model.Value = null;
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 1, 2 },
+                                     rowIndices: new int[] { 0, 1 },
                                      values: new string[] { "3.0", "4.0" });
-        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.ReadOnly));
+        Assert.That(dataProvider.GetCellState(0, 0), Is.EqualTo(SheetDataProviderCellState.Normal));
         Assert.That(dataProvider.GetCellState(0, 1), Is.EqualTo(SheetDataProviderCellState.Normal));
-        Assert.That(dataProvider.GetCellState(0, 2), Is.EqualTo(SheetDataProviderCellState.Normal));
         Assert.That(model.ValueMetadata, Is.EqualTo(new string[] { null, null }));
-    }    
+    }
 
     /// <summary>Ensure the CellChanged event is invoked when data is changed.</summary>
     [Test]
@@ -228,7 +226,7 @@ class ModelToSheetDataProviderTests
         dataProvider.CellChanged += (s, c, r, v) => invoked = true;
 
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 2 },
+                                     rowIndices: new int[] { 1 },
                                      values: new string[] { "ZZZZ" });
 
         Assert.That(invoked, Is.True);
@@ -244,9 +242,44 @@ class ModelToSheetDataProviderTests
         ModelWithFormat model = new();
         var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
         dataProvider.SetCellContents(colIndices: new int[] { 0 }, 
-                                     rowIndices: new int[] { 2 },
+                                     rowIndices: new int[] { 1 },
                                      values: new string[] { "" });
 
         Assert.That(model.Value[1], Is.NaN);
     }
+
+        class ModelWithABProperties : Model
+        {
+            [Display()]
+            public string[] A { get; set; } = new string[] { "a1", "a2", "a3", "a4" };
+
+            [Display()]
+            public string[] B { get; set; } = new string[] { "b1", "b2", "b3", "b4" };
+
+            [Display()]
+            public string[] C { get; set; } = new string[] { "c1", "c2", "c3", "c4" };
+
+            [Display()]
+            public string[] D { get; set; } = new string[] { "d1", "d2", "d3", "d4" };
+            }
+
+        /// <summary>Ensure can delete entire row of grid.</summary>
+        [Test]
+        public void DeleteEntireRow()
+        {
+            var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithABProperties());
+
+            dataProvider.DeleteRows(new int[] { 1, 2 }); 
+            
+            Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
+            Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+            Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("a1"));
+            Assert.That(dataProvider.GetCellContents(1, 0), Is.EqualTo("b1"));
+            Assert.That(dataProvider.GetCellContents(2, 0), Is.EqualTo("c1"));
+            Assert.That(dataProvider.GetCellContents(3, 0), Is.EqualTo("d1"));
+            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a4"));
+            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b4"));
+            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c4"));
+            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d4"));
+        }    
 }

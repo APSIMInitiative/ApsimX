@@ -40,9 +40,12 @@ namespace Gtk.Sheet
         {
             if (sheet.CellSelector != null && sheet.CellSelector.IsSelected(columnIndex, rowIndex))
                 return States.Selected; 
-            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.ReadOnly)
+            if (rowIndex < sheet.NumberFrozenRows)
                 return States.Insensitive;
-            else if (rowIndex < sheet.NumberFrozenRows)
+
+            rowIndex -= sheet.NumberFrozenRows;
+
+            if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.ReadOnly)
                 return States.Insensitive;
             else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.Calculated)
                 return States.Calculated;

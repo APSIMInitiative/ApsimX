@@ -24,14 +24,23 @@ namespace Gtk.Sheet
         /// <summary>An event invoked when a cell changes.</summary>
         event CellChangedDelegate CellChanged;
 
-        /// <summary>Is the data readonly?</summary>
-        bool IsReadOnly { get; }
-
         /// <summary>Gets the number of columns of data.</summary>
         int ColumnCount { get;  }
 
         /// <summary>Gets the number of rows of data.</summary>
         int RowCount { get; }
+
+        /// <summary>Get the name of a column.</summary>
+        /// <param name="colIndex">Column index.</param>
+        string GetColumnName(int colIndex);
+
+        /// <summary>Get the units of a column.</summary>
+        /// <param name="colIndex">Column index.</param>
+        string GetColumnUnits(int colIndex);
+
+        /// <summary>Get the allowable units of a column.</summary>
+        /// <param name="colIndex">Column index.</param>
+        IReadOnlyList<string> GetColumnValidUnits(int colIndex);
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
@@ -58,9 +67,5 @@ namespace Gtk.Sheet
         /// <param name="rowIndex">Row index of cell.</param>
         /// <param name="state">The cell state</param>
         void SetCellState(int colIndex, int rowIndex);
-
-        /// <summary>Get the Units assigned to this column</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        public string GetColumnUnits(int colIndex);
     }
 }

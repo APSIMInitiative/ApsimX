@@ -933,7 +933,7 @@ namespace UserInterface.Presenters
         {
             //fill the grid with data
             DataTableProvider provider = new DataTableProvider(data);
-            gridPresenter.PopulateWithDataProvider(provider, 0, 1);
+            gridPresenter.PopulateWithDataProvider(provider);
         }
 
         public void Dispose()

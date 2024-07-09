@@ -41,19 +41,24 @@ namespace Gtk.Sheet
 
         private bool autoCalculateColumnWidths;
 
+        /// <summary>Put a blank row at bottom of grid?</summary>
+        private bool blankRowAtBottom;
+
         /// <summary>
         /// Constructor
         /// </summary>
         public Sheet(ISheetDataProvider dataProvider, 
                      int numberFrozenColumns,
                      int numberFrozenRows,
-                     int[] columnWidths)
+                     int[] columnWidths,
+                     bool blankRowAtBottom)
         {
-            DataProvider = dataProvider;
             NumberFrozenColumns = numberFrozenColumns;
             NumberFrozenRows = numberFrozenRows;
             ColumnWidths = columnWidths;
             autoCalculateColumnWidths = ColumnWidths == null;
+            this.blankRowAtBottom = blankRowAtBottom;
+            SetDataProvider(dataProvider);
         }
 
         /// <summary>Invoked when a key is pressed.</summary>
@@ -81,7 +86,7 @@ namespace Gtk.Sheet
         public Action<Exception> OnException;
 
         /// <summary>The provider of data for the sheet.</summary>
-        public ISheetDataProvider DataProvider { get; set; }
+        public ISheetDataProvider DataProvider { get; private set; }
 
         /// <summary>The painter to use to get style a cell.</summary>
         public ISheetCellPainter CellPainter { get; set; }
@@ -140,6 +145,61 @@ namespace Gtk.Sheet
         /// <summary>Maximum number of columns that can be hidden (scrolled).</summary>        
         public int MaximumNumberHiddenColumns { get { return CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1); } }
 
+                /// <summary>Maximum number of rows that can be hidden (scrolled).</summary>        
+        public int MaximumNumberHiddenRows { get; private set; }
+
+        /// <summary>Width of the sheet in pixels.</summary>        
+        public int Width { get; set; }
+
+        /// <summary>Height of the sheet in pixels.</summary>        
+        public int Height { get; set; }
+
+        /// <summary>Show grid lines?</summary>
+        public bool ShowLines { get; set; } = true;
+
+        /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
+        public int ColumnPadding { get; set; } = 20;
+
+        /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
+        public int RowCount { get; private set; } = 0;
+
+        /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
+        public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
+
+        /// <summary>A collection of row indexes that are currently visible or partially visible.</summary>        
+        public IEnumerable<int> VisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: false); } }
+
+        /// <summary>A collection of column indexes that are currently fully visible.</summary>        
+        public IEnumerable<int> FullyVisibleColumnIndexes { get { return DetermineVisibleColumnIndexes(fullyVisible: true); } }
+
+        /// <summary>A collection of row indexes that are currently fully visible.</summary>        
+        public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
+
+        public void SetDataProvider(ISheetDataProvider provider)
+        {
+            DataProvider = provider;
+
+            if (DataProvider != null)
+            {
+                bool hasUnits = false;
+                for (int colIndex = 0; colIndex < DataProvider.ColumnCount; colIndex++)
+                    hasUnits = hasUnits || DataProvider.GetColumnUnits(colIndex) != null;
+            
+                // Set the number of frozen rows
+                if (NumberFrozenRows == -1)
+                {
+                    if (hasUnits)
+                        NumberFrozenRows = 2;
+                    else
+                        NumberFrozenRows = 1;
+                }                
+
+                RowCount = DataProvider.RowCount + NumberFrozenRows;
+                if (blankRowAtBottom)
+                    RowCount++;
+            }
+        }
+
         /// <summary>Resize the sheet.</summary>        
         /// <param name="allocationWidth">The width of the sheet.</param>
         /// <param name="allocationHeight">The height of the sheet.</param>
@@ -181,37 +241,6 @@ namespace Gtk.Sheet
         {
             RedrawNeeded?.Invoke(this, new EventArgs());
         }
-
-        /// <summary>Maximum number of rows that can be hidden (scrolled).</summary>        
-        public int MaximumNumberHiddenRows { get; private set; }
-
-        /// <summary>Width of the sheet in pixels.</summary>        
-        public int Width { get; set; }
-
-        /// <summary>Height of the sheet in pixels.</summary>        
-        public int Height { get; set; }
-
-        /// <summary>Show grid lines?</summary>
-        public bool ShowLines { get; set; } = true;
-
-        /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
-        public int ColumnPadding { get; set; } = 20;
-
-        /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
-        public int RowCount { get; set; } = 0;
-
-        /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
-        public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
-
-        /// <summary>A collection of row indexes that are currently visible or partially visible.</summary>        
-        public IEnumerable<int> VisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: false); } }
-
-        /// <summary>A collection of column indexes that are currently fully visible.</summary>        
-        public IEnumerable<int> FullyVisibleColumnIndexes { get { return DetermineVisibleColumnIndexes(fullyVisible: true); } }
-
-        /// <summary>A collection of row indexes that are currently fully visible.</summary>        
-        public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
-
         /// <summary>
         /// The number of rows that might potentially be currently visible, whether they hold data or not, including those partially visible
         /// </summary>
@@ -352,7 +381,7 @@ namespace Gtk.Sheet
             try
             {
                 // Do initialisation
-                //if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
+                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
 
                 if (recalculateWidths)
@@ -364,19 +393,22 @@ namespace Gtk.Sheet
                     }
                 }
 
-                prevNumColumns = DataProvider.ColumnCount;
-                prevNumRows = DataProvider.RowCount;
+                if (DataProvider != null)
+                {
+                    prevNumColumns = DataProvider.ColumnCount;
+                    prevNumRows = DataProvider.RowCount;
 
-                foreach (var columnIndex in VisibleColumnIndexes)
-                    foreach (var rowIndex in VisibleRowIndexes)
-                        DrawCell(cr, columnIndex, rowIndex);
+                    foreach (var columnIndex in VisibleColumnIndexes)
+                        foreach (var rowIndex in VisibleRowIndexes)
+                            DrawCell(cr, columnIndex, rowIndex);
 
-                // Optionally add in blank rows at bottom of grid.
-                int numRowsOfData = VisibleRowIndexes.Count();
-                int numBlankRowsToAdd = 0;
-                foreach (var columnIndex in VisibleColumnIndexes)
-                    for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
-                        DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
+                    // Optionally add in blank rows at bottom of grid.
+                    int numRowsOfData = VisibleRowIndexes.Count();
+                    int numBlankRowsToAdd = 0;
+                    foreach (var columnIndex in VisibleColumnIndexes)
+                        for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
+                            DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
+                }
             }
             catch (Exception err)
             {
@@ -394,10 +426,11 @@ namespace Gtk.Sheet
                 CalculateColumnWidths(cr);
 
             // The first time through here calculate maximum number of hidden rows.
-            if (MaximumNumberHiddenRows == 0)
+            if (MaximumNumberHiddenRows == 0 && DataProvider != null)
+            {
                 MaximumNumberHiddenRows = DataProvider.RowCount - Height/RowHeight; 
-
-            Initialised?.Invoke(this, new EventArgs());
+                Initialised?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <summary>Invoked when the user presses a key.</summary>
@@ -524,11 +557,8 @@ namespace Gtk.Sheet
         /// <param name="cr">The current draing context.</param>
         private void CalculateColumnWidths(IDrawContext cr)
         {
-            if (autoCalculateColumnWidths)
+            if (autoCalculateColumnWidths && DataProvider != null)
             {
-                if (DataProvider == null)
-                    throw new Exception("Unable to calculate column widths as DataProvider was null.");
-                
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
                 if (visibleRows >= DataProvider.RowCount)
                     visibleRows = DataProvider.RowCount - 1;
@@ -555,7 +585,7 @@ namespace Gtk.Sheet
         /// <returns></returns>
         private int GetWidthOfCell(IDrawContext cr, int columnIndex, int rowIndex)
         {
-            var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+            string text = GetCellText(columnIndex, rowIndex);
             if (text == null)
                 text = string.Empty;
 
@@ -572,8 +602,7 @@ namespace Gtk.Sheet
             try
             {
                 string text = null;
-                if (rowIndex < DataProvider.RowCount)
-                    text = DataProvider.GetCellContents(columnIndex, rowIndex);
+                text = GetCellText(columnIndex, rowIndex);
 
                 if (DataProvider.GetColumnUnits(columnIndex) != null)
                 {
@@ -583,7 +612,7 @@ namespace Gtk.Sheet
                         text = "\u2713";
                     }
                 }
-                
+
 
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
                 if (cellBounds != Rectangle.Empty)
@@ -591,7 +620,7 @@ namespace Gtk.Sheet
                     if (text == null)
                         text = string.Empty;
 
-                    cr.Rectangle(cellBounds.Clip(Width-20, Height));
+                    cr.Rectangle(cellBounds.Clip(Width - 20, Height));
                     cr.Clip();
 
                     cr.SetLineWidth(lineWidth);
@@ -602,7 +631,7 @@ namespace Gtk.Sheet
                         // Draw the filled in cell.
 
                         cr.State = CellPainter.GetCellState(columnIndex, rowIndex);
-                        cr.DrawFilledRectangle(cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
+                        cr.DrawFilledRectangle(cellBounds.Left, cellBounds.Top, cellBounds.Width - 5, cellBounds.Height - 5);
 
 
                         // Draw cell outline.
@@ -630,7 +659,7 @@ namespace Gtk.Sheet
                         cr.MoveTo(x, y);
                         cr.DrawText(text, CellPainter.TextBold(columnIndex, rowIndex),
                                             CellPainter.TextItalics(columnIndex, rowIndex));
-                        
+
                     }
                     cr.ResetClip();
                     cr.State = States.Normal;
@@ -640,6 +669,23 @@ namespace Gtk.Sheet
             {
                 OnException(ex);
             }
+        }
+
+        /// <summary>
+        /// Get text for a grid cell.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <param name="rowIndex">The row index.</param>
+        private string GetCellText(int columnIndex, int rowIndex)
+        {
+            string text = null;
+            if (rowIndex == 0)
+                text = DataProvider.GetColumnName(columnIndex);
+            else if (rowIndex == 1 && NumberFrozenRows == 2)
+                text = DataProvider.GetColumnUnits(columnIndex);
+            else if (rowIndex < DataProvider.RowCount + NumberFrozenRows)
+                text = DataProvider.GetCellContents(columnIndex, rowIndex - NumberFrozenRows);
+            return text;
         }
     }
 }

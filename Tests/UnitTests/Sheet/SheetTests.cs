@@ -23,7 +23,8 @@
             var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 30, 40, 50, 60 }); 
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false); 
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -66,7 +67,8 @@
             var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 20, 20, 20, 20 });
+                                  columnWidths: new int[] { 20, 20, 20, 20 },
+                                  blankRowAtBottom: false);
             sheet.Width = 60;
             sheet.Height = 80;
 
@@ -108,9 +110,10 @@
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
             var sheet = new Sheet(new DataTableProvider(data, units),
-                      numberFrozenRows: 1,
-                      numberFrozenColumns: 0,
-                      columnWidths: new int[] { 10, 20, 20, 20 });
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 10, 20, 20, 20 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -157,7 +160,8 @@
             var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 10, 20, 30, 40 });
+                                  columnWidths: new int[] { 10, 20, 30, 40 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -202,7 +206,8 @@
             var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 10, 20, 30, 40 });
+                                  columnWidths: new int[] { 10, 20, 30, 40 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -249,10 +254,10 @@
             var sheet = new Sheet(dataProvider,
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 30, 40, 50, 60 });
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
-            sheet.RowCount = sheet.DataProvider.RowCount;
 
             sheet.ScrollDown();
 
@@ -295,8 +300,8 @@
             var sheet = new Sheet(dataProvider,
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 30, 40, 50, 60 });
-            sheet.RowCount = sheet.DataProvider.RowCount;
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false);
             var multiCellSelector = new MultiCellSelect(sheet);
             sheet.CellSelector = multiCellSelector;
 
@@ -307,63 +312,18 @@
             multiCellSelector.Delete(); 
             
             Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
-            Assert.That(dataProvider.RowCount, Is.EqualTo(3));
-            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a1"));
-            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b1"));
-            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c1"));
-            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d1"));
-            Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("a4"));
-            Assert.That(dataProvider.GetCellContents(1, 2), Is.EqualTo("b4"));
-            Assert.That(dataProvider.GetCellContents(2, 2), Is.EqualTo("c4"));
-            Assert.That(dataProvider.GetCellContents(3, 2), Is.EqualTo("d4"));
+            Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+            Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("a1"));
+            Assert.That(dataProvider.GetCellContents(1, 0), Is.EqualTo("b1"));
+            Assert.That(dataProvider.GetCellContents(2, 0), Is.EqualTo("c1"));
+            Assert.That(dataProvider.GetCellContents(3, 0), Is.EqualTo("d1"));
+            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a4"));
+            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b4"));
+            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c4"));
+            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d4"));
         }
 
-        class ModelWithABProperties : Model
-        {
-            [Display()]
-            public string[] A { get; set; } = new string[] { "a1", "a2", "a3", "a4" };
 
-            [Display()]
-            public string[] B { get; set; } = new string[] { "b1", "b2", "b3", "b4" };
-
-            [Display()]
-            public string[] C { get; set; } = new string[] { "c1", "c2", "c3", "c4" };
-
-            [Display()]
-            public string[] D { get; set; } = new string[] { "d1", "d2", "d3", "d4" };
-            }
-
-        /// <summary>Ensure can delete entire row of grid with a property data provider as backend.</summary>
-        [Test]
-        public void DeleteEntireRowOfSheetProperties()
-        {
-            var dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(new ModelWithABProperties());
-        
-            var sheet = new Sheet(dataProvider,
-                                  numberFrozenRows: 1,
-                                  numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 30, 40, 50, 60 });
-            sheet.RowCount = sheet.DataProvider.RowCount;
-            var multiCellSelector = new MultiCellSelect(sheet);
-            sheet.CellSelector = multiCellSelector;
-
-            // select the 2nd and 3rd rows
-            multiCellSelector.SetSelection(0, 2, 3, 3); 
-
-            // delete the selection.
-            multiCellSelector.Delete(); 
-            
-            Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
-            Assert.That(dataProvider.RowCount, Is.EqualTo(3));
-            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a1"));
-            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b1"));
-            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c1"));
-            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d1"));
-            Assert.That(dataProvider.GetCellContents(0, 2), Is.EqualTo("a4"));
-            Assert.That(dataProvider.GetCellContents(1, 2), Is.EqualTo("b4"));
-            Assert.That(dataProvider.GetCellContents(2, 2), Is.EqualTo("c4"));
-            Assert.That(dataProvider.GetCellContents(3, 2), Is.EqualTo("d4"));
-        }
 
     }
 }

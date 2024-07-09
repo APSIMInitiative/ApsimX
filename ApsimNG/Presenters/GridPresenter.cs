@@ -166,10 +166,24 @@ namespace UserInterface.Presenters
 
         public void SetupSheet(ISheetDataProvider dataProvider)
         {
+            // Determine if sheet is editable
+            bool gridIsEditable = false;
+            if (dataProvider != null)
+            {
+                for (int rowIndex = 0; rowIndex < dataProvider.RowCount; rowIndex++)
+                    for (int columnIndex = 0; columnIndex < dataProvider.ColumnCount; columnIndex++)
+                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        {
+                            gridIsEditable = true;
+                            break;
+                        }
+            }
+
             grid = new SheetWidget(sheetContainer.Widget,  
                                    dataProvider, 
                                    multiSelect: true,
-                                   onException: (err) => ViewBase.MasterView.ShowError(err));
+                                   onException: (err) => ViewBase.MasterView.ShowError(err),
+                                   blankRowAtBottom: gridIsEditable);
 
             contextMenu = new MenuView();
             contextMenuHelper = new ContextMenuHelper(grid);
@@ -185,7 +199,7 @@ namespace UserInterface.Presenters
         /// <param name="dataProvider"></param>
         /// <param name="frozenColumns"></param>
         /// <param name="frozenRows"></param>
-        public void PopulateWithDataProvider(ISheetDataProvider dataProvider, int frozenColumns, int frozenRows)
+        public void PopulateWithDataProvider(ISheetDataProvider dataProvider)
         {
             if (gridTable == null)
             {
@@ -234,10 +248,6 @@ namespace UserInterface.Presenters
                     dataProvider.CellChanged += OnCellChanged;
                 }
             }
-
-            // Add an extra empty row to the grid so that new rows can be created.
-            if (dataProvider != null)
-                grid.RowCount = dataProvider.RowCount + 1;
 
             grid?.UpdateScrollBars();
         }

@@ -127,7 +127,10 @@ namespace Models.Soils
             {
                 if (InitialValues == null)
                     return 0;
-                return MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+                double[] values =  MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                if (values != null)
+                    return values.Sum();
+                return 0;
             }
             set
             {

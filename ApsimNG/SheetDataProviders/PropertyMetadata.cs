@@ -27,13 +27,15 @@ class PropertyMetadata
     /// <param name="metadataProperty">The property info</param>
     /// <param name="alias">The column name to use in the grid.</param>
     /// <param name="units">The units of the property.</param>
+    /// <param name="validUnits">The valid units of the property.</param>
     /// <param name="format">The format to use when displaying values in the grid.</param>
     /// <param name="metadata">The metadata for each value.</param>
-    public PropertyMetadata(object model, PropertyInfo property, PropertyInfo metadataProperty, string alias, string units, string format)
+    public PropertyMetadata(object model, PropertyInfo property, PropertyInfo metadataProperty, string alias, string units, string[] validUnits, string format)
     {
         this.obj = model;
         this.property = property;
         this.metadataProperty = metadataProperty;
+        ValidUnits = validUnits;
         Alias = alias;
         if (Alias == null)
             Alias = property.Name;
@@ -57,6 +59,9 @@ class PropertyMetadata
     
     /// <summary>The units of the property.</summary>
     public string Units { get; set; }
+
+    /// <summary>The valid units of the property.</summary>
+    public string[] ValidUnits { get; }
     
     /// <summary>The metadata of the property.</summary>
     public List<SheetDataProviderCellState> Metadata { get; }

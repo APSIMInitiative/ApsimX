@@ -66,7 +66,8 @@ namespace Gtk.Sheet
                 {
                     for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                     {
-                        var cellText = sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
+                        int dataRowIndex = rowIndex - sheet.NumberFrozenRows;
+                        var cellText = sheet.DataProvider.GetCellContents(columnIndex, dataRowIndex);
                         textToCopy.Append(cellText);
                         if (columnIndex != selectedColumnIndexRight)
                             textToCopy.Append('\t');
@@ -231,7 +232,7 @@ namespace Gtk.Sheet
             {
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                 {
-                    rowIndices[i] = rowIndex;
+                    rowIndices[i] = rowIndex - sheet.NumberFrozenRows;
                     columnIndices[i] = columnIndex;
                     values[i] = string.Empty;
                     i++;

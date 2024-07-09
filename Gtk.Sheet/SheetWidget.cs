@@ -39,6 +39,7 @@ namespace Gtk.Sheet
                            bool multiSelect,
                            int numberFrozenColumns = 0,
                            int numberFrozenRows = -1,
+                           bool blankRowAtBottom = false,
                            int[] columnWidths = null,
                            Action<Exception> onException = null)
         {
@@ -48,7 +49,8 @@ namespace Gtk.Sheet
             Sheet = new Sheet(dataProvider,
                               numberFrozenColumns,
                               numberFrozenRows,
-                              columnWidths);
+                              columnWidths,
+                              blankRowAtBottom);
 
             if (multiSelect)
                 Sheet.CellSelector = new MultiCellSelect(Sheet);
@@ -67,18 +69,7 @@ namespace Gtk.Sheet
         }
 
         /// <summary>The number of rows in the grid.</summary>
-        public int RowCount
-        {
-            get
-            {
-                return Sheet.RowCount;
-            }
-            set
-            {
-                Sheet.RowCount = value;
-            }
-        }
-        
+        public int RowCount => Sheet.RowCount;
 
         /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
         public int NumberFrozenRows => Sheet.NumberFrozenRows;              
@@ -89,25 +80,10 @@ namespace Gtk.Sheet
         /// <param name="dataProvider">The data provider.</param>
         public void SetDataProvider(ISheetDataProvider dataProvider)
         {
-            Sheet.DataProvider = dataProvider;
+            Sheet.SetDataProvider(dataProvider);
             if (dataProvider != null)
             {
-                bool hasUnits = false;
-                for (int colIndex = 0; colIndex < dataProvider.ColumnCount; colIndex++)
-                    hasUnits = hasUnits || dataProvider.GetColumnUnits(colIndex) != null;
-            
-                // Set the number of frozen rows
-                if (Sheet.NumberFrozenRows == -1)
-                {
-                    if (hasUnits)
-                        Sheet.NumberFrozenRows = 2;
-                    else
-                        Sheet.NumberFrozenRows = 1;
-                }
-
-                Sheet.RowCount = dataProvider.RowCount + 1;   // +1 for empty row at bottom of sheet.
-
-                if (!dataProvider.IsReadOnly && Sheet.CellEditor == null)
+                if (Sheet.CellEditor == null)
                     Sheet.CellEditor = new CellEditor(Sheet, this);
             }
         }

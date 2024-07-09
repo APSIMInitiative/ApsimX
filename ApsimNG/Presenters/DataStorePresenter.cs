@@ -210,9 +210,9 @@ namespace UserInterface.Presenters
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        gridPresenter.PopulateWithDataProvider(dataProvider, dataProvider.NumPriorityColumns, dataProvider.NumHeadingRows);
+                        gridPresenter.PopulateWithDataProvider(dataProvider);
 
-                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
+                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount}";
                     }
                     catch (Exception err)
                     {
