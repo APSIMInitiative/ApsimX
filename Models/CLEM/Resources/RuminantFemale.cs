@@ -232,20 +232,29 @@ namespace Models.CLEM.Resources
                     return "Pregnant";
                 else if (IsLactating)
                     return "Lactating";
-                else
+                else if (IsBreeder)
                 {
-                    switch (LastConceptionStatus)
+                    if (IsAbleToBreed)
                     {
-                        case ConceptionStatus.Failed:
-                        case ConceptionStatus.Unsuccessful:
-                        case ConceptionStatus.NotMated:
-                        case ConceptionStatus.NotReady:
-                        case ConceptionStatus.NotAvailable:
-                            return LastConceptionStatus.ToString();
-                        default:
-                            return "NotReady";
+                        switch (LastConceptionStatus)
+                        {
+                            case ConceptionStatus.Failed:
+                            case ConceptionStatus.Unsuccessful:
+                            case ConceptionStatus.NotMated:
+                            case ConceptionStatus.NotAvailable:
+                                return LastConceptionStatus.ToString();
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        return "NotReady";
                     }
                 }
+                else
+                    return "NotReady";
+                return "NoBreeding";
             }
         }
 

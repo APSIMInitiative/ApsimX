@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
         { 
             get 
             { 
-                if (Details.Amount == 0)
+                if (MathUtilities.IsLessThanOrEqual(0.0, Details.Amount))
                     return 0;
                 return Details.MEContent * Details.Amount; 
             } 
