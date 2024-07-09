@@ -116,7 +116,9 @@ namespace UserInterface.Views
                 Box hbox = new Box(Orientation.Horizontal, 0);
 
                 ViewBase view = (ViewBase)control;
+
                 hbox.Add(view.MainWidget);
+                view.MainWidget.Expand = true;
                 frame.Add(hbox);
                 newViewport.Add(frame);
 
