@@ -49,12 +49,8 @@ namespace UserInterface.Views
         private Box vbox1 = null;
         private Notebook notebook1 = null;
         private TextView textview1 = null;
-        private Alignment alignSummary = null;
-        private Alignment alignData = null;
-        private Alignment alignRainChart = null;
-        private Alignment alignRainMonthly = null;
-        private Alignment alignTemp = null;
-        private Alignment alignRadn = null;
+        private Box vboxSummary = null;
+        private Box vboxData = null;
         private Box vboxRainChart = null;
         private Box vboxRainMonthly = null;
         private Box vboxTemp = null;
@@ -65,7 +61,7 @@ namespace UserInterface.Views
         private Button button1 = null;
         private Paned vpaned1 = null;
         private Box hbox2 = null;
-        private Alignment alignment10 = null;
+        private Box vboxWorksheet = null;
         private DropDownView worksheetCombo;
         private Button constantsFileSelector;
         private Container constantsFileSelectorContainer;
@@ -79,12 +75,8 @@ namespace UserInterface.Views
             vbox1 = (Box)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             textview1 = (TextView)builder.GetObject("textview1");
-            alignSummary = (Alignment)builder.GetObject("alignSummary");
-            alignData = (Alignment)builder.GetObject("alignData");
-            alignRainChart = (Alignment)builder.GetObject("alignRainChart");
-            alignRainMonthly = (Alignment)builder.GetObject("alignRainMonthly");
-            alignTemp = (Alignment)builder.GetObject("alignTemp");
-            alignRadn = (Alignment)builder.GetObject("alignRadn");
+            vboxSummary = (Box)builder.GetObject("vboxSummary");
+            vboxData = (Box)builder.GetObject("vboxData");
             vboxRainChart = (Box)builder.GetObject("vboxRainChart");
             vboxRainMonthly = (Box)builder.GetObject("vboxRainMonthly");
             vboxTemp = (Box)builder.GetObject("vboxTemp");
@@ -95,14 +87,14 @@ namespace UserInterface.Views
             button1 = (Button)builder.GetObject("button1");
             vpaned1 = (Paned)builder.GetObject("vpaned1");
             hbox2 = (Box)builder.GetObject("hbox2");
-            alignment10 = (Alignment)builder.GetObject("alignment10");
+            vboxWorksheet = (Box)builder.GetObject("vboxWorksheet");
             constantsFileSelector = (Button)builder.GetObject("button2");
             constantsFileSelector.Clicked += OnChooseConstantsFile;
             constantsFileSelectorContainer = (Container)builder.GetObject("hbox3");
             labelConstantsFileName = (Label)builder.GetObject("labelFileName1");
             mainWidget = vbox1;
             graphViewSummary = new GraphView(this);
-            alignSummary.Add(graphViewSummary.MainWidget);
+            vboxSummary.PackEnd(graphViewSummary.MainWidget, true, true, 0);
             graphViewRainfall = new GraphView(this);
             vboxRainChart.PackEnd(graphViewRainfall.MainWidget, true, true, 0);
             graphViewMonthlyRainfall = new GraphView(this);
@@ -111,10 +103,8 @@ namespace UserInterface.Views
             vboxTemp.PackEnd(graphViewTemperature.MainWidget, true, true, 0);
             graphViewRadiation = new GraphView(this);
             vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
-
             container = new ContainerView(owner);
-            alignData.Add(container.MainWidget);
-            
+            vboxData.PackEnd(container.MainWidget, true, true, 0);
 
             button1.Clicked += OnButton1Click;
             spinStartYear.ValueChanged += OnGraphStartYearValueChanged;
@@ -125,7 +115,7 @@ namespace UserInterface.Views
             GraphStartYearValue = 2000;
             GraphShowYearsValue = 1;
             worksheetCombo = new DropDownView(this);
-            alignment10.Add(worksheetCombo.MainWidget);
+            vboxWorksheet.PackEnd(worksheetCombo.MainWidget, true, true, 0);
             worksheetCombo.Visible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -383,42 +373,42 @@ namespace UserInterface.Views
                 switch (e.PageNum)
                 {
                     case 2:
-                        if (hboxOptions.Parent != alignRainChart)
+                        if (hboxOptions.Parent != vboxRainChart)
                         {
                             if (hboxOptions.Parent is Container container)
                                 container.Remove(hboxOptions);
 
-                            alignRainChart.Add(hboxOptions);
+                            vboxRainChart.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 3:
-                        if (hboxOptions.Parent != alignRainMonthly)
+                        if (hboxOptions.Parent != vboxRainMonthly)
                         {
                             if (hboxOptions.Parent is Container container)
                                 container.Remove(hboxOptions);
 
-                            alignRainMonthly.Add(hboxOptions);
+                            vboxRainMonthly.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 4:
-                        if (hboxOptions.Parent != alignTemp)
+                        if (hboxOptions.Parent != vboxTemp)
                         {
                             if (hboxOptions.Parent is Container container)
                                 container.Remove(hboxOptions);
 
-                            alignTemp.Add(hboxOptions);
+                            vboxTemp.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 5:
-                        if (hboxOptions.Parent != alignRadn)
+                        if (hboxOptions.Parent != vboxRadn)
                         {
                             if (hboxOptions.Parent is Container container)
                                 container.Remove(hboxOptions);
 
-                            alignRadn.Add(hboxOptions);
+                            vboxRadn.Add(hboxOptions);
                             moved = true;
                         }
                         break;
