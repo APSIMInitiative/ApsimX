@@ -468,7 +468,7 @@ namespace UserInterface.Views
                 newLabel.Justify = Justification.Center;
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
                 {
-                    (newLabel.Parent as Alignment).LeftPadding = 2;
+                    (newLabel.Parent as Widget).MarginStart = 2;
                 }
 
                 newLabel.UseMarkup = true;

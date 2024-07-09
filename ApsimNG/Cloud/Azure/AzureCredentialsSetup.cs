@@ -135,10 +135,8 @@ namespace ApsimNG.Cloud.Azure
 
             primaryContainer.Attach(buttonContainer, 0, 9, 2, 1);
 
-            Alignment adj = new Alignment(0f, 0f, 1f, 0f); // 3rd argument is 1 to make the controls to scale (horizontally) with viewport size
-            adj.LeftPadding = adj.RightPadding = adj.TopPadding = adj.BottomPadding = 15;
-            adj.Add(primaryContainer);
-            Add(adj);
+            primaryContainer.Margin = 15;
+            Add(primaryContainer);
 
             WindowPosition = WindowPosition.Center;
 
