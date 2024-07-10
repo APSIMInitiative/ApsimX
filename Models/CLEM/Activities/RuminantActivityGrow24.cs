@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
             if (!ind.IsWeaned)
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother performed before this method is called.
-                double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate2 / ind.Mother.SucklingOffspringList.Count);
+                double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
                 yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4))); 
             }
 
@@ -294,13 +294,14 @@ namespace Models.CLEM.Activities
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 double received = 0;
                 if(ind.Mother is not null)
-                    received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate2 / ind.Mother.SucklingOffspringList.Count);
-                ind.Mother?.Milk.Take(received*events.Interval, MilkUseReason.Suckling);
-
-                milkPacket.MetabolisableEnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
-                milkPacket.CrudeProteinPercent = ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15;
-                milkPacket.Amount = received;
-                ind.Intake.AddFeed(milkPacket);
+                {
+                    received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
+                    milkPacket.MetabolisableEnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
+                    milkPacket.CrudeProteinPercent = ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15;
+                    milkPacket.Amount = received;
+                    ind.Mother.Milk.Take(received * events.Interval, MilkUseReason.Suckling);
+                    ind.Intake.AddFeed(milkPacket);
+                }
 
                 double milkIntakeME = ind.Intake.MilkME;
                 double solidsIntakeME = ind.Intake.SolidsME;
@@ -342,7 +343,7 @@ namespace Models.CLEM.Activities
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
-            double test = ind.Intake.kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth / ind.Intake.kDPLS));
+            //double test = ind.Intake.kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth / ind.Intake.kDPLS));
             double proteinAvailableForGain = ind.Intake.UseableDPLS - ind.ProteinRequiredBeforeGrowth;
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
@@ -364,11 +365,13 @@ namespace Models.CLEM.Activities
             {
                 // Equations 75-76   ==================================================  Freer et al. (2012) The GRAZPLAN animal biology model
                 // Equation 110 Modified  ================
-                double MP = (1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.PotentialRate2;
-                indFemale.Milk.Available = MP * events.Interval;
+                double MP = (1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.ProductionRate;
+                indFemale.Milk.Available = MP * events.Interval / indFemale.Milk.EnergyContent;
                 indFemale.Milk.Produced = indFemale.Milk.Available;
+                indFemale.Milk.ProductionRate = MP;
+                indFemale.Milk.ProductionRatePrevious = MP;
 
-                indFemale.Milk.Protein = (ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0) * (MP / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
+                indFemale.Milk.Protein = (indFemale.Milk.ProteinPercent / 100.0) * (MP / indFemale.Milk.EnergyContent);
                 milkProtein = indFemale.Milk.Protein;
 
                 // Equation 75  ================
@@ -384,7 +387,7 @@ namespace Models.CLEM.Activities
                 proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
                 // Equation 112  ================
                 // Here we adjust proteinAvailableForGain (PG1) rather than use PG2 from report as we can do these equations where Female object known in this if statement and Pg2 is set to PG1 if there are no lactation limits.
-                indFemale.Milk.ProteinReduced = (indFemale.Milk.PotentialRate2 - MP) * ((ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0 ) / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6);
+                indFemale.Milk.ProteinReduced = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0 ) / indFemale.Milk.EnergyContent);
                 proteinAvailableForGain += indFemale.Milk.ProteinReduced;
             }
 
@@ -406,9 +409,11 @@ namespace Models.CLEM.Activities
                     else // energy limited
                     {
                         finalprotein = proteinNeededForGrowth;
+
+                        // LOGIC FAULT
                         // excess protein is converted to energy available for fat
-                        ind.Energy.Protein.Extra = (proteinAvailableForGain - proteinNeededForGrowth) * mJEnergyPerKgProtein;
-                        energyAvailableForGain += ind.Energy.Protein.Extra; 
+                        //ind.Energy.Protein.Extra = (proteinAvailableForGain - proteinNeededForGrowth) * mJEnergyPerKgProtein;
+                        //energyAvailableForGain += ind.Energy.Protein.Extra; 
                     }
                 }
                 else
@@ -568,12 +573,11 @@ namespace Models.CLEM.Activities
             // This is first called in potential intake using last month's energy available after pregnancy and updateValues = false
             // It is called again in CalculateEnergy of WeightGain where it uses the energy available after intake from the current time step.
 
-            if ((ind.IsLactating | MathUtilities.IsPositive(ind.Milk.PotentialRate)) == false)
-                return 0;
-
             ind.Milk.Milked = 0;
             ind.Milk.Suckled = 0;
 
+            if ((ind.IsLactating | MathUtilities.IsPositive(ind.Milk.PotentialRate)) == false)
+                return 0;
 
             // update old parameters in breed params to new approach based on energy and not L milk.
             // TODO: new intercept = 0.4 and coefficient = 0.02
@@ -587,24 +591,34 @@ namespace Models.CLEM.Activities
             if (ind.SucklingOffspringList.Any() == false)
                 milkCurve = ind.Parameters.Lactation.MilkCurveNonSuckling;
 
+            // milk quality - will be dynamic with milkdays etc when relationships provided
+            ind.Milk.EnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
+            ind.Milk.ProteinPercent = ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15;
+
             // Equations 66-76   ==================================================
             // Equation 74  ===================================================
             double DR = 1.0;
             double MEforMilkPreviousDay = ind.Energy.AfterPregnancy;
             if (MathUtilities.IsGreaterThan(ind.Milk.MaximumRate, 0.0))
-                DR = ind.Milk.PotentialRate2 / ind.Milk.MaximumRate;
-                MEforMilkPreviousDay += ind.Energy.ForFetus;
+                DR = ind.Milk.ProductionRatePrevious / ind.Milk.MaximumRate;
+// based on previous time-step
+            MEforMilkPreviousDay += ind.Energy.ForFetus;
 
-            double LR = (ind.Parameters.Grow24_CKCL.PotentialYieldReduction2_CL18 * DR) * ((1 - ind.Parameters.Grow24_CKCL.PotentialYieldReduction2_CL18) * DR);
+            // LR -> Milk lag
+            ind.Milk.Lag = (ind.Parameters.Grow24_CKCL.PotentialYieldReduction2_CL18 * DR) * ((1 - ind.Parameters.Grow24_CKCL.PotentialYieldReduction2_CL18) * DR);
 
             double nutritionAfterPeakLactationFactor = 1; // LB
             if (MathUtilities.IsGreaterThan(milkTime, 0.7 * ind.Parameters.Lactation.MilkPeakDay))
-                nutritionAfterPeakLactationFactor = ind.Milk.NutritionAfterPeakLactationFactor - ind.Parameters.Grow24_CKCL.PotentialYieldReduction_CL17 * (LR - DR);
+                nutritionAfterPeakLactationFactor = ind.Milk.NutritionAfterPeakLactationFactor - ind.Parameters.Grow24_CKCL.PotentialYieldReduction_CL17 * (ind.Milk.Lag - DR);
 
             double Mm = (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay;
 
-            double milkProductionMax = ind.Parameters.Grow24_CKCL.PeakYieldScalar_CL0[ind.NumberOfSucklings - 1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
+            double milkProductionMax = 0;
+            if (ind.SucklingOffspringList.Any())
+                milkProductionMax = ind.Parameters.Grow24_CKCL.PeakYieldScalar_CL0[ind.NumberOfSucklings - 1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
                 Math.Pow(Mm, milkCurve) * Math.Exp(milkCurve * (1 - Mm));
+            else
+                milkProductionMax = 0.94 * ind.Milk.EnergyContent * ind.Parameters.Grow24_CKCL.ExpectedPeakYield * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor * Math.Pow(Mm, ind.Parameters.Grow24_CKCL.MilkCurveNonSuckling_CL4) * Math.Exp(ind.Parameters.Grow24_CKCL.MilkCurveNonSuckling_CL4 * (1 - Mm));
 
             double ratioMilkProductionME = (MEforMilkPreviousDay * 0.94 * kl * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar)/milkProductionMax; // Eq. 69
 
@@ -614,28 +628,28 @@ namespace Models.CLEM.Activities
                 ratioMilkProductionME + ind.Parameters.Grow24_CKCL.PotentialYieldLactationEffect_CL21 * ad * (ratioMilkProductionME - ind.Parameters.Grow24_CKCL.PotentialYieldLactationEffect2_CL22 * ad) - ind.Parameters.Grow24_CKCL.PotentialYieldConditionEffect_CL23
                 * ind.Weight.RelativeCondition * (ratioMilkProductionME - ind.Parameters.Grow24_CKCL.PotentialYieldConditionEffect2_CL24 * ind.Weight.RelativeCondition))));
 
-            double sucklingExpected = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkConsumptionLimit3_CL14 * milkTime));
+            double sucklingExpected = ind.Milk.EnergyContent * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkConsumptionLimit3_CL14 * milkTime)));
             double MP2 = Math.Min(MP1, ind.NumberOfSucklings * sucklingExpected);
 
             foreach (var suckling in ind.SucklingOffspringList)
             {
-                suckling.Intake.MilkDaily.Expected = sucklingExpected;
+                suckling.Intake.MilkDaily.Expected = sucklingExpected / ind.Milk.EnergyContent;
             }
 
             if (updateValues)
             {
-                ind.Milk.Lag = LR;
                 ind.Milk.NutritionAfterPeakLactationFactor = nutritionAfterPeakLactationFactor;
                 ind.Milk.MaximumRate = milkProductionMax;
-                ind.Milk.PotentialRate2 = MP2;
+                ind.Milk.ProductionRatePrevious = MP2;
             }
 
             // Equation 76  ================================================== 0.032 -- All milk production is in MJ/day
-            ind.Milk.Protein = (ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
+            ind.Milk.Protein = (ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
 
-            ind.Milk.PotentialRate = MP2;
-            ind.Milk.Available = MP2 * events.Interval;
-            ind.Milk.Produced = ind.Milk.Available;
+            ind.Milk.Produced = MP2 * events.Interval / ind.Milk.EnergyContent;
+            ind.Milk.PotentialRate = MP1;
+            ind.Milk.ProductionRate = MP2;
+            ind.Milk.Available = ind.Milk.Produced;
 
             // returns the energy required for milk production (MJ/Day)
             return MP2 / (0.94 * kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;

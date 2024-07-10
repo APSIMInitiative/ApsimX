@@ -10,47 +10,55 @@ namespace Models.CLEM.Resources
     public class RuminantInfoLactation
     {
         /// <summary>
+        /// Potential rate (MJ/day)
+        /// </summary>
+        public double PotentialRate { get; set; }
+        /// <summary>
         /// Production rate (MJ/day)
         /// </summary>
         public double ProductionRate { get; set; }
         /// <summary>
+        /// Production rate from the previous time-step (MJ/day)
+        /// </summary>
+        public double ProductionRatePrevious { get; set; }
+        /// <summary>
         /// Maximum production rate (MJ/day)
         /// </summary>
         public double MaximumRate { get; set; }
+        ///// <summary>
+        ///// Potential milk production (MJ/day)
+        ///// </summary>
+        //public double PotentialRate { get; set; }
+        ///// <summary>
+        ///// Potential milk production MP2 (MJ/day)
+        ///// </summary>
+        //public double PotentialRate2 { get; set; }
         /// <summary>
-        /// Potential milk production (MJ/day)
-        /// </summary>
-        public double PotentialRate { get; set; }
-        /// <summary>
-        /// Potential milk production MP2 (MJ/day)
-        /// </summary>
-        public double PotentialRate2 { get; set; }
-        /// <summary>
-        /// Amount produced (MJ)
+        /// Amount produced (kg)
         /// </summary>
         [FilterByProperty]
         public double Produced { get; set; }
         /// <summary>
-        /// Amount currently available (MJ)
+        /// Amount currently available (kg)
         /// </summary>
         [FilterByProperty]
         public double Available { get; set; }
         /// <summary>
-        /// Amount milked (MJ)
+        /// Amount milked (kg)
         /// </summary>
         [FilterByProperty]
         public double Milked { get; set; }
         /// <summary>
-        /// Amount suckled (MJ)
+        /// Amount suckled (kg)
         /// </summary>
         [FilterByProperty]
         public double Suckled { get; set; }
         /// <summary>
-        /// Protein required for lactation
+        /// Protein required for lactation (kg)
         /// </summary>
         public double Protein { get; set; }
         /// <summary>
-        /// Protein saved by lactation reduction
+        /// Protein saved by lactation reduction (kg)
         /// </summary>
         public double ProteinReduced { get; set; }
         /// <summary>
@@ -66,6 +74,14 @@ namespace Models.CLEM.Resources
             }
         }
         /// <summary>
+        /// The percent protein of the milk produced (kg/kg * 100)
+        /// </summary>
+        public double ProteinPercent { get; set; }
+        /// <summary>
+        /// The energy content of the milk produced (MJ)
+        /// </summary>
+        public double EnergyContent { get; set; }
+        /// <summary>
         /// Lag term for milk production
         /// </summary>
         public double Lag { get; set; }
@@ -78,18 +94,18 @@ namespace Models.CLEM.Resources
         /// </summary>
         public bool MilkingPerformed { get; set; } = false;
 
-        /// <summary>
-        /// The proportion of the potential milk production achieved in timestep
-        /// </summary>
-        public double ProportionMilkProductionAchieved 
-        { 
-            get 
-            { 
-                if (PotentialRate > 0)
-                    return ProductionRate / PotentialRate;
-                return 0;
-            }
-        }
+        ///// <summary>
+        ///// The proportion of the potential milk production achieved in timestep
+        ///// </summary>
+        //public double ProportionMilkProductionAchieved 
+        //{ 
+        //    get 
+        //    { 
+        //        if (PotentialRate > 0)
+        //            return ProductionRate / PotentialRate;
+        //        return 0;
+        //    }
+        //}
 
         /// <summary>
         /// Method to remove milk from female
@@ -118,8 +134,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            ProductionRate = 0;
             PotentialRate = 0;
+            ProductionRate = 0;
+            ProductionRatePrevious = 0;
             Produced = 0;
             Available = 0;
             Milked = 0;

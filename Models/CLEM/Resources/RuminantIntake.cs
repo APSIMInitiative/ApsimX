@@ -208,6 +208,8 @@ namespace Models.CLEM.Resources
             {
                 item.Value.Reset();
             }
+            dpls = double.NaN;
+            kDPLS = double.NaN;
         }
 
         /// <summary>

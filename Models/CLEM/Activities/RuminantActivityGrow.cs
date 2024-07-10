@@ -196,8 +196,9 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        femaleind.Milk.ProductionRate = 0;
                         femaleind.Milk.PotentialRate = 0;
+                        femaleind.Milk.ProductionRate = 0;
+                        femaleind.Milk.ProductionRatePrevious = 0;
                         femaleind.Milk.Available = 0;
                         femaleind.Milk.Milked = 0;
                         femaleind.Milk.Suckled = 0;

@@ -573,7 +573,8 @@ namespace Models.CLEM.Resources
             DateOfLastBirth = date;
             Milk.Lag = 1;
             Milk.PotentialRate = 0;
-            Milk.PotentialRate2 = 0;
+            Milk.ProductionRate = 0;
+            Milk.ProductionRatePrevious = 0;
             Milk.MaximumRate = 0;
             Fetuses.Clear();
             Milk.MilkingPerformed = false;

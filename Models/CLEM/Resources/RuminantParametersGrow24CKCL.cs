@@ -51,6 +51,13 @@ namespace Models.CLEM.Resources
         #endregion
 
         #region Lactation CL#
+        /// <summary>
+        /// Expected Peak yield lactation for milking 
+        /// </summary>
+        [Category("Farm", "Lactation")]
+        [Description("Expected peak lactation (kg) when milking")]
+        [Required, GreaterThanEqualValue(0)]
+        public double ExpectedPeakYield { get; set; } = 20.0;
 
         /// <summary>
         /// Peak yield lactation scalar (SCA CL0) 
