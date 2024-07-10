@@ -178,6 +178,8 @@ namespace UserInterface.Presenters
                             break;
                         }
             }
+            else
+                gridIsEditable = true;
 
             grid = new SheetWidget(sheetContainer.Widget,  
                                    dataProvider, 
