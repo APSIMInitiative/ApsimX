@@ -61,34 +61,34 @@
             // Ensure correct scoping from leaf1 (remember Plant is a scoping unit)
             var leaf1 = simulation.Children[2].Children[1].Children[0];
             List<IModel> inScopeOfLeaf1 = leaf1.FindAllInScope().ToList();
-            Assert.AreEqual(inScopeOfLeaf1.Count, 10);
-            Assert.AreEqual(inScopeOfLeaf1[0].Name, "Plant");
-            Assert.AreEqual(inScopeOfLeaf1[1].Name, "leaf1");
-            Assert.AreEqual(inScopeOfLeaf1[2].Name, "stem1");
-            Assert.AreEqual(inScopeOfLeaf1[3].Name, "zone1");
-            Assert.AreEqual(inScopeOfLeaf1[4].Name, "Soil");
-            Assert.AreEqual(inScopeOfLeaf1[5].Name, "Plant");
-            Assert.AreEqual(inScopeOfLeaf1[6].Name, "Simulation");
-            Assert.AreEqual(inScopeOfLeaf1[7].Name, "Clock");
-            Assert.AreEqual(inScopeOfLeaf1[8].Name, "MockSummary");
-            Assert.AreEqual(inScopeOfLeaf1[9].Name, "zone2");
+            Assert.That(inScopeOfLeaf1.Count, Is.EqualTo(10));
+            Assert.That(inScopeOfLeaf1[0].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[1].Name, Is.EqualTo("leaf1"));
+            Assert.That(inScopeOfLeaf1[2].Name, Is.EqualTo("stem1"));
+            Assert.That(inScopeOfLeaf1[3].Name, Is.EqualTo("zone1"));
+            Assert.That(inScopeOfLeaf1[4].Name, Is.EqualTo("Soil"));
+            Assert.That(inScopeOfLeaf1[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[6].Name, Is.EqualTo("Simulation"));
+            Assert.That(inScopeOfLeaf1[7].Name, Is.EqualTo("Clock"));
+            Assert.That(inScopeOfLeaf1[8].Name, Is.EqualTo("MockSummary"));
+            Assert.That(inScopeOfLeaf1[9].Name, Is.EqualTo("zone2"));
 
             // Ensure correct scoping from soil
             var soil = simulation.Children[2].Children[0];
             List<IModel> inScopeOfSoil = soil.FindAllInScope().ToList();
-            Assert.AreEqual(inScopeOfSoil.Count, 12);
-            Assert.AreEqual(inScopeOfSoil[0].Name, "zone1");
-            Assert.AreEqual(inScopeOfSoil[1].Name, "Soil");
-            Assert.AreEqual(inScopeOfSoil[2].Name, "Plant");
-            Assert.AreEqual(inScopeOfSoil[3].Name, "leaf1");
-            Assert.AreEqual(inScopeOfSoil[4].Name, "stem1");
-            Assert.AreEqual(inScopeOfSoil[5].Name, "Plant");
-            Assert.AreEqual(inScopeOfSoil[6].Name, "leaf2");
-            Assert.AreEqual(inScopeOfSoil[7].Name, "stem2");
-            Assert.AreEqual(inScopeOfSoil[8].Name, "Simulation");
-            Assert.AreEqual(inScopeOfSoil[9].Name, "Clock");
-            Assert.AreEqual(inScopeOfSoil[10].Name, "MockSummary");
-            Assert.AreEqual(inScopeOfSoil[11].Name, "zone2");
+            Assert.That(inScopeOfSoil.Count, Is.EqualTo(12));
+            Assert.That(inScopeOfSoil[0].Name, Is.EqualTo("zone1"));
+            Assert.That(inScopeOfSoil[1].Name, Is.EqualTo("Soil"));
+            Assert.That(inScopeOfSoil[2].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[3].Name, Is.EqualTo("leaf1"));
+            Assert.That(inScopeOfSoil[4].Name, Is.EqualTo("stem1"));
+            Assert.That(inScopeOfSoil[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[6].Name, Is.EqualTo("leaf2"));
+            Assert.That(inScopeOfSoil[7].Name, Is.EqualTo("stem2"));
+            Assert.That(inScopeOfSoil[8].Name, Is.EqualTo("Simulation"));
+            Assert.That(inScopeOfSoil[9].Name, Is.EqualTo("Clock"));
+            Assert.That(inScopeOfSoil[10].Name, Is.EqualTo("MockSummary"));
+            Assert.That(inScopeOfSoil[11].Name, Is.EqualTo("zone2"));
         }
     }
 }

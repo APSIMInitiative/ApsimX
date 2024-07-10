@@ -7,6 +7,7 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
+using Gtk.Sheet;
 
 namespace UserInterface.Views
 {
@@ -210,6 +211,7 @@ namespace UserInterface.Views
                 if (isDrawingArc)
                     arcs.Add(tempArc);
 
+                DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
 
                 if (isDrawingArc)

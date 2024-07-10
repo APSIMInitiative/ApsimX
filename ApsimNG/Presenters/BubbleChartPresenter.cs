@@ -87,11 +87,9 @@ namespace UserInterface.Presenters
 
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
 
-
-
             RefreshView();
 
-            this.view.Select(0); //have nothing selected
+            this.view.ClearSelection(); //have nothing selected
         }
 
         /// <summary>

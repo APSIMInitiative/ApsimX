@@ -57,7 +57,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             HeadingBlock block = new HeadingBlock(new HeadingBlockParser()) { Level = 1, Inline = new ContainerInline() };
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(0, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             string text = "heading text";
             renderer.Write(pdfBuilder, CreateHeading(text));
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual($"1 {text}", paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo($"1 {text}"));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             renderer.Write(pdfBuilder, CreateHeading("contents"));
 
             // There should be two paragraphs in the document.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             pdfBuilder.AppendText("this should be in a new paragraph", TextStyle.Normal);
 
             // There should be two paragarphs in the document.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             renderer.Write(pdfBuilder, CreateHeading("heading level 1", 1));
             renderer.Write(pdfBuilder, CreateHeading("heading level 2", 2));
 
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
 
             Paragraph paragraph0 = (Paragraph)document.LastSection.Elements[0];
             Paragraph paragraph1 = (Paragraph)document.LastSection.Elements[1];
@@ -143,7 +143,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
 
             // heading0 is heading level 1, so should haved larger font size than
             // heading1, which is a level 2 heading.
-            Assert.Greater(fontSize0, fontSize1);
+            Assert.That(fontSize0, Is.GreaterThan(fontSize1));
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             FormattedText plainText = (FormattedText)plainParagraph.Elements[0];
             double plainTextSize = document.Styles[plainText.Style].Font.Size.Point;
 
-            Assert.Greater(headingTextSize, plainTextSize);
+            Assert.That(headingTextSize, Is.GreaterThan(plainTextSize));
         }
 
         /// <summary>

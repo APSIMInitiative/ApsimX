@@ -29,7 +29,8 @@ namespace Models.Management
         /// Crop to remove biomass from
         /// </summary>
         [Description("Crop to remove biomass from")]
-        public IPlant PlantToRemoveFrom {
+        public IPlant PlantToRemoveFrom
+        {
             get { return _plant; }
             set { _plant = value; LinkCrop(); }
         }
@@ -40,7 +41,8 @@ namespace Models.Management
         /// The type of biomass removal event
         /// </summary>
         [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
-        public BiomassRemovalType RemovalType {
+        public BiomassRemovalType RemovalType
+        {
             get { return _removalType; }
             set { _removalType = value; LinkCrop(); }
         }
@@ -51,6 +53,7 @@ namespace Models.Management
         /// The stage to set phenology to on removal event
         /// </summary>
         [Description("Stage to set phenology to on removal.  Leave blank if phenology not changed")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StageToSet { get; set; }
 
         /// <summary>
@@ -73,6 +76,9 @@ namespace Models.Management
 
         /// <summary>Harvesting Event</summary>
         public event EventHandler<EventArgs> Harvesting;
+
+        /// <summary>Harvesting Event</summary>
+        public event EventHandler<EventArgs> EndCrop;
 
         [Link]
         private Clock Clock = null;
@@ -160,9 +166,20 @@ namespace Models.Management
         public void Remove()
         {
             LinkCrop();
+            if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
+                Cutting?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
+                Grazing?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Pruning.ToString())
+                Pruning?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
+                Harvesting?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.EndCrop.ToString())
+                EndCrop?.Invoke(this, new EventArgs());
 
             foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
             {
+                checkRemoval(removal);
                 if (removal.Type == RemovalType)
                 {
                     IOrgan organ = PlantToRemoveFrom.FindDescendant<IOrgan>(removal.OrganName);
@@ -173,14 +190,6 @@ namespace Models.Management
                 }
             }
 
-            if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
-                Cutting?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
-                Grazing?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Pruning.ToString())
-                Pruning?.Invoke(this, new EventArgs());
-            if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
-                Harvesting?.Invoke(this, new EventArgs());
 
             double stage;
             Double.TryParse(StageToSet, out stage);
@@ -209,17 +218,10 @@ namespace Models.Management
             return;
         }
 
-        [EventSubscribe("PhenologyCut")]
-        private void OnPhenologyCut(object sender, EventArgs e)
+        [EventSubscribe("PhenologyDefoliate")]
+        private void OnPhenologyDefoliate(object sender, BiomassRemovalEventArgs e)
         {
-            if (RemovalType == BiomassRemovalType.Cutting)
-                Remove();
-        }
-
-        [EventSubscribe("PhenologyGraze")]
-        private void OnPhenologyGraze(object sender, EventArgs e)
-        {
-            if (RemovalType == BiomassRemovalType.Grazing)
+            if (RemovalType == e.RemovalType)
                 Remove();
         }
 
@@ -271,7 +273,7 @@ namespace Models.Management
             }
 
             //remove all non-matching plants
-            for (int i = BiomassRemovals.Count-1; i >=0; i--)
+            for (int i = BiomassRemovals.Count - 1; i >= 0; i--)
             {
                 BiomassRemovalOfPlantOrganType rem = BiomassRemovals[i];
                 if (PlantToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
@@ -305,6 +307,38 @@ namespace Models.Management
                 }
             }
         }
+        /// <summary>
+        /// Method to check each biomass removal for invalid parameters
+        /// </summary>
+        /// <param name="removal"></param>
+        /// <exception cref="Exception"></exception>
+        private void checkRemoval(BiomassRemovalOfPlantOrganType removal)
+        {
+            List<double> removals = new List<double>{removal.LiveToRemove,
+                                                     removal.DeadToRemove,
+                                                     removal.LiveToResidue,
+                                                     removal.DeadToResidue};
 
+            foreach (double rem in removals)
+            {
+                if (Double.IsNaN(rem))
+                    throw new Exception("a removal fraction in " + this.Name + " is not a number.  all values must be numbers between zero and one");
+                if (rem < 0)
+                    throw new Exception("a removal fraction in " + this.Name + " is negative.  all values must be numbers between zero and one");
+                if (rem > 1)
+                    throw new Exception("a removal fraction in " + this.Name + " greater than one.  all values must be numbers between zero and one");
+            }
+        }
+
+    }
+    /// <summary>
+    /// Arguments passed to defoliate event when stage is reset
+    /// </summary>
+    public class BiomassRemovalEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Type of biomass removal
+        /// </summary>
+        public BiomassRemovalType RemovalType { get; set; }
     }
 }

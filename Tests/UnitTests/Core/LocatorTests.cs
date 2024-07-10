@@ -102,9 +102,9 @@ namespace UnitTests.Core
             ILocator locator = sims.GetLocatorService(sim);
 
             container.Current = c2;
-            Assert.AreEqual(2, locator.Get("[Container].Current.X"));
+            Assert.That(locator.Get("[Container].Current.X"), Is.EqualTo(2));
             container.Current = c3;
-            Assert.AreEqual(3, locator.Get("[Container].Current.X"));
+            Assert.That(locator.Get("[Container].Current.X"), Is.EqualTo(3));
         }
 
         [Test]
@@ -122,9 +122,9 @@ namespace UnitTests.Core
             ILocator locator = sims.GetLocatorService(sim);
 
             container.Value = c2;
-            Assert.AreEqual(2, locator.Get("[Container].Value.X"));
+            Assert.That(locator.Get("[Container].Value.X"), Is.EqualTo(2));
             container.Value = c3;
-            Assert.AreEqual(3, locator.Get("[Container].Value.X"));
+            Assert.That(locator.Get("[Container].Value.X"), Is.EqualTo(3));
         }
 
         [Test]
@@ -141,11 +141,11 @@ namespace UnitTests.Core
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
-            Assert.AreEqual(locatorForC.Get("[ModelA].A1"), 1);
+            Assert.That(locatorForC.Get("[ModelA].A1"), Is.EqualTo(1));
 
             // locator for modelD
             ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
-            Assert.AreEqual(locatorForD.Get("[ModelD].D2.Year"), 2000);
+            Assert.That(locatorForD.Get("[ModelD].D2.Year"), Is.EqualTo(2000));
         }
 
         [Test]
@@ -162,9 +162,9 @@ namespace UnitTests.Core
 
             // locator for modelD
             ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
-            Assert.AreEqual(locatorForD.Get("[ModelC].C2[1]"), 6.0);
-            Assert.AreEqual(locatorForD.Get("[ModelC].C2[2]"), 6.1);
-            Assert.AreEqual(locatorForD.Get("[ModelC].C2[3]"), 6.2);
+            Assert.That(locatorForD.Get("[ModelC].C2[1]"), Is.EqualTo(6.0));
+            Assert.That(locatorForD.Get("[ModelC].C2[2]"), Is.EqualTo(6.1));
+            Assert.That(locatorForD.Get("[ModelC].C2[3]"), Is.EqualTo(6.2));
         }
 
         [Test]
@@ -181,11 +181,11 @@ namespace UnitTests.Core
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
-            Assert.AreEqual(locatorForC.Get(".Simulations.Simulation.ModelA.A1"), 1);
+            Assert.That(locatorForC.Get(".Simulations.Simulation.ModelA.A1"), Is.EqualTo(1));
 
             // locator for modelD
             ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
-            Assert.AreEqual(locatorForD.Get(".Simulations.Simulation.Zone.ModelD.D2.Year"), 2000);
+            Assert.That(locatorForD.Get(".Simulations.Simulation.Zone.ModelD.D2.Year"), Is.EqualTo(2000));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace UnitTests.Core
 
             // locator for zone
             ILocator locatorForZone = sims.GetLocatorService(sim.Children[2]);
-            Assert.AreEqual(locatorForZone.Get("ModelC.C1"), 5);
+            Assert.That(locatorForZone.Get("ModelC.C1"), Is.EqualTo(5));
         }
 
         [Test]
@@ -219,7 +219,7 @@ namespace UnitTests.Core
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
-            Assert.AreEqual(locatorForC.Get("[ModelA].A1+[ModelD].D2.Year"), 2001);
+            Assert.That(locatorForC.Get("[ModelA].A1+[ModelD].D2.Year"), Is.EqualTo(2001));
         }
 
         [Test]
@@ -236,7 +236,7 @@ namespace UnitTests.Core
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
-            Assert.AreEqual(locatorForC.Get("[ModelA]"), sim.Children[0]);
+            Assert.That(locatorForC.Get("[ModelA]"), Is.EqualTo(sim.Children[0]));
         }
 
         [Test]
@@ -256,8 +256,8 @@ namespace UnitTests.Core
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
-            Assert.AreEqual(locatorForC.Get("[ModelE].E1[1].F"), 20);
-            Assert.AreEqual(locatorForC.Get("[ModelE].E1[2].F"), 21);
+            Assert.That(locatorForC.Get("[ModelE].E1[1].F"), Is.EqualTo(20));
+            Assert.That(locatorForC.Get("[ModelE].E1[2].F"), Is.EqualTo(21));
         }
 
         [Test]
@@ -286,24 +286,24 @@ namespace UnitTests.Core
 
             // Check that the A1 property is referenced and not the child constant
             ILocator locator = sims.GetLocatorService(sim);
-            Assert.AreEqual((sim.Children[0] as ModelA).A1, locator.Get("[ModelA].A1"));
+            Assert.That(locator.Get("[ModelA].A1"), Is.EqualTo((sim.Children[0] as ModelA).A1));
 
             //Check that if given the modelsOnly flag, that the child is returned
             Constant c = locator.Get("[ModelA].A1", LocatorFlags.ModelsOnly) as Constant;
-            Assert.AreEqual(b.FixedValue, c.FixedValue);
+            Assert.That(c.FixedValue, Is.EqualTo(b.FixedValue));
 
             //Check that we ge the child if an additional name is provided and the property is a primitive type
             string units = locator.Get("[ModelA].A1.Units") as string;
-            Assert.AreEqual(b.Units, units);
+            Assert.That(units, Is.EqualTo(b.Units));
 
             //check that we get the property if the property is not a primitive type
             DateTime date = (DateTime)locator.Get("[ModelD].D3.StartDate");
-            Assert.AreEqual((sim.Children[1] as ModelD).D2, date);
+            Assert.That((sim.Children[1] as ModelD).D2, Is.EqualTo(date));
 
             //Check that if a property has a getter that will throw an exception, but there is a child with that name, that the child is returned
             int g = (int)locator.Get("[ModelG].G1.F");
-            Assert.IsNull((sim.Children[2] as ModelG).G1);
-            Assert.AreEqual(f.F, g);
+            Assert.That((sim.Children[2] as ModelG).G1, Is.Null);
+            Assert.That(g, Is.EqualTo(f.F));
         }
 
         /// <summary>
@@ -336,10 +336,10 @@ namespace UnitTests.Core
             loc.Get("[ModelB].B1");
             FieldInfo cache = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
             int length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(3, length);
+            Assert.That(length, Is.EqualTo(3));
             loc.Clear();
             length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(0, length);
+            Assert.That(length, Is.EqualTo(0));
 
             //should not error if cache empty
             Assert.DoesNotThrow(() => loc.Clear());
@@ -359,11 +359,11 @@ namespace UnitTests.Core
             loc.Get("[ModelB].B1");
             FieldInfo cache = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
             int length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(3, length);
+            Assert.That(length, Is.EqualTo(3));
             //clear only 1 cache entry
             loc.ClearEntry("[ModelA].A1");
             length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(2, length);
+            Assert.That(length, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -381,12 +381,12 @@ namespace UnitTests.Core
             //A failed Get should not put anything into the cache
             loc.Get("[ModelA].Error");
             length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(0, length);
+            Assert.That(length, Is.EqualTo(0));
 
             //A Get should not put anything into the cache with the ModelsOnly flag
             loc.Get("[ModelA].Error", LocatorFlags.ModelsOnly);
             length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.AreEqual(0, length);
+            Assert.That(length, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -400,11 +400,11 @@ namespace UnitTests.Core
             //should return the IVaraible instead of the value of a property
             int val = (int)loc.Get("[ModelA].A1");
             IVariable v = loc.GetObject("[ModelA].A1");
-            Assert.AreEqual(val, v.Value);
+            Assert.That(v.Value, Is.EqualTo(val));
 
             //should return null if object not found
             v = loc.GetObject("[ModelA].Error");
-            Assert.IsNull(v);
+            Assert.That(v, Is.Null);
         }
 
         /// <summary>
@@ -418,11 +418,11 @@ namespace UnitTests.Core
             Locator loc = sims.Locator;
             //should only be able to get the property, not the function
             int val = (int)loc.Get("[ModelH].H");
-            Assert.AreEqual((sims.Children[0].Children[2] as ModelH).H, val);
+            Assert.That((sims.Children[0].Children[2] as ModelH).H, Is.EqualTo(val));
 
             object val2 = loc.Get("[ModelH].HFunction");
-            Assert.IsNull(val2);
-            Assert.AreEqual((sims.Children[0].Children[2] as ModelH).HFunction(), 3);
+            Assert.That(val2, Is.Null);
+            Assert.That((sims.Children[0].Children[2] as ModelH).HFunction(), Is.EqualTo(3));
         }
 
         /// <summary>
@@ -438,11 +438,11 @@ namespace UnitTests.Core
 
             //set a read only property 
             Assert.Throws<Exception>(() => loc.Set("[ModelA].A1", 10));
-            Assert.AreEqual((sims.Children[0].Children[0] as ModelA).A1, 1);
+            Assert.That((sims.Children[0].Children[0] as ModelA).A1, Is.EqualTo(1));
 
             //set a editable property
             loc.Set("[ModelF].F", 10);
-            Assert.AreEqual((sims.Children[0].Children[4] as ModelF).F, 10);
+            Assert.That((sims.Children[0].Children[4] as ModelF).F, Is.EqualTo(10));
 
             //set a method (should fail)
             Assert.Throws<Exception>(() => loc.Set("[ModelH].HFunction", 10));
@@ -450,7 +450,7 @@ namespace UnitTests.Core
             //set a model
             DateTime dt = new DateTime(2020, 1, 1);
             loc.Set("[ModelD].D3", new Clock() { StartDate = dt });
-            Assert.AreEqual((sims.Children[0].Children[3] as ModelD).D3.StartDate, dt);
+            Assert.That((sims.Children[0].Children[3] as ModelD).D3.StartDate, Is.EqualTo(dt));
         }
 
         /// <summary>
@@ -465,7 +465,7 @@ namespace UnitTests.Core
             Locator loc = sims.Locator;
             MethodInfo getInternal = typeof(Locator).GetMethod("GetInternal", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
             IVariable val = getInternal.Invoke(loc, new object[] { "[ModelA].A1", BindingFlags.Default }) as IVariable;
-            Assert.AreEqual((sims.Children[0].Children[0] as ModelA).A1, (int)val.Value);
+            Assert.That((sims.Children[0].Children[0] as ModelA).A1, Is.EqualTo((int)val.Value));
         }
 
         /// <summary>
@@ -482,51 +482,51 @@ namespace UnitTests.Core
 
             //Non relative reference - return false
             input = ".Simulations.Simulation.ModelA.A1";
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //Non relative reference that looks like an expression - return false
             input = ".Simulations.Simulation.ModelA.A1 + .Simulations.Simulation.ModelA.A2";
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //empty - return false
             input = ""; 
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //spaces - return false
             input = "     ";
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //tabs - return false
             input = "\t"; 
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //tabs and spaces - return false
             input = " \t \t ";
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //should return false
             input = "()";
-            Assert.IsFalse((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //Plus - return true
             input = "[ModelA].A1 + [ModelA].A2";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
 
             //Multiply - return true
             input = "[ModelA].A1 * [ModelA].A2";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
 
             //divide - return true
             input = "[ModelA].A1 / [ModelA].A2";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
 
             //power - return true
             input = "[ModelA].A1 ^ [ModelA].A2";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
 
             //This shouldn't be an expression, but according to the code, should still return true
             input = "([ModelA].A1  [ModelA].A2) as A3";
-            Assert.IsTrue((bool)isExpression.Invoke(loc, new object[] { input }));
+            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
         }
 
         /// <summary>
@@ -627,8 +627,8 @@ namespace UnitTests.Core
                     else
                     {
                         Model m = getInternalRelativeTo.Invoke(loc, args) as Model;
-                        Assert.AreEqual(results[i], m);
-                        Assert.AreEqual(outputs[i], args[4]);
+                        Assert.That(results[i], Is.EqualTo(m));
+                        Assert.That(outputs[i], Is.EqualTo(args[4]));
                     }
                 }
             }
@@ -701,7 +701,7 @@ namespace UnitTests.Core
                     else
                     {
                         string[] m = getInternalNameBits.Invoke(loc, args) as string[];
-                        Assert.AreEqual(results[i], m);
+                        Assert.That(results[i], Is.EqualTo(m));
                     }
                 }
             }

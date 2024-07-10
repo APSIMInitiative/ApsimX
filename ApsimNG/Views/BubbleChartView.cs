@@ -117,8 +117,8 @@ namespace UserInterface.Views
             "<right-click>: shows a context-sensitive menu.\n\n" +
             "Once a node/arc is selected, it can be dragged to a new position.\n\n" +
             "Nodes are created by right-clicking on a blank area.\n\n" +
-            "Transition arcs are created by firstly selecting a source node,\n" +
-            "then right-clicking over a target node.";
+            "Transition arcs are created by right clicking a node and selecting\n" +
+            "\"Add Arc\", then clicking on the target node.";
             instructionsLabel.Xalign = 0;
             instructionsLabel.Yalign = 0;
             Gtk.Frame instructionsFrame = new Gtk.Frame(" Instructions: ");
@@ -134,9 +134,6 @@ namespace UserInterface.Views
 
             ContextMenu.SelectionDone += OnContextMenuDeactivated;
             ContextMenu.Mapped += OnContextMenuRendered;
-
-            // Ensure the menu is populated
-            Select(0);
     }
 
         /// <summary>
@@ -226,6 +223,14 @@ namespace UserInterface.Views
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Unselect all objects
+        /// </summary>
+        public void ClearSelection()
+        {
+            this.graphView.UnSelect();
         }
 
         /// <summary>
