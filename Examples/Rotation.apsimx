@@ -14161,8 +14161,8 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Clock].Today.DayOfYear",
-                    "[RotationManager].PreviousState",
-                    "[RotationManager].CurrentState"
+                    "[RotationManager].CurrentState",
+                    "[RotationManager].NextState"
                   ],
                   "EventNames": [
                     "[RotationManager].Transition"
