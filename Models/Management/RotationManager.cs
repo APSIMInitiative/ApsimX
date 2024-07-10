@@ -80,7 +80,32 @@ namespace Models.Management
         public bool Verbose { get; set; }
 
         /// <summary>
-        /// Current State of the rotation.
+        /// Previous State ID of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public int PreviousStateId { get; set; }
+
+        /// <summary>
+        /// Previous State of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public string PreviousState
+        {
+            get { return PreviousStateName; }
+            set { PreviousStateId = getStateIDByName(value); }
+        }
+
+        /// <summary>
+        /// Name of the Previous State
+        /// </summary>
+        [JsonIgnore]
+        public string PreviousStateName
+        {
+            get { return getStateNameByID(PreviousStateId); }
+        }
+
+        /// <summary>
+        /// Current State ID of the rotation.
         /// </summary>
         [JsonIgnore]
         public int CurrentStateId { get; set; }
@@ -89,9 +114,10 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { 
-            get {return CurrentStateName; } 
-            set {CurrentStateId = getStateIDByName(value);} 
+        public string CurrentState
+        {
+            get { return CurrentStateName; }
+            set { CurrentStateId = getStateIDByName(value); }
         }
 
         /// <summary>
@@ -181,7 +207,7 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (! TopLevel) { return; }
+            if (!TopLevel) { return; }
 
             MadeAChange = false;
             bool more = true;
@@ -196,15 +222,15 @@ namespace Models.Management
                     foreach (string testCondition in arc.Conditions)
                     {
                         object value;
-                        try 
-                        { 
-                           value = FindByPath(testCondition)?.Value;
-                           if (value == null)
-                              throw new Exception("Test condition returned nothing");
-                        }
-                        catch (Exception ex) 
+                        try
                         {
-                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message );
+                            value = FindByPath(testCondition)?.Value;
+                            if (value == null)
+                                throw new Exception("Test condition returned nothing");
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message);
                         }
                         double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                         detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
@@ -242,25 +268,25 @@ namespace Models.Management
                 }
             }
         }
-        
+
         private bool MadeAChange;
 
         /// <summary>
         /// Do our rule evaluation when asked by method call
         /// </summary>
-        public bool DoManagement() 
+        public bool DoManagement()
         {
             bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
             TopLevel = true;
             OnDoManagement(null, new EventArgs());
             TopLevel = oldState;
-            return(MadeAChange);
+            return (MadeAChange);
         }
 
         /// <summary>
         /// Log the state of the system (usually beginning/end of simulation)
         /// </summary>
-        public void DoLogState() 
+        public void DoLogState()
         {
             detailedLogger?.DoTransition(CurrentStateName);
         }
@@ -294,9 +320,10 @@ namespace Models.Management
                     summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentStateName}", null);
-
-                CurrentStateId = transition.DestinationID;
                 Transition?.Invoke(this, EventArgs.Empty);
+
+                PreviousStateId = transition.SourceID;
+                CurrentStateId = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
                 {
