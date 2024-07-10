@@ -460,8 +460,8 @@ namespace Models.CLEM.Resources
             // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
             // ========================================================================================================================
             double normWeight = normMax;
-            if (!forceNormMax && Weight.HighestAttained < normMax) // was weight previous but zero at start
-                normWeight = Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * Weight.HighestAttained;
+            if (!forceNormMax && Weight.Base.Amount < normMax) // was weight previous but zero at start
+                normWeight = Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * Weight.Base.Amount;
             if (setForIndividual)
                 Weight.SetNormalWeightForAge(normWeight, normMax);
             return normWeight;
@@ -681,7 +681,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Milk production currently available for each offspring from mother (L day-1)
+        /// Milk production currently available for each offspring from mother (kg day-1)
         /// </summary>
         public double MothersMilkProductionAvailable
         {

@@ -117,7 +117,8 @@ namespace Models.CLEM.Resources
         /// <param name="maxNormalWeight">The maximum normalised weight</param>
         public void SetNormalWeightForAge(double normalWeight, double maxNormalWeight)
         {
-            NormalisedForAge = normalWeight;
+            if (normalWeight > NormalisedForAge)
+                NormalisedForAge = normalWeight;
             MaximumNormalisedForAge = maxNormalWeight;
         }
 
@@ -196,7 +197,7 @@ namespace Models.CLEM.Resources
         public double EmptyBodyMassChange { get; private set; }
 
         /// <summary>
-        /// Adjust weight
+        /// Adjust weight by a given live weight change
         /// </summary>
         /// <param name="wtChange">Change in weight (kg)</param>
         /// <param name="individual">THe individual to change</param>
