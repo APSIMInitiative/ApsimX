@@ -80,28 +80,28 @@ namespace Models.Management
         public bool Verbose { get; set; }
 
         /// <summary>
-        /// Previous State ID of the rotation.
+        /// Next State ID of the rotation.
         /// </summary>
         [JsonIgnore]
-        public int PreviousStateId { get; set; }
+        public int NextStateId { get; set; }
 
         /// <summary>
-        /// Previous State of the rotation.
+        /// Next State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string PreviousState
+        public string NextState
         {
-            get { return PreviousStateName; }
-            set { PreviousStateId = getStateIDByName(value); }
+            get { return NextStateName; }
+            set { NextStateId = getStateIDByName(value); }
         }
 
         /// <summary>
-        /// Name of the Previous State
+        /// Name of the Next State
         /// </summary>
         [JsonIgnore]
-        public string PreviousStateName
+        public string NextStateName
         {
-            get { return getStateNameByID(PreviousStateId); }
+            get { return getStateNameByID(NextStateId); }
         }
 
         /// <summary>
@@ -320,9 +320,9 @@ namespace Models.Management
                     summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentStateName}", null);
-                Transition?.Invoke(this, EventArgs.Empty);
 
-                PreviousStateId = transition.SourceID;
+                NextStateId = transition.DestinationID;
+                Transition?.Invoke(this, EventArgs.Empty);
                 CurrentStateId = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
@@ -344,7 +344,7 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish($"TransitionTo{CurrentStateName}", null);
+                eventService.Publish($"TransitionTo{NextStateName}", null);
                 if (Verbose)
                     summary.WriteMessage(this, $"Current state is now {CurrentStateName}", MessageType.Diagnostic);
             }
