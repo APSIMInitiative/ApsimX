@@ -238,7 +238,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="alignment1">
+      <object class="GtkBox" id="dataBox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>

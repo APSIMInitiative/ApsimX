@@ -21,7 +21,7 @@ namespace UserInterface.Views
         private Box frequencyBox = null;
         private Box commonVariablesBox = null;
         private Box commonFrequencyBox = null;
-        private Box alignment1 = null;
+        private Box dataBox = null;
 
         private IEditorView variableEditor;
         private IEditorView frequencyEditor;
@@ -48,7 +48,7 @@ namespace UserInterface.Views
             frequencyBox = (Box)builder.GetObject("frequencyBox");
             commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
             commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
-            alignment1 = (Box)builder.GetObject("alignment1");
+            dataBox = (Box)builder.GetObject("dataBox");
             submitButton = (Button)builder.GetObject("submitBtn");
 
 
@@ -97,7 +97,7 @@ namespace UserInterface.Views
             panel.Position = verticalPos;
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
-            alignment1.Add(dataStoreView1.MainWidget);
+            dataBox.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
