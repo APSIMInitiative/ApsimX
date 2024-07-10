@@ -8,11 +8,6 @@ using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
-using static Models.Core.ScriptCompiler;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Drawing.Text;
-using MathNet.Numerics.Integration;
 
 namespace Models.CLEM.Activities
 {
@@ -130,7 +125,7 @@ namespace Models.CLEM.Activities
             double yf = 1.0;
             if (!ind.IsWeaned)
             {
-                // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother performed before this method is called.
+                // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
                 double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
                 yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4))); 
             }
@@ -402,24 +397,16 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
                     if (proteinAvailableForGain < proteinNeededForGrowth) // diet protein limited
-                    {
-                        finalprotein = proteinAvailableForGain;
                         // fat can be laid down without protein so all energy passed for fat production. 
-                    }
+                        finalprotein = proteinAvailableForGain;
                     else // energy limited
-                    {
                         finalprotein = proteinNeededForGrowth;
-
-                        // LOGIC FAULT
-                        // excess protein is converted to energy available for fat
-                        //ind.Energy.Protein.Extra = (proteinAvailableForGain - proteinNeededForGrowth) * mJEnergyPerKgProtein;
-                        //energyAvailableForGain += ind.Energy.Protein.Extra; 
-                    }
                 }
                 else
                 {
                     finalprotein = proteinAvailableForGain;
                 }
+
                 // remove protein gain energy so remainder can be used for fat gain/loss
                 energyAvailableForGain -= finalprotein * mJEnergyPerKgProtein;
             }
@@ -601,7 +588,6 @@ namespace Models.CLEM.Activities
             double MEforMilkPreviousDay = ind.Energy.AfterPregnancy;
             if (MathUtilities.IsGreaterThan(ind.Milk.MaximumRate, 0.0))
                 DR = ind.Milk.ProductionRatePrevious / ind.Milk.MaximumRate;
-// based on previous time-step
             MEforMilkPreviousDay += ind.Energy.ForFetus;
 
             // LR -> Milk lag
