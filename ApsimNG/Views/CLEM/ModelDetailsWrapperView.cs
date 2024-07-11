@@ -23,9 +23,9 @@ namespace UserInterface.Views
     /// </remarks>
     public class ModelDetailsWrapperView : ViewBase, IModelDetailsWrapperView
     {
-        private HBox hbox = null;
-        private VBox vbox1 = null;
-        private VBox labels = null;
+        private Box hbox = null;
+        private Box vbox1 = null;
+        private Box labels = null;
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
@@ -46,9 +46,9 @@ namespace UserInterface.Views
             Gtk.CssProvider css_provider = new CssProvider();
             css_provider.LoadFromData(css);
 
-            hbox = new HBox();
-            vbox1 = new VBox();
-            labels = new VBox();
+            hbox = new Box(Orientation.Horizontal, 0);
+            vbox1 = new Box(Orientation.Vertical, 0);
+            labels = new Box(Orientation.Vertical, 0);
 
             modelTypeLabel = new Label
             {
