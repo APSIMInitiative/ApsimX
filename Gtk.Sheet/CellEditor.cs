@@ -71,7 +71,7 @@ namespace Gtk.Sheet
                 entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
                 entry.WidthChars = 5;
                 if (defaultChar == char.MinValue)
-                    entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
+                    entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex - sheet.NumberFrozenRows);
                 else
                     entry.Text = defaultChar.ToString();
                 entry.KeyPressEvent += OnEntryKeyPress;

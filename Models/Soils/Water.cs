@@ -260,8 +260,12 @@ namespace Models.Soils
                         }
                         else
                         {
+                            
                             var paw = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
-                            newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                            if (paw == null)
+                                newFractionFull = 0;
+                            else
+                                newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
                         return newFractionFull;
@@ -286,10 +290,11 @@ namespace Models.Soils
             {
                 double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
 
                 double fraction = FractionFull;
             }
@@ -301,7 +306,7 @@ namespace Models.Soils
         {
             get
             {
-                if (InitialValues == null)
+                if (InitialValues == null || InitialValues.Length != Thickness.Length)
                     return 0;
                 var ll = RelativeToLL;
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
@@ -700,16 +705,19 @@ namespace Models.Soils
         /// <summary>
         /// Checks to make sure every InitialValue value is within airdry and SAT values.
         /// </summary>
-        /// <param name="initialValues"></param>
-        /// <returns>a <see cref="bool">bool</see> value</returns>
-        /// <exception cref="Exception"></exception>
-        public bool AreInitialValuesWithinPhysicalBoundaries(double[] initialValues)
+        public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
                 throw new Exception("To check boundaries of InitialValues Physical must not be null.");
-            for (int i = 0; i < initialValues.Length; i++)
+
+            if (InitialValues.Length != Thickness.Length)
+                return false;
+
+            var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
+
+            for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.SAT[i])
+                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
                     return false;
             }
             return true;

@@ -146,7 +146,7 @@ namespace UserInterface.Presenters
         private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
 
-            if (water.AreInitialValuesWithinPhysicalBoundaries(water.InitialValues))
+            if (water.AreInitialValuesWithinPhysicalBoundaries())
                 Refresh();
             else
             {
@@ -267,72 +267,81 @@ namespace UserInterface.Presenters
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
-            //draw the area relative to whatever the water node is currently relative to
-                graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
-                            sw, swCumulativeThickness,
-                            AxisPosition.Top, AxisPosition.Left,
-                            System.Drawing.Color.LightSkyBlue, true);
-
-            graph.DrawLineAndMarkers("Airdry", airdry,
-                                     cumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
-
-            graph.DrawLineAndMarkers(cllName, cll,
-                                     swCumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
-
-            graph.DrawLineAndMarkers("DUL", dul,
-                         cumulativeThickness,
-                         "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                         System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
-                         LineThickness.Normal, MarkerSize.Normal, 1, true);
-
-            graph.DrawLineAndMarkers("SAT", sat,
-                                     cumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
-
-            if (llsoil != null && llsoilsName != null)
+            if (thickness.Length == airdry.Length &&
+                thickness.Length == ll15.Length &&
+                thickness.Length == dul.Length &&
+                thickness.Length == sat.Length &&
+                thickness.Length == cll.Length)
             {
-                graph.DrawLineAndMarkers(llsoilsName, llsoil,
-                        cumulativeThickness,
-                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                        System.Drawing.Color.Green, LineType.Dash, MarkerType.None,
-                        LineThickness.Normal, MarkerSize.Normal, 1, true);
-            }
+                //draw the area relative to whatever the water node is currently relative to
+                if (swThickness.Length == thickness.Length)
+                    graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
+                                    sw, swCumulativeThickness,
+                                    AxisPosition.Top, AxisPosition.Left,
+                                    System.Drawing.Color.LightSkyBlue, true);
 
-            List<double> vols = new List<double>();
-            foreach (double val in airdry)
-                vols.Add(val);
-            foreach (double val in cll)
-                vols.Add(val);
-            foreach (double val in dul)
-                vols.Add(val);
-            foreach (double val in sat)
-                vols.Add(val);
+                graph.DrawLineAndMarkers("Airdry", airdry,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            if (llsoil != null)
-                foreach (double val in llsoil)
+                if (swThickness.Length == thickness.Length)
+                    graph.DrawLineAndMarkers(cllName, cll,
+                                            swCumulativeThickness,
+                                            "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                            System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                            LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+                graph.DrawLineAndMarkers("DUL", dul,
+                            cumulativeThickness,
+                            "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                            System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                            LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+                graph.DrawLineAndMarkers("SAT", sat,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+                if (llsoil != null && llsoilsName != null)
+                {
+                    graph.DrawLineAndMarkers(llsoilsName, llsoil,
+                            cumulativeThickness,
+                            "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                            System.Drawing.Color.Green, LineType.Dash, MarkerType.None,
+                            LineThickness.Normal, MarkerSize.Normal, 1, true);
+                }
+
+                List<double> vols = new List<double>();
+                foreach (double val in airdry)
+                    vols.Add(val);
+                foreach (double val in cll)
+                    vols.Add(val);
+                foreach (double val in dul)
+                    vols.Add(val);
+                foreach (double val in sat)
                     vols.Add(val);
 
-            double padding = 0.01; //add 1% to bounds
-            double xTopMin = MathUtilities.Min(vols);
-            double xTopMax = MathUtilities.Max(vols);
-            xTopMin -= xTopMax * padding;
-            xTopMax += xTopMax * padding;
+                if (llsoil != null)
+                    foreach (double val in llsoil)
+                        vols.Add(val);
 
-            double height = MathUtilities.Max(cumulativeThickness);
-            height += height * padding;
+                double padding = 0.01; //add 1% to bounds
+                double xTopMin = MathUtilities.Min(vols);
+                double xTopMax = MathUtilities.Max(vols);
+                xTopMin -= xTopMax * padding;
+                xTopMax += xTopMax * padding;
 
-            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
-            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+                double height = MathUtilities.Max(cumulativeThickness);
+                height += height * padding;
 
+                graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+                graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
+                graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+            }
+            
             graph.Refresh();
         }
 
