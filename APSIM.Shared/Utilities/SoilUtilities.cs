@@ -485,7 +485,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="f">The function to call to get a missing value.</param>
         public static (double[] values, string[] metadata) FillMissingValues(double[] values, string[] valuesMetadata, int numValues, Func<int, double> f)
         {
-            double[] newValues = MathUtilities.SetArrayOfCorrectSize(values, numValues);
+            double[] newValues = MathUtilities.SetArrayOfCorrectSize(values, numValues).ToArray();
             for (int i = 0; i < numValues; i++)
             {
                 if (i >= newValues.Length || double.IsNaN(newValues[i])) 
