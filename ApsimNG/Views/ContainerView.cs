@@ -63,7 +63,7 @@ namespace UserInterface.Views
                             Container container2 = (Gtk.Container)container.Children[0];
                             if (container2.Children.Length > 1)
                             {
-                                VScrollbar verticalScrollBar = (VScrollbar)container2.Children[1];
+                                Scrollbar verticalScrollBar = (Scrollbar)container2.Children[1];
                                 if (visible)
                                     verticalScrollBar.Show();
                                 else
@@ -76,7 +76,7 @@ namespace UserInterface.Views
                     {
                         if (container.Children.Length > 1)
                         {
-                            HScrollbar horizontalScrollBar = (HScrollbar)container.Children[1];
+                            Scrollbar horizontalScrollBar = (Scrollbar)container.Children[1];
                             if (visible)
                                 horizontalScrollBar.Show();
                             else
