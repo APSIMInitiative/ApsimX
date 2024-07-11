@@ -1,11 +1,14 @@
 ﻿using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Soils.Nutrients;
 using Models.Functions;
+using Models.Core.ApsimFile;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 
 namespace UnitTests.Core
 {
@@ -304,6 +307,30 @@ namespace UnitTests.Core
             int g = (int)locator.Get("[ModelG].G1.F");
             Assert.That((sim.Children[2] as ModelG).G1, Is.Null);
             Assert.That(g, Is.EqualTo(f.F));
+        }
+
+        [Test]
+        public void LocatorGetCNRFPropertyOfNuterient()
+        {
+            //This is a special case that the locator needs to handle, as it previously returned the incorrect child instead of the property
+            Assembly models = typeof(IModel).Assembly;
+            string[] names = models.GetManifestResourceNames();
+            string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
+
+            Simulations sims = FileFormat.ReadFromString<Simulations>(nut, e => throw e, false).NewModel as Simulations;
+
+            // Check that the CNRF property is referenced and not the child model
+            Nutrient nutrient = sims.Children[0] as Nutrient;
+            ILocator locator = sims.GetLocatorService(sims);
+            Assert.That(nutrient.CNRF, Is.EqualTo(locator.Get("[Nutrient].CNRF")));
+
+            //check that the child still exists as well
+            Model cnrfChild = null;
+            foreach(Model child in nutrient.Children)
+                if (child.Name == "CNRF")
+                    cnrfChild = child;
+            if (cnrfChild == null)
+                Assert.Fail();
         }
 
         /// <summary>
