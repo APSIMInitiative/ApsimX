@@ -257,12 +257,11 @@ namespace Models.Soils
 
                             newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
                                                 MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
-
                         }
                         else
                         {
-                            newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                            var paw = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                            newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
                         return newFractionFull;

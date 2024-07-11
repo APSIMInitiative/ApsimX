@@ -239,8 +239,12 @@ namespace Gtk.Sheet
 
         public void Refresh()
         {
+            RowCount = DataProvider.RowCount + NumberFrozenRows;
+                if (blankRowAtBottom)
+                    RowCount++;
             RedrawNeeded?.Invoke(this, new EventArgs());
         }
+        
         /// <summary>
         /// The number of rows that might potentially be currently visible, whether they hold data or not, including those partially visible
         /// </summary>

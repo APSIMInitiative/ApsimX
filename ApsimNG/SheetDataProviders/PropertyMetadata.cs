@@ -64,7 +64,7 @@ class PropertyMetadata
     public string[] ValidUnits { get; }
     
     /// <summary>The metadata of the property.</summary>
-    public List<SheetDataProviderCellState> Metadata { get; }
+    public List<SheetDataProviderCellState> Metadata { get; private set;}
 
     /// <summary>The values of the property.</summary>
     public ReadOnlyCollection<string> Values => values?.AsReadOnly();
@@ -89,7 +89,10 @@ class PropertyMetadata
                     this.values = new();
                 while (valueIndices[i] > this.values.Count-1)
                     this.values.Add(null);
-                while (valueIndices[i] > this.Metadata.Count-1)
+
+                if (Metadata == null)
+                    Metadata = new();                    
+                while (valueIndices[i] > Metadata.Count-1)
                     Metadata.Add(SheetDataProviderCellState.Normal);
 
                 this.values[valueIndices[i]] = values[i];
@@ -190,6 +193,7 @@ class PropertyMetadata
 
     private void SetMetadata()
     {
-        metadataProperty?.SetValue(obj, Metadata.Select(m => m == SheetDataProviderCellState.Calculated ? "Calculated" : null).ToArray());    
+        if (Metadata != null)
+            metadataProperty?.SetValue(obj, Metadata.Select(m => m == SheetDataProviderCellState.Calculated ? "Calculated" : null).ToArray());    
     }
 }
