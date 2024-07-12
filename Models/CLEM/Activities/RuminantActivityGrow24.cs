@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
 
         // =============================================================================================
         // This activity uses the equations of Freer et al. (2012) The GRAZPLAN animal biology model
-        // The links to equations in the report are provided through this activity as well as Intake
+        // The links to equations in the report are provided throughout this activity as well as Intake
         // Equation X 
         // =============================================================================================
 
@@ -564,11 +564,11 @@ namespace Models.CLEM.Activities
             ind.Milk.Suckled = 0;
 
             if ((ind.IsLactating | MathUtilities.IsPositive(ind.Milk.PotentialRate)) == false)
+            {
+                ind.Milk.Reset();
                 return 0;
+            }
 
-            // update old parameters in breed params to new approach based on energy and not L milk.
-            // TODO: new intercept = 0.4 and coefficient = 0.02
-            // TODO: update peak yield.
             kl = ind.Parameters.Grow24_CKCL.ELactationEfficiencyCoefficient_CK6 * ind.Intake.MDSolid + ind.Parameters.Grow24_CKCL.ELactationEfficiencyIntercept_CK5;
             double milkTime = ind.DaysLactating(events.Interval / 2.0);
 
@@ -585,9 +585,9 @@ namespace Models.CLEM.Activities
             // Equations 66-76   ==================================================
             // Equation 74  ===================================================
             double DR = 1.0;
-            double MEforMilkPreviousDay = ind.Energy.AfterPregnancy;
+            double MEforMilkPreviousDay = ind.Milk.EnergyForLactationPrevious;
             if (MathUtilities.IsGreaterThan(ind.Milk.MaximumRate, 0.0))
-                DR = ind.Milk.ProductionRatePrevious / ind.Milk.MaximumRate;
+                DR = ind.Milk.ProductionRatePrevious / ind.Milk.MaximumRate; // Maximum rate will also be previous as it is not updated until 2nd calc of lactation.
             MEforMilkPreviousDay += ind.Energy.ForFetus;
 
             // LR -> Milk lag
@@ -624,6 +624,7 @@ namespace Models.CLEM.Activities
 
             if (updateValues)
             {
+                ind.Milk.EnergyForLactationPrevious = ind.Energy.AfterPregnancy;
                 ind.Milk.NutritionAfterPeakLactationFactor = nutritionAfterPeakLactationFactor;
                 ind.Milk.MaximumRate = milkProductionMax;
                 ind.Milk.ProductionRatePrevious = MP2;

@@ -22,6 +22,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double ProductionRatePrevious { get; set; }
         /// <summary>
+        /// Energy available for lactation previous time step (MJ/day)
+        /// </summary>
+        public double EnergyForLactationPrevious { get; set; }
+        /// <summary>
         /// Maximum production rate (MJ/day)
         /// </summary>
         public double MaximumRate { get; set; }
@@ -86,19 +90,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public bool MilkingPerformed { get; set; } = false;
 
-        ///// <summary>
-        ///// The proportion of the potential milk production achieved in timestep
-        ///// </summary>
-        //public double ProportionMilkProductionAchieved 
-        //{ 
-        //    get 
-        //    { 
-        //        if (PotentialRate > 0)
-        //            return ProductionRate / PotentialRate;
-        //        return 0;
-        //    }
-        //}
-
         /// <summary>
         /// Method to remove milk from female
         /// </summary>
@@ -135,6 +126,7 @@ namespace Models.CLEM.Resources
             Suckled = 0;
             ProteinReduced = 0;
             Protein = 0;
+            EnergyForLactationPrevious = 0;
         }
     }
 }

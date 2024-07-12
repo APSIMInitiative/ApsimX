@@ -218,7 +218,6 @@ namespace Models.CLEM.Reporting
         [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
         public bool IncludeRuminantWeight { get; set; }
 
-
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
