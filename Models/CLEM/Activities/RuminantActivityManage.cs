@@ -652,7 +652,8 @@ namespace Models.CLEM.Activities
                                     foreach (var item in breederm)
                                         item.Number = Math.Truncate(item.Number * sireAdjustment + 0.5);
 
-                                    information.Add($"[Adjust breeding male (sire) cohorts at start-up] {(sireAdjustment < 1 ? "reduced" : "increased")} the male breeder (sire) numbers from [{totalm:F0}] to [{SiresKept}]{(MathUtilities.IsLessThan(MaximumSiresKept, 1)?" based on specified proportion of the adjusted female breeder herd":"")} ");
+                                    if (!MathUtilities.FloatsAreEqual(sireAdjustment, 1))
+                                        information.Add($"[Adjust breeding male (sire) cohorts at start-up] {(sireAdjustment < 1 ? "reduced" : "increased")} the male breeder (sire) numbers from [{totalm:F0}] to [{SiresKept}]{(MathUtilities.IsLessThan(MaximumSiresKept, 1)?" based on specified proportion of the adjusted female breeder herd":"")} ");
                                 }
                             }
                             else
