@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
 {
     /// <summary>
     /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
-    /// All default values are provided for cattle and Bos indicus breeds where values apply.
+    /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
@@ -34,7 +34,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Feed heat production scalar (CM2 in SCA)
         /// </summary>
-        /// <value>Default is for cattle. Value for Bos indicus breeds with all other cattle 0.36</value>
         [Category("Breed", "Growth")]
         [Description("Feed heat production scalar [CM2]")]
         public double FHPScalar_CM2 { get; set; } = 0.36; // B indicus 0.31

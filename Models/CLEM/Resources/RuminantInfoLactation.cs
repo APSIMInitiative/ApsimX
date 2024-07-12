@@ -25,14 +25,6 @@ namespace Models.CLEM.Resources
         /// Maximum production rate (MJ/day)
         /// </summary>
         public double MaximumRate { get; set; }
-        ///// <summary>
-        ///// Potential milk production (MJ/day)
-        ///// </summary>
-        //public double PotentialRate { get; set; }
-        ///// <summary>
-        ///// Potential milk production MP2 (MJ/day)
-        ///// </summary>
-        //public double PotentialRate2 { get; set; }
         /// <summary>
         /// Amount produced (kg)
         /// </summary>

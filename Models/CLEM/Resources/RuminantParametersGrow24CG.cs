@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
 {
     /// <summary>
     /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
-    /// All default values are provided for cattle and Bos indicus breeds where values apply.
+    /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
@@ -117,19 +117,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Slope parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG11)
         /// </summary>
-        /// <values>Default is for cattle (20.3), Bos indicus breed value used</values>
         [Category("Breed", "Growth")]
         [Description("Energy per kg growth #2 [CG11]")]
         [Required, GreaterThanValue(0)]
-        public double GrowthEnergySlope2_CG11 { get; set; } = 13.8;
-
-        ///// <summary>
-        ///// First intercept of equation to determine energy protein mass (kg kg-1, Freer et al. (2012) GrazPlan CG12)
-        ///// </summary>
-        //[Description("Protein gain intercept #1 [CG12]")]
-        //[Category("Breed", "Growth")]
-        //[Required, GreaterThanValue(0)]
-        //public double ProteinGainIntercept1_CG12 { get; set; } = 0.072; // Same for B.indicus 
+        public double GrowthEnergySlope2_CG11 { get; set; } = 13.8; 
 
         /// <summary>
         /// The adjusted intercept of equation to determine energy protein mass (kg kg-1) based on corrected equation to calculate proteinContentOfGain Dougherty 2024, Freer et al., 2012

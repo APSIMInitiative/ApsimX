@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
 {
     /// <summary>
     /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CD - Death parameters)
-    /// All default values are provided for cattle and Bos indicus breeds where values apply.
+    /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
