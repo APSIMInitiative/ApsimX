@@ -1151,7 +1151,11 @@ namespace Models.CLEM
         /// <summary>
         /// Estimate from nitrogen content supplied 
         /// </summary>
-        EstimateFromNitrogenContent
+        EstimateFromNitrogenContent,
+        /// <summary>
+        /// No Crude Protein
+        /// </summary>
+        NoCrudeProtein
     }
 
     /// <summary>
