@@ -4,8 +4,10 @@ using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -21,7 +23,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType, IValidatableObject
     {
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
@@ -254,11 +256,6 @@ namespace Models.CLEM.Resources
             {
                 this.amount -= amountRemoved;
 
-                //FoodResourcePacket additionalDetails = new FoodResourcePacket
-                //{
-                //    DMD = this.DMD,
-                //    PercentN = this.CurrentStoreNitrogen
-                //};
                 request.AdditionalDetails = CurrentStoreDetails;
 
                 request.Provided = amountRemoved;
@@ -267,13 +264,31 @@ namespace Models.CLEM.Resources
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
                     FoodResourcePacket marketDetails = CurrentStoreDetails.Clone(amountRemoved * request.MarketTransactionMultiplier);
-                    //additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
                     (EquivalentMarketStore as AnimalFoodStoreType).Add(marketDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
                 ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             return;
+        }
+
+        #endregion
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
+            {
+                if (UserNitrogenPercent <= 0)
+                    yield return new ValidationResult($"Percent nitrogen content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserNitrogenPercent" });
+            }
+            else if (CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent)
+            {
+                if (UserCrudeProteinPercent <= 0)
+                    yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserCrudeProteinPercent" });
+            }
         }
 
         #endregion
