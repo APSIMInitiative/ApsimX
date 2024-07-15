@@ -1142,7 +1142,7 @@ namespace UserInterface.Presenters
             //This digs through the menu item that sends the event to see what the text was on the button
             //This is not good code and will break if the GUI changes
             MenuItem menuItem = sender as MenuItem;
-            HBox hBox = menuItem.Children[0] as HBox;
+            Box hBox = menuItem.Children[0] as Box;
             Label label = hBox.Children[1] as Label;
             string itemText = label.Text;
             string playlistName = itemText.Replace("Add to", "").Trim();

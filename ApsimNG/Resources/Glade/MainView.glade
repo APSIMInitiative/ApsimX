@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="3.24"/>
   <object class="GtkMenu" id="menu1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
   </object>
   <object class="GtkWindow" id="window1">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <child>
-      <object class="GtkVPaned" id="vpaned1">
+      <object class="GtkPaned" id="vpaned1">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
+        <property name="can-focus">True</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkHPaned" id="hpaned1">
+          <object class="GtkPaned" id="hpaned1">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <child>
               <object class="GtkNotebook" id="notebook1">
                 <property name="name">left-tab-control</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="enable_popup">True</property>
+                <property name="can-focus">True</property>
+                <property name="enable-popup">True</property>
                 <child>
-                  <object class="GtkVBox" id="vbox1">
+                  <object class="GtkBox" id="vbox1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -37,17 +39,17 @@
                 <child type="tab">
                   <object class="GtkEventBox" id="eventbox1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Home</property>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
               </object>
@@ -59,12 +61,13 @@
             <child>
               <object class="GtkNotebook" id="notebook2">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="enable_popup">True</property>
+                <property name="can-focus">True</property>
+                <property name="enable-popup">True</property>
                 <child>
-                  <object class="GtkVBox" id="vbox2">
+                  <object class="GtkBox" id="vbox2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -76,17 +79,17 @@
                 <child type="tab">
                   <object class="GtkEventBox" id="eventbox2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Home</property>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
               </object>
@@ -102,17 +105,18 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox3">
+          <object class="GtkBox" id="vbox3">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkHBox" id="hbox2">
+              <object class="GtkBox" id="hbox2">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkProgressBar" id="progressBar">
-                    <property name="can_focus">False</property>
-                    <property name="no_show_all">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="no-show-all">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -123,11 +127,11 @@
                 <child>
                   <object class="GtkButton" id="stopButton">
                     <property name="label" translatable="yes">Stop</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="no_show_all">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="image_position">top</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="no-show-all">True</property>
+                    <property name="has-tooltip">True</property>
+                    <property name="image-position">top</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -137,10 +141,10 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="lblStatus">
-                    <property name="can_focus">False</property>
-                    <property name="no_show_all">True</property>
-                    <property name="xalign">0</property>
+                    <property name="can-focus">False</property>
+                    <property name="no-show-all">True</property>
                     <property name="xpad">5</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -158,15 +162,13 @@
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="can-focus">True</property>
                 <child>
                   <object class="GtkTextView" id="StatusWindow">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <property name="editable">False</property>
-                    <property name="wrap_mode">word</property>
+                    <property name="wrap-mode">word</property>
                   </object>
                 </child>
               </object>
