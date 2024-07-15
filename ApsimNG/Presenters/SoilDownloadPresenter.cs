@@ -373,16 +373,19 @@ namespace UserInterface.Presenters
                             {
                                 var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
                                 var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false).NewModel as Folder;
-                                var soil = folder.Children[0] as Soil;      
-
-                                // fixme: this should be handled by the converter or the importer.
-                                InitialiseSoil(soil);
-                                soils.Add(new SoilFromDataSource()
+                                if (folder.Children.Any())
                                 {
-                                    Soil = soil,
-                                    DataSource = "APSOIL"
-                                });
-                                progress.Report(report);
+                                    var soil = folder.Children[0] as Soil;
+
+                                    // fixme: this should be handled by the converter or the importer.
+                                    InitialiseSoil(soil);
+                                    soils.Add(new SoilFromDataSource()
+                                    {
+                                        Soil = soil,
+                                        DataSource = "APSOIL"
+                                    });
+                                    progress.Report(report);
+                                }
                             }
                         }
                     }
@@ -410,7 +413,7 @@ namespace UserInterface.Presenters
         private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
-            string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
+            string url = "https://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
                 longitudeEditBox.Text + "&latitude=" + latitudeEditBox.Text;
             try
             {
