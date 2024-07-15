@@ -152,7 +152,7 @@ namespace UserInterface.Views
             container = new Gtk.EventBox();
             container.Add(image);
 
-            VPaned box = new VPaned();
+            Paned box = new Paned(Orientation.Vertical);
             PropertiesView = new PropertyView(this);
             box.Add1(((ViewBase)PropertiesView).MainWidget);
 
@@ -246,7 +246,7 @@ namespace UserInterface.Views
         private void UpdateMapSize() {
             Rectangle rect = GtkUtilities.GetBorderOfRightHandView(this);
             Point pos = GtkUtilities.GetPositionOfWidget(mainWidget);
-            navigator.SetSize(rect.Width, rect.Height - (mainWidget as VPaned).Position + pos.Y);
+            navigator.SetSize(rect.Width, rect.Height - (mainWidget as Paned).Position + pos.Y);
         }
 
         private void OsmLayer_DataChanged(object sender, Mapsui.Fetcher.DataChangedEventArgs e)
