@@ -120,8 +120,8 @@ namespace UserInterface.Views
             textView.FocusInEvent += OnGainFocus;
             textView.FocusOutEvent += OnLoseFocus;
 
-            handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
-            regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+            handCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Hand2);
+            regularCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Xterm);
 
             textView.KeyPressEvent += OnTextViewKeyPress;
         }

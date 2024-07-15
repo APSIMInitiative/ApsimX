@@ -12,7 +12,7 @@
 
         private Grid table1;
 
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Label label4 = null;
         private Label label5 = null;
 
@@ -40,11 +40,12 @@
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
         {
+            // The glade file no longer provides much of use, with all the
+            // layout work being done here in code. THe glade file could be
+            // eliminated entirely
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
 
-            Widget table = (Widget)builder.GetObject("table1");
-            vbox1.Remove(table);
             table1 = new Grid();
             table1.ColumnSpacing = 10;
             // Set expand to false on this grid, to ensure that any extra space
@@ -52,8 +53,6 @@
             vbox1.PackStart(table1, false, true, 0);
             vbox1.ReorderChild(table1, 0);
 
-            label4 = (Label)builder.GetObject("label4");
-            label5 = (Label)builder.GetObject("label5");
             mainWidget = vbox1;
 
             graphView1 = new GraphView(this);
@@ -90,7 +89,7 @@
             helpBox = new EventBox();
             helpBox.Add(helpImage);
             helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
-            HBox filterBox = new HBox();
+            Box filterBox = new Box(Orientation.Horizontal, 0);
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 

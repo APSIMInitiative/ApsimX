@@ -16,7 +16,7 @@ namespace UserInterface.Views
         public event EventHandler DisabledSeriesChanged;
         public event EventHandler LegendInsideGraphChanged;
 
-        private HBox hbox1 = null;
+        private Box hbox1 = null;
         private Gtk.TreeView listview = null;
 
         private ListStore listModel = new ListStore(typeof(Boolean), typeof(string));
@@ -34,7 +34,7 @@ namespace UserInterface.Views
         public LegendView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
-            hbox1 = (HBox)builder.GetObject("hbox1");
+            hbox1 = (Box)builder.GetObject("hbox1");
             ComboBox combobox1 = (ComboBox)builder.GetObject("combobox1");
             ComboBox orientationCombo = (ComboBox)builder.GetObject("combobox2");
             listview = (Gtk.TreeView)builder.GetObject("listview");
