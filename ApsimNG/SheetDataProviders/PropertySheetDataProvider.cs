@@ -106,7 +106,7 @@ class PropertySheetDataProvider : ISheetDataProvider
             properties[colIndex].SetValues(rowIndices, values);
 
         // Update the number of rows.
-        RowCount = properties.Max(p => p.Values.Count);
+        RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count);
 
         CellChanged?.Invoke(this, colIndices, rowIndices, values);
     }
