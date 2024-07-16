@@ -343,7 +343,7 @@ namespace UserInterface.Views
                 case PropertyType.Files:
                 case PropertyType.Directory:
                     //case PropertyType.Directories:
-                    // Add an Entry and a Button inside a VBox.
+                    // Add an Entry and a Button inside a Box.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
                     fileNameInput.FocusOutEvent += UpdateText;
@@ -358,7 +358,7 @@ namespace UserInterface.Views
                     else if (property.DisplayMethod == PropertyType.Directory)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, true);
 
-                    Box container = new HBox();
+                    Box container = new Box(Orientation.Horizontal, 0);
                     container.PackStart(fileNameInput, true, true, 0);
                     container.PackStart(fileChooserButton, false, false, 0);
                     component = container;
@@ -546,10 +546,20 @@ namespace UserInterface.Views
                 Guid id = new Guid((sender as EditorView).MainWidget.Name);
                 string text = (sender as EditorView).Text;
 
-                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                //trim each line of the text and remove empty lines
+                string[] lines = text.Split('\n');
+                string trimmed = "";
+                foreach (string line in lines) 
                 {
-                    var args = new PropertyChangedEventArgs(id, text);
-                    originalEntryText[id] = text;
+                    string output = line.Trim();
+                    if (output.Length > 0)
+                        trimmed += line + "\n";
+                }
+
+                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], trimmed, StringComparison.CurrentCulture))
+                {
+                    var args = new PropertyChangedEventArgs(id, trimmed);
+                    originalEntryText[id] = trimmed;
                     PropertyChanged?.Invoke(this, args);
                 }
             }

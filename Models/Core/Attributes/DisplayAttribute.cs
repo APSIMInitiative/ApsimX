@@ -137,6 +137,11 @@ namespace Models.Core
     public class DisplayAttribute : System.Attribute
     {
         /// <summary>
+        /// Gets or sets the name to display in the grid.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets the display format (e.g. 'N3') that the user interface should
         /// use when showing values in the related property.
         /// </summary>

@@ -1,0 +1,65 @@
+ParamName,ParamUnit,Description,Mar,Apr,May,Jun,Jul,Aug,Sep
+CropType,string,Type of crop (i.e. crop name) used for characterising organic matter residues composition,Maize,Maize,Maize,Maize,Maize,Maize,Maize
+TT_Temp_X,oC,Average temperature for thermal time calculation,(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37),(0  26  37)
+TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0),(0  26  0)
+D_StartGrowth_00,DAWS,Earliest day after winter solstice when sowing/end-dorm is resumed every year,254,285,315,346,11,41,72
+T_StartGrowth_00,oC,Temperature 14-day running av temp from StartGrowthDOY_00 when growth starts,0,0,0,0,0,0,0
+Tt_Growing_01,oCd,Thermal-time accumulation from StartGrowth to FullCanopy,500,500,500,500,500,500,500
+DefoliateOrDevelop,string,Phase to rewind if defoliated at FullCanopy (FullCover or Graze),FullCover,FullCover,FullCover,FullCover,FullCover,FullCover,FullCover
+Pp_FullCover_02,h,Photoperiod x-values for reproductive target thermal-time lengths,(12 17),(12 17),(12 17),(12 17),(12 17),(12 17),(12 17)
+Tt_FullCover_02,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(7000 700),(7000 700),(7000 700),(7000 700),(1000 500),(1000 500),(1000 500)
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,800,800,800,800,800,800,800
+Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to Dormancy,150,150,150,150,150,150,150
+EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,EndCrop,EndCrop,EndCrop,EndCrop,EndCrop,EndCrop
+Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,(-2 -1 16 17),(-2 -1 16 17),(-2 -1 16 17),(-2 -1 16 17),(-2 -1 16 17),(-2 -1 16 17),(-2 -1 16 17)
+Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,(0 1 1 0),(0 1 1 0),(0 1 1 0),(0 1 1 0),(0 1 1 0),(0 1 1 0),(0 1 1 0)
+AC_Dormant_05,oCd,Accumulated chill units (x-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0)
+Tt_Dormant_05,oCd,Thermal-time duration of dormant phase at  accumulated chill unit (y-value),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0),(0 0)
+VegetativeStartStage,,Phenological stage to start accumulating vegetative tt,6.01,6.01,6.01,6.01,6.01,6.01,6.01
+Pp_Vegetative,h,Photoperiod x-values for reproductive target thermal-time lengths,(12 17),(12 17),(12 17),(12 17),(12 17),(12 17),(12 17)
+Tt_Vegetative,oCd,Thermal-time duration of reproductive/full-canopy phase at PP x-values (FullCanopy to StartSenescence),(5000 500),(5000 500),(5000 500),(5000 500),(800 300),(800 300),(800 300)
+Tt_Flowering,oCd,Thermal time for flowering window,200,200,200,200,200,200,200
+Tt_Reproductive,oCd,Thermal-time duration of produce growth post flowering,800,800,800,800,800,800,800
+MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,0,0,0,0,0,0
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,0,0,0,0,0,0
+MaxCanopyHeight,mm,Maximum canopy height,1800,1800,1800,1800,1800,1800,1800
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,0,0,0,0,0,0,0
+MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,800,800,800,800,800,800,800
+AgeToMaxDimension,Y,Years until plant reaches mature size,1,1,1,1,1,1,1
+AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,0,0,0,0,0,0,0
+SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1),(0 1 1 1)
+TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,0,0,0,0,0,0,0
+LAIbase,m2/m2,The LAI during the winter period for evergreen crops,0,0,0,0,0,0,0
+LAImax,m2/m2,Maximum achievable leaf are index (optimal management),7,7,7,7,7,7,7
+ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.5,0.5,0.5,0.5,0.5,0.5,0.5
+RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),1.5,1.5,1.5,1.5,1.5,1.5,1.5
+RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,(0 15 25 35),(0 15 25 35),(0 15 25 35),(0 15 25 35),(0 15 25 35),(0 15 25 35),(0 15 25 35)
+PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmospheric CO2,C3,C3,C3,C3,C3,C3,C3
+LeafPartitionFrac,fractional,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),0.45,0.45,0.45,0.45,0.45,0.45,0.45
+ProductPartitionFrac,fractional,Proportion of total biomass partitioned to Product,0.45,0.45,0.45,0.45,0.45,0.45,0.45
+RootPartitionFrac,fractional,Proportion of total biomass partitioned to Root,0.1,0.1,0.1,0.1,0.1,0.1,0.1
+LeafMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0
+LeafMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0
+ProductMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0
+ProductMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0
+RootMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0
+RootMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0
+TrunkMaxNConc,gN/gDM,Highest N conc of organ,0,0,0,0,0,0,0
+TrunkMinNConc,gN/gDM,Lowest N conc of organ,0,0,0,0,0,0,0
+MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,1100,1100,1100,1100,1100,1100,1100
+RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
+Frost_Temp_X,oC,Minimum temperatures for frost damage,(-15 -10),(-15 -10),(-15 -10),(-15 -10),(-15 -10),(-15 -10),(-15 -10)
+Frost_Frac_Y,fractional,Frost damage at x-axes temperaure,(1 0),(1 0),(1 0),(1 0),(1 0),(1 0),(1 0)
+WaterStressLAI_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressLAI_Frac_Y,fractional,Fractional multiplier of LAI expansion rates,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+WaterStressExtCoeff_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressExtCoeff_Frac_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+WaterStressRUE_Fw_X,fractional,Fractional degree of water stress,(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1),(0 0.5 1)
+WaterStressRUE_Fract_Y,fractional,Fractional multiplier of extinction coefficient,(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1),(0 1 1)
+FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,30000,30000,30000,30000,30000,30000,30000
+FlowerStress_Temp_X,oC,Maximum temperature at flowering,(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45),(0 30 31 35 40 45)
+FlowerStress_Factor_Y,fractional,Multiplier of maximum flower number at thresold maximum temperature,(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0),(1 1 1 0.8 0.5 0)
+ProduceDryMatterFrac,fractional,Fraction of drymatter in produce,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,.05,.05,.05,.05,.05,.05,.05
+RainfallExcessDamage_mm_X,mm/year,Annual rainfall amount (cycle or full-year?),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700),(0 1500 1700)
+RainfallExcessDamage_Fract_Y,fractional,Fractional multiplier of produce,(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0),(1 1 0)
