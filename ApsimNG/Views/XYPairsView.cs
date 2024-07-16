@@ -10,7 +10,7 @@ namespace UserInterface.Views
     /// </summary>
     public partial class XYPairsView : ViewBase
     {
-        private HPaned hpaned;
+        private Paned hpaned;
 
         private GridView gridView;
 
@@ -24,7 +24,7 @@ namespace UserInterface.Views
         /// </summary>
         public XYPairsView(ViewBase owner) : base(owner)
         {
-            hpaned = new HPaned();
+            hpaned = new Paned(Orientation.Horizontal);
             mainWidget = hpaned;
             gridView = new GridView(this);
             graphView = new GraphView(this);
