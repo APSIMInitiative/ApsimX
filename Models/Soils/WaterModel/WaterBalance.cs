@@ -45,7 +45,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, IGridModel
+    public class WaterBalance : Model, ISoilWater
     {
         private Physical physical;
         private HyProps hyprops = new HyProps();
@@ -206,6 +206,7 @@ namespace Models.WaterModel
         public double PSIDul { get; set; } = -100.0;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Units("mm")]
         [Summary]
         [JsonIgnore]
@@ -398,6 +399,7 @@ namespace Models.WaterModel
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.SWCON for SWCON in standard thickness
         /// </remarks>
+        [Display(Format = "N3")]
         [Summary]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
@@ -410,6 +412,7 @@ namespace Models.WaterModel
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.KLAT for KLAT in standard thickness
         /// </remarks>
+        [Display(Format = "N3")]
         [Summary]
         [Bounds(Lower = 0, Upper = 1.0e3F)]
         [Units("mm/d")]
@@ -906,24 +909,6 @@ namespace Models.WaterModel
         public void Tillage(string tillageType)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
-                columns.Add(new GridTableColumn("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

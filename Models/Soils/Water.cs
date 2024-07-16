@@ -5,7 +5,6 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -18,7 +17,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IGridModel
+    public class Water : Model
     {
         private double[] volumetric;
 
@@ -27,6 +26,7 @@ namespace Models.Soils
 
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -55,7 +55,6 @@ namespace Models.Soils
         /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
-        [Display(Format = "N1")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
         /// <summary>Amount water (mm)</summary>
@@ -128,7 +127,10 @@ namespace Models.Soils
             {
                 if (InitialValues == null)
                     return 0;
-                return MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+                double[] values =  MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                if (values != null)
+                    return values.Sum();
+                return 0;
             }
             set
             {
@@ -181,23 +183,6 @@ namespace Models.Soils
             if (InitialValues == null)
                 throw new Exception("No initial soil water specified.");
             Volumetric = (double[])InitialValues.Clone();
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
         }
 
         [JsonIgnore]
@@ -272,12 +257,15 @@ namespace Models.Soils
 
                             newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
                                                 MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
-
                         }
                         else
                         {
-                            newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+                            
+                            var paw = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                            if (paw == null)
+                                newFractionFull = 0;
+                            else
+                                newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
                         return newFractionFull;
@@ -302,10 +290,11 @@ namespace Models.Soils
             {
                 double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
 
                 double fraction = FractionFull;
             }
@@ -317,7 +306,7 @@ namespace Models.Soils
         {
             get
             {
-                if (InitialValues == null)
+                if (InitialValues == null || InitialValues.Length != Thickness.Length)
                     return 0;
                 var ll = RelativeToLL;
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
@@ -716,16 +705,19 @@ namespace Models.Soils
         /// <summary>
         /// Checks to make sure every InitialValue value is within airdry and SAT values.
         /// </summary>
-        /// <param name="initialValues"></param>
-        /// <returns>a <see cref="bool">bool</see> value</returns>
-        /// <exception cref="Exception"></exception>
-        public bool AreInitialValuesWithinPhysicalBoundaries(double[] initialValues)
+        public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
                 throw new Exception("To check boundaries of InitialValues Physical must not be null.");
-            for (int i = 0; i < initialValues.Length; i++)
+
+            if (InitialValues.Length != Thickness.Length)
+                return false;
+
+            var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
+
+            for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.SAT[i])
+                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
                     return false;
             }
             return true;
