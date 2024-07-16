@@ -64,7 +64,7 @@ class PropertyMetadata
     public string[] ValidUnits { get; }
     
     /// <summary>The metadata of the property.</summary>
-    public List<SheetDataProviderCellState> Metadata { get; private set;}
+    public List<SheetDataProviderCellState> Metadata { get; set;}
 
     /// <summary>The values of the property.</summary>
     public ReadOnlyCollection<string> Values => values?.AsReadOnly();
@@ -117,14 +117,17 @@ class PropertyMetadata
         bool dataWasChanged = false;
         foreach (var i in valueIndices.Reverse())
         {
-            if (i < values.Count)
+            if (Metadata == null || i >= Metadata.Count || Metadata[i] != SheetDataProviderCellState.ReadOnly)
             {
-                values.RemoveAt(i);
-                dataWasChanged = true;
-            }
+                if (values != null && i < values.Count)
+                {
+                    values.RemoveAt(i);
+                    dataWasChanged = true;
+                }
 
-            if (Metadata != null && i < Metadata.Count)
-                Metadata.RemoveAt(i);
+                if (Metadata != null && i < Metadata.Count)
+                    Metadata.RemoveAt(i);
+            }
         }
 
         if (dataWasChanged)

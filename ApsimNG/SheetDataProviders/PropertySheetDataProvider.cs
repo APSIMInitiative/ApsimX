@@ -69,6 +69,10 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <param name="rowIndex">Row index of cell.</param>
     public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
     {
+        if (properties[colIndex].Metadata != null && 
+            properties[colIndex].Metadata.Count > 0 && 
+            properties[colIndex].Metadata.All(m => m == SheetDataProviderCellState.ReadOnly))
+            return SheetDataProviderCellState.ReadOnly;
         if (properties[colIndex].Metadata == null || rowIndex >= properties[colIndex].Metadata.Count)
             return SheetDataProviderCellState.Normal;
         else

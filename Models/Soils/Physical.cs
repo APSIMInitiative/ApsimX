@@ -147,11 +147,6 @@ namespace Models.Soils
             {
                 return SoilUtilities.MapConcentration(WaterNode.InitialValues, WaterNode.Thickness, Thickness, 0);
             }
-            set
-            {
-                if (IsSWSameLayerStructure)
-                    WaterNode.InitialValues = value;
-            }
         }
 
         /// <summary>Initial soil water (mm).</summary>

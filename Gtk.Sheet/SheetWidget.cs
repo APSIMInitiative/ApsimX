@@ -41,6 +41,7 @@ namespace Gtk.Sheet
                            int numberFrozenRows = -1,
                            bool blankRowAtBottom = false,
                            int[] columnWidths = null,
+                           bool gridIsEditable = true,
                            Action<Exception> onException = null)
         {
             this.onException = onException;
@@ -60,7 +61,10 @@ namespace Gtk.Sheet
             SetDataProvider(dataProvider);
 
             Sheet.ScrollBars = new SheetScrollBars(Sheet, this);
-            Sheet.CellPainter = new DefaultCellPainter(Sheet, this);
+            if (gridIsEditable)
+                Sheet.CellPainter = new DefaultCellPainter(Sheet, this);
+            else
+                Sheet.CellPainter = new CellPainterNoCellStates(Sheet, this);
             if (container != null)
                 AddChild(container, Sheet.ScrollBars.MainWidget);
 

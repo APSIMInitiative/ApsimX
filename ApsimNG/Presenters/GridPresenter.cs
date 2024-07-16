@@ -185,6 +185,7 @@ namespace UserInterface.Presenters
                                    dataProvider, 
                                    multiSelect: true,
                                    onException: (err) => ViewBase.MasterView.ShowError(err),
+                                   gridIsEditable: gridIsEditable,
                                    blankRowAtBottom: gridIsEditable);
 
             contextMenu = new MenuView();
@@ -250,6 +251,8 @@ namespace UserInterface.Presenters
                     dataProvider.CellChanged += OnCellChanged;
                 }
             }
+            else if (dataProvider != null)
+                grid.SetDataProvider(dataProvider);
 
             grid?.UpdateScrollBars();
         }

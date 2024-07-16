@@ -77,6 +77,7 @@ public class ModelToSheetDataProvider
             if (initialValues != null)
             {
                 initialValues.Alias = solute.Name;
+                initialValues.Metadata = Enumerable.Repeat(SheetDataProviderCellState.ReadOnly, solute.Thickness.Length).ToList();
                 properties.Insert(insertIndex, initialValues);
                 insertIndex++;
             }
