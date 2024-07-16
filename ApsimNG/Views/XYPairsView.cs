@@ -1,6 +1,7 @@
 ﻿using Gtk;
 using System;
 using UserInterface.Presenters;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -12,7 +13,7 @@ namespace UserInterface.Views
     {
         private Paned hpaned;
 
-        private GridView gridView;
+        private ContainerView containerView;
 
         /// <summary>
         /// Initial water graph
@@ -25,10 +26,11 @@ namespace UserInterface.Views
         public XYPairsView(ViewBase owner) : base(owner)
         {
             hpaned = new Paned(Orientation.Horizontal);
+            hpaned.Position = GtkUtilities.GetBorderOfRightHandView(owner).Width / 6;
             mainWidget = hpaned;
-            gridView = new GridView(this);
+            containerView = new ContainerView(this);
             graphView = new GraphView(this);
-            hpaned.Pack1(gridView.MainWidget, true, false);
+            hpaned.Pack1(containerView.MainWidget, true, false);
             hpaned.Pack2(graphView.MainWidget, true, false);
             graphView.Height = 200;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -61,11 +63,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets the initial water graph.
         /// </summary>
-        public GridView VariablesGrid
+        public ContainerView VariablesGrid
         {
             get
             {
-                return gridView;
+                return containerView;
             }
         }
     }
