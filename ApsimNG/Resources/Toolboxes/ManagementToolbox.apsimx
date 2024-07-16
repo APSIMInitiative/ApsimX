@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 176,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -336,7 +335,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -930,6 +928,208 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using System;",
+            "using Models.Core;",
+            "using Models.Interfaces;",
+            "using Models.PMF;",
+            "using APSIM.Shared.Utilities;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] IClock Clock;",
+            "        [Link] Sugarcane Sugarcane;",
+            "        ",
+            "        [Separator(\"A component to change Parameters the Sugarcane model.\")]",
+            "        [Description(\"RUE:\")]",
+            "        public double[] rue {get; set;}",
+            "        ",
+            "        [Description(\"Root Depth Rate:\")]",
+            "        public double[] root_depth_rate {get; set;}",
+            "        ",
+            "        [Description(\"Ratio Root Shoot:\")]",
+            "        public double[] ratio_root_shoot {get; set;}",
+            "        ",
+            "        [Separator(\"Cultivar Parameters. Leave field blank or NaN if it is unchanged from default\")]",
+            "        [Description(\"Cultivar to Modify:\")]",
+            "        [Display(Type=DisplayType.CultivarName, PlantName = \"Sugarcane\")]",
+            "        public string Cultivar {get; set;}",
+            "        ",
+            "        [Description(\"Leaf Size:\")]",
+            "        public double[] leaf_size {get; set;}",
+            "        ",
+            "        [Description(\"Leaf Size No:\")]",
+            "        public double[] leaf_size_no {get; set;}",
+            "        ",
+            "        [Description(\"Cane Fraction:\")]",
+            "        public double cane_fraction {get; set;}",
+            "        ",
+            "        [Description(\"Sucrose Fraction Stalk:\")]",
+            "        public double[] sucrose_fraction_stalk {get; set;}",
+            "        ",
+            "        [Description(\"Stress Factor Stalk:\")]",
+            "        public double[] stress_factor_stalk {get; set;}",
+            "        ",
+            "        [Description(\"Sucrose Delay:\")]",
+            "        public double sucrose_delay {get; set;}",
+            "        ",
+            "        [Description(\"Min Sstem Sucrose:\")]",
+            "        public double min_sstem_sucrose {get; set;}",
+            "        ",
+            "        [Description(\"Min Sstem Sucrose Redn:\")]",
+            "        public double min_sstem_sucrose_redn {get; set;}",
+            "        ",
+            "        [Description(\"TT Emerg To Begcane:\")]",
+            "        public double tt_emerg_to_begcane {get; set;}",
+            "        ",
+            "        [Description(\"TT Begcane To Flowering:\")]",
+            "        public double tt_begcane_to_flowering {get; set;}",
+            "        ",
+            "        [Description(\"TT Flowering To Crop End:\")]",
+            "        public double tt_flowering_to_crop_end {get; set;}",
+            "        ",
+            "        [Description(\"Green Leaf No:\")]",
+            "        public double green_leaf_no {get; set;}",
+            "        ",
+            "        [Description(\"Tillerf Leaf Size:\")]",
+            "        public double[] tillerf_leaf_size {get; set;}",
+            "        ",
+            "        [Description(\"Tillerf Leaf Size No:\")]",
+            "        public double[] tillerf_leaf_size_no {get; set;}",
+            "        ",
+            "        [EventSubscribe(\"StartOfSimulation\")]",
+            "        private void OnStartOfSimulation(object sender, EventArgs e)",
+            "        {",
+            "            if (rue != null)",
+            "                Sugarcane.plant.rue = rue;",
+            "            if (root_depth_rate != null)",
+            "                Sugarcane.plant.root_depth_rate = root_depth_rate;",
+            "            if (ratio_root_shoot != null)",
+            "                Sugarcane.plant.ratio_root_shoot = ratio_root_shoot;",
+            "            foreach(CultivarConstants cult in Sugarcane.cultivars)",
+            "            {",
+            "                if (cult.cultivar_name == Cultivar)",
+            "                {",
+            "                    if (leaf_size != null)",
+            "                        cult.leaf_size = leaf_size;",
+            "                    if (leaf_size_no != null)",
+            "                        cult.leaf_size_no = leaf_size_no;",
+            "                    if (!Double.IsNaN(cane_fraction))",
+            "                        cult.cane_fraction = cane_fraction;",
+            "                    if (sucrose_fraction_stalk != null)",
+            "                        cult.sucrose_fraction_stalk = sucrose_fraction_stalk;",
+            "                    if (stress_factor_stalk != null)",
+            "                        cult.stress_factor_stalk = stress_factor_stalk;",
+            "                    if (!Double.IsNaN(sucrose_delay))",
+            "                        cult.sucrose_delay = sucrose_delay;",
+            "                    if (!Double.IsNaN(min_sstem_sucrose))",
+            "                        cult.min_sstem_sucrose = min_sstem_sucrose;",
+            "                    if (!Double.IsNaN(min_sstem_sucrose_redn))",
+            "                        cult.min_sstem_sucrose_redn = min_sstem_sucrose_redn;",
+            "                    if (!Double.IsNaN(tt_emerg_to_begcane))",
+            "                        cult.tt_emerg_to_begcane = tt_emerg_to_begcane;",
+            "                    if (!Double.IsNaN(tt_begcane_to_flowering))",
+            "                        cult.tt_begcane_to_flowering = tt_begcane_to_flowering;",
+            "                    if (!Double.IsNaN(tt_flowering_to_crop_end))",
+            "                        cult.tt_flowering_to_crop_end = tt_flowering_to_crop_end;",
+            "                    if (!Double.IsNaN(green_leaf_no))",
+            "                        cult.green_leaf_no = green_leaf_no;",
+            "                    if (tillerf_leaf_size != null)",
+            "                        cult.tillerf_leaf_size = tillerf_leaf_size;",
+            "                    if (tillerf_leaf_size_no != null)",
+            "                        cult.tillerf_leaf_size_no = tillerf_leaf_size_no;",
+            "                }",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [
+            {
+              "Key": "Cultivar",
+              "Value": ""
+            },
+            {
+              "Key": "leaf_size",
+              "Value": ""
+            },
+            {
+              "Key": "leaf_size_no",
+              "Value": ""
+            },
+            {
+              "Key": "cane_fraction",
+              "Value": "NaN"
+            },
+            {
+              "Key": "sucrose_fraction_stalk",
+              "Value": ""
+            },
+            {
+              "Key": "stress_factor_stalk",
+              "Value": ""
+            },
+            {
+              "Key": "sucrose_delay",
+              "Value": "NaN"
+            },
+            {
+              "Key": "min_sstem_sucrose",
+              "Value": "NaN"
+            },
+            {
+              "Key": "min_sstem_sucrose_redn",
+              "Value": "NaN"
+            },
+            {
+              "Key": "tt_emerg_to_begcane",
+              "Value": "NaN"
+            },
+            {
+              "Key": "tt_begcane_to_flowering",
+              "Value": "NaN"
+            },
+            {
+              "Key": "tt_flowering_to_crop_end",
+              "Value": "NaN"
+            },
+            {
+              "Key": "green_leaf_no",
+              "Value": "NaN"
+            },
+            {
+              "Key": "tillerf_leaf_size",
+              "Value": ""
+            },
+            {
+              "Key": "tillerf_leaf_size_no",
+              "Value": ""
+            },
+            {
+              "Key": "rue",
+              "Value": ""
+            },
+            {
+              "Key": "root_depth_rate",
+              "Value": ""
+            },
+            {
+              "Key": "ratio_root_shoot",
+              "Value": ""
+            }
+          ],
+          "Name": "Modify Sugarcane",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -938,7 +1138,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -1572,7 +1771,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2480,7 +2678,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3561,7 +3758,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -3965,7 +4161,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [

@@ -14,6 +14,7 @@ namespace Models
 {
     /// <summary>
     /// # The APSIM Sugarcane Model
+    /// Use the "Modify Sugarcane" manager script from the Management Toolbox (Plants to modify the sugarcane parameters. Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure.
     /// </summary>
     /// <remarks>
     ///## Model Components Overview
@@ -338,8 +339,8 @@ namespace Models
     ///
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.MarkdownView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class Sugarcane : Model, IPlant, ICanopy, IUptake
     {
