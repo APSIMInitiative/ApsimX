@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gtk.Sheet;
+using Models.Core;
 
 namespace UserInterface.Views;
 
@@ -36,6 +37,9 @@ class PropertySheetDataProvider : ISheetDataProvider
 
     /// <summary>Gets the number of rows of data.</summary>
     public int RowCount { get; private set; }
+
+    /// <summary>The model.</summary>
+    public IModel Model => properties.First().Model;
 
     /// <summary>Get the name of a column.</summary>
     /// <param name="columnIndex">Column index.</param>

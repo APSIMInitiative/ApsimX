@@ -6,6 +6,7 @@ using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
+using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -19,8 +20,8 @@ namespace UserInterface.Presenters
     /// </summary>
     class GridPresenter : IPresenter
     {
-        ///// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
-        //private Model model;
+        /// <summary>Stores a reference to the model.</summary>
+        private IModel model;
 
         /// <summary>The data provider.</summary>
         private ISheetDataProvider dataProvider;
@@ -57,6 +58,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private IntellisensePresenter intellisense;
 
+        /// <summary>A replace model command to enable the undo system to work.</summary>
+        private ReplaceModelCommand replaceModelCommand;
+
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
         /// <param name="colIndices">The indices of the columns that were changed.</param>
@@ -83,6 +87,9 @@ namespace UserInterface.Presenters
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
+            this.model = model as IModel;
+            explorerPresenter = parentPresenter;
+
             if (model as ISheetDataProvider != null)
             {  
                 // e.g. DataStorePresenter goes through here.
@@ -97,9 +104,12 @@ namespace UserInterface.Presenters
             }
             else
             {
+                // e.g. ProfilePresenter
                 dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
                 var viewBase = v as ViewBase;
                 sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
+                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null);
+                explorerPresenter.CommandHistory.Add(replaceModelCommand, execute: false);
             }
 
             //we are receiving a container from another presenter to put the grid into
@@ -131,7 +141,6 @@ namespace UserInterface.Presenters
             //Create the sheet widget here.
             SetupSheet(dataProvider);
 
-            explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             if (dataProvider != null)
                 dataProvider.CellChanged += OnCellChanged;
@@ -470,6 +479,9 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            model = changedModel as IModel;
+            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+            SetupSheet(dataProvider);
             Refresh();
         }
 
@@ -493,6 +505,10 @@ namespace UserInterface.Presenters
                     }
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
+            }
+            else if (replaceModelCommand != null)
+            {
+                replaceModelCommand.Replacement = model as IModel;
             }
         }
 

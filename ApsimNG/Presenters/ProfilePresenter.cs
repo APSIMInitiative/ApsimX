@@ -27,9 +27,6 @@ namespace UserInterface.Presenters
         /// <summary>The model.</summary>
         private IModel model;
 
-        /// <summary>The data provider.</summary>
-        private ISheetDataProvider dataProvider;
-
         /// <summary>The physical model.</summary>
         private Physical physical;
 
@@ -64,11 +61,9 @@ namespace UserInterface.Presenters
                 physical.InFill();
                 water = soilNode.FindChild<Water>();
             }
-            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
-
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(dataProvider, gridContainer, explorerPresenter);
+            gridPresenter.Attach(model, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             var propertyView = view.GetControl<PropertyView>("properties");
@@ -329,6 +324,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            model = changedModel as IModel;
             Refresh();
         }
 

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Gtk.Sheet;
+using Models.Core;
 
 namespace UserInterface.Views;
 
@@ -62,6 +63,9 @@ class PropertyMetadata
 
     /// <summary>The valid units of the property.</summary>
     public string[] ValidUnits { get; }
+
+    /// <summary>The model.</summary>
+    public IModel Model => obj as IModel;
     
     /// <summary>The metadata of the property.</summary>
     public List<SheetDataProviderCellState> Metadata { get; set;}
