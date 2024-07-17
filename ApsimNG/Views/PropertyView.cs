@@ -362,7 +362,8 @@ namespace UserInterface.Views
                     break;
                 case PropertyType.Files:
                     string filenamesText = property.Value?.ToString();
-                    filenamesText = filenamesText.Replace(", ", "\n");
+                    filenamesText = filenamesText.Replace(",", "\n");
+                    filenamesText = filenamesText.Replace("\n ", "\n");
                     if (!filenamesText.EndsWith('\n'))
                         filenamesText += '\n';
 
@@ -572,7 +573,7 @@ namespace UserInterface.Views
                     StoreScrollerPosition();
                     Guid id = Guid.Parse(widget.Name);
                     string text = (widget as TextView).Buffer.Text;
-
+                    text = text.Replace(",", "\n"); //do this again incase someone entered filenames with , instead of newlines
                     text = text.Replace("\n", ", ");
                     if (text.EndsWith(", "))
                         text = text.Remove(text.Length-2, 2);
