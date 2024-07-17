@@ -287,10 +287,9 @@ namespace Models.CLEM.Activities
                 // YoungFactor in CalculatePotentialIntake determines how much these individuals can eat when milk is in shortfall.
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                double received = 0;
                 if(ind.Mother is not null)
                 {
-                    received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
+                    double received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
                     milkPacket.MetabolisableEnergyContent = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6;
                     milkPacket.CrudeProteinPercent = ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15;
                     milkPacket.Amount = received;

@@ -115,10 +115,18 @@ namespace Models.CLEM.Activities
             {
                 foreach (var indi in ind)
                 {
-                    // reset tallies at start of the month
+                    // these three are from new intake approach
+                    indi.Intake.SolidsDaily.Reset();
+                    indi.Intake.MilkDaily.Reset(indi.IsSuckling);
+                    indi.Weight.Protein.TimeStepReset();
+
+                    CalculatePotentialIntake(indi);
+
+                    // these happen here three are from new intake approach
                     indi.Intake.Reset();
                     indi.Energy.Reset();
-                    CalculatePotentialIntake(indi);
+                    indi.Output.Reset();
+
                 }
             }
         }
