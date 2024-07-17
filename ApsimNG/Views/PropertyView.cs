@@ -362,7 +362,7 @@ namespace UserInterface.Views
                     break;
                 case PropertyType.Files:
                     string filenamesText = property.Value?.ToString();
-                    filenamesText = filenamesText.Replace(',', '\n');
+                    filenamesText = filenamesText.Replace(", ", "\n");
                     if (!filenamesText.EndsWith('\n'))
                         filenamesText += '\n';
 
@@ -372,12 +372,13 @@ namespace UserInterface.Views
                     filenamesEditor.Buffer.Text = filenamesText ?? "";
                     originalEntryText[property.ID] = filenamesText;
                     filenamesEditor.Name = property.ID.ToString();
-                    filenamesEditor.FocusOutEvent += UpdateText;
+                    filenamesEditor.FocusOutEvent += UpdateFilenamesText;
 
                     Frame filenamesOutline = new Frame();
                     filenamesOutline.Add(filenamesEditor);
 
                     Button filesChooserButton = new Button("...");
+                    filesChooserButton.Name = property.ID.ToString();
                     filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
 
                     Box filenamesContainer = new HBox();
@@ -563,14 +564,19 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void UpdateFilenamesText(object sender, EventArgs e)
         {
-           /* try
+            try
             {
                 Widget widget = sender as Widget;
                 if (widget != null)
                 {
                     StoreScrollerPosition();
                     Guid id = Guid.Parse(widget.Name);
-                    string text = editor.Buffer.Text;
+                    string text = (widget as TextView).Buffer.Text;
+
+                    text = text.Replace("\n", ", ");
+                    if (text.EndsWith(", "))
+                        text = text.Remove(text.Length-2, 2);
+
                     if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
                     {
                         var args = new PropertyChangedEventArgs(id, text);
@@ -582,7 +588,7 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
-            }*/
+            }
         }
 
         /// <summary>

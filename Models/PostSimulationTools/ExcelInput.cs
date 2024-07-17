@@ -75,7 +75,14 @@ namespace Models.PostSimulationTools
                 if (value == null)
                     sheetNames = Array.Empty<string>();
                 else
-                    sheetNames = value;
+                {
+                    List<string> filtered = new List<string>();
+                    foreach(string line in value) {
+                        if (line != null && line.Length > 0)
+                            filtered.Add(line);
+                    }
+                    sheetNames = filtered.ToArray();
+                }
             }
         }
 
