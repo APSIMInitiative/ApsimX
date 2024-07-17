@@ -4,7 +4,7 @@ AgeToMaxDimension,Y,Years until plant reaches mature size,Structure,1,1,1,1,6,6,
 AgeAtStartSimulation,Y,How old is the plant at the start of the simulation (needs to be 0 for annuals),Structure,0,0,0,0,6,6,6,6,6,0.3,1
 SeasonalDimensionPattern,0-1,Relative values for seasonal height and width at StartGrowth | FullCanopy | StartSenescence | Maturity,Structure,(0.05 .3 0.3 1),(0.05 .3 0.3 1),(0.05 1 1 1),(0.05 1 1 1),(0 1 1 1),0 1 1 1),(0 1 1 1),(0 1 1 1),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 TrunkWtAtMaxDimension,g/m2,The weight of perennial biomass when crop has reached max size,Structure,0,0,0,0,500,1500,1000,1500,1500,0,0
-MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,1400,3000,3000,3000,3000,2000,600,600
+MaxRootDepth,mm,Potential depth that roots achieve when plant is mature,Structure,2000,2000,2000,2300,3000,3000,3000,3000,2000,600,600
 RootsInNeighbourZone,bool,Do roots grow into neighbouring zone if multi simulation run?,Structure,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 ProduceDryMatterFrac,0-1,Fraction of drymatter in produce,Structure,0.86,0.86,0.8,0.91,0.23,.9,0.2,0.29,0.2,0.2,0.2
 Frost_Temp_X,oC,Minimum temperatures for frost damage,Stress,(-1 4),(-15 -10),(-4 0),(-15 -10),(-1 2),(-4 -1),(-5 -2),(-3 0),(-10 -5),(-5 0),(-5 0)
@@ -52,14 +52,14 @@ Chill_Temp_X,oC,Temperatures when chilling-time accumulation occurs,Phenology,(0
 Chill_Acc_Y,oCd,Chilling rate accumulation at a given cardinal temperature,Phenology,(0 0 0 0),(0 1 1 0),(0 0 0 0),(0 1 0.5 0),(1 0.8 0),(0 0 0 0),(0 0 0 0),(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
 TT_Temp_X,oC,Average temperature for thermal time calculation,Phenology,(0   18  26  34  44),(0  26  37),(1.9 26  40),(2  30  35),(3.9  29  37.9),(10  24 26  35),(7.2  28.9  40.1),(10 25 33 45),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,Phenology,(0   10  18  26   0),(0  26  0),(0 24.1 0),(0  28  0),(0  25  0),(0 14 16 0),(0 21.7 0),(0 15 23 0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),CarbonSupply,1.8,1.6,1.6,1.6,0.9,1,1,.9,1.2,1,0.9
+RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),CarbonSupply,1.8,1.2,1.05,1.1,0.9,1,1,.9,1.2,1,0.9
 PhotosynthesisType,C3 or C4,Select if a C3 or C4 crop to set sensitivity to atmospheric CO2,CarbonSupply,C4,C3,C3,C3,C3,C3,C3,C3,C3,C3,C3
 RUETempThresholds,oC,Radiation Use Efficiency temperatures for lower_minimum | lower_optima | upper_optima | upper_minimum,CarbonSupply,(8 20 35 50),(0 15 25 35),(0 25 30 45),(0  15 25 35),(5 25 30 45),(10  24 26  35),(10 25 30 45),(10 25 33 45),(5 20 30 40),(3 18 25 35),(5 20 25 35)
-FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,CarbonDemand,3600,30000,35400,132000,1200,400,70,12,40,1000,1000
+FlowerNumberMax,/m2,Maximum (potential) number of flowers per square meter,CarbonDemand,3600,30000,35400,130000,1200,400,70,12,40,1000,1000
 FruitWeightPotential,g DM/fruit,Dry weight potential per fruit,CarbonDemand,0.34,0.045,0.00718,0.0032,.4,2,10,70,35,10,10
-LeafPartitionFrac,0-1,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),CarbonDemand,0.42,0.45,0.7,0.63,.5,.5,0.2,.3,0.3,0.1,0.1
-ProductPartitionFrac,0-1,Proportion of total biomass partitioned to Product,CarbonDemand,0.42,0.45,0.15,0.27,0.3,.25,0.6,.4,0.8,0.7,0.7
-RootPartitionFrac,0-1,Proportion of total biomass partitioned to Root,CarbonDemand,0.16,0.1,0.15,0.1,0.2,.3,0.4,0.3,0.2,0.2,0.2
+LeafPartitionFrac,0-1,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),CarbonDemand,0.42,0.45,0.7,0.60,.5,.5,0.2,.3,0.3,0.1,0.1
+ProductPartitionFrac,0-1,Proportion of total biomass partitioned to Product,CarbonDemand,0.42,0.45,0.15,0.25,0.3,.25,0.6,.4,0.8,0.7,0.7
+RootPartitionFrac,0-1,Proportion of total biomass partitioned to Root,CarbonDemand,0.16,0.1,0.15,0.15,0.2,.3,0.4,0.3,0.2,0.2,0.2
 MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,Canopy,0,0,0,0,1100,1100,1000,1370,1500,0,0
 MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,Canopy,0,0,0,0,1100,3000,3500,3500,2500,100,100
 MaxCanopyHeight,mm,Maximum canopy height,Canopy,2500,1000,1800,900,2600,5700,4500,4500,3500,300,300
@@ -69,5 +69,5 @@ LAIbase,m2/m2,The LAI during the winter period for evergreen crops,Canopy,0,0,0,
 LAIAnnualGrowth,m2/m2,Maximum achievable leaf are index less the LAI base (optimal management),Canopy,6,7,7,6,6,2,2,2,8,6,3
 ExtCoeff,0-1,Extinction coefficient for diffuse light across canopy,Canopy,.75,0.75,0.96,0.55,.7,.6,.7,.7,0.7,0.5,0.8
 RelSlowLAI,0-1,Releative progress through Growing Phase when LAI reaches 10% of its maximum (3.1 - 3.8),Canopy,3.5,3.5,3.5,3.5,3.2,3.2,3.2,3.2,3.2,3.2,3.2
-Gsmax350,m/s,Maximum stomatal conductance at 350 ppm co2,Transpiration,0.011,0.011,0.011,0.012,0.011,0.011,0.011,0.011,0.011,0.011,0.011
+Gsmax350,m/s,Maximum stomatal conductance at 350 ppm co2,Transpiration,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011,0.011
 R50,MJ/m2,Net radiation levels at which gs is half gsmax,Transpiration,150,150,150,150,150,150,150,150,150,150,150
