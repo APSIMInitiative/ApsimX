@@ -523,7 +523,9 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            soil.Children.Add(new CERESSoilTemperature());
+            CERESSoilTemperature temperature = new CERESSoilTemperature();
+            temperature.Name = "Temperature";
+            soil.Children.Add(temperature);
             var physical = soil.FindChild<Physical>();
             if (physical != null)
             {
@@ -822,6 +824,9 @@ namespace UserInterface.Presenters
                     wheat.Name = "WheatSoil";
                     waterNode.ParentAllDescendants();
 
+                    CERESSoilTemperature temperature = new CERESSoilTemperature();
+                    temperature.Name = "Temperature";
+
                     newSoil.Children.Add(waterNode);
                     newSoil.Children.Add(soilWater);
                     newSoil.Children.Add(nutrient);
@@ -830,7 +835,7 @@ namespace UserInterface.Presenters
                     newSoil.Children.Add(initialWater);
                     newSoil.Children.Add(no3);
                     newSoil.Children.Add(nh4);
-                    newSoil.Children.Add(new CERESSoilTemperature());
+                    newSoil.Children.Add(temperature);
                     newSoil.ParentAllDescendants();
                     newSoil.OnCreated();
 
@@ -977,7 +982,10 @@ namespace UserInterface.Presenters
                     organicMatter.FOMCNRatio = 40.0;
                     organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
-                    newSoil.Children.Add(new CERESSoilTemperature());
+                    CERESSoilTemperature temperatureNew = new CERESSoilTemperature();
+                    temperature.Name = "Temperature";
+
+                    newSoil.Children.Add(temperatureNew);
                     newSoil.OnCreated();
 
                     soils.Add(new SoilFromDataSource()
