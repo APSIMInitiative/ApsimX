@@ -348,10 +348,33 @@ namespace UserInterface.Presenters
             var soils = new List<SoilFromDataSource>();
             try
             {
-                // fixme: Shouldn't this be using the current culture?
-                double latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                double latitude = 0;
+                double longitude = 0;
+                double radius = 0;
+                try 
+                {
+                    latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
+                }
+                try 
+                {
+                    longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Longitude field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
+                }
+                try 
+                {
+                    radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
+                }
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
@@ -529,6 +552,10 @@ namespace UserInterface.Presenters
                 if (water != null && water.Thickness == null)
                 {
                     water.Thickness = physical.Thickness;
+                    water.InitialValues = physical.DUL;
+                }
+                if (water != null && water.InitialValues == null)
+                {
                     water.InitialValues = physical.DUL;
                 }
                 var euc = physical.FindChild<SoilCrop>("EucalyptusSoil");
