@@ -12,8 +12,8 @@ namespace UserInterface.Views
     {
         private Widget captureRules;
         private Widget simulationFilter;
-        private VBox mainControl;
-        private HBox settingsControl;
+        private Box mainControl;
+        private Box settingsControl;
 
         /// <summary>Drop down box which displays the simulation names.</summary>
         public DropDownView SimulationDropDown { get; private set; }
@@ -33,8 +33,8 @@ namespace UserInterface.Views
 
             Widget jumpToLogContainer = CreateJumpToLogContainer();
 
-            mainControl = new VBox();
-            settingsControl = new HBox();
+            mainControl = new Box(Orientation.Vertical, 0);
+            settingsControl = new Box(Orientation.Horizontal, 0);
             mainWidget = mainControl;
             settingsControl.PackStart(captureRules, false, false, 0);
             settingsControl.PackStart(simulationFilter, false, false, 0);
@@ -53,7 +53,7 @@ namespace UserInterface.Views
         {
             btnJumpToSimLog = new Button("Jump to simulation log");
             btnJumpToSimLog.Clicked += OnJumpToSimulationLog;
-            HBox box = new HBox();
+            Box box = new Box(Orientation.Horizontal, 0);
             box.PackStart(btnJumpToSimLog, false, false, 0);
             box.Margin = 5;
             return box;
@@ -61,8 +61,8 @@ namespace UserInterface.Views
 
         private Widget CreateSimulationFilter()
         {
-            VBox box = new VBox();
-            HBox hBox = new HBox();
+            Box box = new Box(Orientation.Vertical, 0);
+            Box hBox = new Box(Orientation.Horizontal, 0);
             SimulationDropDown = new DropDownView(this);
             hBox.PackStart(new Label("Simulation:"), false, false, 5);
             hBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
@@ -78,7 +78,7 @@ namespace UserInterface.Views
         {
             VerbosityDropDown = new EnumDropDownView<MessageType>(this);
             Label verbosity = new Label("Messages which should be saved when the simulation is run:");
-            VBox box = new VBox();
+            Box box = new Box(Orientation.Vertical, 0);
             box.PackStart(verbosity, false, false, 5);
             box.PackStart(VerbosityDropDown.MainWidget, false, false, 5);
             box.Margin = 5;

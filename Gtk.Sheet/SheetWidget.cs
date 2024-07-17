@@ -39,7 +39,9 @@ namespace Gtk.Sheet
                            bool multiSelect,
                            int numberFrozenColumns = 0,
                            int numberFrozenRows = -1,
+                           bool blankRowAtBottom = false,
                            int[] columnWidths = null,
+                           bool gridIsEditable = true,
                            Action<Exception> onException = null)
         {
             this.onException = onException;
@@ -48,17 +50,21 @@ namespace Gtk.Sheet
             Sheet = new Sheet(dataProvider,
                               numberFrozenColumns,
                               numberFrozenRows,
-                              columnWidths);
+                              columnWidths,
+                              blankRowAtBottom);
 
             if (multiSelect)
-                Sheet.CellSelector = new MultiCellSelect(Sheet, this);
+                Sheet.CellSelector = new MultiCellSelect(Sheet);
             else
-                Sheet.CellSelector = new SingleCellSelect(Sheet, this);
+                Sheet.CellSelector = new SingleCellSelect(Sheet);
 
             SetDataProvider(dataProvider);
 
             Sheet.ScrollBars = new SheetScrollBars(Sheet, this);
-            Sheet.CellPainter = new DefaultCellPainter(Sheet, this);
+            if (gridIsEditable)
+                Sheet.CellPainter = new DefaultCellPainter(Sheet, this);
+            else
+                Sheet.CellPainter = new CellPainterNoCellStates(Sheet, this);
             if (container != null)
                 AddChild(container, Sheet.ScrollBars.MainWidget);
 
@@ -67,18 +73,7 @@ namespace Gtk.Sheet
         }
 
         /// <summary>The number of rows in the grid.</summary>
-        public int RowCount
-        {
-            get
-            {
-                return Sheet.RowCount;
-            }
-            set
-            {
-                Sheet.RowCount = value;
-            }
-        }
-        
+        public int RowCount => Sheet.RowCount;
 
         /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
         public int NumberFrozenRows => Sheet.NumberFrozenRows;              
@@ -89,23 +84,10 @@ namespace Gtk.Sheet
         /// <param name="dataProvider">The data provider.</param>
         public void SetDataProvider(ISheetDataProvider dataProvider)
         {
-            Sheet.DataProvider = dataProvider;
+            Sheet.SetDataProvider(dataProvider);
             if (dataProvider != null)
             {
-                bool hasUnits = false;
-                for (int colIndex = 0; colIndex < dataProvider.ColumnCount; colIndex++)
-                    hasUnits = hasUnits || dataProvider.GetColumnUnits(colIndex) != null;
-            
-                // Set the number of frozen rows
-                if (Sheet.NumberFrozenRows == -1)
-                {
-                    if (hasUnits)
-                        Sheet.NumberFrozenRows = 2;
-                    else
-                        Sheet.NumberFrozenRows = 1;
-                }
-
-                if (!dataProvider.IsReadOnly && Sheet.CellEditor == null)
+                if (Sheet.CellEditor == null)
                     Sheet.CellEditor = new CellEditor(Sheet, this);
             }
         }
@@ -172,7 +154,8 @@ namespace Gtk.Sheet
         /// </summary>
         public void Cut()
         {
-            Sheet.CellSelector.Cut();
+            Copy();
+            Sheet.CellSelector.Delete();
         }
 
         /// <summary>
@@ -180,7 +163,7 @@ namespace Gtk.Sheet
         /// </summary>
         public void Copy()
         {
-            Sheet.CellSelector.Copy();
+            SetClipboard(Sheet.CellSelector.GetSelectedContents());
         }
 
         /// <summary>
@@ -190,7 +173,7 @@ namespace Gtk.Sheet
         /// <param name="e"></param>
         public void Paste()
         {
-            Sheet.CellSelector.Paste();
+            Sheet.CellSelector.SetSelectedContents(GetClipboard());
         }
 
         /// <summary>
@@ -347,7 +330,17 @@ namespace Gtk.Sheet
             try
             {
                 SheetEventKey keyParams = evnt.ToSheetEventKey();
-                Sheet.InvokeKeyPress(keyParams);
+                if (evnt.KeyValue > 0 && evnt.KeyValue < 255)
+                {
+                    if (evnt.KeyValue == 'c' && keyParams.Control)
+                        Copy();
+                    else if (evnt.KeyValue == 'v' && keyParams.Control)
+                        Paste();
+                    else if (Sheet.CellEditor != null)
+                        Sheet.CellEditor.Edit((char)evnt.KeyValue);
+                }
+                else
+                    Sheet.InvokeKeyPress(keyParams);
             }
             catch (Exception ex)
             {
@@ -361,6 +354,8 @@ namespace Gtk.Sheet
         /// <returns></returns>
         protected override bool OnButtonPressEvent(EventButton evnt)
         {
+            GrabFocus();
+
             try
             {
                 if (evnt.Type == EventType.ButtonPress)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Gtk.Sheet;
-using static Gtk.Sheet.ISheetDataProvider;
+﻿using System.Data;
 
 namespace Gtk.Sheet
 {
@@ -15,21 +10,18 @@ namespace Gtk.Sheet
         /// <summary>The optional units for each column in the data table. Can be null.</summary>
         private readonly IList<string> units;
 
-        /// <summary>Number of heading rows.</summary>
-        private int numHeadingRows;
-
         /// <summary>A matrix of cell booleans to indicate if a cell is calculated (rather than measured).</summary>
-        private List<List<bool>> cellStates;
+        private List<List<SheetDataProviderCellState>> cellStates;
 
         /// <summary>An event invoked when a cell changes.</summary>
-        public event CellChangedDelegate CellChanged;
+        public event ISheetDataProvider.CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
         /// <param name="isReadOnly">Is the data readonly?</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
-        public DataTableProvider(DataTable dataSource,bool isReadOnly, IList<string> columnUnits = null, List<List<bool>> cellStates = null)
+        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<SheetDataProviderCellState>> cellStates = null)
         {
             if (dataSource == null)
                 Data = new DataTable();
@@ -37,11 +29,6 @@ namespace Gtk.Sheet
                 Data = dataSource;
             units = columnUnits;
             this.cellStates = cellStates;
-            IsReadOnly = isReadOnly;
-            if (units == null)
-                numHeadingRows = 1;
-            else
-                numHeadingRows = 2;
         }
 
         /// <summary>The wrapped data table.</summary>
@@ -51,24 +38,48 @@ namespace Gtk.Sheet
         public int ColumnCount => Data.Columns.Count;
 
         /// <summary>Gets the number of rows of data.</summary>
-        public int RowCount => Data.Rows.Count + numHeadingRows;
+        public int RowCount => Data.Rows.Count;
 
-        /// <summary>Is the data readonly?</summary>
-        public bool IsReadOnly { get; }        
+        /// <summary>Get the name of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public string GetColumnName(int columnIndex)
+        {
+            if (columnIndex < Data.Columns.Count)
+                return Data.Columns[columnIndex].ColumnName;
+            throw new Exception($"Invalid column index: {columnIndex}");
+        }
+
+        /// <summary>Get the units of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public string GetColumnUnits(int columnIndex)
+        {
+            if (units == null)
+                return null;
+            if (columnIndex < units.Count)
+                return units[columnIndex];
+            throw new Exception($"Invalid column index: {columnIndex}");
+        }
+
+        /// <summary>Get the allowable units of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public IReadOnlyList<string> GetColumnValidUnits(int columnIndex)
+        {
+            if (units == null)
+                return null;
+            if (columnIndex < units.Count)
+                return new string[] { units[columnIndex] };
+            throw new Exception($"Invalid column index: {columnIndex}");            
+        }        
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
         public string GetCellContents(int colIndex, int rowIndex)
         {
-            if (colIndex >= Data.Columns.Count || rowIndex - numHeadingRows >= Data.Rows.Count)
+            if (colIndex >= Data.Columns.Count || rowIndex >= Data.Rows.Count)
                 return null;
 
-            if (rowIndex == 0)
-                return Data.Columns[colIndex].ColumnName;
-            else if (numHeadingRows == 2 && rowIndex == 1)
-                return units[colIndex];
-            var value = Data.Rows[rowIndex - numHeadingRows][colIndex];
+            var value = Data.Rows[rowIndex][colIndex];
             if (value is double)
                 return ((double)value).ToString("F3");  // 3 decimal places.
             else if (value is DateTime)
@@ -87,19 +98,15 @@ namespace Gtk.Sheet
                 var cellState = GetCellState(colIndices[i], rowIndices[i]);
                 if (cellState == SheetDataProviderCellState.Normal || cellState == SheetDataProviderCellState.Calculated)
                 {
-                    int j = rowIndices[i] - numHeadingRows;
-                    if (j >= 0)
-                    {
-                        while (j >= Data.Rows.Count)
-                            Data.Rows.Add(Data.NewRow());
+                    while (rowIndices[i] >= Data.Rows.Count)
+                        Data.Rows.Add(Data.NewRow());
 
-                        var existingValue = Data.Rows[j][colIndices[i]];
-                        if (existingValue != null && values[i] == null ||
-                            existingValue == null && values[i] != null ||
-                            existingValue.ToString() != values[i].ToString())
-                        {
-                            Data.Rows[j][colIndices[i]] = values[i];                           
-                        }
+                    var existingValue = Data.Rows[rowIndices[i]][colIndices[i]];
+                    if (existingValue != null && values[i] == null ||
+                        existingValue == null && values[i] != null ||
+                        existingValue.ToString() != values[i].ToString())
+                    {
+                        Data.Rows[rowIndices[i]][colIndices[i]] = values[i];                           
                     }
                 }
             }
@@ -150,6 +157,15 @@ namespace Gtk.Sheet
             CellChanged?.Invoke(this, colIndices, rowIndices, values);
         }
 
+        /// <summary>Delete the specified rows.</summary>
+        /// <param name="rowIndices">Row indexes of cell.</param>
+        public void DeleteRows(int[] rowIndices)
+        {
+            foreach (int rowIndex in rowIndices.Reverse())
+                Data.Rows[rowIndex].Delete();
+            CellChanged?.Invoke(this, null, rowIndices, null);
+        }
+
         /// <summary>Is the column readonly?</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
@@ -158,7 +174,7 @@ namespace Gtk.Sheet
             if (Data.Columns[colIndex].ReadOnly)
                 return SheetDataProviderCellState.ReadOnly;
             else if (cellStates != null && colIndex < cellStates.Count && cellStates[colIndex] != null && rowIndex < cellStates[colIndex].Count)
-                return cellStates[colIndex][rowIndex] ? SheetDataProviderCellState.Calculated : SheetDataProviderCellState.Normal;
+                return cellStates[colIndex][rowIndex];
             else
                 return SheetDataProviderCellState.Normal;
         }
@@ -168,17 +184,7 @@ namespace Gtk.Sheet
         /// <param name="rowIndex">Row index of cell.</param>
         public void SetCellState(int colIndex, int rowIndex)
         {
-            throw new NotImplementedException("Cannot set the state of a DataTable");
-        }
-
-        /// <summary>Get the Units assigned to this column</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        public string GetColumnUnits(int colIndex)
-        {
-            if (units == null)
-                return null;
-            else
-                return units[colIndex];
+            throw new NotImplementedException("Cannot set the cell state of a DataTable");
         }
     }
 }

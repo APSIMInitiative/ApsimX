@@ -14,8 +14,8 @@ namespace Models.Utilities
     /// </summary>
     public class GridTable
     {
-        // List of all properties (name, property)
-        private List<GridTableColumn> columns = new List<GridTableColumn>();
+        /// <summary>List of all properties (name, property).</summary>
+        public List<GridTableColumn> Columns = new List<GridTableColumn>();
 
         /// <summary>Name of the data set</summary>
         public string Name { get; set; }
@@ -24,7 +24,7 @@ namespace Models.Utilities
         public string Description { get; set; }
 
         /// <summary>A description of the Data set and how it is used</summary>
-        public Model Model { get; set; }
+        public IModel Model { get; set; }
 
         /// <summary>The data table.</summary>
         public DataTable Data
@@ -37,12 +37,12 @@ namespace Models.Utilities
         /// <param name="nameOfData">Name of tabular data.</param>
         /// <param name="columns">Properties containing array variables. One for each column.</param>
         /// <param name="model">The the model being shown in this grid table</param>
-        public GridTable(string nameOfData, IEnumerable<GridTableColumn> columns, Model model)
+        public GridTable(string nameOfData, IEnumerable<GridTableColumn> columns, IModel model)
         {
             Name = nameOfData;
             Description = "";
             Model = model;
-            this.columns.AddRange(columns);
+            this.Columns.AddRange(columns);
         }
 
         /// <summary>Get tabular data as a DataTable. Called by GUI.</summary>
@@ -51,7 +51,7 @@ namespace Models.Utilities
             var data = new DataTable(Name);
 
             // Add columns to data table.
-            foreach (var column in columns)
+            foreach (var column in Columns)
                 data.Columns.Add(new DataColumn(column.Name));
 
             // Add units to data table as row 1.
@@ -60,17 +60,17 @@ namespace Models.Utilities
             if (hasUnits)
             {
                 var unitsRow = data.NewRow();
-                foreach (var column in columns)
+                foreach (var column in Columns)
                     unitsRow[column.Name] = column.Units;
                 data.Rows.Add(unitsRow);
             }
 
             // Add values to data table.
-            foreach (var column in columns)
+            foreach (var column in Columns)
                 column.AddColumnToDataTable(data, hasUnits);
 
             // Set readonly flag on each column in data.
-            foreach (var column in columns)
+            foreach (var column in Columns)
                 data.Columns[column.Name].ReadOnly = column.IsReadOnly;
 
             return data;
@@ -97,7 +97,7 @@ namespace Models.Utilities
             }
 
             //copy values into properties
-            foreach (var column in columns)
+            foreach (var column in Columns)
                 if (!column.IsReadOnly)
                     column.Set(data, HasUnits());
         }
@@ -109,8 +109,8 @@ namespace Models.Utilities
         /// <returns></returns>
         public IEnumerable<string> GetUnits(int columnIndex)
         {
-            if (columnIndex < columns.Count)
-                return columns[columnIndex].AllowableUnits;
+            if (columnIndex < Columns.Count)
+                return Columns[columnIndex].AllowableUnits;
             else
                 return new string[0];
         }
@@ -121,7 +121,7 @@ namespace Models.Utilities
         /// <returns></returns>
         public bool HasUnits()
         {
-            foreach (var column in columns)
+            foreach (var column in Columns)
                 if (!String.IsNullOrEmpty(column.Units))
                     return true;
             return false;
@@ -134,8 +134,8 @@ namespace Models.Utilities
         /// <param name="units"></param>
         public void SetUnits(int columnIndex, string units)
         {
-            if (columnIndex < columns.Count)
-                columns[columnIndex].Units = units;
+            if (columnIndex < Columns.Count)
+                Columns[columnIndex].Units = units;
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace Models.Utilities
         /// <returns></returns>
         public List<bool> GetIsCalculated(int columnIndex)
         {
-            if (columnIndex < columns.Count)
-                return columns[columnIndex].IsCalculated;
+            if (columnIndex < Columns.Count)
+                return Columns[columnIndex].IsCalculated;
             else
                 return null;
         }        

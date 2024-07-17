@@ -39,7 +39,7 @@ namespace UserInterface.Views
 
         public event EventHandler<TStringArgs> SuppNameChanged;
 
-        private Table table1 = null;
+        private Grid table1 = null;
         private Entry tbSulph = null;
         private Entry tbPhos = null;
         private Entry tbADIP2CP = null;
@@ -67,7 +67,7 @@ namespace UserInterface.Views
         public SupplementView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SupplementView.glade");
-            table1 = (Table)builder.GetObject("table1");
+            table1 = (Grid)builder.GetObject("table1");
             tbSulph = (Entry)builder.GetObject("tbSulph");
             tbPhos = (Entry)builder.GetObject("tbPhos");
             tbADIP2CP = (Entry)builder.GetObject("tbADIP2CP");

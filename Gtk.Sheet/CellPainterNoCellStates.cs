@@ -6,9 +6,8 @@ namespace Gtk.Sheet
     /// <summary>
     /// This cell painter will colour the column headings of a sheet and any selected cells.
     /// It will also tell the sheet not to paint a cell that is being edited.
-    /// It will colour cells differently that are readonly.
     /// </summary>
-    internal class DefaultCellPainter : ISheetCellPainter
+    internal class CellPainterNoCellStates : ISheetCellPainter
     {
         /// <summary>The sheet to paint.</summary>
         Sheet sheet;
@@ -19,7 +18,7 @@ namespace Gtk.Sheet
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet to paint.</param>
         /// <param name="sheetWidget">The sheet widget.</param>
-        public DefaultCellPainter(Sheet sheet, SheetWidget sheetWidget)
+        public CellPainterNoCellStates(Sheet sheet, SheetWidget sheetWidget)
         {
             this.sheet = sheet;
             this.sheetWidget = sheetWidget;
@@ -43,15 +42,7 @@ namespace Gtk.Sheet
                 return States.Selected; 
             if (rowIndex < sheet.NumberFrozenRows)
                 return States.Insensitive;
-
-            rowIndex -= sheet.NumberFrozenRows;
-
-            if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.ReadOnly)
-                return States.Insensitive;
-            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.Calculated)
-                return States.Calculated;
-            else
-                return States.Normal;
+            return States.Normal;
         }
 
         /// <summary>Gets whether to use a bold font for a cell.</summary>

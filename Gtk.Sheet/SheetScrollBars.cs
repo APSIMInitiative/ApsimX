@@ -13,16 +13,16 @@ namespace Gtk.Sheet
         private SheetWidget sheetWidget;
 
         /// <summary>The horizontal scroll bar</summary>
-        private HScrollbar horizontalScrollbar;
+        private Scrollbar horizontalScrollbar;
 
         /// <summary>The vertical scroll bar</summary>
-        private VScrollbar verticalScrollbar;
+        private Scrollbar verticalScrollbar;
 
         /// <summary>The vertical scroll bar</summary>
-        private VBox horizontalScrollbarBox;
+        private Box horizontalScrollbarBox;
 
         /// <summary>The horizontal scroll bar</summary>
-        private HBox verticalScrollbarBox;
+        private Box verticalScrollbarBox;
 
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
@@ -63,17 +63,17 @@ namespace Gtk.Sheet
         private void Initialise()
         {
             var horizontalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
-            horizontalScrollbar = new HScrollbar(horizontalAdjustment);
+            horizontalScrollbar = new Scrollbar(Orientation.Horizontal, horizontalAdjustment);
             horizontalScrollbar.Value = 0;
             horizontalScrollbar.ValueChanged += OnHorizontalScrollbarChanged;
 
             var verticalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
-            verticalScrollbar = new VScrollbar(verticalAdjustment);
+            verticalScrollbar = new Scrollbar(Orientation.Vertical, verticalAdjustment);
             verticalScrollbar.Value = 0;
             verticalScrollbar.ValueChanged += OnVerticalScrollbarChanged;
 
-            verticalScrollbarBox = new HBox();
-            horizontalScrollbarBox = new VBox();
+            verticalScrollbarBox = new Box(Orientation.Horizontal, 0);
+            horizontalScrollbarBox = new Box(Orientation.Vertical, 0);
 
             verticalScrollbarBox.PackStart(sheetWidget, true, true, 0);
             verticalScrollbarBox.PackEnd(verticalScrollbar, false, true, 0);
