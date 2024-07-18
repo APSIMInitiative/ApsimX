@@ -348,33 +348,26 @@ namespace UserInterface.Presenters
             var soils = new List<SoilFromDataSource>();
             try
             {
-                double latitude = 0;
-                double longitude = 0;
-                double radius = 0;
-                try 
-                {
-                    latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                bool canParse;
+                
+                double latitude;
+                canParse = double.TryParse(latitudeEditBox.Text, out latitude);
+                if(!canParse) {
+                    throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"");
                 }
-                catch (Exception e)
-                {
-                    throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
+
+                double longitude;
+                canParse = double.TryParse(longitudeEditBox.Text, out longitude);
+                if(!canParse) {
+                    throw new Exception("Longitude field has invalid input \"" + radiusEditBox.Text +"\"");
                 }
-                try 
-                {
-                    longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+
+                double radius;
+                canParse = double.TryParse(radiusEditBox.Text, out radius);
+                if(!canParse) {
+                    throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
                 }
-                catch (Exception e)
-                {
-                    throw new Exception("Longitude field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
-                }
-                try 
-                {
-                    radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"", e.InnerException);
-                }
+                
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
