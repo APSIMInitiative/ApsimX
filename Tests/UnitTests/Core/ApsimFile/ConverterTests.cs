@@ -449,7 +449,7 @@ namespace UnitTests.Core.ApsimFile
         {
           string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.apsim");
           ConverterReturnType result = Converter.DoConvert(xml, Converter.LatestVersion);
-          Assert.That(JsonUtilities.ChildWithName(result.Root, "SoilTemperature"), Is.Not.Null);
+          Assert.That(JsonUtilities.ChildWithName(result.Root, "Temperature"), Is.Not.Null);
           Assert.That(JsonUtilities.ChildWithName(result.Root, "Nutrient"), Is.Not.Null);
         }
     }
