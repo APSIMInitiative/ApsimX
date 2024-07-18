@@ -84,11 +84,6 @@ namespace Models.DCAPST
         private const double LEAF_LAI_START_USING_DCAPST_TRIGGER = 0.5;
 
         /// <summary>
-        /// The divisor that is used to calculate the correct root shoot ratio.
-        /// </summary>
-        private const double ROOT_SHOOT_RATIO_DIVISOR = 2.0;
-
-        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
@@ -136,9 +131,6 @@ namespace Models.DCAPST
         /// <summary>
         /// A static crop parameter generation object.
         /// </summary>
-        /// TODO - This has been made static because otherwise it will be serialized,
-        /// even with the JSON Ignore attribute! There isn't any concern with it being 
-        /// static as the param generator doesn't carry any state.
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
@@ -313,7 +305,7 @@ namespace Models.DCAPST
         {
             if (DcapstModel is null) return;
 
-            double rootShootRatio = GetRootShootRatio();
+            double rootShootRatio = rootShootRatioFunction.Value();
             double soilWaterValue = GetSoilWaterAvailable();
             DcapstModel.CalculateBiomass(soilWaterValue, rootShootRatio);
 
@@ -377,16 +369,6 @@ namespace Models.DCAPST
             ICanopy leafFind = plant.FindChild<ICanopy>("Leaf");
             if (leafFind == null) throw new ArgumentNullException(nameof(leafFind), "Cannot find leaf configuration");
             return leafFind;
-        }
-
-        private double GetRootShootRatio()
-        {
-            var rootShootRatioValue = rootShootRatioFunction.Value();
-            if (ROOT_SHOOT_RATIO_DIVISOR > 0.0)
-            {
-                rootShootRatioValue /= ROOT_SHOOT_RATIO_DIVISOR;
-            }
-            return rootShootRatioValue;
         }
 
         private IFunction GetRootShootRatioFunction()

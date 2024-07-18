@@ -88,6 +88,11 @@ namespace Models.DCAPST
         public double ActualBiomass { get; private set; }
 
         /// <summary>
+        /// The actual root biomass
+        /// </summary>
+        public double ActualRootBiomass { get; private set; }
+
+        /// <summary>
         /// Daily water demand
         /// </summary>
         public double WaterDemanded { get; private set; }
@@ -113,12 +118,12 @@ namespace Models.DCAPST
         public List<double> WaterDemands { get; private set; } = new();
 
         /// <summary>
-        /// TODO
+        /// This is the total potential biomass which will be limited when under water stress.
         /// </summary>
         public double CalculatedTotalPotentialBiomass { get; private set; }
 
         /// <summary>
-        /// 
+        /// Contains the information for each interval throughout the day.
         /// </summary>
         public IntervalValues[] Intervals;
 
@@ -238,6 +243,10 @@ namespace Models.DCAPST
             // Now perform the biomass calculations.
             TotalActualBiomass = GetBiomassConversionFactor(calculatedTotalActualBiomass);
             ActualBiomass = TotalActualBiomass / (1 + RootShootRatio);
+            // The actual root biomass is the difference between the TotalActual,
+            // which includes the above and below ground biomass, and the Actual,
+            // which is the actual biomass minus the roots.
+            ActualRootBiomass = TotalActualBiomass - ActualBiomass;
             TotalPotentialBiomass = GetBiomassConversionFactor(CalculatedTotalPotentialBiomass);
             PotentialBiomass = TotalPotentialBiomass / (1 + RootShootRatio);
         }
