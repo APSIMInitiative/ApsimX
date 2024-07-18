@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -14,6 +15,10 @@ namespace Models
 {
     /// <summary>
     /// # The APSIM Sugarcane Model
+    /// 
+    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure. 
+    /// 
+    /// Any new cultivars must contain all cultivar variables as there are no default values. See other cultivars under Sugarcane for an example.
     /// </summary>
     /// <remarks>
     ///## Model Components Overview
@@ -338,8 +343,8 @@ namespace Models
     ///
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.MarkdownView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class Sugarcane : Model, IPlant, ICanopy, IUptake
     {
@@ -1172,7 +1177,7 @@ namespace Models
         /// The cult
         /// </summary>
         [JsonIgnore]
-        public CultivarConstants cult;
+        public CultivarConstants cult { get; set; }
 
         #endregion
 
@@ -12072,12 +12077,12 @@ namespace Models
         {
             get
             {
-                string[] returnArray = new string[cultivars.Length];
-                for (int i = 0; i < cultivars.Length; i++)
-                {
-                    returnArray[i] = cultivars[i].cultivar_name;
-                }
-                return returnArray;
+                List<string> returnArray = new List<string>();
+                List<Cultivar> pmfCultivars = FindAllDescendants<Cultivar>().ToList();
+                foreach(Cultivar c in pmfCultivars)
+                    returnArray.Add(c.Name);
+                    
+                return returnArray.ToArray();
             }
         }
 
@@ -13136,14 +13141,14 @@ namespace Models
                     if (g_ratoon_no == 0)
                     {
                         crop = sugar_read_crop_constants("plant_crop");
-                        cult = sugar_read_cultivar_params(l_cultivar);
+                        sugar_read_cultivar_params(l_cultivar);
                     }
                     else
                     {
                         crop = sugar_read_crop_constants("ratoon_crop");
 
                         l_cultivar_ratoon = l_cultivar + "_ratoon";
-                        cult = sugar_read_cultivar_params(l_cultivar_ratoon);
+                        sugar_read_cultivar_params(l_cultivar_ratoon);
                     }
 
                     //! get root profile parameters
@@ -13208,19 +13213,15 @@ namespace Models
         /// <param name="Name">The name.</param>
         /// <returns></returns>
         /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
-        CultivarConstants sugar_read_cultivar_params(string Name)
+        void sugar_read_cultivar_params(string Name)
         {
-            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name, MessageType.Diagnostic);
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(Name));
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{Name}'");
 
-            foreach (CultivarConstants c in cultivars)
-            {
-                if (c.cultivar_name.ToLower() == Name.ToLower())
-                {
-                    return c;
-                }
-            }
-
-            throw new ApsimXException(this, "Could not find in the Sugarcane ini file a cultivar called: " + Name);
+            cult = new CultivarConstants();
+            cultivarDefinition.Apply(this);
         }
 
 
@@ -13657,7 +13658,7 @@ namespace Models
                     crop = sugar_read_crop_constants("ratoon_crop");
 
                     l_cultivar_ratoon = g_crop_cultivar + "_ratoon";
-                    cult = sugar_read_cultivar_params(l_cultivar_ratoon);
+                    sugar_read_cultivar_params(l_cultivar_ratoon);
                 }
                 else
                 {
