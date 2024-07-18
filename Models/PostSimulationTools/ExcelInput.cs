@@ -46,11 +46,17 @@ namespace Models.PostSimulationTools
             }
             set
             {
+                //remove any null or blank filenames that could be passed in
+                List<string> filtered = new List<string>();
+                foreach(string line in value)
+                        if (line != null && line.Length > 0)
+                            filtered.Add(line);
+
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null && simulations.FileName != null && value != null)
-                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
+                    this.filenames = filtered.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
-                    this.filenames = value;
+                    this.filenames = filtered.ToArray();
             }
         }
 
@@ -76,11 +82,12 @@ namespace Models.PostSimulationTools
                     sheetNames = Array.Empty<string>();
                 else
                 {
+                    //remove any null or blank sheet names that could be passed in
                     List<string> filtered = new List<string>();
-                    foreach(string line in value) {
+                    foreach(string line in value)
                         if (line != null && line.Length > 0)
                             filtered.Add(line);
-                    }
+
                     sheetNames = filtered.ToArray();
                 }
             }

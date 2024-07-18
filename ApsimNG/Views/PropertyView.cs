@@ -361,19 +361,16 @@ namespace UserInterface.Views
                     component = container;
                     break;
                 case PropertyType.Files:
-                    string filenamesText = property.Value?.ToString();
-                    filenamesText = filenamesText.Replace(",", "\n");
-                    filenamesText = filenamesText.Replace("\n ", "\n");
-                    if (!filenamesText.EndsWith('\n'))
-                        filenamesText += '\n';
+                    string[] filenamesArray = ReflectionUtilities.StringToObject(typeof(string[]), property.Value.ToString(), CultureInfo.CurrentCulture) as string[];
+                    string filenamesText = string.Join("\n", filenamesArray) + "\n";
 
                     TextView filenamesEditor = new TextView();
                     filenamesEditor.SizeAllocated += OnTextViewSizeAllocated;
                     filenamesEditor.WrapMode = WrapMode.Word;
-                    filenamesEditor.Buffer.Text = filenamesText ?? "";
+                    filenamesEditor.Buffer.Text = filenamesText;
                     originalEntryText[property.ID] = filenamesText;
                     filenamesEditor.Name = property.ID.ToString();
-                    filenamesEditor.FocusOutEvent += UpdateFilenamesText;
+                    filenamesEditor.FocusOutEvent += UpdateText;
 
                     Frame filenamesOutline = new Frame();
                     filenamesOutline.Add(filenamesEditor);
@@ -537,8 +534,12 @@ namespace UserInterface.Views
                         string text;
                         if (widget is Entry entry)
                             text = entry.Text;
-                        else if (widget is TextView editor)
+                        else if (widget is TextView editor) {
                             text = editor.Buffer.Text;
+                            text = text.Replace("\n", ", "); //if this is a "one thing per line", convert back to one line string
+                            if (text.EndsWith(", "))
+                                text = text.Remove(text.Length-2, 2);
+                        }
                         else
                             throw new Exception($"Unknown widget type {sender.GetType().Name}");
                         if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
@@ -550,41 +551,6 @@ namespace UserInterface.Views
                     }
                 }
                 
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when a multiline filenames has been modified.
-        /// </summary>
-        /// <param name="sender">The entry which has been modified.</param>
-        /// <param name="e">Event data.</param>
-        [GLib.ConnectBefore]
-        private void UpdateFilenamesText(object sender, EventArgs e)
-        {
-            try
-            {
-                Widget widget = sender as Widget;
-                if (widget != null)
-                {
-                    StoreScrollerPosition();
-                    Guid id = Guid.Parse(widget.Name);
-                    string text = (widget as TextView).Buffer.Text;
-                    text = text.Replace(",", "\n"); //do this again incase someone entered filenames with , instead of newlines
-                    text = text.Replace("\n", ", ");
-                    if (text.EndsWith(", "))
-                        text = text.Remove(text.Length-2, 2);
-
-                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
-                    {
-                        var args = new PropertyChangedEventArgs(id, text);
-                        originalEntryText[id] = text;
-                        PropertyChanged?.Invoke(this, args);
-                    }
-                }                
             }
             catch (Exception err)
             {
