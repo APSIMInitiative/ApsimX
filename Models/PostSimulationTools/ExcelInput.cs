@@ -36,7 +36,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the file name to read from.
         /// </summary>
         [Description("EXCEL file names")]
-        [Tooltip("Can contain more than one file name, separated by commas.")]
+        [Tooltip("Can contain more than one file name, each on a new line")]
         [Display(Type = DisplayType.FileNames)]
         public string[] FileNames
         {
