@@ -1141,7 +1141,7 @@ namespace Models
         /// <value>
         /// The plant.
         /// </value>
-        public CropConstants plant { get; set; }
+        public SugarcaneCrop plant { get; set; }
 
 
         /// <summary>
@@ -1150,13 +1150,13 @@ namespace Models
         /// <value>
         /// The ratoon.
         /// </value>
-        public CropConstants ratoon { get; set; }
+        public SugarcaneCrop ratoon { get; set; }
 
         /// <summary>
         /// The crop
         /// </summary>
         [JsonIgnore]
-        public CropConstants crop;
+        public SugarcaneCrop crop;
 
         #endregion
 
@@ -1171,13 +1171,13 @@ namespace Models
         /// <value>
         /// The cultivars.
         /// </value>
-        public CultivarConstants[] cultivars { get; set; }
+        public SugarcaneCultivar[] cultivars { get; set; }
 
         /// <summary>
         /// The cult
         /// </summary>
         [JsonIgnore]
-        public CultivarConstants cult { get; set; }
+        public SugarcaneCultivar cult { get; set; }
 
         #endregion
 
@@ -13075,12 +13075,6 @@ namespace Models
             //*+  Changes
             //*     041095 nih changed start of ratton crop from emergence to sprouting
 
-
-
-            string l_cultivar;           //! name of cultivar
-            string l_cultivar_ratoon;    //! name of cultivar ratoon section
-
-
             if (g_crop_status == crop_out)
             {
 
@@ -13102,14 +13096,11 @@ namespace Models
                     //g_initial_plant_density = g_plants;
                     //g_ratoon_no = i_SowData.Ratoon;
                     //g_sowing_depth = i_SowData.sowing_depth;
-                    //l_cultivar = i_SowData.Cultivar;
 
                     g_plants = plants;
                     g_initial_plant_density = g_plants;  //save the intial value of plants because as the crop grows g_plants will be modified.
                     g_ratoon_no = Ratoon;
                     g_sowing_depth = sowing_depth;
-                    l_cultivar = Cultivar;
-
 
                     //! report
 
@@ -13127,7 +13118,7 @@ namespace Models
 
                     //http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx
 
-                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar), MessageType.Diagnostic);  //parameters are zero based.
+                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", Cultivar), MessageType.Diagnostic);  //parameters are zero based.
                     //    write (string, '(3x, i7, 2f7.1, 1x, a10)')
                     //:                   g%day_of_year, g%sowing_depth
                     //:                 , g%Population, cultivar
@@ -13141,14 +13132,12 @@ namespace Models
                     if (g_ratoon_no == 0)
                     {
                         crop = sugar_read_crop_constants("plant_crop");
-                        sugar_read_cultivar_params(l_cultivar);
+                        sugar_read_cultivar_params(Cultivar, false);
                     }
                     else
                     {
                         crop = sugar_read_crop_constants("ratoon_crop");
-
-                        l_cultivar_ratoon = l_cultivar + "_ratoon";
-                        sugar_read_cultivar_params(l_cultivar_ratoon);
+                        sugar_read_cultivar_params(Cultivar, true);
                     }
 
                     //! get root profile parameters
@@ -13162,7 +13151,7 @@ namespace Models
 
 
                     g_crop_status = crop_alive;
-                    g_crop_cultivar = l_cultivar;
+                    g_crop_cultivar = Cultivar;
 
                 }
                 else
@@ -13187,9 +13176,9 @@ namespace Models
         /// </summary>
         /// <param name="CropType">Type of the crop.</param>
         /// <returns></returns>
-        CropConstants sugar_read_crop_constants(string CropType)
+        SugarcaneCrop sugar_read_crop_constants(string CropType)
         {
-            CropConstants l_crop;
+            SugarcaneCrop l_crop;
 
             if (CropType == "plant_crop")
             {
@@ -13210,21 +13199,27 @@ namespace Models
         /// <summary>
         /// Sugar_read_cultivar_paramses the specified name.
         /// </summary>
-        /// <param name="Name">The name.</param>
+        /// <param name="name">Name of cultivar</param>
+        /// <param name="isRatoon">Use ratoon version</param>
         /// <returns></returns>
         /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
-        void sugar_read_cultivar_params(string Name)
+        void sugar_read_cultivar_params(string name, bool isRatoon)
         {
-            // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(Name));
-            if (cultivarDefinition == null)
-                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{Name}'");
+            string adjustedName = name;
+            if (isRatoon)
+                adjustedName += "_ratoon";
 
-            cult = new CultivarConstants(false);
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(adjustedName));
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{name}'");
+            
+            //setup defaults into cult
+            cult = new SugarcaneCultivar(isRatoon);
+
+            //apply cultivar
             cultivarDefinition.Apply(this);
         }
-
-
 
         /// <summary>
         /// Sugar_read_root_paramses this instance.
@@ -13409,7 +13404,6 @@ namespace Models
             double l_biomass_dead;          //! above ground dead plant wt (kg/ha)
             double l_biomass_green;         //! above ground green plant wt (kg/ha)
             double l_biomass_senesced;      //! above ground senesced plant wt (kg/ha)
-            string l_cultivar_ratoon;
             double l_dm;                    //! above ground total dry matter (kg/ha)
             double l_leaf_no;               //! total leaf number
             double l_N_dead;                //! above ground dead plant N (kg/ha)
@@ -13656,9 +13650,7 @@ namespace Models
                 if (g_ratoon_no == 1)
                 {
                     crop = sugar_read_crop_constants("ratoon_crop");
-
-                    l_cultivar_ratoon = g_crop_cultivar + "_ratoon";
-                    sugar_read_cultivar_params(l_cultivar_ratoon);
+                    sugar_read_cultivar_params(g_crop_cultivar, true);
                 }
                 else
                 {

@@ -46,7 +46,7 @@
       "NH4_min_ub": 10000.0,
       "NH4_min_lb": 0.0,
       "plant": {
-        "$type": "CropConstants, Models",
+        "$type": "SugarcaneCrop, Models",
         "stage_names": [
           "sowing",
           "sprouting",
@@ -389,7 +389,7 @@
         "lodge_redn_green_leaf": 0.85
       },
       "ratoon": {
-        "$type": "CropConstants, Models",
+        "$type": "SugarcaneCrop, Models",
         "stage_names": [
           "sowing",
           "sprouting",

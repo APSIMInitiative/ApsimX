@@ -3,10 +3,10 @@ using Models.Core;
 using Newtonsoft.Json;
 
 /// <summary>
-/// Cultivar constants class.
+/// Sugarcane Cultivar class.
 /// </summary>
 [Serializable]
-public class CultivarConstants
+public class SugarcaneCultivar
 {
 
 
@@ -188,7 +188,7 @@ public class CultivarConstants
     /// Constructor. Sets the vaules to default so they can be overwritten by the cultivar.
     /// Defaults are based off Q117.
     /// </summary>
-    public CultivarConstants(bool ratoon) {
+    public SugarcaneCultivar(bool ratoon) {
         leaf_size = new double[] {1500,55000,55000};
         leaf_size_no = new double[] {1,14,20};
         cane_fraction = 0.7;
