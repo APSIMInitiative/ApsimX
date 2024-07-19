@@ -407,6 +407,21 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Returns the difference between X and Y if the difference is positive, otherwise returns 0 if negative.
+        /// Is based on the Fortran DIM function
+        /// </summary>
+        /// <returns></returns>
+        static public double PositiveDifference(double X, double Y)
+        {
+            double difference = X - Y;
+            if (difference > 0)
+                return difference;
+            else
+                return 0;
+
+        }
+
+        /// <summary>
         ///Linearly interpolates a value y for a given value x and a given
         ///set of xy co-ordinates.
         ///When x lies outside the x range_of, y is set to the boundary condition.

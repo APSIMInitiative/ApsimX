@@ -2587,7 +2587,7 @@ namespace Models
             depth_to_layer_top = depth_to_layer_bottom - Dlayer[zb(Layer_ob)];
             depth_to_root = u_bound(depth_to_layer_bottom, RootDepth);
 
-            depth_of_root_in_layer = mu.dim(depth_to_root, depth_to_layer_top);
+            depth_of_root_in_layer = MathUtilities.PositiveDifference(depth_to_root, depth_to_layer_top);
             return MathUtilities.Divide(depth_of_root_in_layer, Dlayer[zb(Layer_ob)], 0.0);
 
         }
@@ -8798,7 +8798,7 @@ namespace Models
 
 
 
-            if (mu.reals_are_equal(g_dlt_plants + g_plants, 0.0) || ((g_dlt_plants + g_plants) < 0.0))   //sv- I added the less than 0 test, because this is an error waiting to happen.
+            if (MathUtilities.FloatsAreEqual(g_dlt_plants + g_plants, 0.0) || ((g_dlt_plants + g_plants) < 0.0))   //sv- I added the less than 0 test, because this is an error waiting to happen.
             {
 
                 sugar_kill_crop(ref g_crop_status, g_dm_dead, g_dm_green, g_dm_senesced);
@@ -8906,7 +8906,7 @@ namespace Models
 
 
             //if ((i_lai <= 0.0) && (stage_is_between(emerg, crop_end, i_current_stage)))
-            if ((mu.reals_are_equal(i_lai, 0.0) || (i_lai < 0.0)) && stage_is_between(emerg, crop_end, i_current_stage)) //sv- I changed this because what if i_lai is 0.0000001, it is still not equal to 0.0
+            if ((MathUtilities.FloatsAreEqual(i_lai, 0.0) || (i_lai < 0.0)) && stage_is_between(emerg, crop_end, i_current_stage)) //sv- I changed this because what if i_lai is 0.0000001, it is still not equal to 0.0
             {
                 o_dlt_plants = -i_plants;
                 i_lai = 0.0;
@@ -10074,7 +10074,7 @@ namespace Models
 
             for (int index = 0; index < i_Array.Length; index++)
             {
-                if (mu.reals_are_equal(i_Number, i_Array[index]))
+                if (MathUtilities.FloatsAreEqual(i_Number, i_Array[index]))
                 {
                     position = index;
                     break;
@@ -11348,7 +11348,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_dm_detached
-        { get { return mu.RoundArray(g_dlt_dm_detached, 2); } }
+        { get { return MathUtilities.Round(g_dlt_dm_detached, 2); } }
 
 
 
@@ -11546,7 +11546,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] n_green
-        { get { return mu.RoundArray(g_n_green, 2); } }
+        { get { return MathUtilities.Round(g_n_green, 2); } }
 
 
 
@@ -11587,7 +11587,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_n_green
-        { get { return mu.RoundArray(g_dlt_n_green, 2); } }
+        { get { return MathUtilities.Round(g_dlt_n_green, 2); } }
 
 
 
@@ -11956,7 +11956,7 @@ namespace Models
                 {
                     l_NO3_uptake[layer] = -g_dlt_no3gsm[layer];
                 }
-                return mu.RoundArray(l_NO3_uptake, 2);
+                return MathUtilities.Round(l_NO3_uptake, 2);
             }
         }
 
@@ -11980,7 +11980,7 @@ namespace Models
                 {
                     l_NH4_uptake[layer] = -g_dlt_nh4gsm[layer];
                 }
-                return mu.RoundArray(l_NH4_uptake, 2);
+                return MathUtilities.Round(l_NH4_uptake, 2);
             }
         }
 
@@ -12002,7 +12002,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake_pot = new double[num_layers];
                 Array.Copy(g_no3gsm_uptake_pot, l_NO3_uptake_pot, num_layers);
-                return mu.RoundArray(l_NO3_uptake_pot, 2);
+                return MathUtilities.Round(l_NO3_uptake_pot, 2);
             }
         }
 
@@ -12023,7 +12023,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake_pot = new double[num_layers];
                 Array.Copy(g_nh4gsm_uptake_pot, l_NH4_uptake_pot, num_layers);
-                return mu.RoundArray(l_NH4_uptake_pot, 2);
+                return MathUtilities.Round(l_NH4_uptake_pot, 2);
             }
         }
 
@@ -12957,7 +12957,7 @@ namespace Models
                 //*     Calculate plant detachment
 
 
-                if (!mu.reals_are_equal(crop.sen_detach_frac[leaf], crop.sen_detach_frac[cabbage]))
+                if (!MathUtilities.FloatsAreEqual(crop.sen_detach_frac[leaf], crop.sen_detach_frac[cabbage]))
                 {
                     throw new ApsimXException(this, "Invalid detachment for leaf and cabbage ratio.");
                 }
