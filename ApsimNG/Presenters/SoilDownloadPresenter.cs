@@ -347,26 +347,15 @@ namespace UserInterface.Presenters
         {
             var soils = new List<SoilFromDataSource>();
             try
-            {
-                bool canParse;
-                
-                double latitude;
-                canParse = double.TryParse(latitudeEditBox.Text, out latitude);
-                if(!canParse) {
+            {                
+                if(!double.TryParse(latitudeEditBox.Text, out double latitude))
                     throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"");
-                }
 
-                double longitude;
-                canParse = double.TryParse(longitudeEditBox.Text, out longitude);
-                if(!canParse) {
+                if(!double.TryParse(longitudeEditBox.Text, out double longitude))
                     throw new Exception("Longitude field has invalid input \"" + radiusEditBox.Text +"\"");
-                }
 
-                double radius;
-                canParse = double.TryParse(radiusEditBox.Text, out radius);
-                if(!canParse) {
+                if(!double.TryParse(radiusEditBox.Text, out double radius))
                     throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
-                }
                 
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
