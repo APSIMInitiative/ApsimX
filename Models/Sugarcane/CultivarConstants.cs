@@ -184,7 +184,31 @@ public class CultivarConstants
     public double[] tillerf_leaf_size_no { get; set; }
 
 
-
+    /// <summary>
+    /// Constructor. Sets the vaules to default so they can be overwritten by the cultivar.
+    /// Defaults are based off Q117.
+    /// </summary>
+    public CultivarConstants(bool ratoon) {
+        leaf_size = new double[] {1500,55000,55000};
+        leaf_size_no = new double[] {1,14,20};
+        cane_fraction = 0.7;
+        sucrose_fraction_stalk = new double[] {1,0.55};
+        stress_factor_stalk = new double[] {0.2,1};
+        sucrose_delay = 0;
+        min_sstem_sucrose = 800;
+        min_sstem_sucrose_redn = 10;
+        tt_emerg_to_begcane = 1900;
+        tt_begcane_to_flowering = 6000;
+        tt_flowering_to_crop_end = 2000;
+        green_leaf_no = 13;
+        if (ratoon) { //Q117_ratoon
+            tillerf_leaf_size = new double[] {1.5,1.5,1.5,1,1};
+            tillerf_leaf_size_no = new double[] {1,4,10,12,26};
+        } else {      //Q117
+            tillerf_leaf_size = new double[] {1,1.5,1.5,1,1};
+            tillerf_leaf_size_no = new double[] {1,6,10,12,26};
+        }
+    }
 
     //Sizes of arrays read in from the INI file (Actually the SIM file).
     //-----------------------------------------

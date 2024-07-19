@@ -731,6 +731,17 @@
         "lodge_redn_sucrose": 0.77,
         "lodge_redn_green_leaf": 0.85
       },
+      "eo_crop_factor": 100.0,
+      "uptake_source": "calc",
+      "rlv_init": [
+        0.04,
+        0.02,
+        0.01,
+        0.005,
+        0.0,
+        0.0,
+        0.0
+      ],
       "Name": "Sugarcane",
       "Children": [
                 {

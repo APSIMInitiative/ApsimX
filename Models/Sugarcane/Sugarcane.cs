@@ -18,7 +18,7 @@ namespace Models
     /// 
     /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure. 
     /// 
-    /// Any new cultivars must contain all cultivar variables as there are no default values. See other cultivars under Sugarcane for an example.
+    /// Default values for cultivars are based of Q117 and Q117_ratoon.
     /// </summary>
     /// <remarks>
     ///## Model Components Overview
@@ -13220,7 +13220,7 @@ namespace Models
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{Name}'");
 
-            cult = new CultivarConstants();
+            cult = new CultivarConstants(false);
             cultivarDefinition.Apply(this);
         }
 
