@@ -11348,7 +11348,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_dm_detached
-        { get { return mu.reals_are_equal(g_dlt_dm_detached, 2); } }
+        { get { return mu.RoundArray(g_dlt_dm_detached, 2); } }
 
 
 
@@ -11546,7 +11546,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] n_green
-        { get { return mu.reals_are_equal(g_n_green, 2); } }
+        { get { return mu.RoundArray(g_n_green, 2); } }
 
 
 
@@ -11587,7 +11587,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_n_green
-        { get { return mu.reals_are_equal(g_dlt_n_green, 2); } }
+        { get { return mu.RoundArray(g_dlt_n_green, 2); } }
 
 
 
@@ -11956,7 +11956,7 @@ namespace Models
                 {
                     l_NO3_uptake[layer] = -g_dlt_no3gsm[layer];
                 }
-                return mu.reals_are_equal(l_NO3_uptake, 2);
+                return mu.RoundArray(l_NO3_uptake, 2);
             }
         }
 
@@ -11980,7 +11980,7 @@ namespace Models
                 {
                     l_NH4_uptake[layer] = -g_dlt_nh4gsm[layer];
                 }
-                return mu.reals_are_equal(l_NH4_uptake, 2);
+                return mu.RoundArray(l_NH4_uptake, 2);
             }
         }
 
@@ -12002,7 +12002,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake_pot = new double[num_layers];
                 Array.Copy(g_no3gsm_uptake_pot, l_NO3_uptake_pot, num_layers);
-                return mu.reals_are_equal(l_NO3_uptake_pot, 2);
+                return mu.RoundArray(l_NO3_uptake_pot, 2);
             }
         }
 
@@ -12023,7 +12023,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake_pot = new double[num_layers];
                 Array.Copy(g_nh4gsm_uptake_pot, l_NH4_uptake_pot, num_layers);
-                return mu.reals_are_equal(l_NH4_uptake_pot, 2);
+                return mu.RoundArray(l_NH4_uptake_pot, 2);
             }
         }
 
