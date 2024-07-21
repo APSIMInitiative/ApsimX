@@ -105,7 +105,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The root shoot ratio used
         /// </summary>
-        public double RootShootRatio { get; private set; }        
+        public double RootShootRatio { get; private set; }
 
         /// <summary>
         /// Daily intercepted radiation
@@ -140,6 +140,18 @@ namespace Models.DCAPST
         // 44 mol wt CO2
         private const double MOL_WT_CO2 = 44;
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
+        public DCAPSTModel()
+        {
+            Solar = default;
+            Radiation = default;
+            Temperature = default;
+            this.pathway = default;
+            Canopy = default;
+            transpiration = default;
+        }
 
         /// <summary>
         /// 

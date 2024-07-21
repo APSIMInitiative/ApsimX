@@ -116,7 +116,7 @@ namespace Models.DCAPST
         /// Store the model as this is used in different functions after assignment.
         /// </summary>
         [JsonIgnore]
-        public DCAPSTModel DcapstModel { get; private set; } = null;
+        public DCAPSTModel DcapstModel { get; private set; } = new();
 
         /// <summary>
         /// The biological transpiration limit of a plant
@@ -412,7 +412,7 @@ namespace Models.DCAPST
             // until it is triggered again (LAI dependent).
             dcapsReachedLAITriggerPoint = false;
             SetMicroClimateForSpecificLeafTypes(0);
-            DcapstModel = null;
+            DcapstModel = new();
 
             SetCultivarOverrides(sowingData);
         }
