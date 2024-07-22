@@ -37548,7 +37548,7 @@
           "Axis": [
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed (t/ha)",
+              "Title": "Observed",
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -37559,7 +37559,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Predicted (t/ha)",
+              "Title": "Predicted",
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
