@@ -5,6 +5,7 @@ using System.Linq;
 using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
 using Models.Utilities;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
@@ -348,17 +349,17 @@ namespace UserInterface.Presenters
 
                 foreach (string option in contextMenuOptions)
                 {
-                    if (option.CompareTo("units") == 0) //used by solute grids to change units
+                    if (option.CompareTo("units") == 0 && model is Solute) //used by solute grids to change units
                     {
                         if (rowIndex == 1)
                         {
-                            foreach (string units in gridTable.GetUnits(columnIndex))
+                            foreach (string units in new List<string>{"ppm", "kgha"})
                             {
                                 var menuItem = new MenuDescriptionArgs()
                                 {
                                     Name = units,
                                 };
-                                menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                                menuItem.OnClick += OnUnitsChanged;
                                 menuItems.Add(menuItem);
                             }
                         }
@@ -429,6 +430,18 @@ namespace UserInterface.Presenters
                     contextMenu.Show();
                 }
             }
+        }
+
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        private void OnUnitsChanged(object sender, EventArgs e)
+        {
+            Solute solute = (model as Solute);
+            Solute.UnitsEnum newUnits = Solute.UnitsEnum.ppm;
+            if ((sender as Gtk.MenuItem).Label == "kgha")
+                newUnits = Solute.UnitsEnum.kgha;
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(solute, "InitialValuesUnits", newUnits));
         }
 
         /// <summary>
