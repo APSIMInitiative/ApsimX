@@ -107,9 +107,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedGraphView" /> class.
         /// </summary>
-        public DirectedGraphView(ViewBase owner = null) : base(owner)
+        public DirectedGraphView(ViewBase owner = null, int width=800) : base(owner)
         {
             drawable = new DrawingArea();
+            drawable.WidthRequest = width;
+
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
@@ -125,7 +127,8 @@ namespace UserInterface.Views
             ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
-                VscrollbarPolicy = PolicyType.Always
+                VscrollbarPolicy = PolicyType.Always,
+                WidthRequest = width
             };
 
 
