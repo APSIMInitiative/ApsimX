@@ -871,7 +871,7 @@ namespace UserInterface.Views
             {
                 if (args.Popup is Menu menu)
                 {
-                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    MenuItem item = new MenuItem(menuItemText);
                     if (!string.IsNullOrEmpty(shortcut))
                     {
                         string keyName = string.Empty;

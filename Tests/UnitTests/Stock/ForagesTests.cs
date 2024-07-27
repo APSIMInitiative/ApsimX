@@ -76,31 +76,31 @@ namespace UnitTests.Stock
             var forages = simulation.FindChild<Forages>();
 
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
-            Assert.AreEqual(1, forageModels.Count);
+            Assert.That(forageModels.Count, Is.EqualTo(1));
 
             var forageMaterial = forageModels[0].Material.ToList();
-            Assert.AreEqual(3, forageMaterial.Count);
+            Assert.That(forageMaterial.Count, Is.EqualTo(3));
 
             // leaf live
-            Assert.AreEqual(200, forageMaterial[0].Total.Wt);       // 200 (StructuralWt)
-            Assert.AreEqual(190, forageMaterial[0].Consumable.Wt);  // 200 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
-            Assert.IsTrue(forageMaterial[0].IsLive);
-            Assert.AreEqual(0.7, forageMaterial[0].Digestibility);
-            Assert.AreEqual("Crop1.Leaf", forageMaterial[0].Name);
+            Assert.That(forageMaterial[0].Total.Wt, Is.EqualTo(200));       // 200 (StructuralWt)
+            Assert.That(forageMaterial[0].Consumable.Wt, Is.EqualTo(190));  // 200 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
+            Assert.That(forageMaterial[0].IsLive, Is.True);
+            Assert.That(forageMaterial[0].Digestibility, Is.EqualTo(0.7));
+            Assert.That(forageMaterial[0].Name, Is.EqualTo("Crop1.Leaf"));
 
             // stem dead
-            Assert.AreEqual(100, forageMaterial[1].Total.Wt);      // 100 (StructuralWt)
-            Assert.AreEqual(45, forageMaterial[1].Consumable.Wt);  // 100 (StructuralWt) * 0.5 (FractionConsumable) - 5 (MinimumAmount)
-            Assert.IsFalse(forageMaterial[1].IsLive);
-            Assert.AreEqual(0.3, forageMaterial[1].Digestibility);
-            Assert.AreEqual("Crop1.Stem", forageMaterial[1].Name);
+            Assert.That(forageMaterial[1].Total.Wt, Is.EqualTo(100));      // 100 (StructuralWt)
+            Assert.That(forageMaterial[1].Consumable.Wt, Is.EqualTo(45));  // 100 (StructuralWt) * 0.5 (FractionConsumable) - 5 (MinimumAmount)
+            Assert.That(forageMaterial[1].IsLive, Is.False);
+            Assert.That(forageMaterial[1].Digestibility, Is.EqualTo(0.3));
+            Assert.That(forageMaterial[1].Name, Is.EqualTo("Crop1.Stem"));
 
             // stolon live
-            Assert.AreEqual(5, forageMaterial[2].Total.Wt);        // 5 (StructuralWt)
-            Assert.AreEqual(0, forageMaterial[2].Consumable.Wt);    // 5 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
-            Assert.IsTrue(forageMaterial[2].IsLive);
-            Assert.AreEqual(0.6, forageMaterial[2].Digestibility);
-            Assert.AreEqual("Crop1.Stolon", forageMaterial[2].Name);
+            Assert.That(forageMaterial[2].Total.Wt, Is.EqualTo(5));        // 5 (StructuralWt)
+            Assert.That(forageMaterial[2].Consumable.Wt, Is.EqualTo(0));    // 5 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
+            Assert.That(forageMaterial[2].IsLive, Is.True);
+            Assert.That(forageMaterial[2].Digestibility, Is.EqualTo(0.6));
+            Assert.That(forageMaterial[2].Name, Is.EqualTo("Crop1.Stolon"));
         }
 
         /// <summary>Make sure digestibility can be expressed as a function.</summary>
@@ -156,10 +156,10 @@ namespace UnitTests.Stock
             var digestibileMaterial = forages.ModelsWithDigestibleBiomass.First().Material.First();
 
             test.OnStartOfDay(null, null);
-            Assert.AreEqual(0.8, digestibileMaterial.Digestibility, 0.00001);
+            Assert.That(digestibileMaterial.Digestibility, Is.EqualTo(0.8).Within(0.00001));
 
             test.OnStartOfDay(null, null);
-            Assert.AreEqual(0.6, digestibileMaterial.Digestibility, 0.00001);
+            Assert.That(digestibileMaterial.Digestibility, Is.EqualTo(0.6).Within(0.00001));
 
         }
 
@@ -209,7 +209,7 @@ namespace UnitTests.Stock
             var forages = simulation.FindChild<Forages>();
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
             var forageMaterial = forageModels[0].Material.ToList();
-            Assert.AreEqual(0.1, forageMaterial[0].Digestibility);
+            Assert.That(forageMaterial[0].Digestibility, Is.EqualTo(0.1));
         }
 
         /// <summary>Make sure the ForageMaterialParameters can override a model that supplys digestibility numbers.</summary>
@@ -258,7 +258,7 @@ namespace UnitTests.Stock
             var forages = simulation.FindChild<Forages>();
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
             var forageMaterial = forageModels[0].Material.ToList();
-            Assert.AreEqual(0.4, forageMaterial[0].Digestibility);
+            Assert.That(forageMaterial[0].Digestibility, Is.EqualTo(0.4));
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Commands;
@@ -61,8 +62,9 @@ namespace UserInterface.Presenters
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
 
             this.explorerPresenter = explorerPresenter;
+
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach(water, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
@@ -140,7 +142,7 @@ namespace UserInterface.Presenters
         private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
 
-            if (water.AreInitialValuesWithinPhysicalBoundaries(water.InitialValues))
+            if (water.AreInitialValuesWithinPhysicalBoundaries())
                 Refresh();
             else
             {
@@ -251,6 +253,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            water = changedModel as Water;
             Refresh();
         }
 
@@ -262,34 +265,36 @@ namespace UserInterface.Presenters
             graph.Clear();
 
             //draw the area relative to whatever the water node is currently relative to
+            if (swThickness.Length == thickness.Length)
                 graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
-                            sw, swCumulativeThickness,
-                            AxisPosition.Top, AxisPosition.Left,
-                            System.Drawing.Color.LightSkyBlue, true);
+                                sw, swCumulativeThickness,
+                                AxisPosition.Top, AxisPosition.Left,
+                                System.Drawing.Color.LightSkyBlue, true);
 
             graph.DrawLineAndMarkers("Airdry", airdry,
-                                     cumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+                                    cumulativeThickness,
+                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                    System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
+                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawLineAndMarkers(cllName, cll,
-                                     swCumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+            if (swThickness.Length == thickness.Length)
+                graph.DrawLineAndMarkers(cllName, cll,
+                                        swCumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
             graph.DrawLineAndMarkers("DUL", dul,
-                         cumulativeThickness,
-                         "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                         System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
-                         LineThickness.Normal, MarkerSize.Normal, 1, true);
+                        cumulativeThickness,
+                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                        System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
             graph.DrawLineAndMarkers("SAT", sat,
-                                     cumulativeThickness,
-                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                     System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
-                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+                                    cumulativeThickness,
+                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                    System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
+                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
 
             if (llsoil != null && llsoilsName != null)
             {
@@ -326,7 +331,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
-
+            
             graph.Refresh();
         }
 

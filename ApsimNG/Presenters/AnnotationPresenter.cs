@@ -44,7 +44,7 @@
         {
             try
             {
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graphModel, "AnnotationPosition", Enum.Parse(typeof(AnnotationPosition), dropDown.SelectedValue)));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graphModel, "AnnotationLocation", Enum.Parse(typeof(AnnotationPosition), dropDown.SelectedValue)));
             }
             catch (Exception err)
             {

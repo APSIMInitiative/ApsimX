@@ -12,6 +12,7 @@ using Models.Climate;
 using Models.Core;
 using UserInterface.Views;
 using System.Linq;
+using Gtk.Sheet;
 
 namespace UserInterface.Presenters
 {
@@ -932,7 +933,7 @@ namespace UserInterface.Presenters
         {
             //fill the grid with data
             DataTableProvider provider = new DataTableProvider(data);
-            gridPresenter.PopulateWithDataProvider(provider, 0, 1);
+            gridPresenter.PopulateWithDataProvider(provider);
         }
 
         public void Dispose()
