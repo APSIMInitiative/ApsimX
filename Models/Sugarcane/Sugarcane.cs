@@ -1141,7 +1141,7 @@ namespace Models
         /// <value>
         /// The plant.
         /// </value>
-        public SugarcaneCrop plant { get; set; }
+        public SugarcaneSpeciesConstants plant { get; set; }
 
 
         /// <summary>
@@ -1150,13 +1150,13 @@ namespace Models
         /// <value>
         /// The ratoon.
         /// </value>
-        public SugarcaneCrop ratoon { get; set; }
+        public SugarcaneSpeciesConstants ratoon { get; set; }
 
         /// <summary>
         /// The crop
         /// </summary>
         [JsonIgnore]
-        public SugarcaneCrop crop;
+        public SugarcaneSpeciesConstants crop;
 
         #endregion
 
@@ -13176,9 +13176,9 @@ namespace Models
         /// </summary>
         /// <param name="CropType">Type of the crop.</param>
         /// <returns></returns>
-        SugarcaneCrop sugar_read_crop_constants(string CropType)
+        SugarcaneSpeciesConstants sugar_read_crop_constants(string CropType)
         {
-            SugarcaneCrop l_crop;
+            SugarcaneSpeciesConstants l_crop;
 
             if (CropType == "plant_crop")
             {
