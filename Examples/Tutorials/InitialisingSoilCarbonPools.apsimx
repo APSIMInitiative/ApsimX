@@ -62,7 +62,7 @@
         },
         {
           "$type": "Models.Climate.WeatherSampler, Models",
-          "FileName": "C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\NZ_Lincoln.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Lincoln.met",
           "TypeOfSampling": 1,
           "Seed": "",
           "Years": [
@@ -2855,7 +2855,7 @@
         },
         {
           "$type": "Models.Climate.WeatherSampler, Models",
-          "FileName": "C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\Lincoln.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Lincoln.met",
           "TypeOfSampling": 1,
           "Seed": null,
           "Years": [
