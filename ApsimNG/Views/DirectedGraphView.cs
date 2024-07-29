@@ -107,10 +107,9 @@ namespace UserInterface.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedGraphView" /> class.
         /// </summary>
-        public DirectedGraphView(ViewBase owner = null, int width=800) : base(owner)
+        public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
             drawable = new DrawingArea();
-            drawable.WidthRequest = width;
 
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
@@ -123,14 +122,13 @@ namespace UserInterface.Views
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
+            drawable.Expand = true;
 
             ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
-                VscrollbarPolicy = PolicyType.Always,
-                WidthRequest = width
+                VscrollbarPolicy = PolicyType.Always
             };
-
 
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
