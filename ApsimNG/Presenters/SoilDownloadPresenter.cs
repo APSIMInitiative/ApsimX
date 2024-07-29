@@ -505,9 +505,12 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            CERESSoilTemperature temperature = new CERESSoilTemperature();
-            temperature.Name = "Temperature";
-            soil.Children.Add(temperature);
+            var temperature = soil.FindChild<CERESSoilTemperature>();
+            if (temperature == null)
+                soil.Children.Add(new CERESSoilTemperature() {Name = "Temperature"});
+            else
+                temperature.Name = "Temperature";
+
             var physical = soil.FindChild<Physical>();
             if (physical != null)
             {
