@@ -59,10 +59,11 @@ namespace Gtk.Sheet
         /// <summary>Display an entry box for the user to edit the current selected cell data.</summary>
         public void Edit(char defaultChar = char.MinValue)
         {
-            
             EndEdit();
             
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
+            int dataRowIndex = selectedRowIndex - sheet.NumberFrozenRows;
+
             if (sheet.DataProvider.GetCellState(selectedColumnIndex, selectedRowIndex) != SheetDataProviderCellState.ReadOnly)
             {
                 var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
@@ -71,7 +72,7 @@ namespace Gtk.Sheet
                 entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
                 entry.WidthChars = 5;
                 if (defaultChar == char.MinValue)
-                    entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
+                    entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, dataRowIndex);
                 else
                     entry.Text = defaultChar.ToString();
                 entry.KeyPressEvent += OnEntryKeyPress;
@@ -132,7 +133,7 @@ namespace Gtk.Sheet
                 {
                     sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
                     sheet.DataProvider.SetCellContents(new int[]{selectedColumnIndex}, 
-                                                        new int[]{selectedRowIndex}, 
+                                                        new int[]{selectedRowIndex - sheet.NumberFrozenRows}, 
                                                         new string[]{entry.Text});
                     sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }

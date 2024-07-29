@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
                 // Create the grid to display data in
                 container = new ContainerView(clemPresenter.View as ViewBase);
                 grid = new SheetWidget(container.Widget,
-                                       dataProvider: new DataTableProvider(new DataTable(), isReadOnly: true),
+                                       dataProvider: new DataTableProvider(new DataTable()),
                                        multiSelect: true,
                                        onException: (err) => ViewBase.MasterView.ShowError(err));
 
@@ -80,7 +80,7 @@ namespace UserInterface.Presenters
 
         /// <inehritdoc/>
         public void Refresh() {
-            grid.SetDataProvider(new DataTableProvider(query.RunQuery(), isReadOnly: true));
+            grid.SetDataProvider(new DataTableProvider(query.RunQuery()));
         }
     }
 }

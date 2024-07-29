@@ -101,10 +101,7 @@ namespace Gtk.Sheet
         public event EventHandler PagingEnd;
 
         /// <summary>An event invoked when a cell changes.</summary>
-        public event CellChangedDelegate CellChanged;        
-
-        /// <summary>Number of heading rows.</summary>
-        public int NumHeadingRows { get; set; }
+        public event ISheetDataProvider.CellChangedDelegate CellChanged;        
 
         /// <summary>Number of columns that are always to be visible.</summary>
         public int NumPriorityColumns { get; set; }
@@ -115,22 +112,42 @@ namespace Gtk.Sheet
         /// <summary>Gets the number of rows of data.</summary>
         public int RowCount { get; private set; }
 
-        /// <summary>Is the data readonly?</summary>
-        public bool IsReadOnly => true;
+        /// <summary>Get the name of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public string GetColumnName(int columnIndex)
+        {
+            if (columnIndex < ColumnCount)
+                return dataPages[0].GetColumnName(columnIndex);
+            throw new Exception($"Invalid column index: {columnIndex}");
+        }
+
+        /// <summary>Get the units of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public string GetColumnUnits(int columnIndex)
+        {
+            if (units == null)
+                return null;
+            if (columnIndex < units.Count)
+                return units[columnIndex];
+            throw new Exception($"Invalid column index: {columnIndex}");
+        }
+
+        /// <summary>Get the allowable units of a column.</summary>
+        /// <param name="columnIndex">Column index.</param>
+        public IReadOnlyList<string> GetColumnValidUnits(int columnIndex)
+        {
+            if (units == null)
+                return null;
+            if (columnIndex < units.Count)
+                return new string[] { units[columnIndex] };
+            throw new Exception($"Invalid column index: {columnIndex}");            
+        }        
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="columnIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
         public string GetCellContents(int columnIndex, int rowIndex)
         {
-            // Return heading or units if rowIndex = 0 or 1.
-            if (rowIndex == 0)
-                return dataPages[0].GetColumnName(columnIndex);
-            else if (units != null && rowIndex == 1)
-                return units[columnIndex];
-
-            rowIndex -= NumHeadingRows;
-
             // Load more data if necessary.
             var dataPage = dataPages.Find(d => d.Contains(rowIndex));
             if (dataPage == null)
@@ -152,6 +169,13 @@ namespace Gtk.Sheet
         public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
             CellChanged?.Invoke(this, columnIndices, rowIndices, values);
+        }
+
+        /// <summary>Delete the specified rows.</summary>
+        /// <param name="rowIndices">Row indexes of cell.</param>
+        public void DeleteRows(int[] rowIndices)
+        {
+            throw new NotImplementedException("Cannot deleta a row of a paged data table");
         }
 
         /// <summary>Get data to show in grid.</summary>
@@ -280,13 +304,7 @@ namespace Gtk.Sheet
             
             // Null conditional used to handle the edge case where data does not contain CheckpointID
             var table = dataStore.GetDataUsingSql(sql) ?? dataStore.GetDataUsingSql($"SELECT COUNT(*) FROM {tableName}");
-            RowCount = Convert.ToInt32(table.Rows[0][0]) + 1; // add a row for headings.
-            NumHeadingRows = 1;
-            if (units != null)
-            {
-                RowCount = RowCount + 1; // add a row for units.
-                NumHeadingRows++;
-            }
+            RowCount = Convert.ToInt32(table.Rows[0][0]); // add a row for headings.
         }
 
         /// <summary>Create a sql filter</summary>
@@ -349,30 +367,12 @@ namespace Gtk.Sheet
             return false;
         }
 
-
-        /// <summary>Is the column readonly?</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        public bool GetCellState(int colIndex)
-        {
-            return false;
-        }
-
-        /// <summary>Get the Units assigned to this column</summary>
-        /// <param name="colIndex">Column index of cell.</param>
-        public string GetColumnUnits(int colIndex)
-        {
-            if (units == null)
-                return null;
-            else
-                return units[colIndex];
-        }
-
         /// <summary>Get the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
         public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
         {
-            return SheetDataProviderCellState.Normal;
+            return SheetDataProviderCellState.ReadOnly;
         }
 
         /// <summary>Set the cell state.</summary>

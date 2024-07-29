@@ -5,6 +5,7 @@
     using UserInterface.Views;
     using Gtk.Sheet;
     using System.Drawing;
+    using Models.Core;
 
     [TestFixture]
     class SheetTests
@@ -19,10 +20,11 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 30, 40, 50, 60 }); 
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false); 
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -62,10 +64,11 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 0,
-                                  columnWidths: new int[] { 20, 20, 20, 20 });
+                                  columnWidths: new int[] { 20, 20, 20, 20 },
+                                  blankRowAtBottom: false);
             sheet.Width = 60;
             sheet.Height = 80;
 
@@ -106,10 +109,11 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
-                      numberFrozenRows: 1,
-                      numberFrozenColumns: 0,
-                      columnWidths: new int[] { 10, 20, 20, 20 });
+            var sheet = new Sheet(new DataTableProvider(data, units),
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 10, 20, 20, 20 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -153,10 +157,11 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 10, 20, 30, 40 });
+                                  columnWidths: new int[] { 10, 20, 30, 40 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -198,10 +203,11 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new Sheet(new DataTableProvider(data, isReadOnly: true, units),
+            var sheet = new Sheet(new DataTableProvider(data, units),
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 10, 20, 30, 40 });
+                                  columnWidths: new int[] { 10, 20, 30, 40 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
 
@@ -244,14 +250,14 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var dataProvider = new DataTableProvider(data, isReadOnly: true, units);
+            var dataProvider = new DataTableProvider(data, units);
             var sheet = new Sheet(dataProvider,
                                   numberFrozenRows: 1,
                                   numberFrozenColumns: 1,
-                                  columnWidths: new int[] { 30, 40, 50, 60 });
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false);
             sheet.Width = 80;
             sheet.Height = 80;
-            sheet.RowCount = sheet.DataProvider.RowCount;
 
             sheet.ScrollDown();
 
@@ -280,5 +286,44 @@
             Assert.That(sheet.CalculateBounds(2, 3), Is.EqualTo(new Rectangle(70, 70, 50, 35)));
             Assert.That(sheet.CalculateBounds(3, 3), Is.EqualTo(Rectangle.Empty));
         }
+
+        /// <summary>Ensure can delete entire row of grid with data table as backend..</summary>
+        [Test]
+        public void DeleteEntireRowOfSheetDataTable()
+        {
+            var data = Utilities.CreateTable(new string[] { "A", "B", "C", "D" },
+                                      new List<object[]> { new object[] {   "a1", "b1",  "c1", "d1" },
+                                                           new object[] {   "a2", "b2",  "c2", "d2" },
+                                                           new object[] {   "a3", "b3",  "c3", "d3" },
+                                                           new object[] {   "a4", "b4",  "c4", "d4" }});
+            var dataProvider = new DataTableProvider(data, null);
+            var sheet = new Sheet(dataProvider,
+                                  numberFrozenRows: 1,
+                                  numberFrozenColumns: 0,
+                                  columnWidths: new int[] { 30, 40, 50, 60 },
+                                  blankRowAtBottom: false);
+            var multiCellSelector = new MultiCellSelect(sheet);
+            sheet.CellSelector = multiCellSelector;
+
+            // select the 2nd and 3rd rows
+            multiCellSelector.SetSelection(0, 2, 3, 3); 
+
+            // delete the selection.
+            multiCellSelector.Delete(); 
+            
+            Assert.That(dataProvider.ColumnCount, Is.EqualTo(4));
+            Assert.That(dataProvider.RowCount, Is.EqualTo(2));
+            Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("a1"));
+            Assert.That(dataProvider.GetCellContents(1, 0), Is.EqualTo("b1"));
+            Assert.That(dataProvider.GetCellContents(2, 0), Is.EqualTo("c1"));
+            Assert.That(dataProvider.GetCellContents(3, 0), Is.EqualTo("d1"));
+            Assert.That(dataProvider.GetCellContents(0, 1), Is.EqualTo("a4"));
+            Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b4"));
+            Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c4"));
+            Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d4"));
+        }
+
+
+
     }
 }

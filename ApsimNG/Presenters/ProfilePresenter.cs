@@ -4,7 +4,6 @@ using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Gtk.Sheet;
 using Models.Core;
-using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Views;
 
@@ -62,10 +61,9 @@ namespace UserInterface.Presenters
                 physical.InFill();
                 water = soilNode.FindChild<Water>();
             }
-
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach(model, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             var propertyView = view.GetControl<PropertyView>("properties");
@@ -135,9 +133,6 @@ namespace UserInterface.Presenters
                 {
                     if (water != null && (model is Physical || model is Water || model is SoilCrop))
                     {
-                        if (water.Thickness.Length != physical.Thickness.Length)
-                            throw new Exception("There is a mismatch between the number of soil layers on the physical node and water nodes. Cannot create graph");
-                            
                         string llsoilName = null;
                         double[] llsoil = null;
                         string cllName = "LL15";
@@ -154,7 +149,7 @@ namespace UserInterface.Presenters
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                          cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
+                                                        cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
                     }
 
                     else if (model is Organic organic)
@@ -168,10 +163,10 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.RowCount()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
                 }
                 finally
                 {
@@ -329,6 +324,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            model = changedModel as IModel;
             Refresh();
         }
 

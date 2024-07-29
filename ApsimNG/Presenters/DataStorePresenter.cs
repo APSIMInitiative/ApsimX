@@ -114,7 +114,7 @@ namespace UserInterface.Presenters
             statusLabel = view.GetControl<LabelView>("statusLabel");
 
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(new DataTableProvider(new DataTable(), isReadOnly: true), sheetContainer, explorerPresenter);
+            gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
 
             tableDropDown.IsEditable = false;
@@ -210,9 +210,9 @@ namespace UserInterface.Presenters
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        gridPresenter.PopulateWithDataProvider(dataProvider, dataProvider.NumPriorityColumns, dataProvider.NumHeadingRows);
+                        gridPresenter.PopulateWithDataProvider(dataProvider);
 
-                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
+                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount}";
                     }
                     catch (Exception err)
                     {

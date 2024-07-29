@@ -105,11 +105,19 @@ namespace Models.Core.ApsimFile
         /// <returns>True if model was changed.</returns>
         private static bool EnsureSoilHasInitWaterAndSample(JObject root)
         {
-            string rootType = JsonUtilities.Type(root, true);
+            JObject soilRoot = root;
+            string rootType = JsonUtilities.Type(soilRoot, true);
+            
+            //ASRIS soils are held below the parent when in xml form, so we should check for that.
+            if (rootType == null && (root["Children"] as JArray != null) && root["Children"].Count() > 0)
+            {
+                soilRoot = root["Children"][0] as JObject;
+                rootType = JsonUtilities.Type(soilRoot, true);
+            }
 
             if (rootType != null && rootType == "Models.Soils.Soil")
             {
-                JArray soilChildren = root["Children"] as JArray;
+                JArray soilChildren = soilRoot["Children"] as JArray;
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
@@ -147,7 +155,7 @@ namespace Models.Core.ApsimFile
                         res = true;
                     }
 
-                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    var physical = JsonUtilities.ChildWithName(soilRoot, "Physical");
                     bool hasPhysical = false;
                     int nLayers = 1;
 
@@ -230,16 +238,16 @@ namespace Models.Core.ApsimFile
                     }
 
                     // Add a soil temperature model.
-                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                    var soilTemperature = JsonUtilities.ChildWithName(soilRoot, "Temperature");
                     if (soilTemperature == null)
-                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
+                        JsonUtilities.AddModel(soilRoot, typeof(CERESSoilTemperature), "Temperature");
 
                     // Add a nutrient model.
-                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                    var nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                     if (nutrient == null)
                     {
-                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
-                        nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                        JsonUtilities.AddModel(soilRoot, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                         nutrient["ResourceName"] = "Nutrient";
                     }
 
