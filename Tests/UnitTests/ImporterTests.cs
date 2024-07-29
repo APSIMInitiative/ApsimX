@@ -11,6 +11,7 @@
     using Models.PMF;
     using Models.Soils;
     using Models.Soils.Nutrients;
+    using Models.Soils.SoilTemp;
     using Models.Storage;
     using Models.Surface;
     using NUnit.Framework;
@@ -137,7 +138,7 @@
             Assert.That(sw.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
 
             Assert.That(s.Children[9] is Nutrient, Is.True);
-            Assert.That(s.Children[3] is CERESSoilTemperature, Is.True);
+            Assert.That(s.Children[3] is SoilTemperature, Is.True);
             Assert.That(s.Children[4] is Solute, Is.True);
             Assert.That(s.Children[5] is Solute, Is.True);
             Assert.That(s.Children[6] is Solute, Is.True);
