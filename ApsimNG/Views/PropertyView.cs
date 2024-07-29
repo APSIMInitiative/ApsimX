@@ -361,28 +361,29 @@ namespace UserInterface.Views
                     component = container;
                     break;
                 case PropertyType.Files:
-                    string[] filenamesArray = ReflectionUtilities.StringToObject(typeof(string[]), property.Value.ToString(), CultureInfo.CurrentCulture) as string[];
-                    string filenamesText = string.Join("\n", filenamesArray) + "\n";
-
+                    string fileNamesText = "";
+                    if (property.Value != null)
+                    {
+                        string[] filenamesArray = ReflectionUtilities.StringToObject(typeof(string[]), property.Value.ToString(), CultureInfo.CurrentCulture) as string[];
+                        fileNamesText = string.Join("\n", filenamesArray) + "\n";
+                    }
                     TextView filenamesEditor = new TextView();
                     filenamesEditor.SizeAllocated += OnTextViewSizeAllocated;
                     filenamesEditor.WrapMode = WrapMode.Word;
-                    filenamesEditor.Buffer.Text = filenamesText;
-                    originalEntryText[property.ID] = filenamesText;
+                    filenamesEditor.Buffer.Text = fileNamesText;
+                    originalEntryText[property.ID] = fileNamesText;
                     filenamesEditor.Name = property.ID.ToString();
                     filenamesEditor.FocusOutEvent += UpdateText;
 
-                    Frame filenamesOutline = new Frame();
-                    filenamesOutline.Add(filenamesEditor);
-
-                    Button filesChooserButton = new Button("...");
-                    filesChooserButton.Name = property.ID.ToString();
+                    Frame filenamesOutline = new(){ filenamesEditor };
+                    Button filesChooserButton = new("..."){ Name = property.ID.ToString() };
                     filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
 
                     Box filenamesContainer = new HBox();
                     filenamesContainer.PackStart(filenamesOutline, true, true, 0);
                     filenamesContainer.PackStart(filesChooserButton, false, false, 0);
                     component = filenamesContainer;
+                    
 
                     break;
                 case PropertyType.Colour:
