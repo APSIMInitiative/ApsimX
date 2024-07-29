@@ -93,6 +93,10 @@ namespace UnitTests.DCaPST
             // Act
             var nextGenSorghumParams = SorghumCropParameterGenerator.Generate();
 
+            // Add in any new ones that didn't exist in Classic.
+            classicSorghumParams.Canopy.ExtCoeffReductionIntercept = nextGenSorghumParams.Canopy.ExtCoeffReductionIntercept;
+            classicSorghumParams.Canopy.ExtCoeffReductionSlope = nextGenSorghumParams.Canopy.ExtCoeffReductionSlope;
+
             // Assert
             DCaPSTParametersComparer.AssertDCaPSTParametersValuesEqual(classicSorghumParams, nextGenSorghumParams);
         }

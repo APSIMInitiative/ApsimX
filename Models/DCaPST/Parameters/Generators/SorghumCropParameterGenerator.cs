@@ -48,6 +48,8 @@ namespace Models.DCAPST
                 LeafScatteringCoeff = 0.15,
                 LeafScatteringCoeffNIR = 0.8,
                 DiffuseExtCoeff = 0.78,
+                ExtCoeffReductionSlope = 0.0288,
+                ExtCoeffReductionIntercept = 0.5311,
                 DiffuseExtCoeffNIR = 0.8,
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,

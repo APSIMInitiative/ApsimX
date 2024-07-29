@@ -102,6 +102,9 @@ namespace UnitTests.DCaPST
 
             // Act
             var nextGenWheatParams = WheatCropParameterGenerator.Generate();
+            // Add in any new ones that didn't exist in Classic.
+            classicWheatParams.Canopy.ExtCoeffReductionIntercept = nextGenWheatParams.Canopy.ExtCoeffReductionIntercept;
+            classicWheatParams.Canopy.ExtCoeffReductionSlope = nextGenWheatParams.Canopy.ExtCoeffReductionSlope;
 
             // Assert
             DCaPSTParametersComparer.AssertDCaPSTParametersValuesEqual(classicWheatParams, nextGenWheatParams);
