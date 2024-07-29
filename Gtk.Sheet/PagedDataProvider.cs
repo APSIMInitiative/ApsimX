@@ -313,19 +313,22 @@ namespace Gtk.Sheet
         {
             var filter = rowFilter;
 
-            // if the filter has [SimulationName] = 'aaaa' then replace it with
-            // SimulationID = b
-            string pattern = @"[\w\[\]]+\s*=\s*'(\w+)'";
-            Match match;
-            while ((match = Regex.Match(filter, pattern)).Success)
+            if (filter != null)
             {
-                string simulationName = match.Groups[1].ToString();
-                var simulationID = dataStore.ToSimulationIDs(new string[] { simulationName })?.First();
-                if (simulationID > 0)
+                // if the filter has [SimulationName] = 'aaaa' then replace it with
+                // SimulationID = b
+                string pattern = @"[\w\[\]]+\s*=\s*'(\w+)'";
+                Match match;
+                while ((match = Regex.Match(filter, pattern)).Success)
                 {
-                    string replacement = $"SimulationID={simulationID}";
-                    filter = filter.Remove(match.Index, match.Length);
-                    filter = filter.Insert(match.Index, replacement);
+                    string simulationName = match.Groups[1].ToString();
+                    var simulationID = dataStore.ToSimulationIDs(new string[] { simulationName })?.First();
+                    if (simulationID > 0)
+                    {
+                        string replacement = $"SimulationID={simulationID}";
+                        filter = filter.Remove(match.Index, match.Length);
+                        filter = filter.Insert(match.Index, replacement);
+                    }
                 }
             }
 
