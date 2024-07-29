@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using static Gtk.Sheet.ISheetDataProvider;
 
 namespace Gtk.Sheet
@@ -311,6 +312,23 @@ namespace Gtk.Sheet
         private string GetFilter()
         {
             var filter = rowFilter;
+
+            // if the filter has [SimulationName] = 'aaaa' then replace it with
+            // SimulationID = b
+            string pattern = @"[\w\[\]]+\s*=\s*'(\w+)'";
+            Match match;
+            while ((match = Regex.Match(filter, pattern)).Success)
+            {
+                string simulationName = match.Groups[1].ToString();
+                var simulationID = dataStore.ToSimulationIDs(new string[] { simulationName })?.First();
+                if (simulationID > 0)
+                {
+                    string replacement = $"SimulationID={simulationID}";
+                    filter = filter.Remove(match.Index, match.Length);
+                    filter = filter.Insert(match.Index, replacement);
+                }
+            }
+
             string checkpointFilter = $"\"CheckpointID\" = {dataStore.GetCheckpointID(checkpointName)}";
             if (string.IsNullOrEmpty(filter))
                 filter = checkpointFilter;
