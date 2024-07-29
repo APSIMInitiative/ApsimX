@@ -36,7 +36,7 @@ namespace Models.Soils.SoilTemp
         [Link]
         private IClock clock = null;
 
-        [Link(IsOptional = false)]   // Simulations without plants don't have a micro climate instance.
+        [Link(IsOptional = true)]   // Simulations without plants don't have a micro climate instance.
         private MicroClimate microClimate = null;
 
         [Link]
@@ -662,7 +662,7 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getIniVariables()
         {
-            BoundCheck(weather.Tav, -30.0, 40.0, "tav (oC)");
+            BoundCheck(weather.Tav, -30.0, 50.0, "tav (oC)");
             // 'gTAve = tav
 
             if ((instrumHeight > 0.00001))
@@ -694,7 +694,6 @@ namespace Models.Soils.SoilTemp
 
             thickness = new double[numLayers + 1 + NUM_PHANTOM_NODES]; // Dlayer dimensioned for layers 1 to gNumlayers + extra nodes for zone below bottom layer
             physical.Thickness.CopyTo(thickness, 1);
-            BoundCheckArray(thickness, 0.0, 1000.0, "thickness");
 
             // mapping of layers to nodes -
             // layer - air surface 1 2 ... NumLayers NumLayers+1
@@ -734,15 +733,17 @@ namespace Models.Soils.SoilTemp
                 bulkDensity[layer] = bulkDensity[numLayers]; 
 
             // SW
-            BoundCheck(waterBalance.SWmm.Length, numLayers, numLayers, "sw layers");
             var oldSoilWater = soilWater;
             soilWater = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             if (oldSoilWater != null)
                 Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
-            for (int layer = 1; layer <= numLayers; layer++)
-                soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
-            for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                soilWater[layer] = soilWater[numLayers]; 
+            if (waterBalance.SW != null)
+            {
+                for (int layer = 1; layer <= numLayers; layer++)
+                    soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
+                for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
+                    soilWater[layer] = soilWater[numLayers]; 
+            }
 
             // Carbon
             BoundCheck(organic.Carbon.Length, numLayers, numLayers, "carbon layers");
