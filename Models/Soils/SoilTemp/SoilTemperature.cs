@@ -338,6 +338,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>
         /// Depth to the constant temperature lower boundary condition (m)
         /// </summary>
+        [JsonIgnore]
         public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
 
 
