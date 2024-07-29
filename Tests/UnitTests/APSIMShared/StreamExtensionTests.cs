@@ -60,7 +60,7 @@ namespace UnitTests.APSIMShared
         public void TestGetBomLengthUtf8NoBom(string message)
         {
             using (Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(message)))
-                Assert.AreEqual(0, stream.GetBomLength());
+                Assert.That(stream.GetBomLength(), Is.EqualTo(0));
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace UnitTests.APSIMShared
         [Test]
         public void TestArrayEquals()
         {
-            Assert.True(APSIM.Shared.Extensions.StreamExtensions.Equal(null, null));
-            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], null));
-            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(null, new byte[0]));
-            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], new byte[1]));
-            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }));
-            Assert.True(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }));
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(null, null), Is.True);
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], null), Is.False);
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(null, new byte[0]), Is.False);
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], new byte[1]), Is.False);
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }), Is.False);
+            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }), Is.True);
         }
 
         /// <summary>
@@ -119,10 +119,10 @@ namespace UnitTests.APSIMShared
         private void TestGetBomLength(Encoding encoding, Stream stream)
         {
             // Ensure the correct byte-order mark is returned.
-            Assert.AreEqual(encoding.GetPreamble().Length, stream.GetBomLength());
+            Assert.That(stream.GetBomLength(), Is.EqualTo(encoding.GetPreamble().Length));
 
             // Ensure the call to GetBomLength() didn't move the stream.
-            Assert.AreEqual(0, stream.Position);
+            Assert.That(stream.Position, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -137,10 +137,10 @@ namespace UnitTests.APSIMShared
             using (Stream stream = GetStream(encoding, message))
             {
                 // Ensure the correct encoding is returned.
-                Assert.AreEqual(encoding, stream.GetEncoding());
+                Assert.That(stream.GetEncoding(), Is.EqualTo(encoding));
 
                 // Ensure the call to GetEncoding() didn't move the stream.
-                Assert.AreEqual(0, stream.Position);
+                Assert.That(stream.Position, Is.EqualTo(0));
             }
         }
 

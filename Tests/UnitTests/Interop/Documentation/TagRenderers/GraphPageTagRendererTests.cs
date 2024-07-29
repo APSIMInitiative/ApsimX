@@ -130,16 +130,16 @@ namespace UnitTests.Interop.Documentation.TagRenderers
 
             if (numGraphs < 1)
                 // No child graphs - document should be empty.
-                Assert.AreEqual(0, document.LastSection.Elements.Count);
+                Assert.That(document.LastSection.Elements.Count, Is.EqualTo(0));
             else
             {
                 // There should be a single paragraph, containing all graphs.
-                Assert.AreEqual(1, document.LastSection.Elements.Count);
+                Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
                 Paragraph paragraph = document.LastSection.Elements[0] as Paragraph;
-                Assert.NotNull(paragraph);
+                Assert.That(paragraph, Is.Not.Null);
 
                 // The paragraph should contain n images.
-                Assert.AreEqual(numGraphs, paragraph.Elements.Count);
+                Assert.That(paragraph.Elements.Count, Is.EqualTo(numGraphs));
 
                 // Ensure that all images have been renderered correctly.
                 for (int i = 0; i < numGraphs; i++)
@@ -166,7 +166,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(page, pdfBuilder);
 
             // There should be two paragraphs.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
 
             // Let's also double check that the image was added correctly.
             Paragraph graphsParagraph = (Paragraph)document.LastSection.Elements[1];
@@ -189,7 +189,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             pdfBuilder.AppendText("paragraph content", TextStyle.Normal);
 
             // There should be two paragraphs.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
 
             // Let's also double check that the image was added correctly.
             Paragraph graphsParagraph = (Paragraph)document.LastSection.Elements[0];
@@ -209,8 +209,8 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             {
                 // This should be 1/2 page width and 1/3 page height in px.
                 // fixme: this isn't really the best way to verify this but it'll do for now.
-                Assert.AreEqual(302.362204724, width, 1e-2);
-                Assert.AreEqual(317.4803405921916, height, 1e-2);
+                Assert.That(width, Is.EqualTo(302.362204724).Within(1e-2));
+                Assert.That(height, Is.EqualTo(317.4803405921916).Within(1e-2));
                 return image;
             });
             IGraphExporter exporter = mockExporter.Object;
@@ -235,10 +235,10 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             mockExporter.Setup(e => e.Export(It.IsAny<IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns((IPlotModel plot, double width, double height) =>
             {
                 PlotModel model = plot as PlotModel;
-                Assert.AreEqual(2, ((OxyPlot.Series.LineSeries)model.Series[0]).MarkerSize);
-                Assert.AreEqual(10, model.DefaultFontSize);
-                Assert.AreEqual(10, model.Axes[0].FontSize);
-                Assert.AreEqual(10, model.TitleFontSize);
+                Assert.That(((OxyPlot.Series.LineSeries)model.Series[0]).MarkerSize, Is.EqualTo(2));
+                Assert.That(model.DefaultFontSize, Is.EqualTo(10));
+                Assert.That(model.Axes[0].FontSize, Is.EqualTo(10));
+                Assert.That(model.TitleFontSize, Is.EqualTo(10));
                 return image;
             });
             IGraphExporter exporter = mockExporter.Object;
@@ -264,7 +264,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             mockExporter.Setup(e => e.Export(It.IsAny<IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns((IPlotModel plot, double width, double height) =>
             {
                 PlotModel model = plot as PlotModel;
-                Assert.AreEqual(0, model.Legends.Count);
+                Assert.That(model.Legends.Count, Is.EqualTo(0));
                 return image;
             });
             IGraphExporter exporter = mockExporter.Object;
@@ -274,7 +274,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(page, pdfBuilder);
 
             // (Sanity check, just to make sure that the above plumbing actually worked.)
-            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -294,15 +294,15 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         private void AssertEqual(SkiaSharp.SKImage expected, MigraDocImage actual)
         {
             if (expected == null)
-                Assert.Null(actual);
+                Assert.That(actual, Is.Null);
             else
-                Assert.NotNull(actual);
+                Assert.That(actual, Is.Not.Null);
 
             // Note: actual.Width is not the actual width (that would be too easy);
             // instead, it represents a custom user-settable width. We're more
             // interested in the width of the underlying image.
-            Assert.AreEqual(expected.Width, actual.Source.Width);
-            Assert.AreEqual(expected.Height, actual.Source.Height);
+            Assert.That(actual.Source.Width, Is.EqualTo(expected.Width));
+            Assert.That(actual.Source.Height, Is.EqualTo(expected.Height));
         }
     }
 }

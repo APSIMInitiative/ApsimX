@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 174; } }
+        public static int LatestVersion { get { return 176; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -105,11 +105,19 @@ namespace Models.Core.ApsimFile
         /// <returns>True if model was changed.</returns>
         private static bool EnsureSoilHasInitWaterAndSample(JObject root)
         {
-            string rootType = JsonUtilities.Type(root, true);
+            JObject soilRoot = root;
+            string rootType = JsonUtilities.Type(soilRoot, true);
+            
+            //ASRIS soils are held below the parent when in xml form, so we should check for that.
+            if (rootType == null && (root["Children"] as JArray != null) && root["Children"].Count() > 0)
+            {
+                soilRoot = root["Children"][0] as JObject;
+                rootType = JsonUtilities.Type(soilRoot, true);
+            }
 
             if (rootType != null && rootType == "Models.Soils.Soil")
             {
-                JArray soilChildren = root["Children"] as JArray;
+                JArray soilChildren = soilRoot["Children"] as JArray;
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
@@ -147,7 +155,7 @@ namespace Models.Core.ApsimFile
                         res = true;
                     }
 
-                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    var physical = JsonUtilities.ChildWithName(soilRoot, "Physical");
                     bool hasPhysical = false;
                     int nLayers = 1;
 
@@ -230,16 +238,16 @@ namespace Models.Core.ApsimFile
                     }
 
                     // Add a soil temperature model.
-                    var soilTemperature = JsonUtilities.ChildWithName(root, "SoilTemperature");
+                    var soilTemperature = JsonUtilities.ChildWithName(soilRoot, "Temperature");
                     if (soilTemperature == null)
-                        JsonUtilities.AddModel(root, typeof(CERESSoilTemperature), "SoilTemperature");
+                        JsonUtilities.AddModel(soilRoot, typeof(CERESSoilTemperature), "Temperature");
 
                     // Add a nutrient model.
-                    var nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                    var nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                     if (nutrient == null)
                     {
-                        JsonUtilities.AddModel(root, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
-                        nutrient = JsonUtilities.ChildWithName(root, "Nutrient");
+                        JsonUtilities.AddModel(soilRoot, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                         nutrient["ResourceName"] = "Nutrient";
                     }
 
@@ -5519,6 +5527,50 @@ namespace Models.Core.ApsimFile
                     arc["SourceID"] = sourceID;
                     arc["DestinationID"] = destinationID;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Add ResourceName to MicroClimate
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion175(JObject root, string fileName)
+        {
+            foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
+                microClimate["ResourceName"] = "MicroClimate";
+        }
+
+        /// <summary>
+        /// Rename Wheat Report Variables
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion176(JObject root, string fileName)
+        {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.AppearedCohortNo", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Phyllochron", "[Wheat].Phenology.Phyllochron");
+            }
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.AppearedCohortNo", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.ExpandedCohortNo", "Wheat.Leaf.Ligules");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Height", "Wheat.Leaf.Height");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Phyllochron", "Wheat.Phenology.Phyllochron");
             }
         }
     }

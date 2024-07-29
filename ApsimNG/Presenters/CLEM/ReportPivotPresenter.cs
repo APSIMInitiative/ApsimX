@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Graphing;
 using Atk;
 using Gtk;
+using Gtk.Sheet;
 using Models.CLEM.Reporting;
 using System;
 using System.Data;
@@ -59,13 +60,10 @@ namespace UserInterface.Presenters
             {
                 // Create the grid to display data in
                 container = new ContainerView(clemPresenter.View as ViewBase);
-                grid = new SheetWidget();
-                grid.Sheet = new Sheet();
-                grid.Sheet.DataProvider = new DataTableProvider(new DataTable());
-                grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-                grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-                grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-                container.Add(grid.Sheet.ScrollBars.MainWidget);
+                grid = new SheetWidget(container.Widget,
+                                       dataProvider: new DataTableProvider(new DataTable()),
+                                       multiSelect: true,
+                                       onException: (err) => ViewBase.MasterView.ShowError(err));
 
                 // Create the SQL display
                 sqlView = new TextInputView(clemPresenter.View as ViewBase);
@@ -95,7 +93,7 @@ namespace UserInterface.Presenters
         /// <inheritdoc/>
         public void Refresh()
         {
-            grid.Sheet.DataProvider = new DataTableProvider(pivot.GenerateTable());
+            grid.SetDataProvider(new DataTableProvider(pivot.GenerateTable()));
             sqlView.Text = pivot.SQL;
         }
     }

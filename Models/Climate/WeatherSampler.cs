@@ -90,6 +90,10 @@ namespace Models.Climate
         /// <summary>Is 'specify years' enabled?</summary>
         public bool IsSpecifyYearsEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecificYears; } }
 
+        /// <summary>The date when years tick over.</summary>
+        [Summary]
+        [Description("The date marking the start of sampling years (d-mmm). Leave blank for 1-Jan")]
+        public string SplitDate { get; set; }
 
 
 
@@ -290,6 +294,10 @@ namespace Models.Climate
             if (Years == null || Years.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
 
+            if (string.IsNullOrEmpty(SplitDate)) {
+                SplitDate = "1-jan";
+            }
+
             currentYearIndex = 0;
             currentRowIndex = FindRowForDate(new DateTime(Years[currentYearIndex], clock.StartDate.Month, clock.StartDate.Day));
         }
@@ -300,14 +308,14 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (clock.Today.DayOfYear == 1)
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
                 if (currentYearIndex == Years.Length)
                     currentYearIndex = 0;
                 
-                var dateToFind = new DateTime(Years[currentYearIndex], 1, 1);
+                var dateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
                 currentRowIndex = FindRowForDate(dateToFind);
             }
 

@@ -12,7 +12,7 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler BrowseButtonClicked;
 
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Button button1 = null;
         private Label label1 = null;
 
@@ -29,7 +29,7 @@ namespace UserInterface.Views
         public InputView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
             mainWidget = vbox1;

@@ -69,13 +69,13 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         public void EnsureTagIsWritten()
         {
             renderer.Write(pdfBuilder, inline);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             FormattedText text = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, text.Elements.Count);
+            Assert.That(text.Elements.Count, Is.EqualTo(1));
             Text rawText = (Text)text.Elements[0];
-            Assert.AreEqual(sampleHtml, rawText.Content);
+            Assert.That(rawText.Content, Is.EqualTo(sampleHtml));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             Mock<PdfBuilder> mockBuilder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             mockBuilder.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
-                       .Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Normal, style))
+                       .Callback<string, TextStyle>((_, style) => Assert.That(style, Is.EqualTo(TextStyle.Normal)))
                        .CallBase();
             renderer.Write(mockBuilder.Object, inline);
         }
@@ -99,7 +99,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, inline);
             pdfBuilder.AppendText("subsequent addition", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -110,9 +110,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, inline);
             pdfBuilder.AppendText("this was inserted after the code inline", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -124,9 +124,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             pdfBuilder.AppendText("pre-existing material", TextStyle.Normal);
             renderer.Write(pdfBuilder, inline);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
         }
     }
 }

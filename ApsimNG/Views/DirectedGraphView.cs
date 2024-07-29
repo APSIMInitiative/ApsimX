@@ -7,6 +7,7 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
+using Gtk.Sheet;
 
 namespace UserInterface.Views
 {
@@ -106,9 +107,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedGraphView" /> class.
         /// </summary>
-        public DirectedGraphView(ViewBase owner = null) : base(owner)
+        public DirectedGraphView(ViewBase owner = null, int width=800) : base(owner)
         {
             drawable = new DrawingArea();
+            drawable.WidthRequest = width;
+
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
@@ -124,7 +127,8 @@ namespace UserInterface.Views
             ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
-                VscrollbarPolicy = PolicyType.Always
+                VscrollbarPolicy = PolicyType.Always,
+                WidthRequest = width
             };
 
 
@@ -210,6 +214,7 @@ namespace UserInterface.Views
                 if (isDrawingArc)
                     arcs.Add(tempArc);
 
+                DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
 
                 if (isDrawingArc)
@@ -463,16 +468,13 @@ namespace UserInterface.Views
                 arcs[i].Selected = false;
 
             //Look through nodes that are in rectangle
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < nodes.Count && (!single || SelectedObjects.Count == 0); i++)
                 if (nodes[i].HitTest(selectionRect.GetRectangle()))
-                    if (!single || (single && SelectedObjects.Count == 0))
-                        SelectedObjects.Add(nodes[i]);
+                    SelectedObjects.Add(nodes[i]);
 
-            if (!single || (single && SelectedObjects.Count == 0))
-                // Look through arcs for the click point
-                for (int i = 0; i < arcs.Count; i++)
-                    if (arcs[i].HitTest(selectionRect.GetRectangle()))
-                        SelectedObjects.Add(arcs[i]);
+            for (int i = 0; i < arcs.Count && (!single || SelectedObjects.Count == 0); i++)
+                if (arcs[i].HitTest(selectionRect.GetRectangle()))
+                    SelectedObjects.Add(arcs[i]);
 
             for (int i = 0; i < SelectedObjects.Count; i++)
                 SelectedObjects[i].Selected = true;
