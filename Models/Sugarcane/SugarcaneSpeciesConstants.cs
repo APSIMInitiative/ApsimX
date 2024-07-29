@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 /// Sugar constants
 /// </summary>
 [Serializable]
-public class CropConstants
+public class SugarcaneSpeciesConstants
 {
 
     /// <summary>
