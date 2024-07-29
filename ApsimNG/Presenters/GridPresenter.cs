@@ -228,7 +228,7 @@ namespace UserInterface.Presenters
             if (gridTable != null && grid != null)
             {
                 if (dataProvider != null)
-                    (dataProvider as DataTableProvider).CellChanged -= OnCellChanged;
+                    (dataProvider as ISheetDataProvider).CellChanged -= OnCellChanged;
 
                 DataTable data = gridTable.Data;
 
@@ -479,7 +479,9 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            model = changedModel as IModel;
+            if (changedModel is GridTable)
+                model = (changedModel as GridTable).Model;
+            else model = changedModel as IModel;
             dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
             SetupSheet(dataProvider);
             Refresh();
