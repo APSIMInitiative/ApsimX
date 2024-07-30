@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Refresh the grid.</summary>
-        public void Refresh()
+        public void     Refresh()
         {
             if (gridTable != null && grid != null)
             {
@@ -496,7 +496,7 @@ namespace UserInterface.Presenters
                 model = (changedModel as GridTable).Model;
             else model = changedModel as IModel;
             dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
-            SetupSheet(dataProvider);
+            //SetupSheet(dataProvider);
             Refresh();
         }
 
