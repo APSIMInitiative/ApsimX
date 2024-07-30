@@ -105,6 +105,25 @@
             Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("10"));
         }
 
+        /// <summary>Ensure paging with a simulation, column and row filter works.</summary>
+        /// <remarks>https://github.com/APSIMInitiative/ApsimX/issues/9209</remarks>
+        [Test]
+        public void PagingWithSimulationColumnandRowFilter2()
+        {
+            CreateTable(database);
+
+            var reader = new DataStoreReader(database);
+            var provider = new PagedDataProvider(reader, "Current", "Report", new string[] { "Sim1" }, "Col1,Col2", "Col1 = '2'", "", 2);
+
+            Assert.That(provider.ColumnCount, Is.EqualTo(3));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col1"));
+            Assert.That(provider.GetColumnName(2), Is.EqualTo("Col2"));
+            Assert.That(provider.GetColumnUnits(1), Is.EqualTo("g"));
+            Assert.That(provider.RowCount, Is.EqualTo(1));
+            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("9"));
+        }        
+
         /// <summary>Ensure a row filter with SimulationName = 'aaaa' works.</summary>
         [Test]
         public void PagingWithRowFilterUsingSimulationName()
