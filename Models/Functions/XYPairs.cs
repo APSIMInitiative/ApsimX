@@ -19,7 +19,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.XYPairsView")]
     [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
-    [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
+    [Description("Returns the corresponding Y value for a given X value, based on the line shape defined by the specified XY matrix.")]
     public class XYPairs : Model, IFunction, IIndexedFunction, IGridModel
     {
         /// <summary>Gets or sets the x.</summary>

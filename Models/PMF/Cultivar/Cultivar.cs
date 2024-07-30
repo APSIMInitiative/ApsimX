@@ -22,6 +22,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(ModelOverrides))]
+    [ValidParent(ParentType = typeof(Sugarcane))]
     public class Cultivar : Model, ILineEditor
     {
         /// <summary>Default constructor.</summary>
