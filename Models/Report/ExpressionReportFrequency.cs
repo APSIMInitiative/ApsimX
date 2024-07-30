@@ -38,12 +38,31 @@ namespace Models
             
             string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
 
-            //assume first token is actually an event
-            clean_line = "true";
-            for(int i = 1; i < tokens.Length; i++) {
-                clean_line += " " + tokens[i];
+            //find which token is an event
+            int eventIndex = -1;
+            clean_line = "";
+            for(int i = 0; i < tokens.Length; i++) {
+                if (eventIndex < 0)
+                {
+                    try
+                    {
+                        events.Subscribe(tokens[i], null);
+                        events.Unsubscribe(tokens[i], null);
+                        eventIndex = i;
+                        clean_line += "true ";
+                    }
+                    catch {
+                        //If this fails, it was not a valid event
+                        clean_line += tokens[i] + " ";
+                    }
+                }
+                else 
+                {
+                    clean_line += tokens[i] + " ";
+                }
             }
 
+            clean_line = clean_line.Trim();
             clean_line = clean_line.Replace("[", "");
             clean_line = clean_line.Replace("]", "");
             compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
