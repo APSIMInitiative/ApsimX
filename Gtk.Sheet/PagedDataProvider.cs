@@ -317,7 +317,7 @@ namespace Gtk.Sheet
             {
                 // if the filter has [SimulationName] = 'aaaa' then replace it with
                 // SimulationID = b
-                string pattern = @"[\w\[\]]+\s*=\s*'(\w+)'";
+                string pattern = @"\[?SimulationName\]?\s*=\s*'(\w+)'";
                 Match match;
                 while ((match = Regex.Match(filter, pattern)).Success)
                 {
