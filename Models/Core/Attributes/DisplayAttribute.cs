@@ -124,10 +124,15 @@ namespace Models.Core
         /// </summary>
         Code,
 
-         /// <summary>
+        /// <summary>
         /// Provides a GTK Colour Picker dialog
         /// </summary>
-        ColourPicker
+        ColourPicker,
+
+        /// <summary>
+        /// Provides a plant name.
+        /// </summary>
+        PlantName
     }
 
     /// <summary>
