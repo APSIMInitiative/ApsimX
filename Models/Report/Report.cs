@@ -132,7 +132,7 @@ namespace Models
             foreach (string line in EventNames)
             {
                 if (!DateReportFrequency.TryParse(line, this, events) &&
-                    !EventReportFrequency.TryParse(line, this, events) &&
+                    !EventReportFrequency.TryParse(line, this, events, compiler) &&
                     !ExpressionReportFrequency.TryParse(line, this, events, compiler))
                     throw new Exception($"Invalid report frequency found: {line}");
             }

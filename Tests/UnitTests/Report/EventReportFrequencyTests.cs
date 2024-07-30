@@ -46,11 +46,12 @@ namespace UnitTests.Reporting
         /// <param name="line">Input line - should be any valid reporting frequency using a model event.</param>
         [TestCase("[Clock].DoReport")]
         [TestCase("[Clock with space].DoReport")]
+        [TestCase("[Clock].DoReport && [Clock].Today.Year > 2000")]
         public void TestReportingFrequency(string line)
         {
             //this is the order lines are parsed by Report.cs
             Assert.That(DateReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.False);
-            Assert.That(EventReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.True);
+            Assert.That(EventReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object, new ScriptCompiler()), Is.True);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace UnitTests.Reporting
             ScriptCompiler compiler = new ScriptCompiler();
             //this is the order lines are parsed by Report.cs
             Assert.That(DateReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.False);
-            Assert.That(EventReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.False);
+            Assert.That(EventReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object, compiler), Is.False);
             Assert.That(ExpressionReportFrequency.TryParse(line, report, mockEvents.Object, compiler), Is.True);
         }
     }
