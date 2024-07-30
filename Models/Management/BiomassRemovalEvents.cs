@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Utilities;
+using Models.PMF;
 
 namespace Models.Management
 {
@@ -29,13 +30,11 @@ namespace Models.Management
         /// Crop to remove biomass from
         /// </summary>
         [Description("Crop to remove biomass from")]
-        public IPlant PlantToRemoveFrom
-        {
-            get { return _plant; }
-            set { _plant = value; LinkCrop(); }
-        }
+        [Display(Type = DisplayType.PlantName)]
+        public string PlantToRemoveBiomassFrom { get; set; }
+
         [JsonIgnore]
-        private IPlant _plant { get; set; }
+        private Plant PlantToRemoveFrom { get; set; }
 
         /// <summary>
         /// The type of biomass removal event
@@ -246,11 +245,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>();
+                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>();
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveFrom.Name);
 
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
@@ -266,7 +265,7 @@ namespace Models.Management
                 Folder replacements = sims.FindChild<Folder>("Replacements");
                 if (replacements != null)
                 {
-                    IPlant plant = replacements.FindChild<IPlant>(PlantToRemoveFrom.Name);
+                    Plant plant = replacements.FindChild<Plant>(PlantToRemoveFrom.Name);
                     if (plant != null)
                         PlantToRemoveFrom = plant;
                 }

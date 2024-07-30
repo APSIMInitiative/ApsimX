@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 176; } }
+        public static int LatestVersion { get { return 177; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5571,6 +5571,20 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
                 JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
                 JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Phyllochron", "Wheat.Phenology.Phyllochron");
+            }
+        }
+
+        /// <summary>
+        /// Change BiomassRemovalEvents.PlantToRemoveFrom property from IModel to a string.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion177(JObject root, string fileName)        
+        {
+            foreach (var biomassRemovalEvents in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+            {
+                string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
+                biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
             }
         }
     }
