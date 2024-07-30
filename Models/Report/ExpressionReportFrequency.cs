@@ -21,14 +21,15 @@ namespace Models
         /// <returns>true if line was able to be parsed.</returns>
         public static bool TryParse(string line, Report report, IEvent events, ScriptCompiler compiler)
         {
-            line = line.Replace("[", "")
-                       .Replace("]", "");
+            
+            string clean_line = line;
+            clean_line = clean_line.Replace("[", "");
+            clean_line = clean_line.Replace("]", "");
 
             IBooleanFunction function = null;
             string errorMessages = "";
 
-
-            bool compiled = CSharpExpressionFunction.Compile(line, report, compiler, out function, out errorMessages);
+            bool compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
             if (compiled)
             {
                 new ExpressionReportFrequency(report, events, function);
@@ -38,12 +39,14 @@ namespace Models
             string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
 
             //assume first token is actually an event
-            string expression = "true";
+            clean_line = "true";
             for(int i = 1; i < tokens.Length; i++) {
-                expression += " " + tokens[i];
+                clean_line += " " + tokens[i];
             }
 
-            compiled = CSharpExpressionFunction.Compile(expression, report, compiler, out function, out errorMessages);
+            clean_line = clean_line.Replace("[", "");
+            clean_line = clean_line.Replace("]", "");
+            compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
             if (compiled)
             {
                 new EventReportFrequency(report, events, tokens[0], function);
