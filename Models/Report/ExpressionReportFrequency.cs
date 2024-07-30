@@ -36,18 +36,20 @@ namespace Models
                 return true;
             }
             
-            string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
+            //If the line could not be evaluated as an expression, see if part of it was an event, in case we have an event with a condition
 
-            //find which token is an event
+            string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
             int eventIndex = -1;
             clean_line = "";
+            //find which token is an event
             for(int i = 0; i < tokens.Length; i++) {
                 if (eventIndex < 0)
                 {
                     try
                     {
-                        events.Subscribe(tokens[i], null);
-                        events.Unsubscribe(tokens[i], null);
+                        //If we can subscribe to the event, it is valid.
+                        events.Subscribe(tokens[i], TestEventHandler);
+                        events.Unsubscribe(tokens[i], TestEventHandler);
                         eventIndex = i;
                         clean_line += "true ";
                     }
@@ -62,13 +64,18 @@ namespace Models
                 }
             }
 
+            //if we didn't find an event, then this is just an invalid expression, return false.
+            if (eventIndex < 0)
+                return false;
+            
+            //if we did, recompile our condition with "true" where the event was
             clean_line = clean_line.Trim();
             clean_line = clean_line.Replace("[", "");
             clean_line = clean_line.Replace("]", "");
             compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
             if (compiled)
             {
-                new EventReportFrequency(report, events, tokens[0], function);
+                new EventReportFrequency(report, events, tokens[eventIndex], function);
                 return true;
             }
             
@@ -96,6 +103,14 @@ namespace Models
         {
             if (expressionFunction.Value())
                 report.DoOutput();
+        }
+
+        /// <summary>An event handler for testing if a token is a valid event</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private static void TestEventHandler(object sender, EventArgs e)
+        {
+            //do nothing
         }
     }
 }
