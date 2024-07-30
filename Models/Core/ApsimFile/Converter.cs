@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Factorial;
@@ -5583,8 +5584,12 @@ namespace Models.Core.ApsimFile
         {
             foreach (var biomassRemovalEvents in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
             {
-                string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
-                biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
+                var plantToRemoveFromObj = biomassRemovalEvents["PlantToRemoveFrom"];
+                if (plantToRemoveFromObj.Any())
+                {
+                    string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
+                    biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
+                }
             }
         }
     }
