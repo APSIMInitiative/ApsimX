@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Refresh the grid.</summary>
-        public void     Refresh()
+        public void Refresh()
         {
             if (gridTable != null && grid != null)
             {
