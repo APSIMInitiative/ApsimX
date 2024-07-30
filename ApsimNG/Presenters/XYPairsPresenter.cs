@@ -63,9 +63,8 @@ namespace UserInterface.Presenters
             this.xYPairsView = view as XYPairsView;
             this.presenter = explorerPresenter as ExplorerPresenter;
 
-            List<GridTable> tables = this.xYPairs.Tables;
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid, this.presenter);
+            gridPresenter.Attach(model, this.xYPairsView.VariablesGrid, this.presenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             // Populate the graph.
