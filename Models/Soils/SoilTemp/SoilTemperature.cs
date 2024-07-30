@@ -36,7 +36,7 @@ namespace Models.Soils.SoilTemp
         [Link]
         private IClock clock = null;
 
-        [Link]
+        [Link(IsOptional = true)]   // Simulations without plants don't have a micro climate instance.
         private MicroClimate microClimate = null;
 
         [Link]
@@ -338,6 +338,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>
         /// Depth to the constant temperature lower boundary condition (m)
         /// </summary>
+        [JsonIgnore]
         public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
 
 
@@ -617,6 +618,7 @@ namespace Models.Soils.SoilTemp
         private void OnStartOfSimulation(object sender, EventArgs e)            // JNGH - changed this from Init1.
         {
             doInit1Stuff = true;
+            InitialValues = null;
             getIniVariables();
             getProfileVariables();
             readParam();
@@ -660,7 +662,7 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getIniVariables()
         {
-            BoundCheck(weather.Tav, -30.0, 40.0, "tav (oC)");
+            BoundCheck(weather.Tav, -30.0, 50.0, "tav (oC)");
             // 'gTAve = tav
 
             if ((instrumHeight > 0.00001))
@@ -692,7 +694,6 @@ namespace Models.Soils.SoilTemp
 
             thickness = new double[numLayers + 1 + NUM_PHANTOM_NODES]; // Dlayer dimensioned for layers 1 to gNumlayers + extra nodes for zone below bottom layer
             physical.Thickness.CopyTo(thickness, 1);
-            BoundCheckArray(thickness, 0.0, 1000.0, "thickness");
 
             // mapping of layers to nodes -
             // layer - air surface 1 2 ... NumLayers NumLayers+1
@@ -732,15 +733,17 @@ namespace Models.Soils.SoilTemp
                 bulkDensity[layer] = bulkDensity[numLayers]; 
 
             // SW
-            BoundCheck(waterBalance.SWmm.Length, numLayers, numLayers, "sw layers");
             var oldSoilWater = soilWater;
             soilWater = new double[numLayers + 1 + NUM_PHANTOM_NODES];
             if (oldSoilWater != null)
                 Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
-            for (int layer = 1; layer <= numLayers; layer++)
-                soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
-            for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                soilWater[layer] = soilWater[numLayers]; 
+            if (waterBalance.SW != null)
+            {
+                for (int layer = 1; layer <= numLayers; layer++)
+                    soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
+                for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
+                    soilWater[layer] = soilWater[numLayers]; 
+            }
 
             // Carbon
             BoundCheck(organic.Carbon.Length, numLayers, numLayers, "carbon layers");
@@ -896,38 +899,23 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void GetOtherVariables()
         {
-            BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");
-            BoundCheck(weather.MinT, -100.0, weather.MaxT, "mint");
             maxAirTemp = weather.MaxT;
             minAirTemp = weather.MinT;
-            tempStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
+            tempStepSec = Convert.ToDouble(timestep) * MIN2SEC;
             waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
-            // Debug(test): multiplyArray(gSW, 0.1)
-
-            BoundCheck(waterBalance.Eo, -30.0, 40.0, "eo");
             potEvapotrans = waterBalance.Eo;
-
-            BoundCheck(waterBalance.Eos, -30.0, 40.0, "eos");
             potSoilEvap = waterBalance.Eos;
-
-            BoundCheck(waterBalance.Es, -30.0, 40.0, "es");
             actualSoilEvap = waterBalance.Es;
-            // BoundCheck(cover_tot, 0.0, 1.0, "cover_tot")
-
-            //if ((weather.Wind > 0.0))
-            //    gWindSpeed = weather.Wind * KM2M / (DAY2HR * HR2SEC);
-            //else
             windSpeed = defaultWindSpeed;
-            BoundCheck(windSpeed, 0.0, 1000.0, "wind");
 
-            canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) * MM2M;
-            BoundCheck(canopyHeight, 0.0, 20.0, "Height");
-
+            if (microClimate != null)
+                canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) * MM2M;
+            else
+                canopyHeight = 0;
 
             // Vals HACK. Should be recalculating wind profile.
             instrumentHeight = Math.Max(instrumentHeight, canopyHeight + 0.5);
-
         }
 
 

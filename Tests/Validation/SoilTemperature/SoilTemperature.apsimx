@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 175,
+  "Version": 177,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -146,8 +146,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
-      "Name": "ValidationTests",
+      "Name": "Validation",
       "ResourceName": null,
       "Children": [
         {
@@ -167,14 +166,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "ForestHill",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "ForestHillWeatherStation",
               "ResourceName": null,
               "Children": [
@@ -322,6 +319,8 @@
                                 400.0,
                                 300.0
                               ],
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "ParticleSizeClay": [
                                 40.0,
                                 40.0,
@@ -332,8 +331,6 @@
                                 10.0,
                                 10.0
                               ],
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -474,6 +471,8 @@
                               "A": 1.0,
                               "DTHC": 0.0,
                               "DTHP": 1.0,
+                              "eo_time": "06:00",
+                              "eo_durn": 720.0,
                               "Diagnostics": false,
                               "Name": "Swim3",
                               "ResourceName": null,
@@ -620,7 +619,6 @@
                             },
                             {
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                              "CONSTANT_TEMPdepth": 10.0,
                               "Thickness": [
                                 10.0,
                                 20.0,
@@ -1672,7 +1670,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "ForestHillWheat",
               "ResourceName": null,
               "Children": [
@@ -1737,6 +1734,8 @@
                                     400.0,
                                     400.0
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "ParticleSizeClay": [
                                     100.0,
                                     100.0,
@@ -1750,8 +1749,6 @@
                                     100.0,
                                     100.0
                                   ],
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -2217,6 +2214,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "eo_time": "06:00",
+                                  "eo_durn": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -2253,7 +2252,6 @@
                                 },
                                 {
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                                  "CONSTANT_TEMPdepth": 10.0,
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -2339,6 +2337,8 @@
                                     400.0,
                                     400.0
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "ParticleSizeClay": [
                                     1.0,
                                     1.0,
@@ -2353,8 +2353,6 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -2825,6 +2823,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "eo_time": "06:00",
+                                  "eo_durn": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -2861,7 +2861,6 @@
                                 },
                                 {
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                                  "CONSTANT_TEMPdepth": 10.0,
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -3154,6 +3153,8 @@
                                     800.0,
                                     400.0
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "ParticleSizeClay": [
                                     40.0,
                                     40.0,
@@ -3161,8 +3162,6 @@
                                     40.0,
                                     40.0
                                   ],
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -3568,6 +3567,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "eo_time": "06:00",
+                                  "eo_durn": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -3604,7 +3605,6 @@
                                 },
                                 {
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                                  "CONSTANT_TEMPdepth": 10.0,
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -3920,14 +3920,12 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "Graphs",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": false,
-                          "GraphsPerPage": 6,
                           "Name": "Crop",
                           "ResourceName": null,
                           "Children": [
@@ -4453,7 +4451,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Comparison of averages soil temperature",
                   "ResourceName": null,
                   "Children": [
@@ -5240,7 +5237,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Comparison of diurnal ranges",
                   "ResourceName": null,
                   "Children": [
@@ -6537,7 +6533,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Wagga",
           "ResourceName": null,
           "Children": [
@@ -6669,6 +6664,8 @@
                             1000.0,
                             1000.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             9.0,
                             11.0,
@@ -6679,8 +6676,6 @@
                             42.0,
                             40.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -7005,7 +7000,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": null,
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -7948,7 +7942,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Norwin",
           "ResourceName": null,
           "Children": [
@@ -8100,6 +8093,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             70.0,
                             70.0,
@@ -8107,8 +8102,6 @@
                             70.0,
                             70.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -8223,6 +8216,8 @@
                           "A": 1.0,
                           "DTHC": 0.0,
                           "DTHP": 1.0,
+                          "eo_time": "06:00",
+                          "eo_durn": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim3",
                           "ResourceName": null,
@@ -8458,7 +8453,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": null,
                           "InitialValues": null,
                           "Name": "Temperature",
@@ -8892,7 +8886,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "USA BareSoil",
           "ResourceName": null,
           "Children": [
@@ -9147,16 +9140,6 @@
                                 400.0,
                                 100.0
                               ],
-                              "ParticleSizeClay": [
-                                18.0,
-                                18.0,
-                                22.0,
-                                22.0,
-                                21.0,
-                                21.0,
-                                17.0,
-                                17.0
-                              ],
                               "ParticleSizeSand": [
                                 51.0,
                                 51.0,
@@ -9176,6 +9159,16 @@
                                 28.0,
                                 32.0,
                                 32.0
+                              ],
+                              "ParticleSizeClay": [
+                                18.0,
+                                18.0,
+                                22.0,
+                                22.0,
+                                21.0,
+                                21.0,
+                                17.0,
+                                17.0
                               ],
                               "Rocks": null,
                               "Texture": null,
@@ -9549,7 +9542,6 @@
                             },
                             {
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                              "CONSTANT_TEMPdepth": 10.0,
                               "Thickness": null,
                               "InitialValues": null,
                               "Name": "Temperature",
@@ -10482,7 +10474,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "USA CornSoybean",
           "ResourceName": null,
           "Children": [
@@ -10661,19 +10652,6 @@
                             320.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            25.67,
-                            25.67,
-                            26.43,
-                            28.09,
-                            28.5,
-                            29.0,
-                            29.0,
-                            27.0,
-                            27.0,
-                            27.0,
-                            27.0
-                          ],
                           "ParticleSizeSand": [
                             38.29,
                             38.29,
@@ -10699,6 +10677,19 @@
                             36.0,
                             36.0,
                             36.0
+                          ],
+                          "ParticleSizeClay": [
+                            25.67,
+                            25.67,
+                            26.43,
+                            28.09,
+                            28.5,
+                            29.0,
+                            29.0,
+                            27.0,
+                            27.0,
+                            27.0,
+                            27.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -11086,6 +11077,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "eo_time": "06:00",
+                          "eo_durn": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
@@ -11318,7 +11311,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "Temperature",
@@ -11520,7 +11512,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "soil water graphs",
                   "ResourceName": null,
                   "Children": [
@@ -12416,7 +12407,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Crop",
                   "ResourceName": null,
                   "Children": [
@@ -13901,7 +13891,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "NewZealand",
           "ResourceName": null,
           "Children": [
@@ -14339,7 +14328,6 @@
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": true,
-                          "GraphsPerPage": 6,
                           "Name": "Manager folder",
                           "ResourceName": null,
                           "Children": [
@@ -14971,7 +14959,6 @@
                             },
                             {
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                              "CONSTANT_TEMPdepth": 10.0,
                               "Thickness": null,
                               "InitialValues": null,
                               "Name": "SoilTemperature",
@@ -14993,18 +14980,6 @@
                                 100.0,
                                 200.0,
                                 250.0
-                              ],
-                              "ParticleSizeClay": [
-                                24.0,
-                                23.2,
-                                17.9,
-                                13.3,
-                                12.0,
-                                16.7,
-                                12.7,
-                                12.8,
-                                11.5,
-                                11.8
                               ],
                               "ParticleSizeSand": [
                                 15.9,
@@ -15029,6 +15004,18 @@
                                 52.0,
                                 50.9,
                                 50.3
+                              ],
+                              "ParticleSizeClay": [
+                                24.0,
+                                23.2,
+                                17.9,
+                                13.3,
+                                12.0,
+                                16.7,
+                                12.7,
+                                12.8,
+                                11.5,
+                                11.8
                               ],
                               "Rocks": null,
                               "Texture": null,
@@ -16650,7 +16637,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Effect of Soil Layering",
       "ResourceName": null,
       "Children": [
@@ -16991,14 +16977,14 @@
                         200.0,
                         300.0
                       ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "ParticleSizeClay": [
                         9.0,
                         9.0,
                         9.0,
                         9.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -17159,7 +17145,6 @@
                     },
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": null,
                       "InitialValues": null,
                       "Name": "SoilTemperature",
@@ -17623,14 +17608,14 @@
                         200.0,
                         300.0
                       ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "ParticleSizeClay": [
                         9.0,
                         9.0,
                         9.0,
                         9.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -17791,7 +17776,6 @@
                     },
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": null,
                       "InitialValues": null,
                       "Name": "SoilTemperature",
@@ -18669,7 +18653,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Initialisation Choices",
       "ResourceName": null,
       "Children": [
@@ -18705,7 +18688,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [
                         100.0,
                         150.0,
@@ -18746,7 +18728,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [],
                       "InitialValues": null,
                       "Name": "SoilTemperature",
@@ -18771,7 +18752,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "CONSTANT_TEMPdepth": 10.0,
                       "Thickness": [
                         100.0,
                         150.0,
@@ -19735,6 +19715,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             20.0,
                             15.0,
@@ -19744,8 +19726,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -20043,7 +20023,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [
                             100.0,
                             150.0,
@@ -20218,7 +20197,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Shortterm Plots",
               "ResourceName": null,
               "Children": [
@@ -20501,7 +20479,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Longterm Plots",
               "ResourceName": null,
               "Children": [
@@ -20792,7 +20769,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Initialisation Time of Year",
       "ResourceName": null,
       "Children": [
@@ -21761,6 +21737,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             20.0,
                             15.0,
@@ -21770,8 +21748,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -22069,7 +22045,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -22509,7 +22484,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Resetting SoilTemperature",
       "ResourceName": null,
       "Children": [
@@ -23538,6 +23512,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             20.0,
                             15.0,
@@ -23547,8 +23523,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -23846,7 +23820,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -24285,7 +24258,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "SensibilityTests - Clay",
       "ResourceName": null,
       "Children": [
@@ -24681,6 +24653,8 @@
                             999999.0,
                             999999.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             9.0,
                             9.0,
@@ -24691,8 +24665,6 @@
                             "NaN",
                             "NaN"
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -24841,7 +24813,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 0.0,
                           "Thickness": null,
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -25536,7 +25507,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "SensibilityTests - Depth of Lower Boundary",
       "ResourceName": null,
       "Children": [
@@ -25944,14 +25914,14 @@
                             800.0,
                             9000.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             10.0,
                             10.0,
                             10.0,
                             10.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -26080,7 +26050,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 0.0,
                           "Thickness": null,
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -26886,7 +26855,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Comparison of Temperature Models",
       "ResourceName": null,
       "Children": [
@@ -26902,7 +26870,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Wheat in Australia",
           "ResourceName": null,
           "Children": [
@@ -27260,9 +27227,9 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "ParticleSizeClay": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -27547,7 +27514,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -28060,6 +28029,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             30.0,
                             30.0,
@@ -28069,8 +28040,6 @@
                             30.0,
                             30.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -28356,7 +28325,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -28912,7 +28880,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Pasture in New Zealand",
           "ResourceName": null,
           "Children": [
@@ -29865,6 +29832,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             20.0,
                             15.0,
@@ -29874,8 +29843,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -30172,7 +30139,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -31272,6 +31241,8 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             20.0,
                             15.0,
@@ -31281,8 +31252,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -31580,7 +31549,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
@@ -32128,7 +32096,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "MaizeSoybean in Iowa",
           "ResourceName": null,
           "Children": [
@@ -32461,19 +32428,6 @@
                             320.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            25.67,
-                            25.67,
-                            26.43,
-                            28.09,
-                            28.5,
-                            29.0,
-                            29.0,
-                            27.0,
-                            27.0,
-                            27.0,
-                            27.0
-                          ],
                           "ParticleSizeSand": [
                             38.29,
                             38.29,
@@ -32499,6 +32453,19 @@
                             36.0,
                             36.0,
                             36.0
+                          ],
+                          "ParticleSizeClay": [
+                            25.67,
+                            25.67,
+                            26.43,
+                            28.09,
+                            28.5,
+                            29.0,
+                            29.0,
+                            27.0,
+                            27.0,
+                            27.0,
+                            27.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -32886,6 +32853,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "eo_time": "06:00",
+                          "eo_durn": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
@@ -33117,7 +33086,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
@@ -33484,19 +33455,6 @@
                             320.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            25.67,
-                            25.67,
-                            26.43,
-                            28.09,
-                            28.5,
-                            29.0,
-                            29.0,
-                            27.0,
-                            27.0,
-                            27.0,
-                            27.0
-                          ],
                           "ParticleSizeSand": [
                             38.29,
                             38.29,
@@ -33522,6 +33480,19 @@
                             36.0,
                             36.0,
                             36.0
+                          ],
+                          "ParticleSizeClay": [
+                            25.67,
+                            25.67,
+                            26.43,
+                            28.09,
+                            28.5,
+                            29.0,
+                            29.0,
+                            27.0,
+                            27.0,
+                            27.0,
+                            27.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -33909,6 +33880,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "eo_time": "06:00",
+                          "eo_durn": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
@@ -34141,7 +34114,6 @@
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "CONSTANT_TEMPdepth": 10.0,
                           "Thickness": [],
                           "InitialValues": null,
                           "Name": "SoilTemperature",
