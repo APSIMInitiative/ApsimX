@@ -1,6 +1,7 @@
 ﻿using System;
 using Models.Core;
 using Models.Functions;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -23,11 +24,32 @@ namespace Models
             line = line.Replace("[", "")
                        .Replace("]", "");
 
-            if (CSharpExpressionFunction.Compile(line, report, compiler, out IBooleanFunction function, out string errorMessages))
+            IBooleanFunction function = null;
+            string errorMessages = "";
+
+
+            bool compiled = CSharpExpressionFunction.Compile(line, report, compiler, out function, out errorMessages);
+            if (compiled)
             {
                 new ExpressionReportFrequency(report, events, function);
                 return true;
             }
+            
+            string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
+
+            //assume first token is actually an event
+            string expression = "true";
+            for(int i = 1; i < tokens.Length; i++) {
+                expression += " " + tokens[i];
+            }
+
+            compiled = CSharpExpressionFunction.Compile(expression, report, compiler, out function, out errorMessages);
+            if (compiled)
+            {
+                new EventReportFrequency(report, events, tokens[0], function);
+                return true;
+            }
+            
             return false;
         }
 

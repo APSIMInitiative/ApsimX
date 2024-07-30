@@ -18,28 +18,19 @@ namespace Models
         /// <param name="line">The line to parse.</param>
         /// <param name="report">An instance of a report model.</param>
         /// <param name="events">An instance of an events publish/subcribe interface.</param>
-        /// <param name="compiler">An instance of a c# compiler.</param>
         /// <returns>true if line was able to be parsed.</returns>
-        public static bool TryParse(string line, Report report, IEvent events, ScriptCompiler compiler)
+        public static bool TryParse(string line, Report report, IEvent events)
         {
             string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
             if (tokens.Length == 1)
             {
-                new EventReportFrequency(report, events, tokens[0]);
+                new EventReportFrequency(report, events, tokens[0], null);
                 return true;
             }
             else 
-            if (tokens.Length > 1)
+            if (tokens.Length > 1 && line.IndexOfAny(new char[] { '=', '<', '>', '&', '|' }) == 0) 
             {
-                //assume first token is event
-                //rebuild expression with "true" instead of event
-                string expression = "true";
-                for(int i = 1; i < tokens.Length; i++) {
-                    expression += " " + tokens[i];
-                }
-                CSharpExpressionFunction.Compile(expression, report, compiler, out IBooleanFunction function, out string errorMessages);
-                new EventReportFrequency(report, events, tokens[0], function);
-
+                new EventReportFrequency(report, events, line, null);
                 return true;
             }
             else
@@ -49,13 +40,13 @@ namespace Models
         }
 
         /// <summary>
-        /// Private constructor.
+        /// Constructor.
         /// </summary>
         /// <param name="report">An instance of the report model.</param>
         /// <param name="events">An instance of an event publish/subscribe engine.</param>
         /// <param name="eventName">The name of the event to subscribe to.</param>
         /// <param name="expression">An expression to also match against</param>
-        private EventReportFrequency(Report report, IEvent events, string eventName, IBooleanFunction expression = null)
+        public EventReportFrequency(Report report, IEvent events, string eventName, IBooleanFunction expression = null)
         {
             this.report = report;
             this.events = events;
