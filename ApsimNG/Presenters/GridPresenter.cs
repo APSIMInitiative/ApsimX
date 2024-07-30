@@ -496,7 +496,6 @@ namespace UserInterface.Presenters
                 model = (changedModel as GridTable).Model;
             else model = changedModel as IModel;
             dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
-            //SetupSheet(dataProvider);
             Refresh();
         }
 
