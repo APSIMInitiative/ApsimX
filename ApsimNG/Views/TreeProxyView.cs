@@ -143,8 +143,8 @@ namespace UserInterface.Views
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
-                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                Color foregroundColour = ConfigureColor(true);
+                Color backgroundColour = ConfigureColor(false);
                 SetForegroundColour(aboveGroundGraph, foregroundColour);
                 SetBackgroundColour(aboveGroundGraph, backgroundColour);
             }
@@ -201,9 +201,9 @@ namespace UserInterface.Views
                     series.ItemsSource = points;
                     belowGroundGraph.Model.Series.Add(series);
                 }
-                
-                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+
+                Color foregroundColour = ConfigureColor(true);
+                Color backgroundColour = ConfigureColor(false);
                 SetForegroundColour(belowGroundGraph, foregroundColour);
                 SetBackgroundColour(belowGroundGraph, backgroundColour);
             }
@@ -264,6 +264,38 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Configures foreground or background color.
+        /// Used to take into account when a theme is changed and 
+        /// when a restart is required to change a theme.
+        /// </summary>
+        /// <param name="isForegroundColor"></param>
+        /// <returns>Either Color.Black or Color.White</returns>
+        private Color ConfigureColor(bool isForegroundColor)
+        {
+            Color returnColor = Color.FromArgb(255, 48, 48, 48);
+            if (isForegroundColor)
+            {
+                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                {
+                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                }
+                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
+                return returnColor;
+            }
+            else
+            {
+                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                {
+                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                }
+                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+
+                return returnColor;
             }
         }
     }

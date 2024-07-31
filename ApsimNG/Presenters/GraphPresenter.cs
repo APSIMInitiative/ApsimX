@@ -341,7 +341,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    System.Drawing.Color colour = GetColour(definition.Colour);
+                    System.Drawing.Color colour = definition.Colour;
 
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
@@ -431,16 +431,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        private System.Drawing.Color GetColour(System.Drawing.Color colour)
-        {
-            // If dark theme is active, and colour is black, use white instead.
-            // This won't help at all if the colour is a dark grey.
-            if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                return System.Drawing.Color.White;
-
-            return colour;
-        }
-
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
@@ -506,7 +496,7 @@ namespace UserInterface.Presenters
                                         textAnnotation.textRotation,
                                         AxisPosition.Bottom,
                                         AxisPosition.Left,
-                                        GetColour(textAnnotation.colour));
+                                        textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -517,7 +507,7 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type,
                                         lineAnnotation.thickness,
-                                        GetColour(lineAnnotation.colour),
+                                        lineAnnotation.colour,
                                         lineAnnotation.InFrontOfSeries,
                                         lineAnnotation.ToolTip);
                 }
