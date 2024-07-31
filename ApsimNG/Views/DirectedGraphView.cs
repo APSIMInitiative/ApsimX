@@ -212,7 +212,10 @@ namespace UserInterface.Views
                 if (isDrawingArc)
                     arcs.Add(tempArc);
 
-                DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
+                // Account for change in theme.
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
+                else DirectedGraphRenderer.DarkMode = !Configuration.Settings.DarkTheme;
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
 
                 if (isDrawingArc)

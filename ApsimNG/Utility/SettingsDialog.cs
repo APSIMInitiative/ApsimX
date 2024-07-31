@@ -18,6 +18,7 @@ namespace UserInterface.Views
     /// </summary>
     public class SettingsDialog : Dialog
     {
+        private Window parentWindow = null;
         private PropertyView propertyEditor;
         Dictionary<Guid, PropertyInfo> properties = new Dictionary<Guid, PropertyInfo>();
         List<KeyValuePair<PropertyInfo, object>> pendingChanges = new List<KeyValuePair<PropertyInfo, object>>();
@@ -38,6 +39,7 @@ namespace UserInterface.Views
             box = ContentArea;
 
             box.PackStart(propertyEditor.MainWidget, true, true, 0);
+            parentWindow = parent;
             propertyEditor.MainWidget.ShowAll();
             propertyEditor.PropertyChanged += OnPropertyChanged;
             Refresh();
@@ -143,6 +145,32 @@ namespace UserInterface.Views
             if (newValue != null && newValue.GetType() != property.PropertyType)
                 newValue = ReflectionUtilities.StringToObject(property.PropertyType, newValue.ToString(), CultureInfo.CurrentCulture);
             property.SetValue(Configuration.Settings, newValue);
+            if (property.Name.Equals("DarkTheme"))
+            {
+                ShowMsgDialog("Theme will be applied on next restart.",
+                                "Restart Required",
+                                Gtk.MessageType.Info,
+                                ButtonsType.Ok,
+                                parentWindow);
+            }
+        }
+
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="msgType">Message type (info, warning, error, ...).</param>
+        /// <param name="buttonType">Type of buttons to be shown in the dialog.</param>
+        /// <param name="errorLevel">The error level.</param>
+        /// <param name="masterWindow">The main window.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
+        {
+            MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            md.WindowPosition = WindowPosition.Center;
+            int result = md.Run();
+            md.Dispose();
+            return result;
         }
     }
 }

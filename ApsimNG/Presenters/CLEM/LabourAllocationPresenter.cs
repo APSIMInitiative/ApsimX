@@ -125,32 +125,13 @@ namespace UserInterface.Presenters
 
             // Start building table
             // apply theme based settings
-            if (!Utility.Configuration.Settings.DarkTheme)
+            if (!Utility.Configuration.Settings.ThemeRestartRequired)
             {
-                // light theme
-                htmlString = htmlString.Replace("[FontColor]", "#000000");
-                htmlString = htmlString.Replace("[GridColor]", "Black");
-                htmlString = htmlString.Replace("[WarningBackground]", "#FFFFFA");
-                htmlString = htmlString.Replace("[MessageBackground]", "#FAFAFF");
-                htmlString = htmlString.Replace("[DisabledColour]", "#cccccc");
-                htmlString = htmlString.Replace("[TableBackground]", "background-color: white;");
-                htmlString = htmlString.Replace("[ContDefaultBack]", "#FAFAFA");
-                htmlString = htmlString.Replace("[ContDefaultBanner]", "#000");
-                htmlString = htmlString.Replace("[HeaderFontColor]", "white");
-
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                // dark theme
-                htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
-                htmlString = htmlString.Replace("[GridColor]", "#888");
-                htmlString = htmlString.Replace("[WarningBackground]", "rgba(255, 102, 0, 0.4)");
-                htmlString = htmlString.Replace("[MessageBackground]", "rgba(100, 149, 237, 0.4)");
-                htmlString = htmlString.Replace("[DisabledColour]", "#666666");
-                htmlString = htmlString.Replace("[TableBackground]", "background-color: rgba(50, 50, 50, 0.5);");
-                htmlString = htmlString.Replace("[ContDefaultBack]", "#282828");
-                htmlString = htmlString.Replace("[ContDefaultBanner]", "#686868");
-                htmlString = htmlString.Replace("[HeaderFontColor]", "#333333");
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);         
             }
 
             // get CLEM Zone
@@ -275,6 +256,8 @@ namespace UserInterface.Presenters
                 return htmlWriter.ToString(); 
             }
         }
+
+
 
         private string TableRowHTML(IModel model)
         {
@@ -513,6 +496,39 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+        }
+
+        private static string ModifyHTMLStyle(string htmlString, bool isDarkMode )
+        {
+            string reformattedHTML = htmlString;
+            if ( isDarkMode )
+            {
+                // dark theme
+                reformattedHTML = reformattedHTML.Replace("[FontColor]", "#E5E5E5");
+                reformattedHTML = reformattedHTML.Replace("[GridColor]", "#888");
+                reformattedHTML = reformattedHTML.Replace("[WarningBackground]", "rgba(255, 102, 0, 0.4)");
+                reformattedHTML = reformattedHTML.Replace("[MessageBackground]", "rgba(100, 149, 237, 0.4)");
+                reformattedHTML = reformattedHTML.Replace("[DisabledColour]", "#666666");
+                reformattedHTML = reformattedHTML.Replace("[TableBackground]", "background-color: rgba(50, 50, 50, 0.5);");
+                reformattedHTML = reformattedHTML.Replace("[ContDefaultBack]", "#282828");
+                reformattedHTML = reformattedHTML.Replace("[ContDefaultBanner]", "#686868");
+                reformattedHTML = reformattedHTML.Replace("[HeaderFontColor]", "#333333");
+            }
+            else
+            {
+                // light theme
+                reformattedHTML = reformattedHTML.Replace("[FontColor]", "#000000");
+                reformattedHTML = reformattedHTML.Replace("[GridColor]", "Black");
+                reformattedHTML = reformattedHTML.Replace("[WarningBackground]", "#FFFFFA");
+                reformattedHTML = reformattedHTML.Replace("[MessageBackground]", "#FAFAFF");
+                reformattedHTML = reformattedHTML.Replace("[DisabledColour]", "#cccccc");
+                reformattedHTML = reformattedHTML.Replace("[TableBackground]", "background-color: white;");
+                reformattedHTML = reformattedHTML.Replace("[ContDefaultBack]", "#FAFAFA");
+                reformattedHTML = reformattedHTML.Replace("[ContDefaultBanner]", "#000");
+                reformattedHTML = reformattedHTML.Replace("[HeaderFontColor]", "white");
+            }
+
+            return reformattedHTML;
         }
 
     }

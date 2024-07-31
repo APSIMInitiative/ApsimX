@@ -165,10 +165,19 @@ namespace UserInterface.Views
                 captionLabel.Text = null;
                 captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             }
-            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-            ForegroundColour = Utility.Colour.ToOxy(foreground);
-            if (!Utility.Configuration.Settings.DarkTheme)
-                BackColor = Utility.Colour.ToOxy(Color.White);
+
+            Color foregroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                foregroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+            else foregroundColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+            ForegroundColour = Colour.ToOxy(foregroundColor);
+
+            Color backgroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                backgroundColor = Configuration.Settings.DarkTheme ? Color.FromArgb(255,48,48,48) : Color.White;
+            else backgroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.FromArgb(255,48,48,48);
+            BackColor = Colour.ToOxy(backgroundColor);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
