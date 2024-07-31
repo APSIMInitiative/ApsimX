@@ -9,8 +9,6 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Interfaces;
-using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -26,7 +24,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationDescriptionGenerator, IGridModel, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -67,13 +65,21 @@ namespace Models
         [Display(Type = DisplayType.FieldName)]
         public string AggregationVariableName { get; set; }
 
-        /// <summary>
-        /// List of parameters
-        /// </summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        public List<Parameter> Parameters { get; set; }
+        /// <summary>Name of parameter</summary>
+        [Display]
+        public string[] ParameterName { get; set; } = new string[0];
+
+        /// <summary>Model path of parameter</summary>
+        [Display]
+        public string[] ParameterPath { get; set; } = new string[0];
+
+        /// <summary>Lower bound of parameter</summary>
+        [Display]
+        public double[] ParameterLowerBound { get; set; } = new double[0];
+
+        /// <summary>Upper bound of parameter</summary>
+        [Display]
+        public double[] ParameterUpperBound { get; set; } = new double[0];
 
         /// <summary>
         /// This ID is used to identify temp files used by this Sobol model.
@@ -88,7 +94,6 @@ namespace Models
         /// <summary>Constructor</summary>
         public Sobol()
         {
-            Parameters = new List<Parameter>();
             allCombinations = new List<List<CompositeFactor>>();
         }
 
@@ -163,15 +168,15 @@ namespace Models
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
                          "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
                          ,
-                        NumPaths, Parameters.Count);
+                        NumPaths, ParameterName.Length);
 
-                    for (int i = 0; i < Parameters.Count; i++)
+                    for (int i = 0; i < ParameterName.Length; i++)
                     {
                         script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
                                                 "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
                                                 ,
-                                                i + 1, Parameters[i].LowerBound,
-                                                Parameters[i].UpperBound - Parameters[i].LowerBound);
+                                                i + 1, ParameterLowerBound[i],
+                                                ParameterUpperBound[i] - ParameterLowerBound[i]);
                     }
 
                     string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
@@ -206,10 +211,10 @@ namespace Models
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
                     var factors = new List<CompositeFactor>();
-                    for (int p = 0; p < Parameters.Count; p++)
+                    for (int p = 0; p < ParameterName.Length; p++)
                     {
                         object value = Convert.ToDouble(parameterRow[p], CultureInfo.InvariantCulture);
-                        var f = new CompositeFactor(Parameters[p].Name, Parameters[p].Path, value);
+                        var f = new CompositeFactor(ParameterName[p], ParameterPath[p], value);
                         factors.Add(f);
                     }
 
@@ -281,7 +286,7 @@ namespace Models
                         }
                     }
 
-                    string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+                    string paramNames = StringUtilities.Build(ParameterName, ",", "\"", "\"");
                     string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
                     string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
                     string sobolVariableValuesFileName = GetTempFileName("sobolvariableValues", ".csv");
@@ -326,7 +331,7 @@ namespace Models
                          "}}" + Environment.NewLine +
                          "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
                         ,
-                        paramNames, NumPaths, Parameters.Count,
+                        paramNames, NumPaths, ParameterName.Length,
                         sobolx1FileName.Replace("\\", "/"),
                         sobolx1FileName.Replace("\\", "/"),
                         sobolVariableValuesFileName.Replace("\\", "/"));
@@ -370,27 +375,6 @@ namespace Models
                     string msg = StringUtilities.BuildString(errorsFromR.ToArray(), Environment.NewLine);
                     throw new Exception(msg);
                 }
-            }
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
             }
         }
 
@@ -452,15 +436,15 @@ namespace Models
                  "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
                  "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
                  ,
-                NumPaths, Parameters.Count);
+                NumPaths, ParameterName.Length);
 
-            for (int i = 0; i < Parameters.Count; i++)
+            for (int i = 0; i < ParameterName.Length; i++)
             {
                 script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
                                         "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
                                         ,
-                                        i + 1, Parameters[i].LowerBound,
-                                        Parameters[i].UpperBound - Parameters[i].LowerBound);
+                                        i + 1, ParameterLowerBound[i],
+                                        ParameterUpperBound[i] - ParameterLowerBound[i]);
             }
 
             string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
