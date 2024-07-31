@@ -144,7 +144,16 @@ namespace APSIM.Shared.Containers
                 };
                 // Only attempt to kill the container if it's still running.
                 if (await IsRunning(container.ID))
-                    await client.Containers.KillContainerAsync(container.ID, killParameters);
+                {
+                    // The container may have exited between the check above and the following kill line.
+                    // Wrap in try/catch just in case.
+                    try
+                    {
+                        await client.Containers.KillContainerAsync(container.ID, killParameters);
+                    }
+                    catch
+                    {}
+                }
                 await client.Containers.RemoveContainerAsync(container.ID, removeParameters);
             }
         }
