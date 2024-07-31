@@ -51,7 +51,7 @@ class PropertyMetadata
         }
         GetValues();
 
-        if (!property.CanWrite)
+        if (!property.CanWrite || property.SetMethod.IsPrivate)
             Metadata.AddRange(Enumerable.Repeat(SheetDataProviderCellState.ReadOnly, Values.Count));
     }
 
@@ -150,14 +150,22 @@ class PropertyMetadata
 
         if (propertyValue != null)
         {
-            if (property.PropertyType == typeof(string[]))
-                values = ((string[])propertyValue).Select(v => v?.ToString()).ToList();
-            else if (property.PropertyType == typeof(double[]))
-                values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
-            else if (property.PropertyType == typeof(int[]))
-                values = ((int[])propertyValue).Select(v => v.ToString()).ToList();
-            else if (property.PropertyType == typeof(DateTime[]))
-                values = ((DateTime[])propertyValue).Select(v => v.ToString("yyyy/MM/dd")).ToList();
+            if (propertyValue is string[] s)
+                values = s.Select(v => v?.ToString()).ToList();
+            else if (propertyValue is double[] d)
+                values = d.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+            else if (propertyValue is int[] i)
+                values = i.Select(v => v.ToString()).ToList();
+            else if (propertyValue is DateTime[] dt)
+                values = dt.Select(v => v.ToString("yyyy/MM/dd")).ToList();
+            else if (propertyValue is List<string> ls)
+                values = ls.Select(v => v?.ToString()).ToList();
+            else if (propertyValue is List<double> ld)
+                values = ld.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+            else if (propertyValue is List<int> li)
+                values = li.Select(v => v.ToString()).ToList();
+            else if (propertyValue is List<DateTime> ldt)
+                values = ldt.Select(v => v.ToString("yyyy/MM/dd")).ToList();
             else
                 throw new Exception($"Unknown property data type found while trying to display model in grid control. Data type: {property.PropertyType}");
         }
@@ -191,6 +199,27 @@ class PropertyMetadata
             }).ToArray();
         else if (property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
+        else if (property.PropertyType == typeof(List<string>))
+            newValues = values.ToList();
+        else if (property.PropertyType == typeof(List<double>))
+        {
+            newValues = values.Select(v => 
+            {
+                if (Double.TryParse(v, out double d))
+                    return d;
+                return double.NaN;
+            }).ToList();
+        }
+        else if (property.PropertyType == typeof(List<int>))
+            newValues = values.Select(v => 
+            {
+                if (Int32.TryParse(v, out int i))
+                    return i;
+                return Int32.MaxValue;
+
+            }).ToList();
+        else if (property.PropertyType == typeof(DateTime[]) || property.PropertyType == typeof(List<DateTime>))
+            newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToList();
         else
             throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {property.PropertyType}");
 

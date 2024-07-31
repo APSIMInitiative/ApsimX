@@ -111,7 +111,7 @@ public class ModelToSheetDataProvider
 
         foreach (var property in model.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public))
         {
-            if (property.PropertyType.IsArray)
+            if (property.PropertyType.IsArray || property.PropertyType.FullName.Contains("Generic.List"))
             {
                 DisplayAttribute displayAttribute = property.GetCustomAttribute<DisplayAttribute>();
                 UnitsAttribute unitsAttribute = property.GetCustomAttribute<UnitsAttribute>();

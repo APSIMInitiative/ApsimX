@@ -177,7 +177,11 @@ namespace UserInterface.Presenters
         public void SetupSheet(ISheetDataProvider dataProvider)
         {
             // Determine if sheet is editable
-            bool gridIsEditable = dataProvider.RowCount == 0;
+            bool gridIsEditable;
+            if (dataProvider == null)
+                gridIsEditable = false;
+            else
+                gridIsEditable = dataProvider.RowCount == 0;
             if (dataProvider != null)
             {
                 for (int rowIndex = 0; rowIndex < dataProvider.RowCount; rowIndex++)
