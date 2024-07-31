@@ -1,0 +1,35 @@
+name: Merge Master into AAA_ForSesame and Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  merge_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ApsimX repository
+        uses: actions/checkout@v3
+        with:
+          repository: APSIMInitiative/ApsimX
+          ref: master
+
+      - name: Checkout ApsimNG repository
+        uses: actions/checkout@v3
+        with:
+          repository: BrianCollinss/ApsimNG
+          ref: AAA_ForSesame
+          path: ApsimNG 
+
+      - name: Merge Master into AAA_ForSesame
+        run: |
+          cd ApsimNG
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git merge origin/master
+
+      - name: Push AAA_ForSesame to ApsimNG
+        run: |
+          cd ApsimNG
+          git push 
