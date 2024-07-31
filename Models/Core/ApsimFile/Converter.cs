@@ -5594,14 +5594,15 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change the way parameters are store in Morris, Sobol
+        /// Change the way parameters are store in Morris, Sobol, Croptimizr
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion178(JObject root, string fileName)        
         {
             foreach (var model in JsonUtilities.ChildrenOfType(root, "Sobol")
-                                               .Concat(JsonUtilities.ChildrenOfType(root, "Morris")))
+                                               .Concat(JsonUtilities.ChildrenOfType(root, "Morris")
+                                               .Concat(JsonUtilities.ChildrenOfType(root, "CroptimizR"))))
             {
                 var parameters = model["Parameters"] as JArray;
                 if (parameters != null)

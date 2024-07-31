@@ -16,8 +16,6 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using Models.Interfaces;
-using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -55,7 +53,7 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, IGridModel, IRunnable, IReportsStatus
+    public class CroptimizR : Model, IRunnable, IReportsStatus
     {
         /// <summary>
         /// File name of the generated csv file containing croptimizR
@@ -73,13 +71,21 @@ namespace Models.Optimisation
         [JsonIgnore]
         private readonly string id = Guid.NewGuid().ToString();
 
-        /// <summary>
-        /// List of parameters
-        /// </summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        /// <summary>Name of parameter</summary>
+        [Display]
+        public string[] ParameterName { get; set; } = new string[0];
+
+        /// <summary>Model path of parameter</summary>
+        [Display]
+        public string[] ParameterPath { get; set; } = new string[0];
+
+        /// <summary>Lower bound of parameter</summary>
+        [Display]
+        public double[] ParameterLowerBound { get; set; } = new double[0];
+
+        /// <summary>Upper bound of parameter</summary>
+        [Display]
+        public double[] ParameterUpperBound { get; set; } = new double[0];
 
         /// <summary>
         /// Name of the predicted data table.
@@ -362,8 +368,8 @@ namespace Models.Optimisation
         /// <returns></returns>
         private string GetParamInfo()
         {
-            string[] lower = Parameters.Select(p => $"'{p.Path}'={p.LowerBound}").ToArray();
-            string[] upper = Parameters.Select(p => $"'{p.Path}'={p.UpperBound}").ToArray();
+            string[] lower = ParameterName.Zip(ParameterLowerBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
+            string[] upper = ParameterName.Zip(ParameterUpperBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
             string lowerBounds = string.Join(", ", lower);
             string upperBounds = string.Join(", ", upper);
 
@@ -572,8 +578,8 @@ namespace Models.Optimisation
         private IEnumerable<Override> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
-            foreach (Parameter param in Parameters)
-                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
+            foreach (var param in ParameterName.Zip(ParameterPath))
+                yield return new Override(param.Second, optimal[$"{param.First} Final"], Override.MatchTypeEnum.NameAndType);
         }
 
         /// <summary>
@@ -603,7 +609,7 @@ namespace Models.Optimisation
             string csvFile = $"{directory}/{outputCsvFileName}";
             script.AppendLine($"output_file <- '{csvFile}'");
             script.AppendLine($"load('{rDataPath.Replace(@"\", "/")}')");
-            IEnumerable<string> paramNames = Parameters.Select(p => $"'{p.Name}'");
+            IEnumerable<string> paramNames = ParameterName.Select(p => $"'{p}'");
             script.AppendLine($"param_names <- c({string.Join(", ", paramNames)})");
             script.AppendLine(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.read_croptimizr_output.r"));
             return script.ToString();

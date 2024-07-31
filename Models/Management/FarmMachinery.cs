@@ -26,7 +26,7 @@ namespace Models.Management
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class FarmMachinery : Model, IGridModel
+    public class FarmMachinery : Model
     {
         /// <summary> </summary>
         [Description("Fuel Cost ($/l)" )]
@@ -34,14 +34,18 @@ namespace Models.Management
 
         /////////////  Arrays of combined machinery pair (tractor + implement) parameters
         /// <summary> </summary>
+        [Display]
         public string[] TractorNames {get; set;}
         /// <summary> </summary>
+        [Display]
         public string[] ImplementNames {get; set;}
 
         /// <summary> Coverage - work rate (ha/hr) </summary>
+        [Display]
         public double[] WorkRates {get; set;}
     
         /// <summary> Fuel consumption rate</summary>
+        [Display]
         public double[] FuelConsRates {get; set;}
 
 
@@ -111,57 +115,6 @@ namespace Models.Management
                 Where(i => i.MachineryType == MachineryType.Implement).
                 Select(i => i.Name).ToList();
            return result;
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                // fixme - these should be dropdown lists
-                columns.Add(new GridTableColumn("Tractor", new VariableProperty(this, GetType().GetProperty("TractorNames"))));
-                columns.Add(new GridTableColumn("Implement", new VariableProperty(this, GetType().GetProperty("ImplementNames"))));
-                columns.Add(new GridTableColumn("Work Rate (ha/hr)", new VariableProperty(this, GetType().GetProperty("WorkRates"))));
-                columns.Add(new GridTableColumn("Fuel Consumption (l/hr)", new VariableProperty(this, GetType().GetProperty("FuelConsRates"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-                return tables;
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-           return(dt);
-        }
-
-        /// <summary>
-        /// Ensure any new child components added by user are present in the arrays
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
-        { 
-            var newCombos = new List<string>();
-            foreach (var t in getTractorNames()) 
-               foreach(var i in getImplementNames()) 
-                  newCombos.Add(t + "." + i);
-
-            var dtCombos = new List<string>();
-            for (var row = 0; row < dt.Rows.Count; row++) 
-               dtCombos.Add(dt.Rows[row]["Tractor"].ToString() + "." + dt.Rows[row]["Implement"].ToString());
-
-            foreach (var combo in newCombos)
-               if ( ! dtCombos.Contains(combo)) {
-                  DataRow newRow = dt.NewRow();
-                  newRow["Tractor"] = combo.Split(".")[0];
-                  newRow["Implement"] = combo.Split(".")[1];
-                  dt.Rows.Add(newRow);
-               }
-            return(dt);
         }
 
         /// <summary> </summary>

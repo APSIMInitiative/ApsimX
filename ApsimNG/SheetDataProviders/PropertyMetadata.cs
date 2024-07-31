@@ -156,6 +156,8 @@ class PropertyMetadata
                 values = d.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
             else if (propertyValue is int[] i)
                 values = i.Select(v => v.ToString()).ToList();
+            else if (propertyValue is bool[] b)
+                values = b.Select(v => v ? "X" : string.Empty).ToList();
             else if (propertyValue is DateTime[] dt)
                 values = dt.Select(v => v.ToString("yyyy/MM/dd")).ToList();
             else if (propertyValue is List<string> ls)
@@ -164,6 +166,8 @@ class PropertyMetadata
                 values = ld.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
             else if (propertyValue is List<int> li)
                 values = li.Select(v => v.ToString()).ToList();
+            else if (propertyValue is bool[] lb)
+                values = lb.Select(v => v ? "X" : string.Empty).ToList();
             else if (propertyValue is List<DateTime> ldt)
                 values = ldt.Select(v => v.ToString("yyyy/MM/dd")).ToList();
             else
@@ -197,6 +201,8 @@ class PropertyMetadata
                 return Int32.MaxValue;
 
             }).ToArray();
+        else if (property.PropertyType == typeof(bool[]))
+            newValues = values.Select(v => v == "X" || v == "x").ToList();
         else if (property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
         else if (property.PropertyType == typeof(List<string>))
@@ -218,6 +224,8 @@ class PropertyMetadata
                 return Int32.MaxValue;
 
             }).ToList();
+        else if (property.PropertyType == typeof(List<bool>))
+            newValues = values.Select(v => v == "X" || v == "x").ToList();
         else if (property.PropertyType == typeof(DateTime[]) || property.PropertyType == typeof(List<DateTime>))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToList();
         else
