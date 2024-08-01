@@ -368,8 +368,8 @@ namespace Models.Optimisation
         /// <returns></returns>
         private string GetParamInfo()
         {
-            string[] lower = ParameterName.Zip(ParameterLowerBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
-            string[] upper = ParameterName.Zip(ParameterUpperBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
+            string[] lower = ParameterPath.Zip(ParameterLowerBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
+            string[] upper = ParameterPath.Zip(ParameterUpperBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
             string lowerBounds = string.Join(", ", lower);
             string upperBounds = string.Join(", ", upper);
 
