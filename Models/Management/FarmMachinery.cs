@@ -28,6 +28,8 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     public class FarmMachinery : Model
     {
+        private List<string> _tractorNames = new();
+
         /// <summary> </summary>
         [Description("Fuel Cost ($/l)" )]
         public double FuelCost {get; set;}
@@ -35,19 +37,28 @@ namespace Models.Management
         /////////////  Arrays of combined machinery pair (tractor + implement) parameters
         /// <summary> </summary>
         [Display]
-        public string[] TractorNames {get; set;}
+        public List<string> TractorNames 
+         {
+            get {
+               CollectMachineryAndImplements();
+               return _tractorNames;
+            }
+            set { 
+               _tractorNames = value;
+            }
+         }
+               
         /// <summary> </summary>
         [Display]
-        public string[] ImplementNames {get; set;}
+        public List<string> ImplementNames {get; set;} = new();
 
         /// <summary> Coverage - work rate (ha/hr) </summary>
         [Display]
-        public double[] WorkRates {get; set;}
+        public List<double> WorkRates {get; set;} = new();
     
         /// <summary> Fuel consumption rate</summary>
         [Display]
-        public double[] FuelConsRates {get; set;}
-
+        public List<double> FuelConsRates {get; set;} = new();
 
         /// <summary> The daily amount of fuel consumed (litres) </summary>
         public double FuelConsumption {get; set;}
@@ -115,6 +126,45 @@ namespace Models.Management
                 Where(i => i.MachineryType == MachineryType.Implement).
                 Select(i => i.Name).ToList();
            return result;
+        }
+
+        /// <summary>
+        /// Go through all child components and ensure they are in the tractor/implement arrays
+        /// so that the user can modify them.
+        /// </summary>
+        public void CollectMachineryAndImplements()
+        { 
+            // Add in missing tractor / implements
+            foreach (var t in getTractorNames()) 
+               foreach(var i in getImplementNames()) 
+               {
+                  var alreadyExists = _tractorNames.Zip(ImplementNames)
+                                                   .Any(zip => zip.First == t && zip.Second == i);
+                  if (!alreadyExists)
+                  {
+                     _tractorNames.Add(t);
+                     ImplementNames.Add(i);
+                     WorkRates.Add(0);
+                     FuelConsRates.Add(0);
+                  }
+               }
+
+            var childTractorNames = getTractorNames();
+            var childImplementNames = getImplementNames();
+
+            // Remove tractor / implements that no longer exist.
+            for (int i = _tractorNames.Count - 1; i >= 0; i--)
+            {
+               bool remove = !childTractorNames.Contains(_tractorNames[i]) || 
+                             !childImplementNames.Contains(ImplementNames[i]);
+               if (remove)
+               {
+                  _tractorNames.RemoveAt(i);
+                  ImplementNames.RemoveAt(i);
+                  WorkRates.RemoveAt(i);
+                  FuelConsRates.RemoveAt(i);
+               }
+            }
         }
 
         /// <summary> </summary>
@@ -235,13 +285,13 @@ namespace Models.Management
       /// <summary> Index into the arrays for this tractor/implement combination </summary>
       private int getComboIndex(string tractor, string implement){
            int iRow;
-           for(iRow = 0; iRow < TractorNames.Length; iRow++) {
+           for(iRow = 0; iRow < TractorNames.Count; iRow++) {
                if (TractorNames[iRow] == tractor &&
                    ImplementNames[iRow] == implement)
                   break;
            }
 
-           if (iRow >= TractorNames.Length)
+           if (iRow >= TractorNames.Count)
                throw new Exception($"Cant find work rates for {tractor} and {implement}");
             return(iRow);
         }
@@ -301,3 +351,4 @@ namespace Models.Management
       public double Area { get; set; }
    }
 }
+
