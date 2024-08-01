@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -214,9 +215,9 @@ namespace Models.Core.Apsim710File
             XmlNode child = systemNode.FirstChild;
             while (child != null)
             {
-                if (child.Name == "simulation")
+                if (child.Name.ToLower() == "simulation")
                     this.AddComponent(child, ref destParent);
-                else if (child.Name == "folder")
+                else if (child.Name.ToLower() == "folder")
                 {
                     XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
@@ -333,6 +334,7 @@ namespace Models.Core.Apsim710File
                     newNode = CopyNode(compNode, destParent, "Swim3");
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
                     AddNutrients(compNode, ref destParent);
+                    AddSwimNutrientData(compNode, ref destParent);
                 }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
@@ -478,6 +480,41 @@ namespace Models.Core.Apsim710File
                 {
                     childNode.InnerText = "1";  // ensure kg/ha units
                 }
+            }
+        }
+
+        /// <summary>
+        /// Appends EXCO and FIP data to already existing solute nodes.
+        /// </summary>
+        /// <param name="compNode">Swim object being imported.</param>
+        /// <param name="destParent">New soil object being created.</param>
+        private void AddSwimNutrientData(XmlNode compNode, ref XmlNode destParent)
+        {
+            var sampleNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+            var swimSoluteNode = XmlUtilities.FindByType(compNode, "SwimSoluteParameters");
+            if (swimSoluteNode == null || sampleNode == null)
+                return;
+
+            var oldThickness = XmlUtilities.Values(swimSoluteNode, "Thickness/double").Select(Convert.ToDouble).ToArray();
+            var newThickness = XmlUtilities.Values(sampleNode, "Thickness/double").Select(Convert.ToDouble).ToArray();
+
+            XmlDocument helper = new();
+            foreach (var solute in destParent.SelectNodes("Solute").Cast<XmlNode>())
+            {
+                var name = solute.SelectSingleNode("Name")?.InnerXml;
+                if (string.IsNullOrEmpty(name))
+                    continue;
+                var target = $"{name}Exco";
+                var data = XmlUtilities.Values(swimSoluteNode, $"{target}/double").Select(Convert.ToDouble).ToArray();
+                var newData = SoilUtilities.MapConcentration(data, oldThickness, newThickness, data.Last());
+                helper.LoadXml($"<EXCO>{string.Join("", newData.Select(s => $"<double>{s}</double>"))}</EXCO>");
+                CopyNode(helper.DocumentElement, solute, "EXCO");
+
+                target = $"{name}FIP";
+                data = XmlUtilities.Values(swimSoluteNode, $"{target}/double").Select(Convert.ToDouble).ToArray();
+                newData = SoilUtilities.MapConcentration(data, oldThickness, newThickness, data.Last());
+                helper.LoadXml($"<FIP>{string.Join("", newData.Select(s => $"<double>{s}</double>"))}</FIP>");
+                CopyNode(helper.DocumentElement, solute, "FIP");
             }
         }
 
@@ -652,6 +689,8 @@ namespace Models.Core.Apsim710File
             this.CopyNodeAndValueArray(childNode, newNode, "DUL", "DUL");
             childNode = XmlUtilities.Find(compNode, "SAT");
             this.CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
+            childNode = XmlUtilities.Find(compNode, "KS");
+            this.CopyNodeAndValueArray(childNode, newNode, "KS", "KS");
 
             this.AddChildComponents(compNode, newNode);
 
@@ -1145,20 +1184,7 @@ namespace Models.Core.Apsim710File
 
                 string childText = string.Empty;
                 childNode = XmlUtilities.Find(oper, "date");
-                DateTime when;
-                if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
-                    childText = when.ToString("yyyy-MM-dd");
-                else if (childNode != null && childNode.InnerText != string.Empty)
-                {
-                    childText = DateUtilities.GetDateISO(childNode.InnerText);
-                    if (childText == "0001-01-01")
-                    {
-                        childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
-                    }
-                }
-                else
-                    childText = "0001-01-01";
-                dateNode.InnerText = childText;
+                dateNode.InnerText = DateUtilities.ValidateDateString(childNode?.InnerText ?? string.Empty);
 
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 

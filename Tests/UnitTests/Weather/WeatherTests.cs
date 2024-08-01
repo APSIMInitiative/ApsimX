@@ -57,7 +57,7 @@ namespace UnitTests.Weather
             baseSim.Prepare();
             baseSim.Run();
             var summary = baseSim.FindDescendant<MockSummary>();
-            Assert.AreEqual(summary.messages[0], "Simulation terminated normally");
+            Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
         }
 
         [Test]
@@ -113,16 +113,16 @@ namespace UnitTests.Weather
                 // Run simulations.
                 Runner runner = new Runner(sims);
                 List<Exception> errors = runner.Run();
-                Assert.NotNull(errors);
+                Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)
                     throw new AggregateException(errors);
 
                 int[] rawData = new int[] { 6, 7, 2, 3, 4 };
                 List<object[]> rowData = rawData.Select(x => new object[] { x }).ToList();
                 DataTable expected = Utilities.CreateTable(new string[] { "x" }, rowData);
-                Assert.IsTrue(
+                Assert.That(
                     expected
-                .IsSame(database.ExecuteQuery("SELECT [x] FROM Report")));
+                .IsSame(database.ExecuteQuery("SELECT [x] FROM Report")), Is.True);
             }
             finally
             {
@@ -136,7 +136,7 @@ namespace UnitTests.Weather
         {
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Dalby.met"));
 
             Simulation baseSim = new Simulation()
             {
@@ -168,24 +168,24 @@ namespace UnitTests.Weather
             DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.ParseExact("1900-01-03", "yyyy-MM-dd", CultureInfo.InvariantCulture));
             DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.ParseExact("2000-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture));
 
-            Assert.AreEqual(31.9, weather1900.MaxT, 0.01);
-            Assert.AreEqual(16.6, weather1900.MinT, 0.01);
-            Assert.AreEqual(3.0, weather1900.Wind, 0.01);
-            Assert.AreEqual(25.0, weather1900.Radn, 0.01);
-            Assert.AreEqual(0.0, weather1900.Rain, 0.01);
+            Assert.That(weather1900.MaxT, Is.EqualTo(31.9).Within(0.01));
+            Assert.That(weather1900.MinT, Is.EqualTo(16.6).Within(0.01));
+            Assert.That(weather1900.Wind, Is.EqualTo(3.0).Within(0.01));
+            Assert.That(weather1900.Radn, Is.EqualTo(25.0).Within(0.01));
+            Assert.That(weather1900.Rain, Is.EqualTo(0.0).Within(0.01));
 
-            Assert.AreEqual(30.5, weather2000.MaxT, 0.01);
-            Assert.AreEqual(13.5, weather2000.MinT, 0.01);
-            Assert.AreEqual(3.0, weather2000.Wind, 0.01);
-            Assert.AreEqual(28.0, weather2000.Radn, 0.01);
-            Assert.AreEqual(0.0, weather2000.Rain, 0.01);
+            Assert.That(weather2000.MaxT, Is.EqualTo(30.5).Within(0.01));
+            Assert.That(weather2000.MinT, Is.EqualTo(13.5).Within(0.01));
+            Assert.That(weather2000.Wind, Is.EqualTo(3.0).Within(0.01));
+            Assert.That(weather2000.Radn, Is.EqualTo(28.0).Within(0.01));
+            Assert.That(weather2000.Rain, Is.EqualTo(0.0).Within(0.01));
 
             //should get the 3/1/1900 weather data
-            Assert.AreEqual(weather1900.MaxT, weather.TomorrowsMetData.MaxT, 0.01);
-            Assert.AreEqual(weather1900.MinT, weather.TomorrowsMetData.MinT, 0.01);
-            Assert.AreEqual(weather1900.Wind, weather.TomorrowsMetData.Wind, 0.01);
-            Assert.AreEqual(weather1900.Radn, weather.TomorrowsMetData.Radn, 0.01);
-            Assert.AreEqual(weather1900.Rain, weather.TomorrowsMetData.Rain, 0.01);
+            Assert.That(weather.TomorrowsMetData.MaxT, Is.EqualTo(weather1900.MaxT).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.MinT, Is.EqualTo(weather1900.MinT).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Wind, Is.EqualTo(weather1900.Wind).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Radn, Is.EqualTo(weather1900.Radn).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Rain, Is.EqualTo(weather1900.Rain).Within(0.01));
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace UnitTests.Weather
                     }
                 }
             }
-            Assert.True(allFilesHaveRootReference);
+            Assert.That(allFilesHaveRootReference, Is.True);
         }
 
 
@@ -277,5 +277,69 @@ namespace UnitTests.Weather
             }
         }
         */
+    }
+    /// <summary>
+    /// Tests for weather files.
+    /// </summary>
+    class SimpleWeatherFileTests
+    {
+        [Test]
+        public void TestGetAnyDayMetData()
+        {
+
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // Start with dalby
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Dalby.met"));
+            // Switch to another
+            string weatherFilePath2 = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "AU_Gatton.met"));
+
+            Simulation baseSim = new Simulation()
+            {
+                Name = "Base",
+                Children = new List<IModel>()
+                    {
+                        new Models.Climate.SimpleWeather()
+                        {
+                            Name = "Weather",
+                            FileName = weatherFilePath,
+                            ExcelWorkSheetName = ""
+                        },
+                        new Clock()
+                        {
+                            Name = "Clock",
+                        },
+                        new MockSummary()
+                    }
+            };
+
+            Models.Climate.SimpleWeather weather = baseSim.Children[0] as Models.Climate.SimpleWeather;
+            Clock clock = baseSim.Children[1] as Clock;
+
+            weather.FileName = weatherFilePath2;
+            clock.StartDate = DateTime.ParseExact("1990-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            clock.EndDate = DateTime.ParseExact("1990-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            baseSim.Prepare();
+            baseSim.Run();
+
+            DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.ParseExact("1990-01-03", "yyyy-MM-dd", CultureInfo.InvariantCulture));
+            DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.ParseExact("2000-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture));
+
+            Assert.That(weather1900.MaxT, Is.EqualTo(33.7).Within(0.01));
+            Assert.That(weather1900.MinT, Is.EqualTo(15.5).Within(0.01));
+            Assert.That(weather1900.Radn, Is.EqualTo(30.0).Within(0.01));
+            Assert.That(weather1900.Rain, Is.EqualTo(0.0).Within(0.01));
+
+            Assert.That(weather2000.MaxT, Is.EqualTo(28.6).Within(0.01));
+            Assert.That(weather2000.MinT, Is.EqualTo(19.4).Within(0.01));
+            Assert.That(weather2000.Radn, Is.EqualTo(27.0).Within(0.01));
+            Assert.That(weather2000.Rain, Is.EqualTo(0.0).Within(0.01));
+
+            //should get the 3/1/1900 weather data
+            Assert.That(weather.TomorrowsMetData.MaxT, Is.EqualTo(weather1900.MaxT).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.MinT, Is.EqualTo(weather1900.MinT).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Wind, Is.EqualTo(weather1900.Wind).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Radn, Is.EqualTo(weather1900.Radn).Within(0.01));
+            Assert.That(weather.TomorrowsMetData.Rain, Is.EqualTo(weather1900.Rain).Within(0.01));
+        }
     }
 }

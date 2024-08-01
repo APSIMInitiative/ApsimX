@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -35,7 +36,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model
+    public class BiomassArbitrator : Model, ITotalCFixationSupply
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -48,9 +49,14 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         protected IZone zone = null;
 
+        [Link] 
+        private Clock clock = null;
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
         private double tolerence = 1e-12;
+        private double StartN { get; set; }
+        private double StartC { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -77,6 +83,53 @@ namespace Models.PMF
         /// <summary>The variables for N</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientsDelta Nitrogen { get; private set; }
+
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCFixationSupply => Carbon.TotalFixationSupply;
+
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCReTranslocationSupply => Carbon.TotalReTranslocationSupply;
+
+        /// <summary> The amount of carbon fixed by photosynthesis</summary>
+        public double TotalCReAllocationSupply => Carbon.TotalReAllocationSupply;
+
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        public double FN
+        {
+            get
+            {
+                double fn = 1.0;
+                if (Nitrogen != null)
+                    fn = Math.Min(1, MathUtilities.Divide(Nitrogen.TotalPlantSupply, Nitrogen.TotalPlantDemand, 1));
+                return fn;
+            }
+        }
+
+        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gC/m2")]
+        public double UnallocatedC { get; private set; }
+
+        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double UnallocatedN { get; private set; }
+
+        /// <summary>The amount of C not allocated because supply was insufficient to maintain minimum N conc</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double CUnallocatedDueToNLimitation { get; private set; }
+
+        /// <summary>The amount of C not allocated because supply was insufficient to maintain minimum N conc</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double CFixationDownRegulationToNLimitation { get; private set; }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -105,6 +158,8 @@ namespace Models.PMF
                 // Calculate potential DM allocaiton without nutrient limitation
 
                 double CTotalReAllocationAllocated = DoAllocation(Carbon.TotalReAllocationSupply, Carbon);
+                if (Math.Abs(Carbon.TotalReAllocationSupply- CTotalReAllocationAllocated) < -tolerence)
+                    throw new Exception("Error in reallocatoin of carbon");
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
@@ -115,6 +170,8 @@ namespace Models.PMF
                     }
 
                 double CTotalFixationAllocated = DoAllocation(Carbon.TotalFixationSupply, Carbon);
+                if (Math.Abs(CTotalFixationAllocated - Carbon.TotalFixationSupply)<-tolerence)
+                    throw new Exception("Error in allocatoin of fixed carbon");
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.Fixation > 0)
                     {
@@ -122,6 +179,8 @@ namespace Models.PMF
                     }
 
                 double CTotalReTranslocationAllocated = DoAllocation(Carbon.TotalReTranslocationSupply, Carbon);
+                if (Math.Abs(CTotalReTranslocationAllocated - Carbon.TotalReTranslocationSupply)<-tolerence)
+                    throw new Exception("Error in reTranslocatoin of carbon");
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
@@ -198,6 +257,53 @@ namespace Models.PMF
                     }
 
                 NutrientConstrainedDMAllocation();
+
+                UnallocatedC = Math.Max(0, Carbon.TotalFixationSupply + Carbon.TotalReAllocationSupply - Carbon.TotalPlantDemandsAllocated);
+                UnallocatedN = Math.Max(0, Nitrogen.TotalUptakeSupply + Nitrogen.TotalReAllocationSupply + Nitrogen.TotalFixationSupply - Nitrogen.TotalPlantDemandsAllocated);
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            StartC = 0;
+            StartN = 0;
+            foreach (Organ o in PlantOrgans)
+            {
+                StartC += o.C;
+                StartN += o.N;
+            }
+        }
+
+        /// <summary>
+        /// Event from clock when biomass partitioning is complete
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("PartitioningComplete")]
+        private void OnPartitioningComplete(object sender, EventArgs e)
+        {
+            if (plant.IsEmerged)
+            {
+                double endC = 0;
+                double endN = 0;
+                double checkC = StartC;
+                double checkN = StartN;
+                foreach (Organ o in PlantOrgans)
+                {
+                    checkC += (o.Carbon.SuppliesAllocated.Fixation + o.Carbon.SuppliesAllocated.Uptake - o.Detached.C - o.LiveRemoved.C - o.DeadRemoved.C);
+                    checkN += (o.Nitrogen.SuppliesAllocated.Fixation + o.Nitrogen.SuppliesAllocated.Uptake - o.Detached.N - o.LiveRemoved.N - o.DeadRemoved.N);
+                    endC += o.C;
+                    endN += o.N;
+                }
+                
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
+                    throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
+                    throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }
 
@@ -205,6 +311,7 @@ namespace Models.PMF
         public void NutrientConstrainedDMAllocation()
         {
             double PreNStressDMAllocation = Carbon.TotalPlantDemandsAllocated;
+            CFixationDownRegulationToNLimitation = 0;
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs
@@ -225,15 +332,74 @@ namespace Models.PMF
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
                     double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
+                    // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
                         Math.Min(C.DemandsAllocated.Metabolic, N.MaxCDelta * MetabolicProportion),
                         Math.Min(C.DemandsAllocated.Storage, N.MaxCDelta * StorageProportion));
                 }
             }
+
+            CUnallocatedDueToNLimitation = PreNStressDMAllocation - Carbon.TotalPlantDemandsAllocated;
+
+            //Finally we need to wind back allocations of C supplies if nutrient limitation constrained growth
+           if (CUnallocatedDueToNLimitation > 0)
+            {
+                //First wind back retranslocation
+                double PotentialAllocationYetToWindBack = CUnallocatedDueToNLimitation;
+                if (Carbon.TotalReTranslocationSupply > 0)
+                {
+                    double AllocationToWindBack = Math.Min(Carbon.TotalReTranslocationSupplyAllocated, PotentialAllocationYetToWindBack);
+                    double constrainedAllocation = Carbon.TotalReTranslocationSupplyAllocated - AllocationToWindBack;
+
+                    foreach (Organ o in PlantOrgans) //Redo ReTrans with constrained amount
+                    {
+                        o.Carbon.SuppliesAllocated.ReTranslocation = new NutrientPoolsState(
+                                0.0,
+                                calcAllocated(constrainedAllocation, o.Carbon.Supplies.ReTranslocation.Metabolic, Carbon.TotalReTranslocationSupply),
+                                calcAllocated(constrainedAllocation, o.Carbon.Supplies.ReTranslocation.Storage, Carbon.TotalReTranslocationSupply));
+                    }
+                    PotentialAllocationYetToWindBack -= AllocationToWindBack;
+
+                }
+
+                //Then wind back fixation
+                if ((Carbon.TotalFixationSupplyAllocated > 0)&&(PotentialAllocationYetToWindBack > 0))
+                {
+                    CFixationDownRegulationToNLimitation = Math.Min(PotentialAllocationYetToWindBack, Carbon.TotalFixationSupply);
+                    double AllocationToWindBack = Math.Min(Carbon.TotalFixationSupplyAllocated, PotentialAllocationYetToWindBack);
+                    double constrainedAllocation = Carbon.TotalFixationSupplyAllocated - AllocationToWindBack;
+                    
+                    foreach (Organ o in PlantOrgans) //Redo Fixation with constrained amount
+                    {
+                        if (o.Carbon.Supplies.Fixation > 0)
+                        {
+                            o.Carbon.SuppliesAllocated.Fixation = calcAllocated(constrainedAllocation, o.Carbon.Supplies.Fixation, Carbon.TotalFixationSupply);
+                        }
+                    }
+                    PotentialAllocationYetToWindBack -= AllocationToWindBack;
+                }
+
+                //Finally wind back reallocation
+                if ((Carbon.TotalReAllocationSupplyAllocated > 0)&& (PotentialAllocationYetToWindBack > 0))
+                {
+                    double AllocationToWindBack = Math.Min(Carbon.TotalReAllocationSupplyAllocated, PotentialAllocationYetToWindBack);
+                    double constrainedAllocation = Carbon.TotalReAllocationSupplyAllocated - AllocationToWindBack;
+                    
+                    foreach (Organ o in PlantOrgans) //Redo allocation with constrained amount
+                    {
+                        o.Carbon.SuppliesAllocated.ReAllocation = new NutrientPoolsState(
+                                0.0,
+                                calcAllocated(constrainedAllocation, o.Carbon.Supplies.ReAllocation.Metabolic, Carbon.TotalReAllocationSupply),
+                                calcAllocated(constrainedAllocation, o.Carbon.Supplies.ReAllocation.Storage, Carbon.TotalReAllocationSupply));
+                    }
+                    PotentialAllocationYetToWindBack -= AllocationToWindBack;
+                }
+
+                if (PotentialAllocationYetToWindBack > 0)
+                    throw new Exception("Problem with nutrient constrained supply allocation");
+            }
         }
-
-
 
         private double calcAllocated(double totalAllocated, double organSupply, double totalSupply)
         {
@@ -249,10 +415,11 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The Allocation process</param>
-        /// <param name="PRS">The bat.</param>
+        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
+            double initialDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
             double totalAllocated = 0;
             if (TotalSupply > tolerence)
             {
@@ -277,6 +444,10 @@ namespace Models.PMF
                     }
                 }
                 double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
+                if (RemainingDemand < -tolerence) //Throw if really negative
+                    throw new Exception(FullPath + ".Storage was set to negative value");
+                if (RemainingDemand < 0)  // if negative in floating point tollerence, zero the pool
+                    RemainingDemand = 0.0;
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {

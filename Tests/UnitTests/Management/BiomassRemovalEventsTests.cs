@@ -36,13 +36,16 @@ namespace UnitTests.Core
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
 
+            foreach (var ex in errors)
+                Console.WriteLine(ex.ToString());
+
             // Check that no errors were thrown
-            Assert.AreEqual(0, errors.Count);
+            Assert.That(errors.Count, Is.EqualTo(0));
 
             DataStore dataStore = sims.FindChild<DataStore>();
 
             //check that the datastore and expected simulations have the same amount of entries
-            Assert.AreEqual(dataStore.Reader.SimulationNames.Count, 3);
+            Assert.That(dataStore.Reader.SimulationNames.Count, Is.EqualTo(3));
             System.Data.DataTable dt = dataStore.Reader.GetData("Report");
 
 
@@ -61,17 +64,17 @@ namespace UnitTests.Core
                     Assert.Fail();
             }
 
-            Assert.AreEqual(simScript["AboveGroundWt"], simEvents["AboveGroundWt"]);
-            Assert.AreEqual(simScript["AboveGroundN"], simEvents["AboveGroundN"]);
-            Assert.AreEqual(simScript["TotalWt"], simEvents["TotalWt"]);
+            Assert.That(simEvents["AboveGroundWt"], Is.EqualTo(simScript["AboveGroundWt"]));
+            Assert.That(simEvents["AboveGroundN"], Is.EqualTo(simScript["AboveGroundN"]));
+            Assert.That(simEvents["TotalWt"], Is.EqualTo(simScript["TotalWt"]));
 
-            Assert.AreNotEqual(simNone["AboveGroundWt"], simScript["AboveGroundWt"]);
-            Assert.AreNotEqual(simNone["AboveGroundN"], simScript["AboveGroundN"]);
-            Assert.AreNotEqual(simNone["TotalWt"], simScript["TotalWt"]);
+            Assert.That(simScript["AboveGroundWt"], Is.Not.EqualTo(simNone["AboveGroundWt"]));
+            Assert.That(simScript["AboveGroundN"], Is.Not.EqualTo(simNone["AboveGroundN"]));
+            Assert.That(simScript["TotalWt"], Is.Not.EqualTo(simNone["TotalWt"]));
 
-            Assert.AreNotEqual(simNone["AboveGroundWt"], simEvents["AboveGroundWt"]);
-            Assert.AreNotEqual(simNone["AboveGroundN"], simEvents["AboveGroundN"]);
-            Assert.AreNotEqual(simNone["TotalWt"], simEvents["TotalWt"]);
+            Assert.That(simEvents["AboveGroundWt"], Is.Not.EqualTo(simNone["AboveGroundWt"]));
+            Assert.That(simEvents["AboveGroundN"], Is.Not.EqualTo(simNone["AboveGroundN"]));
+            Assert.That(simEvents["TotalWt"], Is.Not.EqualTo(simNone["TotalWt"]));
         }
     }
 }

@@ -95,17 +95,17 @@ namespace UserInterface.Views
         /// <summary>
         /// Gtk box which holds <see cref="listButtonView1"/>.
         /// </summary>
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
 
         /// <summary>
         /// Gtk box which holds <see cref="listButtonView2"/>.
         /// </summary>
-        private VBox vbox2 = null;
+        private Box vbox2 = null;
 
         /// <summary>
         /// Gtk widget which holds the two sets of tabs.
         /// </summary>
-        private HPaned hpaned1 = null;
+        private Paned hpaned1 = null;
 
         /// <summary>
         /// Gtk widget which holds the status panel.
@@ -115,7 +115,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Gtk vpane which holds two main parts of the viuw
         /// </summary>
-        private VPaned vpaned1 = null;
+        private Paned vpaned1 = null;
 
         /// <summary>
         /// Dialog which allows the user to change fonts.
@@ -139,11 +139,11 @@ namespace UserInterface.Views
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             notebook2 = (Notebook)builder.GetObject("notebook2");
-            vbox1 = (VBox)builder.GetObject("vbox1");
-            vbox2 = (VBox)builder.GetObject("vbox2");
-            hpaned1 = (HPaned)builder.GetObject("hpaned1");
+            vbox1 = (Box)builder.GetObject("vbox1");
+            vbox2 = (Box)builder.GetObject("vbox2");
+            hpaned1 = (Paned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
-            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            vpaned1 = (Paned)builder.GetObject("vpaned1");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -156,6 +156,8 @@ namespace UserInterface.Views
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
+            hpaned1.AddNotification(OnDividerNotified);
+            vpaned1.AddNotification(OnDividerNotified);
 
             notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
             notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
@@ -227,6 +229,7 @@ namespace UserInterface.Views
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
+                Utility.Configuration.Settings.DarkTheme = false;
                 //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
             }
 
@@ -307,6 +310,9 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler ShowDetailedError;
 
+        /// <summary>Invoked when the divider position is changed</summary>
+        public event EventHandler DividerChanged;
+
         /// <summary>
         /// Get the list and button view
         /// </summary>
@@ -333,7 +339,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Height of the VPaned that holds the view
+        /// Height of the Paned that holds the view
         /// </summary>
         public int PanelHeight
         {
@@ -389,7 +395,7 @@ namespace UserInterface.Views
                 tabLabel.Text = Path.GetFileNameWithoutExtension(text);
             else
                 tabLabel.Text = text;
-            HBox headerBox = new HBox();
+            Box headerBox = new Box(Orientation.Horizontal, 0);
             Button closeBtn = new Button();
             string imageName = Utility.Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
             Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, $"ApsimNG.Resources.TreeViewImages.{imageName}", 12, 12));
@@ -475,9 +481,9 @@ namespace UserInterface.Views
                 EventBox ebox = (EventBox)notebook.GetTabLabel(tab);
                 ebox.TooltipText = tooltip;
                 ebox.HasTooltip = !String.IsNullOrEmpty(tooltip);
-                // The EventBox holds an HBox
-                HBox hbox = (HBox)ebox.Child;
-                // And the HBox has the actual label as its first child
+                // The EventBox holds an Box
+                Box hbox = (Box)ebox.Child;
+                // And the Box has the actual label as its first child
                 Label tabLabel = (Label)hbox.Children[0];
                 tabLabel.Text = newTabName;
                 // Update the context menu label
@@ -530,7 +536,8 @@ namespace UserInterface.Views
             label.Visible = true;
 
             // Attach the label and icon together
-            HBox box = new HBox(false, 4);
+            Box box = new Box(Orientation.Horizontal, 4);
+            box.Homogeneous = false;
             box.PackStart(image, false, true, 0);
             box.PackStart(label, false, true, 0);
             box.Visible = true;
@@ -931,7 +938,7 @@ namespace UserInterface.Views
             box.ShowAll();
             box.Realize();
             box.ShowAll();
-            moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Arrow);
+            moreInfo.ParentWindow.Cursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Arrow);
         }
 
         [GLib.ConnectBefore]
@@ -1092,6 +1099,15 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Listens to an event of the divider position changing</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnDividerNotified(object sender, GLib.NotifyArgs args)
+        {
+            if (DividerChanged != null)
+                DividerChanged.Invoke(sender, new EventArgs());
+        }
+
         /// <summary>
         /// Change Apsim's default font, and apply the new font to all existing
         /// widgets.
@@ -1142,7 +1158,7 @@ namespace UserInterface.Views
             {
                 if (MainWindow != null)
                 {
-                    MainWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    MainWindow.Cursor = value ? new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

@@ -1,16 +1,21 @@
 ﻿namespace Utility
 {
     using System;
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using OxyPlot;
     using OxyPlot.Series;
-    using UserInterface.EventArguments;
 
     /// <summary>
     /// A line series with a better tracker.
     /// </summary>
-    public class LineSeriesWithTracker : LineSeries
+    public class LineSeriesWithTracker : OxyPlot.Series.LineSeries, INameableSeries
     {
+        /// <summary>
+        /// Name of series.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Name of the tooltip
         /// </summary>
@@ -36,6 +41,16 @@
         /// </summary>
         public Type YType { get; set; }
 
+
+        public LineSeriesWithTracker() { }
+
+        public LineSeriesWithTracker(string name/*, string seriesViewName*/)
+        {
+            this.Name = name;
+            //this.SeriesViewName = seriesViewName;
+        }
+
+
         /// <summary>
         /// Tracker is calling to determine the nearest point.
         /// </summary>
@@ -55,11 +70,14 @@
                     xInput = MathUtilities.RoundSignificant(hitResult.DataPoint.X, 2).ToString();
                 else if (XType == typeof(DateTime))
                 {
-                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
-                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
-                        xInput = d.ToString("dd/MM/yyyy");
-                    else
-                        xInput = d.ToString();
+                    if (hitResult.DataPoint.X > 0)
+                    {
+                        DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
+                        if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                            xInput = d.ToString("dd/MM/yyyy");
+                        else
+                            xInput = d.ToString();
+                    }
                 }
 
                 if (YType == typeof(double))

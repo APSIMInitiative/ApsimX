@@ -26,16 +26,21 @@ namespace Models.Core.ApsimFile
 
             modelToAdd.Parent = parent;
             modelToAdd.ParentAllDescendants();
-            parent.Children.Add(modelToAdd);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
 
-            // Call OnCreated
+            if(parent.IsChildAllowable(modelToAdd.GetType()))
+            {
+                parent.Children.Add(modelToAdd);
+            }
+            else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
+                       
             modelToAdd.OnCreated();
+
             foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
-            
+
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
@@ -95,13 +100,6 @@ namespace Models.Core.ApsimFile
             // Correctly parent all models.
             modelToAdd = Add(modelToAdd, parent);
 
-            // Ensure the model name is valid.
-            EnsureNameIsUnique(modelToAdd);
-
-            // Call OnCreated
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
-                model.OnCreated();
-
             return modelToAdd;
         }
 
@@ -111,8 +109,15 @@ namespace Models.Core.ApsimFile
         /// <returns>The newly created model.</returns>
         public static void Rename(IModel model, string newName)
         {
-            model.Name = newName;
-            EnsureNameIsUnique(model);
+            //use a clone to see if the name is good
+            IModel clone = model.Clone();
+            clone.Name = newName;
+            clone.Parent = model.Parent;
+            model.Name = ""; //rename the existing model so it doesn't conflict
+            EnsureNameIsUnique(clone);
+
+            //set the name to whatever was found using the clone.
+            model.Name = clone.Name.Trim();
             Apsim.ClearCaches(model);
         }
 
@@ -128,9 +133,9 @@ namespace Models.Core.ApsimFile
                 // The models in scope will be different after the move so we will
                 // need to do this again after we move the model.
                 Apsim.ClearCaches(model);
+                EnsureNameIsUnique(model);
                 newParent.Children.Add(model as Model);
                 model.Parent = newParent;
-                EnsureNameIsUnique(model);
                 Apsim.ClearCaches(model);
             }
             else
@@ -153,7 +158,34 @@ namespace Models.Core.ApsimFile
                 newName = originalName + counter.ToString();
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
+            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            if (sims != null)
+            {
+                bool stop = false;
+                while (!stop && counter < 10000)
+                {
+                    bool goodName = true;
 
+                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
+                    if (obj != null) { //found a potential conflict
+                        goodName = false;
+                        if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
+                            if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                                if (modelToCheck.FindSibling(newName) == null)
+                                    goodName = true;
+                    }
+
+                    if (goodName == false)
+                    {
+                        counter++;
+                        newName = originalName + counter.ToString();
+                    }
+                    else
+                    {
+                        stop = true;
+                    }
+                }
+            }
             if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
@@ -173,7 +205,7 @@ namespace Models.Core.ApsimFile
         /// <summary>Replace one model with another.</summary>
         /// <param name="modelToReplace">The old model to replace.</param>
         /// <param name="replacement">The new model.</param>
-        public static void Replace(IModel modelToReplace, IModel replacement)
+        public static IModel Replace(IModel modelToReplace, IModel replacement)
         {
             IModel newModel = Apsim.Clone(replacement);
             int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
@@ -202,6 +234,8 @@ namespace Models.Core.ApsimFile
             newModel.OnCreated();
             foreach (var model in newModel.FindAllDescendants().ToList())
                 model.OnCreated();
+                
+            return newModel;
         }
     }
 }

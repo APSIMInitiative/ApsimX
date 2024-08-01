@@ -51,6 +51,23 @@ namespace Models.PMF
         /// <summary>The total demand for resoure  /// </summary>
         public double TotalPlantDemandsAllocated { get { return ArbitratingOrgans.Sum(o => o.DemandsAllocated.Total); } }
 
+        /// <summary>
+        ///  The total amount of reallocation supplies that has been allocated
+        /// </summary>
+        public double TotalReAllocationSupplyAllocated { get { return ArbitratingOrgans.Sum(o => o.SuppliesAllocated.ReAllocation.Total); } }
+
+        /// <summary>
+        ///  The total amount of retranslocation supplies that has been allocated
+        /// </summary>
+        public double TotalReTranslocationSupplyAllocated { get { return ArbitratingOrgans.Sum(o => o.SuppliesAllocated.ReTranslocation.Total); } }
+
+        /// <summary>
+        ///  The total amount of fixation supplies that has been allocated
+        /// </summary>
+        public double TotalFixationSupplyAllocated { get { return ArbitratingOrgans.Sum(o => o.SuppliesAllocated.Fixation); } }
+
+
+
         //Error checking variables
         /// <summary>Gets or sets the start.</summary>
         [JsonIgnore]

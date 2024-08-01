@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using APSIM.Shared.Utilities;
 using Gtk;
 using OxyPlot.Axes;
 using UserInterface.Interfaces;
@@ -14,7 +15,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The table
         /// </summary>
-        private Table table1 = null;
+        private Grid grid1 = null;
 
         /// <summary>
         /// The minumum value
@@ -58,7 +59,7 @@ namespace UserInterface.Views
         public AxisView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
-            table1 = (Table)builder.GetObject("table1");
+            grid1 = (Grid)builder.GetObject("grid1");
             entryMin = (Entry)builder.GetObject("entryMin");
             entryMax = (Entry)builder.GetObject("entryMax");
             entryInterval = (Entry)builder.GetObject("entryInterval");
@@ -66,7 +67,7 @@ namespace UserInterface.Views
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             checkbutton3 = (CheckButton)builder.GetObject("checkbutton3");
-            mainWidget = table1;
+            mainWidget = grid1;
             entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
             entryTitle.TextInserted += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
@@ -193,16 +194,30 @@ namespace UserInterface.Views
         {
             get
             {
+                //if empty, return nan for no minimum
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
-                else if (DateTime.TryParseExact(entryMin.Text,
-                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
-                                                CultureInfo.CurrentCulture,
-                                                DateTimeStyles.None,
-                                                out var date))
-                    return DateTimeAxis.ToDouble(date);
+
+                //if its parseable to a date, return a date
+                string dateString = DateUtilities.ValidateDateString(entryMin.Text);
+                if (dateString != null)
+                    return DateTimeAxis.ToDouble(DateUtilities.GetDate(dateString));
+
+                //if it can be parsed to a double, return that
+                bool success = double.TryParse(entryMin.Text, out double result);
+                if (success)
+                    return result;
+
+                //if it can't be parsed, return NaN for no minimum
+                return double.NaN;
+            }
+
+            set
+            {
+                if (double.IsNaN(value))
+                    entryMin.Text = string.Empty;
                 else
-                    return Convert.ToDouble(entryMin.Text, CultureInfo.InvariantCulture);
+                    entryMin.Text = value.ToString();
             }
         }
 
@@ -213,16 +228,22 @@ namespace UserInterface.Views
         {
             get
             {
+                //if empty, return nan for no minimum
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
-                else if (DateTime.TryParseExact(entryMax.Text,
-                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
-                                                CultureInfo.CurrentCulture,
-                                                DateTimeStyles.None,
-                                                out var date))
-                    return DateTimeAxis.ToDouble(date);
-                else
-                    return Convert.ToDouble(entryMax.Text, CultureInfo.InvariantCulture);
+
+                //if its parseable to a date, return a date
+                string dateString = DateUtilities.ValidateDateString(entryMax.Text);
+                if (dateString != null)
+                    return DateTimeAxis.ToDouble(DateUtilities.GetDate(dateString));
+
+                //if it can be parsed to a double, return that
+                bool success = double.TryParse(entryMax.Text, out double result);
+                if (success)
+                    return result;
+
+                //if it can't be parsed, return NaN for no minimum
+                return double.NaN;
             }
 
             set
@@ -264,8 +285,10 @@ namespace UserInterface.Views
             {
                 if (double.IsNaN(value))
                     entryMin.Text = string.Empty;
+                else if (isDate)
+                    entryMin.Text = DateUtilities.ValidateDateString(DateTimeAxis.ToDateTime(value).ToShortDateString());
                 else
-                    entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+                    entryMin.Text = value.ToString();
             }
         }
 
@@ -280,8 +303,10 @@ namespace UserInterface.Views
             {
                 if (double.IsNaN(value))
                     entryMax.Text = string.Empty;
+                else if (isDate)
+                    entryMax.Text = DateUtilities.ValidateDateString(DateTimeAxis.ToDateTime(value).ToShortDateString());
                 else
-                    entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+                    entryMax.Text = value.ToString();
             }
         }
 

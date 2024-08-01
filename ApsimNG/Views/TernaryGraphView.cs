@@ -37,7 +37,7 @@ namespace UserInterface.Views
 
         public TernaryGraphView(ViewBase owner) : base(owner)
         {
-            HBox container = new HBox();
+            Box container = new Box(Orientation.Horizontal, 0);
             chart = new DrawingArea();
             chart.AddEvents((int)Gdk.EventMask.ExposureMask
             | (int)Gdk.EventMask.PointerMotionMask
@@ -57,7 +57,7 @@ namespace UserInterface.Views
             ylabel = new Label();
             zlabel = new Label();
 
-            VBox labels = new VBox();
+            Box labels = new Box(Orientation.Vertical, 0);
             labels.PackStart(xlabel, false, false, 0);
             labels.PackStart(ylabel, false, false, 0);
             labels.PackStart(zlabel, false, false, 0);

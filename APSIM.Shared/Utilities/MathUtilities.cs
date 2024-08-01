@@ -407,6 +407,21 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Returns the difference between X and Y if the difference is positive, otherwise returns 0 if negative.
+        /// Is based on the Fortran DIM function
+        /// </summary>
+        /// <returns></returns>
+        static public double PositiveDifference(double X, double Y)
+        {
+            double difference = X - Y;
+            if (difference > 0)
+                return difference;
+            else
+                return 0;
+
+        }
+
+        /// <summary>
         ///Linearly interpolates a value y for a given value x and a given
         ///set of xy co-ordinates.
         ///When x lies outside the x range_of, y is set to the boundary condition.
@@ -694,7 +709,7 @@ namespace APSIM.Shared.Utilities
             {
                 foreach (string Value in Values)
                 {
-                    if (Value != "")
+                    if (!string.IsNullOrEmpty(Value))
                         return true;
                 }
             }
@@ -1861,6 +1876,39 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Ensure an array is the correct size.
+        /// </summary>
+        /// <param name="arr">The array.</param>
+        /// <param name="numValues">The required size.</param>
+        /// <returns>The new array of the correct size.</returns>
+        public static double[] SetArrayOfCorrectSize(double[] arr, int numValues)
+        {
+            if (arr == null)
+                arr = Enumerable.Repeat(double.NaN, numValues).ToArray();
+            else
+            {
+                int bottomIndexOfValues = arr.Length;
+                Array.Resize(ref arr, numValues);
+                for (int i = bottomIndexOfValues; i < numValues; i++)
+                    arr[i] = double.NaN;
+            }
+
+            return arr;
+        }          
+
+        /// <summary>
+        /// Ensure an array is the correct size.
+        /// </summary>
+        /// <param name="arr">The array.</param>
+        /// <param name="numValues">The required size.</param>
+        /// <returns>The new array of the correct size.</returns>
+        public static string[] SetArrayOfCorrectSize(string[] arr, int numValues)
+        {
+            Array.Resize(ref arr, numValues);
+            return arr;
+        }         
+
+        /// <summary>
         /// Find the first non NaN value in the array.
         /// </summary>
         /// <param name="values"></param>
@@ -1873,7 +1921,6 @@ namespace APSIM.Shared.Utilities
 
             return double.NaN;
         }
-
-
+     
     }
 }

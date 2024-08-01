@@ -1,13 +1,14 @@
-﻿using UserInterface.EventArguments;
-using Models.Core;
-using Models.Factorial;
-using Models.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using UserInterface.Views;
 using APSIM.Shared.Documentation.Extensions;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using UserInterface.EventArguments;
+using UserInterface.Views;
+using Gtk.Sheet;
 
 namespace UserInterface.Presenters
 {
@@ -41,6 +42,9 @@ namespace UserInterface.Presenters
 
         /// <summary>table name drop down.</summary>
         public DropDownView tableDropDown { get; private set; }
+
+        /// <summary>table name drop down.</summary>
+        public DropDownView orderByDropDown { get; private set; }
 
         /// <summary>Column filter edit box.</summary>
         private EditView columnFilterEditBox;
@@ -103,6 +107,7 @@ namespace UserInterface.Presenters
 
             checkpointDropDown = view.GetControl<DropDownView>("checkpointDropDown");
             tableDropDown = view.GetControl<DropDownView>("tableDropDown");
+            orderByDropDown = view.GetControl<DropDownView>("orderByDropDown");
             columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
             sheetContainer = view.GetControl<ContainerView>("grid");
@@ -127,8 +132,10 @@ namespace UserInterface.Presenters
                 }
                 tableDropDown.SelectedIndex = 0;
             }
+            UpdateSortBy();
 
             tableDropDown.Changed += this.OnTableSelected;
+            orderByDropDown.Changed += this.OnOrderBySelected;
             columnFilterEditBox.Leave += OnColumnFilterChanged;
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             rowFilterEditBox.Leave += OnColumnFilterChanged;
@@ -148,7 +155,9 @@ namespace UserInterface.Presenters
         {
             //base.Detach();
             // Keep the column and row filters
-            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
+            temporaryColumnFilters = columnFilterEditBox.Text;
+            temporaryRowFilters = rowFilterEditBox.Text;
+            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters);
             temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
@@ -196,13 +205,14 @@ namespace UserInterface.Presenters
                                                              tableDropDown.SelectedValue,
                                                              simulationNames,
                                                              columnFilterEditBox.Text,
-                                                             filter);
+                                                             filter,
+                                                             orderByDropDown.SelectedValue);
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        gridPresenter.PopulateWithDataProvider(dataProvider, dataProvider.NumPriorityColumns, dataProvider.NumHeadingRows);
+                        gridPresenter.PopulateWithDataProvider(dataProvider);
 
-                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
+                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount}";
                     }
                     catch (Exception err)
                     {
@@ -238,7 +248,33 @@ namespace UserInterface.Presenters
         /// <summary>The selected table has changed.</summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
+        private void UpdateSortBy()
+        {
+            orderByDropDown.IsEditable = false;
+            List<string> columns = new List<string>();
+            columns.Add("");
+            if (dataStore != null)
+            {
+                foreach (Tuple<string, Type> column in dataStore.Reader.GetColumns(tableDropDown.SelectedValue))
+                    columns.Add(column.Item1);
+            }
+            orderByDropDown.Values = columns.ToArray();
+            orderByDropDown.SelectedIndex = 0;
+        }
+
+        /// <summary>The selected table has changed.</summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
         private void OnTableSelected(object sender, EventArgs e)
+        {
+            UpdateSortBy();
+            PopulateGrid();
+        }
+
+        /// <summary>The selected order by has changed.</summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnOrderBySelected(object sender, EventArgs e)
         {
             PopulateGrid();
         }

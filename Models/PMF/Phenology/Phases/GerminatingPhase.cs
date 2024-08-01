@@ -73,7 +73,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete { get { return 0.999; } }
+        public double FractionComplete { get { return 0; } }
 
         /// <summary>
         /// Date for germination to occur.  null by default so model is used

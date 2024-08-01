@@ -36,7 +36,7 @@ namespace UnitTests.Core.ApsimFile
                              "</Simulation>";
 
             var converter = Converter.DoConvert(fromXML, 1);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string toXML = "<Simulation Version=\"1\">" +
                              "<Graph>" +
@@ -47,7 +47,7 @@ namespace UnitTests.Core.ApsimFile
                                "</Series>" +
                              "</Graph>" +
                            "</Simulation>";
-            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
+            Assert.That(converter.RootXml.OuterXml, Is.EqualTo(toXML));
         }
 
         /// <summary>Test version 2</summary>
@@ -62,7 +62,7 @@ namespace UnitTests.Core.ApsimFile
                              "</Simulation>";
 
             var converter = Converter.DoConvert(fromXML, 2);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string toXML = "<Simulation Version=\"2\">" +
                              "<Cultivar>" +
@@ -74,7 +74,7 @@ namespace UnitTests.Core.ApsimFile
                                  "</Alias>" +
                              "</Cultivar>" +
                            "</Simulation>";
-            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
+            Assert.That(converter.RootXml.OuterXml, Is.EqualTo(toXML));
         }
 
         /// <summary>Test version 7</summary>
@@ -118,10 +118,10 @@ namespace UnitTests.Core.ApsimFile
                 " </Simulation>\r\n";
 
             var converter = Converter.DoConvert(fromXML, 7);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string expected = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Version7.Expected.txt");
-            Assert.AreEqual(converter.RootXml.OuterXml, expected);
+            Assert.That(converter.RootXml.OuterXml, Is.EqualTo(expected));
         }
 
         /// <summary>Test version 10</summary>
@@ -135,7 +135,7 @@ namespace UnitTests.Core.ApsimFile
                              " </Simulation>\r\n";
 
             var converter = Converter.DoConvert(fromXML, 10);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string toXML = "<Simulation Version=\"10\">" +
                              "<GenericOrgan>" +
@@ -162,7 +162,7 @@ namespace UnitTests.Core.ApsimFile
                                "</VariableReference>" +
                              "</GenericOrgan>" +
                             "</Simulation>";
-            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
+            Assert.That(converter.RootXml.OuterXml, Is.EqualTo(toXML));
         }
 
         /// <summary>Test version 11</summary>
@@ -219,7 +219,7 @@ namespace UnitTests.Core.ApsimFile
                              "</Simulation>\r\n";
 
             var converter = Converter.DoConvert(fromXML, 11);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string toXML = "<Simulation Version=\"11\">" +
                              "<Manager>" +
@@ -269,7 +269,7 @@ namespace UnitTests.Core.ApsimFile
                                "<Value>1</Value>" +
                              "</StorageNReallocated>" +
                            "</Simulation>";
-            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
+            Assert.That(converter.RootXml.OuterXml, Is.EqualTo(toXML));
         }
 
         public void Version9()
@@ -290,11 +290,11 @@ namespace UnitTests.Core.ApsimFile
                 string fromXML = "<Simulation Version=\"8\"/>";
 
                 var converter = Converter.DoConvert(fromXML, 9);
-                Assert.IsTrue(converter.DidConvert);
+                Assert.That(converter.DidConvert, Is.True);
 
                 DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
                 string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture);
-                Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );
+                Assert.That(tableNames, Is.EqualTo(new string[] { "_Simulations", "_Messages", "_Units", "Report" } ));
             }
             finally
             {
@@ -310,12 +310,12 @@ namespace UnitTests.Core.ApsimFile
             string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion32 after.xml");
 
             var converter = Converter.DoConvert(xml, 33);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             using (StringWriter writer = new StringWriter())
             {
                 converter.RootXml.Save(writer);
-                Assert.AreEqual(writer.ToString(), expectedXml);
+                Assert.That(writer.ToString(), Is.EqualTo(expectedXml));
             }
         }
 
@@ -326,12 +326,12 @@ namespace UnitTests.Core.ApsimFile
             string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 after.json");
 
             var converter = Converter.DoConvert(xml, 59);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             using (StringWriter writer = new StringWriter())
             {
                 writer.Write(converter.Root.ToString());
-                Assert.AreEqual(writer.ToString(), expectedXml);
+                Assert.That(writer.ToString(), Is.EqualTo(expectedXml));
             }
         }
 
@@ -342,12 +342,12 @@ namespace UnitTests.Core.ApsimFile
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 after.json");
 
             var converter = Converter.DoConvert(json, 60);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             using (StringWriter writer = new StringWriter())
             {
                 writer.Write(converter.Root.ToString());
-                Assert.AreEqual(expectedJson, writer.ToString());
+                Assert.That(writer.ToString(), Is.EqualTo(expectedJson));
             }
         }
 
@@ -358,12 +358,12 @@ namespace UnitTests.Core.ApsimFile
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 after.json");
 
             var converter = Converter.DoConvert(json, 63);
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             using (StringWriter writer = new StringWriter())
             {
                 writer.Write(converter.Root.ToString());
-                Assert.AreEqual(writer.ToString(), expectedJson);
+                Assert.That(writer.ToString(), Is.EqualTo(expectedJson));
             }
         }
 
@@ -373,7 +373,7 @@ namespace UnitTests.Core.ApsimFile
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileBefore.apsimx");
             ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
             Simulations actualModel = converter.NewModel as Simulations;
-            Assert.IsTrue(converter.DidConvert);
+            Assert.That(converter.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileAfter.apsimx");
             converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
@@ -382,7 +382,27 @@ namespace UnitTests.Core.ApsimFile
             string actual = FileFormat.WriteToString(actualModel);
             string expected = FileFormat.WriteToString(expectedModel);
 
-            Assert.AreEqual(actual, expected);
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Version172()
+        {
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
+            Simulations actualModel = converter.NewModel as Simulations;
+            Assert.That(converter.DidConvert, Is.True);
+
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileAfter.apsimx");
+            converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
+            Simulations expectedModel = converter.NewModel as Simulations;
+
+            string actual = FileFormat.WriteToString(actualModel);
+            string expected = FileFormat.WriteToString(expectedModel);
+
+            Assert.That(actual, Is.EqualTo(expected));
+
+            Assert.Pass();
         }
 
         /// <summary>
@@ -397,8 +417,8 @@ namespace UnitTests.Core.ApsimFile
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.json");
             ConverterReturnType result = Converter.DoConvert(json, Converter.LatestVersion);
             IEnumerable<JObject> initialWaters = JsonUtilities.Children(result.Root).Where(c => string.Equals(c["Name"].ToString(), "Initial water", StringComparison.InvariantCultureIgnoreCase));
-            Assert.AreEqual(1, initialWaters.Count());
-            Assert.AreEqual("Models.Soils.Sample, Models", initialWaters.First()["$type"].ToString());
+            Assert.That(initialWaters.Count(), Is.EqualTo(1));
+            Assert.That(initialWaters.First()["$type"].ToString(), Is.EqualTo("Models.Soils.Sample, Models"));
         }
 
         [Test]
@@ -419,9 +439,18 @@ namespace UnitTests.Core.ApsimFile
             };
             var oc = Converter.GetValues(new JObject[] { organic, sample }, "OC", 1.0, null, null, null);
 
-            Assert.AreEqual(new double[] { 2.0, 1.0 }, oc.Item1);
-            Assert.AreEqual("Total", oc.Item2);
-            Assert.AreEqual(new double[] { 100.0, 200.0 }, oc.Item3);
+            Assert.That(oc.Item1, Is.EqualTo(new double[] { 2.0, 1.0 }));
+            Assert.That(oc.Item2, Is.EqualTo("Total"));
+            Assert.That(oc.Item3, Is.EqualTo(new double[] { 100.0, 200.0 }));
+        }
+
+        [Test]
+        public void TestUpgradeSoil()
+        {
+          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.apsim");
+          ConverterReturnType result = Converter.DoConvert(xml, Converter.LatestVersion);
+          Assert.That(JsonUtilities.ChildWithName(result.Root, "Temperature"), Is.Not.Null);
+          Assert.That(JsonUtilities.ChildWithName(result.Root, "Nutrient"), Is.Not.Null);
         }
     }
 }

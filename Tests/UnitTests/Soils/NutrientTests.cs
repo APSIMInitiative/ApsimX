@@ -1,13 +1,13 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using NUnit.Framework;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using System.Collections.Generic;
 using Models.Storage;
-using System.Globalization;
-using System.Data;
-using System.Linq;
+using NUnit.Framework;
 
 namespace UnitTests.SurfaceOrganicMatterTests
 {
@@ -22,7 +22,12 @@ namespace UnitTests.SurfaceOrganicMatterTests
         public void EnsureTotalCOnStartOfFirstDayIsntZero()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.totalc.apsimx");
+
             Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Models.Climate.Weather weather = file.FindDescendant<Models.Climate.Weather>();
+            string properWeatherFilePath = PathUtilities.GetRelativePath(weather.FullFileName, null);
+            weather.FullFileName = properWeatherFilePath;
+
 
             // Run the file.
             var Runner = new Runner(file);
@@ -35,7 +40,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
 
             // Ensure the first value isn't zero.
             double[] values = DataTableUtilities.GetColumnAsDoubles(data, fieldNames[0], CultureInfo.InvariantCulture);
-            Assert.NotZero(values.First());
+            Assert.That(values.First(), Is.Not.Zero);
         }
     }
 }

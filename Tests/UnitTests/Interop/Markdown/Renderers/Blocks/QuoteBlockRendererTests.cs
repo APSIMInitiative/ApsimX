@@ -71,7 +71,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             pdfBuilder.AppendText("existing paragraph", TextStyle.Normal);
             renderer.Write(pdfBuilder, quote);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             renderer.Write(pdfBuilder, quote);
             pdfBuilder.AppendText("additional content", TextStyle.Normal);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         public void EnsureChildrenAreWritten()
         {
             renderer.Write(pdfBuilder, quote);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph inserted = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(quoteText, inserted.GetRawText());
+            Assert.That(inserted.GetRawText(), Is.EqualTo(quoteText));
         }
 
         /// <summary>
@@ -105,11 +105,11 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         public void EnsureChildrenHaveQuoteStyle()
         {
             renderer.Write(pdfBuilder, quote);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph inserted = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, inserted.Elements.Count);
+            Assert.That(inserted.Elements.Count, Is.EqualTo(1));
             FormattedText text = (FormattedText)inserted.Elements[0];
-            Assert.True(HasQuoteStyle(document.Styles[text.Style]));
+            Assert.That(HasQuoteStyle(document.Styles[text.Style]), Is.True);
         }
 
         /// <summary>
@@ -122,11 +122,11 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             renderer.Write(pdfBuilder, quote);
             pdfBuilder.AppendText("suplementary addition to the doc", TextStyle.Normal);
 
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
             Paragraph supplementary = (Paragraph)document.LastSection.Elements[1];
-            Assert.AreEqual(1, supplementary.Elements.Count);
+            Assert.That(supplementary.Elements.Count, Is.EqualTo(1));
             FormattedText text = (FormattedText)supplementary.Elements[0];
-            Assert.False(HasQuoteStyle(document.Styles[text.Style]));
+            Assert.That(HasQuoteStyle(document.Styles[text.Style]), Is.False);
         }
 
         /// <summary>

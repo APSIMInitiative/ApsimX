@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Factorial;
 using Models.Interfaces;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -17,12 +18,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical, IGridModel
+    public class Physical : Model, IPhysical
     {
         // Water node.
         private Water waterNode = null;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Units("mm")]
         [Summary]
         [JsonIgnore]
@@ -65,23 +67,27 @@ namespace Models.Soils
         [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Particle size clay.</summary>
-        [Summary]
-        [Units("%")]
-        public double[] ParticleSizeClay { get; set; }
-
         /// <summary>Particle size sand.</summary>
         [Summary]
+        [Display(DisplayName = "Sand", Format = "N3")]
         [Units("%")]
         public double[] ParticleSizeSand { get; set; }
 
         /// <summary>Particle size silt.</summary>
         [Summary]
+        [Display(DisplayName = "Silt", Format = "N3")]
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
 
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Display(DisplayName = "Clay", Format = "N3")]
+        [Units("%")]
+        public double[] ParticleSizeClay { get; set; }
+
         /// <summary>Rocks.</summary>
         [Summary]
+        [Display(Format = "N3")]
         [Units("%")]
         public double[] Rocks { get; set; }
 
@@ -91,19 +97,19 @@ namespace Models.Soils
         /// <summary>Bulk density (g/cc).</summary>
         [Summary]
         [Units("g/cc")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] BD { get; set; }
 
         /// <summary>Air dry - volumetric (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] AirDry { get; set; }
 
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] LL15 { get; set; }
 
         /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
@@ -113,7 +119,7 @@ namespace Models.Soils
         /// <summary>Drained upper limit (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] DUL { get; set; }
 
         /// <summary>Drained upper limit (mm).</summary>
@@ -123,7 +129,7 @@ namespace Models.Soils
         /// <summary>Saturation (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         public double[] SAT { get; set; }
 
         /// <summary>Saturation (mm).</summary>
@@ -133,18 +139,13 @@ namespace Models.Soils
         /// <summary>Initial soil water (mm/mm).</summary>
         [Summary]
         [Units("mm/mm")]
-        [Display(Format = "N2")]
+        [Display(Format = "N3")]
         [JsonIgnore]
         public double[] SW
         {
             get
             {
                 return SoilUtilities.MapConcentration(WaterNode.InitialValues, WaterNode.Thickness, Thickness, 0);
-            }
-            set
-            {
-                if (IsSWSameLayerStructure)
-                    WaterNode.InitialValues = value;
             }
         }
 
@@ -155,7 +156,7 @@ namespace Models.Soils
         /// <summary>KS (mm/day).</summary>
         [Summary]
         [Units("mm/day")]
-        [Display(Format = "N1")]
+        [Display(Format = "N3")]
         public double[] KS { get; set; }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
@@ -164,7 +165,6 @@ namespace Models.Soils
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
         public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
 
         /// <summary>Gets or sets the bd metadata.</summary>
@@ -200,44 +200,128 @@ namespace Models.Soils
         /// <summary>Particle size clay metadata.</summary>
         public string[] ParticleSizeClayMetadata { get; set; }
 
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
+        /// <summary>Called to infill data if necessary.</summary>
+        public void InFill()
         {
-            get
+            // Add soil/crop parameterisations is on a vertosol soil.
+            AddPredictedCrops();
+
+            // Fill in missing XF values.
+            foreach (var crop in FindAllChildren<SoilCrop>())
             {
-                bool waterNodePresent = FindInScope<Water>() != null;
-                var columns = new List<GridTableColumn>();
+                if (crop.KL == null)
+                    FillInKLForCrop(crop);
 
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
-                columns.Add(new GridTableColumn("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
-                columns.Add(new GridTableColumn("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
-                columns.Add(new GridTableColumn("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
-                columns.Add(new GridTableColumn("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
-                columns.Add(new GridTableColumn("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
-                columns.Add(new GridTableColumn("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
-                columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
-                columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
-                if (waterNodePresent)
-                    columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
-                columns.Add(new GridTableColumn("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
+                var (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.LL, crop.LLMetadata, Thickness.Length, (i) => i < LL15.Length ? LL15[i] : LL15.Last());
+                crop.LL = cropValues;
+                crop.LLMetadata = cropMetadata;
 
-                foreach (var soilCrop in FindAllChildren<SoilCrop>())
-                {
-                    var cropName = soilCrop.Name.Replace("Soil", "");
-                    columns.Add(new GridTableColumn($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
-                    columns.Add(new GridTableColumn($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
-                    columns.Add(new GridTableColumn($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
-                    columns.Add(new GridTableColumn($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
-                }
+                (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.KL, crop.KLMetadata, Thickness.Length, (i) => 0.06);
+                crop.KL = cropValues;
+                crop.KLMetadata = cropMetadata;
 
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
+                (cropValues, cropMetadata) = SoilUtilities.FillMissingValues(crop.XF, crop.XFMetadata, Thickness.Length, (i) => 1.0);
+                crop.XF = cropValues;
+                crop.XFMetadata = cropMetadata;
 
-                return tables;
+                // Modify wheat crop for sub soil constraints.
+                //if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
+                //    ModifyKLForSubSoilConstraints(crop);
             }
+
+            // Make sure there are the correct number of KS values.
+            if (KS != null && KS.Length > 0)
+                KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
+
+            ParticleSizeClay = MathUtilities.SetArrayOfCorrectSize(ParticleSizeClay, Thickness.Length);
+            ParticleSizeClayMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeClayMetadata, Thickness.Length);
+            ParticleSizeSand = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSand, Thickness.Length);
+            ParticleSizeSandMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSandMetadata, Thickness.Length);
+            ParticleSizeSilt = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSilt, Thickness.Length);
+            ParticleSizeSiltMetadata = MathUtilities.SetArrayOfCorrectSize(ParticleSizeSiltMetadata, Thickness.Length);
+
+            // Fill in missing particle size values.
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                bool clayIsSupplied = !double.IsNaN(ParticleSizeClay[i]);
+                bool siltIsSupplied = !double.IsNaN(ParticleSizeSilt[i]);
+                bool sandIsSupplied = !double.IsNaN(ParticleSizeSand[i]);
+
+                if (!clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 30);
+                    SetDefaultSilt(i, 65);
+                    SetDefaultSand(i, 5);
+                }
+                else if (clayIsSupplied && !siltIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultSilt(i, 0.65 * (100 - ParticleSizeClay[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (siltIsSupplied && !clayIsSupplied && !sandIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                }
+                else if (sandIsSupplied && !clayIsSupplied && !siltIsSupplied)
+                {
+                    SetDefaultClay(i, 0.3 * (100 - ParticleSizeSilt[i]));
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                }
+                else if (clayIsSupplied && siltIsSupplied && !sandIsSupplied)
+                    SetDefaultSand(i, 100 - ParticleSizeClay[i] - ParticleSizeSilt[i]);
+                else if (clayIsSupplied && sandIsSupplied && !siltIsSupplied)
+                    SetDefaultSilt(i, 100 - ParticleSizeClay[i] - ParticleSizeSand[i]);
+                else if (siltIsSupplied && sandIsSupplied && !clayIsSupplied)
+                    SetDefaultClay(i, 100 - ParticleSizeSilt[i] - ParticleSizeSand[i]);
+            }
+
+            // Fill in missing rocks.
+            Rocks = MathUtilities.SetArrayOfCorrectSize(Rocks, Thickness.Length);
+            RocksMetadata = MathUtilities.SetArrayOfCorrectSize(RocksMetadata, Thickness.Length);
+            var (values, metadata) = SoilUtilities.FillMissingValues(Rocks, RocksMetadata, Thickness.Length, (i) =>
+            {
+                double bd = i < BD.Length ? BD[i] : BD.Last();
+                double sat = i < SAT.Length ? SAT[i] : SAT.Last();
+                double particleDensity = 2.65;
+                double totalPorosity = (1 - bd / particleDensity) * 0.93;
+                double rocksFraction = 1 - sat / totalPorosity;
+                if (rocksFraction > 0.1)
+                    return rocksFraction;
+                else
+                    return 0;
+            });
+            Rocks = values;
+            RocksMetadata = metadata;
         }
+
+        /// <summary>Set the default clay content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultClay(int i, double value)
+        {
+            ParticleSizeClay[i] = value;
+            ParticleSizeClayMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default silt content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSilt(int i, double value)
+        {
+            ParticleSizeSilt[i] = value;
+            ParticleSizeSiltMetadata[i] = "Calculated";
+        }
+
+        /// <summary>Set the default sand content.</summary>
+        /// <param name="i">Layer index.</param>
+        /// <param name="value">The value.</param>
+        private void SetDefaultSand(int i, double value)
+        {
+            ParticleSizeSand[i] = value;
+            ParticleSizeSandMetadata[i] = "Calculated";
+        }
+
 
         private Water WaterNode
         {
@@ -245,6 +329,8 @@ namespace Models.Soils
             {
                 if (waterNode == null)
                     waterNode = FindInScope<Water>();
+                if (waterNode == null)
+                    waterNode = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
                 if (waterNode == null)
                     throw new Exception("Cannot find water node in simulation");
                 return waterNode;
@@ -259,27 +345,7 @@ namespace Models.Soils
         public void Standardise(double[] targetThickness)
         {
             SetThickness(targetThickness);
-            AddPredictedCrops();
-            foreach (var crop in FindAllChildren<SoilCrop>())
-            {
-                if (crop.XF == null)
-                {
-                    crop.XF = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-                    crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", Thickness.Length);
-                }
-                if (crop.KL == null)
-                    FillInKLForCrop(crop);
-
-                CheckCropForMissingValues(crop);
-
-                // Modify wheat crop for sub soil constraints.
-                if (crop.Name.Equals("wheat", StringComparison.InvariantCultureIgnoreCase))
-                    ModifyKLForSubSoilConstraints(crop);
-            }
-
-            // Make sure there are the correct number of KS values.
-            if (KS != null && KS.Length > 0)
-                KS = MathUtilities.FillMissingValues(KS, Thickness.Length, 0.0);
+            InFill();
         }
 
         /// <summary>Sets the water thickness.</summary>
@@ -327,7 +393,7 @@ namespace Models.Soils
         {
             if (crop.Name == null)
                 throw new Exception("Crop has no name");
-            int i = StringUtilities.IndexOfCaseInsensitive(cropNames, crop.Name);
+            int i = StringUtilities.IndexOfCaseInsensitive(cropNames, crop.Name + "Soil");
             if (i != -1)
             {
                 var water = crop.Parent as Physical;
@@ -340,6 +406,7 @@ namespace Models.Soils
                 {
                     bool didInterpolate;
                     crop.KL[l] = MathUtilities.LinearInterpReal(cumThickness[l], defaultKLThickness, KLs, out didInterpolate);
+                    crop.KLMetadata = Enumerable.Repeat("Calculated", water.Thickness.Length).ToArray();
                 }
             }
         }
@@ -355,21 +422,6 @@ namespace Models.Soils
                 values.Add(array[row, col]);
 
             return values.ToArray();
-        }
-
-        /// <summary>Checks the crop for missing values.</summary>
-        /// <param name="crop">The crop.</param>
-        private void CheckCropForMissingValues(SoilCrop crop)
-        {
-            for (int i = 0; i < Thickness.Length; i++)
-            {
-                if (crop.LL != null && double.IsNaN(crop.LL[i]))
-                    crop.LL[i] = LL15[i];
-                if (crop.KL != null && double.IsNaN(crop.KL[i]))
-                    crop.KL[i] = 0.06;
-                if (crop.XF != null && double.IsNaN(crop.XF[i]))
-                    crop.XF[i] = 1;
-            }
         }
 
         private static string[] cropNames = {"Wheat", "Oats",
@@ -576,6 +628,11 @@ namespace Models.Soils
             if (soil.SoilType != null)
             {
                 string[] predictedCropNames = null;
+                if (soil.ASCOrder == "Vertosol" && soil.ASCSubOrder == "Black")
+                    soil.SoilType = "Black Vertosol";
+                else if (soil.ASCOrder == "Vertosol" && soil.ASCSubOrder == "Grey")
+                    soil.SoilType = "Grey Vertosol";
+
                 if (soil.SoilType.Equals("Black Vertosol", StringComparison.CurrentCultureIgnoreCase))
                     predictedCropNames = BlackVertosolCropList;
                 else if (soil.SoilType.Equals("Grey Vertosol", StringComparison.CurrentCultureIgnoreCase))
@@ -589,8 +646,9 @@ namespace Models.Soils
                     foreach (string cropName in predictedCropNames)
                     {
                         // if a crop parameterisation already exists for this crop then don't add a predicted one.
-                        if (crops.Find(c => c.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase)) == null)
-                            crops.Add(PredictedCrop(soil, cropName));
+                        if (crops.Find(c => c.Name.Equals(cropName + "Soil", StringComparison.InvariantCultureIgnoreCase)) == null)
+                            Structure.Add(PredictedCrop(soil, cropName), water);
+                        //water.Children.Add(PredictedCrop(soil, cropName));
                     }
                 }
             }
@@ -688,10 +746,11 @@ namespace Models.Soils
             KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());
             double[] XF = SoilUtilities.MapConcentration(PredictedXF, PredictedThickness, physical.Thickness, PredictedXF.Last());
             string[] Metadata = StringUtilities.CreateStringArray("Estimated", physical.Thickness.Length);
+            LL = MathUtilities.Constrain(LL, physical.LL15, physical.DUL);
 
             return new SoilCrop()
             {
-                Name = CropName,
+                Name = CropName + "Soil",
                 LL = LL,
                 LLMetadata = Metadata,
                 KL = KL,
@@ -755,7 +814,7 @@ namespace Models.Soils
         {
             var clNode = FindInScope<Solute>("CL");
             var chemical = FindInScope<Chemical>();
-            double[] cl = clNode.InitialValues;
+            double[] cl = clNode?.InitialValues;
             if (MathUtilities.ValuesInArray(cl))
             {
                 cl = SoilUtilities.MapConcentration(cl, clNode.Thickness, Thickness, 0);
@@ -769,6 +828,7 @@ namespace Models.Soils
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
+                    esp = SoilUtilities.MapConcentration(esp, chemical.Thickness, Thickness, esp.Last());
                     for (int i = 0; i < Thickness.Length; i++)
                         crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
@@ -778,6 +838,7 @@ namespace Models.Soils
                     if (MathUtilities.ValuesInArray(ec))
                     {
                         crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
+                        ec = SoilUtilities.MapConcentration(ec, chemical.Thickness, Thickness, ec.Last());
                         for (int i = 0; i < Thickness.Length; i++)
                             crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }

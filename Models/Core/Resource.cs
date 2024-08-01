@@ -203,12 +203,12 @@ namespace Models.Core
                 lock (cacheLock)
                 {
                     if (!cache.TryGetValue(resourceName, out modelFromResource))
-                    {
-                        string contents = GetString(resourceName);
-                        if (string.IsNullOrEmpty(contents))
-                            return null;
+            {
+                string contents = GetString(resourceName);
+                if (string.IsNullOrEmpty(contents))
+                    return null;
 
-                        modelFromResource = new ResourceModel(contents);
+                modelFromResource = new ResourceModel(contents);
                         cache.Add(resourceName, modelFromResource);
                     }
                 }

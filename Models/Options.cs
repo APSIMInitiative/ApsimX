@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
@@ -65,7 +66,7 @@ namespace Models
         /// This property holds the path to the config file.
         /// This is identical to --edit switch. 
         /// </remarks>
-        [Option("run-use-config", HelpText = "Edit the .apsimx file(s) before running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
+        [Option("run-use-config", HelpText = "Deprecated. Use --apply switch with config file workflow instead.")]
         public string RunUseConfig { get; set; }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Models
         /// <remarks>
         /// This property holds the path to the config file and optionally a path to a .apsimx to save the modified .apsimx file (white-space separated).
         /// </remarks>
-        [Option("edit-use-config", HelpText = "Edit the .apsimx file and save without running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
+        [Option("edit-use-config", HelpText = "Deprecated. Use --apply switch with config file workflow instead.")]
         public string EditUseConfig { get; set; }
 
         /// <summary>
@@ -82,6 +83,12 @@ namespace Models
         /// </summary>
         [Option("list-simulations", HelpText = "List simulation names without running them.")]
         public bool ListSimulationNames { get; set; }
+
+        /// <summary>
+        /// List enabled simulation names without running them.
+        /// </summary>
+        [Option('e', "list-enabled-simulations", HelpText = "List enabled simulation names without running them.")]
+        public bool ListEnabledSimulationNames { get; set; }
 
         /// <summary>
         /// List all files that are referenced by an .apsimx file(s) with absolute paths.
@@ -127,13 +134,28 @@ namespace Models
         public string Apply { get; set; }
 
         /// <summary>
-        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.
         /// </summary>
-        /// <remarks>
-        /// Intended to provide a overall approach to simulation handling.
-        /// </remarks>
-        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        [Option('p', "playlist", HelpText = "Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.")]
         public string Playlist { get; set; }
+
+        /// <summary>
+        /// Sets the verbosity level of all summary files.
+        /// </summary>
+        [Option('l', "log", HelpText = "Sets the verbosity level of all summary nodes in file(s).")]
+        public string Log { get; set; }
+
+        /// <summary>
+        /// Sets Simulations to use in memory database rather than database files.
+        /// </summary>
+        [Option("in-memory-db", HelpText = "Sets datastore to use memory instead of database." )]
+        public bool InMemoryDB {get; set;}
+
+        /// <summary>
+        /// Allows the use of a batch file which specifies a series of changes to make to an apsimx file. Used in conjunction with --apply switch.
+        /// </summary>
+        [Option('b', "batch", HelpText="Allows the use of a batch file which specifies a series of changes to make to an apsimx file. To be used with the --apply switch.")]
+        public string Batch{ get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.
@@ -172,6 +194,12 @@ namespace Models
                                          {
                                              Files = new[] { "/path/to/file.apsimx" },
                                              EditFilePath = "/path/to/config/file.txt"
+                                         });
+                yield return new Example("Reconfigure a file with a config file",
+                                         new Options()
+                                         {
+                                             Files = new[] { "/path/to/file.apsimx" },
+                                             Apply = "/path/to/config/file.txt"
                                          });
             }
         }

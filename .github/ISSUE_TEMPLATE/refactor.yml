@@ -1,6 +1,6 @@
-name: "\U0001F527 Refactor request"
-description: Exising code needs to be changed.
-labels: ["refactor"]
+name: "\U0001F527 Refactor Feature"
+description: Existing code requires rewriting or improvement
+labels: ["Improvement", "Refactor"]
 body:
   - type: textarea
     id: location-textarea

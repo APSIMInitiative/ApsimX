@@ -75,7 +75,7 @@ namespace UserInterface.Views
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
-        /// Invoked when the user changes the text in the editor.
+        /// Invoked when the user changes the text in the editor, sender is buffer object
         /// </summary>
         public event EventHandler TextHasChangedByUser;
 
@@ -93,6 +93,11 @@ namespace UserInterface.Views
         /// Invoked when the user drops a variable on the EditorView.
         /// </summary>
         public event EventHandler VariableDragDataReceived;
+
+        /// <summary>
+        /// Invoked when the editor is destoryed and passes back the text inside
+        /// </summary>
+        public event EventHandler<PropertyChangedEventArgs> DisposeEditor;
 
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
@@ -154,6 +159,21 @@ namespace UserInterface.Views
             {
                 if (value != null)
                     Text = string.Join(Environment.NewLine, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or Sets the script as read only (editable)
+        /// </summary>
+        public bool ReadOnly
+        {
+            get
+            {
+                return !textEditor.Editable;
+            }
+            set
+            {
+                textEditor.Editable = !value;
             }
         }
 
@@ -375,7 +395,10 @@ namespace UserInterface.Views
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
             if (style == null)
             {
-                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                string defaultStyle = "";
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                else defaultStyle = Configuration.Settings.DarkTheme ? defaultLightStyle : defaultDarkStyle;
                 style = StyleSchemeManager.Default.GetScheme(defaultStyle);
             }
             if (style != null)
@@ -426,6 +449,11 @@ namespace UserInterface.Views
         {
             try
             {
+                //name will be an ID if editor is a propertyview
+                bool isID = Guid.TryParse(this.mainWidget.Name, out Guid result);
+                if (isID)
+                    DisposeEditor.Invoke(this, new PropertyChangedEventArgs(result, this.Text));
+
                 foreach (ICompletionProvider completion in textEditor.Completion.Providers)
                     textEditor.Completion.RemoveProvider(completion);
 
@@ -650,14 +678,6 @@ namespace UserInterface.Views
             textEditor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
         }
 
-        /// <summary>
-        /// Display a list of completion options to the user.
-        /// </summary>
-        public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
-        {
-
-        }
-
         // Get reference to EditorView's GTK SourceView widget.
         public SourceView GetSourceView()
         {
@@ -791,7 +811,8 @@ namespace UserInterface.Views
         {
             try
             {
-                ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+                if ((o as Widget).Toplevel is Gtk.Window)
+                    ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
                 if (LeaveEditor != null)
                     LeaveEditor.Invoke(this, e);
             }
@@ -853,7 +874,7 @@ namespace UserInterface.Views
             {
                 if (args.Popup is Menu menu)
                 {
-                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    MenuItem item = new MenuItem(menuItemText);
                     if (!string.IsNullOrEmpty(shortcut))
                     {
                         string keyName = string.Empty;

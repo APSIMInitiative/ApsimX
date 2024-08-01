@@ -179,7 +179,7 @@
         /// <returns>The encoded object as a byte array.</returns>
         public static byte[] EncodeData(object o)
         {
-            MemoryStream memStream = ReflectionUtilities.BinarySerialise(o) as MemoryStream;
+            MemoryStream memStream = ReflectionUtilities.JsonSerialiseToStream(o) as MemoryStream;
             byte[] bytes = new byte[memStream.Length + 4];
             BitConverter.GetBytes((int)memStream.Length).CopyTo(bytes, 0);
             memStream.ToArray().CopyTo(bytes, 4);
@@ -193,7 +193,7 @@
         {
             MemoryStream memStream = new MemoryStream(bytes);
             memStream.Seek(4, SeekOrigin.Begin);
-            return ReflectionUtilities.BinaryDeserialise(memStream);
+            return ReflectionUtilities.JsonDeserialise(memStream);
         }
 
         /////////////////////////////////////////////////////////////////////////
