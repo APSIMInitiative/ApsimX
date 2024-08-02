@@ -40,6 +40,12 @@ namespace Models.Functions
         [Units("ppm")]
         public double ConcentrationAtHalfMax { get; set; } = 90;
 
+        /// <summary>
+        /// Nitirification inhibition function.
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction NitrificationInhibition { get; set; }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -53,7 +59,11 @@ namespace Models.Functions
             RateModifier = Math.Min(RateModifier, CERESWF.Value(arrayIndex));
             RateModifier = Math.Min(RateModifier, CERESpHF.Value(arrayIndex));
 
-            return PotentialRate * RateModifier;
+            double inhibitor = 1;
+            if (NitrificationInhibition != null)
+                inhibitor = NitrificationInhibition.Value();
+
+            return PotentialRate * RateModifier * inhibitor;
         }
     }
 }
