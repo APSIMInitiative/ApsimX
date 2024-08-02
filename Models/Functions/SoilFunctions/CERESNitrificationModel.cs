@@ -20,8 +20,8 @@ namespace Models.Functions
         [Link(ByName = true)]
         CERESMineralisationTemperatureFactor TF = null;
 
-        [Link(Type = LinkType.Child)]
-        CERESNitrificationWaterFactor CERESWF = null;
+        // [Link(Type = LinkType.Child)]
+        // CERESNitrificationWaterFactor CERESWF = null;
 
         [Link(Type = LinkType.Child)]
         CERESNitrificationpHFactor CERESpHF = null;
@@ -46,6 +46,12 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction NitrificationInhibition { get; set; }
 
+        /// <summary>
+        /// Water factor for nitrification.
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction NitrificationWaterFactor { get; set; }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -56,7 +62,8 @@ namespace Models.Functions
             double PotentialRate = PotentialNitrificationRate / (NH4.ppm[arrayIndex] + ConcentrationAtHalfMax);
 
             double RateModifier = TF.Value(arrayIndex);
-            RateModifier = Math.Min(RateModifier, CERESWF.Value(arrayIndex));
+            // RateModifier = Math.Min(RateModifier, CERESWF.Value(arrayIndex));
+            RateModifier = Math.Min(RateModifier, NitrificationWaterFactor.Value(arrayIndex));
             RateModifier = Math.Min(RateModifier, CERESpHF.Value(arrayIndex));
 
             double inhibitor = 1;

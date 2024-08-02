@@ -11,7 +11,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
+    [Description("A Y value is returned for the current value of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction
     {
         /// <summary>The ys are all the same</summary>

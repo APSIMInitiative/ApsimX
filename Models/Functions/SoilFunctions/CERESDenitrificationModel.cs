@@ -45,6 +45,12 @@ namespace Models.Functions
         public double DenitrificationRateModifier { get; set; } = 0.0006;
 
         /// <summary>
+        /// Water factor for denitrification.
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction DenitrificationWaterFactor { get; set; }
+
+        /// <summary>
         /// Kludge
         /// </summary>
         [Description("Is inert pool active?")]
@@ -67,7 +73,7 @@ namespace Models.Functions
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
-            return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
+            return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex); // TODO: need to replace CERESWF.Value here.
         }
 
         /// <summary>
