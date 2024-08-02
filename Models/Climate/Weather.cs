@@ -1027,6 +1027,7 @@ namespace Models.Climate
             DateTime start = this.reader.FirstDate;
             DateTime last = this.reader.LastDate;
             int nyears = last.Year - start.Year + 1;
+            int validYears = nyears;
 
             // temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
@@ -1070,29 +1071,52 @@ namespace Models.Climate
             double yearlySumAmp = 0;
             for (int y = 0; y < nyears; y++)
             {
+                double validMonths = 12.0;
+                double currentYearSumMean = 0.0;
+                double currentYearSumAmp = 0.0;
                 maxMean = double.MinValue;
                 minMean = double.MaxValue;
                 sumOfMeans = 0;
                 for (int m = 0; m < 12; m++)
                 {
-                    monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  // calc monthly mean
+                    double monthlyMean = 0.0;
+                    if (monthlySums[m, y] != 0.0)
+                        monthlyMean = monthlySums[m, y] / monthlyDays[m, y];
+                    else validMonths--; // reduce months if no values for month.
+
+                    monthlyMeans[m, y] = monthlyMean;  // calc monthly mean
+
                     if (monthlyDays[m, y] != 0)
                     {
                         sumOfMeans += monthlyMeans[m, y];
                         maxMean = Math.Max(monthlyMeans[m, y], maxMean);
-                        minMean = Math.Min(monthlyMeans[m, y], minMean);
+                        if (monthlyMean != 0)
+                            minMean = Math.Min(monthlyMeans[m, y], minMean);
+                        else minMean = Math.Min(monthlyMean, minMean);
                     }
                 }
 
                 if (maxMean != double.MinValue && minMean != double.MaxValue)
                 {
-                    yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
-                    yearlySumAmp += maxMean - minMean;          // accum the amp of means
+                    if (sumOfMeans == 0 && validMonths == 0)               
+                        yearlySumMeans += currentYearSumMean;
+                    else
+                    {
+                        currentYearSumMean = sumOfMeans / validMonths;
+                        yearlySumMeans += currentYearSumMean; // accum the ave of monthly means
+                    }
+
+                    currentYearSumAmp = maxMean - minMean;
+                    yearlySumAmp += currentYearSumAmp;          // accum the amp of means
                 }
+
+                // Invalidate year if no data.
+                if (currentYearSumMean == 0 && currentYearSumAmp == 0)
+                    validYears--;
             }
 
-            tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
-            amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
+            tav = validYears > 0 ? yearlySumMeans / validYears : yearlySumMeans;  // calc the ave of the yearly ave means
+            amp = validYears > 0 ? yearlySumAmp / validYears : yearlySumAmp;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
         }
