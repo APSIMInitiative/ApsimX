@@ -25,7 +25,7 @@ namespace UserInterface.Presenters
         private IModel model;
 
         /// <summary>The data provider.</summary>
-        private ISheetDataProvider dataProvider;
+        private IDataProvider dataProvider;
 
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
@@ -67,7 +67,7 @@ namespace UserInterface.Presenters
         /// <param name="colIndices">The indices of the columns that were changed.</param>
         /// <param name="rowIndices">The indices of the rows that were changed.</param>
         /// <param name="values">The values of the cells changed.</param>
-        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
+        public delegate void CellChangedDelegate(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
@@ -91,10 +91,10 @@ namespace UserInterface.Presenters
             this.model = model as IModel;
             explorerPresenter = parentPresenter;
 
-            if (model as ISheetDataProvider != null)
+            if (model as IDataProvider != null)
             {  
                 // e.g. DataStorePresenter goes through here.
-                dataProvider = model as ISheetDataProvider;
+                dataProvider = model as IDataProvider;
                 gridTable = null;
             }
             //else we are receiving a GridTable that was created by another presenter
@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
 
         }
 
-        public void SetupSheet(ISheetDataProvider dataProvider)
+        public void SetupSheet(IDataProvider dataProvider)
         {
             // Determine if sheet is editable
             bool gridIsEditable;
@@ -186,7 +186,7 @@ namespace UserInterface.Presenters
             {
                 for (int rowIndex = 0; rowIndex < dataProvider.RowCount; rowIndex++)
                     for (int columnIndex = 0; columnIndex < dataProvider.ColumnCount; columnIndex++)
-                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetCellState.ReadOnly)
                         {
                             gridIsEditable = true;
                             break;
@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
         /// <param name="dataProvider"></param>
         /// <param name="frozenColumns"></param>
         /// <param name="frozenRows"></param>
-        public void PopulateWithDataProvider(ISheetDataProvider dataProvider)
+        public void PopulateWithDataProvider(IDataProvider dataProvider)
         {
             if (gridTable == null)
             {
@@ -233,7 +233,7 @@ namespace UserInterface.Presenters
             if (gridTable != null && grid != null)
             {
                 if (dataProvider != null)
-                    (dataProvider as ISheetDataProvider).CellChanged -= OnCellChanged;
+                    (dataProvider as IDataProvider).CellChanged -= OnCellChanged;
 
                 DataTable data = gridTable.Data;
 
@@ -252,9 +252,9 @@ namespace UserInterface.Presenters
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
                 if (data != null)
                 {
-                    List<List<SheetDataProviderCellState>> isCalculated = new();
+                    List<List<SheetCellState>> isCalculated = new();
                     for (int i = 0; i < data.Columns.Count; i++)
-                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
+                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetCellState.Calculated: SheetCellState.Normal).ToList());
 
                     // Create instance of DataTableProvider.
                     dataProvider = new DataTableProvider(data, units, isCalculated);
@@ -320,7 +320,7 @@ namespace UserInterface.Presenters
         /// <param name="values"></param>
         /// <param name="colIndex">The indices of the column that was changed.</param>
         /// <param name="rowIndex">The indices of the row that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
+        private void OnCellChanged(IDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
         {
             if (CellChanged != null)
             {

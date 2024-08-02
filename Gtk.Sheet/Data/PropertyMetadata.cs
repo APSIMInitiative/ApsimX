@@ -1,21 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using Gtk.Sheet;
-using Models.Core;
 
-namespace UserInterface.Views;
+namespace Gtk.Sheet;
 
 /// <summary>
 /// An internal class representing a property that has been discovered.
 /// </summary>
-class PropertyMetadata
+public class PropertyMetadata
 {
-    private readonly object obj;
-    private readonly PropertyInfo property;
     private readonly PropertyInfo metadataProperty;
     private List<string> values;
     private string format;
@@ -23,7 +16,7 @@ class PropertyMetadata
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="model">The model instance</param>
+    /// <param name="obj">The object instance</param>
     /// <param name="property">The property info</param>
     /// <param name="metadataProperty">The property info</param>
     /// <param name="alias">The column name to use in the grid.</param>
@@ -31,10 +24,10 @@ class PropertyMetadata
     /// <param name="validUnits">The valid units of the property.</param>
     /// <param name="format">The format to use when displaying values in the grid.</param>
     /// <param name="metadata">The metadata for each value.</param>
-    public PropertyMetadata(object model, PropertyInfo property, PropertyInfo metadataProperty, string alias, string units, string[] validUnits, string format)
+    public PropertyMetadata(object obj, PropertyInfo property, PropertyInfo metadataProperty, string alias, string units, string[] validUnits, string format)
     {
-        this.obj = model;
-        this.property = property;
+        Obj = obj;
+        Property = property;
         this.metadataProperty = metadataProperty;
         ValidUnits = validUnits;
         Alias = alias;
@@ -46,13 +39,19 @@ class PropertyMetadata
             Metadata = new();
         else
         {
-            var metadata = metadataProperty.GetValue(model, null) as string[];
-            Metadata = metadata?.Select(m => m == "Calculated" || m == "Estimated" ? SheetDataProviderCellState.Calculated : SheetDataProviderCellState.Normal).ToList();
+            var metadataValue = metadataProperty.GetValue(obj, null);
+            if (metadataValue is string s)
+                Metadata = new() { s == "Calculated" || s == "Estimated" ? SheetCellState.Calculated : SheetCellState.Normal };
+            else
+            {
+                var metadata = metadataValue as string[];
+                Metadata = metadata?.Select(m => m == "Calculated" || m == "Estimated" ? SheetCellState.Calculated : SheetCellState.Normal).ToList();
+            }
         }
         GetValues();
 
         if (!property.CanWrite || property.SetMethod.IsPrivate)
-            Metadata.AddRange(Enumerable.Repeat(SheetDataProviderCellState.ReadOnly, Values.Count));
+            Metadata.AddRange(Enumerable.Repeat(SheetCellState.ReadOnly, Values.Count));
     }
 
     /// <summary>The alias of the property.</summary>
@@ -64,11 +63,13 @@ class PropertyMetadata
     /// <summary>The valid units of the property.</summary>
     public string[] ValidUnits { get; }
 
-    /// <summary>The model.</summary>
-    public IModel Model => obj as IModel;
+    /// <summary>The object instance.</summary>
+    public object Obj { get; }
     
     /// <summary>The metadata of the property.</summary>
-    public List<SheetDataProviderCellState> Metadata { get; set;}
+    public List<SheetCellState> Metadata { get; set;}
+
+    public PropertyInfo Property { get; }
 
     /// <summary>The values of the property.</summary>
     public ReadOnlyCollection<string> Values => values?.AsReadOnly();
@@ -86,7 +87,7 @@ class PropertyMetadata
         bool dataWasChanged = false;
         for (int i = 0; i < valueIndices.Length; i++)
         {
-            if (Metadata == null || i >= Metadata.Count || Metadata[i] != SheetDataProviderCellState.ReadOnly)
+            if (Metadata == null || i >= Metadata.Count || Metadata[i] != SheetCellState.ReadOnly)
             {
                 // Ensure we have enough space in values and metadata lists.
                 if (this.values == null)
@@ -97,10 +98,10 @@ class PropertyMetadata
                 if (Metadata == null)
                     Metadata = new();                    
                 while (valueIndices[i] > Metadata.Count-1)
-                    Metadata.Add(SheetDataProviderCellState.Normal);
+                    Metadata.Add(SheetCellState.Normal);
 
                 this.values[valueIndices[i]] = values[i];
-                Metadata[valueIndices[i]] = SheetDataProviderCellState.Normal;
+                Metadata[valueIndices[i]] = SheetCellState.Normal;
                 dataWasChanged = true;
             }
         }
@@ -121,7 +122,7 @@ class PropertyMetadata
         bool dataWasChanged = false;
         foreach (var i in valueIndices.Reverse())
         {
-            if (Metadata == null || i >= Metadata.Count || Metadata[i] != SheetDataProviderCellState.ReadOnly)
+            if (Metadata == null || i >= Metadata.Count || Metadata[i] != SheetCellState.ReadOnly)
             {
                 if (values != null && i < values.Count)
                 {
@@ -146,11 +147,19 @@ class PropertyMetadata
     /// </summary>
     private void GetValues()
     {
-        object propertyValue = property.GetValue(obj, null);
+        object propertyValue = Property.GetValue(Obj, null);
 
         if (propertyValue != null)
         {
-            if (propertyValue is string[] s)
+            if (propertyValue is string st)
+                values = new List<string>() { st };
+            else if (propertyValue is double doub)
+                values = new List<string>() { double.IsNaN(doub) ? string.Empty : doub.ToString(format) };
+            else if (propertyValue is int integer)
+                values = new List<string>() { integer.ToString() };
+            else if (propertyValue is DateTime datet)
+                values = new List<string>() { datet.ToString("yyyy/MM/dd") };
+            else if (propertyValue is string[] s)
                 values = s.Select(v => v?.ToString()).ToList();
             else if (propertyValue is double[] d)
                 values = d.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
@@ -170,8 +179,6 @@ class PropertyMetadata
                 values = lb.Select(v => v ? "X" : string.Empty).ToList();
             else if (propertyValue is List<DateTime> ldt)
                 values = ldt.Select(v => v.ToString("yyyy/MM/dd")).ToList();
-            else
-                throw new Exception($"Unknown property data type found while trying to display model in grid control. Data type: {property.PropertyType}");
         }
     }
 
@@ -182,9 +189,17 @@ class PropertyMetadata
     {
         object newValues = null;
 
-        if (property.PropertyType == typeof(string[]))
+        if (Property.PropertyType == typeof(string))
+            newValues = values.First();
+        else if (Property.PropertyType == typeof(double))
+            newValues = Double.TryParse(values.First(), out double d) ? d : double.NaN;
+        else if (Property.PropertyType == typeof(int))
+            newValues = Int32.TryParse(values.First(), out int i) ? i : Int32.MaxValue;
+        else if (Property.PropertyType == typeof(DateTime))
+            newValues = DateTime.ParseExact(values.First(), "yyyy/MM/dd", CultureInfo.InvariantCulture);
+        else if (Property.PropertyType == typeof(string[]))
             newValues = values.ToArray();
-        else if (property.PropertyType == typeof(double[]))
+        else if (Property.PropertyType == typeof(double[]))
         {
             newValues = values.Select(v => 
             {
@@ -193,7 +208,7 @@ class PropertyMetadata
                 return double.NaN;
             }).ToArray();
         }
-        else if (property.PropertyType == typeof(int[]))
+        else if (Property.PropertyType == typeof(int[]))
             newValues = values.Select(v => 
             {
                 if (Int32.TryParse(v, out int i))
@@ -201,13 +216,13 @@ class PropertyMetadata
                 return Int32.MaxValue;
 
             }).ToArray();
-        else if (property.PropertyType == typeof(bool[]))
+        else if (Property.PropertyType == typeof(bool[]))
             newValues = values.Select(v => v == "X" || v == "x").ToList();
-        else if (property.PropertyType == typeof(DateTime[]))
+        else if (Property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
-        else if (property.PropertyType == typeof(List<string>))
+        else if (Property.PropertyType == typeof(List<string>))
             newValues = values.ToList();
-        else if (property.PropertyType == typeof(List<double>))
+        else if (Property.PropertyType == typeof(List<double>))
         {
             newValues = values.Select(v => 
             {
@@ -216,7 +231,7 @@ class PropertyMetadata
                 return double.NaN;
             }).ToList();
         }
-        else if (property.PropertyType == typeof(List<int>))
+        else if (Property.PropertyType == typeof(List<int>))
             newValues = values.Select(v => 
             {
                 if (Int32.TryParse(v, out int i))
@@ -224,20 +239,25 @@ class PropertyMetadata
                 return Int32.MaxValue;
 
             }).ToList();
-        else if (property.PropertyType == typeof(List<bool>))
+        else if (Property.PropertyType == typeof(List<bool>))
             newValues = values.Select(v => v == "X" || v == "x").ToList();
-        else if (property.PropertyType == typeof(DateTime[]) || property.PropertyType == typeof(List<DateTime>))
+        else if (Property.PropertyType == typeof(DateTime[]) || Property.PropertyType == typeof(List<DateTime>))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToList();
         else
-            throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {property.PropertyType}");
+            throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {Property.PropertyType}");
 
-        if (property.CanWrite)
-            property.SetValue(obj, newValues);
+        if (Property.CanWrite)
+            Property.SetValue(Obj, newValues);
     }
 
     private void SetMetadata()
     {
-        if (Metadata != null)
-            metadataProperty?.SetValue(obj, Metadata.Select(m => m == SheetDataProviderCellState.Calculated ? "Calculated" : null).ToArray());    
+        if (Metadata != null && metadataProperty != null)
+        {
+            if (metadataProperty.PropertyType.IsArray)
+                metadataProperty.SetValue(Obj, Metadata.Select(m => m == SheetCellState.Calculated ? "Calculated" : null).ToArray());    
+            else
+                metadataProperty.SetValue(Obj, Metadata.First() == SheetCellState.Calculated ? "Calculated" : null);
+        }
     }
 }
