@@ -16,6 +16,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
+using Models.Interfaces;
+using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -71,21 +73,14 @@ namespace Models.Optimisation
         [JsonIgnore]
         private readonly string id = Guid.NewGuid().ToString();
 
-        /// <summary>Name of parameter</summary>
+        /// <summary>
+        /// List of parameters
+        /// </summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
         [Display]
-        public string[] ParameterName { get; set; } = new string[0];
-
-        /// <summary>Model path of parameter</summary>
-        [Display]
-        public string[] ParameterPath { get; set; } = new string[0];
-
-        /// <summary>Lower bound of parameter</summary>
-        [Display]
-        public double[] ParameterLowerBound { get; set; } = new double[0];
-
-        /// <summary>Upper bound of parameter</summary>
-        [Display]
-        public double[] ParameterUpperBound { get; set; } = new double[0];
+        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 
         /// <summary>
         /// Name of the predicted data table.
@@ -167,27 +162,6 @@ namespace Models.Optimisation
         /// </summary>
         [JsonIgnore]
         public string Status { get; private set; }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable("Table", columns, this));
-
-                return tables;
-            }
-        }
 
         /// <summary>
         /// Invoked whenever the R process writes to stdout.
@@ -368,8 +342,8 @@ namespace Models.Optimisation
         /// <returns></returns>
         private string GetParamInfo()
         {
-            string[] lower = ParameterPath.Zip(ParameterLowerBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
-            string[] upper = ParameterPath.Zip(ParameterUpperBound).Select(p => $"'{p.First}'={p.Second}").ToArray();
+            string[] lower = Parameters.Select(p => $"'{p.Path}'={p.LowerBound}").ToArray();
+            string[] upper = Parameters.Select(p => $"'{p.Path}'={p.UpperBound}").ToArray();
             string lowerBounds = string.Join(", ", lower);
             string upperBounds = string.Join(", ", upper);
 
@@ -578,8 +552,8 @@ namespace Models.Optimisation
         private IEnumerable<Override> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
-            foreach (var param in ParameterName.Zip(ParameterPath))
-                yield return new Override(param.Second, optimal[$"{param.First} Final"], Override.MatchTypeEnum.NameAndType);
+            foreach (Parameter param in Parameters)
+                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
         }
 
         /// <summary>
@@ -609,7 +583,7 @@ namespace Models.Optimisation
             string csvFile = $"{directory}/{outputCsvFileName}";
             script.AppendLine($"output_file <- '{csvFile}'");
             script.AppendLine($"load('{rDataPath.Replace(@"\", "/")}')");
-            IEnumerable<string> paramNames = ParameterName.Select(p => $"'{p}'");
+            IEnumerable<string> paramNames = Parameters.Select(p => $"'{p.Name}'");
             script.AppendLine($"param_names <- c({string.Join(", ", paramNames)})");
             script.AppendLine(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.read_croptimizr_output.r"));
             return script.ToString();

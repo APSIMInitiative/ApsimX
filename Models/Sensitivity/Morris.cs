@@ -9,6 +9,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Interfaces;
+using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -89,21 +91,14 @@ namespace Models
             set { _aggregationVariableName = value; ParametersHaveChanged = true; }
         }
 
-        /// <summary>Name of parameter</summary>
+        /// <summary>
+        /// List of parameters
+        /// </summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
         [Display]
-        public string[] ParameterName { get; set; } = new string[0];
-
-        /// <summary>Model path of parameter</summary>
-        [Display]
-        public string[] ParameterPath { get; set; } = new string[0];
-
-        /// <summary>Lower bound of parameter</summary>
-        [Display]
-        public double[] ParameterLowerBound { get; set; } = new double[0];
-
-        /// <summary>Upper bound of parameter</summary>
-        [Display]
-        public double[] ParameterUpperBound { get; set; } = new double[0];
+        public List<Parameter> Parameters { get; set; }
 
         /// <summary>
         /// List of aggregation values
@@ -126,6 +121,7 @@ namespace Models
         /// <summary>Constructor</summary>
         public Morris()
         {
+            Parameters = new List<Parameter>();
             allCombinations = new List<List<CompositeFactor>>();
         }
 
@@ -151,7 +147,7 @@ namespace Models
                 var simDescription = new SimulationDescription(baseSimulation, simulationName);
 
                 // Add some descriptors
-                int path = (simulationNumber - 1) / (ParameterName.Length + 1) + 1;
+                int path = (simulationNumber - 1) / (Parameters.Count + 1) + 1;
                 simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
                 simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Path", path.ToString()));
 
@@ -197,7 +193,7 @@ namespace Models
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
-                int n = NumPaths * (ParameterName.Length + 1);
+                int n = NumPaths * (Parameters.Count + 1);
                 // Sometimes R will return an incorrect number of parameter values, usually
                 // this happens when jump is too high. In this situation, we retry up to 10 times.
                 for (int numTries = 1; numTries < 10 && ParameterValues.Rows.Count != n; numTries++)
@@ -206,7 +202,7 @@ namespace Models
                     msg.AppendLine("Morris error: Number of parameter values from R is not equal to num paths * (N + 1).");
                     msg.AppendLine($"Number of parameters from R = {ParameterValues.Rows.Count}");
                     msg.AppendLine($"NumPaths={NumPaths}");
-                    msg.AppendLine($"Parameters.Count={ParameterName.Length}");
+                    msg.AppendLine($"Parameters.Count={Parameters.Count}");
                     msg.AppendLine($"Trying again...");
                     Console.WriteLine(msg.ToString());
 
@@ -221,7 +217,7 @@ namespace Models
                     msg.AppendLine("Morris error: Number of parameter values from R is not equal to num paths * (N + 1).");
                     msg.AppendLine($"Number of parameters from R = {ParameterValues.Rows.Count}");
                     msg.AppendLine($"NumPaths={NumPaths}");
-                    msg.AppendLine($"Parameters.Count={ParameterName.Length}");
+                    msg.AppendLine($"Parameters.Count={Parameters.Count}");
                     msg.AppendLine($"ParameterValues as returned from R:");
                     using (StringWriter writer = new StringWriter(msg))
                         DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
@@ -232,10 +228,10 @@ namespace Models
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
                     var factors = new List<CompositeFactor>();
-                    for (int p = 0; p < ParameterName.Length; p++)
+                    foreach (Parameter param in Parameters)
                     {
-                        object value = Convert.ToDouble(parameterRow[ParameterName[p]], CultureInfo.InvariantCulture);
-                        CompositeFactor f = new CompositeFactor(ParameterName[p], ParameterPath[p], value);
+                        object value = Convert.ToDouble(parameterRow[param.Name], CultureInfo.InvariantCulture);
+                        CompositeFactor f = new CompositeFactor(param.Name, param.Path, value);
                         factors.Add(f);
                     }
 
@@ -324,7 +320,7 @@ namespace Models
                 // Create a path variable. 
                 var pathValues = Enumerable.Range(1, NumPaths).ToArray();
 
-                foreach (var parameterName in ParameterName)
+                foreach (var parameter in Parameters)
                 {
                     foreach (DataColumn column in predictedValues.Columns)
                     {
@@ -334,9 +330,9 @@ namespace Models
                         string aggregationValue = StringUtilities.GetAfter(column.ColumnName, "_");
                         string variableName = StringUtilities.RemoveAfter(column.ColumnName, '_');
 
-                        eeTableKey.SetIndex(new object[] { parameterName, aggregationValue });
+                        eeTableKey.SetIndex(new object[] { parameter.Name, aggregationValue });
 
-                        List<double> values = DataTableUtilities.GetColumnAsDoubles(eeView, parameterName).ToList();
+                        List<double> values = DataTableUtilities.GetColumnAsDoubles(eeView, parameter.Name).ToList();
                         for (int i = 0; i < values.Count; i++)
                             values[i] = Math.Abs(values[i]);
                         var runningMean = MathUtilities.RunningAverage(values);
@@ -421,9 +417,9 @@ namespace Models
             using (StreamWriter writer = new StreamWriter(morrisParametersFileName))
                 DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
 
-            string paramNames = StringUtilities.Build(ParameterName, ",", "\"", "\"");
-            string lowerBounds = StringUtilities.Build(ParameterLowerBound, ",");
-            string upperBounds = StringUtilities.Build(ParameterUpperBound, ",");
+            string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+            string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
+            string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = GetMorrisRScript();
             script += string.Format
             ("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
@@ -471,9 +467,9 @@ namespace Models
         /// </summary>
         private string GetMorrisRScript()
         {
-            string paramNames = StringUtilities.Build(ParameterName, ",", "\"", "\"");
-            string lowerBounds = StringUtilities.Build(ParameterLowerBound, ",");
-            string upperBounds = StringUtilities.Build(ParameterUpperBound, ",");
+            string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+            string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
+            string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = string.Format
             ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
             $"library('sensitivity')" + Environment.NewLine +

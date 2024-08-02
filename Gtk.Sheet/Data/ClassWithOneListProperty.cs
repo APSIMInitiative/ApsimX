@@ -78,10 +78,8 @@ class ClassWithOneListProperty : IDataProvider
     /// <param name="rowIndex">Row index of cell.</param>
     public SheetCellState GetCellState(int columnIndex, int rowIndex)
     {
-        if (columnIndex >= ColumnCount)
-            throw new Exception($"Invalid column index: {columnIndex}");
-        if (rowIndex >= RowCount)
-            throw new Exception($"Invalid row index: {rowIndex}");
+        if (columnIndex >= ColumnCount || rowIndex >= RowCount)
+            return SheetCellState.Normal;
         if (properties[rowIndex][columnIndex].Metadata != null && 
             properties[rowIndex][columnIndex].Metadata.Count > 0 && 
             properties[rowIndex][columnIndex].Metadata.All(m => m == SheetCellState.ReadOnly))

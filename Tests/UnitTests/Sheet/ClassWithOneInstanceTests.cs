@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace UnitTests.Sheet;
 
 [TestFixture]
-class ClassWithOneInstanceTests
+class ClassWithOneListPropertyTests
 {
     class ClassWithUnits
     {

@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 178; } }
+        public static int LatestVersion { get { return 177; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5589,28 +5589,6 @@ namespace Models.Core.ApsimFile
                 {
                     string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
                     biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Change the way parameters are store in Morris, Sobol, Croptimizr
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion178(JObject root, string fileName)        
-        {
-            foreach (var model in JsonUtilities.ChildrenOfType(root, "Sobol")
-                                               .Concat(JsonUtilities.ChildrenOfType(root, "Morris")
-                                               .Concat(JsonUtilities.ChildrenOfType(root, "CroptimizR"))))
-            {
-                var parameters = model["Parameters"] as JArray;
-                if (parameters != null)
-                {
-                    model["ParameterName"] = new JArray(parameters.Select(p => p["Name"]).Values<string>());
-                    model["ParameterPath"] = new JArray(parameters.Select(p => p["Path"]).Values<string>());
-                    model["ParameterLowerBound"] = new JArray(parameters.Select(p => p["LowerBound"]).Values<double>());
-                    model["ParameterUpperBound"] = new JArray(parameters.Select(p => p["UpperBound"]).Values<double>());
                 }
             }
         }
