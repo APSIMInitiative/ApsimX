@@ -39,7 +39,7 @@ jobs:
           cd ApsimNG
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
-          git merge origin/master
+          git merge apsimx master
 
       - name: Push AAA_ForSesame to ApsimNG (if changes exist)
         if: steps.check_changes.outputs.changes_exist == 'true'
