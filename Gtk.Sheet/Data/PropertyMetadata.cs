@@ -50,7 +50,7 @@ public class PropertyMetadata
         }
         GetValues();
 
-        if (!property.CanWrite || property.SetMethod.IsPrivate)
+        if (Values != null && (!property.CanWrite || property.SetMethod.IsPrivate))
             Metadata.AddRange(Enumerable.Repeat(SheetCellState.ReadOnly, Values.Count));
     }
 

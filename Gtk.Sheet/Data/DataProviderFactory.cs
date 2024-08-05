@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Data;
 using System.Reflection;
+using ExCSS;
 using Models.Core;
 
 namespace Gtk.Sheet;
@@ -19,6 +21,10 @@ public class DataProviderFactory
     {
         // Discover a list of potential class properties.
         var properties = DiscoverProperties(obj);
+
+        var dataTableProperty = properties.Where(p => p.Property.PropertyType == typeof(DataTable));
+        if (dataTableProperty.Any())
+            return new DataTableProvider(dataTableProperty.First().Property.GetValue(obj) as DataTable);
 
         // If the first discovered property is a list of objects.
         var listObjectProperties = properties.Where(p => typeof(IList).IsAssignableFrom(p.Property.PropertyType) &&

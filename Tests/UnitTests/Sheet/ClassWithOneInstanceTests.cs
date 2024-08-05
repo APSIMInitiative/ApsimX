@@ -369,5 +369,6 @@ class ClassWithOneListPropertyTests
         Assert.That(dataProvider.GetCellContents(1, 1), Is.EqualTo("b4"));
         Assert.That(dataProvider.GetCellContents(2, 1), Is.EqualTo("c4"));
         Assert.That(dataProvider.GetCellContents(3, 1), Is.EqualTo("d4"));
-    }      
+    }
+   
 }
