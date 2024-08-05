@@ -23,7 +23,7 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class DEROPAPY : Model, IGridModel
+    public class DEROPAPY : Model
     {
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
@@ -129,13 +129,18 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar derochild = null;
 
+        private DataTable readData;
+
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         private DataTable readCSVandUpdateProperties()
         {
-            DataTable readData = new DataTable();
+            readData = new DataTable();
             readData = ApsimTextFile.ToTable(FullFileName);
+
+            foreach (DataColumn column in readData.Columns)
+                column.ReadOnly = true;
             
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
@@ -144,50 +149,18 @@ namespace Models.PMF.SimplePlantModels
                 CurrentCropParams = getCurrentParams(readData, CurrentCropName);
             }
             CropNames = readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray().Skip(3).ToArray();
-
             return readData;
         }
 
         /// <summary>Gets or sets the table of values.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
+        [Display]
+        public DataTable Data
         {
             get
             {
-                List<GridTable> tables = new List<GridTable>
-                {
-                    new GridTable("", new List<GridTableColumn>(), this)
-                };
-                return tables;
+                readCSVandUpdateProperties();
+                return readData;
             }
-        }
-
-        /// <summary>
-        /// Reads in the csv data and sends it as a datatable to the grid
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
-        {
-            DataTable dt2 = new DataTable();
-            try
-            {
-                dt2 = readCSVandUpdateProperties();
-            }
-            catch
-            {
-                dt2 = new DataTable();
-            }
-            return dt2;
-        }
-
-        /// <summary>
-        /// Writes out changes from the grid to the csv file
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-            //TextWriter writer = new StreamWriter(FullFileName, false);
-            //DataTableUtilities.DataTableToText(dt, startColumnIndex: 0, delimiter: ",", showHeadings: true,writer:writer);
-            //writer.Close();
-            return new DataTable();
         }
 
         /// <summary>

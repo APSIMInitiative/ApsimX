@@ -45,7 +45,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
+            gridPresenter.Attach(input, this.view.Grid, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
 

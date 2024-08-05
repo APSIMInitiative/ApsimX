@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace Gtk.Sheet
+﻿namespace Gtk.Sheet
 {
-
-    public enum SheetDataProviderCellState
+    public enum SheetCellState
     {
         ReadOnly,
         Calculated,
@@ -11,7 +8,7 @@ namespace Gtk.Sheet
     }
 
     /// <summary>An interface used by the sheet widget to get and set the contents of a sheet cell.</summary>
-    public interface ISheetDataProvider
+    public interface IDataProvider
     {
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="sender">The sender of the event.</param>
@@ -19,7 +16,7 @@ namespace Gtk.Sheet
         /// <param name="rowIndices">The indices of the rows that were changed.</param>
         /// <param name="values">The values of the cells changed.</param>
 
-        delegate void CellChangedDelegate(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
+        delegate void CellChangedDelegate(IDataProvider sender, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         event CellChangedDelegate CellChanged;
@@ -60,7 +57,7 @@ namespace Gtk.Sheet
         /// <summary>Get the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
-        SheetDataProviderCellState GetCellState(int colIndex, int rowIndex);
+        SheetCellState GetCellState(int colIndex, int rowIndex);
 
         /// <summary>Set the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>

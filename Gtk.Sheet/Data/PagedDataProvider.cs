@@ -1,19 +1,14 @@
 ﻿using APSIM.Shared.Utilities;
-using Gtk.Sheet;
 using Models.Storage;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text.RegularExpressions;
-using static Gtk.Sheet.ISheetDataProvider;
 
 namespace Gtk.Sheet
 {
     /// <summary>
     /// Provides paged access to a table in the DataStore.
     /// </summary>
-    public class PagedDataProvider : ISheetDataProvider
+    public class PagedDataProvider : IDataProvider
     {
         /// <summary>The data store.</summary>
         private readonly IStorageReader dataStore;
@@ -102,7 +97,7 @@ namespace Gtk.Sheet
         public event EventHandler PagingEnd;
 
         /// <summary>An event invoked when a cell changes.</summary>
-        public event ISheetDataProvider.CellChangedDelegate CellChanged;        
+        public event IDataProvider.CellChangedDelegate CellChanged;        
 
         /// <summary>Number of columns that are always to be visible.</summary>
         public int NumPriorityColumns { get; set; }
@@ -391,9 +386,9 @@ namespace Gtk.Sheet
         /// <summary>Get the cell state.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
-        public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
+        public SheetCellState GetCellState(int colIndex, int rowIndex)
         {
-            return SheetDataProviderCellState.ReadOnly;
+            return SheetCellState.ReadOnly;
         }
 
         /// <summary>Set the cell state.</summary>

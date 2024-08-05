@@ -28,7 +28,7 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridModel
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// The DataStore.
@@ -68,30 +68,13 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
+        [Display]
+        public DataTable Data
         {
             get
             {
-                return new List<GridTable>() { new GridTable(Name, new List<GridTableColumn>(), this) };
+                return GetTable();
             }
-        }
-
-        /// <summary>
-        /// Combines the live and dead forages into a single row for display and renames columns
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
-        {
-            return GetTable();
-        }
-
-        /// <summary>
-        /// Breaks the lines into the live and dead parts and changes headers to match class
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-            //since Input is not an input in the GUI, we don't want to actualy change the model.
-            return new DataTable();
         }
 
         /// <summary>Return our input filenames</summary>
@@ -153,7 +136,10 @@ namespace Models.PostSimulationTools
                 if (File.Exists(fileName))
                 {
                     textFile.Open(fileName);
-                    return textFile.ToTable();
+                    DataTable data = textFile.ToTable();
+                    foreach (DataColumn column in data.Columns)
+                        column.ReadOnly = true;
+                    return data;
                 }
                 else
                     throw new Exception($"The specified file '{fileName}' does not exist.");

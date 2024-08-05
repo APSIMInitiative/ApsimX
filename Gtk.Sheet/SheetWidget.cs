@@ -35,7 +35,7 @@ namespace Gtk.Sheet
 
         /// <summary>Constructor</summary>
         public SheetWidget(Container container,
-                           ISheetDataProvider dataProvider, 
+                           IDataProvider dataProvider, 
                            bool multiSelect,
                            int numberFrozenColumns = 0,
                            int numberFrozenRows = -1,
@@ -82,7 +82,7 @@ namespace Gtk.Sheet
         /// Set a new data provider for the sheet.
         /// </summary>
         /// <param name="dataProvider">The data provider.</param>
-        public void SetDataProvider(ISheetDataProvider dataProvider)
+        public void SetDataProvider(IDataProvider dataProvider)
         {
             Sheet.SetDataProvider(dataProvider);
             if (dataProvider != null)

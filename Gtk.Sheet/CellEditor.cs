@@ -64,7 +64,7 @@ namespace Gtk.Sheet
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
             int dataRowIndex = selectedRowIndex - sheet.NumberFrozenRows;
 
-            if (sheet.DataProvider.GetCellState(selectedColumnIndex, selectedRowIndex) != SheetDataProviderCellState.ReadOnly)
+            if (sheet.DataProvider.GetCellState(selectedColumnIndex, selectedRowIndex) != SheetCellState.ReadOnly)
             {
                 var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 

@@ -88,7 +88,7 @@ namespace Gtk.Sheet
                 foreach (string word in line.Split('\t'))
                 {
                     int dataRowIndex = rowIndex - sheet.NumberFrozenRows;
-                    if (sheet.DataProvider.GetCellState(columnIndex, dataRowIndex) != SheetDataProviderCellState.ReadOnly)
+                    if (sheet.DataProvider.GetCellState(columnIndex, dataRowIndex) != SheetCellState.ReadOnly)
                         sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{dataRowIndex}, new string[] {word});
                     columnIndex++;
                     if (columnIndex == sheet.DataProvider.ColumnCount)
