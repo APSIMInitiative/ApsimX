@@ -49,7 +49,7 @@ namespace Utility
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
         private ScrolledWindow scroller;
-        private VBox vbox1;
+        private Box vbox1;
         Box dialogVBox;
         private bool singleInstance = false;
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -66,7 +66,7 @@ namespace Utility
         {
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
             dialogVBox = (Box)builder.GetObject("dialog-vbox1");
             scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             radioAus = (RadioButton)builder.GetObject("radioAus");
@@ -909,7 +909,7 @@ namespace Utility
             {
                 if (dialog1.Toplevel.Window != null)
                 {
-                    dialog1.Toplevel.Window.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.Window.Cursor = value ? new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

@@ -51,19 +51,18 @@
             var provider = new PagedDataProvider(reader, "Current", "Report", null, null, null, "", 2);
 
             Assert.That(provider.ColumnCount, Is.EqualTo(3));
-            Assert.That(provider.GetCellContents(0, 0), Is.EqualTo("SimulationName"));
-            Assert.That(provider.GetCellContents(1, 0), Is.EqualTo("Col1"));
-            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("Col2"));
-            Assert.That(provider.RowCount, Is.EqualTo(9));
-            Assert.That(provider.NumHeadingRows, Is.EqualTo(2));
-            Assert.That(provider.GetCellContents(1, 1), Is.EqualTo("g"));
-            Assert.That(provider.GetCellContents(1, 2), Is.EqualTo("1"));
-            Assert.That(provider.GetCellContents(1, 3), Is.EqualTo("2"));
-            Assert.That(provider.GetCellContents(1, 4), Is.EqualTo("3"));
-            Assert.That(provider.GetCellContents(1, 5), Is.EqualTo("4"));
-            Assert.That(provider.GetCellContents(1, 6), Is.EqualTo("5"));
-            Assert.That(provider.GetCellContents(1, 7), Is.EqualTo("6"));
-            Assert.That(provider.GetCellContents(1, 8), Is.EqualTo("7"));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col1"));
+            Assert.That(provider.GetColumnName(2), Is.EqualTo("Col2"));
+            Assert.That(provider.RowCount, Is.EqualTo(7));
+            Assert.That(provider.GetColumnUnits(1), Is.EqualTo("g"));
+            Assert.That(provider.GetCellContents(1, 0), Is.EqualTo("1"));
+            Assert.That(provider.GetCellContents(1, 1), Is.EqualTo("2"));
+            Assert.That(provider.GetCellContents(1, 2), Is.EqualTo("3"));
+            Assert.That(provider.GetCellContents(1, 3), Is.EqualTo("4"));
+            Assert.That(provider.GetCellContents(1, 4), Is.EqualTo("5"));
+            Assert.That(provider.GetCellContents(1, 5), Is.EqualTo("6"));
+            Assert.That(provider.GetCellContents(1, 6), Is.EqualTo("7"));
         }
 
         /// <summary>Ensure paging with a column filter works.</summary>
@@ -76,17 +75,16 @@
             var provider = new PagedDataProvider(reader, "Current", "Report", null, "Col2", null, "", 2);
 
             Assert.That(provider.ColumnCount, Is.EqualTo(2));
-            Assert.That(provider.GetCellContents(0, 0), Is.EqualTo("SimulationName"));
-            Assert.That(provider.GetCellContents(1, 0), Is.EqualTo("Col2"));
-            Assert.That(provider.RowCount, Is.EqualTo(8));
-            Assert.That(provider.NumHeadingRows, Is.EqualTo(1));
-            Assert.That(provider.GetCellContents(1, 1), Is.EqualTo("8"));
-            Assert.That(provider.GetCellContents(1, 2), Is.EqualTo("9"));
-            Assert.That(provider.GetCellContents(1, 3), Is.EqualTo("10"));
-            Assert.That(provider.GetCellContents(1, 4), Is.EqualTo("11"));
-            Assert.That(provider.GetCellContents(1, 5), Is.EqualTo("12"));
-            Assert.That(provider.GetCellContents(1, 6), Is.EqualTo("13"));
-            Assert.That(provider.GetCellContents(1, 7), Is.EqualTo("14"));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col2"));
+            Assert.That(provider.RowCount, Is.EqualTo(7));
+            Assert.That(provider.GetCellContents(1, 0), Is.EqualTo("8"));
+            Assert.That(provider.GetCellContents(1, 1), Is.EqualTo("9"));
+            Assert.That(provider.GetCellContents(1, 2), Is.EqualTo("10"));
+            Assert.That(provider.GetCellContents(1, 3), Is.EqualTo("11"));
+            Assert.That(provider.GetCellContents(1, 4), Is.EqualTo("12"));
+            Assert.That(provider.GetCellContents(1, 5), Is.EqualTo("13"));
+            Assert.That(provider.GetCellContents(1, 6), Is.EqualTo("14"));
         }
 
         /// <summary>Ensure paging with a simulation, column and row filter works.</summary>
@@ -99,15 +97,53 @@
             var provider = new PagedDataProvider(reader, "Current", "Report", new string[] { "Sim1" }, "Col1,Col2", "Col1 > 2", "", 2);
 
             Assert.That(provider.ColumnCount, Is.EqualTo(3));
-            Assert.That(provider.GetCellContents(0, 0), Is.EqualTo("SimulationName"));
-            Assert.That(provider.GetCellContents(1, 0), Is.EqualTo("Col1"));
-            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("Col2"));
-            Assert.That(provider.RowCount, Is.EqualTo(3));
-            Assert.That(provider.NumHeadingRows, Is.EqualTo(2));
-            Assert.That(provider.GetCellContents(1, 1), Is.EqualTo("g"));
-            Assert.That(provider.GetCellContents(2, 1), Is.Null);
-            Assert.That(provider.GetCellContents(2, 2), Is.EqualTo("10"));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col1"));
+            Assert.That(provider.GetColumnName(2), Is.EqualTo("Col2"));
+            Assert.That(provider.GetColumnUnits(1), Is.EqualTo("g"));
+            Assert.That(provider.RowCount, Is.EqualTo(1));
+            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("10"));
         }
+
+        /// <summary>Ensure paging with a simulation, column and row filter works.</summary>
+        /// <remarks>https://github.com/APSIMInitiative/ApsimX/issues/9209</remarks>
+        [Test]
+        public void PagingWithSimulationColumnandRowFilter2()
+        {
+            CreateTable(database);
+
+            var reader = new DataStoreReader(database);
+            var provider = new PagedDataProvider(reader, "Current", "Report", new string[] { "Sim1" }, "Col1,Col2", "Col1 = '2'", "", 2);
+
+            Assert.That(provider.ColumnCount, Is.EqualTo(3));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col1"));
+            Assert.That(provider.GetColumnName(2), Is.EqualTo("Col2"));
+            Assert.That(provider.GetColumnUnits(1), Is.EqualTo("g"));
+            Assert.That(provider.RowCount, Is.EqualTo(1));
+            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("9"));
+        }        
+
+        /// <summary>Ensure a row filter with SimulationName = 'aaaa' works.</summary>
+        [Test]
+        public void PagingWithRowFilterUsingSimulationName()
+        {
+            CreateTable(database);
+
+            var reader = new DataStoreReader(database);
+            var provider = new PagedDataProvider(reader, "Current", "Report", new string[] { "Sim1" }, "Col1,Col2", "[SimulationName] = 'Sim1'", "", 2);
+
+            Assert.That(provider.ColumnCount, Is.EqualTo(3));
+            Assert.That(provider.GetColumnName(0), Is.EqualTo("SimulationName"));
+            Assert.That(provider.GetColumnName(1), Is.EqualTo("Col1"));
+            Assert.That(provider.GetColumnName(2), Is.EqualTo("Col2"));
+            Assert.That(provider.GetColumnUnits(1), Is.EqualTo("g"));
+            Assert.That(provider.RowCount, Is.EqualTo(3));
+            Assert.That(provider.GetCellContents(2, 0), Is.EqualTo("8"));
+            Assert.That(provider.GetCellContents(2, 1), Is.EqualTo("9"));
+            Assert.That(provider.GetCellContents(2, 2), Is.EqualTo("10"));
+        }        
+        
 
         /// <summary>Create a table that we can test</summary>
         private static void CreateTable(IDatabaseConnection database)

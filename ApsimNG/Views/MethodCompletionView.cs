@@ -93,11 +93,11 @@ namespace UserInterface.Views
             //lblArgumentSummaries.Ellipsize = Pango.EllipsizeMode.Start;
             lblArgumentSummaries.LineWrap = true;
 
-            HBox bottomRow = new HBox();
+            Box bottomRow = new Box(Orientation.Horizontal, 0);
             bottomRow.PackStart(lblArgumentSummaries, true, true, 0);
             bottomRow.PackEnd(lblOverloadIndex, false, false, 0);
 
-            VBox container = new VBox();
+            Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(lblMethodSignature, false, false, 0);
             container.PackStart(lblMethodSummary, false, false, 0);
             container.PackStart(bottomRow, false, false, 0);

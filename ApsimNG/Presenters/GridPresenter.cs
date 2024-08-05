@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Gtk.Sheet;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
 using Models.Utilities;
+using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -18,17 +21,17 @@ namespace UserInterface.Presenters
     /// </summary>
     class GridPresenter : IPresenter
     {
-        /// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
-        private Model model;
+        /// <summary>Stores a reference to the model.</summary>
+        private IModel model;
+
+        /// <summary>The data provider.</summary>
+        private ISheetDataProvider dataProvider;
 
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
-
-        /// <summary>The data provider.</summary>
-        private ISheetDataProvider dataProvider;
 
         // /// <summary>Currently Selected Row. Used to detect when a cell is slected</summary>
         // private int selectedRow = -1;
@@ -56,6 +59,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private IntellisensePresenter intellisense;
 
+        /// <summary>A replace model command to enable the undo system to work.</summary>
+        private ReplaceModelCommand replaceModelCommand;
+
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
         /// <param name="colIndices">The indices of the columns that were changed.</param>
@@ -82,29 +88,29 @@ namespace UserInterface.Presenters
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
-            //this allows a data provider to be passed in instead of a model.
-            //For example, the datastore presenter uses this to fill out the table.
+            this.model = model as IModel;
+            explorerPresenter = parentPresenter;
+
             if (model as ISheetDataProvider != null)
-            {
+            {  
+                // e.g. DataStorePresenter goes through here.
                 dataProvider = model as ISheetDataProvider;
                 gridTable = null;
             }
-            //else we are receiving a model with IGridTable that we should get our GridTable from
-            else if (model as IGridModel != null)
-            {
-                this.model = (model as Model);
-                IGridModel m = (model as IGridModel);
-                gridTable = m.Tables[0];
-            }
             //else we are receiving a GridTable that was created by another presenter
             else if (model as GridTable != null)
-            {
+            {  
+                // e.g. PropertyAndGridPresenter goes through here.
                 gridTable = (model as GridTable);
             }
-
             else
             {
-                throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
+                // e.g. ProfilePresenter
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
+                var viewBase = v as ViewBase;
+                sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
+                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null);
+                explorerPresenter.CommandHistory.Add(replaceModelCommand, execute: false);
             }
 
             //we are receiving a container from another presenter to put the grid into
@@ -136,8 +142,9 @@ namespace UserInterface.Presenters
             //Create the sheet widget here.
             SetupSheet(dataProvider);
 
-            explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (dataProvider != null)
+                dataProvider.CellChanged += OnCellChanged;
 
             //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
@@ -151,7 +158,7 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
-            if (dataProvider is DataTableProvider)
+            if (dataProvider != null)
                 dataProvider.CellChanged -= OnCellChanged;
 
             SaveGridToModel();
@@ -169,10 +176,27 @@ namespace UserInterface.Presenters
 
         public void SetupSheet(ISheetDataProvider dataProvider)
         {
+            // Determine if sheet is editable
+            bool gridIsEditable = false;
+            if (dataProvider != null)
+            {
+                for (int rowIndex = 0; rowIndex < dataProvider.RowCount; rowIndex++)
+                    for (int columnIndex = 0; columnIndex < dataProvider.ColumnCount; columnIndex++)
+                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        {
+                            gridIsEditable = true;
+                            break;
+                        }
+            }
+            else
+                gridIsEditable = true;
+
             grid = new SheetWidget(sheetContainer.Widget,  
                                    dataProvider, 
                                    multiSelect: true,
-                                   onException: (err) => ViewBase.MasterView.ShowError(err));
+                                   onException: (err) => ViewBase.MasterView.ShowError(err),
+                                   gridIsEditable: gridIsEditable,
+                                   blankRowAtBottom: gridIsEditable);
 
             contextMenu = new MenuView();
             contextMenuHelper = new ContextMenuHelper(grid);
@@ -188,7 +212,7 @@ namespace UserInterface.Presenters
         /// <param name="dataProvider"></param>
         /// <param name="frozenColumns"></param>
         /// <param name="frozenRows"></param>
-        public void PopulateWithDataProvider(ISheetDataProvider dataProvider, int frozenColumns, int frozenRows)
+        public void PopulateWithDataProvider(ISheetDataProvider dataProvider)
         {
             if (gridTable == null)
             {
@@ -205,7 +229,7 @@ namespace UserInterface.Presenters
             if (gridTable != null && grid != null)
             {
                 if (dataProvider != null)
-                    (dataProvider as DataTableProvider).CellChanged -= OnCellChanged;
+                    (dataProvider as ISheetDataProvider).CellChanged -= OnCellChanged;
 
                 DataTable data = gridTable.Data;
 
@@ -222,25 +246,23 @@ namespace UserInterface.Presenters
                 }
 
                 // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                List<List<bool>> isCalculated = new();
-
                 if (data != null)
                 {
+                    List<List<SheetDataProviderCellState>> isCalculated = new();
                     for (int i = 0; i < data.Columns.Count; i++)
-                    isCalculated.Add(gridTable.GetIsCalculated(i));
+                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
 
                     // Create instance of DataTableProvider.
-                    dataProvider = new DataTableProvider(data, isReadOnly: false, units, isCalculated);
-                
+                    dataProvider = new DataTableProvider(data, units, isCalculated);
+
                     // Give DataTableProvider to grid sheet.
                     grid.SetDataProvider(dataProvider);
-
-                    // Add an extra empty row to the grid so that new rows can be created.
-                    grid.RowCount = grid.NumberFrozenRows + data.Rows.Count + 1;
 
                     dataProvider.CellChanged += OnCellChanged;
                 }
             }
+            else if (dataProvider != null)
+                grid.SetDataProvider(dataProvider);
 
             grid?.UpdateScrollBars();
         }
@@ -302,7 +324,7 @@ namespace UserInterface.Presenters
                 {
                     SaveGridToModel();
                     CellChanged?.Invoke(sender, colIndices, rowIndices, values);
-
+                    Refresh();
                 }
                 catch (Exception err)
                 {
@@ -327,17 +349,17 @@ namespace UserInterface.Presenters
 
                 foreach (string option in contextMenuOptions)
                 {
-                    if (option.CompareTo("units") == 0) //used by solute grids to change units
+                    if (option.CompareTo("units") == 0 && model is Solute) //used by solute grids to change units
                     {
                         if (rowIndex == 1)
                         {
-                            foreach (string units in gridTable.GetUnits(columnIndex))
+                            foreach (string units in new List<string>{"ppm", "kgha"})
                             {
                                 var menuItem = new MenuDescriptionArgs()
                                 {
                                     Name = units,
                                 };
-                                menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                                menuItem.OnClick += OnUnitsChanged;
                                 menuItems.Add(menuItem);
                             }
                         }
@@ -413,6 +435,18 @@ namespace UserInterface.Presenters
         /// <summary>
         /// User has selected cut.
         /// </summary>
+        private void OnUnitsChanged(object sender, EventArgs e)
+        {
+            Solute solute = (model as Solute);
+            Solute.UnitsEnum newUnits = Solute.UnitsEnum.ppm;
+            if ((sender as Gtk.MenuItem).Label == "kgha")
+                newUnits = Solute.UnitsEnum.kgha;
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(solute, "InitialValuesUnits", newUnits));
+        }
+
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
         private void OnCut(object sender, EventArgs e)
         {
             grid.Cut();
@@ -458,6 +492,10 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            if (changedModel is GridTable)
+                model = (changedModel as GridTable).Model;
+            else model = changedModel as IModel;
+            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
             Refresh();
         }
 
@@ -471,14 +509,20 @@ namespace UserInterface.Presenters
                     var data = (dataProvider as DataTableProvider).Data;
                     List<string> unitsRow = new List<string>();
                     for (int i = 0; i < data.Columns.Count; i++)
+                    {
                         unitsRow.Add(dataProvider.GetColumnUnits(i));
 
-                    DataRow row = data.NewRow();
-                    row.ItemArray = unitsRow.ToArray();
+                        DataRow row = data.NewRow();
+                        row.ItemArray = unitsRow.ToArray();
 
-                    data.Rows.InsertAt(row, 0);
+                        data.Rows.InsertAt(row, 0);
+                    }
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
                 }
+            }
+            else if (replaceModelCommand != null)
+            {
+                replaceModelCommand.Replacement = model as IModel;
             }
         }
 
@@ -490,15 +534,15 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private void OnIntellisenseNeedContextItems(object sender, NeedContextItemsArgs args)
         {
-            try
-            {
-                if (intellisense.GenerateGridCompletions(args.Code, args.Code.Length, model, true, false, false, false))
-                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
+            // try
+            // {
+            //     if (intellisense.GenerateGridCompletions(args.Code, args.Code.Length, model, true, false, false, false))
+            //         intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            // }
+            // catch (Exception err)
+            // {
+            //     explorerPresenter.MainPresenter.ShowError(err);
+            // }
         }
 
         // /// <summary>

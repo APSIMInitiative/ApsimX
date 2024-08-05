@@ -124,10 +124,15 @@ namespace Models.Core
         /// </summary>
         Code,
 
-         /// <summary>
+        /// <summary>
         /// Provides a GTK Colour Picker dialog
         /// </summary>
-        ColourPicker
+        ColourPicker,
+
+        /// <summary>
+        /// Provides a plant name.
+        /// </summary>
+        PlantName
     }
 
     /// <summary>
@@ -136,6 +141,11 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Property)]
     public class DisplayAttribute : System.Attribute
     {
+        /// <summary>
+        /// Gets or sets the name to display in the grid.
+        /// </summary>
+        public string DisplayName { get; set; }
+
         /// <summary>
         /// Gets or sets the display format (e.g. 'N3') that the user interface should
         /// use when showing values in the related property.

@@ -30,12 +30,12 @@ namespace UserInterface.Views
         private ScrolledWindow scrolledwindow1 = null;
         public Gtk.TreeView Grid { get; set; }
         public Gtk.TreeView Fixedcolview { get; set; }
-        private HBox hbox1 = null;
+        private Box hbox1 = null;
         private Gtk.Image image1 = new Gtk.Image();
         /// <summary>
         /// The splitter between the fixed and non-fixed grids.
         /// </summary>
-        private HPaned splitter = null;
+        private Paned splitter = null;
 
         private Gdk.Pixbuf imagePixbuf = null;
 
@@ -51,11 +51,11 @@ namespace UserInterface.Views
         public ActivityLedgerGridView(ViewBase owner) : base(owner)
         {
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.CLEMGridView.glade");
-            hbox1 = (HBox)builder.GetObject("hbox1");
+            hbox1 = (Box)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             Fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
-            splitter = (HPaned)builder.GetObject("hpaned1");
+            splitter = (Paned)builder.GetObject("hpaned1");
             image1 = new Gtk.Image();
             mainWidget = hbox1;
             Grid.Model = gridmodel;
@@ -245,7 +245,7 @@ namespace UserInterface.Views
 
             if (MasterView.MainWindow != null)
             {
-                MasterView.MainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                MasterView.MainWindow.Cursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Watch);
             }
 
             ClearGridColumns();
@@ -468,7 +468,7 @@ namespace UserInterface.Views
                 newLabel.Justify = Justification.Center;
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
                 {
-                    (newLabel.Parent as Alignment).LeftPadding = 2;
+                    (newLabel.Parent as Widget).MarginStart = 2;
                 }
 
                 newLabel.UseMarkup = true;
