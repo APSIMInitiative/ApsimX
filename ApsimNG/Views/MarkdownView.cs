@@ -702,6 +702,11 @@ namespace UserInterface.Views
             var strikethrough = new TextTag("Strikethrough");
             strikethrough.Strikethrough = true;
             textView.Buffer.TagTable.Add(strikethrough);
+
+            // Give Gtk time to digest these additions to the tag table
+            // Otherwise we can sometimes get nulls when we access the tags
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         // Looks at all tags covering the position (x, y) in the text view,

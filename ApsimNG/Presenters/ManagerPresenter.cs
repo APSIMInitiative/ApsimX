@@ -105,8 +105,8 @@ namespace UserInterface.Presenters
             manager.Cursor.TabIndex = managerView.TabIndex;
             manager.Cursor = managerView.CursorLocation;
 
-            propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
+            propertyPresenter.Detach();
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.LeaveEditor -= OnEditorLeave;
