@@ -48,6 +48,7 @@ namespace Models.Core
         /// <summary>Return the index of this paddock</summary>
         public int Index { get { return Parent.Children.IndexOf(this); } }
 
+        // TODO(nubby): Make this GIS-like.
         /// <summary>Return the X-coordinate location of a Field.</summary>
         [Description("Return the X-coordinate location of a Field.")]
         public double X { get; set; } = 0.0;

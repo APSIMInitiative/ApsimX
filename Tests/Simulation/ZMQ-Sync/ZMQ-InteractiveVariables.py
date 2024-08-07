@@ -18,6 +18,8 @@ import msgpack
 import time
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Axes, Figure
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
     
 import pdb
@@ -35,7 +37,6 @@ class ZMQServer(object):
         info (:obj: `dict`): { address: str, port: str } 
         socket
     """
-
     def __init__(
             self,
             addr: str,
@@ -130,7 +131,7 @@ class FieldNode(object):
     Attributes:
         id (int): Location (index) within Apsim list.
         info (dict): Includes the following keys:
-            { "X", "Y", "Z", "Name" }
+            { "X", "Y", "Z", "Radius", "WaterVolume", "Name" }
         
     """
     def __init__(
@@ -142,11 +143,23 @@ class FieldNode(object):
         Args:
             configs (:obj: `dict`, optional): Pre-formatted field configs; see
                 [example_url.com] for supported configurations.
+
+        TODO:
+            * Replace XYZ with GPS data and elevation/depth?
         """
         self.id = None
-        self.info = configs
+        self.info = {}
+        #[self.info[field] = configs[field] for field in ["X", "Y", "Z", "SW"]]
+        for key in ["Name", "X", "Y", "Z"]:
+            self.info[key] = configs[key]
+        # TODO(nubby): Make the radius/area settings better.
+        self.info["Area"] = str((float(configs["Radius"]) * 2)**2)
+
         self.coords = [configs["X"], configs["Y"], configs["Z"]]
+        self.radius = configs["Radius"]
         self.name = configs["Name"]
+        #self.water_vol = configs["SW"]
+
         # Aliases.
         self.socket = server.socket
         self.send_command = server.send_command
@@ -155,6 +168,8 @@ class FieldNode(object):
     def __repr__(self):
         return "{}: @({},{},{})".format(
             self.info["Name"],
+            #self.info["SW"],
+            self.info["Area"],
             self.info["X"],
             self.info["Y"],
             self.info["Z"]
@@ -233,25 +248,33 @@ class ApsimController:
         # Create all your Fields here.
         field_configs = [
             {
-                "Name": "CoolField",
+                "Name": "Field1",
+                "Radius": "1.0",
+                #"WaterVolume": "1.0",
                 "X": "1.0",
                 "Y": "2.0",
                 "Z": "3.0"
             },
             {
-                "Name": "FreshField",
+                "Name": "WetField1",
+                "Radius": "1.0",
+                #"WaterVolume": "5.0",
                 "X": "4.0",
                 "Y": "5.0",
                 "Z": "6.0"
             },
             {
-                "Name": "DopeField",
+                "Name": "WetField2",
+                "Radius": "1.0",
+                #"WaterVolume": "5.0",
                 "X": "7.0",
                 "Y": "8.0",
                 "Z": "9.0"
             },
             {
-                "Name": "FunkyField",
+                "Name": "Field2",
+                "Radius": "1.0",
+                #"WaterVolume": "2.0",
                 "X": "4.0",
                 "Y": "5.0",
                 "Z": "3.0"
@@ -266,8 +289,6 @@ class ApsimController:
             ) for config in field_configs
         ]
         [print(field) for field in self.fields]
-        # create fields
-        #msg = self.send_command("fields", [self.fields], unpack=False)
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
 
@@ -324,10 +345,10 @@ def poll_zmq(controller : ApsimController) -> tuple:
         ts = controller.send_command("get", ["[Clock].Today"])
         ts_arr.append(ts.to_unix())
         
-        sw1 = controller.send_command("get", ["sum([CoolField].HeavyClay.Water.Volumetric)"])
+        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([FreshField].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([WetField2].HeavyClay.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -352,13 +373,111 @@ def poll_zmq(controller : ApsimController) -> tuple:
     return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
+def plot_field_geo(ax: Axes, field: FieldNode, color="m"):
+    """Add a the physical dimensions of a field as a subplot in a figure.
+
+    Args:
+        ax      (:obj:`Axes`)
+        fig     (:obj:`Figure`)
+        field   (:obj:`FieldNode`)
+        color   (:obj:`Optional[str]`)  Field color.
+    """
+    [x_coord, y_coord, z_coord] = [float(coord) for coord in field.coords]
+    r = float(field.radius)
+
+    # Define the vertices.
+    x_min = x_coord - r/2
+    y_min = y_coord - r/2
+    z_min = z_coord - r/2
+    x_max = x_coord + r/2
+    y_max = y_coord + r/2
+    z_max = z_coord + r/2
+
+    vertices = np.array([
+        [x_min, y_min, z_min],
+        [x_max, y_min, z_min],
+        [x_max, y_max, z_min],
+        [x_min, y_max, z_min],
+        [x_min, y_min, z_max],
+        [x_max, y_min, z_max],
+        [x_max, y_max, z_max],
+        [x_min, y_max, z_max]
+    ])
+
+    # Define the faces of the rectangular prism.
+    faces = [
+        [vertices[v] for v in [0, 1, 2, 3]],    # Bottom face.
+        [vertices[v] for v in [4, 5, 6, 7]],    # Top face.
+        [vertices[v] for v in [0, 1, 5, 4]],    # Front face.
+        [vertices[v] for v in [2, 3, 7, 6]],    # Back face.
+        [vertices[v] for v in [0, 3, 7, 4]],    # Left face.
+        [vertices[v] for v in [1, 2, 6, 5]]     # Right face.
+    ]
+
+    rprism = Poly3DCollection(
+        faces,
+        facecolors=color,
+        alpha=0.5,
+        edgecolors="black",
+        linewidths=1
+    )
+    ax.add_collection3d(rprism)
+
+def plot_field_h2o(ax: Axes, field: FieldNode):
+    """Add a field's water content as a spherical subplot in a figure.
+
+    Args:
+        field   (:obj:`FieldNode`)
+    """
+    print("Hi nub.")
+
+
+def plot_field(ax: Axes, field: FieldNode):
+    """Add a field as a subplot in a figure.
+
+    Args:
+        field   (:obj:`FieldNode`)
+    """
+    plot_field_geo(ax, field)
+    plot_field_h2o(ax, field)
+
+def _format_plot(
+        ax: Axes,
+        x: list[float],
+        y: list[float],
+        z: list[float],
+        margin: float = 3.0
+    ):
+    """
+    ax: (:obj:`Axes`)
+    """
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    ax.set_xlim([min(x) - margin, max(x) + margin])
+    ax.set_ylim([min(y) - margin, max(y) + margin])
+    ax.set_zlim([min(z) - margin, max(z) + margin])
+
 def plot_oasis(controller: ApsimController):
     """Generate a 3D plot representation of an OASIS simulation.
 
     Args:
         controller (:obj:`ApsimController`)
     """
-    ax = plt.figure().add_subplot(projection="3d")
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
+    x, y, z = [], [], []
+    for field in controller.fields:
+        plot_field(ax, field)
+        [x_coord, y_coord, z_coord] = field.coords
+        x.append(float(x_coord))
+        y.append(float(y_coord))
+        z.append(float(z_coord))
+
+    _format_plot(ax, x, y, z)
+
+    """
+    ax = fig.add_subplot(projection="3d")
     x, y, z, labels = [], [], [], []
     for field in controller.fields:
         x.append(field.coords[0])
@@ -372,10 +491,7 @@ def plot_oasis(controller: ApsimController):
 
     ax.scatter(x, y, z)
     [ax.text(_x, _y, _z, label) for _x, _y, _z, label in zip(x, y, z, labels)]
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-
+    """
     plt.show()
 
 if __name__ == '__main__':

@@ -129,6 +129,13 @@ namespace APSIM.ZMQServer
                                 case "Name":
                                     newField.Name = fieldConfigs[key];
                                     break;
+                                case "Area":
+                                    newField.Area = Convert.ToDouble(fieldConfigs[key]);
+                                    break;
+                                // TODO(nubby): Actually plug this into the right place.
+                                //case "SW":
+                                //    newField.SW = Convert.ToDouble(fieldConfigs[key]);
+                                //    break;
                                 case "X":
                                     newField.X = Convert.ToDouble(fieldConfigs[key]);
                                     break;
