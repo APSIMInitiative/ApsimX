@@ -12,7 +12,7 @@ Todo:
     * Make the ZMQServer object run as part of its own thread, reading from a
         dedicated queue.
 """
-
+import csv
 import zmq
 import msgpack
 import time
@@ -214,7 +214,6 @@ class ApsimController:
     Attributes:
         fields (:obj:`list` of :obj:`FieldNode`): List of Fields in simulation.
     """
-    
     def __init__(self, addr="0.0.0.0", port=27746):
         """Initializes a ZMQ connection to the Apsim synchronizer
        
@@ -246,40 +245,16 @@ class ApsimController:
             pass
         
         # Create all your Fields here.
-        field_configs = [
-            {
-                "Name": "Field1",
-                "Radius": "1.0",
-                #"WaterVolume": "1.0",
-                "X": "1.0",
-                "Y": "2.0",
-                "Z": "3.0"
-            },
-            {
-                "Name": "WetField1",
-                "Radius": "1.0",
-                #"WaterVolume": "5.0",
-                "X": "4.0",
-                "Y": "5.0",
-                "Z": "6.0"
-            },
-            {
-                "Name": "WetField2",
-                "Radius": "1.0",
-                #"WaterVolume": "5.0",
-                "X": "7.0",
-                "Y": "8.0",
-                "Z": "9.0"
-            },
-            {
-                "Name": "Field2",
-                "Radius": "1.0",
-                #"WaterVolume": "2.0",
-                "X": "4.0",
-                "Y": "5.0",
-                "Z": "3.0"
-            },
-        ]
+        """
+        Format (dict[list]): [{
+            "Name": "",
+            "Radius": "",
+            "X": "",
+            "Y": "",
+            "Z": ""
+            }...]
+        """
+        field_configs = read_csv_file("./data/sample_fields.csv")
         [
             self.fields.append(
                 FieldNode(
@@ -316,6 +291,22 @@ class ApsimController:
         return rc
 
 
+# Function decs.
+## Helpers.
+def read_csv_file(fpath: str) -> list[dict]:
+    data = []
+    print(f"Reading from {fpath}...")
+    with open(fpath, "r+") as csvs:
+        reader = csv.DictReader(csvs)
+        for row in reader:
+            data.append(row)
+    print(f"    DONE")
+    if (not data):
+        print(f"WARNING!! {fpath} is an empty file!")
+    return data
+
+
+## MEAT.
 def poll_zmq(controller : ApsimController) -> tuple:
     """Runs the simulation and obtains simulated data
 
@@ -348,7 +339,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
         sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([WetField2].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -386,12 +377,12 @@ def plot_field_geo(ax: Axes, field: FieldNode, color="m"):
     r = float(field.radius)
 
     # Define the vertices.
-    x_min = x_coord - r/2
-    y_min = y_coord - r/2
-    z_min = z_coord - r/2
-    x_max = x_coord + r/2
-    y_max = y_coord + r/2
-    z_max = z_coord + r/2
+    x_min = x_coord - r
+    y_min = y_coord - r
+    z_min = z_coord - r
+    x_max = x_coord + r
+    y_max = y_coord + r
+    z_max = z_coord + r
 
     vertices = np.array([
         [x_min, y_min, z_min],
@@ -504,40 +495,3 @@ if __name__ == '__main__':
     # Plot simulation.
     # TODO(nubby): Integrate irrigation with colors.
     plot_oasis(apsim)
-    """
-    # Code for testing with echo server
-    #start_str = socket.recv_string()
-    #if start_str != "connect":
-    #    raise ValueError(f"Did not get correct start starting, got {start_str}, expected 'connect'")
-
-    #sendCommand(socket, "get", ["[Manager].Script.cumsumfert"])
-
-    #print('Do we get a reply?')
-    #reply = socket.recv_multipart()
-    #print(reply)
-
-    # make plot
-    plt.figure()
-
-    plt.plot(ts_arr, esw1_arr)
-    plt.plot(ts_arr, esw2_arr)
-    plt.xlabel("Time (Unix epochs)")
-    plt.ylabel("Volumetric Water Content")
-    plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
-
-    plt.twinx()
-    plt.plot(ts_arr, rain_arr, color="orange")
-    plt.ylabel("Rain")
-
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-    """
-    """
-    # Test for FieldNode setup.
-    patonfigs = {
-            "Name": "pato",
-            "Bird": "duck"
-        }
-    pato = FieldNode(configs=patonfigs)
-    """

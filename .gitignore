@@ -61,3 +61,4 @@ CurrentDescriptiveSummary.html
 /.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
+Tests/Simulation/ZMQ-Sync/data/
