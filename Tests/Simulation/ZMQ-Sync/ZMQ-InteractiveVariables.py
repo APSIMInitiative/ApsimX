@@ -149,8 +149,7 @@ class FieldNode(object):
         """
         self.id = None
         self.info = {}
-        #[self.info[field] = configs[field] for field in ["X", "Y", "Z", "SW"]]
-        for key in ["Name", "X", "Y", "Z"]:
+        for key in ["Name", "SW", "X", "Y", "Z"]:
             self.info[key] = configs[key]
         # TODO(nubby): Make the radius/area settings better.
         self.info["Area"] = str((float(configs["Radius"]) * 2)**2)
@@ -158,7 +157,7 @@ class FieldNode(object):
         self.coords = [configs["X"], configs["Y"], configs["Z"]]
         self.radius = configs["Radius"]
         self.name = configs["Name"]
-        #self.water_vol = configs["SW"]
+        self.v_water = configs["SW"]
 
         # Aliases.
         self.socket = server.socket
@@ -166,9 +165,9 @@ class FieldNode(object):
         self.create()
 
     def __repr__(self):
-        return "{}: @({},{},{})".format(
+        return "{}: {} acres, {} gal H2O; @({},{},{})".format(
             self.info["Name"],
-            #self.info["SW"],
+            self.info["SW"],
             self.info["Area"],
             self.info["X"],
             self.info["Y"],
@@ -247,11 +246,12 @@ class ApsimController:
         # Create all your Fields here.
         """
         Format (dict[list]): [{
-            "Name": "",
-            "Radius": "",
-            "X": "",
-            "Y": "",
-            "Z": ""
+            "Name": "(str)",
+            "Radius": "(float)",
+            "SW": "(float)",
+            "X": "(float)",
+            "Y": "(float)",
+            "Z": "(float)"
             }...]
         """
         field_configs = read_csv_file("./data/sample_fields.csv")
@@ -364,7 +364,7 @@ def poll_zmq(controller : ApsimController) -> tuple:
     return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
-def plot_field_geo(ax: Axes, field: FieldNode, color="m"):
+def plot_field_geo(ax: Axes, field: FieldNode, color="g"):
     """Add a the physical dimensions of a field as a subplot in a figure.
 
     Args:
@@ -414,25 +414,50 @@ def plot_field_geo(ax: Axes, field: FieldNode, color="m"):
     )
     ax.add_collection3d(rprism)
 
-def plot_field_h2o(ax: Axes, field: FieldNode):
+def get_sphere_coords(field: FieldNode, u, v):
+    """Let's get parametric.
+    """
+    h2o_scaler = 1 
+    center = [float(coord) for coord in field.coords]
+    radius = h2o_scaler * float(field.v_water)
+    x = center[0] + radius * np.sin(v) * np.cos(u)
+    y = center[1] + radius * np.sin(v) * np.sin(u)
+    z = center[2] + radius * np.cos(v)
+    return x, y, z
+
+def plot_field_h2o(ax: Axes, field: FieldNode, color="c"):
     """Add a field's water content as a spherical subplot in a figure.
 
     Args:
+        ax      (:obj:`Axes`)
         field   (:obj:`FieldNode`)
     """
-    print("Hi nub.")
+    [x_coord, y_coord, z_coord] = [float(coord) for coord in field.coords]
+    r = float(field.v_water)
+    u = np.linspace(0, 2 * np.pi, 100)
+    v = np.linspace(0, np.pi, 100)
+    u, v = np.meshgrid(u, v)
+    x, y, z = get_sphere_coords(field, u, v)
+    ax.plot_surface(
+        x,
+        y,
+        z,
+        color=color,
+        alpha=0.2
+    )
 
-
-def plot_field(ax: Axes, field: FieldNode):
+def plot_field(geox: Axes, h2ox: Axes, field: FieldNode):
     """Add a field as a subplot in a figure.
 
     Args:
+        geox    (:obj:`Axes`)   Axes for geospatial depiction.
+        h2ox    (:obj:`Axes`)   Axes for H2O volume depiction.
         field   (:obj:`FieldNode`)
     """
-    plot_field_geo(ax, field)
-    plot_field_h2o(ax, field)
+    plot_field_geo(geox, field)
+    plot_field_h2o(h2ox, field)
 
-def _format_plot(
+def _format_geo_plot(
         ax: Axes,
         x: list[float],
         y: list[float],
@@ -442,9 +467,26 @@ def _format_plot(
     """
     ax: (:obj:`Axes`)
     """
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
+    ax.set_xlabel("X [acres]")
+    ax.set_ylabel("Y [acres]")
+    ax.set_zlabel("Z [acres]")
+    ax.set_xlim([min(x) - margin, max(x) + margin])
+    ax.set_ylim([min(y) - margin, max(y) + margin])
+    ax.set_zlim([min(z) - margin, max(z) + margin])
+
+def _format_h2o_plot(
+        ax: Axes,
+        x: list[float],
+        y: list[float],
+        z: list[float],
+        margin: float = 3.0
+    ):
+    """
+    ax: (:obj:`Axes`)
+    """
+    ax.set_xlabel("X [gal]")
+    ax.set_ylabel("Y [gal]")
+    ax.set_zlabel("Z [gal]")
     ax.set_xlim([min(x) - margin, max(x) + margin])
     ax.set_ylim([min(y) - margin, max(y) + margin])
     ax.set_zlim([min(z) - margin, max(z) + margin])
@@ -455,34 +497,23 @@ def plot_oasis(controller: ApsimController):
     Args:
         controller (:obj:`ApsimController`)
     """
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
+    fig = plt.figure(figsize=(10, 8))
+    geox = fig.add_subplot(211, projection="3d")
+    h2ox = fig.add_subplot(212, projection="3d")
     x, y, z = [], [], []
     for field in controller.fields:
-        plot_field(ax, field)
+        plot_field(geox, h2ox, field)
         [x_coord, y_coord, z_coord] = field.coords
         x.append(float(x_coord))
         y.append(float(y_coord))
         z.append(float(z_coord))
 
-    _format_plot(ax, x, y, z)
+    _format_geo_plot(geox, x, y, z)
+    _format_h2o_plot(h2ox, x, y, z)
 
-    """
-    ax = fig.add_subplot(projection="3d")
-    x, y, z, labels = [], [], [], []
-    for field in controller.fields:
-        x.append(field.coords[0])
-        y.append(field.coords[1])
-        z.append(field.coords[2]) 
-        labels.append(field.name)
-
-    x = np.array(x,dtype="float")
-    y = np.array(y,dtype="float")
-    z = np.array(z,dtype="float")
-
-    ax.scatter(x, y, z)
-    [ax.text(_x, _y, _z, label) for _x, _y, _z, label in zip(x, y, z, labels)]
-    """
+    geox.set_title(f"Sample Apsim Field Positions")
+    h2ox.set_title(f"Sample Apsim Field Total H2O Volumes")
+    plt.tight_layout()
     plt.show()
 
 if __name__ == '__main__':

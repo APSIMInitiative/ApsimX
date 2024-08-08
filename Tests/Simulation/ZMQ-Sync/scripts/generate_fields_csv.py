@@ -4,6 +4,7 @@
 import copy
 import csv
 from dataclasses import dataclass
+import random
 
 def generate_csv_from_grist(grist: list[dict], fpath: str):
     """Write the details of a flight plan to a CSV file.
@@ -23,6 +24,7 @@ def generate_data(configs: dict) -> list[dict]:
     datum = {
         "Name": "",
         "Radius": "",
+        "SW": "",
         "X": "",
         "Y": "",
         "Z": ""
@@ -30,6 +32,8 @@ def generate_data(configs: dict) -> list[dict]:
 
     r_default = 0.5 # Acres?
     spacing_default = 2.0
+    vol_h2o_min = 0.1
+    vol_h2o_max = 2.0
     index = 0
     for i in range(0, configs.dim_x):
         for j in range(0, configs.dim_y):
@@ -37,6 +41,9 @@ def generate_data(configs: dict) -> list[dict]:
                 fresh_datum = copy.deepcopy(datum)
                 fresh_datum["Name"] = f"Field{index}"
                 fresh_datum["Radius"] = str(r_default)
+                fresh_datum["SW"] = str(random.uniform(
+                    vol_h2o_min, vol_h2o_max
+                ))
                 fresh_datum["X"] = str(spacing_default * i)
                 fresh_datum["Y"] = str(spacing_default * j)
                 fresh_datum["Z"] = str(spacing_default * k)

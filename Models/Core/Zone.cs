@@ -58,6 +58,9 @@ namespace Models.Core
         /// <summary>Return the Z-coordinate location of a Field.</summary>
         [Description("Return the Z-coordinate location of a Field.")]
         public double Z { get; set; } = 0.0;
+        /// <summary>Return the total water volume of a Field.</summary>
+        [Description("Return the total water volume of a Field.")]
+        public double SW { get; set; } = 0.0;
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
