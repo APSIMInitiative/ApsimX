@@ -31,8 +31,8 @@ namespace Models.Functions
     /// <item><description><em>CumulativeFrostReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred frost events</description></item>
     /// <item><description><em>CumulativeHeatReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred heat events</description></item>
     /// <item><description><em>CumulativeFrostHeatReductionRatio</em>: Cumulative yield reduction ratio induced by the occurred frost and heat events</description></item>
-    /// <item><description><em>FrostEventNo</em>: Number of frost events during sensitive period</description></item>
-    /// <item><description><em>HeatEventNo</em>: Number of heat events during sensitive period</description></item>
+    /// <item><description><em>FrostEventNnumber</em>: Number of frost events during sensitive period</description></item>
+    /// <item><description><em>HeatEventNumber</em>: Number of heat events during sensitive period</description></item>
     /// <item><description><em>FrostHeatYield</em>: Frost- and heat-limited yield</description></item>
     /// </list>
     /// </para>
@@ -196,10 +196,10 @@ namespace Models.Functions
         public double CumulativeHeatReductionRatio { get; set; }
 
         /// <summary>Number of frost events during sensitive period.</summary>
-        public double FrostEventNO { get; set; }
+        public double FrostEventNumber { get; set; }
 
         /// <summary>Number of heat events during sensitive period.</summary>
-        public double HeatEventNo { get; set; }
+        public double HeatEventNumber { get; set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by frost and heat stress.</summary>
         public double CumulativeFrostHeatReductionRatio { get; set; }
@@ -297,8 +297,8 @@ namespace Models.Functions
             CumulativeHeatReductionRatio = 0;
             CumulativeFrostHeatReductionRatio = 0;
             FrostHeatYield = 0;
-            FrostEventNO = 0;
-            HeatEventNo = 0;
+            FrostEventNumber = 0;
+            HeatEventNumber = 0;
         }
 
         /// <summary>Caculates daily potential yield reduction ratio induced by a frost event.</summary>
@@ -436,7 +436,7 @@ namespace Models.Functions
             // Count frost events
             if (FrostReductionRatio > 0)
             {
-                FrostEventNO++;
+                FrostEventNumber++;
             }
             // Daily potential yield reduction by a heat event
             HeatPotentialReductionRatio = HeatPotentialReductionRatioFun(Weather.MaxT);
@@ -449,7 +449,7 @@ namespace Models.Functions
             // Count heat events
             if (HeatReductionRatio > 0)
             {
-                HeatEventNo++;
+                HeatEventNumber++;
             }
 
             // Daily actual yield reduction by the frost and heat events
