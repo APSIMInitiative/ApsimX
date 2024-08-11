@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 177; } }
+        public static int LatestVersion { get { return 178; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5590,6 +5590,19 @@ namespace Models.Core.ApsimFile
                     string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
                     biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Adds a NitrificationInhibition model to CERESNitrificationModel.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion178(JObject root, string fileName)        
+        {
+            foreach (var rate in JsonUtilities.ChildrenOfType(root, "CERESNitrificationModel"))
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(rate, "NitrificationInhibition", "1.0");
             }
         }
     }
