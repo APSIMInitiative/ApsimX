@@ -25,7 +25,7 @@ jobs:
       - name: Check for changes in ApsimX master
         id: check_changes
         run: |
-          cd ApsimNG
+          cd ApsimNGMaster
           git remote add apsimx https://github.com/APSIMInitiative/ApsimX.git
           git fetch apsimx master
           if [ $(git rev-list --count apsimx/master..AAA_ForSesame) -gt 0 ]; then
