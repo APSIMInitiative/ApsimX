@@ -252,6 +252,7 @@ namespace Models.Storage
                     WriteSimulationIDs();
                     WriteCheckpointIDs();
                     WriteAllUnits();
+                    WriteTableCommand.WriteRemainingMessages(Connection);
                     WaitForIdle();
                     // Make sure all existing writing has completed.
                     SpinWait.SpinUntil(() => commandRunner.SimsRunning.IsEmpty);
