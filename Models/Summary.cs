@@ -30,6 +30,9 @@ namespace Models
         [NonSerialized]
         private DataTable messageTemplate;
 
+        [NonSerialized]
+        private bool afterCompleted = false;
+
         /// <summary>A link to a storage service</summary>
         [Link]
         private IDataStore storage = null;
@@ -70,6 +73,14 @@ namespace Models
         private void OnCommencing(object sender, EventArgs args)
         {
             messages = null;
+            afterCompleted = false;
+        }
+
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs args)
+        {
+            WriteMessagesToDataStore();
+            afterCompleted = true;
         }
 
         /// <summary>Event handler to create initialise</summary>
@@ -129,6 +140,10 @@ namespace Models
                 row[3] = message;
                 row[4] = (int)messageType;
                 messages.Rows.Add(row);
+                
+                //This message has come in after the simulation has completed, potentially due to a late event or mis-ordered event
+                if (afterCompleted)
+                    WriteMessagesToDataStore();
             }
         }
 

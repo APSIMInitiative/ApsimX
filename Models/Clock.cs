@@ -513,7 +513,6 @@ namespace Models
                 EndOfSimulation.Invoke(this, args);
 
             Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
-            Summary?.WriteMessagesToDataStore();
         }
 
         /// <summary>
