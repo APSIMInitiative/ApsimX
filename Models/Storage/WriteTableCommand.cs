@@ -60,6 +60,7 @@ namespace Models.Storage
         public void Run(CancellationTokenSource cancelToken)
         {
             DataTable table = this.dataToWrite;
+            tableDetails.EnsureTableExistsAndHasRequiredColumns(ref table);
             
             // Treat messages as a special case
             // They come in as single-row tables, so writing each separately is not very efficient.
