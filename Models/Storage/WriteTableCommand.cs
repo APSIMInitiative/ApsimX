@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
 using System.Threading;
 using APSIM.Shared.JobRunning;
@@ -12,9 +10,6 @@ namespace Models.Storage
     /// <summary>Encapsulates a row to write to an SQL database.</summary>
     class WriteTableCommand : IRunnable
     {
-        private static int MESSAGE_QUEUE_SIZE = 50;
-        private static DataTable messages = null;
-
         /// <summary>The datastore connection.</summary>
         private IDatabaseConnection connection;
 
@@ -59,26 +54,49 @@ namespace Models.Storage
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            DataTable table = this.dataToWrite;
-            tableDetails.EnsureTableExistsAndHasRequiredColumns(ref table);
-            
-            // Treat messages as a special case
-            // They come in as single-row tables, so writing each separately is not very efficient.
-            if (dataToWrite.TableName == "_Messages") 
+            if (dataToWrite.Rows.Count > 0)
             {
-                if (messages == null) 
-                    messages = dataToWrite.Clone();
-                else 
+                // Make sure the table has the correct columns.
+                tableDetails.EnsureTableExistsAndHasRequiredColumns(ref dataToWrite);
+
+                connection.BeginTransaction();
+                var query = new InsertQuery(dataToWrite);
+                try
+                {
+                    if (deleteExistingRows && connection.TableExists(dataToWrite.TableName))
+                    {
+                        // fixme - this assumes that "Current" checkpoint ID is always 1.
+                        // This should always be correct afaik, but it would be better to
+                        // verify this at runtime.
+                        bool tableHasCheckpointID = connection.GetColumns(dataToWrite.TableName).Any(c => c.Item1 == "CheckpointID");
+                        connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}] {(tableHasCheckpointID ? "WHERE \"CheckpointID\" = 1" : "")}");
+                    }
+
+                    if (connection is Firebird)
+                    {
+                        // Treat messages as a special case
+                        // They come in as single-row tables, so writing each
+                        // separately is not very efficient.
+                        if (dataToWrite.TableName == "_Messages")
+                        {
+                            (connection as Firebird).InsertMessageRecord(dataToWrite);
+                            return;
+                        }
+                    }
+
+                    // Get a list of column names.
+                    var columnNames = dataToWrite.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
+
+                    // Write all rows.
                     foreach (DataRow row in dataToWrite.Rows)
-                        messages.ImportRow(row);
-
-                if (messages.Rows.Count <= MESSAGE_QUEUE_SIZE)
-                    return;
-                else
-                    table = messages;
+                        query.ExecuteQuery(connection, columnNames, row.ItemArray);
+                }
+                finally
+                {
+                    query.Close(connection);
+                    connection.EndTransaction();
+                }
             }
-
-            Write(connection, table, deleteExistingRows);
         }
 
         /// <summary>
@@ -87,56 +105,6 @@ namespace Models.Storage
         public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
             // Do nothing.
-        }
-
-        /// <summary>
-        /// Cleanup the job after running it.
-        /// </summary>
-        public static void WriteRemainingMessages(IDatabaseConnection databaseConnection)
-        {
-            if (messages != null)
-            {
-                Write(databaseConnection, messages, false);
-                messages = null;
-            }
-        }
-
-        /// <summary>
-        /// Cleanup the job after running it.
-        /// </summary>
-        public static void Write(IDatabaseConnection connection, DataTable table, bool deleteExistingRows)
-        {
-            connection.BeginTransaction();
-            var query = new InsertQuery(table);
-            try
-            {
-                if (table.Rows.Count > 0)
-                {
-                    if (deleteExistingRows && connection.TableExists(table.TableName))
-                    {
-                        // fixme - this assumes that "Current" checkpoint ID is always 1.
-                        // This should always be correct afaik, but it would be better to
-                        // verify this at runtime.
-                        bool tableHasCheckpointID = connection.GetColumns(table.TableName).Any(c => c.Item1 == "CheckpointID");
-                        connection.ExecuteNonQuery($"DELETE FROM [{table.TableName}] {(tableHasCheckpointID ? "WHERE \"CheckpointID\" = 1" : "")}");
-                    }
-
-                    // Get a list of column names.
-                    var columnNames = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
-
-                    // Write all rows.
-                    foreach (DataRow row in table.Rows)
-                        query.ExecuteQuery(connection, columnNames, row.ItemArray);
-                }
-            }
-            finally
-            {
-                query.Close(connection);
-                connection.EndTransaction();
-
-                if (table.TableName == "_Messages") //we wrote messages here, so clear list
-                    messages = null;
-            }
         }
     }
 }
