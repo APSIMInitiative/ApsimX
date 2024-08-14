@@ -28,9 +28,6 @@ namespace Models
         private DataTable messages;
 
         [NonSerialized]
-        private DataTable messageTemplate;
-
-        [NonSerialized]
         private bool afterCompleted = false;
 
         /// <summary>A link to a storage service</summary>
@@ -76,6 +73,7 @@ namespace Models
             afterCompleted = false;
         }
 
+        /// <summary>When the simulation is completed, we need to write all the messages to the datastore.</summary>
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs args)
         {
@@ -90,20 +88,6 @@ namespace Models
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
             CreateInitialConditionsTable();
-        }
-
-        /// <summary>Initialise the summary messages table.</summary>
-        private void Initialise()
-        {
-            if (messages == null)
-            {
-                messageTemplate = new DataTable("_Messages");
-                messageTemplate.Columns.Add("SimulationName", typeof(string));
-                messageTemplate.Columns.Add("ComponentName", typeof(string));
-                messageTemplate.Columns.Add("Date", typeof(DateTime));
-                messageTemplate.Columns.Add("Message", typeof(string));
-                messageTemplate.Columns.Add("MessageType", typeof(int));
-            }
         }
 
         /// <summary>Write a message to the summary</summary>
@@ -122,11 +106,16 @@ namespace Models
                         throw new ApsimXException(author, "No datastore is available!");
                 }
 
-                Initialise();
-
-                // Clone() will copy the schema (ie columns) but not the data.
+                //set up our messages table if it is null. It will always be null at the start of the simulation.
                 if (messages == null)
-                    messages = messageTemplate.Clone();
+                {
+                    messages = new DataTable("_Messages");
+                    messages.Columns.Add("SimulationName", typeof(string));
+                    messages.Columns.Add("ComponentName", typeof(string));
+                    messages.Columns.Add("Date", typeof(DateTime));
+                    messages.Columns.Add("Message", typeof(string));
+                    messages.Columns.Add("MessageType", typeof(int));
+                }
 
                 // Remove the path of the simulation within the .apsimx file.
                 string relativeModelPath = null;
@@ -147,7 +136,7 @@ namespace Models
             }
         }
 
-        /// <summary>Writes all the stored messages to the datastore. Called when the table is big enough and at the end of simulation.</summary>
+        /// <summary>Writes all the stored messages to the datastore. At the end of simulation to fill up the datastore.</summary>
         public void WriteMessagesToDataStore() {
             if (messages != null) {
                 storage?.Writer?.WriteTable(messages, false);
