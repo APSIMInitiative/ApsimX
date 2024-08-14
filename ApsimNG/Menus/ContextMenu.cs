@@ -994,28 +994,22 @@ namespace UserInterface.Presenters
                     explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
                 }
 
+                string modelTypeName = String.Empty;
+                if (modelToDocument is Models.PMF.Plant)
+                    modelTypeName = modelToDocument.Name;
+                else modelTypeName = modelToDocument.GetType().Name;
+
+                string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
+                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.pdf";
+
                 PdfWriter pdf = new PdfWriter();
-                string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
 
-                //if filename is null, prompt user to save the file
-                if (fileNameWritten == null)
-                {
-                    explorerPresenter.Save();
-                    fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
-                }
-                //check if filename is still null (user didn't save) and throw a useful exception
-                if (fileNameWritten == null)
-                {
-                    throw new Exception("You must save this file before documentation can be created");
-                }
+                pdf.Write(fullDocFileName, AutoDocumentation.Document(modelToDocument));
 
-                ;
-                pdf.Write(fileNameWritten, AutoDocumentation.Document(modelToDocument));
-
-                explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowMessage($"Written {fullDocFileName}", Simulation.MessageType.Information);
 
                 // Open the document.
-                ProcessUtilities.ProcessStart(fileNameWritten);
+                ProcessUtilities.ProcessStart(fullDocFileName);
             }
             catch (Exception err)
             {
