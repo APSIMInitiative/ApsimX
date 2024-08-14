@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-	<requires lib="gtk+" version="2.24"/>
-	<!-- interface-naming-policy project-wide -->
-	<object class="GtkVPaned" id="main_widget">
-		<property name="visible">True</property>
-		<property name="can_focus">False</property>
-		<child>
-			<object class="GtkHPaned" id="top_paned">
-				<property name="visible">True</property>
-				<property name="can_focus">True</property>
-				<child>
-					<object class="GtkHBox" id="chart_box">
-						<property name="visible">True</property>
-						<property name="can_focus">True</property>
-					</object>
-					<packing>
-						<property name="position">0</property>
-					</packing>
-				</child>
-				<child>
-					<object class="GtkHBox" id="instructions_box">
-						<property name="visible">True</property>
-						<property name="can_focus">True</property>
-					</object>
-					<packing>
-						<property name="position">1</property>
-					</packing>
-				</child>
-			</object>
-			
-		</child>
-		<child>
-			<object class="GtkHPaned" id="settings_paned">
-				<property name="visible">True</property>
-				<property name="can_focus">True</property>
-				<child>
-					<object class="GtkHBox" id="properties_box">
-						<property name="visible">True</property>
-						<property name="can_focus">True</property>
-					</object>
-				</child>
-				<child>
-					<object class="GtkHBox" id="object_box">
-						<property name="visible">True</property>
-						<property name="can_focus">True</property>
-					</object>
-				</child>
-			</object>
-		</child>
-	</object>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkPaned" id="main_widget">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkPaned" id="top_paned">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <child>
+          <object class="GtkBox" id="chart_box">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="instructions_box">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="resize">False</property>
+        <property name="shrink">True</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkPaned" id="settings_paned">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <child>
+          <object class="GtkBox" id="properties_box">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="object_box">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="resize">True</property>
+        <property name="shrink">True</property>
+      </packing>
+    </child>
+  </object>
 </interface>

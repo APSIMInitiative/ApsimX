@@ -70,7 +70,7 @@ namespace UserInterface.Interfaces
         int StatusPanelPosition { get; set; }
 
         /// <summary>
-        /// Height of the VPaned that holds the view
+        /// Height of the Paned that holds the view
         /// </summary>
         int PanelHeight { get; }
 

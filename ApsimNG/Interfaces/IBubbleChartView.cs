@@ -69,5 +69,10 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="objectID">ID of the object to be selected.</param>
         void Select(int objectID);
+
+        /// <summary>
+        /// Unselect all objects
+        /// </summary>
+        public void ClearSelection();
     }
 } 

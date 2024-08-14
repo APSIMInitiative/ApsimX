@@ -91,7 +91,7 @@ namespace UnitTests.Core
             // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
             // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
-            Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
+            Assert.That(post, Is.EqualTo(pre), $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
 
         private static Simulation CreateSimulation(string path)

@@ -556,7 +556,8 @@ namespace Models.AgPasture
                 return true;
 
             // Do graze if expression is true
-            return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1];
+            // this was return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1]; but this assessment shoudl be against total DM
+            return PreGrazeDM > PreGrazeDMArray[clock.Today.Month - 1];
         }
 
         /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>

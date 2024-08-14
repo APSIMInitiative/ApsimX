@@ -16,6 +16,8 @@ namespace Utility
         /// <summary>The configuration file</summary>
         private string configurationFile = null;
 
+        public bool ThemeRestartRequired = false;
+
         /// <summary>The location for the form</summary>
         public Point MainFormLocation { get; set; }
 
@@ -374,6 +376,7 @@ namespace Utility
         {
 
             EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
+            ThemeRestartRequired = !ThemeRestartRequired;
 
         }
     }

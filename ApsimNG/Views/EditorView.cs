@@ -395,7 +395,10 @@ namespace UserInterface.Views
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
             if (style == null)
             {
-                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                string defaultStyle = "";
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                else defaultStyle = Configuration.Settings.DarkTheme ? defaultLightStyle : defaultDarkStyle;
                 style = StyleSchemeManager.Default.GetScheme(defaultStyle);
             }
             if (style != null)
@@ -871,7 +874,7 @@ namespace UserInterface.Views
             {
                 if (args.Popup is Menu menu)
                 {
-                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    MenuItem item = new MenuItem(menuItemText);
                     if (!string.IsNullOrEmpty(shortcut))
                     {
                         string keyName = string.Empty;

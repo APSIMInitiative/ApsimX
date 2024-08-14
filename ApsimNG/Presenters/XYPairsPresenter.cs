@@ -8,6 +8,7 @@ using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
 using APSIM.Documentation.Models;
+using Gtk.Sheet;
 
 namespace UserInterface.Presenters
 {
@@ -65,7 +66,7 @@ namespace UserInterface.Presenters
 
             List<GridTable> tables = this.xYPairs.Tables;
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid.Grid1, this.presenter);
+            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid, this.presenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             // Populate the graph.

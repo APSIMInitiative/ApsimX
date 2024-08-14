@@ -367,7 +367,7 @@ Name: associate; Description: &Associate .apsimx with Apsim Next Generation; Gro
 Type: files; Name: "{app}\apsim.url"
 
 [INI]
-Filename: "{app}\apsim.url"; Section: "InternetShortcut"; Key: "URL"; String: "https://apsimnextgeneration.netlify.com/" 
+Filename: "{app}\apsim.url"; Section: "InternetShortcut"; Key: "URL"; String: "https://apsimnextgeneration.netlify.app/" 
 
 [Icons]
 ;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\bin\ApsimNG.exe
