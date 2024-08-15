@@ -17,6 +17,7 @@ using Models.PMF;
 using Models.PMF.Phen;
 using Models.Core.Run;
 using Models.Storage;
+using Models.PMF.Organs;
 
 
 namespace APSIM.Documentation.Models
@@ -38,6 +39,7 @@ namespace APSIM.Documentation.Models
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
 
+        /// <summary>Returns a dictionary to match model classes to document class.</summary>
         private static Dictionary<Type, Type> DefineFunctions()
         {
             Dictionary<Type, Type> documentMap = new Dictionary<Type, Type>()
@@ -58,7 +60,9 @@ namespace APSIM.Documentation.Models
                 {typeof(NutrientProportionFunctions), typeof(DocUIInterfaceNutrient)},
                 {typeof(NutrientSupplyFunctions), typeof(DocUIInterfaceNutrient)},
                 {typeof(RootUptakesArbitrator), typeof(DocRootUptakesArbitrator)},
-                {typeof(Phenology), typeof(DocPhenology)}
+                {typeof(Phenology), typeof(DocPhenology)},
+                {typeof(OrganArbitrator), typeof(DocGeneric)},
+                {typeof(Root), typeof(DocRoot)},
             };
             return documentMap;
         }
@@ -97,6 +101,7 @@ namespace APSIM.Documentation.Models
         /// <param name="headingLevel">The starting heading level.</param>
         public void DocumentModel(IModel rootModel, string modelNameToDocument, List<ITag> tags, int headingLevel)
         {
+            //This was in my stash, no idea where the function is that was using this in models.
             Simulation simulation = rootModel.FindInScope<Simulation>();
             if (simulation != null)
             {
