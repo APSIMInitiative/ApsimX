@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 178; } }
+        public static int LatestVersion { get { return 179; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -108,7 +108,7 @@ namespace Models.Core.ApsimFile
         {
             JObject soilRoot = root;
             string rootType = JsonUtilities.Type(soilRoot, true);
-            
+
             //ASRIS soils are held below the parent when in xml form, so we should check for that.
             if (rootType == null && (root["Children"] as JArray != null) && root["Children"].Count() > 0)
             {
@@ -299,7 +299,7 @@ namespace Models.Core.ApsimFile
         }
 
         ///<summary>
-        /// Upgrades to version 50. Fixes the RelativeTo property of 
+        /// Upgrades to version 50. Fixes the RelativeTo property of
         /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
         /// <param name="root"></param>
@@ -330,7 +330,7 @@ namespace Models.Core.ApsimFile
         private static void UpgradeToVersion51(JObject root, string fileName)
         {
             // Create a list of models that might have gsmax.
-            // Might need to add in other models that implement ICanopy 
+            // Might need to add in other models that implement ICanopy
             // e.g. OilPalm, AgPastureSpecies, SimpleTree, Sugarcane
 
             var models = new List<JObject>();
@@ -612,7 +612,7 @@ namespace Models.Core.ApsimFile
                     {
                         if (specifications.Count > 1)
                         {
-                            // must be a compound factor. 
+                            // must be a compound factor.
 
                             // Change our Factor to a CompositeFactor
                             factor["$type"] = "Models.Factorial.CompositeFactor, Models";
@@ -625,7 +625,7 @@ namespace Models.Core.ApsimFile
                             var siteFactor = JsonUtilities.ChildWithName(parent as JObject, "Site") as JObject;
                             if (siteFactor == null)
                             {
-                                // Create a site factor 
+                                // Create a site factor
                                 siteFactor = new JObject();
                                 siteFactor["$type"] = "Models.Factorial.Factor, Models";
                                 JsonUtilities.RenameModel(siteFactor, "Site");
@@ -1469,7 +1469,7 @@ namespace Models.Core.ApsimFile
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
                 // The linking code previously had a hack which automatically enabled link by name if the target
-                // model type is IFunction or Biomass (or any inherited class thereof). I've removed this hack 
+                // model type is IFunction or Biomass (or any inherited class thereof). I've removed this hack
                 // from the link resolution code, which means that all such links must be adjusted accordingly.
 
                 // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
@@ -1586,7 +1586,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of 
+        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of
         /// string property called XProperty and YProperty that it then had to locate.  Aiming to get all things using get for properties
         /// to be doing it via Variable reference so we can stream line scoping rules
         /// </summary>
@@ -3208,7 +3208,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change report and manager scripts for soil variables that have been out of soil class. 
+        /// Change report and manager scripts for soil variables that have been out of soil class.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -3521,7 +3521,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add some extra constants to GenericOrgan to make 
+        /// Add some extra constants to GenericOrgan to make
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -3559,7 +3559,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Rename DroughtInducedSenescence and Lag functions so they can be used for other stresses 
+        /// Rename DroughtInducedSenescence and Lag functions so they can be used for other stresses
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -3686,7 +3686,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add priority factor functions into each demand function 
+        /// Add priority factor functions into each demand function
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -3955,7 +3955,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add in a Forages model at the simulation level if Stock or SimpleGrazing 
+        /// Add in a Forages model at the simulation level if Stock or SimpleGrazing
         /// are in the simulation.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -5048,7 +5048,7 @@ namespace Models.Core.ApsimFile
                         indent = code.IndexOf(code.Substring(pos).First(ch => ch != ' '), pos) - pos;
                     }
 
-                    // Delete the removal fraction matches lines. 
+                    // Delete the removal fraction matches lines.
                     // Do it in reverse order so that match.Index remains valid.
                     foreach (Match match in matches.Reverse())
                         code = code.Remove(match.Index, match.Length);
@@ -5147,7 +5147,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Adds a line property to the Operation object. This stores the input that is given, 
+        /// Adds a line property to the Operation object. This stores the input that is given,
         /// even if it is not able to be parsed as an Operation
         /// </summary>
         /// <param name="root"></param>
@@ -5580,7 +5580,7 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion177(JObject root, string fileName)        
+        private static void UpgradeToVersion177(JObject root, string fileName)
         {
             foreach (var biomassRemovalEvents in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
             {
@@ -5598,11 +5598,96 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion178(JObject root, string fileName)        
+        private static void UpgradeToVersion178(JObject root, string fileName)
         {
             foreach (var rate in JsonUtilities.ChildrenOfType(root, "CERESNitrificationModel"))
             {
                 JsonUtilities.AddConstantFunctionIfNotExists(rate, "NitrificationInhibition", "1.0");
+            }
+        }
+
+        private class ForageParameter
+        {
+            public string LiveDigestibility { get; set; }
+            public string DeadDigestibility { get; set; }
+            public double LiveFractionConsumable { get; set; }
+            public double DeadFractionConsumable { get; set; }
+            public double LiveMinimumAmount { get; set;}
+            public double DeadMinimumAmount { get; set; }
+        }
+
+        /// <summary>
+        /// Rearrange the forage parameters.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion179(JObject root, string fileName)
+        {
+            foreach (var forage in JsonUtilities.ChildrenOfType(root, "Forages"))
+            {
+                Dictionary<string, ForageParameter> parameters = new();
+                JArray oldForageParameters = forage["Parameters"] as JArray;
+                if (oldForageParameters != null)
+                {
+                    foreach (JObject forageParameters in oldForageParameters)
+                    {
+                        // get values of existing parameters.
+                        string name = forageParameters["Name"].Value<string>();
+                        bool isLive = forageParameters["IsLive"].Value<bool>();
+                        string digestibilityString = forageParameters["DigestibilityString"].Value<string>();
+                        double fractionConsumable = forageParameters["FractionConsumable"].Value<double>();
+                        double minimumAmount = forageParameters["MinimumAmount"].Value<double>();
+                        bool useDigestibilityFromModel = forageParameters["UseDigestibilityFromModel"].Value<bool>();
+                        if (useDigestibilityFromModel)
+                            digestibilityString = "FromModel";
+
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            // remove old parameters.
+                            forageParameters.Remove("IsLive");
+                            forageParameters.Remove("DigestibilityString");
+                            forageParameters.Remove("FractionConsumable");
+                            forageParameters.Remove("MinimumAmount");
+                            forageParameters.Remove("UseDigestibilityFromModel");
+
+                            // store parameters in dictionary.
+                            if (!parameters.TryGetValue(name, out var value))
+                            {
+                                parameters.Add(name, new());
+                                value = parameters[name];
+                            }
+                            if (isLive)
+                            {
+                                value.LiveDigestibility = digestibilityString;
+                                value.LiveFractionConsumable = fractionConsumable;
+                                value.LiveMinimumAmount = minimumAmount;
+                            }
+                            else
+                            {
+                                value.DeadDigestibility = digestibilityString;
+                                value.DeadFractionConsumable = fractionConsumable;
+                                value.DeadMinimumAmount = minimumAmount;
+                            }
+                        }
+                    }
+
+                    // Write all parameters to JSON
+                    JArray parametersArray = new();
+                    foreach (var parameter in parameters)
+                    {
+                        parametersArray.Add(new JObject()
+                        {
+                            ["Name"] = parameter.Key,
+                            ["LiveDigestibility"] = parameter.Value.LiveDigestibility,
+                            ["DeadDigestibility"] = parameter.Value.DeadDigestibility,
+                            ["LiveFractionConsumable"] = parameter.Value.LiveFractionConsumable,
+                            ["DeadFractionConsumable"] = parameter.Value.DeadFractionConsumable,
+                            ["LiveMinimumAmount"] = parameter.Value.LiveMinimumAmount,
+                            ["DeadMinimumAmount"] = parameter.Value.DeadMinimumAmount,
+                        });
+                    }
+                    forage["Parameters"] = parametersArray;
+                }
             }
         }
     }
