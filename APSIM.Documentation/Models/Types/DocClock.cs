@@ -9,12 +9,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class ClockDoc : GenericDoc
+    public class DocClock : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocClock" /> class.
         /// </summary>
-        public ClockDoc(IModel model): base(model) {}
+        public DocClock(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.

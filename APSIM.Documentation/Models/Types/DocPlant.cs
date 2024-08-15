@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using APSIM.Shared.Documentation;
-using DocumentFormat.OpenXml.Office2021.Excel.RichDataWebImage;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models;
 using Models.Core;
 using Models.PMF;
@@ -80,7 +77,7 @@ namespace APSIM.Documentation.Models.Types
                         if (type.IsAssignableFrom(child.GetType()))
                         {
                             if (child is Phenology)
-                                AutoDocumentation.Document(child, subTags, 1, 1, false, true);
+                                AutoDocumentation.Document(child, subTags, 1, 1);
                             else
                             {
                                 ITag firstChildTag = child.Document()?.First();

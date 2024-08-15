@@ -44,8 +44,9 @@ namespace UserInterface.Presenters
 
             // It's slightly simpler to generate Markdown for this, but it
             // would be pretty easy to build this directly as HTML
+            /*
             List<ITag> tags = new List<ITag>();
-            AutoDocumentation.Document(this.model, tags, 1, 0, false, force: true);
+            AutoDocumentation.Document(this.model, tags, 1, 0);
 
             StringBuilder contents = new StringBuilder();
             foreach (ITag tag in tags)
@@ -63,6 +64,7 @@ namespace UserInterface.Presenters
             }
 
             this.genericView.Text = contents.ToString();
+            */
         }
 
         /// <summary>

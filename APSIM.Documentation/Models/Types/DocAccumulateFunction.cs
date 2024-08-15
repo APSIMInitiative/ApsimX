@@ -10,7 +10,7 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class DocAccumulateFunction : GenericDoc
+    public class DocAccumulateFunction : DocGeneric
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DocAccumulateFunction" /> class.

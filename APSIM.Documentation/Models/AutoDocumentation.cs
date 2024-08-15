@@ -38,49 +38,56 @@ namespace APSIM.Documentation.Models
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
 
+        private static Dictionary<Type, Type> DefineFunctions()
+        {
+            Dictionary<Type, Type> documentMap = new Dictionary<Type, Type>()
+            {
+                {typeof(Plant), typeof(DocPlant)},
+                {typeof(Clock), typeof(DocClock)},
+                {typeof(Simulation), typeof(DocGenericWithChildren)},
+                {typeof(AccumulateFunction), typeof(DocAccumulateFunction)},
+                {typeof(BiomassArbitrator), typeof(DocBiomassArbitrator)},
+                {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
+                {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
+                {typeof(MobilisationSupplyFunction), typeof(DocBiomassArbitrationFunction)},
+                {typeof(PlantPartitionFractions), typeof(DocBiomassArbitrationFunction)},
+                {typeof(OrganNutrientDelta), typeof(DocOrganNutrient)},
+                {typeof(OrganNutrientsState), typeof(DocOrganNutrient)},
+                {typeof(NutrientDemandFunctions), typeof(DocUIInterfaceNutrient)},
+                {typeof(NutrientPoolFunctions), typeof(DocUIInterfaceNutrient)},
+                {typeof(NutrientProportionFunctions), typeof(DocUIInterfaceNutrient)},
+                {typeof(NutrientSupplyFunctions), typeof(DocUIInterfaceNutrient)},
+                {typeof(RootUptakesArbitrator), typeof(DocRootUptakesArbitrator)},
+                {typeof(Phenology), typeof(DocPhenology)}
+            };
+            return documentMap;
+        }
+
         /// <summary>Writes the description of a class to the tags.</summary>
         /// <param name="model">The model to get documentation for.</param>
         /// <param name="tags">The tags to add to.</param>
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
-        /// <param name="documentAllChildren">Document all children?</param>
-        /// <param name="force">
-        /// Whether or not to force the generation of documentation,
-        /// regardless of the model's IncludeInDocumentation status.
-        /// </param>
-        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0, bool documentAllChildren = true, bool force = false)
+        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
             if (tags == null)
                 tags = new List<ITag>();
-                
-            IEnumerable<ITag> newTags;
-            if (model is Plant)
-                newTags = new DocPlant(model).Document();
-            else if (model is Clock)
-                newTags = new DocClock(model).Document();
-            else if (model is Simulation)
-                newTags = new DocGenericWithChildren(model).Document();
-            else if (model is AccumulateFunction)
-                newTags = new DocAccumulateFunction(model).Document();
-            else if (model is BiomassArbitrator)
-                newTags = new DocBiomassArbitrator(model).Document();
-            else if (model is CalculateCarbonFractionFromNConc || model is DeficitDemandFunction || model is MobilisationSupplyFunction || model is PlantPartitionFractions)
-                newTags = new DocBiomassArbitrationFunction(model).Document();
-            else if (model is OrganNutrientDelta || model is OrganNutrientsState)
-                newTags = new DocOrganNutrient(model).Document();
-            else if (model is NutrientDemandFunctions || model is NutrientPoolFunctions || model is MobilisationSupplyFunction || model is NutrientSupplyFunctions)
-                newTags = new DocUIInterfaceNutrient(model).Document();
-            else if (model is RootUptakesArbitrator)
-                newTags = new DocRootUptakesArbitrator(model).Document();
-            else if (model is Phenology)
-                newTags = new DocPhenology(model).Document();
-            else
-                newTags = new DocGeneric(model).Document();
 
-            foreach(ITag tag in newTags)
-                tags.Add(tag);
-                
-            return tags;
+            IEnumerable<ITag> newTags;
+
+            DefineFunctions().TryGetValue(model.GetType(), out Type docType);
+
+            if (docType != null) 
+            {
+                object documentClass = Activator.CreateInstance(docType, new object[]{model});
+                newTags = (documentClass as DocGeneric).Document(tags, headingLevel, indent);
+            }
+            else 
+            {
+                newTags = new DocGeneric(model).Document(tags, headingLevel, indent);
+            }
+                            
+            return newTags;
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -510,7 +517,7 @@ namespace APSIM.Documentation.Models
                 foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
-                        Document(child, tags, headingLevel + 1, indent, documentAllChildren);
+                        Document(child, tags, headingLevel + 1, indent);
                 }
             }
         }
