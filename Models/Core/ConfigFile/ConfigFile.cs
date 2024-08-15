@@ -310,6 +310,7 @@ namespace Models.Core.ConfigFile
             Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
             Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
             Regex rxFactorSpecification = new Regex(@"(.)*(\=)(.)*(\=)(.)*");
+            Regex rxNodeWithChild = new Regex(@"(\[{1})([\w\d\s])*(\]){1}(\.){1}([\w\d\s])*");
 
             List<string> normalizedList = new();
             StringBuilder correctedLineString = new();
@@ -369,7 +370,12 @@ namespace Models.Core.ConfigFile
                             else if (rxNode.IsMatch(section))
                             {
                                 if (section.Contains('.'))
-                                    correctedLineString.Append(section);
+                                {
+                                    if (rxNodeWithChild.IsMatch(section) && section != lineSections.Last())
+                                        correctedLineString.Append(section + " ");
+                                    else
+                                        correctedLineString.Append(section);
+                                }
                                 else if (section == lineSections.Last())
                                     correctedLineString.Append(section);
                                 else correctedLineString.Append(section + " ");
@@ -554,7 +560,7 @@ namespace Models.Core.ConfigFile
         {
             if (!commandString.Contains('$'))
                 return commandString;
-            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex); 
+            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex);
         }
     }
 }
