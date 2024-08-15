@@ -12,12 +12,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class MinimumMaximumFunctionDoc : GenericDoc
+    public class DocMinimumMaximumFunction : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlantDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocMinimumMaximumFunction" /> class.
         /// </summary>
-        public MinimumMaximumFunctionDoc(IModel model): base(model) {}
+        public DocMinimumMaximumFunction(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.

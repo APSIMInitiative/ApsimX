@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
+using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -10,12 +11,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class RootUptakesArbitratorDoc : GenericDoc
+    public class DocOrganNutrient : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RootUptakesArbitratorDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocOrganNutrient" /> class.
         /// </summary>
-        public RootUptakesArbitratorDoc(IModel model): base(model) {}
+        public DocOrganNutrient(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
@@ -25,15 +26,15 @@ namespace APSIM.Documentation.Models.Types
             if (tags == null)
                 tags = new List<ITag>();
             
-            // add a heading.
+            // add a heading, the name of this organ
             tags.Add(new Heading(model.Name, headingLevel));
 
-            // write description of this class.
+            // write the basic description of this class, given in the <summary>
             AutoDocumentation.DocumentModelSummary(model, tags, headingLevel, indent, false);
 
-            // write children.
-            foreach (IModel child in model.FindAllChildren<Memo>())
-                AutoDocumentation.Document(child, tags, headingLevel + 1, indent);
+            // write the memos
+            foreach (IModel memo in model.FindAllChildren<Memo>())
+                AutoDocumentation.Document(memo, tags, headingLevel + 1, indent);
 
             return tags;
         }

@@ -11,12 +11,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class BiomassArbitrationFunctionDoc : GenericDoc
+    public class DocBiomassArbitrationFunction : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BiomassArbitrationFunctionDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocBiomassArbitrationFunction" /> class.
         /// </summary>
-        public BiomassArbitrationFunctionDoc(IModel model): base(model) {}
+        public DocBiomassArbitrationFunction(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.

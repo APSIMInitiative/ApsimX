@@ -55,27 +55,27 @@ namespace APSIM.Documentation.Models
                 
             IEnumerable<ITag> newTags;
             if (model is Plant)
-                newTags = new PlantDoc(model).Document();
+                newTags = new DocPlant(model).Document();
             else if (model is Clock)
-                newTags = new ClockDoc(model).Document();
+                newTags = new DocClock(model).Document();
             else if (model is Simulation)
-                newTags = new GenericWithChildrenDoc(model).Document();
+                newTags = new DocGenericWithChildren(model).Document();
             else if (model is AccumulateFunction)
-                newTags = new AccumulateFunctionDoc(model).Document();
+                newTags = new DocAccumulateFunction(model).Document();
             else if (model is BiomassArbitrator)
-                newTags = new BiomassArbitratorDoc(model).Document();
+                newTags = new DocBiomassArbitrator(model).Document();
             else if (model is CalculateCarbonFractionFromNConc || model is DeficitDemandFunction || model is MobilisationSupplyFunction || model is PlantPartitionFractions)
-                newTags = new BiomassArbitrationFunctionDoc(model).Document();
+                newTags = new DocBiomassArbitrationFunction(model).Document();
             else if (model is OrganNutrientDelta || model is OrganNutrientsState)
-                newTags = new OrganNutrientDoc(model).Document();
+                newTags = new DocOrganNutrient(model).Document();
             else if (model is NutrientDemandFunctions || model is NutrientPoolFunctions || model is MobilisationSupplyFunction || model is NutrientSupplyFunctions)
-                newTags = new UIInterfaceNutrientDoc(model).Document();
+                newTags = new DocUIInterfaceNutrient(model).Document();
             else if (model is RootUptakesArbitrator)
-                newTags = new RootUptakesArbitratorDoc(model).Document();
+                newTags = new DocRootUptakesArbitrator(model).Document();
             else if (model is Phenology)
-                newTags = new PhenologyDoc(model).Document();
+                newTags = new DocPhenology(model).Document();
             else
-                newTags = new GenericDoc(model).Document();
+                newTags = new DocGeneric(model).Document();
 
             foreach(ITag tag in newTags)
                 tags.Add(tag);

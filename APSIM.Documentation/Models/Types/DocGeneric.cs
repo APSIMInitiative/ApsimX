@@ -11,7 +11,7 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class GenericDoc
+    public class DocGeneric
     {
         /// <summary>
         /// The model that the documentation should be generated for
@@ -19,9 +19,9 @@ namespace APSIM.Documentation.Models.Types
         protected IModel model = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocGeneric" /> class.
         /// </summary>
-        public GenericDoc(IModel model)
+        public DocGeneric(IModel model)
         {
             this.model = model;
         }

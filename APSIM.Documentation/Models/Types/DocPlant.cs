@@ -18,12 +18,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class PlantDoc : GenericDoc
+    public class DocPlant : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlantDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocPlant" /> class.
         /// </summary>
-        public PlantDoc(IModel model): base(model) {}
+        public DocPlant(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.

@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
-using Models.PMF;
+using Models.Functions;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -11,12 +10,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class OrganNutrientDoc : GenericDoc
+    public class DocUIInterfaceNutrient : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrganNutrientDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocUIInterfaceNutrient" /> class.
         /// </summary>
-        public OrganNutrientDoc(IModel model): base(model) {}
+        public DocUIInterfaceNutrient(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
@@ -26,15 +25,19 @@ namespace APSIM.Documentation.Models.Types
             if (tags == null)
                 tags = new List<ITag>();
             
-            // add a heading, the name of this organ
+            // add a heading
             tags.Add(new Heading(model.Name, headingLevel));
 
-            // write the basic description of this class, given in the <summary>
-            AutoDocumentation.DocumentModelSummary(model, tags, headingLevel, indent, false);
+            // get description of this class.
+            tags.Add(new Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
 
-            // write the memos
+            // write memos.
             foreach (IModel memo in model.FindAllChildren<Memo>())
                 AutoDocumentation.Document(memo, tags, headingLevel + 1, indent);
+
+            // write children.
+            foreach (IModel child in model.FindAllChildren<IFunction>())
+                AutoDocumentation.Document(child, tags, headingLevel + 1, indent);
 
             return tags;
         }

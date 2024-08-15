@@ -13,12 +13,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class OrganDoc : GenericDoc
+    public class DocOrgan : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrganDoc" /> class.
+        /// Initializes a new instance of the <see cref="DocOrgan" /> class.
         /// </summary>
-        public OrganDoc(IModel model): base(model) {}
+        public DocOrgan(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
