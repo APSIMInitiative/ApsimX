@@ -14,6 +14,7 @@ using Models.Core;
 using Models.Functions;
 using APSIM.Documentation.Models.Types;
 using Models.PMF;
+using Models.PMF.Phen;
 
 
 namespace APSIM.Documentation.Models
@@ -69,6 +70,8 @@ namespace APSIM.Documentation.Models
                 newTags = new UIInterfaceNutrientDoc(model).Document();
             else if (model is RootUptakesArbitrator)
                 newTags = new RootUptakesArbitratorDoc(model).Document();
+            else if (model is Phenology)
+                newTags = new PhenologyDoc(model).Document();
             else
                 newTags = new GenericDoc(model).Document();
 

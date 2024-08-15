@@ -1,10 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using APSIM.Shared.Documentation;
+using DocumentFormat.OpenXml.Office2021.Excel.RichDataWebImage;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models;
 using Models.Core;
 using Models.PMF;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -58,10 +64,29 @@ namespace APSIM.Documentation.Models.Types
             }
             subTags.Add(new Table(tableData));
 
+            List<Type> documentableModels = new()
+            {
+                typeof(IOrgan), 
+                typeof(IPhenology), 
+                typeof(IArbitrator),
+                typeof(IBiomass),
+                typeof(Cultivar)
+            };
+
             // Document children.
             foreach (IModel child in this.model.Children)
                 if (child != introduction)
-                    subTags.Add(new Section(child.Name, child.Document()));
+                    foreach (Type type in documentableModels)
+                        if (type.IsAssignableFrom(child.GetType()))
+                        {
+                            if (child is Phenology)
+                                AutoDocumentation.Document(child, subTags, 1, 1, false, true);
+                            else
+                            {
+                                ITag firstChildTag = child.Document()?.First();
+                                subTags.Add(new Section(child.Name, firstChildTag));
+                            }
+                        }
 
             tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
             return tags;
