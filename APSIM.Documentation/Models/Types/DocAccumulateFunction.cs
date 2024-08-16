@@ -22,18 +22,16 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
             string list = ChildFunctionList(model);
 
-            tags.Add(new Paragraph($"*{model.Name}* = Accumulated {list} and  between {(model as AccumulateFunction).StartStageName.ToLower()} and {(model as AccumulateFunction).EndStageName.ToLower()}"));
+            newTags.Add(new Paragraph($"*{model.Name}* = Accumulated {list} and  between {(model as AccumulateFunction).StartStageName.ToLower()} and {(model as AccumulateFunction).EndStageName.ToLower()}"));
 
             foreach (var child in model.Children)
-                foreach (var tag in child.Document())
-                    tags.Add(tag);
+                AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1);
 
-            return tags;
+            return newTags;
         }
 
         /// <summary> creates a list of child function names </summary>

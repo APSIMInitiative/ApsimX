@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Documentation;
 using Models.Core;
-using System.Linq;
+using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -9,12 +11,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class DocGenericWithChildren : DocGeneric
+    public class DocCompositeBiomass : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DocGenericWithChildren" /> class.
+        /// Initializes a new instance of the <see cref="DocCompositeBiomass" /> class.
         /// </summary>
-        public DocGenericWithChildren(IModel model): base(model) {}
+        public DocCompositeBiomass(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model.
@@ -22,12 +24,16 @@ namespace APSIM.Documentation.Models.Types
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
-            
-            List<ITag> subTags = new List<ITag>();
-            foreach (IModel child in model.FindAllChildren())
-                subTags.Add(new Section(child.Name, child.Document()));
 
-            newTags.Add(new Section(model.Name, subTags));
+            string organs = "";
+            foreach (string name in (model as CompositeBiomass).OrganNames)
+                organs += $"- {name}" + Environment.NewLine;
+
+            List<ITag> subTags = new List<ITag>();
+            subTags.Add(new Paragraph($"{model.Name} summarises the following biomass objects:"));
+            subTags.Add(new Paragraph(organs));
+
+            newTags.Add(new Section("Organs", subTags));
 
             return newTags;
         }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
+using System.Linq;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -21,17 +22,11 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
-            List<ITag> subTags = new List<ITag>();
-            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
-            tags.Add(new Section(model.Name, subTags));
-
-            tags.Add(new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true)));
+            newTags.Add(new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true)));
             
-            return tags;
+            return newTags;
         }
     }
 }
