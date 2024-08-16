@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using DocumentFormat.OpenXml.Office2010.CustomUI;
 using Models.Core;
 using Models.PMF;
 
@@ -27,26 +25,26 @@ public class DocCultivar : DocGeneric
         if (tags == null)
             tags = new List<ITag>();
 
-        List<ITag> subTags = new();
+        tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
+        tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
-        if ((model as Cultivar).GetNames().Any())
-        {
-            subTags.Add(
-                new Section(
-                    "Aliases",
-                    new Paragraph(string.Join(',', (model as Cultivar).GetNames())))
-            );
-        }
+        // Get table of Parameter overrides.
+        DataTable overridesTable = new();
+        overridesTable.Columns.Add("Parameter overrides");
+        foreach(string paramOverride in (model as Cultivar).Command)
+            overridesTable.Rows.Add(paramOverride);
+        Table paramOverridesDisplayTable = new(overridesTable);
 
-        string parameterOverwritesText = "";
-        foreach (string command in (model as Cultivar).Command)
+        ITag aliasTag = (model as Cultivar).GetNames().Any() ? 
+            new Section("Aliases", new Paragraph(string.Join(',', (model as Cultivar).GetNames()))) : 
+            new Paragraph("");
+
+        List<ITag> subTags = new()
         {
-            parameterOverwritesText += "- " + command + Environment.NewLine;
+            aliasTag,
+            paramOverridesDisplayTable
         };
 
-        Paragraph parameterOverwrites = new(parameterOverwritesText);
-
-        subTags.Add(parameterOverwrites);
         tags.Add(new Section(model.Name, subTags));
         return tags;
     }

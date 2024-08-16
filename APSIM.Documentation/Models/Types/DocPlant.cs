@@ -68,7 +68,6 @@ namespace APSIM.Documentation.Models.Types
                 typeof(IPhenology), 
                 typeof(IArbitrator),
                 typeof(IBiomass),
-                typeof(Cultivar)
             };
 
             // Document children.
@@ -90,14 +89,20 @@ namespace APSIM.Documentation.Models.Types
                 }
                 if (child is Folder && child.Name == "Cultivars")
                 {
-                    List<ITag> cultivarTags = new();
+                    DataTable cultivarNameTable = new();
+                    cultivarNameTable.Columns.Add("Cultivar Name");
+                    cultivarNameTable.Columns.Add("Alternative Name(s)");
+                   
                     foreach (Folder folder in child.FindAllChildren<Folder>())
                     {
                         List<Cultivar> cultivars = folder.FindAllChildren<Cultivar>().ToList();
                         foreach (Cultivar cultivarChild in cultivars)
-                            AutoDocumentation.Document(cultivarChild, cultivarTags, headingLevel+1, indent+1);
+                        {
+                            string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
+                            cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames});
+                        }
                     }
-                    subTags.Add(new Section("Cultivars", cultivarTags));
+                    subTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
                 }
             }
 
