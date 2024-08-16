@@ -18,6 +18,7 @@ using Models.PMF.Phen;
 using Models.Core.Run;
 using Models.Storage;
 using Models.PMF.Organs;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace APSIM.Documentation.Models
@@ -63,6 +64,8 @@ namespace APSIM.Documentation.Models
                 {typeof(Phenology), typeof(DocPhenology)},
                 {typeof(OrganArbitrator), typeof(DocGeneric)},
                 {typeof(Root), typeof(DocRoot)},
+                {typeof(CompositeBiomass), typeof(DocGeneric)},
+                {typeof(Cultivar), typeof(DocCultivar)},
             };
             return documentMap;
         }
@@ -72,7 +75,7 @@ namespace APSIM.Documentation.Models
         /// <param name="tags">The tags to add to.</param>
         /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
-        public static IEnumerable<Shared.Documentation.ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public static IEnumerable<ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
             if (tags == null)
                 tags = new List<ITag>();
