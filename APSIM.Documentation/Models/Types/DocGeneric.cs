@@ -36,9 +36,9 @@ namespace APSIM.Documentation.Models.Types
                 tags = new List<ITag>();
 
             List<ITag> subTags = new List<ITag>();
-            subTags.Add(new Heading(this.model.Name, headingLevel));
             subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
+            tags.Add(new Section(this.model.Name, subTags));
 
             // write children.
             foreach (IModel child in model.FindAllChildren<Memo>())
