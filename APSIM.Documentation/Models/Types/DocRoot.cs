@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
+using System.Linq;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -21,13 +22,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
             List<ITag> subTags = new List<ITag>();
-
-            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
 
             List<ITag> growthTags = new List<ITag>();
             growthTags.Add(new Paragraph("Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension."));
@@ -69,8 +66,8 @@ namespace APSIM.Documentation.Models.Types
                     constantTags.Add(tag);
             subTags.Add(new Section("Constants", constantTags));
 
-            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
-            return tags;
+            newTags.Add(new Section($"The APSIM {model.Name} Model", subTags));
+            return newTags;
         }
     }
 }

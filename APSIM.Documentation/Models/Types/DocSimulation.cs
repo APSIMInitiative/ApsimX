@@ -5,7 +5,6 @@ using Models.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
-
     /// <summary>
     /// Base documentation class for models
     /// </summary>
@@ -21,13 +20,12 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
-            foreach (ITag tag in model.Children.SelectMany(c => c.Document()))
-                tags.Add(tag);
+            foreach (IModel child in model.Children)
+                AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1);
 
-            return tags;
+            return newTags;
         }
     }
 }

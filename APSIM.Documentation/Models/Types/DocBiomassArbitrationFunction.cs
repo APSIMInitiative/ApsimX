@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Documentation;
-using Models;
 using Models.Core;
 using Models.PMF;
 
@@ -23,28 +23,17 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
-            
-            // add a heading
-            tags.Add(new Heading(model.Name, headingLevel));
-
-            // get description of this class
-            AutoDocumentation.DocumentModelSummary(model, tags, headingLevel, indent, false);
-
-            // write memos
-            foreach (IModel memo in model.FindAllChildren<Memo>())
-                AutoDocumentation.Document(memo, tags, headingLevel + 1, indent);
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             Organ parentOrgan = FindParentOrgan(model.Parent);
 
             // add a description of the equation for this function
-            tags.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+            newTags.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
                 + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-            tags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+            newTags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
                 + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
 
-            return tags;
+            return newTags;
         }
 
         private Organ FindParentOrgan(IModel model)

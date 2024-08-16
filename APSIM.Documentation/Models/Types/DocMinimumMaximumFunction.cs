@@ -24,20 +24,19 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             foreach (ITag tag in model.Children.SelectMany(c => c.Document()))
-                tags.Add(tag);
+                newTags.Add(tag);
 
             string type = "Max";
             if (model is MinimumFunction)
                 type = "Min";
 
             foreach (ITag tag in DocumentMinMaxFunction(type, model.Name, model.Children))
-                tags.Add(tag);
+                newTags.Add(tag);
 
-            return tags;
+            return newTags;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

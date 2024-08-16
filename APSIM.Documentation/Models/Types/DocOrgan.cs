@@ -25,18 +25,7 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
-            
-            // add a heading, the name of this organ
-            tags.Add(new Heading(this.model.Name, headingLevel));
-
-            // write the basic description of this class, given in the <summary>
-            AutoDocumentation.DocumentModelSummary(this.model, tags, headingLevel, indent, false);
-
-            // write the memos
-            foreach (IModel memo in this.model.FindAllChildren<Memo>())
-                AutoDocumentation.Document(memo, tags, headingLevel + 1, indent);
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             //// List the parameters, properties, and processes from this organ that need to be documented:
 
