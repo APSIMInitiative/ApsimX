@@ -69,9 +69,10 @@ namespace Models.PMF
         /// </summary>
         public IEnumerable<string> GetNames()
         {
-            yield return Name;
+            List<string> names = new();
             foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
-                yield return name;
+                names.Add(name);
+            return names;
         }
 
         /// <summary>Apply commands.</summary>

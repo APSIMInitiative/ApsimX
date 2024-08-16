@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Svg;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -72,18 +73,33 @@ namespace APSIM.Documentation.Models.Types
 
             // Document children.
             foreach (IModel child in this.model.Children)
+            {
                 if (child != introduction)
+                {
                     foreach (Type type in documentableModels)
                         if (type.IsAssignableFrom(child.GetType()))
                         {
                             if (child is Phenology)
-                                AutoDocumentation.Document(child, subTags, 1, 1);
+                                AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1);
                             else
                             {
                                 ITag firstChildTag = child.Document()?.First();
                                 subTags.Add(new Section(child.Name, firstChildTag));
                             }
                         }
+                }
+                if (child is Folder && child.Name == "Cultivars")
+                {
+                    List<ITag> cultivarTags = new();
+                    foreach (Folder folder in child.FindAllChildren<Folder>())
+                    {
+                        List<Cultivar> cultivars = folder.FindAllChildren<Cultivar>().ToList();
+                        foreach (Cultivar cultivarChild in cultivars)
+                            AutoDocumentation.Document(cultivarChild, cultivarTags, headingLevel+1, indent+1);
+                    }
+                    subTags.Add(new Section("Cultivars", cultivarTags));
+                }
+            }
 
             tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
             return tags;
