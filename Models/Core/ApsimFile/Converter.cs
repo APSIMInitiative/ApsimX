@@ -5689,6 +5689,62 @@ namespace Models.Core.ApsimFile
                     forage["Parameters"] = parametersArray;
                 }
             }
+
+            // Convert TreeProxy parameters.
+            foreach (var treeProxy in JsonUtilities.ChildrenOfType(root, "TreeProxy"))
+            {
+                JArray tables = treeProxy["Table"] as JArray;
+
+                JArray parameters = new();
+
+                // add shade
+                CreateTreeProxyParameterObj(parameters, "Shade (%)", tables.Skip(2).Select(table => (table as JArray)[0].Value<string>()).ToArray());
+
+                // add two documentation lines.
+                //CreateTreeProxyParameterObj(parameters, "Root Length Density (cm/cm3)", Enumerable.Repeat(string.Empty, 10).ToArray());
+                //CreateTreeProxyParameterObj(parameters, "Depth (cm)", Enumerable.Repeat(string.Empty, 10).ToArray());
+
+                // add depths
+                var depths = (tables[1] as JArray).Skip(3).Select(i => i).ToArray();
+                for (int i = 0; i < depths.Length; i++)
+                {
+                    string depth = depths[i].Value<string>();
+                    string parameterName;
+                    if (i == 0)
+                        parameterName = $"Root Length Density (cm/cm3): {depth}cm";
+                    else
+                        parameterName = $"{depth}cm";
+                    CreateTreeProxyParameterObj(parameters, parameterName, tables.Skip(2).Select(table => (table as JArray)[i + 3].Value<string>()).ToArray());
+                }
+
+                JObject spatial = new();
+                treeProxy["Spatial"] = spatial;
+                spatial["Parameters"] = parameters;
+            }
+        }
+
+        /// <summary>
+        /// Create a TreeProxy parameter instance.
+        /// </summary>
+        /// <param name="parameters">The JSON array to add the instance to.</param>
+        /// <param name="name">The name of the parameter to add.</param>
+        /// <param name="values">The values of the parameters.</param>
+        private static void CreateTreeProxyParameterObj(JArray parameters, string name, string[] values)
+        {
+            parameters.Add(new JObject()
+            {
+                ["Name"] = name,
+                ["THCutOff0"] = values[0],
+                ["THCutOff05"] = values[1],
+                ["THCutOff1"] = values[2],
+                ["THCutOff15"] = values[3],
+                ["THCutOff2"] = values[4],
+                ["THCutOff25"] = values[5],
+                ["THCutOff3"] = values[6],
+                ["THCutOff4"] = values[7],
+                ["THCutOff5"] = values[8],
+                ["THCutOff6"] = values[9],
+            });
         }
     }
 }

@@ -92,21 +92,21 @@ namespace UserInterface.Presenters
             explorerPresenter = parentPresenter;
 
             if (model as IDataProvider != null)
-            {  
+            {
                 // e.g. DataStorePresenter goes through here.
                 dataProvider = model as IDataProvider;
                 gridTable = null;
             }
             //else we are receiving a GridTable that was created by another presenter
             else if (model as GridTable != null)
-            {  
+            {
                 // e.g. PropertyAndGridPresenter goes through here.
                 gridTable = (model as GridTable);
             }
             else
             {
                 // e.g. ProfilePresenter
-                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
                 var viewBase = v as ViewBase;
                 sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
                 replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null);
@@ -195,8 +195,8 @@ namespace UserInterface.Presenters
             else
                 gridIsEditable = true;
 
-            grid = new SheetWidget(sheetContainer.Widget,  
-                                   dataProvider, 
+            grid = new SheetWidget(sheetContainer.Widget,
+                                   dataProvider,
                                    multiSelect: true,
                                    onException: (err) => ViewBase.MasterView.ShowError(err),
                                    gridIsEditable: gridIsEditable,
@@ -301,7 +301,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Adds intellisense to the grid. 
+        /// Adds intellisense to the grid.
         /// </summary>
         public void AddIntellisense(Model model)
         {
@@ -562,8 +562,8 @@ namespace UserInterface.Presenters
         //         grid.Sheet.CellEditor.EndEdit();
         //         grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
         //         string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-        //         grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
-        //                                                 new int[] {rowIndex}, 
+        //         grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex},
+        //                                                 new int[] {rowIndex},
         //                                                 new string[]{text + args.ItemSelected});
         //         grid.Sheet.CalculateBounds(columnIndex, rowIndex);
 

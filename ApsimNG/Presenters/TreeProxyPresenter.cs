@@ -59,15 +59,13 @@ namespace UserInterface.Presenters
             propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(forestryModel, forestryViewer.Constants, explorerPresenter);
 
-            List<GridTable> tables = forestryModel.Tables;
-
             spatialGridPresenter = new GridPresenter();
-            spatialGridPresenter.Attach(tables[1], forestryViewer.SpatialDataGrid, explorerPresenter);
+            spatialGridPresenter.Attach(forestryModel.Spatial, forestryViewer.SpatialDataGrid, explorerPresenter);
             spatialGridPresenter.CellChanged += OnCellChanged;
             spatialGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             temporalGridPresenter = new GridPresenter();
-            temporalGridPresenter.Attach(tables[0], forestryViewer.TemporalDataGrid, explorerPresenter);
+            temporalGridPresenter.Attach(forestryModel, forestryViewer.TemporalDataGrid, explorerPresenter);
             temporalGridPresenter.CellChanged += OnCellChanged;
             temporalGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
@@ -96,7 +94,7 @@ namespace UserInterface.Presenters
         {
             Physical physical = forestryModel.Parent.FindDescendant<Physical>();
             forestryViewer.SoilMidpoints = physical.DepthMidPoints;
-            forestryViewer.DrawGraphs(forestryModel.Tables[1].Data);
+            forestryViewer.DrawGraphs(forestryModel.Spatial);
             propertyPresenter.RefreshView(forestryModel);
         }
 

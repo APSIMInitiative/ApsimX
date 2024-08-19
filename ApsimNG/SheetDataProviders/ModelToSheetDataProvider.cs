@@ -16,9 +16,9 @@ public class ModelToSheetDataProvider
     /// </summary>
     /// <param name="model">The model.</param>
     /// <returns>An ISheetDataProvider instance.</returns>
-    public static IDataProvider ToSheetDataProvider(IModel model)
+    public static IDataProvider ToSheetDataProvider(object model)
     {
-        return DataProviderFactory.Create(model, (properties) => 
+        return DataProviderFactory.Create(model, (properties) =>
         {
             if (model is Physical physical)
                 ProcessPhysicalProperties(properties);
