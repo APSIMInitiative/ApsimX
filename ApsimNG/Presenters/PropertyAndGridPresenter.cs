@@ -30,10 +30,7 @@ namespace UserInterface.Presenters
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
             gridPresenter = new GridPresenter();
-            if (model is IGridModel)
-                gridPresenter.Attach((model as IGridModel).Tables[0], view.Grid, parentPresenter);
-            else
-                gridPresenter.Attach(model, view.Grid, parentPresenter);            
+            gridPresenter.Attach(model, view.Grid, parentPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
             gridPresenter.AddIntellisense(model as Model);
             gridPresenter.CellChanged += OnCellChanged;

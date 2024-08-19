@@ -27,9 +27,6 @@ namespace UserInterface.Presenters
         /// <summary>The data provider.</summary>
         private IDataProvider dataProvider;
 
-        /// <summary>The data store model to work with.</summary>
-        private GridTable gridTable;
-
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
 
@@ -95,17 +92,9 @@ namespace UserInterface.Presenters
             {
                 // e.g. DataStorePresenter goes through here.
                 dataProvider = model as IDataProvider;
-                gridTable = null;
-            }
-            //else we are receiving a GridTable that was created by another presenter
-            else if (model as GridTable != null)
-            {
-                // e.g. PropertyAndGridPresenter goes through here.
-                gridTable = (model as GridTable);
             }
             else
             {
-                // e.g. ProfilePresenter
                 dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
                 var viewBase = v as ViewBase;
                 sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
@@ -127,16 +116,6 @@ namespace UserInterface.Presenters
                 view.SetDescriptionText("");
                 view.SetLabelHeight(0);
                 AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
-
-                if (model as IGridModel != null)
-                {
-                    string text = (model as IGridModel).GetDescription();
-                    if (text.Length > 0)
-                    {
-                        view.SetDescriptionText(text);
-                        view.SetLabelHeight(0.1f);
-                    }
-                }
             }
 
             //Create the sheet widget here.
@@ -218,56 +197,14 @@ namespace UserInterface.Presenters
         /// <param name="frozenRows"></param>
         public void PopulateWithDataProvider(IDataProvider dataProvider)
         {
-            if (gridTable == null)
-            {
-                grid.Cleanup();
-                SetupSheet(dataProvider);
-            }
-            else
-                throw new Exception($"PopulateWithDataProvider cannot be used on a presenter that has supplied a Model");
+            grid.Cleanup();
+            SetupSheet(dataProvider);
         }
 
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (gridTable != null && grid != null)
-            {
-                if (dataProvider != null)
-                    (dataProvider as IDataProvider).CellChanged -= OnCellChanged;
-
-                DataTable data = gridTable.Data;
-
-                // Assemble column units to pass to DataTableProvider constructor.
-                List<string> units = null;
-                if (gridTable.HasUnits())
-                {
-                    units = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        units.Add(data.Rows[0].ItemArray[i].ToString());
-                    }
-                    data.Rows.Remove(data.Rows[0]);
-                }
-
-                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                if (data != null)
-                {
-                    List<List<SheetCellState>> isCalculated = new();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetCellState.Calculated: SheetCellState.Normal).ToList());
-
-                    // Create instance of DataTableProvider.
-                    dataProvider = new DataTableProvider(data, units, isCalculated);
-
-                    // Give DataTableProvider to grid sheet.
-                    grid.SetDataProvider(dataProvider);
-
-                    dataProvider.CellChanged += OnCellChanged;
-                }
-            }
-            else if (dataProvider != null)
-                grid.SetDataProvider(dataProvider);
-
+            grid.SetDataProvider(dataProvider);
             grid?.UpdateScrollBars();
         }
 
@@ -496,38 +433,15 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel is GridTable)
-                model = (changedModel as GridTable).Model;
-            else model = changedModel as IModel;
-            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
+            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(changedModel as IModel);
             Refresh();
         }
 
         /// <summary>Save the contents of the grid to the model.</summary>
         private void SaveGridToModel()
         {
-            if (gridTable != null)
-            {
-                if (dataProvider != null)
-                {
-                    var data = (dataProvider as DataTableProvider).Data;
-                    List<string> unitsRow = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        unitsRow.Add(dataProvider.GetColumnUnits(i));
-
-                        DataRow row = data.NewRow();
-                        row.ItemArray = unitsRow.ToArray();
-
-                        data.Rows.InsertAt(row, 0);
-                    }
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
-                }
-            }
-            else if (replaceModelCommand != null)
-            {
+            if (replaceModelCommand != null)
                 replaceModelCommand.Replacement = model as IModel;
-            }
         }
 
         /// <summary>
