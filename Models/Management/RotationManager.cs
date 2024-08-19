@@ -221,20 +221,23 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
                     {
-                        object value;
-                        try
+                        if (testCondition.Length > 0)
                         {
-                            value = FindByPath(testCondition)?.Value;
-                            if (value == null)
-                                throw new Exception("Test condition returned nothing");
+                            object value;
+                            try
+                            {
+                                value = FindByPath(testCondition)?.Value;
+                                if (value == null)
+                                    throw new Exception("Test condition returned nothing");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message);
+                            }
+                            double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                            detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
+                            score *= result;
                         }
-                        catch (Exception ex)
-                        {
-                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message);
-                        }
-                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                        detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
-                        score *= result;
                     }
 
                     if (Verbose)
