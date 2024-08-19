@@ -5682,8 +5682,8 @@ namespace Models.Core.ApsimFile
                             ["DeadDigestibility"] = parameter.Value.DeadDigestibility,
                             ["LiveFractionConsumable"] = parameter.Value.LiveFractionConsumable,
                             ["DeadFractionConsumable"] = parameter.Value.DeadFractionConsumable,
-                            ["LiveMinimumAmount"] = parameter.Value.LiveMinimumAmount,
-                            ["DeadMinimumAmount"] = parameter.Value.DeadMinimumAmount,
+                            ["LiveMinimumBiomass"] = parameter.Value.LiveMinimumAmount,
+                            ["DeadMinimumBiomass"] = parameter.Value.DeadMinimumAmount,
                         });
                     }
                     forage["Parameters"] = parametersArray;

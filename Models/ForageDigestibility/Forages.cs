@@ -122,7 +122,6 @@ namespace Models.ForageDigestibility
         /// <summary>Create parameters using default values.</summary>
         private void CreateParametersUsingDefaults()
         {
-            _parameters = new();
             var materialNames = new List<string>();
             foreach (var forage in FindAllInScope<IHasDamageableBiomass>())
             {
@@ -138,6 +137,8 @@ namespace Models.ForageDigestibility
                             deadDigestibility = "FromModel";
                         }
 
+                        if (_parameters == null)
+                            _parameters = new();
                         Parameters.Add(new ForageMaterialParameters()
                         {
                             Name = material.Name,
