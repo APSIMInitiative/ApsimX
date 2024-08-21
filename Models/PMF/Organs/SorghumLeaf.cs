@@ -623,7 +623,7 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
             {
-                if (leafInitialised)
+                if (leafInitialised && !flag)
                 {
                     //areaActual in old model
                     // culms.AreaActual() will update this.DltLAI
