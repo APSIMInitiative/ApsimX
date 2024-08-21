@@ -95,11 +95,6 @@ namespace Models.PMF.Struct
 				return 1.0;
 			}
 
-			if (dayOfClassicsEmergence == 0)
-			{
-				dayOfClassicsEmergence = 1;
-				return 1.0;
-			}
 			var currentLeafNo = culms.Culms[0].CurrentLeafNo;
 			double dltLeafNoMainCulm = 0.0;
 			if (beforeEndJuvenileStage())
