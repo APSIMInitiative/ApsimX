@@ -94,11 +94,12 @@ namespace Models.PMF.Struct
 				dayOfClassicsEmergence = 0; //When it runs tomorrow it will be the day of ermergence
 				return 1.0;
 			}
-			//if (dayOfClassicsEmergence == 0)
-			//{
-			//	dayOfClassicsEmergence = 1;
-			//	return 1.0;
-			//}
+
+			if (dayOfClassicsEmergence == 0)
+			{
+				dayOfClassicsEmergence = 1;
+				return 1.0;
+			}
 			var currentLeafNo = culms.Culms[0].CurrentLeafNo;
 			double dltLeafNoMainCulm = 0.0;
 			if (beforeEndJuvenileStage())
