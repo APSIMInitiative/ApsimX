@@ -137,7 +137,7 @@ namespace Models.PMF.Organs
         private double nDeadLeaves;
         private double dltDeadLeaves;
         private int leafIndex;
-        private bool flag = true;
+        private int flag = 0;
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
@@ -595,7 +595,7 @@ namespace Models.PMF.Organs
             SowingDensity = 0;
             // Default the stage number to 0 for Sorghum.
             phenology.Stage = 0;
-            flag = true;
+            flag = 0;
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
@@ -623,7 +623,7 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
             {
-                if (leafInitialised && !flag)
+                if (leafInitialised && flag > 1)
                 {
                     //areaActual in old model
                     // culms.AreaActual() will update this.DltLAI
@@ -1078,12 +1078,13 @@ namespace Models.PMF.Organs
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             }
 
-            if (leafInitialised && flag)
+            if (leafInitialised && flag == 0)
             {
-                flag = false;
+                flag = 1;
             }
-            else if (leafInitialised && !flag)
+            else if (leafInitialised && flag > 0)
             {
+                flag = 2;
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
                 DltPotentialLAI = culms.dltPotentialLAI;
