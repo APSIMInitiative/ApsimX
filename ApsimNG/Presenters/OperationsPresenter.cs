@@ -95,7 +95,7 @@ namespace UserInterface.Presenters
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
                 }
 
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "OperationsAsStrings", input));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "OperationsAsString", input));
                 this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             }
             catch (Exception err)
