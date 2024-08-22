@@ -20,8 +20,10 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class ScrumRotation : Model, IGridModel
+    public class ScrumRotation : Model
     {
+        private DataTable dataTable;
+
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
@@ -82,64 +84,43 @@ namespace Models.PMF.SimplePlantModels
 
         private DataTable readCSVandUpdateProperties()
         {
-                DataTable dataTable = new DataTable();
-                using (StreamReader reader = new StreamReader(FullFileName))
+            dataTable = new DataTable();
+            using (StreamReader reader = new StreamReader(FullFileName))
+            {
+                string[] headers = reader.ReadLine().Split(',');
+                foreach (string header in headers)
                 {
-                    string[] headers = reader.ReadLine().Split(',');
-                    foreach (string header in headers)
-                    {
-                        dataTable.Columns.Add(header);
-                    }
-                    while (!reader.EndOfStream)
-                    {
-                        string[] rows = reader.ReadLine().Split(',');
-                        dataTable.Rows.Add(rows);
-                    }
+                    dataTable.Columns.Add(header);
                 }
-                return dataTable;
+                while (!reader.EndOfStream)
+                {
+                    string[] rows = reader.ReadLine().Split(',');
+                    dataTable.Rows.Add(rows);
+                }
+            }
+            dataTable.RowChanged += OnRowChanged;
+            return dataTable;
         }
 
         /// <summary>Gets or sets the table of values.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
+        [Display]
+        public DataTable Data
         {
             get
             {
-                List<GridTable> tables = new List<GridTable>
-                {
-                    new GridTable("", new List<GridTableColumn>(), this)
-                };
-                return tables;
+                readCSVandUpdateProperties();
+                return dataTable;
             }
         }
 
-        //private DataTable tableData = null;
-
         /// <summary>
-        /// Reads in the csv data and sends it as a datatable to the grid
+        /// Invoked when a row of the table is changed by the user.
         /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowChanged(object sender, DataRowChangeEventArgs e)
         {
-            DataTable tableData = new DataTable();
-            try
-            {
-                tableData = readCSVandUpdateProperties();
-            }
-            catch
-            {
-                tableData = new DataTable();
-            }
-            return tableData;
-        }
-
-        /// <summary>
-        /// Writes out changes from the grid to the csv file
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-            saveToCSV(FullFileName, dt);
-
-            return new DataTable();
+            saveToCSV(FullFileName, dataTable);
         }
 
         /// <summary>
