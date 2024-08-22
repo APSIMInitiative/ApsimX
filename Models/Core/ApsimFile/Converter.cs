@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 178; } }
+        public static int LatestVersion { get { return 179; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5603,6 +5603,19 @@ namespace Models.Core.ApsimFile
             foreach (var rate in JsonUtilities.ChildrenOfType(root, "CERESNitrificationModel"))
             {
                 JsonUtilities.AddConstantFunctionIfNotExists(rate, "NitrificationInhibition", "1.0");
+            }
+        }
+
+        /// <summary>
+        /// Renames the Operation property of Operations to OperationsList to avoid name conficts with the Operation class
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion179(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                operations["OperationsList"] = operations["Operation"];
             }
         }
     }
