@@ -594,7 +594,7 @@ namespace Models.AgPasture
             private double amountUrineNReturned;
             private double dmRemovedToday;
             private double areaWeighting;
-            private List<DigestibleBiomass> grazedForages = new List<DigestibleBiomass>();
+            private List<Forages.MaterialRemoved> grazedForages = new();
 
             /// <summary>onstructor</summary>
             /// <param name="zone">Our zone.</param>
@@ -711,9 +711,9 @@ namespace Models.AgPasture
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                            grazedDM += grazed.Total.Wt * 10;  // kg/ha
-                            grazedN += grazed.Total.N * 10;    // kg/ha
-                            grazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
+                            grazedDM += grazed.Wt;  // kg/ha
+                            grazedN += grazed.N;    // kg/ha
+                            grazedME += grazedMetabolisableEnergy * grazed.Wt;
 
                             grazedForages.Add(grazed);
                         }

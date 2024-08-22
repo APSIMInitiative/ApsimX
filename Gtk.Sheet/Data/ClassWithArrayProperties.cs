@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Gtk.Sheet;
-using Models.Core;
-
-namespace UserInterface.Views;
+namespace Gtk.Sheet;
 
 /// <summary>
 /// A SheetDataProvider that wraps a list of model property instances.
 /// </summary>
-class PropertySheetDataProvider : ISheetDataProvider
+class ClassWithArrayProperties : IDataProvider
 {
     private readonly List<PropertyMetadata> properties;
 
@@ -17,29 +11,25 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// Constructor.
     /// </summary>
     /// <param name="properties">The properties.</param>
-    /// <param name="model">The model.</param>
-    public PropertySheetDataProvider(List<PropertyMetadata> properties)
+    public ClassWithArrayProperties(List<PropertyMetadata> properties)
     {
-        this.properties = properties;
+       this.properties = properties;
 
         if (properties.Any())
         {
             // Determine the number of rows the grid should have. 
-            RowCount = properties.Max(p => p.Values == null ? 0 : p.Values.Count);
+            RowCount = this.properties.Max(p => p.Values == null ? 0 : p.Values.Count);
         }
     }
 
     /// <summary>An event invoked when a cell changes.</summary>
-    public event ISheetDataProvider.CellChangedDelegate CellChanged;
+    public event IDataProvider.CellChangedDelegate CellChanged;
 
     /// <summary>Gets the number of columns of data.</summary>
     public int ColumnCount => properties.Count;
 
     /// <summary>Gets the number of rows of data.</summary>
     public int RowCount { get; private set; }
-
-    /// <summary>The model.</summary>
-    public IModel Model => properties.First().Model;
 
     /// <summary>Get the name of a column.</summary>
     /// <param name="columnIndex">Column index.</param>
@@ -71,14 +61,14 @@ class PropertySheetDataProvider : ISheetDataProvider
     /// <summary>Get the cell state.</summary>
     /// <param name="colIndex">Column index of cell.</param>
     /// <param name="rowIndex">Row index of cell.</param>
-    public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
+    public SheetCellState GetCellState(int colIndex, int rowIndex)
     {
         if (properties[colIndex].Metadata != null && 
             properties[colIndex].Metadata.Count > 0 && 
-            properties[colIndex].Metadata.All(m => m == SheetDataProviderCellState.ReadOnly))
-            return SheetDataProviderCellState.ReadOnly;
+            properties[colIndex].Metadata.All(m => m == SheetCellState.ReadOnly))
+            return SheetCellState.ReadOnly;
         if (properties[colIndex].Metadata == null || rowIndex >= properties[colIndex].Metadata.Count)
-            return SheetDataProviderCellState.Normal;
+            return SheetCellState.Normal;
         else
             return properties[colIndex].Metadata[rowIndex];
     }
