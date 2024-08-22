@@ -2,6 +2,7 @@
 using System.Linq;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils.NutrientPatching;
 
 namespace Models.Soils.Arbitrator
 {
@@ -16,6 +17,7 @@ namespace Models.Soils.Arbitrator
         private ISolute NH4Solute;
         private ISoilWater WaterBalance;
         private Soil soilInZone;
+        private NutrientPatchManager patchManager;
 
         /// <summary>
         /// The Zone for this water and N
@@ -57,6 +59,7 @@ namespace Models.Soils.Arbitrator
             soilInZone = from.soilInZone;
             Zone = from.Zone;
             WaterBalance = from.WaterBalance;
+            patchManager = from.patchManager;
 
             Water = (double[])from.Water.Clone();
             NO3N = (double[])from.NO3N.Clone();
@@ -81,20 +84,23 @@ namespace Models.Soils.Arbitrator
             WaterBalance = soilInZone.FindInScope<ISoilWater>();
             NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
             NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
-            var PlantAvailableNO3Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNO3");
-            if (PlantAvailableNO3Solute != null)
-                NO3Solute = PlantAvailableNO3Solute;
-            var PlantAvailableNH4Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNH4");
-            if (PlantAvailableNH4Solute != null)
-                NH4Solute = PlantAvailableNH4Solute;
+            patchManager = soilInZone.FindChild<NutrientPatchManager>();
         }
 
         /// <summary>Initialises this instance.</summary>
         public void InitialiseToSoilState()
         {
             Water = WaterBalance.SWmm;
-            NO3N = NO3Solute.kgha;
-            NH4N = NH4Solute.kgha;
+            if (patchManager == null)
+            {
+                NO3N = NO3Solute.kgha;
+                NH4N = NH4Solute.kgha;
+            }
+            else
+            {
+                NO3N = patchManager.NO3Effective.kgha;
+                NH4N = patchManager.NH4Effective.kgha;
+            }
         }
     }
 }

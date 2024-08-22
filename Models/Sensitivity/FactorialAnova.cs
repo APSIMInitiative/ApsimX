@@ -17,8 +17,8 @@ namespace Models
     /// Encapsulates a factorial ANOVA parameter sensitivity analysis.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
     public class FactorialAnova : Model, IGridModel, IPostSimulationTool
@@ -29,11 +29,15 @@ namespace Models
         /// <summary>
         /// List of analysis outputs
         /// </summary>
+        [Description("Analysis outputs")]
+        [Display(Type = DisplayType.MultiLineText)]
         public List<string> Outputs { get; set; }
 
         /// <summary>
         /// List of analysis inputs
         /// </summary>
+        [Description("Analysis inputs")]
+        [Display(Type = DisplayType.MultiLineText)]
         public List<string> Inputs { get; set; }
 
         /// <summary>

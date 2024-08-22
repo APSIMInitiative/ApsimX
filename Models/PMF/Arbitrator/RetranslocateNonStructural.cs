@@ -36,7 +36,7 @@ namespace Models.PMF
             GenericOrgan genOrgan = organ as GenericOrgan; // FIXME!
             double availableDM = Math.Max(0.0, genOrgan.StartLive.StorageWt - genOrgan.DMSupply.ReAllocation) * genOrgan.DMRetranslocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
-                throw new Exception("Negative DM retranslocation value computed for " + Name);
+                throw new Exception("Negative DM retranslocation value computed in function " + Name + " in organ " + organ.Name);
 
             return availableDM;
         }
@@ -50,7 +50,7 @@ namespace Models.PMF
 
             // Retranslocation
             if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.ReAllocation))
-                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in function " + Name + " in organ " + organ.Name);
 
             double storageRetranslocation = Math.Min(genOrgan.Live.StorageN, nitrogen.Retranslocation);
             genOrgan.Live.StorageN -= storageRetranslocation;
@@ -80,7 +80,7 @@ namespace Models.PMF
 
             // Check retranslocation
             if (MathUtilities.IsGreaterThan(biomass.Retranslocation, genOrgan.StartLive.StorageWt))
-                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+                throw new Exception("Retranslocation exceeds non structural biomass in function " + Name + " in organ " + organ.Name);
 
             double diffWt = biomass.Storage - biomass.Retranslocation;
             if (diffWt > 0)

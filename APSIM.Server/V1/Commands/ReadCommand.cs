@@ -1,4 +1,6 @@
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -18,18 +20,24 @@ namespace APSIM.Server.Commands
         /// <summary>
         /// Name of the table from which parameters will be read.
         /// </summary>
-        public string TableName { get; private set; }
+        public string TableName { get; set; }
 
         /// <summary>
         /// Parameter names to be read.
         /// </summary>
-        public IEnumerable<string> Parameters { get; private set; }
+        public List<string> Parameters { get; set; }
 
         /// <summary>
         /// The result of the ReadCommand.
         /// Contains the data 
         /// </summary>
+        [JsonConverter(typeof(DataTableConverter))]
         public DataTable Result { get; set; }
+
+        /// <summary>
+        /// Parameterless constructor for serialization
+        /// </summary>
+        public ReadCommand() { }
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
@@ -37,7 +45,7 @@ namespace APSIM.Server.Commands
         public ReadCommand(string tablename, IEnumerable<string> parameters)
         {
             this.TableName = tablename;
-            this.Parameters = parameters;
+            this.Parameters = parameters.ToList();
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -35,10 +36,6 @@ namespace Models.PMF
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Ancestor)]
         public Organ parentOrgan = null;
-
-        /// <summary>The RootShape model</summary> 
-        [Link(Type = LinkType.Child, ByName = false)]
-        public IRootShape RootShape = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -149,16 +146,6 @@ namespace Models.PMF
         [JsonIgnore]
         public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
-        /*
-        // <summary>Live Biomass in each soil layer</summary>
-        [JsonIgnore]
-        public List<OrganNutrientStates> LayerLive { get { return PlantZone.LayerLive; } }
-
-        /// <summary>Dead Biomass in each soil layer</summary>
-        [JsonIgnore]
-        public List<OrganNutrientStates> LayerDead { get { return PlantZone.LayerDead; } }*/
-
-
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
         public List<NetworkZoneState> Zones { get; set; }
@@ -185,6 +172,11 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>
+        /// The kl being used daily in each layer
+        /// </summary>
+        public double[] klByLayer { get; set; }
+
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
         [JsonIgnore]
@@ -201,15 +193,14 @@ namespace Models.PMF
         /// <summary>Root depth.</summary>
         [JsonIgnore]
         [Units("mm")]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { 
+            get { return PlantZone.Depth; }
+            set { PlantZone.Depth = value; }
+        }
 
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
-
-        /// <summary>Root Area</summary>
-        [JsonIgnore]
-        public double Area { get { return PlantZone.RootArea; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -296,7 +287,7 @@ namespace Models.PMF
                         var waterBalance = Z.Soil.FindChild<ISoilWater>();
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
-                        int i = 1;
+                        int i = 0;
                         foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             if (pawc[i] > 0)
@@ -357,51 +348,26 @@ namespace Models.PMF
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
 
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            double[] ll = soilCrop.LL;
+
+            double[] supply = new double[myZone.Physical.Thickness.Length];
+            LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+            for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
             {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer <= currentLayer; layer++)
+                if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                 {
-                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
+                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer];
 
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
+                    supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
                 }
-
-                return supply;
             }
-            else
-            {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
-                {
-                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
-                    {
-                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
-                    }
-                }
-                return supply;
-            }
+            return supply;
         }
 
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-
             double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
@@ -412,52 +378,12 @@ namespace Models.PMF
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * PlantZone.RootProportions[layer]);
+                    supply += Math.Max(0.0, klByLayer[layer] * available * PlantZone.RootProportions[layer]);
                 }
             }
             return supply;
         }
 
-
-        /// <summary>Plant Avaliable water supply used by sorghum.</summary>
-        /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
-        public double PlantAvailableWaterSupply()
-        {
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.WaterBalance.SWmm;
-            double[] DZ = PlantZone.Physical.Thickness;
-            double[] available = new double[PlantZone.Physical.Thickness.Length];
-            double[] supply = new double[PlantZone.Physical.Thickness.Length];
-
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
-            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
-
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
-                }
-            }
-            available[currentLayer] *= layerProportion;
-
-            double supplyTotal = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        PlantZone.RootProportions[layer]);
-
-                    supplyTotal += supply[layer];
-                }
-            }
-            return supplyTotal;
-        }
 
         ///6. Public methods
         /// --------------------------------------------------------------------------------------------------
@@ -514,61 +440,30 @@ namespace Models.PMF
                 double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
-                if (RootFrontCalcSwitch?.Value() >= 1.0)
+
+                double maxNUptake = maxDailyNUptake.Value();
+                for (int layer = 0; layer < thickness.Length; layer++)
                 {
-                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.Physical.Thickness.Length)
-                        myZone.MassFlow = new double[myZone.Physical.Thickness.Length];
-                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Physical.Thickness.Length)
-                        myZone.Diffusion = new double[myZone.Physical.Thickness.Length];
-
-                    var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
-                    for (int layer = 0; layer <= currentLayer; layer++)
+                    accuDepth += thickness[layer];
+                    if (myZone.LayerLive[layer].Wt > 0)
                     {
-                        var swdep = water[layer]; //mm
-                        var flow = myZone.WaterUptake[layer];
-                        var yest_swdep = swdep - flow;
-                        //NO3N is in kg/ha - old sorghum used g/m^2
-                        var no3conc = zone.NO3N[layer] * kgha2gsm / yest_swdep; //to equal old sorghum
-                        var no3massFlow = no3conc * (-flow);
-                        myZone.MassFlow[layer] = no3massFlow;
+                        double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth) / thickness[layer]));
+                        RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
+                        RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
+                        double SWAF = nUptakeSWFactor.Value(layer);
 
-                        //diffusion
-                        var swAvailFrac = RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
-                        //old sorghum stores N03 in g/ms not kg/ha
-                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
-                        myZone.Diffusion[layer] = no3Diffusion * myZone.RootProportions[layer];
+                        double kno3 = this.kno3.Value(layer);
+                        double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
+                        NO3Uptake += NO3Supply[layer];
 
-                        //NH4Supply[layer] = no3massFlow;
-                        //onyl 2 fields passed in for returning data. 
-                        //actual uptake needs to distinguish between massflow and diffusion
-                        //sorghum calcs don't use nh4 - so using that temporarily
+                        double knh4 = this.knh4.Value(layer);
+                        double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
+                        NH4Uptake += NH4Supply[layer];
                     }
                 }
-                else
-                {
-                    double maxNUptake = maxDailyNUptake.Value();
-                    for (int layer = 0; layer < thickness.Length; layer++)
-                    {
-                        accuDepth += thickness[layer];
-                        if (myZone.LayerLive[layer].Wt > 0)
-                        {
-                            double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth) / thickness[layer]));
-                            RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
-                            RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
-                            double SWAF = nUptakeSWFactor.Value(layer);
 
-                            double kno3 = this.kno3.Value(layer);
-                            double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
-                            NO3Uptake += NO3Supply[layer];
-
-                            double knh4 = this.knh4.Value(layer);
-                            double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
-                            NH4Uptake += NH4Supply[layer];
-                        }
-                    }
-                }
             }
         }
 
@@ -594,8 +489,8 @@ namespace Models.PMF
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        [EventSubscribe("PostPhenology")]
+        protected void OnPostPhenology(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
             {
@@ -604,7 +499,15 @@ namespace Models.PMF
                 foreach (NetworkZoneState z in Zones)
                 {
                     z.CalculateRAw();
-                    z.CalculateRelativeBiomassProportions();
+                    z.CalculateRelativeLiveBiomassProportions();
+                    z.CalculateRelativeDeadBiomassProportions();
+                }
+                
+                double[] KL = soilCrop.KL;
+                for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
+                {
+                    klByLayer[layer] = KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer);
+                    Zones[0].RootProportions[layer] = SoilUtilities.ProportionThroughLayer(Zones[0].Physical.Thickness, layer, Depth);
                 }
             }
         }
@@ -615,6 +518,9 @@ namespace Models.PMF
         public void InitailiseNetwork(OrganNutrientsState Initial)
         {
             Clear();
+            RootFrontVelocity = rootFrontVelocity.Value();
+            MaximumRootDepth = maximumRootDepth.Value();
+            
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {
@@ -632,7 +538,6 @@ namespace Models.PMF
         /// <param name="detached"></param>
         /// <param name="liveRemoved"></param>
         /// <param name="deadRemoved"></param>
-
         public void PartitionBiomassThroughSoil(OrganNutrientsState reAllocated, OrganNutrientsState reTranslocated,
                                              OrganNutrientsState allocated, OrganNutrientsState senesced,
                                              OrganNutrientsState detached,
@@ -642,26 +547,87 @@ namespace Models.PMF
             foreach (NetworkZoneState Z in Zones)
                 TotalRAw += Z.RAw.Sum();
 
-            if ((parentPlant.IsAlive) && (TotalRAw > 0))
+            if (parentPlant.IsAlive)
             {
-                foreach (NetworkZoneState Z in Zones)
+                double checkTotalWt = 0;
+                double checkTotalN = 0;
+                foreach (NetworkZoneState z in Zones)
                 {
-                    if (Depth > 0)
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
+                    for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
-                        for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
-                        {
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reAllocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reTranslocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (senesced * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (liveRemoved * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
+                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(liveRemoved, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reAllocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reTranslocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(senesced, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        double fracAlloc = MathUtilities.Divide(z.RAw[layer], TotalRAw, 0);
+                        z.LayerLive[layer] = OrganNutrientsState.Add(z.LayerLive[layer], OrganNutrientsState.Multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
 
-                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (allocated * Z.RAw[layer] / TotalRAw), parentOrgan.Cconc);
+                        z.LayerDead[layer] = OrganNutrientsState.Add(z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        OrganNutrientsState detachedToday = OrganNutrientsState.Multiply(detached, z.LayerDeadProportion[layer], parentOrgan.Cconc);
+                        z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], detachedToday, parentOrgan.Cconc);
+                        z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], OrganNutrientsState.Multiply(deadRemoved, z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        checkTotalWt += (z.LayerLive[layer].Wt + z.LayerDead[layer].Wt);
+                        checkTotalN += (z.LayerLive[layer].N + z.LayerDead[layer].N);
 
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (senesced * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (detached * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (deadRemoved * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
-                        }
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)(detachedToday.Wt * 10);
+                        fom.N = (float)(detachedToday.N * 10);
+                        fom.C = (float)(0.40 * detachedToday.Wt * 10);
+                        fom.P = 0.0;
+                        fom.AshAlk = 0.0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0.0;
+                        Layer.LabileP = 0.0;
+                        FOMLayers[layer] = Layer;
                     }
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = parentPlant.PlantType;
+                    FomLayer.Layer = FOMLayers;
+                    z.nutrient.DoIncorpFOM(FomLayer);
+                }
+               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-11)
+                        throw new Exception("C Mass balance error in root profile partitioning");
+                if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
+                    throw new Exception("C Mass balance error in root profile partitioning");
+            }
+        }
+
+        /// <summary>
+        /// Sets root biomass to zero and passes existing biomass to soil
+        /// </summary>
+        public void endRoots()
+        {
+            if (parentPlant.IsAlive)
+            {
+                foreach (NetworkZoneState z in Zones)
+                {
+                    FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
+                    for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
+                    {
+                        OrganNutrientsState detachedToday = OrganNutrientsState.Add(z.LayerLive[layer], z.LayerDead[layer], parentOrgan.Cconc);
+                        z.LayerDead[layer] = new OrganNutrientsState();
+                        z.LayerLive[layer] = new OrganNutrientsState();
+
+                        FOMType fom = new FOMType();
+                        fom.amount = (float)(detachedToday.Wt * 10);
+                        fom.N = (float)(detachedToday.N * 10);
+                        fom.C = (float)(0.40 * detachedToday.Wt * 10);
+                        fom.P = 0.0;
+                        fom.AshAlk = 0.0;
+
+                        FOMLayerLayerType Layer = new FOMLayerLayerType();
+                        Layer.FOM = fom;
+                        Layer.CNR = 0.0;
+                        Layer.LabileP = 0.0;
+                        FOMLayers[layer] = Layer;
+                    }
+                    FOMLayerType FomLayer = new FOMLayerType();
+                    FomLayer.Type = parentPlant.PlantType;
+                    FomLayer.Layer = FOMLayers;
+                    z.nutrient.DoIncorpFOM(FomLayer);
                 }
             }
         }
@@ -695,6 +661,8 @@ namespace Models.PMF
                     Zones.Add(newZone);
                 }
             }
+
+            klByLayer = new double[Zones[0].Physical.Thickness.Length];
         }
 
         /// <summary>Clears this instance.</summary>

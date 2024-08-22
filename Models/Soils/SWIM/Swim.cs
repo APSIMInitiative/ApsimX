@@ -127,24 +127,12 @@ namespace Models.Soils
         /// </summary>
         private const double default_rain_duration = 1440.0;
 
-        /// <summary>
-        /// default time of evaporation (hh:mm)
-        /// </summary>
-        private const string default_evap_time = "06:00";
-
-        /// <summary>
-        /// default duration of evaporation (min)
-        /// </summary>
-        private const double default_evap_duration = 720;
-
         private const double hydrol_effective_depth = 450;
 
         private double[] _swf;
         private string rain_time = null;
         private double rain_durn = Double.NaN;
         private double rain_int = Double.NaN;
-        private string eo_time = null;
-        private double eo_durn = Double.NaN;
         private double[] SWIMRainTime = new double[0];
         private double[] SWIMRainAmt = new double[0];
         private double[] SWIMEqRainTime = new double[0];
@@ -388,6 +376,14 @@ namespace Models.Soils
         /// <summary>Tortuoisty Power.</summary>
         [Description("Tortuoisty Power")]
         public double DTHP { get; set; }
+
+        /// <summary>Time of evaporation (hh:mm).</summary>
+        [Description("Time of evaporation (hh:mm). Default: 06:00")]
+        public string eo_time { get; set; } = "06:00";
+        
+        /// <summary>Duration of evaporation (min).</summary>
+        [Description("Duration of evaporation (min). Default: 720")]
+        public double eo_durn { get; set; } = 720;
 
         /// <summary>Show diagnostic information?</summary>
         [Description("Diagnostic Information?")]
@@ -1785,6 +1781,11 @@ namespace Models.Soils
                 var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                if (soluteParam.FIP == null || double.IsNaN(MathUtilities.Sum(soluteParam.FIP)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have FIP values.");
+                if (soluteParam.Exco == null || double.IsNaN(MathUtilities.Sum(soluteParam.Exco)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have EXCO values.");
+
                 fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, physical.Thickness, double.NaN);
                 exco[i] = SoilUtilities.MapConcentration(soluteParam.Exco, soluteParam.Thickness, physical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], physical.BD);
@@ -1933,29 +1934,17 @@ namespace Models.Soils
             if (!MathUtilities.FloatsAreEqual(apsim_timestep, 1440.0, floatComparisonTolerance))
                 throw new Exception("apswim can only calculate Eo for daily timestep");
 
-            string time;
-            double duration = 0.0;
             if (string.IsNullOrWhiteSpace(eo_time))
-            {
-                time = default_evap_time;
-                duration = default_evap_duration;
-            }
-            else
-            {
-                time = eo_time;
-                if (Double.IsNaN(eo_durn))
-                    throw new Exception("Failure to supply eo duration data");
-                duration = eo_durn;
-            }
-            if (duration < 0.0 || duration > 1440.0 * 30)
+                throw new Exception("Failure to supply eo time data");
+            if (eo_durn < 0.0 || eo_durn > 1440.0 * 30)
                 summary.WriteMessage(this, "Value for eo duration outside expected range", MessageType.Warning);
 
-            int timeOfDay = TimeToMins(time);
+            int timeOfDay = TimeToMins(eo_time);
             double timeMins = Time(year, day, timeOfDay);
 
             _cover_green_sum = GetGreenCover();
 
-            InsertLoginfo(timeMins, duration, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
+            InsertLoginfo(timeMins, eo_durn, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
         }
 
         private double GetGreenCover()
