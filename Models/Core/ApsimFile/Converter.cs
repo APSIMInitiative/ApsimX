@@ -5758,6 +5758,14 @@ namespace Models.Core.ApsimFile
             {
                 operations["OperationsList"] = operations["Operation"];
             }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                //rename uses of ScriptModel to Script
+                bool changeMade = manager.Replace(".Operation.", ".OperationsList.", true);
+                if (changeMade)
+                    manager.Save();
+            }
         }
     }
     
