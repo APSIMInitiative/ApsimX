@@ -91,7 +91,7 @@
                     new Fertiliser() { Name = "Fertilise", ResourceName = "Fertiliser" },
                     new Operations()
                     {
-                        Operation = new List<Operation>()
+                        OperationsList = new List<Operation>()
                         {
                             new Operation()
                             {
@@ -142,7 +142,7 @@
                     new Fertiliser() { Name = "Fertilise", ResourceName = "Fertiliser" },
                     new Operations()
                     {
-                        Operation = new List<Operation>()
+                        OperationsList = new List<Operation>()
                         {
                             new Operation()
                             {

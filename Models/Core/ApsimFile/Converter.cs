@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 179; } }
+        public static int LatestVersion { get { return 180; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5746,6 +5746,28 @@ namespace Models.Core.ApsimFile
                 ["THCutOff6"] = values[9],
             });
         }
+        
+        /// <summary>
+        /// Renames the Operation property of Operations to OperationsList to avoid name conficts with the Operation class
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion180(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                operations["OperationsList"] = operations["Operation"];
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                //rename uses of ScriptModel to Script
+                bool changeMade = manager.Replace(".Operation.", ".OperationsList.", true);
+                if (changeMade)
+                    manager.Save();
+            }
+        }
     }
+    
 }
 
