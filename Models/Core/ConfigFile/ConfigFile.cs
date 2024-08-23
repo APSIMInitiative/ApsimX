@@ -87,7 +87,7 @@ namespace Models.Core.ConfigFile
 
                     //check if second part is a filename or value (ends in ; and file exists)
                     //if so, read contents of that file in as the value
-                    string potentialFilepath = configFileDirectory + "\\" + value.Substring(0, value.Length-1);
+                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
                     if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
                         value = File.ReadAllText(potentialFilepath);
 
