@@ -39,7 +39,10 @@ namespace APSIM.ZMQServer.IO
                 try
                 {
                     // double slash comments are not escaped - just send host/port
-                    string[] args = { "[Synchroniser].Script.Identifier = " + options.IPAddress + ":" + options.Port }; 
+                    //string[] args = { "[Synchroniser].Script.Identifier = " + options.IPAddress + ":" + options.Port }; 
+                    string[] args = { }; 
+                    // for (int i=0; i<args.Length; i++){
+                    Console.WriteLine(args);
                     apsim.Run(args);
                     apsim.WaitForStateChange();
                     if (apsim.getErrors()?.Count > 0)

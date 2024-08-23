@@ -4,7 +4,7 @@ library(processx)
 
 # Exercise "One-shot" protocol
 
-apsimDir <- "/home/uqpdevo1/src/ApsimX-ZMQ"
+apsimDir <- "/home/mwmaster/Documents/oasis_sim/oasis_sim"
 #apsimDir <- "/usr/local/lib/apsim/"
 
 # Open a request socket 

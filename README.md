@@ -25,6 +25,25 @@ Any recent PC with a minimum of 8Gb of RAM.
 
 Binary releases are available via our [registration system](https://registration.apsim.info).
 
+## OASIS Modifications
+
+OASIS is a UCSC project, funded by a USDA NIFA seed grant, to extend APSIM to a voxelized 3D representation interfaced through a server/Python client pair. This step is preparatory work, before using APSIM as a physics engine for procedural generation of realistic test environments.
+
+
+### World Representation
+
+We use a ENU-oriented world coordinate system (x-East, y-North, z-Up) to index the voxels of our representation, locating the front, left, bottom voxel at origin. Columns are currently strictly of uniform depth, but taller columns will be implemented through variations of the number of layers in the column.
+Boundary voxels, those which touch atmosphere or the edge of the simulated region, will be partitioned from the voxels with full neighbor sets, so that they can be treated as (literal) edge cases when implementing fluid dynamics models on the voxel set.
+
+The generated fields are required to have a rectangular cross-section when viewed from a top-down perspective.
+
+The size of a field and the height of each voxel column will be specifed by the Python client before the APSIM server is launched. Subsequent adjustments of the properties of each voxel, as well as specifications of weather patterns, can be executed via the Python client at runtime.
+
+### Coupled Column Physics Implementation
+
+Our physics model couples soil columns at the surface, only. Subsurface water transport is currently modeled as laterally independent of neighboring voxels (all transport is strictly vertical).
+Surface water transport is implemented by passing runoff equally among neighboring surface voxels of equal or lower height (if column heights are nonuniform).
+
 ## Contributing
 
 Any individual or organisation (a 3rd party outside of the AI) who uses APSIM must be licensed do so by the AI. On download of APSIM, the terms and conditions of a General Use Licence are agreed to and binds the user.
