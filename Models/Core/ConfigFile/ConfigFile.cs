@@ -77,11 +77,18 @@ namespace Models.Core.ConfigFile
                 if (firstSplitResult.Success)
                 {
                     string property = commandSplits[0];
-                    string value = commandSplits[1];
+                    string value = "";
+                    for(int i = 1; i < commandSplits.Count; i++)
+                    {
+                        value += commandSplits[i];
+                        if (i < commandSplits.Count-1)
+                            value += "=";
+                    }
+
                     //check if second part is a filename or value (ends in ; and file exists)
                     //if so, read contents of that file in as the value
                     string potentialFilepath = configFileDirectory + "\\" + value.Substring(0, value.Length-1);
-                    if (value.EndsWith(';') && File.Exists(potentialFilepath)) 
+                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
                         value = File.ReadAllText(potentialFilepath);
 
                     // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
