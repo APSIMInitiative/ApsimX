@@ -1068,6 +1068,28 @@ run";
 
         }
 
+        [Test]
+        public void TestReadingInputValueFromFile()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            string inputFile = "input.txt";
+            string newName = "New Name";
+            File.WriteAllText(Path.Combine(Path.GetTempPath(), inputFile), newName);
+
+            string outputFile = "test.apsimx";
+
+            string configFile = Path.GetTempPath() + "config.txt";
+            File.WriteAllText(configFile, "[Simulation].Name=input.txt;\nsave " + outputFile);
+
+            Utilities.RunModels(file, $"--apply {configFile}");
+
+            // Reload simulation from file text. Needed to see changes made.
+            string text = File.ReadAllText(Path.GetTempPath() + outputFile);
+            Simulations result = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            Assert.That(result.FindInScope<Simulation>().Name, Is.EqualTo(newName));
+        }
 
     }
 }
