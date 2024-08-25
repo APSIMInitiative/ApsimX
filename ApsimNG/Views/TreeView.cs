@@ -902,7 +902,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeIter dest;
                 if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
-                    target != Gdk.Atom.Intern("GDK_NONE", false))
+                    target != null && target != Gdk.Atom.Intern("GDK_NONE", false))
                 {
                     AllowDropArgs args = new AllowDropArgs();
                     args.NodePath = GetFullPath(path);
