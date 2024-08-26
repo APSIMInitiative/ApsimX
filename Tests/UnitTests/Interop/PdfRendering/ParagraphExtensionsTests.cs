@@ -83,7 +83,7 @@ namespace UnitTests.Interop.PdfRendering
         {
             Paragraph paragraph = document.LastSection.AddParagraph();
             string text0 = "before line break";
-            string text1 = "\n";
+            string text1 = "\r";
             string text2 = "afterlinebreak";
             paragraph.AddText(text0);
             paragraph.AddText(text1);
