@@ -307,7 +307,7 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                string message = e.Message + " : " + instruction.NodeForAction + " and " + instruction.NodeToModify + " " + instruction.keyword;
+                string message = e.Message + " : " + instruction.keyword + " " +  instruction.NodeToModify + " " + instruction.NodeForAction;
                 throw new Exception(message);
             }
         }
