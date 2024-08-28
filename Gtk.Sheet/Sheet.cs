@@ -564,20 +564,11 @@ namespace Gtk.Sheet
             if (autoCalculateColumnWidths && DataProvider != null)
             {
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
-                if (visibleRows >= DataProvider.RowCount)
-                {
-                    // Prevents visibleRows from going to zero when there is only one data row.
-                    if (DataProvider.RowCount > 1)
-                    {
-                        visibleRows = DataProvider.RowCount - 1;
-                    }
-                }
-
                 ColumnWidths = new int[DataProvider.ColumnCount];
                 for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
                 {
                     int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
-                    for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
+                    for (int rowIndex = NumberHiddenRows; rowIndex < visibleRows; rowIndex++)
                         columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
                     ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
