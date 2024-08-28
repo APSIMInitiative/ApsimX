@@ -31373,7 +31373,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Brightwater.met",
+                              "FileName": "WeatherFiles\\Kaitaia.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -31398,7 +31398,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Jervoistown.met",
+                              "FileName": "WeatherFiles\\Whangarei.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -31423,7 +31423,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
+                              "FileName": "WeatherFiles\\Te Puke.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -41488,7 +41488,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Brightwater.met",
+                              "FileName": "WeatherFiles\\Kaitaia.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -41513,7 +41513,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Jervoistown.met",
+                              "FileName": "WeatherFiles\\Whangarei.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -41538,7 +41538,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
+                              "FileName": "WeatherFiles\\Te Puke.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -48352,7 +48352,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Brightwater.met",
+                              "FileName": "WeatherFiles\\Kaitaia.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -48377,7 +48377,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
+                              "FileName": "WeatherFiles\\Te Puke.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -48402,7 +48402,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Jervoistown.met",
+                              "FileName": "WeatherFiles\\Whangarei.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -48452,7 +48452,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Martinborough.met",
+                              "FileName": "VCS_Jervoistown.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -48477,7 +48477,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
+                              "FileName": "WeatherFiles\\Nelson.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -58536,13 +58536,63 @@
                           ],
                           "Paths": null,
                           "Values": null,
+                          "Name": "FarNorth",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Climate.Weather, Models",
+                              "ConstantsFile": null,
+                              "FileName": "WeatherFiles\\Kaitaia.met",
+                              "ExcelWorkSheetName": "",
+                              "Name": "Weather",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Weather]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
                           "Name": "BayofPlenty",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
+                              "FileName": "WeatherFiles\\Te Puke.met",
+                              "ExcelWorkSheetName": "",
+                              "Name": "Weather",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Weather]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "Whangarei",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Climate.Weather, Models",
+                              "ConstantsFile": null,
+                              "FileName": "WeatherFiles\\Whangarei.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -58586,88 +58636,38 @@
                           ],
                           "Paths": null,
                           "Values": null,
-                          "Name": "Nelson",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Climate.Weather, Models",
-                              "ConstantsFile": null,
-                              "FileName": "VCS_Cromwell.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "Weather",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Weather]"
-                          ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "HawkesBay",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "VCS_Martinborough.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "Weather",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Weather]"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "FarNorth",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Climate.Weather, Models",
-                              "ConstantsFile": null,
-                              "FileName": "VCS_Brightwater.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "Weather",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Weather]"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "Whangarei",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Climate.Weather, Models",
-                              "ConstantsFile": null,
                               "FileName": "VCS_Jervoistown.met",
+                              "ExcelWorkSheetName": "",
+                              "Name": "Weather",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Weather]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "Nelson",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Climate.Weather, Models",
+                              "ConstantsFile": null,
+                              "FileName": "WeatherFiles\\Nelson.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
