@@ -565,7 +565,13 @@ namespace Gtk.Sheet
             {
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
                 if (visibleRows >= DataProvider.RowCount)
-                    visibleRows = DataProvider.RowCount - 1;
+                {
+                    // Prevents visibleRows from going to zero when there is only one data row.
+                    if (DataProvider.RowCount > 1)
+                    {
+                        visibleRows = DataProvider.RowCount - 1;
+                    }
+                }
 
                 ColumnWidths = new int[DataProvider.ColumnCount];
                 for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
