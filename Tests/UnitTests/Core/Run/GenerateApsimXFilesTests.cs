@@ -14,6 +14,7 @@
     using System.Linq;
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
+    using Models.Utilities.Extensions;
 
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]
@@ -149,7 +150,12 @@
             finally
             {
                 if (Directory.Exists(temp))
-                    Directory.Delete(temp, true);
+                {
+                    string fileName = "generated-0.db";
+                    FileInfo file = new(temp + Path.DirectorySeparatorChar + fileName);
+                    while(!file.IsLocked())
+                        Directory.Delete(temp, true);
+                }
             }
         }
     }
