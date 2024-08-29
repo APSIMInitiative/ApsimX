@@ -1,11 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using Cairo;
-using CommandLine;
+﻿using Cairo;
 using Gdk;
-using Gtk;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("UnitTests")]
@@ -14,12 +8,12 @@ namespace Gtk.Sheet
     /// <summary>
     /// This is a sheet (grid) widget for GTK. It can display a table (rows and columns)
     /// of data. The grid widget is intentionally very simple and does not contain
-    /// any cell selection or editing capability. Instead, this widget relies on 
+    /// any cell selection or editing capability. Instead, this widget relies on
     /// other classes that work with this widget e.g. SingleCellSelect.
     /// </summary>
     /// <remarks>
     /// The caller can provide column widths or the widget will auto-calculate them.
-    /// 
+    ///
     /// </remarks>
     public class SheetWidget : EventBox
     {
@@ -35,7 +29,7 @@ namespace Gtk.Sheet
 
         /// <summary>Constructor</summary>
         public SheetWidget(Container container,
-                           ISheetDataProvider dataProvider, 
+                           IDataProvider dataProvider,
                            bool multiSelect,
                            int numberFrozenColumns = 0,
                            int numberFrozenRows = -1,
@@ -76,13 +70,13 @@ namespace Gtk.Sheet
         public int RowCount => Sheet.RowCount;
 
         /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
-        public int NumberFrozenRows => Sheet.NumberFrozenRows;              
+        public int NumberFrozenRows => Sheet.NumberFrozenRows;
 
         /// <summary>
         /// Set a new data provider for the sheet.
         /// </summary>
         /// <param name="dataProvider">The data provider.</param>
-        public void SetDataProvider(ISheetDataProvider dataProvider)
+        public void SetDataProvider(IDataProvider dataProvider)
         {
             Sheet.SetDataProvider(dataProvider);
             if (dataProvider != null)
@@ -139,7 +133,7 @@ namespace Gtk.Sheet
         public System.Drawing.Rectangle CalculateBounds(int columnIndex, int rowIndex)
         {
             return Sheet.CalculateBounds(columnIndex, rowIndex);
-        }        
+        }
 
         /// <summary>Return true if col/row coordinate denotes a readonly cell.</summary>
         /// <param name="columnIndex">Column index.</param>
@@ -190,7 +184,7 @@ namespace Gtk.Sheet
         public void SelectAll()
         {
             Sheet.CellSelector.SelectAll();
-        }   
+        }
 
         /// <summary>Clean up the sheet components.</summary>
         public void Cleanup()
@@ -203,7 +197,7 @@ namespace Gtk.Sheet
         public void ScrollRight()
         {
             Sheet.ScrollRight();
-        }        
+        }
 
         /// <summary>Scroll the sheet to the left one column.</summary>
         public void ScrollLeft()
@@ -251,7 +245,7 @@ namespace Gtk.Sheet
             }
             else
                 Sheet.ScrollBars.SetVerticalScrollbarVisibility(false);
-        }        
+        }
 
         private void OnRedrawNeeded(object sender, EventArgs e)
         {

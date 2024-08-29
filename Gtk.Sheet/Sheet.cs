@@ -47,7 +47,7 @@ namespace Gtk.Sheet
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sheet(ISheetDataProvider dataProvider, 
+        public Sheet(IDataProvider dataProvider, 
                      int numberFrozenColumns,
                      int numberFrozenRows,
                      int[] columnWidths,
@@ -86,7 +86,7 @@ namespace Gtk.Sheet
         public Action<Exception> OnException;
 
         /// <summary>The provider of data for the sheet.</summary>
-        public ISheetDataProvider DataProvider { get; private set; }
+        public IDataProvider DataProvider { get; private set; }
 
         /// <summary>The painter to use to get style a cell.</summary>
         public ISheetCellPainter CellPainter { get; set; }
@@ -175,7 +175,7 @@ namespace Gtk.Sheet
         /// <summary>A collection of row indexes that are currently fully visible.</summary>        
         public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
 
-        public void SetDataProvider(ISheetDataProvider provider)
+        public void SetDataProvider(IDataProvider provider)
         {
             DataProvider = provider;
 
@@ -564,14 +564,11 @@ namespace Gtk.Sheet
             if (autoCalculateColumnWidths && DataProvider != null)
             {
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
-                if (visibleRows >= DataProvider.RowCount)
-                    visibleRows = DataProvider.RowCount - 1;
-
                 ColumnWidths = new int[DataProvider.ColumnCount];
                 for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
                 {
                     int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
-                    for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
+                    for (int rowIndex = NumberHiddenRows; rowIndex < visibleRows; rowIndex++)
                         columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
                     ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;

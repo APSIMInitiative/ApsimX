@@ -10,6 +10,8 @@ using UserInterface.Interfaces;
 using System.Drawing;
 using UserInterface.EventArguments;
 using APSIM.Interop.Graphing.Extensions;
+using Models.Agroforestry;
+using System.Globalization;
 
 namespace UserInterface.Views
 {
@@ -96,7 +98,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Setup the graphs shown below the grids.
         /// </summary>
-        public void DrawGraphs(DataTable spatialData)
+        public void DrawGraphs(TreeProxySpatial spatialData)
         {
             double[] x = { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
             try
@@ -119,27 +121,16 @@ namespace UserInterface.Views
                 agyAxis.AxisDistance = 2;
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
                 List<DataPoint> pointsShade = new List<DataPoint>();
-                
-                DataRow rowShade = spatialData.Rows[0];
-                DataColumn col = spatialData.Columns[0];
-                double[] yShade = new double[spatialData.Columns.Count - 1];
 
                 aboveGroundGraph.Model.Axes.Add(agxAxis);
                 aboveGroundGraph.Model.Axes.Add(agyAxis);
 
-                for (int i = 1; i < spatialData.Columns.Count; i++)
-                {
-                    if (rowShade[i].ToString() == "")
-                        return;
-                    yShade[i - 1] = Convert.ToDouble(rowShade[i], 
-                                                     System.Globalization.CultureInfo.InvariantCulture);
-                }
-                
+                var yShade = spatialData.Shade;
                 for (int i = 0; i < x.Length; i++)
                 {
                     pointsShade.Add(new DataPoint(x[i], yShade[i]));
                 }
-                
+
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
@@ -178,19 +169,12 @@ namespace UserInterface.Views
                 bgyAxis.MinorTickSize = 0;
                 bgyAxis.AxislineStyle = LineStyle.Solid;
                 belowGroundGraph.Model.Axes.Add(bgyAxis);
-                
-                for (int i = 1; i < spatialData.Columns.Count; i++)
+
+                foreach (var thCutoff in spatialData.THCutoffs)
                 {
                     Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
-                    series.Title = spatialData.Columns[i].ColumnName;
-                    double[] data = new double[spatialData.Rows.Count - 4];
-                    for (int j = 4; j < spatialData.Rows.Count; j++)
-                    {
-                        if (spatialData.Rows[j].ItemArray[i].ToString().Length > 0) 
-                            data[j - 4] = Convert.ToDouble(spatialData.Rows[j].ItemArray[i], System.Globalization.CultureInfo.InvariantCulture);
-                        else
-                            data[j - 4] = 0;
-                    }
+                    series.Title = thCutoff.ToString();
+                    double[] data = spatialData.Rld(thCutoff);
 
                     List<DataPoint> points = new List<DataPoint>();
 
@@ -269,7 +253,7 @@ namespace UserInterface.Views
 
         /// <summary>
         /// Configures foreground or background color.
-        /// Used to take into account when a theme is changed and 
+        /// Used to take into account when a theme is changed and
         /// when a restart is required to change a theme.
         /// </summary>
         /// <param name="isForegroundColor"></param>
