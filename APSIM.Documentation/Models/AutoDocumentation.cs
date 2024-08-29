@@ -67,6 +67,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Biomass), typeof(DocGeneric)},
                 {typeof(CompositeBiomass), typeof(DocGeneric)},
                 {typeof(Cultivar), typeof(DocCultivar)},
+                {typeof(Memo), typeof(DocMemo)},
             };
             return documentMap;
         }
