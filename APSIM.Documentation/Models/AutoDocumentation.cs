@@ -46,7 +46,6 @@ namespace APSIM.Documentation.Models
                 {typeof(Plant), typeof(DocPlant)},
                 {typeof(Clock), typeof(DocClock)},
                 {typeof(Simulation), typeof(DocGenericWithChildren)},
-                {typeof(AccumulateFunction), typeof(DocFunction)},
                 {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
                 {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
                 {typeof(MobilisationSupplyFunction), typeof(DocBiomassArbitrationFunction)},
@@ -67,7 +66,8 @@ namespace APSIM.Documentation.Models
                 {typeof(AddFunction), typeof(DocFunction)},
                 {typeof(SubtractFunction), typeof(DocFunction)},
                 {typeof(MultiplyFunction), typeof(DocFunction)},
-                {typeof(DivideFunction), typeof(DocFunction)}
+                {typeof(DivideFunction), typeof(DocFunction)},
+                {typeof(Memo), typeof(DocMemo)}
             };
             return documentMap;
         }
