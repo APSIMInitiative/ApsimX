@@ -198,18 +198,6 @@ namespace Models.Soils
                 kgha[i] += delta[i];
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            foreach (ITag tag in GetModelDescription())
-                yield return tag;
-        }
-
         /// <summary>Gets the model ready for running in a simulation.</summary>
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)

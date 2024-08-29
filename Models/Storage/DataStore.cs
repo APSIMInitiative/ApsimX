@@ -309,14 +309,5 @@ namespace Models.Storage
             }
             return "";
         }
-
-        /// <summary>
-        /// Override the Document() function but do nothing.
-        /// This model does not show any documentation.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield break;
-        }
     }
 }
