@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Text;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
 using APSIM.Shared.Documentation;
@@ -48,26 +47,27 @@ namespace APSIM.Documentation.Models
                 {typeof(Clock), typeof(DocClock)},
                 {typeof(Simulation), typeof(DocGenericWithChildren)},
                 {typeof(AccumulateFunction), typeof(DocFunction)},
-                {typeof(BiomassArbitrator), typeof(DocGeneric)},
                 {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
                 {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
                 {typeof(MobilisationSupplyFunction), typeof(DocBiomassArbitrationFunction)},
                 {typeof(PlantPartitionFractions), typeof(DocBiomassArbitrationFunction)},
-                {typeof(OrganNutrientDelta), typeof(DocGeneric)},
-                {typeof(OrganNutrientsState), typeof(DocGeneric)},
                 {typeof(NutrientDemandFunctions), typeof(DocGenericWithChildren)},
                 {typeof(NutrientPoolFunctions), typeof(DocGenericWithChildren)},
                 {typeof(NutrientProportionFunctions), typeof(DocGenericWithChildren)},
                 {typeof(NutrientSupplyFunctions), typeof(DocGenericWithChildren)},
-                {typeof(RootUptakesArbitrator), typeof(DocGeneric)},
                 {typeof(Phenology), typeof(DocPhenology)},
-                {typeof(OrganArbitrator), typeof(DocGeneric)},
                 {typeof(Root), typeof(DocRoot)},
-                {typeof(Biomass), typeof(DocGeneric)},
-                {typeof(CompositeBiomass), typeof(DocGeneric)},
                 {typeof(Cultivar), typeof(DocCultivar)},
                 {typeof(Map), typeof(DocMap)},
-                {typeof(Map), typeof(DocMap)},
+                {typeof(BoundFunction), typeof(DocBoundFunction)},
+                {typeof(AccumulateAtEvent), typeof(DocFunction)},
+                {typeof(AccumulateResetAtStage), typeof(DocFunction)},
+                {typeof(Constant), typeof(DocFunction)},
+                {typeof(AccumulateFunction), typeof(DocFunction)},
+                {typeof(AddFunction), typeof(DocFunction)},
+                {typeof(SubtractFunction), typeof(DocFunction)},
+                {typeof(MultiplyFunction), typeof(DocFunction)},
+                {typeof(DivideFunction), typeof(DocFunction)}
             };
             return documentMap;
         }
