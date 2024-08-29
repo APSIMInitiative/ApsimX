@@ -38,7 +38,8 @@ namespace APSIM.Documentation.Models.Types
 
         private Organ FindParentOrgan(IModel model)
         {
-            if (model is Organ) return model as Organ;
+            if (model is Organ) 
+                return model as Organ;
 
             if (model is IPlant)
                 throw new Exception(model.Name + "cannot find parent organ to get Structural and Storage DM status");
