@@ -22,11 +22,7 @@ public class DocCultivar : DocGeneric
     /// </summary>
     public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
     {
-        if (tags == null)
-            tags = new List<ITag>();
-
-        tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-        tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
+        List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
         // Get table of Parameter overrides.
         DataTable overridesTable = new();
@@ -45,7 +41,7 @@ public class DocCultivar : DocGeneric
             paramOverridesDisplayTable
         };
 
-        tags.Add(new Section(model.Name, subTags));
-        return tags;
+        newTags.Add(new Section(model.Name, subTags));
+        return newTags;
     }
 }

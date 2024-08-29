@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Text;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
 using APSIM.Shared.Documentation;
@@ -18,8 +19,6 @@ using Models.PMF.Phen;
 using Models.Core.Run;
 using Models.Storage;
 using Models.PMF.Organs;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 
 namespace APSIM.Documentation.Models
 {
@@ -48,7 +47,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Plant), typeof(DocPlant)},
                 {typeof(Clock), typeof(DocClock)},
                 {typeof(Simulation), typeof(DocGenericWithChildren)},
-                {typeof(AccumulateFunction), typeof(DocAccumulateFunction)},
+                {typeof(AccumulateFunction), typeof(DocFunction)},
                 {typeof(BiomassArbitrator), typeof(DocGeneric)},
                 {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
                 {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
@@ -67,6 +66,8 @@ namespace APSIM.Documentation.Models
                 {typeof(Biomass), typeof(DocGeneric)},
                 {typeof(CompositeBiomass), typeof(DocGeneric)},
                 {typeof(Cultivar), typeof(DocCultivar)},
+                {typeof(Map), typeof(DocMap)},
+                {typeof(Map), typeof(DocMap)},
                 {typeof(Memo), typeof(DocMemo)},
             };
             return documentMap;
