@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using Models.Climate;
 using Models.Core;
 using Models.Mapping;
@@ -15,7 +14,7 @@ namespace Models
     [ViewName("UserInterface.Views.MapView")]
     [PresenterName("UserInterface.Presenters.MapPresenter")]
     [ValidParent(DropAnywhere = true)]
-    public class Map : Model, ITag
+    public class Map : Model
     {
         /// <summary>List of coordinates to show on map</summary>
         public List<Coordinate> GetCoordinates(List<string> names = null)
@@ -94,13 +93,5 @@ namespace Models
         /// Zoom level
         /// </summary>
         private Double _Zoom = 1.0;
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new MapTag(Center, _Zoom, GetCoordinates());
-        }
     }
 }

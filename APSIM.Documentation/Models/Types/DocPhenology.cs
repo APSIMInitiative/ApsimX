@@ -8,7 +8,7 @@ namespace APSIM.Documentation.Models.Types
 {
 
     /// <summary>
-    /// Base documentation class for models
+    /// Documentation class for Phenology
     /// </summary>
     public class DocPhenology : DocGeneric
     {
