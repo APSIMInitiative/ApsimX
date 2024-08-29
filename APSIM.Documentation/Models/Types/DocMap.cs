@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using APSIM.Documentation.Tags;
+using APSIM.Interop.Mapping;
 using Models.Core;
 using Models;
 

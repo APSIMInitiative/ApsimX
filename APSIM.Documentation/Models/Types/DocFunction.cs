@@ -57,6 +57,14 @@ namespace APSIM.Documentation.Models.Types
                 return DocumentMathFunction('x', multiplyFunction);
             else if (model is DivideFunction divideFunction)
                 return DocumentMathFunction('/', divideFunction);
+            else if (model is DailyMeanVPD dailyMeanVPD)
+                return $"*MaximumVPDWeight = {dailyMeanVPD.MaximumVPDWeight}*";
+            else if (model is DeltaFunction deltaFunction)
+                return $"*{model.Name}* is the daily differential of {ChildFunctionList(model)}";
+            else if (model is ExpressionFunction expressionFunction)
+                return $"{model.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
+            else if (model is HoldFunction holdFunction && holdFunction.FindChild<IFunction>() != null)
+                return $"*{model.Name}* = *{holdFunction.FindChild<IFunction>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
             else
                 return "";
         }
