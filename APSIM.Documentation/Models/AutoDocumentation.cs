@@ -18,6 +18,7 @@ using Models.PMF.Phen;
 using Models.Core.Run;
 using Models.Storage;
 using Models.PMF.Organs;
+using Models.PMF.Struct;
 
 namespace APSIM.Documentation.Models
 {
@@ -41,7 +42,7 @@ namespace APSIM.Documentation.Models
         /// <summary>Returns a dictionary to match model classes to document class.</summary>
         private static Dictionary<Type, Type> DefineFunctions()
         {
-            Dictionary<Type, Type> documentMap = new Dictionary<Type, Type>()
+            Dictionary<Type, Type> documentMap = new()
             {
                 {typeof(Plant), typeof(DocPlant)},
                 {typeof(Clock), typeof(DocClock)},
@@ -72,6 +73,7 @@ namespace APSIM.Documentation.Models
                 {typeof(DeltaFunction), typeof(DocFunction)},
                 {typeof(ExpressionFunction), typeof(DocFunction)},
                 {typeof(HoldFunction), typeof(DocFunction)},
+                {typeof(Structure), typeof(DocStructure)},
             };
             return documentMap;
         }
