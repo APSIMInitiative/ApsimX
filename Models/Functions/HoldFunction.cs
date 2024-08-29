@@ -60,19 +60,6 @@ namespace Models.Functions
         {
             return _Value;
         }
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            if (ValueToHold != null)
-            {
-                yield return new Paragraph($"*{Name}* = *{ValueToHold.Name}* until {WhenToHold} after which the value is fixed.");
-                foreach (var child in FindAllChildren<IModel>())
-                    foreach (var tag in child.Document())
-                        yield return tag;
-            }
-        }
 
         /// <summary>Get value</summary>
         private void GetValue()

@@ -67,7 +67,11 @@ namespace APSIM.Documentation.Models
                 {typeof(SubtractFunction), typeof(DocFunction)},
                 {typeof(MultiplyFunction), typeof(DocFunction)},
                 {typeof(DivideFunction), typeof(DocFunction)},
-                {typeof(Memo), typeof(DocMemo)}
+                {typeof(Memo), typeof(DocMemo)},
+                {typeof(DailyMeanVPD), typeof(DocFunction)},
+                {typeof(DeltaFunction), typeof(DocFunction)},
+                {typeof(ExpressionFunction), typeof(DocFunction)},
+                {typeof(HoldFunction), typeof(DocFunction)},
             };
             return documentMap;
         }

@@ -108,13 +108,6 @@ namespace Models.Functions
             }
             return sdts;
         }
-
-        /// <summary>Writes documentation for this function</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-        }
     }
 
 }
