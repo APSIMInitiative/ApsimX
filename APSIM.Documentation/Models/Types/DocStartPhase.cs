@@ -27,16 +27,12 @@ namespace APSIM.Documentation.Models.Types
 
             var subTags = new List<ITag>
             {
-                new Paragraph($"This phase goes from {(model as StartPhase).Start.ToLower()} to {(model as StartPhase).End.ToLower()}.")
+                new Paragraph($"This phase goes from {(model as StartPhase).Start.ToLower()} to {(model as StartPhase).End.ToLower()}."),
+                new Paragraph($"It has no length but sets plant status to emerged once progressed.")
             };
-            
-            foreach (var memoTag in DocumentChildren<Memo>())
-                subTags.Add(memoTag);
 
-            subTags.Add(new Paragraph($"It has not length but sets plant status to emerged once progressed"));
-
-            tags.Add(new Section(model.Name, subTags));
-            return tags;
+            newTags.Add(new Section(model.Name, subTags));
+            return newTags;
         }
     }
 }
