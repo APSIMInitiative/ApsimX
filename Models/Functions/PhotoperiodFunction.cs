@@ -54,15 +54,5 @@ namespace Models.Functions
             else
                 DayLength = 0;
         }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in GetModelDescription())
-                yield return tag;
-            yield return new Paragraph($"*Twilight = {Twilight} (degrees)*");
-        }
     }
 }

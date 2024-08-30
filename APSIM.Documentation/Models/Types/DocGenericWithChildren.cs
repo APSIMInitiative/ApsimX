@@ -7,7 +7,7 @@ namespace APSIM.Documentation.Models.Types
 {
 
     /// <summary>
-    /// Base documentation class for models
+    /// Documentation class for generic models
     /// </summary>
     public class DocGenericWithChildren : DocGeneric
     {

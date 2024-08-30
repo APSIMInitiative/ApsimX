@@ -81,8 +81,24 @@ namespace APSIM.Documentation.Models.Types
             else if (model is BudNumberFunction budNumberFunction && model.FindChild<IFunction>() != null)
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"*{budNumberFunction.FindChild<IFunction>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
-            else
+            else if (model is PhaseLookup phaseLookup)
                 return $"{model.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
+            else if (model is PhaseLookupValue phaseLookupValue)
+                return $"{model.Name} has a value between {phaseLookupValue.Start} and {phaseLookupValue.End} calculated as:";
+            else if (model is PhotoperiodFunction photoperiodFunction)
+                return $"*Twilight = {photoperiodFunction.Twilight} (degrees)*";
+            else if (model is SigmoidFunction sigmoidFunction)
+                return $"Values of Ymax, Xo, b and XValue are calcuated as defined below.";
+            else if (model is StringComparisonFunction stringComparisonFunction)
+                return $"If {stringComparisonFunction.PropertyName} = {stringComparisonFunction.StringValue} Then:";
+            else if (model is VariableReference variableReference)
+                return $"*{model.Name} = {StringUtilities.RemoveTrailingString(variableReference.VariableName, ".Value()")}*";
+            else if (model is WangEngelTempFunction wangEngelTempFunction)
+                return $"{model.Name} is calculated using a Wang and Engel beta function which has a value of zero below {wangEngelTempFunction.MinTemp} {wangEngelTempFunction.Units} increasing to a maximum value at {wangEngelTempFunction.OptTemp} {wangEngelTempFunction.Units} and decreasing to zero again at {wangEngelTempFunction.MaxTemp} {wangEngelTempFunction.Units} ([WangEngel1998]).";
+            else if (model is WeightedTemperatureFunction weightedTemperatureFunction)
+                return $"*MaximumTemperatureWeighting = {weightedTemperatureFunction.MaximumTemperatureWeighting}*";
+            else
+                return $"";
         }
 
         /// <summary> 
