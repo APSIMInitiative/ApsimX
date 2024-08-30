@@ -5,6 +5,7 @@ using Models.Functions;
 using System.Linq;
 using APSIM.Shared.Utilities;
 using System;
+using Models.Functions.DemandFunctions;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -93,6 +94,10 @@ namespace APSIM.Documentation.Models.Types
                 return $"{model.Name} is calculated using a Wang and Engel beta function which has a value of zero below {wangEngelTempFunction.MinTemp} {wangEngelTempFunction.Units} increasing to a maximum value at {wangEngelTempFunction.OptTemp} {wangEngelTempFunction.Units} and decreasing to zero again at {wangEngelTempFunction.MaxTemp} {wangEngelTempFunction.Units} ([WangEngel1998]).";
             else if (model is WeightedTemperatureFunction weightedTemperatureFunction)
                 return $"*MaximumTemperatureWeighting = {weightedTemperatureFunction.MaximumTemperatureWeighting}*";
+            else if (model is AllometricDemandFunction allometricDemandFunction)
+                return $"YValue = {allometricDemandFunction.Const} * XValue ^ {allometricDemandFunction.Power}";
+            else if (model is PartitionFractionDemandFunction partitionFractionDemandFunction)
+                return $"*{model.Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*";
             else
                 return $"";
         }
