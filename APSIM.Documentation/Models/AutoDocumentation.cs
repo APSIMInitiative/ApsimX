@@ -95,6 +95,7 @@ namespace APSIM.Documentation.Models
                 {typeof(VariableReference), typeof(DocFunction)},
                 {typeof(WangEngelTempFunction), typeof(DocFunction)},
                 {typeof(WeightedTemperatureFunction), typeof(DocFunction)},
+                {typeof(VernalisationPhase), typeof(DocVernalisationPhase)},
             };
             return documentMap;
         }
