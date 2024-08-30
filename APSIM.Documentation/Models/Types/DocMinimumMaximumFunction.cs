@@ -26,45 +26,44 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
-            foreach (ITag tag in model.Children.SelectMany(c => c.Document()))
-                newTags.Add(tag);
+            foreach (IModel child in model.FindAllChildren())
+                newTags.AddRange(AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1).ToList());
 
             string type = "Max";
             if (model is MinimumFunction)
                 type = "Min";
 
-            foreach (ITag tag in DocumentMinMaxFunction(type, model.Name, model.Children))
-                newTags.Add(tag);
+            newTags.AddRange(DocumentMinMaxFunction(type, model.Name, model.Children));
 
             return newTags;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        private static IEnumerable<ITag> DocumentMinMaxFunction(string functionName, string name, IEnumerable<IModel> children)
+        private static List<ITag> DocumentMinMaxFunction(string functionName, string name, IEnumerable<IModel> children)
         {
-            foreach (var child in children.Where(c => c is Memo))
-                foreach (var tag in child.Document())
-                    yield return tag;
+            List<ITag> newTags = new List<ITag>();
 
             var writer = new StringBuilder();
             writer.Append($"*{name}* = {functionName}(");
 
             bool addComma = false;
-            foreach (var child in children.Where(c => !(c is Memo)))
+            foreach (IModel child in children)
             {
-                if (addComma)
-                    writer.Append($", ");
-                writer.Append($"*" + child.Name + "*");
-                addComma = true;
+                if (children as Memo == null)
+                {
+                    if (addComma)
+                        writer.Append($", ");
+                    writer.Append($"*" + child.Name + "*");
+                    addComma = true;
+                }
             }
             writer.Append(')');
-            yield return new Paragraph(writer.ToString());
+            
+            newTags.Add(new Paragraph(writer.ToString()));
 
-            yield return new Paragraph("Where:");
+            newTags.Add(new Paragraph("Where:"));
 
-            foreach (var child in children.Where(c => !(c is Memo)))
-                foreach (var tag in child.Document())
-                    yield return tag;
+            return newTags;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -103,17 +102,6 @@ namespace Models.PMF
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             Unapply();
-        }
-
-        /// <summary>Document the model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            if (Command != null && Command.Any())
-            {
-                yield return new Paragraph($"{Name} overrides the following properties:");
-                foreach (string command in Command)
-                    yield return new Paragraph(command);
-            }
         }
     }
 }

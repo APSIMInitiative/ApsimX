@@ -72,8 +72,8 @@ namespace APSIM.Documentation.Models.Types
                                 subTags.AddRange(AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1));
                             else
                             {
-                                ITag firstChildTag = child.Document()?.First();
-                                subTags.Add(new Section(new List<ITag> { firstChildTag }));
+                                List<ITag> childTags = AutoDocumentation.Document(child, new List<ITag>(), 0, 0).ToList();
+                                subTags.Add(new Section(new List<ITag> { childTags.First() }));
                             }
                         }
                 }
