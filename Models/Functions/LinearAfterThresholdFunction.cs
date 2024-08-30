@@ -79,14 +79,5 @@ namespace Models.Functions
             else
                 return Math.Max(0.0, (x - XTrigger)) * Slope;
         }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Paragraph($"*{Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(XProperty, ".Value()")}*");
-            yield return new Paragraph($"*Trigger value {XTrigger} Gradient {Slope}*");
-        }
     }
 }

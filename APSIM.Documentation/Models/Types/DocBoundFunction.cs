@@ -42,13 +42,13 @@ namespace APSIM.Documentation.Models.Types
                 if (child != Upper && child != Lower)
                 {
                     subTags.Add(new Paragraph($"{model.Name} is the value of {child.Name} bound between a lower and upper bound where:"));
-                    AutoDocumentation.Document(child, subTags, headingLevel + 1, indent + 1);
+                    subTags = AutoDocumentation.Document(child, subTags, headingLevel + 1, indent + 1).ToList();
                 }
             }
             if (Lower != null)
-                AutoDocumentation.Document(Lower, subTags, headingLevel + 1, indent + 1);
+                subTags = AutoDocumentation.Document(Lower, subTags, headingLevel + 1, indent + 1).ToList();
             if (Upper != null)
-                AutoDocumentation.Document(Upper, subTags, headingLevel + 1, indent + 1);
+                subTags = AutoDocumentation.Document(Upper, subTags, headingLevel + 1, indent + 1).ToList();
 
             newTags.Add(new Section(model.Name, subTags));
 

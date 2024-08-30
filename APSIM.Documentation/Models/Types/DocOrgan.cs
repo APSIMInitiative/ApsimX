@@ -33,21 +33,21 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(new Heading("Dry Matter Demand", headingLevel + 1));
             tags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
             IModel DMDemand = this.model.FindChild("dmDemands");
-            AutoDocumentation.Document(DMDemand, tags, headingLevel + 2, indent);
+            tags.AddRange(AutoDocumentation.Document(DMDemand, tags, headingLevel + 2, indent));
 
             // document N demands
             tags.Add(new Heading("Nitrogen Demand", headingLevel + 1));
             tags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
             IModel NDemand = this.model.FindChild("nDemands");
-            AutoDocumentation.Document(NDemand, tags, headingLevel + 2, indent);
+            tags.AddRange(AutoDocumentation.Document(NDemand, tags, headingLevel + 2, indent));
 
             // document N concentration thresholds
             IModel MinN = this.model.FindChild("MinimumNConc");
-            AutoDocumentation.Document(MinN, tags, headingLevel + 2, indent);
+            tags.AddRange(AutoDocumentation.Document(MinN, tags, headingLevel + 2, indent));
             IModel CritN = this.model.FindChild("CriticalNConc");
-            AutoDocumentation.Document(CritN, tags, headingLevel + 2, indent);
+            tags.AddRange(AutoDocumentation.Document(CritN, tags, headingLevel + 2, indent));
             IModel MaxN = this.model.FindChild("MaximumNConc");
-            AutoDocumentation.Document(MaxN, tags, headingLevel + 2, indent);
+            tags.AddRange(AutoDocumentation.Document(MaxN, tags, headingLevel + 2, indent));
             IModel NDemSwitch = this.model.FindChild("NitrogenDemandSwitch");
             if (NDemSwitch is Constant)
             {
@@ -63,7 +63,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.", indent));
-                AutoDocumentation.Document(NDemSwitch, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(NDemSwitch, tags, headingLevel + 2, indent));
             }
 
             // document DM supplies
@@ -79,7 +79,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                AutoDocumentation.Document(DMReallocFac, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(DMReallocFac, tags, headingLevel + 2, indent));
             }
             IModel DMRetransFac = this.model.FindChild("DMRetranslocationFactor");
             if (DMRetransFac is Constant)
@@ -92,7 +92,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                AutoDocumentation.Document(DMRetransFac, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(DMRetransFac, tags, headingLevel + 2, indent));
             }
 
             // document N supplies
@@ -108,7 +108,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                AutoDocumentation.Document(NReallocFac, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(NReallocFac, tags, headingLevel + 2, indent));
             }
             IModel NRetransFac = this.model.FindChild("NRetranslocationFactor");
             if (NRetransFac is Constant)
@@ -121,7 +121,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                AutoDocumentation.Document(NRetransFac, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(NRetransFac, tags, headingLevel + 2, indent));
             }
 
             // document senescence and detachment
@@ -137,7 +137,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.", indent));
-                AutoDocumentation.Document(SenRate, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(SenRate, tags, headingLevel + 2, indent));
             }
 
             IModel DetRate = this.model.FindChild("DetachmentRateFunction");
@@ -151,7 +151,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 tags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
-                AutoDocumentation.Document(DetRate, tags, headingLevel + 2, indent);
+                tags.AddRange(AutoDocumentation.Document(DetRate, tags, headingLevel + 2, indent));
             }
             return tags;
         }

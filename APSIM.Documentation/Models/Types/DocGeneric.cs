@@ -38,11 +38,10 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> subTags = new List<ITag>();
             subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
-            tags.Add(new Section(this.model.Name, subTags));
 
             // write children.
             foreach (IModel child in model.FindAllChildren<Memo>())
-                AutoDocumentation.Document(child, subTags, headingLevel + 1, indent);
+                subTags = AutoDocumentation.Document(child, subTags, headingLevel + 1, indent + 1).ToList();
 
             tags.Add(new Section(model.Name, subTags));
             return tags;

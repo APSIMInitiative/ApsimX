@@ -26,12 +26,10 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
-            List<ITag> subTags = new List<ITag>();
-            foreach (IModel child in model.FindAllChildren())
-                AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1);
-
-            AccumulateAtEvent ev = this.model as AccumulateAtEvent;
             newTags.Add(new Paragraph(GetFunctionText()));
+
+            foreach (IModel child in model.FindAllChildren())
+                newTags = AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1).ToList();
 
             return newTags;
         }
@@ -65,8 +63,22 @@ namespace APSIM.Documentation.Models.Types
                 return $"{model.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
             else if (model is HoldFunction holdFunction && holdFunction.FindChild<IFunction>() != null)
                 return $"*{model.Name}* = *{holdFunction.FindChild<IFunction>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
+            else if (model is LessThanFunction lessThanFunction)
+            {
+                List<IFunction> childFunctions = lessThanFunction.FindAllChildren<IFunction>().ToList();
+                if (childFunctions.Count == 4)
+                    return $"IF {childFunctions[0].Name} is less than {childFunctions[1].Name} then return {childFunctions[2].Name}, else return {childFunctions[3].Name}";
+                else
+                    return "";
+            }
+            else if (model is LinearAfterThresholdFunction linearAfterThresholdFunction)
+                return $"*{model.Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}*. *Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}*";
+            else if (model is MovingAverageFunction movingAverageFunction && model.FindChild<IFunction>() != null)
+                return $"{model.Name} is calculated from a moving average of {model.FindChild<IFunction>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
+            else if (model is MovingSumFunction movingSumFunction && model.FindChild<IFunction>() != null)
+                return $"{model.Name} is calculated from a moving sum of {model.FindChild<IFunction>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
             else
-                return "";
+                return $"{model.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
         }
 
         /// <summary> 

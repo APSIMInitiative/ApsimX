@@ -23,7 +23,7 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
             foreach (IModel child in model.Children)
-                AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1);
+                newTags = AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1).ToList();
 
             return newTags;
         }

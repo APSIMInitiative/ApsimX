@@ -75,6 +75,13 @@ namespace APSIM.Documentation.Models
                 {typeof(HoldFunction), typeof(DocFunction)},
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
+                {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
+                {typeof(LiveOnEventFunction), typeof(DocGenericWithChildren)},
+                {typeof(OnEventFunction), typeof(DocGenericWithChildren)},
+                {typeof(LessThanFunction), typeof(DocFunction)},
+                {typeof(LinearAfterThresholdFunction), typeof(DocFunction)},
+                {typeof(MovingAverageFunction), typeof(DocFunction)},
+                {typeof(MovingSumFunction), typeof(DocFunction)},
             };
             return documentMap;
         }
