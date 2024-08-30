@@ -69,7 +69,6 @@ namespace APSIM.Documentation.Models
                 {typeof(HeightFunction), typeof(DocFunction)},
                 {typeof(BudNumberFunction), typeof(DocFunction)},
                 {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
-                {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
                 {typeof(VernalisationPhase), typeof(DocPhase)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
@@ -77,7 +76,15 @@ namespace APSIM.Documentation.Models
                 {typeof(StartPhase), typeof(DocPhase)},
                 {typeof(PhotoperiodPhase), typeof(DocPhase)},
                 {typeof(NodeNumberPhase), typeof(DocPhase)},
-               
+                {typeof(LeafDeathPhase), typeof(DocPhase)},
+                {typeof(LeafAppearancePhase), typeof(DocPhase)},
+                {typeof(GrazeAndRewind), typeof(DocPhase)},
+                {typeof(GotoPhase), typeof(DocPhase)},
+                {typeof(GerminatingPhase), typeof(DocPhase)},
+                // {typeof(GenericPhase), typeof(DocPhase)},
+
+
+              
             };
             return documentMap;
         }
