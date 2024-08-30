@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
             
             List<ITag> subTags = new List<ITag>();
             foreach (IModel child in model.FindAllChildren())
-                subTags = AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1).ToList();
+                subTags.AddRange(AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1).ToList());
 
             newTags.Add(new Section(model.Name, subTags));
 
