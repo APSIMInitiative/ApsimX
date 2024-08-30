@@ -82,6 +82,8 @@ namespace APSIM.Documentation.Models
                 {typeof(LinearAfterThresholdFunction), typeof(DocFunction)},
                 {typeof(MovingAverageFunction), typeof(DocFunction)},
                 {typeof(MovingSumFunction), typeof(DocFunction)},
+                {typeof(HeightFunction), typeof(DocFunction)},
+                {typeof(BudNumberFunction), typeof(DocFunction)}
             };
             return documentMap;
         }
