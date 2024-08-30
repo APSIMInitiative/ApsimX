@@ -81,6 +81,16 @@ namespace APSIM.Documentation.Models
                 {typeof(LinearAfterThresholdFunction), typeof(DocFunction)},
                 {typeof(MovingAverageFunction), typeof(DocFunction)},
                 {typeof(MovingSumFunction), typeof(DocFunction)},
+                {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
+                {typeof(XYPairs), typeof(DocXYPairs)},
+                {typeof(PhaseLookup), typeof(DocFunction)},
+                {typeof(PhaseLookupValue), typeof(DocFunction)},
+                {typeof(PhotoperiodFunction), typeof(DocFunction)},
+                {typeof(SigmoidFunction), typeof(DocFunction)},
+                {typeof(StringComparisonFunction), typeof(DocFunction)},
+                {typeof(VariableReference), typeof(DocFunction)},
+                {typeof(WangEngelTempFunction), typeof(DocFunction)},
+                {typeof(WeightedTemperatureFunction), typeof(DocFunction)},
             };
             return documentMap;
         }

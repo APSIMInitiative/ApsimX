@@ -52,19 +52,5 @@ namespace Models.Functions
             else
                 return FalseValue.Value(arrayIndex);
         }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Paragraph($"If {PropertyName} = {StringValue} Then");
-            foreach (ITag tag in TrueValue.Document())
-                yield return tag;
-
-            yield return new Paragraph("Else");
-            foreach (ITag tag in FalseValue.Document())
-                yield return tag;
-        }
     }
 }
