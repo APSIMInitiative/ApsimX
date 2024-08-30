@@ -84,7 +84,7 @@ namespace APSIM.Documentation.Models
                 {typeof(MovingSumFunction), typeof(DocFunction)},
                 {typeof(HeightFunction), typeof(DocFunction)},
                 {typeof(BudNumberFunction), typeof(DocFunction)},
-                {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)}
+                {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
                 {typeof(PhaseLookup), typeof(DocFunction)},
