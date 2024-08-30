@@ -100,18 +100,6 @@ namespace Models.PMF.Phen
             First = true;
         }
 
-        /// <summary>Document the model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-
-            // Write description of this class.
-            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved. The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target");
-
-            // Write children
-            foreach (var tag in DocumentChildren<IModel>())
-                yield return tag;
-        }
-
         //7. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 

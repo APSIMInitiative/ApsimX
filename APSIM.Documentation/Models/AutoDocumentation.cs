@@ -20,6 +20,7 @@ using Models.Storage;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
+using APSIM.Shared.Graphing;
 
 namespace APSIM.Documentation.Models
 {
@@ -70,10 +71,13 @@ namespace APSIM.Documentation.Models
                 {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
-                {typeof(VernalisationPhase), typeof(DocVernalisationPhase)},
+                {typeof(VernalisationPhase), typeof(DocPhase)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(StorageNDemandFunction), typeof(DocStorageNDemandFunction)},
-                {typeof(StartPhase), typeof(DocStartPhase)}
+                {typeof(StartPhase), typeof(DocPhase)},
+                {typeof(PhotoperiodPhase), typeof(DocPhase)},
+                {typeof(NodeNumberPhase), typeof(DocPhase)},
+               
             };
             return documentMap;
         }
