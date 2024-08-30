@@ -23,12 +23,11 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             Map map = model as Map;
-            tags.Add(new Section(model.Name, new MapTag(map.Center, map.Zoom, map.GetCoordinates())));
-            return tags;
+            newTags.Add(new Section(model.Name, new MapTag(map.Center, map.Zoom, map.GetCoordinates())));
+            return newTags;
         }        
     }
 }

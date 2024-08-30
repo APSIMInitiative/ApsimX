@@ -24,16 +24,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
-
-            tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             var subTags = new List<ITag>();
-
-            // Write memos.
-            foreach (var tag in DocumentChildren<Memo>())
-                subTags.Add(tag);
                 
             // Write a table containing growth phases and descriptions.
             DataTable table = new DataTable();
@@ -107,8 +100,8 @@ namespace APSIM.Documentation.Models.Types
             var growthStageTable = new Table(table);
             subTags.Add(new Section("List of growth stages", growthStageTable));
             
-            tags.Add(new Section(model.Name, subTags));
-            return tags;
+            newTags.Add(new Section(model.Name, subTags));
+            return newTags;
         }
     }
 }

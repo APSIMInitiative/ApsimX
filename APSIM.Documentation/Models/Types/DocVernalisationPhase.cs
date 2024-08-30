@@ -22,15 +22,14 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             var paragraph = new Paragraph(
                 $"The {model.Name} phase goes from the {(model as VernalisationPhase).Start} stage to the {(model as VernalisationPhase).End}" +
                 $" stage and reaches {(model as VernalisationPhase).End} when vernalisation saturation occurs.");
 
-            tags.Add(new Section("VernalisationPhase", paragraph));
-            return tags;
+            newTags.Add(new Section("VernalisationPhase", paragraph));
+            return newTags;
         }
     }
 }
