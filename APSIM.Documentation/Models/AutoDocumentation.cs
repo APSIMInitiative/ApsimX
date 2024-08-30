@@ -65,8 +65,13 @@ namespace APSIM.Documentation.Models
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
+                {typeof(HeightFunction), typeof(DocFunction)},
+                {typeof(BudNumberFunction), typeof(DocFunction)},
+                {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
+                {typeof(VernalisationPhase), typeof(DocVernalisationPhase)},
+                {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(StorageNDemandFunction), typeof(DocStorageNDemandFunction)},
             };
             return documentMap;

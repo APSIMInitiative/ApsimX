@@ -5,6 +5,7 @@ using Models.Functions;
 using System.Linq;
 using APSIM.Shared.Utilities;
 using System;
+using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
 
 namespace APSIM.Documentation.Models.Types
@@ -27,7 +28,9 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
-            newTags.Add(new Paragraph(GetFunctionText()));
+            string text = GetFunctionText();
+            if (text.Length > 0)
+                newTags.Add(new Paragraph(text));
 
             foreach (IModel child in model.FindAllChildren())
                 newTags = AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1).ToList();
@@ -78,6 +81,9 @@ namespace APSIM.Documentation.Models.Types
                 return $"{model.Name} is calculated from a moving average of {model.FindChild<IFunction>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
             else if (model is MovingSumFunction movingSumFunction && model.FindChild<IFunction>() != null)
                 return $"{model.Name} is calculated from a moving sum of {model.FindChild<IFunction>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
+            else if (model is BudNumberFunction budNumberFunction && model.FindChild<IFunction>() != null)
+                return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
+                $"*{budNumberFunction.FindChild<IFunction>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
             else if (model is PhaseLookup phaseLookup)
                 return $"{model.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
             else if (model is PhaseLookupValue phaseLookupValue)

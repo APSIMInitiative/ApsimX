@@ -77,12 +77,5 @@ namespace Models.PMF.Phen
             ResetPhase();
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Paragraph($"The {Name} phase goes from the {Start} stage to the {End} stage and reaches {End} when vernalisation saturation occurs.");
-        }
     }
 }
