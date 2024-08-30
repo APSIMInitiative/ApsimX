@@ -37,7 +37,7 @@ namespace Models.Core
         public bool ShowInDocs { get; set; }
 
         /// <summary>Number of graphs to show per page.</summary>
-        private int GraphsPerPage { get; set; } = 6;
+        public int GraphsPerPage { get; set; } = 6;
 
         /// <summary>
         /// Document the model, and any child models which should be documented.
@@ -124,13 +124,21 @@ namespace Models.Core
                     yield return tag;
         }
 
-        private IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs(IModel parent)
+        /// <summary>
+        /// Gets child graphs from a folder model.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs(IModel parent)
         {
             var graphs = new List<APSIM.Shared.Documentation.Graph>();
-            var page = new Models.GraphPage();
-            page.Graphs.AddRange(parent.FindAllChildren<Models.Graph>().Where(g => g.Enabled));
-            var storage = parent.FindInScope<Models.Storage.IDataStore>();
-            foreach (var map in page.GetAllSeriesDefinitions(this, storage.Reader))
+            var page = new GraphPage();
+            page.Graphs.AddRange(parent.FindAllChildren<Graph>().Where(g => g.Enabled));
+            var storage = parent.FindInScope<Storage.IDataStore>();
+            List<GraphPage.GraphDefinitionMap> definitionMaps = new();
+            if (storage != null)
+                definitionMaps.AddRange(page.GetAllSeriesDefinitions(this, storage.Reader));
+            foreach (var map in definitionMaps)
             {
                 try
                 {

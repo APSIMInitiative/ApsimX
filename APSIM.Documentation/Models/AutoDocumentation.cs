@@ -74,6 +74,7 @@ namespace APSIM.Documentation.Models
                 {typeof(ExpressionFunction), typeof(DocFunction)},
                 {typeof(HoldFunction), typeof(DocFunction)},
                 {typeof(Structure), typeof(DocStructure)},
+                {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
                 {typeof(LiveOnEventFunction), typeof(DocGenericWithChildren)},
                 {typeof(OnEventFunction), typeof(DocGenericWithChildren)},
