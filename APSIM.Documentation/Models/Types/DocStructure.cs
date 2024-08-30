@@ -23,12 +23,9 @@ public class DocStructure : DocGeneric
     /// </summary>
     public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
     {
-        if (tags == null)
-            tags = new List<ITag>();
+        List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
-        tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-
-        tags.Add(new Section("Plant and Main-Stem Population", new Paragraph(
+        newTags.Add(new Section("Plant and Main-Stem Population", new Paragraph(
                 $"The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method. " +
                 $"The *PrimaryBudNumber* is also sent with the Sow method. The main-stem population (*MainStemPopn*) is calculated as:\n\n" +
                 $"*MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*\n\n" +
@@ -61,7 +58,7 @@ public class DocStructure : DocGeneric
             leafTags.AddRange(finalLeafNumberTags);
         }
 
-        tags.Add(new Section("Main-Stem leaf appearance", leafTags));
+        newTags.Add(new Section("Main-Stem leaf appearance", leafTags));
 
         var branchingTags = new List<ITag>()
         {
@@ -86,7 +83,7 @@ public class DocStructure : DocGeneric
             branchingTags.AddRange(branchMortalityTags);
         }
 
-        tags.Add(new Section("Branching and Branch Mortality", branchingTags));
+        newTags.Add(new Section("Branching and Branch Mortality", branchingTags));
 
         var heightTags = new List<ITag>
         {
@@ -97,8 +94,8 @@ public class DocStructure : DocGeneric
         {
             heightTags.AddRange(heightModelTags);
         }
-        tags.Add(new Section("Height", heightTags));
+        newTags.Add(new Section("Height", heightTags));
 
-        return tags;
+        return newTags;
     }
 }

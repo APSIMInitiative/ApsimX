@@ -19,6 +19,7 @@ using Models.Core.Run;
 using Models.Storage;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
+using Models.Functions.DemandFunctions;
 
 namespace APSIM.Documentation.Models
 {
@@ -60,42 +61,18 @@ namespace APSIM.Documentation.Models
                 {typeof(Cultivar), typeof(DocCultivar)},
                 {typeof(Map), typeof(DocMap)},
                 {typeof(BoundFunction), typeof(DocBoundFunction)},
-                {typeof(AccumulateAtEvent), typeof(DocFunction)},
-                {typeof(AccumulateResetAtStage), typeof(DocFunction)},
-                {typeof(Constant), typeof(DocFunction)},
-                {typeof(AccumulateFunction), typeof(DocFunction)},
-                {typeof(AddFunction), typeof(DocFunction)},
-                {typeof(SubtractFunction), typeof(DocFunction)},
-                {typeof(MultiplyFunction), typeof(DocFunction)},
-                {typeof(DivideFunction), typeof(DocFunction)},
                 {typeof(Memo), typeof(DocMemo)},
-                {typeof(DailyMeanVPD), typeof(DocFunction)},
-                {typeof(DeltaFunction), typeof(DocFunction)},
-                {typeof(ExpressionFunction), typeof(DocFunction)},
-                {typeof(HoldFunction), typeof(DocFunction)},
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
-                {typeof(LiveOnEventFunction), typeof(DocGenericWithChildren)},
-                {typeof(OnEventFunction), typeof(DocGenericWithChildren)},
-                {typeof(LessThanFunction), typeof(DocFunction)},
-                {typeof(LinearAfterThresholdFunction), typeof(DocFunction)},
-                {typeof(MovingAverageFunction), typeof(DocFunction)},
-                {typeof(MovingSumFunction), typeof(DocFunction)},
                 {typeof(HeightFunction), typeof(DocFunction)},
                 {typeof(BudNumberFunction), typeof(DocFunction)},
                 {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
-                {typeof(PhaseLookup), typeof(DocFunction)},
-                {typeof(PhaseLookupValue), typeof(DocFunction)},
-                {typeof(PhotoperiodFunction), typeof(DocFunction)},
-                {typeof(SigmoidFunction), typeof(DocFunction)},
-                {typeof(StringComparisonFunction), typeof(DocFunction)},
-                {typeof(VariableReference), typeof(DocFunction)},
-                {typeof(WangEngelTempFunction), typeof(DocFunction)},
-                {typeof(WeightedTemperatureFunction), typeof(DocFunction)},
                 {typeof(VernalisationPhase), typeof(DocVernalisationPhase)},
+                {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
+                {typeof(StorageNDemandFunction), typeof(DocStorageNDemandFunction)},
                 {typeof(StartPhase), typeof(DocStartPhase)}
             };
             return documentMap;
@@ -120,7 +97,11 @@ namespace APSIM.Documentation.Models
                 object documentClass = Activator.CreateInstance(docType, new object[]{model});
                 newTags = (documentClass as DocGeneric).Document(tags, headingLevel, indent);
             }
-            else 
+            else if (docType == null && model as IFunction != null)
+            {
+                newTags = new DocFunction(model).Document(tags, headingLevel, indent);
+            }
+            else
             {
                 newTags = new DocGeneric(model).Document(tags, headingLevel, indent);
             }

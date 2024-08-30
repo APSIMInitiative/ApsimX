@@ -23,23 +23,16 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-             if (tags == null)
-                tags = new List<ITag>();
-                
-            List<ITag> memoDocs = new();
-            foreach (Memo memo in model.FindAllChildren<Memo>().ToList())
-                 memoDocs.AddRange(AutoDocumentation.Document(memo));
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
-            List<ITag> newTags = new()
+            List<ITag> subTags = new()
             {
-                new Section(memoDocs),
-                // Required to get sections properly aligned.
                 new Paragraph("."),
                 new Section("List of Plant Model Components",
                     new Table((model as Phenology).GetPhaseTable())),
             };
 
-            tags.Add(new Section("Phenology", newTags));
+            newTags.Add(new Section("Phenology", subTags));
             return tags;
         }
     }

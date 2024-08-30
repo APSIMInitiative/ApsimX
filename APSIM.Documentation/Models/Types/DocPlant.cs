@@ -28,20 +28,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
             
             List<ITag> subTags = new List<ITag>();
-
-            // If first child is a memo, document it first.
-            Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
-            if (introduction != null)
-                foreach (ITag tag in introduction.Document())
-                    subTags.Add(tag);
-
-            subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-            
-            subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(GetType())));
 
             subTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
@@ -70,6 +59,7 @@ namespace APSIM.Documentation.Models.Types
                 typeof(IBiomass),
             };
 
+            Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
             // Document children.
             foreach (IModel child in this.model.Children)
             {
@@ -106,8 +96,8 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
 
-            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
-            return tags;
+            newTags.Add(new Section($"The APSIM {model.Name} Model", subTags));
+            return newTags;
         }
     }
 }

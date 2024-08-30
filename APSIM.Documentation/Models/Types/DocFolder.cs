@@ -3,7 +3,6 @@ using APSIM.Shared.Documentation;
 using Models.Core;
 using System.Linq;
 using Models;
-using System.Collections.Immutable;
 using Models.Factorial;
 using System.Data;
 
@@ -25,18 +24,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
 
             var subTags = new List<ITag>();
-
-            // Write memos.
-            var memoTags = new List<ITag>();
-            foreach (Memo memo in model.FindAllChildren<Memo>().Where(memo => memo.Enabled))
-            {
-                memoTags.AddRange(AutoDocumentation.Document(memo));
-            }
-            subTags.Add(new Section(memoTags));
 
             foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
             {
@@ -108,8 +98,8 @@ namespace APSIM.Documentation.Models.Types
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 subTags.AddRange(AutoDocumentation.Document(folder));
 
-            tags.Add(new Section(model.Name, subTags));
-            return tags;
+            newTags.Add(new Section(model.Name, subTags));
+            return newTags;
         }
 
     }

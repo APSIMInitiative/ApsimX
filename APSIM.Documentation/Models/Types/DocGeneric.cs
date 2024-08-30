@@ -83,18 +83,5 @@ namespace APSIM.Documentation.Models.Types
             }
             yield return new Table(data);
         }
-
-        /// <summary>
-        /// Document all child models of a given type.
-        /// </summary>
-        /// <param name="withHeadings">If true, each child to be documented will be given its own section/heading.</param>
-        /// <typeparam name="T">The type of models to be documented.</typeparam>
-        protected IEnumerable<ITag> DocumentChildren<T>(bool withHeadings = false) where T : IModel
-        {
-            if (withHeadings)
-                return model.FindAllChildren<T>().Select(m => new Section(m.Name, m.Document()));
-            else
-                return model.FindAllChildren<T>().SelectMany(m => m.Document());
-        }
     }
 }
