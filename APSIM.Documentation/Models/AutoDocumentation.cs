@@ -73,6 +73,7 @@ namespace APSIM.Documentation.Models
                 {typeof(VernalisationPhase), typeof(DocVernalisationPhase)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
                 {typeof(StorageNDemandFunction), typeof(DocStorageNDemandFunction)},
+                {typeof(StartPhase), typeof(DocStartPhase)}
             };
             return documentMap;
         }
