@@ -22,6 +22,7 @@ namespace Models
             List<Coordinate> coordinates = new List<Coordinate>();
             if (names != null)
                 names.Clear();
+            else names = new List<string>();
 
             foreach (Weather weather in FindAllInScope<Weather>().Where(w => w.Enabled))
             {
@@ -40,7 +41,7 @@ namespace Models
 
             if (coordinates.Count == 0)
             {
-                foreach (var soil in this.FindAllInScope<Models.Soils.Soil>())
+                foreach (var soil in FindAllInScope<Soils.Soil>())
                 {
                     double latitude = soil.Latitude;
                     double longitude = soil.Longitude;
