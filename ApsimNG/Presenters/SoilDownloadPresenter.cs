@@ -188,9 +188,12 @@ namespace UserInterface.Presenters
                         string fullName = await GetPlacenameFromLatLongAsync();
 
                         //remove the address at start of the name "This business is closed, Dalby"
-                        if (fullName.Contains(','))
-                            fullName = fullName.Substring(fullName.IndexOf(',') + 2);
-                        placeNameEditBox.Text = fullName;
+                        if (fullName != null)
+                        {
+                            if (fullName.Contains(','))
+                                fullName = fullName.Substring(fullName.IndexOf(',') + 2);
+                            placeNameEditBox.Text = fullName;
+                        }
 
                         // Use this to monitor task progress
                         Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
