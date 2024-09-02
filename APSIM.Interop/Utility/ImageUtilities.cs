@@ -2,8 +2,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using HarfBuzzSharp;
 using SkiaSharp;
-using Svg;
 
 namespace APSIM.Interop.Utility
 {
@@ -26,34 +26,18 @@ namespace APSIM.Interop.Utility
 
             // Create a scaled image.
             using (var surface = SKSurface.Create(new SKImageInfo { Width = scaleWidth, Height = scaleHeight, ColorType = SKImageInfo.PlatformColorType, AlphaType = SKAlphaType.Premul }))
-                using (var paint = new SKPaint())
-                {
-                    // high quality with antialiasing
-                    paint.IsAntialias = true;
-                    paint.FilterQuality = SKFilterQuality.High;
+            using (var paint = new SKPaint())
+            {
+                // high quality with antialiasing
+                paint.IsAntialias = true;
+                paint.FilterQuality = SKFilterQuality.High;
 
-                    // draw the bitmap to fill the surface
-                    surface.Canvas.DrawImage(image, new SKRectI(0, 0, scaleWidth, scaleHeight), paint);
-                    surface.Canvas.Flush();
+                // draw the bitmap to fill the surface
+                surface.Canvas.DrawImage(image, new SKRectI(0, 0, scaleWidth, scaleHeight), paint);
+                surface.Canvas.Flush();
 
                 return surface.Snapshot();
-                }
-        }
-
-        /// <summary>
-        /// Convert an svg image into a raster.
-        /// </summary>
-        /// <param name="stream">The input svg stream.</param>
-        /// <param name="width">Desired image width.</param>
-        /// <param name="height">Desired image height.</param>
-        /// <remarks>
-        /// If one of width or height is zero, the returned image will have
-        /// its "natural" aspect ratio.
-        /// </remarks>
-        public static Image ReadSvg(Stream stream, int width, int height)
-        {
-            SvgDocument doc = SvgDocument.Open<SvgDocument>(stream);
-            return doc.Draw(width, height);
+            }
         }
     }
 }

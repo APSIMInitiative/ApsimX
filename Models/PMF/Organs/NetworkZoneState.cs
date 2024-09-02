@@ -4,16 +4,19 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IRootGeometryData
+    public class NetworkZoneState : Model
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
+        /// <summary>The nutrient model</summary>
+        public INutrient nutrient { get; set; }
 
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
@@ -72,24 +75,11 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double RootLength { get { return Depth - plant.SowingData.Depth; } }
 
-        /// <summary>Gets the RootFront</summary>
-        public double RootFront { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double RootSpread { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double LeftDist { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        public double RightDist { get; set; }
-
         /// <summary>Gets the RootProportions</summary>
         public double[] RootProportions { get; set; }
 
         /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
         public double[] LLModifier { get; set; }
-
-        /// <summary>Soil area occipied by roots</summary>
-        [Units("m2")]
-        public double RootArea { get; set; }
 
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
@@ -128,6 +118,7 @@ namespace Models.PMF.Organs
             this.Soil = soil;
             this.plant = Plant;
             this.parentNetwork = Plant.FindDescendant<RootNetwork>();
+            nutrient = soil.FindChild<INutrient>(); 
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -165,7 +156,6 @@ namespace Models.PMF.Organs
         {
             Clear();
             Depth = depth;
-            RootFront = depth;
             SetMaxDepthFromXF();
             CalculateRAw();
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
@@ -193,22 +183,74 @@ namespace Models.PMF.Organs
                     else if (layer > 0)
                         RAw[layer] = RAw[layer - 1];
                     else
-                        RAw[layer] = 0;
+                        RAw[layer] = 1;
             }
         }
 
         /// <summary>
         /// Calculates the proportion of total root biomass in each zone layer
         /// </summary>
-        public void CalculateRelativeBiomassProportions()
+        public void CalculateRelativeLiveBiomassProportions()
         {
+            OrganNutrientsState totalLive = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.Live;
-                LayerDeadProportion[i] = LayerDead[i] / parentNetwork.parentOrgan.Dead;
+                totalLive =  OrganNutrientsState.Add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
             }
+            double checkLiveWtPropn = 0;
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                if ((totalLive.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
+                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
+                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
+                                                                     potassium: new NutrientPoolsState(1, 1, 1),
+                                                                     cconc: 1);
+                }
+                else
+                {
+                    LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                }
+                checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
+            }
+            if (Math.Abs(checkLiveWtPropn - 1) > 1e-12 && (totalLive.Wt > 0))
+                throw new Exception("Error in calculating root LiveWt distribution");
         }
 
+
+        /// <summary>
+        /// Calculates the proportion of total root biomass in each zone layer
+        /// </summary>
+        public void CalculateRelativeDeadBiomassProportions()
+        {
+            OrganNutrientsState totalDead = new OrganNutrientsState();
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                totalDead = OrganNutrientsState.Add(totalDead, LayerDead[i], parentNetwork.parentOrgan.Cconc);
+            }
+            double checkDeadWtPropn = 0;
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                if ((totalDead.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
+                {
+                    //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
+                    LayerDeadProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
+                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
+                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
+                                                                     potassium: new NutrientPoolsState(1, 1, 1),
+                                                                     cconc: 1);
+                }
+                else
+                {
+                    LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                }
+                checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
+            }
+            if ((Math.Abs(checkDeadWtPropn - 1) > 1e-12) && (totalDead.Wt > 0))
+                throw new Exception("Error in calculating root DeadWt distribution");
+        }
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -226,7 +268,7 @@ namespace Models.PMF.Organs
                 LayerLive = new OrganNutrientsState[Physical.Thickness.Length];
                 LayerDead = new OrganNutrientsState[Physical.Thickness.Length];
                 LayerLiveProportion = new OrganNutrientsState[Physical.Thickness.Length];
-                LayerDeadProportion = new OrganNutrientsState[Physical.Thickness.Length];
+                LayerDeadProportion = new OrganNutrientsState[Physical.Thickness.Length]; ;
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
@@ -242,6 +284,8 @@ namespace Models.PMF.Organs
                 {
                     LayerLive[i].Clear();
                     LayerDead[i].Clear();
+                    LayerLiveProportion[i].Clear();
+                    LayerDeadProportion[i].Clear();
                 }
             }
         }
@@ -265,7 +309,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress;
+                Depth = Depth + (rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress);
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -285,21 +329,6 @@ namespace Models.PMF.Organs
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(parentNetwork.MaximumRootDepth, MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
-
-            //RootFront - needed by sorghum
-            if (parentNetwork.RootFrontCalcSwitch?.Value() == 1)
-            {
-                var dltRootFront = rootfrontvelocity * xf[RootLayer] * parentNetwork.RootDepthStressFactor.Value();
-
-                double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
-                dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront += dltRootFront;
-            }
-            else
-            {
-                RootFront = Depth;
-            }
-            parentNetwork.RootShape.CalcRootProportionInLayers(this);
         }
     }
 }

@@ -34,12 +34,10 @@ namespace Models.Core
         /// Apparently, not all folders of graphs are intended to be shown in the autodocs.
         /// Hence, this flag.
         /// </remarks>
-        [Description("Include in documentation?")]
         public bool ShowInDocs { get; set; }
 
         /// <summary>Number of graphs to show per page.</summary>
-        [Description("Number of graphs to show per page")]
-        public int GraphsPerPage { get; set; } = 6;
+        private int GraphsPerPage { get; set; } = 6;
 
         /// <summary>
         /// Document the model, and any child models which should be documented.

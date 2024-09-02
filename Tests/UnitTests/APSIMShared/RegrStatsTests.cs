@@ -79,77 +79,77 @@ namespace UnitTests.APSIMShared
         public void TestN()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(X[i].Length, stats[i].n);
+                Assert.That(stats[i].n, Is.EqualTo(X[i].Length));
         }
 
         [Test]
         public void TestSlope()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(Slope[i], stats[i].Slope, Math.Abs(Slope[i] * 0.0001));
+                Assert.That(stats[i].Slope, Is.EqualTo(Slope[i]).Within(Math.Abs(Slope[i] * 0.0001)));
         }
 
         [Test]
         public void TestIntercept()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(Intercept[i], stats[i].Intercept, Math.Abs(Intercept[i] * 0.0001));
+                Assert.That(stats[i].Intercept, Is.EqualTo(Intercept[i]).Within(Math.Abs(Intercept[i] * 0.0001)));
         }
 
         [Test]
         public void TestSEintercept()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(SEintercept[i], stats[i].SEintercept, Math.Abs(SEintercept[i] * 0.0001));
+                Assert.That(stats[i].SEintercept, Is.EqualTo(SEintercept[i]).Within(Math.Abs(SEintercept[i] * 0.0001)));
         }
 
         [Test]
         public void TestSEslope()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(SEslope[i], stats[i].SEslope, Math.Abs(SEslope[i] * 0.0001));
+                Assert.That(stats[i].SEslope, Is.EqualTo(SEslope[i]).Within(Math.Abs(SEslope[i] * 0.0001)));
         }
 
         [Test]
         public void TestR2()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(R2[i], stats[i].R2, Math.Abs(R2[i] * 0.001));
+                Assert.That(stats[i].R2, Is.EqualTo(R2[i]).Within(Math.Abs(R2[i] * 0.001)));
         }
 
         [Test]
         public void TestRMSE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(RMSE[i], stats[i].RMSE, Math.Abs(RMSE[i] * 0.0001));
+                Assert.That(stats[i].RMSE, Is.EqualTo(RMSE[i]).Within(Math.Abs(RMSE[i] * 0.0001)));
         }
 
         [Test]
         public void TestNSE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(NSE[i], stats[i].NSE, Math.Abs(NSE[i] * 0.0001));
+                Assert.That(stats[i].NSE, Is.EqualTo(NSE[i]).Within(Math.Abs(NSE[i] * 0.0001)));
         }
 
         [Test]
         public void TestME()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(ME[i], stats[i].ME, Math.Abs(ME[i] * 0.0001));
+                Assert.That(stats[i].ME, Is.EqualTo(ME[i]).Within(Math.Abs(ME[i] * 0.0001)));
         }
 
         [Test]
         public void TestMAE()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(MAE[i], stats[i].MAE, Math.Abs(MAE[i] * 0.0001));
+                Assert.That(stats[i].MAE, Is.EqualTo(MAE[i]).Within(Math.Abs(MAE[i] * 0.0001)));
         }
 
         [Test]
         public void TestRSR()
         {
             for (int i = 0; i < X.Count; i++)
-                Assert.AreEqual(RSR[i], stats[i].RSR, Math.Abs(RSR[i] * 0.0001));
+                Assert.That(stats[i].RSR, Is.EqualTo(RSR[i]).Within(Math.Abs(RSR[i] * 0.0001)));
         }
     }
 }

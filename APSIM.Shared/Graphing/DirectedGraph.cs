@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System;
 
 namespace APSIM.Shared.Graphing
@@ -8,8 +7,6 @@ namespace APSIM.Shared.Graphing
     [Serializable]
     public class DirectedGraph
     {
-        private Point nextNodePosition = new Point(50, 50);
-
         /// <summary>A collection of nodes</summary>
         public List<Node> Nodes { get; set; }
 
@@ -24,33 +21,10 @@ namespace APSIM.Shared.Graphing
         }
 
         /// <summary>Begin constrction of graph</summary>
-        public void Begin()
+        public void Clear()
         {
             Nodes.Clear();
             Arcs.Clear();
-        }
-
-        /// <summary>Add a new node to the graph</summary>
-        public void AddTransparentNode(string name)
-        {
-            /*
-            Node newNode = Nodes.Find(node => node.Name == name);
-            if (newNode == null)
-            {
-                newNode = new Node();
-                newNode.Location = nextNodePosition;
-                nextNodePosition.X += 150;
-                if (nextNodePosition.X > 500)
-                {
-                    nextNodePosition.X = 50;
-                    nextNodePosition.Y = nextNodePosition.Y + 150;
-                }
-                Nodes.Add(newNode);
-            }
-            newNode.Name = name;
-            newNode.Transparent = true;
-            nodesToKeep.Add(newNode);
-            */
         }
 
         /// <summary>
@@ -108,6 +82,24 @@ namespace APSIM.Shared.Graphing
         {
             foreach (Arc arc in Arcs)
                 if (arc.ID == id)
+                    return arc;
+            return null;
+        }
+
+        /// <summary>Get a reference to the node with the given ID. Null if not found</summary>
+        public Node GetNodeByName(string name)
+        {
+            foreach (Node node in Nodes)
+                if (node.Name.CompareTo(name) == 0)
+                    return node;
+            return null;
+        }
+
+        /// <summary>Get a reference to the arc with the given ID. Null if not found</summary>
+        public Arc GetArcByID(string sourceName, string destName)
+        {
+            foreach (Arc arc in Arcs)
+                if (arc.Source.Name.CompareTo(sourceName) == 0 && arc.Destination.Name.CompareTo(destName) == 0)
                     return arc;
             return null;
         }

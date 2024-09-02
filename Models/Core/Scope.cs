@@ -13,7 +13,7 @@ namespace Models.Core
     public class ScopingRules
     {
         private Dictionary<IModel, List<IModel>> cache = new Dictionary<IModel, List<IModel>>();
-        private static SortedSet<string> scopedModels = new();
+        private Dictionary<string, bool> scopedModels = new();
 
 
         /// <summary>
@@ -88,13 +88,8 @@ namespace Models.Core
         /// Returns null if non found.
         /// </summary>
         /// <param name="relativeTo">The model to use as a base.</param>
-        public static IModel FindScopedParentModel(IModel relativeTo)
+        public IModel FindScopedParentModel(IModel relativeTo)
         {
-            //if (IsScopedModel(relativeTo))
-            //    return relativeTo;
-            //
-            //return relativeTo.Ancestors().FirstOrDefault(a => IsScopedModel(a));
-
             do
             {
                 if (IsScopedModel(relativeTo))
@@ -123,13 +118,12 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo"></param>
         /// <returns></returns>
-        public static bool IsScopedModel(IModel relativeTo)
+        public bool IsScopedModel(IModel relativeTo)
         {
-            if (scopedModels.Contains(relativeTo.GetType().Name))
-                return true;
-            bool isScoped = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
-            if (isScoped)
-                scopedModels.Add(relativeTo.GetType().Name);
+            if (scopedModels.TryGetValue(relativeTo.GetType().Name, out bool isScoped))
+                return isScoped;
+            isScoped = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
+            scopedModels.Add(relativeTo.GetType().Name, isScoped);
             return isScoped;
         }
 

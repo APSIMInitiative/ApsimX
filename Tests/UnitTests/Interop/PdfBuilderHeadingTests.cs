@@ -53,8 +53,8 @@ namespace UnitTests.Interop.Documentation
         public void TestSimpleHeading()
         {
             builder.AppendHeading("hello");
-            Assert.AreEqual(1, doc.Sections.Count);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.Sections.Count, Is.EqualTo(1));
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
 
             Paragraph paragraph = doc.LastSection.Elements.LastObject as Paragraph;
             ValidateHeading(paragraph, "1 ", "hello");
@@ -74,7 +74,7 @@ namespace UnitTests.Interop.Documentation
             builder.AppendHeading("nested heading");
             builder.PopSubHeading();
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section should have two paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2), "Section should have two paragraphs");
             Paragraph top = doc.LastSection.Elements[0] as Paragraph;
             Paragraph nested = doc.LastSection.Elements[1] as Paragraph;
 
@@ -100,7 +100,7 @@ namespace UnitTests.Interop.Documentation
             builder.PopSubHeading();
             builder.PopSubHeading();
 
-            Assert.AreEqual(3, doc.LastSection.Elements.Count, "Section should have three paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(3), "Section should have three paragraphs");
             Paragraph top = doc.LastSection.Elements[0] as Paragraph;
             Paragraph middle = doc.LastSection.Elements[1] as Paragraph;
             Paragraph lowest = doc.LastSection.Elements[2] as Paragraph;
@@ -198,7 +198,7 @@ namespace UnitTests.Interop.Documentation
             // 4
             builder.AppendHeading("Final toplevel heading");
 
-            Assert.AreEqual(13, doc.LastSection.Elements.Count, "Section should have thirteen paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(13), "Section should have thirteen paragraphs");
             var elements = doc.LastSection.Elements;
 
             ValidateHeading(elements[0] as Paragraph,  "1 ", "Top-level heading");
@@ -274,7 +274,7 @@ namespace UnitTests.Interop.Documentation
             // 2
             builder.AppendHeading("another toplevel heading");
 
-            Assert.AreEqual(7, doc.LastSection.Elements.Count, "Section should have seven paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(7), "Section should have seven paragraphs");
             var elements = doc.LastSection.Elements;
 
             ValidateHeading(elements[0] as Paragraph,  "1 ", "toplevel heading");
@@ -323,7 +323,7 @@ namespace UnitTests.Interop.Documentation
             builder.PopSubHeading();
             builder.AppendHeading("section 3");
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section has incorrect number of paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2), "Section has incorrect number of paragraphs");
             var elements = doc.LastSection.Elements;
 
             ValidateHeading(elements[0] as Paragraph,  "2 ", "section 2");
@@ -338,37 +338,37 @@ namespace UnitTests.Interop.Documentation
         {
             builder.AppendHeading("Heading level 1");
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level1, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
 
             builder.PushSubHeading();
 
             builder.AppendHeading("Heading level 2");
             paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level2, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level2));
 
             builder.PushSubHeading();
 
             builder.AppendHeading("Heading level 3");
             paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level3, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level3));
 
             builder.PushSubHeading();
 
             builder.AppendHeading("Heading level 4");
             paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level4, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level4));
 
             builder.PushSubHeading();
 
             builder.AppendHeading("Heading level 5");
             paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level5, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level5));
 
             builder.PushSubHeading();
 
             builder.AppendHeading("Heading level 6");
             paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
-            Assert.AreEqual(OutlineLevel.Level6, paragraph.Format.OutlineLevel);
+            Assert.That(paragraph.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level6));
         }
 
         /// <summary>
@@ -387,11 +387,11 @@ namespace UnitTests.Interop.Documentation
             builder.ClearHeadingLevel();
             builder.PopSubHeading();
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section has incorrect # paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2), "Section has incorrect # paragraphs");
             Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[0];
             Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[1];
-            Assert.AreEqual(OutlineLevel.Level1, paragraph0.Format.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level2, paragraph1.Format.OutlineLevel);
+            Assert.That(paragraph0.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(paragraph1.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level2));
         }
 
         /// <summary>
@@ -410,11 +410,11 @@ namespace UnitTests.Interop.Documentation
             builder.ClearHeadingLevel();
             builder.PopSubHeading();
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section has incorrect # paragraphs");
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2), "Section has incorrect # paragraphs");
             Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[0];
             Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[1];
-            Assert.AreEqual(OutlineLevel.Level1, paragraph0.Format.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level2, paragraph1.Format.OutlineLevel);
+            Assert.That(paragraph0.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(paragraph1.Format.OutlineLevel, Is.EqualTo(OutlineLevel.Level2));
         }
 
         /// <summary>
@@ -427,29 +427,29 @@ namespace UnitTests.Interop.Documentation
         /// <param name="expectedHeadingText">The actual heading text not including the indices.</param>
         private void ValidateHeading(Paragraph paragraph, string expectedIndices, string expectedHeadingText)
         {
-            Assert.NotNull(paragraph, "Heading was not written to a paragraph object");
+            Assert.That(paragraph, Is.Not.Null, "Heading was not written to a paragraph object");
 
-            Assert.AreEqual(3, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(3));
             FormattedText indices = paragraph.Elements[0] as FormattedText;
             FormattedText heading = paragraph.Elements[1] as FormattedText;
             BookmarkField bookmark = paragraph.Elements[2] as BookmarkField;
 
-            Assert.NotNull(indices, "Heading indices were not written to document");
-            Assert.NotNull(heading, "Heading text was not written to document");
-            Assert.NotNull(bookmark, "Heading text was not written as a bookmark");
+            Assert.That(indices, Is.Not.Null, "Heading indices were not written to document");
+            Assert.That(heading, Is.Not.Null, "Heading text was not written to document");
+            Assert.That(bookmark, Is.Not.Null, "Heading text was not written as a bookmark");
 
-            Assert.AreEqual(1, indices.Elements.Count, "Heading indices should be a single text element");
-            Assert.AreEqual(1, heading.Elements.Count, "Heading text should be a single text element");
+            Assert.That(indices.Elements.Count, Is.EqualTo(1), "Heading indices should be a single text element");
+            Assert.That(heading.Elements.Count, Is.EqualTo(1), "Heading text should be a single text element");
 
             Text indicesText = indices.Elements.LastObject as Text;
             Text headingText = heading.Elements.LastObject as Text;
 
-            Assert.NotNull(indices, "Heading indices were not written");
-            Assert.NotNull(heading, "Heading text was not written");
+            Assert.That(indices, Is.Not.Null, "Heading indices were not written");
+            Assert.That(heading, Is.Not.Null, "Heading text was not written");
 
-            Assert.AreEqual(expectedIndices, indicesText.Content, "Heading index is incorrect");
-            Assert.AreEqual(expectedHeadingText, headingText.Content, "Heading text is incorrect");
-            Assert.AreEqual($"#{expectedHeadingText}", bookmark.Name);
+            Assert.That(indicesText.Content, Is.EqualTo(expectedIndices), "Heading index is incorrect");
+            Assert.That(headingText.Content, Is.EqualTo(expectedHeadingText), "Heading text is incorrect");
+            Assert.That(bookmark.Name, Is.EqualTo($"#{expectedHeadingText}"));
         }
     }
 }

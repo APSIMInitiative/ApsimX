@@ -35,8 +35,8 @@ namespace UnitTests.Core.ApsimFile
 
             ManagerConverter converter = new ManagerConverter();
             converter.Read(script);
-            Assert.AreEqual(converter.GetUsingStatements(), 
-                            new string[] { "System", "Models.Soils", "APSIM.Shared.Utilities" });
+            Assert.That(converter.GetUsingStatements(), Is.EqualTo( 
+                            new string[] { "System", "Models.Soils", "APSIM.Shared.Utilities" }));
         }
 
         /// <summary>Ensure we can set using statements</summary>
@@ -59,7 +59,7 @@ namespace UnitTests.Core.ApsimFile
             ManagerConverter converter = new ManagerConverter();
             converter.Read(script);
             converter.SetUsingStatements(new string[] { "System" });
-            Assert.AreEqual(converter.ToString(),
+            Assert.That(converter.ToString(), Is.EqualTo(
                 "// Comment 1" + Environment.NewLine +
                 "// Comment 2" + Environment.NewLine +
                 Environment.NewLine +
@@ -67,7 +67,7 @@ namespace UnitTests.Core.ApsimFile
                 Environment.NewLine +
                 "namespace Models" + Environment.NewLine +
                 "{" + Environment.NewLine +
-                "}" + Environment.NewLine);
+                "}" + Environment.NewLine));
 
         }
 
@@ -95,21 +95,21 @@ namespace UnitTests.Core.ApsimFile
 
             var declarations = converter.GetDeclarations();
 
-            Assert.AreEqual(declarations[0].LineIndex, 5);
-            Assert.AreEqual(declarations[0].InstanceName, "mySolutes1");
-            Assert.AreEqual(declarations[0].TypeName, "SoluteManager");
-            Assert.AreEqual(declarations[0].Attributes[0], "[Link]");
+            Assert.That(declarations[0].LineIndex, Is.EqualTo(5));
+            Assert.That(declarations[0].InstanceName, Is.EqualTo("mySolutes1"));
+            Assert.That(declarations[0].TypeName, Is.EqualTo("SoluteManager"));
+            Assert.That(declarations[0].Attributes[0], Is.EqualTo("[Link]"));
 
-            Assert.AreEqual(declarations[1].LineIndex, 8);
-            Assert.AreEqual(declarations[1].InstanceName, "fert");
-            Assert.AreEqual(declarations[1].TypeName, "Fertiliser");
-            Assert.IsTrue(declarations[1].Attributes.Contains("[Link]"));
-            Assert.IsTrue(declarations[1].Attributes.Contains("[Units(0-1)]"));
+            Assert.That(declarations[1].LineIndex, Is.EqualTo(8));
+            Assert.That(declarations[1].InstanceName, Is.EqualTo("fert"));
+            Assert.That(declarations[1].TypeName, Is.EqualTo("Fertiliser"));
+            Assert.That(declarations[1].Attributes.Contains("[Link]"), Is.True);
+            Assert.That(declarations[1].Attributes.Contains("[Units(0-1)]"), Is.True);
 
-            Assert.AreEqual(declarations[2].LineIndex, 10);
-            Assert.AreEqual(declarations[2].InstanceName, "mySoil");
-            Assert.AreEqual(declarations[2].TypeName, "Soil");
-            Assert.AreEqual(declarations[2].Attributes[0], "[Link(Type = LinkType.Descendant, ByName = true)]");
+            Assert.That(declarations[2].LineIndex, Is.EqualTo(10));
+            Assert.That(declarations[2].InstanceName, Is.EqualTo("mySoil"));
+            Assert.That(declarations[2].TypeName, Is.EqualTo("Soil"));
+            Assert.That(declarations[2].Attributes[0], Is.EqualTo("[Link(Type = LinkType.Descendant, ByName = true)]"));
         }
 
         /// <summary>Ensure we can find method calls</summary>
@@ -139,13 +139,13 @@ namespace UnitTests.Core.ApsimFile
             ManagerConverter converter = new ManagerConverter();
             converter.Read(script);
             List<MethodCall> methods = converter.FindMethodCalls("SoluteManager", "Add");
-            Assert.AreEqual(methods.Count, 2);
-            Assert.AreEqual(methods[0].InstanceName, "mySolutes1");
-            Assert.AreEqual(methods[0].MethodName, "Add");
-            Assert.AreEqual(methods[0].Arguments, new string[] { "arg1", "arg2" });
-            Assert.AreEqual(methods[1].InstanceName, "mySolutes2");
-            Assert.AreEqual(methods[1].MethodName, "Add");
-            Assert.AreEqual(methods[1].Arguments, new string[] { "arg3", "arg4" });
+            Assert.That(methods.Count, Is.EqualTo(2));
+            Assert.That(methods[0].InstanceName, Is.EqualTo("mySolutes1"));
+            Assert.That(methods[0].MethodName, Is.EqualTo("Add"));
+            Assert.That(methods[0].Arguments, Is.EqualTo(new string[] { "arg1", "arg2" }));
+            Assert.That(methods[1].InstanceName, Is.EqualTo("mySolutes2"));
+            Assert.That(methods[1].MethodName, Is.EqualTo("Add"));
+            Assert.That(methods[1].Arguments, Is.EqualTo(new string[] { "arg3", "arg4" }));
         }
 
         /// <summary>Ensure we can set method call</summary>
@@ -179,14 +179,14 @@ namespace UnitTests.Core.ApsimFile
             converter.SetMethodCall(method);
 
             // Make sure we can't find old one.
-            Assert.AreEqual(converter.FindMethodCalls("SoluteManager", "Add").Count, 0);
+            Assert.That(converter.FindMethodCalls("SoluteManager", "Add").Count, Is.EqualTo(0));
 
             // Make sure we find new one.
             var foundMethod = converter.FindMethodCalls("SoluteManager", "Add2")[0];
-            Assert.AreEqual(foundMethod.LineIndex, 8);
-            Assert.AreEqual(foundMethod.InstanceName, "mySolutes1");
-            Assert.AreEqual(foundMethod.MethodName, "Add2");
-            Assert.AreEqual(foundMethod.Arguments, new string[] { "10" });
+            Assert.That(foundMethod.LineIndex, Is.EqualTo(8));
+            Assert.That(foundMethod.InstanceName, Is.EqualTo("mySolutes1"));
+            Assert.That(foundMethod.MethodName, Is.EqualTo("Add2"));
+            Assert.That(foundMethod.Arguments, Is.EqualTo(new string[] { "10" }));
         }
 
         /// <summary>
@@ -204,18 +204,18 @@ namespace UnitTests.Core.ApsimFile
             manager.Replace("original text", newText);
 
             // Ensure the code was modified correctly.
-            Assert.AreEqual(newText + Environment.NewLine, manager.ToString());
+            Assert.That(manager.ToString(), Is.EqualTo(newText + Environment.NewLine));
 
             // Ensure that passing in a null search string causes no changes.
             manager.Replace(null, "test");
-            Assert.AreEqual(newText + Environment.NewLine, manager.ToString());
+            Assert.That(manager.ToString(), Is.EqualTo(newText + Environment.NewLine));
 
             // Attempt to replace code of a node which doesn't have a code
             // property. Ensure that no code property is created (and that
             // no exception is thrown).
             var childWithNoCode = new ManagerConverter(JsonUtilities.Children(rootNode).First());
             childWithNoCode.Replace("test1", "test2");
-            Assert.Null(childWithNoCode.ToString());
+            Assert.That(childWithNoCode.ToString(), Is.Null);
         }
 
         /// <summary>
@@ -235,18 +235,18 @@ namespace UnitTests.Core.ApsimFile
             // backreferencing.
             string newText = "originaltext" + Environment.NewLine;
             manager.ReplaceRegex(@"([^\s]*)\s", @"$1");
-            Assert.AreEqual(manager.ToString(), newText);
+            Assert.That(manager.ToString(), Is.EqualTo(newText));
 
             // Ensure that passing in a null search string causes no changes.
             manager.ReplaceRegex(null, "test");
-            Assert.AreEqual(manager.ToString(), newText);
+            Assert.That(manager.ToString(), Is.EqualTo(newText));
 
             // Attempt to replace code of a node which doesn't have a code
             // property. Ensure that no code property is created (and that
             // no exception is thrown).
             var childWithNoCode = new ManagerConverter(JsonUtilities.Children(rootNode).First());
             childWithNoCode.ReplaceRegex("test1", "test2");
-            Assert.Null(childWithNoCode.ToString());
+            Assert.That(childWithNoCode.ToString(), Is.Null);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace UnitTests.Core.ApsimFile
             manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
 
             // Ensure the link has been added below the using statement.
-            Assert.AreEqual(manager.ToString(),
+            Assert.That(manager.ToString(), Is.EqualTo(
                 "using System;" + Environment.NewLine +
                 "namespace Models" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -273,7 +273,7 @@ namespace UnitTests.Core.ApsimFile
                 "        [Link]" + Environment.NewLine +
                 "        private NutrientPool Humic;" + Environment.NewLine +
                 "    }" + Environment.NewLine +
-                "}" + Environment.NewLine);
+                "}" + Environment.NewLine));
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace UnitTests.Core.ApsimFile
             manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
 
             // Ensure the link has been added below the using statement.
-            Assert.AreEqual(manager.ToString(),
+            Assert.That(manager.ToString(), Is.EqualTo(
                 "using System;" + Environment.NewLine +
                 "namespace Models" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -308,7 +308,7 @@ namespace UnitTests.Core.ApsimFile
                 "        [Link]" + Environment.NewLine +
                 "        private NutrientPool Humic;" + Environment.NewLine +
                 "    }" + Environment.NewLine +
-                "}" + Environment.NewLine);
+                "}" + Environment.NewLine));
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace UnitTests.Core.ApsimFile
             manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
 
             // Ensure the link has been added below the using statement.
-            Assert.AreEqual(manager.ToString(),
+            Assert.That(manager.ToString(), Is.EqualTo(
                 "using System;" + Environment.NewLine +
                 "namespace Models" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -347,7 +347,7 @@ namespace UnitTests.Core.ApsimFile
                 "        [Link]" + Environment.NewLine +
                 "        private NutrientPool Humic;" + Environment.NewLine +
                 "    }" + Environment.NewLine +
-                "}" + Environment.NewLine);
+                "}" + Environment.NewLine));
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace UnitTests.Core.ApsimFile
             manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
 
             // Ensure the link has been added below the using statement.
-            Assert.AreEqual(manager.ToString(),
+            Assert.That(manager.ToString(), Is.EqualTo(
                 "using System;" + Environment.NewLine +
                 "namespace Models" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -394,7 +394,7 @@ namespace UnitTests.Core.ApsimFile
                 "        [Description(\"Turn ferliser applications on? \")]" + Environment.NewLine +
                 "        public yesnoType AllowFertiliser { get; set; }" + Environment.NewLine +
                 "    }" + Environment.NewLine +
-                "}" + Environment.NewLine);
+                "}" + Environment.NewLine));
         }
     }
 }

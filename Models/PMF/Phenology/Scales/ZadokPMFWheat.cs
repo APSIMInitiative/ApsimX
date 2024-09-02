@@ -4,6 +4,7 @@ using System.Data;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
@@ -22,11 +23,9 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>
-        /// The Structure class
-        /// </summary>
-        [Link]
-        Structure Structure = null;
+        /// <summary>Haun stage is used for zadok stages 10 to 30</summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
+        IFunction haunStage = null;
 
         [Link]
         private IPlant plant = null;
@@ -46,21 +45,14 @@ namespace Models.PMF.Phen
                     zadok_stage = 5.0f * fracInCurrent;
                 else if (Phenology.InPhase("Emerging"))
                     zadok_stage = 5.0f + 5 * fracInCurrent;
-                else if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
-                    || (!Phenology.InPhase("ReadyForHarvesting") && Phenology.Stage < 5.3))
+                else if (Phenology.Stage < 5.3)
                 {
-                    if (Structure.BranchNumber <= 0.0)
-                        zadok_stage = 10.0f + Structure.LeafTipsAppeared;
-                    else
-                        zadok_stage = 20.0f + Structure.BranchNumber;
-                    // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
-                    zadok_stage = 10.0f + Structure.LeafTipsAppeared;
-
+                    zadok_stage = 10.0f + haunStage.Value();
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
-                    double[] zadok_code_y = { 30.0, 33, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0 };
-                    double[] zadok_code_x = { 5.3, 5.9, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0 };
+                    double[] zadok_code_y = { 30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0 };
+                    double[] zadok_code_x = { 5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0 };
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                zadok_code_x, zadok_code_y,

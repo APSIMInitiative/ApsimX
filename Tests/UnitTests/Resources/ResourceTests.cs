@@ -70,13 +70,13 @@ namespace UnitTests.Resources
 
             // The wheat model under replacements should have its full
             // model structure (properties + children) serialized.
-            Assert.NotNull(fullWheat);
-            Assert.AreNotEqual(0, JsonUtilities.Children(fullWheat).Count);
+            Assert.That(fullWheat, Is.Not.Null);
+            Assert.That(JsonUtilities.Children(fullWheat).Count, Is.Not.EqualTo(0));
 
             // The wheat model under the folder should *not* have its
             // full model structure (properties + children) serialized.
-            Assert.NotNull(wheat);
-            Assert.AreEqual(0, JsonUtilities.Children(wheat).Count);
+            Assert.That(wheat, Is.Not.Null);
+            Assert.That(JsonUtilities.Children(wheat).Count, Is.EqualTo(0));
         }
     }
 }

@@ -72,7 +72,7 @@ namespace UnitTests
                                         new object[] {                         null,             1,              null,   1971,          12,          16,          13,          17 }
                    });
 
-            Assert.IsTrue(table.IsSame(data));
+            Assert.That(table.IsSame(data), Is.True);
         }
 
         /// <summary>Create a table that we can test</summary>

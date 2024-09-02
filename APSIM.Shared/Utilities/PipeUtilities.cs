@@ -23,7 +23,7 @@
             MemoryStream result = new MemoryStream();
             using (Stream cryptoStream = new CryptoStream(result, new ToBase64Transform(), CryptoStreamMode.Write, leaveOpen: true))
             {
-                using (Stream serialised = ReflectionUtilities.BinarySerialise(obj))
+                using (Stream serialised = ReflectionUtilities.JsonSerialiseToStream(obj))
                 {
                     serialised.Seek(0, SeekOrigin.Begin);
                     serialised.CopyTo(cryptoStream);
@@ -41,7 +41,7 @@
         {
             // Decode from base64, then deserialise the result.
             using (Stream cryptoStream = new CryptoStream(stream, new FromBase64Transform(), CryptoStreamMode.Read, leaveOpen: true))
-                return ReflectionUtilities.BinaryDeserialise(cryptoStream);
+                return ReflectionUtilities.JsonDeserialise(cryptoStream);
         }
 
         /// <summary>

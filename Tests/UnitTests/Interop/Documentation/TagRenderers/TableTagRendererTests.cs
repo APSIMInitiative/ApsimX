@@ -48,14 +48,14 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             data.Rows.Add(1, 15000);
             renderer.Render(new Table(data), pdfBuilder);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             MigraDocTable table = document.LastSection.Elements[0] as MigraDocTable;
             // We will just check that the inserted table looks to be the right shape.
             // Note taht the inserted table will have one extra row, in which the
             // headings are written. More detailed tests of the data can be found
             // in <see cref="PdfBuilderTableTests"/>
-            Assert.AreEqual(data.Rows.Count + 1, table.Rows.Count, "Wrong number of rows");
-            Assert.AreEqual(data.Columns.Count, table.Columns.Count, "Wrong number of columns");
+            Assert.That(table.Rows.Count, Is.EqualTo(data.Rows.Count + 1), "Wrong number of rows");
+            Assert.That(table.Columns.Count, Is.EqualTo(data.Columns.Count), "Wrong number of columns");
         }
     }
 }

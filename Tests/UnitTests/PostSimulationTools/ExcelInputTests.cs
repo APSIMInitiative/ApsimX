@@ -53,9 +53,9 @@ namespace UnitTests
             
             DataTable dt = dataStore.Reader.GetData("Sheet1");
 
-            Assert.AreEqual(dt.Columns[4].DataType, typeof(DateTime));
-            Assert.AreEqual(dt.Columns[5].DataType, typeof(string));
-            Assert.AreEqual(dt.Columns[6].DataType, typeof(string));
+            Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));
+            Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
+            Assert.That(dt.Columns[6].DataType, Is.EqualTo(typeof(string)));
         }
     }
 }

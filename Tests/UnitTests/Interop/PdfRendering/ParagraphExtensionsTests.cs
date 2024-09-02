@@ -72,7 +72,7 @@ namespace UnitTests.Interop.PdfRendering
         public void GetRawTextFormats(string text, TextFormat format)
         {
             document.LastSection.AddParagraph().AddFormattedText(text, format);
-            Assert.AreEqual(text, document.LastSection.LastParagraph.GetRawText());
+            Assert.That(document.LastSection.LastParagraph.GetRawText(), Is.EqualTo(text));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace UnitTests.Interop.PdfRendering
             paragraph.AddText(text2);
 
             string expected = $"{text0}{text1}{text2}";
-            Assert.AreEqual(expected, paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo(expected));
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace UnitTests.Interop.PdfRendering
             paragraph.AddFormattedText(text2);
 
             string[] elements = paragraph.Elements.GetTextElements().ToArray();
-            Assert.AreEqual(text0, elements[0]);
-            Assert.AreEqual(text1, elements[1]);
-            Assert.AreEqual(text2, elements[2]);
+            Assert.That(elements[0], Is.EqualTo(text0));
+            Assert.That(elements[1], Is.EqualTo(text1));
+            Assert.That(elements[2], Is.EqualTo(text2));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace UnitTests.Interop.PdfRendering
             Paragraph paragraph = document.LastSection.AddParagraph();
             paragraph.AddFormattedText(formattedText);
             paragraph.AddText(plainText);
-            Assert.AreEqual($"{formattedText}{plainText}", paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo($"{formattedText}{plainText}"));
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace UnitTests.Interop.PdfRendering
                 else
                     paragraph.AddText(text);
             }
-            Assert.AreEqual(empty, paragraph.IsEmpty());
+            Assert.That(paragraph.IsEmpty(), Is.EqualTo(empty));
         }
 
         /// <summary>
@@ -181,9 +181,9 @@ namespace UnitTests.Interop.PdfRendering
                     paragraph.AddText(text);
             }
             List<string> textElements = paragraph.Elements.GetTextElements().ToList();
-            Assert.AreEqual(elements.Length, textElements.Count);
+            Assert.That(textElements.Count, Is.EqualTo(elements.Length));
             for (int i = 0; i < elements.Length; i++)
-                Assert.AreEqual(elements[i], textElements[i]);
+                Assert.That(textElements[i], Is.EqualTo(elements[i]));
         }
 
         /// <summary>
@@ -201,9 +201,9 @@ namespace UnitTests.Interop.PdfRendering
             link.AddText(linkText);
             link.AddFormattedText(linkFormatted);
             List<string> textElements = paragraph.Elements.GetTextElements().ToList();
-            Assert.AreEqual(2, textElements.Count);
-            Assert.AreEqual(linkText, textElements[0]);
-            Assert.AreEqual(linkFormatted, textElements[1]);
+            Assert.That(textElements.Count, Is.EqualTo(2));
+            Assert.That(textElements[0], Is.EqualTo(linkText));
+            Assert.That(textElements[1], Is.EqualTo(linkFormatted));
         }
     }
 }

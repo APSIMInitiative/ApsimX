@@ -1,0 +1,36 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 180,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.MicroClimate, Models",
+      "a_interception": 0.0,
+      "b_interception": 1.0,
+      "c_interception": 0.0,
+      "d_interception": 0.0,
+      "SoilHeatFluxFraction": 0.4,
+      "MinimumHeightDiffForNewLayer": 0.0,
+      "NightInterceptionFraction": 0.5,
+      "ReferenceHeight": 2.0,
+      "Name": "MicroClimate",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.AtmosphericPotentialEvaporation, Models",
+          "Name": "AtmosphericPotentialEvaporation",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}
