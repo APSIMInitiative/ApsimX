@@ -21,7 +21,7 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events or stages")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction
+    public class AccumulateFunctionGeneral : Model, IFunction
     {
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -123,8 +123,14 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-            startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
-            endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
+            if (StartStageName != "")
+            {
+                startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
+            }
+            if (EndStageName != "")
+            {
+                endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
+            }
             if (StartEventName == null)
             {
                 AccumulateToday = true;
@@ -143,10 +149,22 @@ namespace Models.Functions
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
-            events.Subscribe(StartEventName, OnStartEvent);
-            events.Subscribe(EndEventName, OnEndEvent);
-            events.Subscribe(AccumulateEventName, OnAccumulateEvent);
-            events.Subscribe(ReduceEventName, OnRemoveEvent);
+            if (StartEventName != null)
+            { 
+                events.Subscribe(StartEventName, OnStartEvent); 
+            }
+            if (EndEventName != null)
+            { 
+                events.Subscribe(EndEventName, OnEndEvent); 
+            }
+            if (AccumulateEventName != null)
+            { 
+                events.Subscribe(AccumulateEventName, OnAccumulateEvent); 
+            }
+            if (ReduceEventName != null)
+            { 
+                events.Subscribe(ReduceEventName, OnRemoveEvent); 
+            }
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -154,7 +172,7 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnAccumulateEvent(object sender, EventArgs e)
         {
-            if ((StartStageName != null) && (EndStageName != null))
+            if ((StartStageName != "") && (EndStageName != ""))
             {
                 if (phenology.Between(startStageIndex, endStageIndex))
                 {
@@ -187,8 +205,14 @@ namespace Models.Functions
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (phaseChange.StageName == ReduceStageName)
-                AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue; ;
+            if (ReduceStageName != null)
+            {
+                if (phaseChange.StageName == ReduceStageName)
+                    if (!Double.IsNaN(FractionRemovedOnReduce))
+                    {
+                        AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+                    }
+            }
         }
 
         private void OnStartEvent(object sender, EventArgs args)
@@ -203,7 +227,10 @@ namespace Models.Functions
 
         private void OnRemoveEvent(object sender, EventArgs args)
         {
-            AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+            if (!Double.IsNaN(FractionRemovedOnReduce))
+            {
+                AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+            }
         }
 
         /// <summary>Gets the value.</summary>
@@ -229,7 +256,10 @@ namespace Models.Functions
         [EventSubscribe("Cutting")]
         private void OnCut(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+            if (!Double.IsNaN(FractionRemovedOnCut))
+            {
+                AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+            }
         }
 
         /// <summary>Called when harvest.</summary>
@@ -238,7 +268,10 @@ namespace Models.Functions
         [EventSubscribe("Harvesting")]
         private void OnHarvest(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+            if (!Double.IsNaN(FractionRemovedOnHarvest))
+            {
+                AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+            }
         }
         /// <summary>Called when Graze.</summary>
         /// <param name="sender">The sender.</param>
@@ -246,7 +279,10 @@ namespace Models.Functions
         [EventSubscribe("Grazing")]
         private void OnGraze(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+            if (!Double.IsNaN(FractionRemovedOnGraze))
+            {
+                AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+            }
         }
 
         /// <summary>Called when winter pruning.</summary>
@@ -255,7 +291,10 @@ namespace Models.Functions
         [EventSubscribe("Pruning")]
         private void OnPrune(object sender, EventArgs e)
         {
-            AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
+            if (!Double.IsNaN(FractionRemovedOnPrune))
+            {
+                AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
+            }
         }
 
         /// <summary>Called when [EndCrop].</summary>
