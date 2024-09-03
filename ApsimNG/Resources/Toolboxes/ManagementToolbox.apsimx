@@ -963,12 +963,16 @@
             "",
             "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
             "        public string[] FertiliserDates { get; set; } ",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
             "        public double Amount { get; set; }",
             "",
             "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
             "        public bool AmountType { get; set; }",
+            "",
             "        ",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -980,7 +984,7 @@
             "                    if (AmountType)",
             "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
             "                    else",
-            "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+            "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType, Depth: FertiliseDepth);",
             "                }",
             "            }",
             "        }",
@@ -995,6 +999,10 @@
             {
               "Key": "FertiliserDates",
               "Value": "24-apr"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             },
             {
               "Key": "Amount",
@@ -1204,12 +1212,15 @@
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
             "        public double Amount { get; set; }",
             "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
+            "        ",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
             "        {",
             "            Model crop = sender as Model;",
             "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1226,6 +1237,10 @@
             {
               "Key": "Amount",
               "Value": "160"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise at sowing",
@@ -1262,6 +1277,9 @@
             "",
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
             "        public double Amount { get; set; }",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "     ",
             "        [EventSubscribe(\"DoManagement\")] ",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -1271,7 +1289,7 @@
             "            if (zadok >= Stage && !hasFertilised)",
             "            { ",
             "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "                hasFertilised = true; ",
             "            } ",
             "        }",
@@ -1296,6 +1314,10 @@
             {
               "Key": "Amount",
               "Value": "40"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise on Zadok stage",
@@ -1330,11 +1352,14 @@
             "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
             "        public double Threshold { get; set;}",
             "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
+            "        ",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
             "        {",
             "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-            "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1347,6 +1372,10 @@
             {
               "Key": "Threshold",
               "Value": "200"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise topup",
@@ -1393,6 +1422,9 @@
             "                 ",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")]",
             "        public double Amount { get; set; }",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")]",
             "        public Fertiliser.Types FertiliserType { get; set; }",
@@ -1441,7 +1473,7 @@
             "            if (clock.Today == FertiliseDate)",
             "            {",
             "                waitingForFertiliser = false;",
-            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "            }",
             "        }",
             "    }",
@@ -1461,6 +1493,10 @@
               "Value": "10"
             },
             {
+              "Key": "DoOncePerSowing",
+              "Value": "True"
+            },
+            {
               "Key": "Amount",
               "Value": "30"
             },
@@ -1469,8 +1505,8 @@
               "Value": "Urea"
             },
             {
-              "Key": "DoOncePerSowing",
-              "Value": "True"
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise when variable reaches threshold",
@@ -1512,6 +1548,9 @@
             "                 ",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
             "        public double Amount { get; set; }  ",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")] ",
             "        public Fertiliser.Types FertiliserType { get; set; }   ",
@@ -1533,7 +1572,7 @@
             "        private void OnDoManagementCalculations(object sender, EventArgs e)",
             "        {",
             "            if (clock.Today == FertiliseDate)",
-            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1554,6 +1593,10 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise on event",
