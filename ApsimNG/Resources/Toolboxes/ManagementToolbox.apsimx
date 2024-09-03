@@ -4032,13 +4032,13 @@
             "        [Link] private Summary Summary;",
             "",
             "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public bool ResetWater {get;set;}",
+            "        public bool ResetWater {get;set;} = true;",
             "",
             "        [Description(\"Reset Soil Nutrients? (Yes or No)\")]",
-            "        public bool ResetNutrients {get;set;}",
+            "        public bool ResetNutrients {get;set;} = true;",
             "",
             "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public bool ResetSOM {get;set;}",
+            "        public bool ResetSOM {get;set;} = true;",
             "",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
@@ -4116,13 +4116,13 @@
             "        public int OffsetDays {get;set;}",
             "",
             "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public bool ResetWater {get;set;}",
+            "        public bool ResetWater {get;set;} = true;",
             "",
             "        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]",
-            "        public bool ResetNutrients {get;set;}",
+            "        public bool ResetNutrients {get;set;} = true;",
             "",
             "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public bool ResetSOM {get;set;}",
+            "        public bool ResetSOM {get;set;} = true;",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -4156,6 +4156,10 @@
               "Value": "1-Jan"
             },
             {
+              "Key": "OffsetDays",
+              "Value": "0"
+            },
+            {
               "Key": "ResetWater",
               "Value": "False"
             },
@@ -4166,10 +4170,6 @@
             {
               "Key": "ResetSOM",
               "Value": "False"
-            },
-            {
-              "Key": "OffsetDays",
-              "Value": "0"
             }
           ],
           "Name": "Reset on date",
