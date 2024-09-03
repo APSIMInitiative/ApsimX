@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 180,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -336,7 +335,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -494,8 +492,8 @@
             "            ",
             "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
             "                !Crop.IsAlive &&",
-            "                MathUtilities.Sum(waterBalance.ESW) > MinESW &&",
-            "                accumulatedRain.Sum > MinRain)",
+            "                MathUtilities.Sum(waterBalance.ESW) >= MinESW &&",
+            "                accumulatedRain.Sum >= MinRain)",
             "            {",
             "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
             "            }",
@@ -938,7 +936,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -966,12 +963,16 @@
             "",
             "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
             "        public string[] FertiliserDates { get; set; } ",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
             "        public double Amount { get; set; }",
             "",
             "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
             "        public bool AmountType { get; set; }",
+            "",
             "        ",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -983,7 +984,7 @@
             "                    if (AmountType)",
             "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
             "                    else",
-            "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+            "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType, Depth: FertiliseDepth);",
             "                }",
             "            }",
             "        }",
@@ -998,6 +999,10 @@
             {
               "Key": "FertiliserDates",
               "Value": "24-apr"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             },
             {
               "Key": "Amount",
@@ -1207,12 +1212,15 @@
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
             "        public double Amount { get; set; }",
             "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
+            "        ",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
             "        {",
             "            Model crop = sender as Model;",
             "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1229,6 +1237,10 @@
             {
               "Key": "Amount",
               "Value": "160"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise at sowing",
@@ -1265,6 +1277,9 @@
             "",
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
             "        public double Amount { get; set; }",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "     ",
             "        [EventSubscribe(\"DoManagement\")] ",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -1274,7 +1289,7 @@
             "            if (zadok >= Stage && !hasFertilised)",
             "            { ",
             "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "                hasFertilised = true; ",
             "            } ",
             "        }",
@@ -1299,6 +1314,10 @@
             {
               "Key": "Amount",
               "Value": "40"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise on Zadok stage",
@@ -1333,11 +1352,14 @@
             "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
             "        public double Threshold { get; set;}",
             "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
+            "        ",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
             "        {",
             "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-            "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1350,6 +1372,10 @@
             {
               "Key": "Threshold",
               "Value": "200"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise topup",
@@ -1396,6 +1422,9 @@
             "                 ",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")]",
             "        public double Amount { get; set; }",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")]",
             "        public Fertiliser.Types FertiliserType { get; set; }",
@@ -1444,7 +1473,7 @@
             "            if (clock.Today == FertiliseDate)",
             "            {",
             "                waitingForFertiliser = false;",
-            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "            }",
             "        }",
             "    }",
@@ -1464,6 +1493,10 @@
               "Value": "10"
             },
             {
+              "Key": "DoOncePerSowing",
+              "Value": "True"
+            },
+            {
               "Key": "Amount",
               "Value": "30"
             },
@@ -1472,8 +1505,8 @@
               "Value": "Urea"
             },
             {
-              "Key": "DoOncePerSowing",
-              "Value": "True"
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise when variable reaches threshold",
@@ -1515,6 +1548,9 @@
             "                 ",
             "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
             "        public double Amount { get; set; }  ",
+            "        ",
+            "        [Description(\"Fertilise depth (mm)\")]",
+            "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")] ",
             "        public Fertiliser.Types FertiliserType { get; set; }   ",
@@ -1536,7 +1572,7 @@
             "        private void OnDoManagementCalculations(object sender, EventArgs e)",
             "        {",
             "            if (clock.Today == FertiliseDate)",
-            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1557,6 +1593,10 @@
             {
               "Key": "FertiliserType",
               "Value": "Urea"
+            },
+            {
+              "Key": "FertiliseDepth",
+              "Value": "0"
             }
           ],
           "Name": "Fertilise on event",
@@ -1572,7 +1612,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2480,7 +2519,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3561,7 +3599,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -3965,7 +4002,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [
@@ -3995,29 +4031,29 @@
             "        [Link] private SurfaceOrganicMatter SOM;",
             "        [Link] private Summary Summary;",
             "",
-            "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public string ResetWater {get;set;}",
+            "        [Description(\"Reset Water?\")]",
+            "        public bool ResetWater {get;set;}",
             "",
-            "        [Description(\"Reset Soil Nutrients? (Yes or No)\")]",
-            "        public string ResetNutrients {get;set;}",
+            "        [Description(\"Reset Soil Nutrients?\")]",
+            "        public bool ResetNutrients {get;set;}",
             "",
-            "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public string ResetSOM {get;set;}",
+            "        [Description(\"Reset Surface Organic Matter?\")]",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
             "        {",
-            "            if (ResetWater == \"Yes\")",
+            "            if (ResetWater)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);",
             "                SoilWater.Reset();",
             "            }",
-            "            if (ResetNutrients == \"Yes\")",
+            "            if (ResetNutrients)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Nutrients\", MessageType.Diagnostic);",
             "                nutrient.Reset();",
             "            }",
-            "            if (ResetSOM == \"Yes\")",
+            "            if (ResetSOM)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);",
             "                SOM.Reset();",
@@ -4029,15 +4065,15 @@
           "Parameters": [
             {
               "Key": "ResetWater",
-              "Value": "Yes"
+              "Value": "True"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "Yes"
+              "Value": "True"
             },
             {
               "Key": "ResetSOM",
-              "Value": "Yes"
+              "Value": "True"
             }
           ],
           "Name": "Reset on sowing",
@@ -4079,14 +4115,14 @@
             "        [Description(\"Offset by Days (Negative is Days Before, Positive is Days After):\")]",
             "        public int OffsetDays {get;set;}",
             "",
-            "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public string ResetWater {get;set;}",
+            "        [Description(\"Reset Water?\")]",
+            "        public bool ResetWater {get;set;}",
             "",
-            "        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]",
-            "        public string ResetNutrients {get;set;}",
+            "        [Description(\"Reset Soil Nutrients?\")]",
+            "        public bool ResetNutrients {get;set;}",
             "",
-            "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public string ResetSOM {get;set;}",
+            "        [Description(\"Reset Surface Organic Matter?\")]",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -4094,17 +4130,17 @@
             "            DateTime offsetDate = DateUtilities.GetDate(ResetDate, Clock.Today).AddDays(OffsetDays);",
             "            if (offsetDate.Equals(Clock.Today))",
             "            {",
-            "                if (ResetWater == \"Yes\")",
+            "                if (ResetWater)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);",
             "                    SoilWater.Reset();",
             "                }",
-            "                if (ResetNutrients == \"Yes\")",
+            "                if (ResetNutrients)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);",
             "                    nutrient.Reset();",
             "                }",
-            "                if (ResetSOM == \"Yes\")",
+            "                if (ResetSOM)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);",
             "                    SOM.Reset();",
@@ -4120,20 +4156,20 @@
               "Value": "1-Jan"
             },
             {
+              "Key": "OffsetDays",
+              "Value": "0"
+            },
+            {
               "Key": "ResetWater",
-              "Value": "Yes"
+              "Value": "True"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "Yes"
+              "Value": "True"
             },
             {
               "Key": "ResetSOM",
-              "Value": "Yes"
-            },
-            {
-              "Key": "OffsetDays",
-              "Value": "0"
+              "Value": "True"
             }
           ],
           "Name": "Reset on date",
