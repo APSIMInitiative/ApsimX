@@ -4031,14 +4031,14 @@
             "        [Link] private SurfaceOrganicMatter SOM;",
             "        [Link] private Summary Summary;",
             "",
-            "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public bool ResetWater {get;set;} = true;",
+            "        [Description(\"Reset Water?\")]",
+            "        public bool ResetWater {get;set;}",
             "",
-            "        [Description(\"Reset Soil Nutrients? (Yes or No)\")]",
-            "        public bool ResetNutrients {get;set;} = true;",
+            "        [Description(\"Reset Soil Nutrients?\")]",
+            "        public bool ResetNutrients {get;set;}",
             "",
-            "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public bool ResetSOM {get;set;} = true;",
+            "        [Description(\"Reset Surface Organic Matter?\")]",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
@@ -4065,15 +4065,15 @@
           "Parameters": [
             {
               "Key": "ResetWater",
-              "Value": "False"
+              "Value": "True"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "False"
+              "Value": "True"
             },
             {
               "Key": "ResetSOM",
-              "Value": "False"
+              "Value": "True"
             }
           ],
           "Name": "Reset on sowing",
@@ -4115,14 +4115,14 @@
             "        [Description(\"Offset by Days (Negative is Days Before, Positive is Days After):\")]",
             "        public int OffsetDays {get;set;}",
             "",
-            "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public bool ResetWater {get;set;} = true;",
+            "        [Description(\"Reset Water?\")]",
+            "        public bool ResetWater {get;set;}",
             "",
-            "        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]",
-            "        public bool ResetNutrients {get;set;} = true;",
+            "        [Description(\"Reset Soil Nutrients?\")]",
+            "        public bool ResetNutrients {get;set;}",
             "",
-            "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public bool ResetSOM {get;set;} = true;",
+            "        [Description(\"Reset Surface Organic Matter?\")]",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -4161,15 +4161,15 @@
             },
             {
               "Key": "ResetWater",
-              "Value": "False"
+              "Value": "True"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "False"
+              "Value": "True"
             },
             {
               "Key": "ResetSOM",
-              "Value": "False"
+              "Value": "True"
             }
           ],
           "Name": "Reset on date",
