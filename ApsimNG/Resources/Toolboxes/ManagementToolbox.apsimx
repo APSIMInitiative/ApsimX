@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 180,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -336,7 +335,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -494,8 +492,8 @@
             "            ",
             "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
             "                !Crop.IsAlive &&",
-            "                MathUtilities.Sum(waterBalance.ESW) > MinESW &&",
-            "                accumulatedRain.Sum > MinRain)",
+            "                MathUtilities.Sum(waterBalance.ESW) >= MinESW &&",
+            "                accumulatedRain.Sum >= MinRain)",
             "            {",
             "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
             "            }",
@@ -938,7 +936,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -1572,7 +1569,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2480,7 +2476,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3561,7 +3556,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -3965,7 +3959,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [
@@ -3996,28 +3989,28 @@
             "        [Link] private Summary Summary;",
             "",
             "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public string ResetWater {get;set;}",
+            "        public bool ResetWater {get;set;}",
             "",
             "        [Description(\"Reset Soil Nutrients? (Yes or No)\")]",
-            "        public string ResetNutrients {get;set;}",
+            "        public bool ResetNutrients {get;set;}",
             "",
             "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public string ResetSOM {get;set;}",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"Sowing\")]",
             "        private void OnSowing(object sender, EventArgs e)",
             "        {",
-            "            if (ResetWater == \"Yes\")",
+            "            if (ResetWater)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);",
             "                SoilWater.Reset();",
             "            }",
-            "            if (ResetNutrients == \"Yes\")",
+            "            if (ResetNutrients)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Nutrients\", MessageType.Diagnostic);",
             "                nutrient.Reset();",
             "            }",
-            "            if (ResetSOM == \"Yes\")",
+            "            if (ResetSOM)",
             "            {",
             "                Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);",
             "                SOM.Reset();",
@@ -4029,15 +4022,15 @@
           "Parameters": [
             {
               "Key": "ResetWater",
-              "Value": "Yes"
+              "Value": "False"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "Yes"
+              "Value": "False"
             },
             {
               "Key": "ResetSOM",
-              "Value": "Yes"
+              "Value": "False"
             }
           ],
           "Name": "Reset on sowing",
@@ -4080,13 +4073,13 @@
             "        public int OffsetDays {get;set;}",
             "",
             "        [Description(\"Reset Water? (Yes or No)\")]",
-            "        public string ResetWater {get;set;}",
+            "        public bool ResetWater {get;set;}",
             "",
             "        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]",
-            "        public string ResetNutrients {get;set;}",
+            "        public bool ResetNutrients {get;set;}",
             "",
             "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
-            "        public string ResetSOM {get;set;}",
+            "        public bool ResetSOM {get;set;}",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -4094,17 +4087,17 @@
             "            DateTime offsetDate = DateUtilities.GetDate(ResetDate, Clock.Today).AddDays(OffsetDays);",
             "            if (offsetDate.Equals(Clock.Today))",
             "            {",
-            "                if (ResetWater == \"Yes\")",
+            "                if (ResetWater)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);",
             "                    SoilWater.Reset();",
             "                }",
-            "                if (ResetNutrients == \"Yes\")",
+            "                if (ResetNutrients)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);",
             "                    nutrient.Reset();",
             "                }",
-            "                if (ResetSOM == \"Yes\")",
+            "                if (ResetSOM)",
             "                {",
             "                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);",
             "                    SOM.Reset();",
@@ -4121,15 +4114,15 @@
             },
             {
               "Key": "ResetWater",
-              "Value": "Yes"
+              "Value": "False"
             },
             {
               "Key": "ResetNutrients",
-              "Value": "Yes"
+              "Value": "False"
             },
             {
               "Key": "ResetSOM",
-              "Value": "Yes"
+              "Value": "False"
             },
             {
               "Key": "OffsetDays",
