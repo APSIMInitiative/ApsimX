@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
@@ -249,6 +250,28 @@ namespace UserInterface.Views
                 treeview1.GetCursor(out selPath, out selCol);
                 treeview1.GrabFocus();
                 treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            }
+        }
+
+        /// <summary>Edit the text of the current node</summary>
+        public void EndRenamingCurrentNode(string newText)
+        {
+            if (isEdittingNodeLabel == true)
+            {
+                textRender.Editable = false;
+                // TreeView.ContextMenuStrip = this.PopupMenu;
+                if (Renamed != null && !string.IsNullOrEmpty(newText))
+                {
+                    NodeRenameArgs args = new NodeRenameArgs()
+                    {
+                        NodePath = this.nodePathBeforeRename,
+                        NewName = newText
+                    };
+                    Renamed(this, args);
+                    if (!args.CancelEdit)
+                        previouslySelectedNodePath = args.NodePath;
+                }
+                isEdittingNodeLabel = false;
             }
         }
 
@@ -879,7 +902,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeIter dest;
                 if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
-                    target != Gdk.Atom.Intern("GDK_NONE", false))
+                    target != null && target != Gdk.Atom.Intern("GDK_NONE", false))
                 {
                     AllowDropArgs args = new AllowDropArgs();
                     args.NodePath = GetFullPath(path);
@@ -946,7 +969,7 @@ namespace UserInterface.Views
         {
             try
             {
-                byte[] data = e.SelectionData.Data;
+                var data = e.SelectionData.Data;
                 Int64 value = BitConverter.ToInt64(data, 0);
                 if (value != 0)
                 {
@@ -956,7 +979,9 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ShowError(err);
+                if (err.Message.Contains("Arithmetic operation resulted in an overflow."))
+                    ShowError(new Exception("Unable to add new model. Try adding the model again."));
+                else ShowError(err);
             }
         }
 
@@ -1028,29 +1053,14 @@ namespace UserInterface.Views
         {
             try
             {
-                if (isEdittingNodeLabel == true)
-                {
-                    textRender.Editable = false;
-                    // TreeView.ContextMenuStrip = this.PopupMenu;
-                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
-                    {
-                        NodeRenameArgs args = new NodeRenameArgs()
-                        {
-                            NodePath = this.nodePathBeforeRename,
-                            NewName = e.NewText
-                        };
-                        Renamed(this, args);
-                        if (!args.CancelEdit)
-                            previouslySelectedNodePath = args.NodePath;
-                    }
-                }
+                EndRenamingCurrentNode(e.NewText);
             }
             catch (Exception err)
             {
+                isEdittingNodeLabel = false;
                 ShowError(err);
             }
-
-            isEdittingNodeLabel = false;
+            
         }
 
         /// <summary>

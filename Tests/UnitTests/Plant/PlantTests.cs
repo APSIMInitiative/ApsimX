@@ -62,7 +62,7 @@ namespace UnitTests.Core
 
             var data = DataTableUtilities.GetColumnAsDoubles(dataTable, "Wheat.Leaf.Detached.Wt", CultureInfo.InvariantCulture);
 
-            Assert.Greater(data.Sum(), 0);
+            Assert.That(data.Sum(), Is.GreaterThan(0));
         }
     }
 }

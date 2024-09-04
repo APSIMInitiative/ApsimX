@@ -65,7 +65,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             string expected = $"mailto:{sampleUri}";
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             builder.Setup(b => b.SetLinkState(It.IsAny<string>()))
-                   .Callback<string>(uri => Assert.AreEqual(expected, uri))
+                   .Callback<string>(uri => Assert.That(uri, Is.EqualTo(expected)))
                    .CallBase();
             renderer.Write(builder.Object, autolink);
         }
@@ -80,7 +80,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             string expected = sampleUri;
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             builder.Setup(b => b.SetLinkState(It.IsAny<string>()))
-                   .Callback<string>(uri => Assert.AreEqual(expected, uri))
+                   .Callback<string>(uri => Assert.That(uri, Is.EqualTo(expected)))
                    .CallBase();
             renderer.Write(builder.Object, autolink);
         }
@@ -92,15 +92,15 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         public void EnsureLinkTextIsInserted()
         {
             renderer.Write(pdfBuilder, autolink);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             Hyperlink inserted = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(1, inserted.Elements.Count);
+            Assert.That(inserted.Elements.Count, Is.EqualTo(1));
             FormattedText text = (FormattedText)inserted.Elements[0];
-            Assert.AreEqual(1, text.Elements.Count);
+            Assert.That(text.Elements.Count, Is.EqualTo(1));
             Text rawText = (Text)text.Elements[0];
-            Assert.AreEqual(sampleUri, rawText.Content);
+            Assert.That(rawText.Content, Is.EqualTo(sampleUri));
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, autolink);
             pdfBuilder.AppendText("subsequent addition", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, autolink);
             pdfBuilder.AppendText("supplemental material", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             pdfBuilder.AppendText("supplemental material", TextStyle.Normal);
             renderer.Write(pdfBuilder, autolink);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
         }
     }
 }

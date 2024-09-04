@@ -371,7 +371,8 @@ namespace Models.Management
       public string[] GetSimulationNames()
         {
             // populate the simulation names in the view.
-            IModel scopedParent = ScopingRules.FindScopedParentModel(this);
+            ScopingRules scope = new();
+            IModel scopedParent = scope.FindScopedParentModel(this);
 
             if (scopedParent is Simulation parentSimulation)
             {

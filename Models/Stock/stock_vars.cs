@@ -189,6 +189,7 @@ namespace Models.GrazPlan
         public const int prpRDP_EFFECT = 40;
         public const int prpPADD_RANK = 41;
         public const int prpINTAKE_MOD = 42;
+        public const int prpBASE_EMPTY_WT = 43;
 #pragma warning restore 1591 //missing xml comment
     }
 
@@ -451,6 +452,9 @@ namespace Models.GrazPlan
                                     break;
                                 case StockProps.prpINTAKE_MOD:
                                     value = animalGroup.IntakeModifier;
+                                    break;
+                                case StockProps.prpBASE_EMPTY_WT:
+                                    value = animalGroup.EmptyBodyWeight;
                                     break;
                                 default:
                                     result = false;

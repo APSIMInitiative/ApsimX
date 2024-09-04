@@ -117,15 +117,16 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
-            vbox2 = (VBox)builder.GetObject("vbox2");
+            vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
             Initialise(owner, vbox1);
         }
 
+   
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
@@ -164,10 +165,19 @@ namespace UserInterface.Views
                 captionLabel.Text = null;
                 captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             }
-            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-            ForegroundColour = Utility.Colour.ToOxy(foreground);
-            if (!Utility.Configuration.Settings.DarkTheme)
-                BackColor = Utility.Colour.ToOxy(Color.White);
+
+            Color foregroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                foregroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+            else foregroundColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+            ForegroundColour = Colour.ToOxy(foregroundColor);
+
+            Color backgroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                backgroundColor = Configuration.Settings.DarkTheme ? Color.FromArgb(255,48,48,48) : Color.White;
+            else backgroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.FromArgb(255,48,48,48);
+            BackColor = Colour.ToOxy(backgroundColor);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
@@ -202,16 +212,16 @@ namespace UserInterface.Views
                                 seriesNamePreviouslyUnselected = true;
                             if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
                                 newUnselectedSeriesNames.Add(seriesNameable.Name);
-                            else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && 
+                                    (series as OxyPlot.Series.Series).Title != null && 
+                                    seriesNamePreviouslyUnselected)
                                 reselectedSeriesNames.Add(seriesNameable.Name);
                         }
                         
                     }
                     UnselectedSeriesNames = newUnselectedSeriesNames;
-                    LegendPosition legendPosition;
-                    LegendOrientation legendOrientation;
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out LegendPosition legendPosition);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out LegendOrientation legendOrientation);
                     // Reformat the legend without the matching unselectedSeries.
                     FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
                 }
@@ -1220,8 +1230,7 @@ namespace UserInterface.Views
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
-            OxyLegendPosition oxyLegendPosition;
-            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out OxyLegendPosition oxyLegendPosition))
             {
                 this.plot1.Model.SetLegendFont(Font);
                 this.plot1.Model.SetLegendFontSize(FontSize);
@@ -1244,7 +1253,6 @@ namespace UserInterface.Views
                             series.Title = (series as INameableSeries).Name;
                             series.IsVisible = true;
                         }
-
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
@@ -1383,7 +1391,7 @@ namespace UserInterface.Views
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        item.DetachHandler("activate");
+                        _ = item.DetachHandler("activate");
                     }
                 }
             }
@@ -1524,9 +1532,10 @@ namespace UserInterface.Views
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
 
                 // Create data points
                 for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
@@ -1561,11 +1570,12 @@ namespace UserInterface.Views
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
-                double[] xErrorValues = GetDataPointValues(xError?.GetEnumerator(), xAxisType);
-                double[] yErrorValues = GetDataPointValues(yError?.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator(), xError?.GetEnumerator(), yError?.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType, xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
+                double[] xErrorValues = arrays[2];
+                double[] yErrorValues = arrays[3];
 
                 if (xValues.Length == yValues.Length)
                 {
@@ -1601,67 +1611,128 @@ namespace UserInterface.Views
             return null;
         }
 
-        /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="enumerator">The enumumerator</param>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Shared.Graphing.AxisPosition axisType)
+        private List<double[]> GetDataPointValues(List<IEnumerator> enumerators, List<APSIM.Shared.Graphing.AxisPosition> axisTypes)
         {
-            List<double> dataPointValues = new List<double>();
-            double x; // Used only as an out parameter, to maintain backward
-                      // compatibility with older versions VS/C#.
-            if (enumerator == null || !enumerator.MoveNext())
-                return new double[0];
-            if (enumerator.Current.GetType() == typeof(DateTime))
-            {
-                this.EnsureAxisExists(axisType, typeof(DateTime));
-                DateTime defaultDate = new DateTime();
-                smallestDate = DateTime.MaxValue;
-                largestDate = DateTime.MinValue;
-                do
-                {
-                    DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
-                    if (d != defaultDate)
-                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
-                }
-                while (enumerator.MoveNext());
-            }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
-            {
-                this.EnsureAxisExists(axisType, typeof(double));
-                do
-                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
-                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
-                while (enumerator.MoveNext());
-            }
-            else
-            {
-                this.EnsureAxisExists(axisType, typeof(string));
-                CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                if (axis != null)
-                {
-                    do
-                    {
-                        int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        if (index == -1)
-                        {
-                            axis.Labels.Add(enumerator.Current.ToString());
-                            index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        }
+            //NOTE: This function only looks at the first element of each enumerator to get the type, 
+            //      this could lead to mistakes if there is a mix of types in a column of data.
+            List<List<double>> output = new List<List<double>>();
+            List<int> indiciesToRemove = new List<int>();
 
-                        dataPointValues.Add(index);
+            for(int i = 0; i < enumerators.Count; i++)
+            {
+                IEnumerator enumerator = enumerators[i];
+                APSIM.Shared.Graphing.AxisPosition axisType = axisTypes[i];
+                List<double> values = new List<double>();
+                int index = 0;
+                bool hasValues = true;
+                if (enumerator == null || !enumerator.MoveNext()) //moves to first value, returns false if can't
+                    hasValues = false;
+                    
+                if (hasValues)
+                {
+                    bool isDate = false;
+                    bool isDouble = false;
+                    bool isString = false;
+                    if (enumerator.Current.GetType() == typeof(DateTime)) {
+                        isDate = true;
                     }
-                    while (enumerator.MoveNext());
+                    if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+                    {
+                        isDouble = true;
+                    }
+                    if (!isDate && !isDouble)
+                    {
+                        //check if double stored as a string
+                        if (double.TryParse(enumerator.Current.ToString(), out double parseOut)) 
+                            isDouble = true;
+
+                        isString = true;
+                    }
+                    enumerator.Reset();//reset poition so the while loops work in the next section
+                    if (isDate)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(DateTime));
+                        DateTime defaultDate = new DateTime();
+                        smallestDate = DateTime.MaxValue;
+                        largestDate = DateTime.MinValue;
+                        while (enumerator.MoveNext())
+                        {
+                            DateTime date = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
+                            if (date != defaultDate)
+                            {
+                                values.Add(DateTimeAxis.ToDouble(date));
+                                if (date < smallestDate)
+                                    smallestDate = date;
+                                if (date > largestDate)
+                                    largestDate = date;
+                            }
+                            else 
+                            {
+                                MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
+                                values.Add(0); //leave a 0 in this entry so that the indexs line up still for later.
+                                indiciesToRemove.Add(index);
+                            }
+                            index += 1;
+                        }
+                    }
+                    else if (isDouble)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(double));
+                        while (enumerator.MoveNext())
+                        {
+                            double value = 0;
+                            if (isString)
+                                double.TryParse(enumerator.Current.ToString(), out value);
+                            else
+                                value = Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture);
+
+                            values.Add(value);
+                            index += 1;
+                        }
+                    }
+                    else if (isString)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(string));
+                        CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
+                        if (axis != null)
+                        {
+                            while (enumerator.MoveNext())
+                            {
+                                int axisIndex = axis.Labels.IndexOf(enumerator.Current.ToString());
+                                if (axisIndex == -1) {
+                                    axis.Labels.Add(enumerator.Current.ToString());
+                                    axisIndex = axis.Labels.Count - 1;
+                                }
+                                
+                                values.Add(axisIndex);
+                                index += 1;
+                            }
+                        }
+                    }
+                }
+                output.Add(values);
+            }
+
+            int length = output[0].Count;
+            for (int i = 0; i < output.Count; i++)
+            {
+                if (output[i].Count > 0 && output[i].Count != length) //we need to check if more than 0 so that empty axis are skipped (like null error axis)
+                    throw new Exception("XY point pairs are misaligned. Array of X values and array of Y values have different lengths.");
+
+                for (int j = output[i].Count-1; j >= 0; j--)
+                {
+                    if (indiciesToRemove.Contains(j))
+                        output[i].RemoveAt(j);
                 }
             }
 
-            return dataPointValues.ToArray();
+            List<double[]> outputArrays = new List<double[]>();
+            for (int i = 0; i < output.Count; i++)
+            {
+                outputArrays.Add(output[i].ToArray());
+            }
+
+            return outputArrays;
         }
 
         /// <summary>

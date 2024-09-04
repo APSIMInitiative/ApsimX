@@ -79,7 +79,7 @@ namespace Models.Functions
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StageWasReset")]
-        private void OnStageReset(object sender, EventArgs e)
+        private void OnStageReset(object sender, StageSetType e)
         {
             YesterdaysValue = Integral.Value();
         }

@@ -179,7 +179,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
-        public double Height { get { return Structure.Height; } }
+        public double Height 
+        {  get 
+            {
+                if (parentPlant.IsAlive)
+                    return Structure.Height;
+                else
+                    return 0.0;
+            } 
+        }
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
@@ -791,6 +799,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
         public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt, 0); } }
+
+        /// <summary>Gets the specific area of the overall canopy</summary>
+        [Units("m2/g")]
+        public double SpecificAreaCanopy { get { return MathUtilities.Divide(LAI, Live.Wt, 0); } }
 
         /// <summary>
         /// Returns the relative expansion of the next leaf to produce its ligule

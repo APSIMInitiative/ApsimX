@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 174,
+  "Version": 180,
   "Name": "Simulations",
   "Children": [
     {
@@ -1301,6 +1301,11 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "NitrificationInhibition",
+                  "FixedValue": "1.0"
                 }
               ],
               "Enabled": true,

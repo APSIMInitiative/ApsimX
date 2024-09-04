@@ -20,7 +20,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, IGridModel
+    public class Solute : Model, ISolute
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -55,6 +55,7 @@ namespace Models.Soils
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -74,7 +75,6 @@ namespace Models.Soils
 
         /// <summary> Values converted to alternative units.</summary>
         [Summary]
-        [Display(Format = "N3")]
         public double[] InitialValuesConverted { get { return SoilUtilities.ppm2kgha(Physical.Thickness, Physical.BD, ppm); } }
 
         /// <summary>Units of the Initial values.</summary>
@@ -89,9 +89,11 @@ namespace Models.Soils
         public double D0 { get; set; }
 
         /// <summary>EXCO.</summary>
+        [Display(Format = "N3")]
         public double[] Exco { get; set; }
 
         /// <summary>FIP.</summary>
+        [Display(Format = "N3")]
         public double[] FIP { get; set; }
 
         /// <summary>Solute amount (kg/ha)</summary>
@@ -208,30 +210,6 @@ namespace Models.Soils
                 yield return tag;
         }
 
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-                var columns = new List<GridTableColumn>()
-                {
-                    new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                    new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-                };
-                if (swimPresent)
-                {
-                    columns.Add(new GridTableColumn("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                    columns.Add(new GridTableColumn("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
-                }
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
-        }
-
         /// <summary>Gets the model ready for running in a simulation.</summary>
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)
@@ -259,12 +237,12 @@ namespace Models.Soils
                 if (FIP != null)
                     FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
 
-                double[] ppm = InitialValues;
                 if (InitialValuesUnits == UnitsEnum.kgha)
-                    ppm = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
-                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, defaultValue);
-                InitialValuesUnits = Solute.UnitsEnum.ppm;
+                    InitialValues = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
+                InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, defaultValue);
                 Thickness = thickness;
+                if (InitialValuesUnits == UnitsEnum.kgha)
+                    InitialValues = SoilUtilities.ppm2kgha(Thickness, SoluteBD, InitialValues);
             }
         }
 

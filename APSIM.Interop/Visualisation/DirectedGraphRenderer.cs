@@ -18,6 +18,11 @@ namespace APSIM.Interop.Visualisation
         public DirectedGraph Graph { get; private set; }
 
         /// <summary>
+        /// The directed graph to be rendered.
+        /// </summary>
+        public static bool DarkMode { get; set; } = false;
+
+        /// <summary>
         /// Create a new <see cref="DirectedGraph"/> instance.
         /// </summary>
         /// <param name="graph">The directed graph to be rendered.</param>
@@ -68,7 +73,7 @@ namespace APSIM.Interop.Visualisation
                 DrawArc(context, arc);
 
             foreach (APSIM.Shared.Graphing.Node node in nodes)
-                DrawNode(context, node);
+                DrawNode(context, node, DarkMode);
 
             if (rectangle != null)
                 rectangle.Paint(context);
@@ -92,7 +97,7 @@ namespace APSIM.Interop.Visualisation
         /// <summary>Paint on the graphics context</summary>
         /// <param name="context">The graphics context to draw on</param>
         /// <param name="node">Node to draw</param>
-        private static void DrawNode(IDrawContext context, APSIM.Shared.Graphing.Node node)
+        private static void DrawNode(IDrawContext context, APSIM.Shared.Graphing.Node node, bool darkmode)
         {
             Color outlineColour;
             if (node.Selected)
@@ -105,7 +110,7 @@ namespace APSIM.Interop.Visualisation
                 outlineColour = GraphObject.DefaultOutlineColour;
 
             Color backgroundColour = node.Transparent ? GraphObject.DefaultBackgroundColour : node.Colour;
-            Color textColour = GraphObject.DefaultOutlineColour;
+            Color textColour = darkmode ? Color.Black : GraphObject.DefaultOutlineColour;
 
             // Draw circle
             context.SetColour(outlineColour);

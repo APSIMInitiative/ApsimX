@@ -33,7 +33,7 @@ namespace UnitTests
             events.Publish("DoSoilWaterMovement", args);
             var amountSWHasIncreased = MathUtilities.Sum(soilWater.SWmm) - swBeforeIrrigation;
 
-            Assert.AreEqual(amountSWHasIncreased, 10);
+            Assert.That(amountSWHasIncreased, Is.EqualTo(10));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace UnitTests
             events.Publish("DoSoilWaterMovement", args);
             var amountSWHasIncreased = MathUtilities.Sum(soilWater.SWmm) - swBeforeIrrigation;
 
-            Assert.AreEqual(amountSWHasIncreased, 5);
+            Assert.That(amountSWHasIncreased, Is.EqualTo(5));
         }
 
 

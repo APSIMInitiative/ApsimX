@@ -54,21 +54,21 @@
 
             DBMerger.Merge(database2, database1);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[] {                       "ID", "Name", "FolderName" },
                                       new List<object[]> { new object[] {     1, "Sim1",    "Folder1" },
                                                            new object[] {     2, "Sim2",    "Folder2" },
                                                            new object[] {     3, "Sim3",    "Folder3" },
                                                            new object[] {     4, "Sim4",    "Folder4" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")), Is.True);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[]                      { "SimulationID",  "A",    "B" },
                                       new List<object[]> { new object[] {              1,  10, "str1" },
                                                            new object[] {              2,  11, "str2" },
                                                            new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "Report")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
         }
 
         /// <summary>Ensure two .db files, which have the same simulation names, can be merged.</summary>
@@ -117,19 +117,19 @@
 
             DBMerger.Merge(database2, database1);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[] {                       "ID", "Name", "FolderName" },
                                       new List<object[]> { new object[] {     1, "Sim1",    "Folder1" },
                                                            new object[] {     2, "Sim2",    "Folder2" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")), Is.True);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[]                      { "SimulationID",  "A",    "B" },
                                       new List<object[]> { new object[] {              1,  10, "str1" },
                                                            new object[] {              1,  20, "str3" },
                                                            new object[] {              2,  11, "str2" },
                                                            new object[] {              2,  21, "str4" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "Report")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
         }
 
         /// <summary>Ensure two .db files, which have different tables, can be merged.</summary>
@@ -178,25 +178,25 @@
 
             DBMerger.Merge(database2, database1);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[] { "ID", "Name", "FolderName" },
                                       new List<object[]> { new object[] {     1, "Sim1",    "Folder1" },
                                                            new object[] {     2, "Sim2",    "Folder2" },
                                                            new object[] {     3, "Sim3",    "Folder3" },
                                                            new object[] {     4, "Sim4",    "Folder4" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")), Is.True);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[]                      { "SimulationID", "A", "B" },
                                       new List<object[]> { new object[] {              1,  10, "str1" },
                                                            new object[] {              2,  11, "str2" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "Report1")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "Report1")), Is.True);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[]                      { "SimulationID", "A", "B" },
                                       new List<object[]> { new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "Report2")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "Report2")), Is.True);
         }
 
         /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.</summary>
@@ -243,17 +243,17 @@
 
             DBMerger.Merge(database2, database1);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[] { "ID", "Name", "FolderName" },
                                       new List<object[]> { new object[] {     1, "Sim1",    "Folder1" },
                                                            new object[] {     2, "Sim2",    "Folder2" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "_Simulations")), Is.True);
 
-            Assert.IsTrue(
+            Assert.That(
                 Utilities.CreateTable(new string[] { "TableName", "ColumnHeading", "Units" },
                                       new List<object[]> { new object[] {  "Report",          "A",  "g/m2" },
                                                            new object[] {  "Report",          "B", "kg/ha" }})
-               .IsSame(Utilities.GetTableFromDatabase(database1, "_Units")));
+               .IsSame(Utilities.GetTableFromDatabase(database1, "_Units")), Is.True);
         }
 
         /// <summary>Create a table</summary>

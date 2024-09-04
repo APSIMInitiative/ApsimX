@@ -1,0 +1,34 @@
+ParamName,ParamUnit,Description,Maize,Apple
+TT_Temp_X,oC,Average temperature for thermal time calculation,(0 18.0 26.0 34.0 44.0),(0 18.0 26.0 34.0 44.0)
+TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0 10.0 18.0 26.0 0.0),(0 10.0 18.0 26.0 0.0)
+StartGrowth_00,DOY,"""Earliest"" day of year when sowing/end-dorm is resumed every year",243,243
+Tt_FullCanopy_01,oCd,Thermal-time accumulation from sowing/end-dorm to MAX LAI,400,400
+Tt_Flowering_02,oCd,Thermal-time accumulation from sowing/end-dorm to FLOWERING,736,736
+Tt_StartSenescence_03,oCd,Thermal-time accumulation from sowing/end-dorm to START SENESCENCE,500,500
+Tt_Maturity_or_Harvest_04,oCd,Thermal-time accumulation from sowing/end-dorm to MATURITY,200,200
+LAImax,m2/m2,Maximum achievable leaf are index (optimal management),6,6
+ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.45
+PartitioningStages,stageCode,Phenology stage code to drive partitioning changes,(0 1 2 3 4 5),(0 1 2 3 4 5)
+DailyShareToShoot,fractional,Fractional allocation of total daily biomass assimilation to shoots (without produce),(0.2 0.2 0.2 0.2 0.2 0.2),(0.2 0.2 0.2 0.2 0.2 0.2)
+DailyShareFromShootToLeaf,fractional,Fractional allocation of shoot daily biomass into leaves (% of shoot allocation),(0.2 0.2 0.2 0.2 0.2 0.2),(0.2 0.2 0.2 0.2 0.2 0.2)
+DailyShareToProduce,fractional,Fractional allocation of total daily biomass assimilation to produce,(0.2 0.2 0.2 0.2 0.2 0.2),(0.2 0.2 0.2 0.2 0.2 0.2)
+PhotosynthesisStages,stageCode,Phenology stage code to drive photosynthesis changes,(0.2 0.2 0.2 0.2 0.2 0.2),(0.2 0.2 0.2 0.2 0.2 0.2)
+RUEtotal,g_DM/MJ_global_rad,Radiation use efficiency for total plant biomass (global solar radiation),(1.9 1.9 1.9 1.9 1.9 1.9),(1.9 1.9 1.9 1.9 1.9 1.9)
+NDemandStages,stageCode,Phenology stage code to drive nitrogen demand changes,(0 1 2 3 4 5),(0 1 2 3 4 5)
+Nconc_Max,%_DM,Maximum percentage of N in shoot biomass,(2 2 2 2 2 2),(2 2 2 2 2 2)
+Nconc_Min,%_DM,Minimum percentage of N in shoot biomass,(2 2 2 2 2 2),(2 2 2 2 2 2)
+WaterStress_LAI_X,fractional,Supply/Demand for water,(0 0.5 0.81.0),(0 0.5 0.81.0)
+WaterStress_LAI_Y,fractional,LAI expansion potential for a given water supply/demand,(0 0.5 1.01.0),(0 0.5 1.01.0)
+WaterStress_RUE_X,fractional,Supply/Demand for water,(0 0.5 0.81.0),(0 0.5 0.81.0)
+WaterStress_RUE_Y,fractional,RUE potential for a given water supply/demand,(0 0.5 1.01.0),(0 0.5 1.01.0)
+NitrogenStress_LAI_X,fractional,Fraction of N range in plant (e.g.  0.5 is 50% between N min and N max),(0 0.5 0.81.0),(0 0.5 0.81.0)
+NitrogenStress_LAI_Y,fractional,LAI expansion potential for a given water supply/demand,(0 0.5 1.01.0),(0 0.5 1.01.0)
+NitrogenStress_RUE_X,fractional,Fraction of N range in plant (e.g.  0.5 is 50% between N min and N max),(0 0.5 0.81.0),(0 0.5 0.81.0)
+NitrogenStress_RUE_Y,fractional,RUE potential for a given critical nitrogen level,(0 0.5 1.01.0),(0 0.5 1.01.0)
+HeatStressWindow_TT,oCd,Window of thermal-time around flowering when harvest index is sensitive to heat,100,100
+HeatStressThreshold,oC,Critical maximum temperature when heat stress occurs,30,30
+HeatStressDamage_HI,fractional,Thermal time accumulation above heat stress critical temperature,(0 5 10 15 20),(0 5 10 15 20)
+HeatStressDamage_HI,fractional,Share of HI reduction due to heat stress,(0 0.2 0.5 1.0),(0 0.2 0.5 1.0)
+CO2_level_X,ppm,Atmospheric CO2 concentration,(0 280 350 550 1200),(0 280 350 550 1200)
+CO2_RUE_Y,fractional,Fractional change in RUE for a given CO2 concentration,(0 0.9 1 1.2 1.5),(0 0.9 1 1.2 1.5)
+CO2_WaterUse_Y,fractional,Fractional change in water use for a given CO2 concentration,(0 0.9 1 1.2 1.5),(0 0.9 1 1.2 1.5)
