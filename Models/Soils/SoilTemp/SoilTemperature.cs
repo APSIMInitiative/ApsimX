@@ -8,26 +8,30 @@ using Models.Interfaces;
 
 namespace Models.Soils.SoilTemp
 {
-    // ------------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
-    // Due to FORTRAN's 'flexibility' with arrays there have been a few modifications to array sizes in this
-    // version of SoilTemp. All arrays here are forceably 0-based, so to deal with the fact that this module
-    // contains both 0- and 1-based arrays all arrays have been increased in size by 1. All indexing will not
-    // change from FORTRAN code, those arrays that are 1-based will simply not use their first (0th) element.
-    //
-    // This is actually rather convenient. In these arrays, the element 0 (AIRnode) refers to the air,
-    // the element 1 (SURFACEnode) refers to the soil surface, and elements 2 (TOPSOILnode) .. numNodes + 1
-    // refer to nodes within the soil.
-    // ------------------------------------------------------------------------------------------------------------
-
     /// <summary>
-    /// Since temperature changes rapidly near the soil surface and very little at depth, the best simulation will
-    /// be obtained with short elements (shallow layers) near the soil surface and longer ones deeper in the soil.
-    /// The element lengths should go in a geometric progression. Ten to twelve nodes are probably sufficient for
-    /// short term simulations (daily or weekly). Fifteen nodes would probably be sufficient for annual cycle simulation
-    /// where a deeper grid is needed.
-    /// p36, Campbell, G.S. (1985) "Soil physics with BASIC: Transport models for soil-plant systems" (Amsterdam, Elsevier)
+    /// The soil temperature model includes functionality for simulating the heat flux and temperatures over
+    /// the soil profile, includes temperature on the soil surface. The processes are described below, most
+    /// are based on Campbell, 1985. "Soil physics with BASIC: Transport models for soil-plant systems"
     /// </summary>
+    /// <remarks>
+    /// Since temperature changes rapidly near the soil surface and very little at depth, the best simulation
+    /// will be obtained with short elements (shallow layers) near the soil surface and longer ones deeper in
+    /// the soil. Ideally, the element lengths should follow a geometric progression...
+    /// Ten to twelve nodes are probably sufficient for short term simulations (daily or weekly). Fifteen nodes
+    /// would probably be sufficient for annual cycle simulation where a deeper grid is needed.
+    /// p36, Campbell, G.S. (1985) "Soil physics with BASIC: Transport models for soil-plant systems" (Amsterdam, Elsevier)
+    /// ------------------------------------------------------------------------------------------------------------
+    /// -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
+    /// Due to FORTRAN's 'flexibility' with arrays there have been a few modifications to array sizes in this
+    /// version of SoilTemp. All arrays here are forceably 0-based, so to deal with the fact that this module
+    /// contains both 0- and 1-based arrays all arrays have been increased in size by 1. All indexing will not
+    /// change from FORTRAN code, those arrays that are 1-based will simply not use their first (0th) element.
+    ///
+    /// This is actually rather convenient. In these arrays, the element 0 (AIRnode) refers to the air,
+    /// the element 1 (SURFACEnode) refers to the soil surface, and elements 2 (TOPSOILnode) .. numNodes + 1
+    /// refer to nodes within the soil.
+    /// ------------------------------------------------------------------------------------------------------------
+    /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
@@ -186,26 +190,34 @@ namespace Models.Soils.SoilTemp
 
         #region constants
 
-        /// <summary></summary>
-        private bool doInit1Stuff = false;      // NEW
-                                                // Two representations are distinguished for the profile.
-                                                // a) Soil layers, each with a top and bottom boundary and a depth. Index range of 1..NumLayer
-                                                // b) Temperature nodes, each node being at the centre of each layer and additionally a node below
-                                                // the bottom layer and a node above the top layer (in the atmosphere). Index range of 0..NumLayer + 1,
-                                                // giving 0 for atmosphere,
+        /// <summary>Flag whether initialisation is needed - CHECK</summary>
+        private bool doInit1Stuff = false;
+                  // NEW
+                  // Two representations are distinguished for the profile.
+                  // a) Soil layers, each with a top and bottom boundary and a depth. Index range of 1..NumLayer
+                  // b) Temperature nodes, each node being at the centre of each layer and additionally a node below
+                  // the bottom layer and a node above the top layer (in the atmosphere). Index range of 0..NumLayer + 1,
+                  // giving 0 for atmosphere,
 
-        /// <summary></summary>
-        const double LAMBDA = 2465000.0;      // latent heat of vapourisation for water (J/kg); 1 mm evap/day = 1 kg/m^2 day requires 2.45*10^6 J/m^2
-        /// <summary></summary>
-        const double STEFAN_BOLTZMANNconst = 0.0000000567;   // defines the power per unit area emitted by a black body as a function of its thermodynamic temperature (W/m^2/K^4).
-        /// <summary></summary>
-        const double DAYSinYear = 365.25;    // no of days in one year
-        /// <summary></summary>
+        /// <summary>Latent heat of vapourisation for water (J/kg)</summary>
+        /// <remarks>Evaporation of 1.0 mm/day = 1 kg/m^2/day requires 2.45*10^6 J/m^2</remarks>
+        const double LAMBDA = 2465000.0;
+
+        /// <summary>The Stefan-Boltzmann constant (W/m2/K4)</summary>
+        /// <remarks>Power per unit area emitted by a black body as a function of its temperature</remarks>
+        const double STEFAN_BOLTZMANNconst = 0.0000000567;
+
+        /// <summary>Number of days in one year</summary>
+        const double DAYSinYear = 365.25;
+
+        /// <summary>Conversion from degrees to radians</summary>
         const double DEG2RAD = Math.PI / 180.0;
-        /// <summary></summary>
+        /// <summary>Conversion from radians to degrees</summary>
         const double RAD2DEG = 180.0 / Math.PI;
-        /// <summary></summary>
-        const double DOY2RAD = DEG2RAD * 360.0 / DAYSinYear;          // convert day of year to radians
+
+        /// <summary>Conversion of day of year into radians</summary>
+        const double DOY2RAD = DEG2RAD * 360.0 / DAYSinYear;
+
         /// <summary></summary>
         const double MIN2SEC = 60.0;          // 60 seconds in a minute - conversion minutes to seconds
         /// <summary></summary>
@@ -228,14 +240,19 @@ namespace Models.Soils.SoilTemp
         const double MJ2J = 1000000.0;            // convert MJ to J
         /// <summary></summary>
         const double J2MJ = 1.0 / MJ2J;            // convert J to MJ
-        /// <summary></summary>
-        const int AIRnode = 0;                // index of atomspheric node
-        /// <summary></summary>
-        const int SURFACEnode = 1;            // index of surface node
-        /// <summary></summary>
-        const int TOPSOILnode = 2;            // index of first soil layer node
-        /// <summary></summary>
-        const int NUM_PHANTOM_NODES = 5;      // dummy/phantom nodes (invisible to the user) below the soil profile in order for the lower BC to work properly
+
+        /// <summary>The index of the node in the atmosphere (aboveground)</summary>
+        const int AIRnode = 0;
+
+        /// <summary>The index of the node on the soil surface</summary>
+        const int SURFACEnode = 1;
+
+        /// <summary>The index of the first node within the soil (mid of top layer)</summary>
+        const int TOPSOILnode = 2;
+
+        /// <summary>The number of phantom nodes below the soil profile</summary>
+        /// <remarks>These are needed for the lower BC to work properly, invisible externally</remarks>
+        const int NUM_PHANTOM_NODES = 5;
 
         /// <summary>Internal time-step (s)</summary>
         private double gDt = 0.0;
@@ -336,87 +353,115 @@ namespace Models.Soils.SoilTemp
         /// <summary>Potential soil evaporation, after modification for green cover residue (mm)</summary>
         private double potSoilEvap = 0.0;
 
-        /// <summary>Potential daily (CHECK) evapotranspitation (mm)</summary>
+        /// <summary>Potential daily (CHECK) evapotranspiration (mm)</summary>
         private double potEvapotrans = 0.0;
 
         /// <summary>Actual soil evaporation (mm)</summary>
         private double actualSoilEvap = 0.0;
 
-        /// <summary>Net radiation per internal timestep (MJ)</summary>
+        /// <summary>Net radiation per internal time-step (MJ)</summary>
         private double netRadiation = 0.0;
 
         /// <summary>Height of canopy above ground (m)</summary>
         private double canopyHeight = 0.0;
-        /// <summary></summary>
-        private double soilRoughnessHeight = 0.0;    // (mm) height of soil roughness
-        /// <summary></summary>
-        private double[] rocks;              // Rocks in each layer of profile (%)
-        /// <summary></summary>
-        private double[] carbon;              // Soil carbon in each layer of profile (%)
-        /// <summary></summary>
-        private double[] sand;                // Proportion of sand in each layer of profile (%)
-        /// <summary></summary>
-        private double[] silt;                // Proportion of silt in each layer of profile (%)
-        /// <summary></summary>
-        private double[] clay;                // Proportion of clay in each layer of profile (%)
+
+        /// <summary>Height of soil roughness (mm)</summary>
+        private double soilRoughnessHeight = 0.0;
+
+        /// <summary>Volumetric fraction of rocks in each soil layer (% - CHECK unit)</summary>
+        private double[] rocks;
+
+        /// <summary>Volumetric fraction of carbon (CHECK) in each soil layer (% - CHECK unit)</summary>
+        private double[] carbon;
+
+        /// <summary>Volumetric fraction of sand in each soil layer (% - CHECK unit)</summary>
+        private double[] sand;
+
+        /// <summary>Volumetric fraction of silt in each soil layer (% - CHECK unit)</summary>
+        private double[] silt;
+
+        /// <summary>Volumetric fraction of clay in each soil layer (% - CHECK unit)</summary>
+        private double[] clay;
+
         #endregion
 
-        private const int timestep = 1440;     // timestep in minutes
+        /// <summary>Internal time-step (minutes)</summary>
+        private const int timestep = 1440;
 
         // this was not an input in old apsim. // [Input]                                //FIXME - optional input
-        private double maxTempTime = 0.0;      // Time of maximum temperature in hours
+        /// <summary>Time of maximum temperature in hours</summary>
+        private double maxTempTime = 0.0;
 
         // Private cover_tot As Double = 0.0    ' (0-1) total surface cover
 
-        private double instrumHeight = 0.0;    // (m) height of instruments above ground
+        /// <summary>Height of instruments above ground</summary>
+        private double instrumHeight = 0.0;
 
-        private double altitude = 0.0;         // (m) altitude at site
+        /// <summary>Altitude at site (m)</summary>
+        private double altitude = 0.0;
 
-        private double nu = 0.6;                  // forward/backward differencing coefficient (0-1).
-                                                  // A weighting factor which may range from 0 to 1. If nu=0, the flux is determined by the temperature difference
-                                                  // at the beginning of the time step. The numerical procedure which results from this choice is called a forward
-                                                  // difference of explicit method. If nu=0.5, the average of the old and new temperatures is used to compute heat flux.
-                                                  // This is called a time-centered or Crank-Nicholson scheme.
-                                                  // The equation for computing T(j+1) is implicit for this choice of nu (and any other except nu=0) since T(j+1) depends
-                                                  // on the values of the new temperatures at the nodes i+1 and i-1. Most heat flow models use either nu=0 or nu=0.5.
-                                                  // The best value for nu is determined by consideration of numerical stability and accuracy.
-                                                  // The explicit scheme with nu=0 predicts more heat transfer between nodes than would actually occur, and can therefore
-                                                  // become unstable if time steps are too large. Stable numerical solutions are only obtained when (Simonson, 1975)
-                                                  // deltaT < CH*(deltaZ)^2 / 2*lambda.
-                                                  // When nu < 0.5, stable solutions to the heat flow problem will always be obtained, but if nu is too small, the solutions
-                                                  // may oscillate. The reason for this is that the simulated heat transfer between nodes overshoots. On the next time step
-                                                  // the excess heat must be transferrec back, so the predicted temperature at that node oscillates. On the other hand, if nu
-                                                  // is too large, the temperature difference will be too small and not enough heat will be transferred. Simulated temperatures
-                                                  // will never oscillate under these conditions, but the simulation will understimate heat flux. The best accuracy is obtained
-                                                  // with nu around 0.4, while best stability is at nu=1. A typical compromise is nu=0.6.
+        /// <summary>Forward/backward differencing coefficient (0-1)</summary>
+        /// <remarks>
+        /// This is a weighting factor used to determined how the heat flux is to be computed.
+        /// The numerical procedure that results from setting this to zero is called a forward difference
+        /// of the explicit method. If set to 0.5, the average of the old and new temperatures is used to
+        /// compute heat flux. This is called a time-centred or Crank-Nicholson scheme.
+        /// The equation for computing T(j+1) is an 'implicit' scheme for any choice of this parameter
+        /// (except zero, which is called the 'explicit' scheme). This is because T(j+1) depends on the
+        /// values of the new temperatures at the nodes i+1 and i-1.
+        /// Most heat flow models use either 0.0 or 0.5. However, the best value for this parameters is
+        /// determined by consideration of numerical stability and accuracy.
+        /// The explicit scheme predicts more heat transfer between nodes than would actually occur, and
+        /// can therefore become unstable if time steps are too large. Stable numerical solutions are only
+        /// obtained when deltaT is less than CH*(deltaZ)^2 / 2*lambda (Simonson, 1975).
+        /// When using 0.5, stable solutions to the heat flow problem will always be obtained, while if 
+        /// set to a too small value, the solutions may oscillate. The reason for this is that simulated
+        /// heat transfer between nodes 'overshoots' (thus in the next time step the excess heat must be
+        /// transferred back). If the parameter is closer to one, the temperature difference will be too
+        /// small and not enough heat will be transferred. Simulated temperatures will never oscillate in
+        /// these conditions, but the simulation will underestimate heat flux. Best accuracy is obtained
+        /// with a value around 0.4, while best stability is at one. A typical compromise is nu=0.6.
+        /// </remarks>
+        private double nu = 0.6;
 
-
+        /// <summary></summary>
         private double volSpecHeatClay = 2.39e6;  // [Joules*m-3*K-1]
 
+        /// <summary></summary>
         private double volSpecHeatOM = 5e6;       // [Joules*m-3*K-1]
 
+        /// <summary></summary>
         private double volSpecHeatWater = 4.18e6; // [Joules*m-3*K-1]
 
+        /// <summary></summary>
         private double maxTTimeDefault = 14.0;
 
+        /// <summary></summary>
         private double[] aveSoilTemp;  // FIXME - optional. Allow setting from set in manager or get from input //init to average soil temperature
 
+        /// <summary></summary>
         private string boundarLayerConductanceSource = "calc";
 
+        /// <summary></summary>
         private const double boundaryLayerConductance = 20;
 
+        /// <summary></summary>
         private const double BoundaryLayerConductanceIterations = 1;    // maximum number of iterations to calculate atmosphere boundary layer conductance
 
+        /// <summary></summary>
         private string netRadiationSource = "calc";
 
-        // from met
-        private double defaultWindSpeed = 3;      // default wind speed (m/s)
+        /// <summary>Default wind speed (m/s)</summary>
+        private double defaultWindSpeed = 3.0;
 
-        private const double defaultAltitude = 18;    // default altitude (m)
+        /// <summary>Default altitude (m)</summary>
+        private const double defaultAltitude = 18.0;
 
-        private const double defaultInstrumentHeight = 1.2;  // default instrument height (m)
+        /// <summary>Default instrument height (m)</summary>
+        private const double defaultInstrumentHeight = 1.2;
 
-        private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
+        /// <summary>Roughness element height of bare soil (mm)</summary>
+        private const double bareSoilHeight = 57;
 
         /// <summary>Depth down to the constant temperature (m)</summary>
         public double CONSTANT_TEMPdepth { get; set; } = 10.0;
@@ -829,7 +874,7 @@ namespace Models.Soils.SoilTemp
             BoundCheck(bareSoilHeight, 0.0, 150.0, "bareSoilHeight");     // "canopy height" when no canopy is present. FIXME - need to test if canopy is absent and set to this.
             soilRoughnessHeight = bareSoilHeight;
             boundarLayerConductanceSource = boundarLayerConductanceSource.ToLower();
-            switch (boundarLayerConductanceSource)
+            switch (boundarLayerConductanceSource)  // CHECK, this can be deleted
             {
                 case "calc":
                 case "constant":
@@ -846,7 +891,7 @@ namespace Models.Soils.SoilTemp
             BoundCheck(boundaryLayerConductance, 10.0, 40.0, "boundaryLayerConductance");
             boundaryLayerConductanceIterations = System.Convert.ToInt32(BoundaryLayerConductanceIterations);
             netRadiationSource = netRadiationSource.ToLower();
-            switch (netRadiationSource)
+            switch (netRadiationSource)  // CHECK, this can be deleted
             {
                 case "calc":
                 case "eos":
@@ -862,11 +907,11 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>Calculate the coefficients for thermal conductivity equation</summary>
-        /// <remarks>This is equation 4.20 (Campbell, 1985), for a typical low-quartz, mineral soil</remarks>
+        /// <remarks>This is equation 4.20 (Campbell, 1985) for a typical low-quartz, mineral soil</remarks>
         private void doThermalConductivityCoeffs()
         {
             var oldGC1 = thermCondPar1;
-            thermCondPar1 = new double[numNodes + 1];
+            thermCondPar1 = new double[numNodes + 1];  // CHECK, needed these copies??
             if (oldGC1 != null)
                 Array.Copy(oldGC1, thermCondPar1, Math.Min(numNodes + 1, oldGC1.Length));     // C1 dimensioned for nodes 0 to Nz
             var oldGC2 = thermCondPar2;
@@ -903,7 +948,7 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void GetOtherVariables()
         {
-            BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");
+            BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");  // CHECK, need these checks??
             BoundCheck(weather.MinT, -100.0, weather.MaxT, "mint");
             maxAirTemp = weather.MaxT;
             minAirTemp = weather.MinT;
