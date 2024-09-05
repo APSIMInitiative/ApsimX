@@ -599,11 +599,17 @@ namespace Models.Soils.SoilTemp
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             doInit1Stuff = true;
-            InitialValues = null;
             getIniVariables();
             getProfileVariables();
             readParam();
         }
+		
+
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            InitialValues = null;
+        }		
 
         /// <summary>Called when model has been created</summary>
         public override void OnCreated()
