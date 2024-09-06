@@ -769,12 +769,6 @@ namespace Models.Soils.SoilTemp
         {
             InitialValues = null;
         }
-        
-        /// <summary>Called when model has been created</summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-        }
 
         /// <summary>Performs the tasks to simulate soil temperature</summary>
         [EventSubscribe("DoSoilTemperature")]
@@ -826,13 +820,6 @@ namespace Models.Soils.SoilTemp
         }
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Maps the initial temperature value over the soil profile</summary>
-        /// <param name="targetThickness">Target thickness</param>
-        public void Standardise(double[] targetThickness)
-        {
-            InitialValues = SoilUtilities.MapInterpolation(InitialValues, Thickness, targetThickness, allowMissingValues:true);
-        }
 
         /// <summary>Performs the tasks to reset the model</summary>
         public void Reset(double[] values = null)
