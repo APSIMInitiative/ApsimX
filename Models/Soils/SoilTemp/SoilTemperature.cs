@@ -268,6 +268,60 @@ namespace Models.Soils.SoilTemp
             return result;
         }
 
+        /// <summary>Volumetric fraction of rocks in the soil</summary>
+        private double volumetricFractionRocks(int layer) => rocks[layer] / 100.0;
+
+        /// <summary>Volumetric fraction of organic matter in the soil</summary>
+        private double volumetricFractionOrganicMatter(int layer) => carbon[layer] / 100.0 * 2.5 * bulkDensity[layer] / pom;
+
+        /// <summary>Volumetric fraction of sand in the soil</summary>
+        private double volumetricFractionSand(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                       sand[layer] / 100.0 * bulkDensity[layer] / ps;
+
+        /// <summary>Volumetric fraction of silt in the soil</summary>
+        private double volumetricFractionSilt(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                       silt[layer] / 100.0 * bulkDensity[layer] / ps;
+
+        /// <summary>Volumetric fraction of clay in the soil</summary>
+        private double volumetricFractionClay(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                       clay[layer] / 100.0 * bulkDensity[layer] / ps;
+
+        /// <summary>Volumetric fraction of water in the soil</summary>
+        private double volumetricFractionWater(int layer) => (1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer];
+
+        /// <summary>Volumetric fraction of ice in the soil</summary>
+        /// <remarks>
+        /// Not implemented yet, might be simulated in the future. Something like:
+        ///  (1 - VolumetricFractionOrganicMatter(i)) * waterBalance.Ice[i];
+        /// </remarks>
+        private double volumetricFractionIce(int layer) => 0.0;
+
+        /// <summary>Volumetric fraction of air in the soil</summary>
+        private double volumetricFractionAir(int layer)
+        {
+            return 1.0 - volumetricFractionRocks(layer) -
+                         volumetricFractionOrganicMatter(layer) -
+                         volumetricFractionSand(layer) -
+                         volumetricFractionSilt(layer) -
+                         volumetricFractionClay(layer) -
+                         volumetricFractionWater(layer) -
+                         volumetricFractionIce(layer);
+        }
+
+        /// <summary>Calculate the density of air at a given environmental conditions</summary>
+        /// <param name="temperature">temperature (oC)</param>
+        /// <param name="AirPressure">air pressure (hPa)</param>
+        /// <returns>density of air (kg/m3)</returns>
+        /// <remarks>From - CHECK</remarks>
+        private double RhoA(double temperature, double AirPressure)
+        {
+            const double MWair = 0.02897;     // molecular weight air (kg/mol)
+            const double RGAS = 8.3143;       // universal gas constant (J/mol/K)
+            const double HPA2PA = 100.0;      // hectoPascals to Pascals
+
+            return MathUtilities.Divide(MWair * AirPressure * HPA2PA, kelvinT(temperature) * RGAS, 0.0);
+        }
+
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region constants   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -773,47 +827,6 @@ namespace Models.Soils.SoilTemp
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
-        /// <summary>Volumetric fraction of rocks in the soil</summary>
-        private double volumetricFractionRocks(int layer) => rocks[layer] / 100.0;
-
-        /// <summary>Volumetric fraction of organic matter in the soil</summary>
-        private double volumetricFractionOrganicMatter(int layer) => carbon[layer] / 100.0 * 2.5 * bulkDensity[layer] / pom;
-
-        /// <summary>Volumetric fraction of sand in the soil</summary>
-        private double volumetricFractionSand(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       sand[layer] / 100.0 * bulkDensity[layer] / ps;
-
-        /// <summary>Volumetric fraction of silt in the soil</summary>
-        private double volumetricFractionSilt(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       silt[layer] / 100.0 * bulkDensity[layer] / ps;
-
-        /// <summary>Volumetric fraction of clay in the soil</summary>
-        private double volumetricFractionClay(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       clay[layer] / 100.0 * bulkDensity[layer] / ps;
-
-        /// <summary>Volumetric fraction of water in the soil</summary>
-        private double volumetricFractionWater(int layer) => (1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer];
-
-        /// <summary>Volumetric fraction of ice in the soil</summary>
-        /// <remarks>
-        /// Not implemented yet, might be simulated in the future. Something like:
-        ///  (1 - VolumetricFractionOrganicMatter(i)) * waterBalance.Ice[i];
-        /// </remarks>
-        private double volumetricFractionIce(int layer) => 0.0;
-
-        /// <summary>Volumetric fraction of air in the soil</summary>
-        private double volumetricFractionAir(int layer)
-        {
-            return 1.0 - volumetricFractionRocks(layer) -
-                         volumetricFractionOrganicMatter(layer) -
-                         volumetricFractionSand(layer) -
-                         volumetricFractionSilt(layer) -
-                         volumetricFractionClay(layer) -
-                         volumetricFractionWater(layer) -
-                         volumetricFractionIce(layer);
-        }
-
         /// <summary>Maps the initial temperature value over the soil profile</summary>
         /// <param name="targetThickness">Target thickness</param>
         public void Standardise(double[] targetThickness)
@@ -908,7 +921,7 @@ namespace Models.Soils.SoilTemp
             depth[TOPSOILnode] = 0.5 * thickness[1] * MM2M;
             for (int node = TOPSOILnode; node <= numNodes; node++)
                 depth[node + 1] = (SumOfRange(thickness, 1, node - 1) + 0.5 * thickness[node]) * MM2M;
-
+            
             // BD
             BoundCheck(physical.BD.Length, numLayers, numLayers, "bd layers");
             var oldBulkDensity = bulkDensity;
@@ -1104,7 +1117,6 @@ namespace Models.Soils.SoilTemp
             instrumentHeight = Math.Max(instrumentHeight, canopyHeight + 0.5);
         }
 
-
         /// <summary>Perform actions for current day</summary>
         private void doProcess()
         {
@@ -1174,8 +1186,10 @@ namespace Models.Soils.SoilTemp
                 // Now start again with final atmosphere boundary layer conductance
                 doThomas(ref tempNew);        // RETURNS gTNew_zb()
                 doUpdate(ITERATIONSperDAY);
-                if ((RealsAreEqual(timeOfDaySecs, 5.0 * HR2MIN * MIN2SEC)))
+                if (Math.Abs(timeOfDaySecs - 5.0 * HR2MIN * MIN2SEC) <= Math.Min(timeOfDaySecs, 5.0 * HR2MIN * MIN2SEC) * 0.0001)
+                {
                     soilTemp.CopyTo(morningSoilTemp, 0);
+                }
             }
 
             // Next two for DEBUGGING only
@@ -1184,29 +1198,6 @@ namespace Models.Soils.SoilTemp
 
             minTempYesterday = minAirTemp;
             maxTempYesterday = maxAirTemp;
-        }
-
-        /// <summary>Calculate the volumetric specific heat capacity (Cv, Joules*m-3*K-1) of each soil layer</summary>
-        /// <remarks>
-        /// from Campbell, G.S. (1985). Soil physics with BASIC: Transport models for soil-plant systems
-        /// </remarks>
-        private void doVolumetricSpecificHeatCampbell()
-        {
-            const double SPECIFICbd = 2.65;   // (g/cc) specific bulk density
-            double[] volSpecHeatSoil = new double[numLayers + 1];
-
-            for (int layer = 1; layer <= numLayers; layer++)
-            {
-                double solidity = bulkDensity[layer] / SPECIFICbd;
-
-                // the Campbell version
-                // heatStore[i] = (vol_spec_heat_clay * (1-porosity) + vol_spec_heat_water * SWg[i]) * (zb_z[i+1]-zb_z[i-1])/(2*real(dt));
-                volSpecHeatSoil[layer] = volSpecHeatClay * solidity + volSpecHeatWater * soilWater[layer];
-            }
-
-            // mapLayer2Node(volSpecHeatSoil, gVolSpecHeatSoil)
-            volSpecHeatSoil.CopyTo(this.volSpecHeatSoil, 1);     // map volumetric heat capicity (Cv) from layers to nodes (node 2 in centre of layer 1)
-            this.volSpecHeatSoil[1] = volSpecHeatSoil[1];        // assume surface node Cv is same as top layer Cv
         }
 
         /// <summary>Calculate the volumetric specific heat capacity (Cv, Joules*m-3*K-1) of each soil layer</summary>
@@ -1252,31 +1243,6 @@ namespace Models.Soils.SoilTemp
                 }
 
                 thermCondLayers[node] = numerator / denominator;
-            }
-
-            // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
-            mapLayer2Node(thermCondLayers, ref thermalConductivity);
-        }
-
-        /// <summary>Calculate the thermal conductivity of each soil layer (W/m2/K, CHECK, should be W/m/K)</summary>
-        /// <remarks>
-        /// From Campbell, G.S. (1985). Soil physics with BASIC: Transport models for soil-plant systems
-        /// Equation 4.20 where Lambda = A + B*Theta - (A-D)*exp[-(C*theta)^E]
-        ///  Lambda is the thermal conductivity, theta is volumetric water content and A, B, C, D, E are coefficients.
-        ///  When theta = 0, lambda = D. At saturation, the last term becomes zero and Lambda = A + B*theta.
-        ///  The constant E can be assigned a value of 4. The constant C determines the water content where thermal
-        ///  conductivity begins to increase rapidly and is highly correlated with clay content.
-        ///  Here C1=A, C2=B, SW=theta, C3=C, C4=D, 4=E.
-        /// </remarks>
-        private void doThermConductivityCampbell()
-        {
-            double temp = 0.0;
-            double[] thermCondLayers = new double[numNodes + 1];
-            for (int layer = 1; layer <= numNodes; layer++)
-            {
-                temp = Math.Pow((thermCondPar3[layer] * soilWater[layer]), 4) * (-1);
-                thermCondLayers[layer] = thermCondPar1[layer] + (thermCondPar2[layer] * soilWater[layer])
-                                       - (thermCondPar1[layer] - thermCondPar4[layer]) * Math.Exp(temp);  // Eqn 4.20 Campbell.
             }
 
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
@@ -1396,75 +1362,6 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary>Numerical solution of the differential equations based on Thomas algorithm</summary>
-        /// <remarks>
-        /// Solves the tri_diagonal matrix using the Thomas algorithm
-        /// Thomas, L.H. (1946). Elliptic problems in linear difference equations over a network
-        /// Val Snow's original version
-        /// </remarks>
-        private void doThomas_VS(ref double[] newTemps)
-        {
-            double[] a = new double[numNodes + 1 + 1];    // A;
-            double[] b = new double[numNodes + 1];        // B;
-            double[] c = new double[numNodes + 1];        // C;
-            double[] d = new double[numNodes + 1];        // D;
-            double[] heat = new double[numNodes + 1];     // CP; heat storage between nodes - index is same as upper node
-            double[] Therm_zb = new double[numNodes + 1]; // K; conductance between nodes - index is same as upper node
-                                                          // nu = F; Nz = M; 1-nu = G; T_zb = T; newTemps = TN;
-
-            Therm_zb[0] = thermalConductivity[0];
-            for (int node = 1; node <= numNodes; node++)
-            {
-                heat[node] = MathUtilities.Divide(volSpecHeatSoil[node] * 0.5 * (depth[node + 1] - depth[node - 1]), gDt, 0);
-                // rate of heat
-                // convert to thermal conduc
-                Therm_zb[node] = MathUtilities.Divide(thermalConductivity[node], depth[node + 1] - depth[node], 0);
-            }
-
-            // My version
-            a[1] = 0;
-            b[1] = nu * Therm_zb[1] + nu * Therm_zb[0] + heat[1];
-            c[1] = (-nu) * Therm_zb[1];
-            d[1] = soilTemp[0] * (1 - nu) * Therm_zb[0] - soilTemp[1] * (1 - nu) * Therm_zb[1] - soilTemp[1] * (1 - nu) * Therm_zb[0] + soilTemp[1] * heat[1] + soilTemp[2] * (1 - nu) * Therm_zb[1] + Therm_zb[0] * newTemps[0] * nu;
-
-            if ((potSoilEvap - actualSoilEvap) > 0.2)
-                d[1] += MathUtilities.Divide((potSoilEvap - actualSoilEvap) * LAMBDA, tempStepSec, 0);
-            else
-            {
-            }
-
-            // last line is unfullfilled soil water evaporation
-            // the main loop
-            for (int i = 2; i <= numNodes - 1; i++)
-            {
-                a[i] = (-nu) * Therm_zb[i - 1];
-                b[i] = nu * Therm_zb[i] + nu * Therm_zb[i - 1] + heat[i];
-                c[i] = (-nu) * Therm_zb[i];
-                d[i] = soilTemp[i - 1] * (1 - nu) * Therm_zb[i - 1] - soilTemp[i] * (1 - nu) * Therm_zb[i] - soilTemp[i] * (1 - nu) * Therm_zb[i - 1] + soilTemp[i] * heat[i] + soilTemp[i + 1] * (1 - nu) * Therm_zb[i];
-            }
-
-            // lower node
-            a[numNodes] = (-nu) * Therm_zb[numNodes - 1];
-            a[numNodes + 1] = (-nu) * Therm_zb[numNodes];
-            b[numNodes] = nu * Therm_zb[numNodes] + nu * Therm_zb[numNodes - 1] + heat[numNodes];
-            c[numNodes] = 0.0D;
-            c[numNodes] = (-nu) * Therm_zb[numNodes];
-            d[numNodes] = soilTemp[numNodes - 1] * (1 - nu) * Therm_zb[numNodes - 1] - soilTemp[numNodes] * (1 - nu) * Therm_zb[numNodes] - soilTemp[numNodes] * (1 - nu) * Therm_zb[numNodes - 1] + soilTemp[numNodes] * heat[numNodes] + soilTemp[numNodes + 1] * (1 - nu) * Therm_zb[numNodes] + Therm_zb[numNodes] * nu * newTemps[numNodes + 1];
-
-            // the Thomas algorithm
-            for (int node = 1; node <= numNodes - 1; node++)
-            {
-                c[node] = MathUtilities.Divide(c[node], b[node], 0);
-                d[node] = MathUtilities.Divide(d[node], b[node], 0);
-                b[node + 1] -= a[node + 1] * c[node];
-                d[node + 1] -= a[node + 1] * d[node];
-            }
-            newTemps[numNodes] = MathUtilities.Divide(d[numNodes], b[numNodes], 0);
-
-            for (int node = numNodes - 1; node >= 1; node += -1)
-                newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-        }
-
         /// <summary>Interpolate air temperature</summary>
         /// <param name="timeHours">time of day at which air temperature is required</param>
         /// <returns>Interpolated air temperature for specified time of day (oC)</returns>
@@ -1534,20 +1431,6 @@ namespace Models.Soils.SoilTemp
                 aveSoilTemp[node] += MathUtilities.Divide(soilTemp[node], System.Convert.ToDouble(IterationsPerDay), 0);
             }
             _boundaryLayerConductance += MathUtilities.Divide(thermalConductivity[AIRnode], System.Convert.ToDouble(IterationsPerDay), 0);
-        }
-
-        /// <summary>Calculate the density of air at a given environmental conditions</summary>
-        /// <param name="temperature">temperature (oC)</param>
-        /// <param name="AirPressure">air pressure (hPa)</param>
-        /// <returns>density of air (kg/m3)</returns>
-        /// <remarks>From - CHECK</remarks>
-        private double RhoA(double temperature, double AirPressure)
-        {
-            const double MWair = 0.02897;     // molecular weight air (kg/mol)
-            const double RGAS = 8.3143;       // universal gas constant (J/mol/K)
-            const double HPA2PA = 100.0;      // hectoPascals to Pascals
-
-            return Divide(MWair * AirPressure * HPA2PA , kelvinT(temperature) * RGAS , 0.0);
         }
 
         /// <summary>Calculate atmospheric boundary layer conductance</summary>
@@ -1719,37 +1602,6 @@ namespace Models.Soils.SoilTemp
             return weather.Tav + (weather.Amp / 2.0 * Math.Cos(alx - depthLag) + deltaTemp) * Math.Exp(-depthLag);
         }
 
-        /// <summary>Calculates the rate of change in soil surface temperature with time</summary>
-        /// <param name="alx">The time of year in radians from warmest instance</param>
-        /// <returns>Change in temperature</returns>
-        /// <remarks>
-        ///           jngh 24-12-91.  I think this is actually a correction to adjust
-        ///           today's normal sinusoidal soil surface temperature to the
-        ///           current temperature conditions.
-        /// </remarks>
-        private double TempDelta(double alx)
-        {
-            // Get today's top layer temp from yesterdays temp and today's weather conditions.
-            // The actual soil surface temperature is affected by current weather conditions.
-
-            // Get today's normal surface soil temperature
-            // There is no depth lag, being the surface, and there is no adjustment for the current
-            //  temperature conditions as we want the "normal" sinusoidal temperature for this time of year
-
-            double temp_a = LayerTemp(0.0, alx, 0.0);
-
-            // Get the rate of change in soil surface temperature with time.
-            // This is the difference between a five-day moving average and
-            // today's normal surface soil temperature.
-
-            double dT = SurfaceTemperatureInit() - temp_a;
-
-            // check output
-            BoundCheck(dT, -100.0, 100.0, "Initial SoilTemp_dt");
-
-            return dT;
-        }
-
         /// <summary>Calculate initial soil surface temperature</summary>
         /// <returns>The initial soil surface temperature (oC)</returns>
         private double SurfaceTemperatureInit()
@@ -1798,15 +1650,15 @@ namespace Models.Soils.SoilTemp
 
             // get average bulk density
 
-            bd_tot = sum_products_real_array(bulkDensity, thickness);
+            bd_tot = MathUtilities.Sum(MathUtilities.Multiply(bulkDensity, thickness));
             cum_depth = SumOfRange(thickness, 1, numLayers);
-            ave_bd = Divide(bd_tot, cum_depth, 0.0);
+            ave_bd = MathUtilities.Divide(bd_tot, cum_depth, 0.0);
 
             // favbd ranges from almost 0 to almost 1
             // damp_depth_max ranges from 1000 to almost 3500
             // It seems damp_depth_max is the damping depth potential.
 
-            favbd = Divide(ave_bd, (ave_bd + 686.0 * Math.Exp(-5.63 * ave_bd)), 0.0);
+            favbd = MathUtilities.Divide(ave_bd, (ave_bd + 686.0 * Math.Exp(-5.63 * ave_bd)), 0.0);
             damp_depth_max = 1000.0 + 2500.0 * favbd;
             damp_depth_max = Math.Max(damp_depth_max, 0.0);
 
@@ -1833,9 +1685,9 @@ namespace Models.Soils.SoilTemp
             // wc can range from 0 to 1 while
             // wcf ranges from 1 to 0
 
-            wc = Divide(sw_avail_tot, (ww * cum_depth), 1.0);
-            wc = bound(wc, 0.0, 1.0);
-            wcf = Divide((1.0 - wc), (1.0 + wc), 0.0);
+            wc = MathUtilities.Divide(sw_avail_tot, (ww * cum_depth), 1.0);
+            wc = Math.Min(Math.Max(wc, 0.0), 1.0);
+            wcf = MathUtilities.Divide((1.0 - wc), (1.0 + wc), 0.0);
 
             // Here b can range from -.69314 to -1.94575
             // and f ranges from 1 to  0.142878
@@ -1845,7 +1697,7 @@ namespace Models.Soils.SoilTemp
             // and soiln2_SoilTemp_DampDepth=damp_depth_max
             // and that damp_depth_max is the maximum.
 
-            b = Math.Log(Divide(500.0, damp_depth_max, 10000000000.0));
+            b = Math.Log(MathUtilities.Divide(500.0, damp_depth_max, 10000000000.0));
 
             f = Math.Exp(b * Math.Pow(wcf, 2));
 
@@ -1884,7 +1736,7 @@ namespace Models.Soils.SoilTemp
             double psr = m1Tot * SOLARconst * W2MJ;   // potential solar radiation for the day (MJ/m^2)
             double fr = MathUtilities.Divide(Math.Max(weather.Radn, 0.1), psr, 0);               // ratio of potential to measured daily solar radiation (0-1)
             cloudFr = 2.33 - 3.33 * fr;    // fractional cloud cover (0-1)
-            cloudFr = bound(cloudFr, 0.0, 1.0);
+            cloudFr = Math.Min(Math.Max(cloudFr, 0.0), 1.0);
 
             for (int timestepNumber = 1; timestepNumber <= ITERATIONSperDAY; timestepNumber++)
                 solarRadn[timestepNumber] = Math.Max(weather.Radn, 0.1) *
@@ -1926,69 +1778,6 @@ namespace Models.Soils.SoilTemp
             // Dim swRout As Double = (salb + (1.0 - salb) * (1.0 - sunAngleAdjust())) * solarRadn   'FIXME temp test
             double swRnetSoil = (swRin - swRout) * PenetrationConstant;
             return swRnetSoil + lwRnetSoil;
-        }
-
-        /// <summary></summary>
-        /// <returns></returns>
-        private double SunAngleAdjust()
-        {
-            double solarDeclination = 0.3985 * Math.Sin(4.869 + clock.Today.DayOfYear * DOY2RAD + 0.03345 * Math.Sin(6.224 + clock.Today.DayOfYear * DOY2RAD));
-            double zenithAngle = Math.Abs(weather.Latitude - solarDeclination * RAD2DEG);
-            double sunAngle = 90.0 - zenithAngle;
-            double fr = sunAngle / 90.0;
-            return bound(fr, 0.0, 1.0);
-        }
-
-        /// <summary>
-        ///       Divides one number by another.  If the divisor is zero or overflow
-        ///       would occur a specified default is returned.  If underflow would
-        ///       occur, nought is returned.
-        /// </summary>
-        /// <param name="dividend">dividend - quantity to be divided</param>
-        /// <param name="divisor">divisor</param>
-        /// <param name="defaultValue">default value if overflow, underflow or divide by zero</param>
-        /// <returns></returns>
-        /// <remarks>
-        ///  Definition
-        ///     Returns (dividend / divisor) if the division can be done
-        ///     without overflow or underflow.  If divisor is zero or
-        ///     overflow would have occurred, default is returned.  If
-        ///     underflow would have occurred, zero is returned.
-        ///     '''
-        /// Assumptions
-        ///       largest/smallest real number is 1.0e+/-30
-        /// </remarks>
-        private double Divide(double dividend, double divisor, double defaultValue)
-        {
-            const double LARGEST = 1.0E+30;   // largest acceptable no. for quotient
-            const double NOUGHT = 0.0;      // 0
-            const double SMALLEST = 1.0E-30;    // smallest acceptable no. for quotient
-
-            // + Local Variables
-            double quotient = 0.0;              // quotient
-
-            if ((RealsAreEqual(dividend, NOUGHT)))
-                quotient = NOUGHT;
-            else if ((RealsAreEqual(divisor, NOUGHT)))
-                quotient = defaultValue;
-            else if ((Math.Abs(divisor) < 1.0))
-            {
-                if ((Math.Abs(dividend) > Math.Abs(LARGEST * divisor)))
-                    quotient = defaultValue;
-                else
-                    quotient = MathUtilities.Divide(dividend, divisor, 0);
-            }
-            else if ((Math.Abs(divisor) > 1.0))
-            {
-                if ((Math.Abs(dividend) < Math.Abs(SMALLEST * divisor)))
-                    quotient = NOUGHT;
-                else
-                    quotient = MathUtilities.Divide(dividend, divisor, 0);
-            }
-            else
-                quotient = MathUtilities.Divide(dividend, divisor, 0);
-
-            return quotient;
         }
 
         /// <summary>
@@ -2078,98 +1867,6 @@ namespace Models.Soils.SoilTemp
             else
             {
             }
-        }
-
-        /// <summary>
-        /// Tests if two real values are practically equal
-        /// </summary>
-        /// <param name="double1"></param>
-        /// <param name="double2"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public bool RealsAreEqual(double double1, double double2)
-        {
-            double precision = Math.Min(double1, double2) * 0.0001;
-            return (Math.Abs(double1 - double2) <= precision);
-        }
-        /// <summary>
-        /// constrains a variable within bounds of lower and upper
-        /// </summary>
-        /// <param name="var">(INPUT) variable to be constrained</param>
-        /// <param name="lower">(INPUT) lower limit of variable</param>
-        /// <param name="upper">(INPUT) upper limit of variable</param>
-        /// <returns>Constrained value</returns>
-        /// <remarks>
-        /// Returns "lower", if "var" is less than "lower".  Returns "upper" if "var" is greater than "upper".  Otherwise returns "var".
-        /// A warning error is flagged if "lower" is greater than "upper".
-        /// If the lower bound is > the upper bound, the variable remains unconstrained.
-        /// </remarks>
-        private double bound(double var, double lower, double upper)
-        {
-            double high = 0.0;                  // temporary variable constrained to upper limit of variable
-
-            // check that lower & upper bounds are valid
-
-            if ((lower > upper))
-            {
-                // bounds invalid, don't constrain variable
-                throw new Exception("Lower bound (" + lower.ToString() + ") exceeds upper bound (" + upper.ToString() + ") in bounds checking: Variable (value=" + var.ToString() + ") is not constrained between bounds");
-            }
-            else
-            {
-                // bounds valid, now constrain variable
-                high = Math.Min(var, upper);
-                return Math.Max(high, lower);
-            }
-        }
-        /// <summary>
-        /// returns sum_of of products of arrays var1 and var2, up to level limit.
-        /// each level of one array is multiplied by the corresponding level of the other.
-        /// </summary>
-        /// <param name="var1">(INPUT) first array for multiply</param>
-        /// <param name="var2">(INPUT) 2nd array for multiply</param>
-        /// <returns>Returns sum of  ("var1"(j) * "var2"(j))   for all j in  1 .. upperBound.</returns>
-        /// <remarks></remarks>
-        private double sum_products_real_array(double[] var1, double[] var2)
-        {
-            if ((var1.GetUpperBound(0) == var2.GetUpperBound(0)))
-            {
-                double tot = 0.0;
-                for (int level = 0; level <= var1.GetUpperBound(0); level++)
-                    tot = tot + var1[level] * var2[level];
-
-                return tot;
-            }
-            else
-                throw new Exception("sum_products_real_array must have same size arrays. Array1 size =" + var1.GetLength(0).ToString() + ". Array2 sixe =" + var2.GetLength(0).ToString());
-        }
-
-        /// <summary>
-        /// Multiplies array by specified multiplier
-        /// </summary>
-        /// <param name="array">(INPUT/OUTPUT)</param>
-        /// <param name="multiplier"></param>
-        /// <remarks></remarks>
-        private void multiplyArray(double[] array, double multiplier)
-        {
-            for (int level = 0; level <= array.GetUpperBound(0); level++)
-                array[level] = array[level] * multiplier;
-        }
-
-        /// <summary>
-        ///  adds or subtracts specified days to/from day of year number
-        /// </summary>
-        /// <param name="iyr">(INPUT) year</param>
-        /// <param name="doy">(INPUT) day of year number</param>
-        /// <param name="ndays">(INPUT) number of days to adjust by</param>
-        /// <returns>New day of year</returns>
-        /// <remarks> Returns the day of year for the day "ndays" after the day specified by the day of year, "doy", in the year, "iyr".
-        ///  "ndays" may well be negative.
-        /// </remarks>
-        private int offsetDayOfYear(int iyr, int doy, int ndays)
-        {
-            DateTime newdate = new DateTime(iyr, 1, 1).AddDays(doy - 1 + ndays);
-            return newdate.DayOfYear;
         }
     }
 }
