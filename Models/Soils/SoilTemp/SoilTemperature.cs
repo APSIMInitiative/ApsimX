@@ -595,10 +595,6 @@ namespace Models.Soils.SoilTemp
         /// <summary></summary>
         private string netRadiationSource = "calc";
 
-        /// <summary>Depth down to the constant temperature (m)</summary>
-        [JsonIgnore]
-        public double CONSTANT_TEMPdepth { get; set; } = 10.0;
-
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region Input for this model  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -622,6 +618,11 @@ namespace Models.Soils.SoilTemp
         [Display(Format = "N2")]
         [Units("oC")]
         public double[] InitialValues { get; set; }
+
+        /// <summary>Depth down to the constant temperature (mm)</summary>
+        [JsonIgnore]
+        [Units("mm")]
+        public double DepthToConstantTemperature { get; set; } = 10.0;
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -891,7 +892,7 @@ namespace Models.Soils.SoilTemp
             physical.Thickness.CopyTo(thickness, 1);
 
             // add enough to make last node at 9-10 meters - should always be enough to assume constant temperature
-            double BelowProfileDepth = Math.Max(CONSTANT_TEMPdepth * M2MM - SumOfRange(thickness, 1, numLayers), 1.0 * M2MM);    // Metres. Depth added below profile to take last node to constant temperature zone
+            double BelowProfileDepth = Math.Max(DepthToConstantTemperature * M2MM - SumOfRange(thickness, 1, numLayers), 1.0 * M2MM);    // Metres. Depth added below profile to take last node to constant temperature zone
 
             double thicknessForPhantomNodes = BelowProfileDepth * 2.0 / NUM_PHANTOM_NODES; // double depth so that bottom node at mid-point is at the ConstantTempDepth
             int firstPhantomNode = numLayers;
