@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """OASIS Apsim Python client.
 
@@ -23,6 +24,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
     
 import pdb
+import argparse
 
 # iteration that rain happens on
 RAIN_DAY = 90
@@ -213,13 +215,14 @@ class ApsimController:
     Attributes:
         fields (:obj:`list` of :obj:`FieldNode`): List of Fields in simulation.
     """
-    def __init__(self, addr="0.0.0.0", port=27746):
+    def __init__(self, path, addr="0.0.0.0", port=27746):
         """Initializes a ZMQ connection to the Apsim synchronizer
        
         Starts the command sequence by checking connect was received and sending
         "ok" back.
         
         Args:
+            fields_configs: Path t
             addr (str): Server address
             port (str): Server port number
         """
@@ -254,7 +257,7 @@ class ApsimController:
             "Z": "(float)"
             }...]
         """
-        field_configs = read_csv_file("./data/sample_fields.csv")
+        field_configs = read_csv_file(path)
         [
             self.fields.append(
                 FieldNode(
@@ -516,9 +519,30 @@ def plot_oasis(controller: ApsimController):
     plt.tight_layout()
     plt.show()
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
+    # cli interface
+    parser = argparse.ArgumentParser(description="OASIS Apsim Python client")
+    parser.add_argument(
+        "--addr",
+        type=str,
+        default="0.0.0.0",
+        help="Server address"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=27746,
+        help="Server port number"
+    )
+    parser.add_argument(
+        "config",
+        type=str,
+        help="Configuration CSV" 
+    )
+    args = parser.parse_args()
+    
     # initialize connection
-    apsim = ApsimController() 
+    apsim = ApsimController(args.config, addr=args.addr, port=args.port) 
 
     # TODO(nubby): Integrate polling into ZMQServer object.
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
