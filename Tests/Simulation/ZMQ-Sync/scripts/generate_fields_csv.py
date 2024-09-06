@@ -1,10 +1,14 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Kraww!!
 """
+
+import argparse
 import copy
 import csv
 from dataclasses import dataclass
 import random
+import os
 
 def generate_csv_from_grist(grist: list[dict], fpath: str):
     """Write the details of a flight plan to a CSV file.
@@ -54,6 +58,17 @@ def generate_data(configs: dict) -> list[dict]:
 def kraww():
     """Procedurally generate a CSV file of APSIM Field configs.
     """
+
+    # cli args    
+    parser = argparse.ArgumentParser(description="Generate field configuration csv")
+    parser.add_argument("path", type=str, help="Path to save csv")
+    args = parser.parse_args()
+   
+    # create path if doesn't already exist 
+    dir_path = os.path.dirname(args.path)
+    if dir_path and not os.path.exists(args.path):
+        os.makedirs(os.path.dirname(args.path), exist_ok=True)
+    
     # Number of fields in each dimension of spacetime.
     @dataclass
     class GristConfigs:
@@ -63,7 +78,7 @@ def kraww():
 
     configs = GristConfigs()
     grist = generate_data(configs)
-    generate_csv_from_grist(grist, "../data/sample_fields.csv")
+    generate_csv_from_grist(grist, args.path)
     
 
 if __name__ == "__main__":
