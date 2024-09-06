@@ -43,7 +43,7 @@ namespace Models.Soils.SoilTemp
         private Physical physical = null;
 
         [Link]
-        private Organic organic = null;        
+        private Organic organic = null;
 
         [Link]
         ISoilWater waterBalance = null;
@@ -86,11 +86,11 @@ namespace Models.Soils.SoilTemp
         public double VolumetricFractionAir(int i) => 1 - VolumetricFractionRocks(i) -
                                                           VolumetricFractionOrganicMatter(i) -
                                                           VolumetricFractionSand(i) -
-                                                          VolumetricFractionSilt(i) - 
+                                                          VolumetricFractionSilt(i) -
                                                           VolumetricFractionClay(i) -
-                                                          VolumetricFractionWater(i) - 
+                                                          VolumetricFractionWater(i) -
                                                           VolumetricFractionIce(i);
-                                                                
+
 
 
         #region Table1
@@ -140,7 +140,7 @@ namespace Models.Soils.SoilTemp
             /// <param name="name">Name of the constituent.</param>
             /// <param name="layer">The layer index.</param>
 
-            public double SpecificHeat(string name, int layer) 
+            public double SpecificHeat(string name, int layer)
             {
                 if (name == "Minerals")
                     throw new Exception("Cannot return specific heat for minerals constitute");
@@ -152,7 +152,7 @@ namespace Models.Soils.SoilTemp
             /// </summary>
             /// <param name="name">Name of the constituent.</param>
             /// <param name="layer">The layer index.</param>
-            public double ThermalConductance(string name, int layer) 
+            public double ThermalConductance(string name, int layer)
             {
                 if (name == "Minerals")
                     return Math.Pow(constituents["Rocks"].ThermalConductance, soilTemperature.VolumetricFractionRocks(layer)) *
@@ -168,21 +168,21 @@ namespace Models.Soils.SoilTemp
             /// </summary>
             /// <param name="name">Name of the constituent.</param>
             /// <param name="layer">The layer index.</param>
-            public double ShapeFactor(string name, int layer) 
+            public double ShapeFactor(string name, int layer)
             {
                 if (name == "Minerals")
                     return constituents["Rocks"].ShapeFactor * soilTemperature.VolumetricFractionRocks(layer) +
-                           constituents["Sand"].ShapeFactor * soilTemperature.VolumetricFractionSand(layer) +  
-                           constituents["Silt"].ShapeFactor * soilTemperature.VolumetricFractionSilt(layer) +             
+                           constituents["Sand"].ShapeFactor * soilTemperature.VolumetricFractionSand(layer) +
+                           constituents["Silt"].ShapeFactor * soilTemperature.VolumetricFractionSilt(layer) +
                            constituents["Clay"].ShapeFactor * soilTemperature.VolumetricFractionClay(layer);
                 else if (name == "Ice")
-                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionIce(layer) / 
+                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionIce(layer) /
                            (soilTemperature.VolumetricFractionWater(layer) + soilTemperature.VolumetricFractionIce(layer) + soilTemperature.VolumetricFractionAir(layer));
                 else if (name == "Air")
-                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionAir(layer) / 
+                    return 0.333 - 0.333 * soilTemperature.VolumetricFractionAir(layer) /
                            (soilTemperature.VolumetricFractionWater(layer) + soilTemperature.VolumetricFractionIce(layer) + soilTemperature.VolumetricFractionAir(layer));
                 return constituents[name].SpecificHeat;
-            }            
+            }
         }
 
         private Constituents constituents;
@@ -580,7 +580,7 @@ namespace Models.Soils.SoilTemp
                     InitialValues = new double[numLayers];
                     Array.ConstrainedCopy(soilTemp, TOPSOILnode, InitialValues, 0, numLayers);
                 }
-                
+
                 soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
                 soilTemp[SURFACEnode] = SurfaceTemperatureInit();
                 // initialise the phantom nodes.
@@ -626,12 +626,6 @@ namespace Models.Soils.SoilTemp
 
         #endregion
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            InitialValues = SoilUtilities.MapInterpolation(InitialValues, Thickness, targetThickness, allowMissingValues:true);
-        }
 
         /// <summary>Perform a reset.</summary>
         public void Reset(double[] values = null)
@@ -645,7 +639,7 @@ namespace Models.Soils.SoilTemp
                     throw new Exception($"Not enough values specified when resetting soil temperature. There needs to be {expectedNumValues} values.");
                 Array.ConstrainedCopy(values, 0, soilTemp, TOPSOILnode, values.Length);
             }
-        
+
             soilTemp[AIRnode] = (maxAirTemp + minAirTemp) * 0.5;
             soilTemp[SURFACEnode] = SurfaceTemperatureInit();
             int firstPhantomNode = TOPSOILnode + InitialValues.Length;
@@ -705,7 +699,7 @@ namespace Models.Soils.SoilTemp
             double thicknessForPhantomNodes = BelowProfileDepth * 2.0 / NUM_PHANTOM_NODES; // double depth so that bottom node at mid-point is at the ConstantTempDepth
             int firstPhantomNode = numLayers;
             for (int i = firstPhantomNode; i < firstPhantomNode + NUM_PHANTOM_NODES; i++)
-                thickness[i] = thicknessForPhantomNodes;   
+                thickness[i] = thicknessForPhantomNodes;
             var oldDepth = depth;
             depth = new double[numNodes + 1 + 1];
 
@@ -729,7 +723,7 @@ namespace Models.Soils.SoilTemp
             BoundCheckArray(bulkDensity, 0.0, 2.65, "bulkDensity");
             bulkDensity[numNodes] = bulkDensity[numLayers];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                bulkDensity[layer] = bulkDensity[numLayers]; 
+                bulkDensity[layer] = bulkDensity[numLayers];
 
             // SW
             BoundCheck(waterBalance.SWmm.Length, numLayers, numLayers, "sw layers");
@@ -740,7 +734,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                soilWater[layer] = soilWater[numLayers]; 
+                soilWater[layer] = soilWater[numLayers];
 
             // Carbon
             BoundCheck(organic.Carbon.Length, numLayers, numLayers, "carbon layers");
@@ -748,7 +742,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 carbon[layer] = organic.Carbon[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                carbon[layer] = carbon[numLayers]; 
+                carbon[layer] = carbon[numLayers];
 
             // Rocks
             BoundCheck(physical.Rocks.Length, numLayers, numLayers, "rocks layers");
@@ -756,7 +750,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 rocks[layer] = physical.Rocks[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                rocks[layer] = rocks[numLayers]; 
+                rocks[layer] = rocks[numLayers];
 
             // Sand
             BoundCheck(physical.ParticleSizeSand.Length, numLayers, numLayers, "sand layers");
@@ -764,7 +758,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 sand[layer] = physical.ParticleSizeSand[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                sand[layer] = sand[numLayers];    
+                sand[layer] = sand[numLayers];
 
             // Silt
             BoundCheck(physical.ParticleSizeSilt.Length, numLayers, numLayers, "silt layers");
@@ -772,7 +766,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 silt[layer] = physical.ParticleSizeSilt[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                silt[layer] = silt[numLayers];                               
+                silt[layer] = silt[numLayers];
 
             // Clay
             BoundCheck(physical.ParticleSizeClay.Length, numLayers, numLayers, "clay layers");
@@ -780,7 +774,7 @@ namespace Models.Soils.SoilTemp
             for (int layer = 1; layer <= numLayers; layer++)
                 clay[layer] = physical.ParticleSizeClay[layer - 1];
             for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                clay[layer] = clay[numLayers];                 
+                clay[layer] = clay[numLayers];
 
 
             maxSoilTemp = new double[numLayers + 1 + NUM_PHANTOM_NODES];
@@ -1058,10 +1052,10 @@ namespace Models.Soils.SoilTemp
                 }
             }
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
-            mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);            
+            mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);
             //volSpecHeatSoil.CopyTo(this.volSpecHeatSoil, 1);     // map volumetric heat capicity (Cv) from layers to nodes (node 2 in centre of layer 1)
             //this.volSpecHeatSoil[1] = volSpecHeatSoil[1];        // assume surface node Cv is same as top layer Cv
-        }        
+        }
 
         /// <summary>
         /// Calculate the thermal conductivity of the soil layer.
@@ -1072,7 +1066,7 @@ namespace Models.Soils.SoilTemp
 
             for (int node = 1; node <= numNodes; node++)
             {
-                double numerator = 0; 
+                double numerator = 0;
                 double denominator = 0;
                 foreach (var constituentName in constituents.Names)
                 {
@@ -1559,14 +1553,14 @@ namespace Models.Soils.SoilTemp
             double w = 2 * Math.PI / (365.25 * 24 * 3600);
             double dh = 0.6;   // this needs to be in mm a default value for a loam at field capacity - consider makeing this settable
             double zd = Math.Sqrt( 2 * dh / w);
-            double offset = 0.25;  // moves the "0" and rise in the sin to the spring equinox for southern latitudes 
+            double offset = 0.25;  // moves the "0" and rise in the sin to the spring equinox for southern latitudes
             if (weather.Latitude > 0.0)  // to cope with the northern summer
                 offset = -0.25;
 
             double[] soilTemp = new double[numNodes + 1 + 1];
             for (int nodes = 1; nodes <= numNodes; nodes++)
             {
-                soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) * 
+                soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) *
                                                               Math.Sin((clock.Today.DayOfYear / 365.0 + offset) * 2.0 * Math.PI - cumulativeDepth[nodes] / zd);
             }
 
