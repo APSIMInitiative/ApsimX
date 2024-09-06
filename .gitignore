@@ -60,6 +60,7 @@ CurrentDescriptiveSummary.html
 /Docs/.hugo_build.lock
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
+Tests/Simulation/ZMQ-Sync/data/
 /testEnvironments.json
 .mono
 ApsimX.xml

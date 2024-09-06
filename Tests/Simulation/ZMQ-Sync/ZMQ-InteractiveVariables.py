@@ -12,12 +12,14 @@ Todo:
     * Make the ZMQServer object run as part of its own thread, reading from a
         dedicated queue.
 """
-
+import csv
 import zmq
 import msgpack
 import time
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Axes, Figure
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
     
 import pdb
@@ -35,7 +37,6 @@ class ZMQServer(object):
         info (:obj: `dict`): { address: str, port: str } 
         socket
     """
-
     def __init__(
             self,
             addr: str,
@@ -130,7 +131,7 @@ class FieldNode(object):
     Attributes:
         id (int): Location (index) within Apsim list.
         info (dict): Includes the following keys:
-            { "X", "Y", "Z", "Name" }
+            { "X", "Y", "Z", "Radius", "WaterVolume", "Name" }
         
     """
     def __init__(
@@ -142,19 +143,32 @@ class FieldNode(object):
         Args:
             configs (:obj: `dict`, optional): Pre-formatted field configs; see
                 [example_url.com] for supported configurations.
+
+        TODO:
+            * Replace XYZ with GPS data and elevation/depth?
         """
         self.id = None
-        self.info = configs
+        self.info = {}
+        for key in ["Name", "SW", "X", "Y", "Z"]:
+            self.info[key] = configs[key]
+        # TODO(nubby): Make the radius/area settings better.
+        self.info["Area"] = str((float(configs["Radius"]) * 2)**2)
+
         self.coords = [configs["X"], configs["Y"], configs["Z"]]
+        self.radius = configs["Radius"]
         self.name = configs["Name"]
+        self.v_water = configs["SW"]
+
         # Aliases.
         self.socket = server.socket
         self.send_command = server.send_command
         self.create()
 
     def __repr__(self):
-        return "{}: @({},{},{})".format(
+        return "{}: {} acres, {} gal H2O; @({},{},{})".format(
             self.info["Name"],
+            self.info["SW"],
+            self.info["Area"],
             self.info["X"],
             self.info["Y"],
             self.info["Z"]
@@ -199,7 +213,6 @@ class ApsimController:
     Attributes:
         fields (:obj:`list` of :obj:`FieldNode`): List of Fields in simulation.
     """
-    
     def __init__(self, addr="0.0.0.0", port=27746):
         """Initializes a ZMQ connection to the Apsim synchronizer
        
@@ -231,32 +244,17 @@ class ApsimController:
             pass
         
         # Create all your Fields here.
-        field_configs = [
-            {
-                "Name": "CoolField",
-                "X": "1.0",
-                "Y": "2.0",
-                "Z": "3.0"
-            },
-            {
-                "Name": "FreshField",
-                "X": "4.0",
-                "Y": "5.0",
-                "Z": "6.0"
-            },
-            {
-                "Name": "DopeField",
-                "X": "7.0",
-                "Y": "8.0",
-                "Z": "9.0"
-            },
-            {
-                "Name": "FunkyField",
-                "X": "4.0",
-                "Y": "5.0",
-                "Z": "3.0"
-            },
-        ]
+        """
+        Format (dict[list]): [{
+            "Name": "(str)",
+            "Radius": "(float)",
+            "SW": "(float)",
+            "X": "(float)",
+            "Y": "(float)",
+            "Z": "(float)"
+            }...]
+        """
+        field_configs = read_csv_file("./data/sample_fields.csv")
         [
             self.fields.append(
                 FieldNode(
@@ -266,8 +264,6 @@ class ApsimController:
             ) for config in field_configs
         ]
         [print(field) for field in self.fields]
-        # create fields
-        #msg = self.send_command("fields", [self.fields], unpack=False)
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
 
@@ -295,6 +291,22 @@ class ApsimController:
         return rc
 
 
+# Function decs.
+## Helpers.
+def read_csv_file(fpath: str) -> list[dict]:
+    data = []
+    print(f"Reading from {fpath}...")
+    with open(fpath, "r+") as csvs:
+        reader = csv.DictReader(csvs)
+        for row in reader:
+            data.append(row)
+    print(f"    DONE")
+    if (not data):
+        print(f"WARNING!! {fpath} is an empty file!")
+    return data
+
+
+## MEAT.
 def poll_zmq(controller : ApsimController) -> tuple:
     """Runs the simulation and obtains simulated data
 
@@ -324,10 +336,10 @@ def poll_zmq(controller : ApsimController) -> tuple:
         ts = controller.send_command("get", ["[Clock].Today"])
         ts_arr.append(ts.to_unix())
         
-        sw1 = controller.send_command("get", ["sum([CoolField].HeavyClay.Water.Volumetric)"])
+        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([FreshField].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -352,30 +364,156 @@ def poll_zmq(controller : ApsimController) -> tuple:
     return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 
+def plot_field_geo(ax: Axes, field: FieldNode, color="g"):
+    """Add a the physical dimensions of a field as a subplot in a figure.
+
+    Args:
+        ax      (:obj:`Axes`)
+        fig     (:obj:`Figure`)
+        field   (:obj:`FieldNode`)
+        color   (:obj:`Optional[str]`)  Field color.
+    """
+    [x_coord, y_coord, z_coord] = [float(coord) for coord in field.coords]
+    r = float(field.radius)
+
+    # Define the vertices.
+    x_min = x_coord - r
+    y_min = y_coord - r
+    z_min = z_coord - r
+    x_max = x_coord + r
+    y_max = y_coord + r
+    z_max = z_coord + r
+
+    vertices = np.array([
+        [x_min, y_min, z_min],
+        [x_max, y_min, z_min],
+        [x_max, y_max, z_min],
+        [x_min, y_max, z_min],
+        [x_min, y_min, z_max],
+        [x_max, y_min, z_max],
+        [x_max, y_max, z_max],
+        [x_min, y_max, z_max]
+    ])
+
+    # Define the faces of the rectangular prism.
+    faces = [
+        [vertices[v] for v in [0, 1, 2, 3]],    # Bottom face.
+        [vertices[v] for v in [4, 5, 6, 7]],    # Top face.
+        [vertices[v] for v in [0, 1, 5, 4]],    # Front face.
+        [vertices[v] for v in [2, 3, 7, 6]],    # Back face.
+        [vertices[v] for v in [0, 3, 7, 4]],    # Left face.
+        [vertices[v] for v in [1, 2, 6, 5]]     # Right face.
+    ]
+
+    rprism = Poly3DCollection(
+        faces,
+        facecolors=color,
+        alpha=0.5,
+        edgecolors="black",
+        linewidths=1
+    )
+    ax.add_collection3d(rprism)
+
+def get_sphere_coords(field: FieldNode, u, v):
+    """Let's get parametric.
+    """
+    h2o_scaler = 1 
+    center = [float(coord) for coord in field.coords]
+    radius = h2o_scaler * float(field.v_water)
+    x = center[0] + radius * np.sin(v) * np.cos(u)
+    y = center[1] + radius * np.sin(v) * np.sin(u)
+    z = center[2] + radius * np.cos(v)
+    return x, y, z
+
+def plot_field_h2o(ax: Axes, field: FieldNode, color="c"):
+    """Add a field's water content as a spherical subplot in a figure.
+
+    Args:
+        ax      (:obj:`Axes`)
+        field   (:obj:`FieldNode`)
+    """
+    [x_coord, y_coord, z_coord] = [float(coord) for coord in field.coords]
+    r = float(field.v_water)
+    u = np.linspace(0, 2 * np.pi, 100)
+    v = np.linspace(0, np.pi, 100)
+    u, v = np.meshgrid(u, v)
+    x, y, z = get_sphere_coords(field, u, v)
+    ax.plot_surface(
+        x,
+        y,
+        z,
+        color=color,
+        alpha=0.2
+    )
+
+def plot_field(geox: Axes, h2ox: Axes, field: FieldNode):
+    """Add a field as a subplot in a figure.
+
+    Args:
+        geox    (:obj:`Axes`)   Axes for geospatial depiction.
+        h2ox    (:obj:`Axes`)   Axes for H2O volume depiction.
+        field   (:obj:`FieldNode`)
+    """
+    plot_field_geo(geox, field)
+    plot_field_h2o(h2ox, field)
+
+def _format_geo_plot(
+        ax: Axes,
+        x: list[float],
+        y: list[float],
+        z: list[float],
+        margin: float = 3.0
+    ):
+    """
+    ax: (:obj:`Axes`)
+    """
+    ax.set_xlabel("X [acres]")
+    ax.set_ylabel("Y [acres]")
+    ax.set_zlabel("Z [acres]")
+    ax.set_xlim([min(x) - margin, max(x) + margin])
+    ax.set_ylim([min(y) - margin, max(y) + margin])
+    ax.set_zlim([min(z) - margin, max(z) + margin])
+
+def _format_h2o_plot(
+        ax: Axes,
+        x: list[float],
+        y: list[float],
+        z: list[float],
+        margin: float = 3.0
+    ):
+    """
+    ax: (:obj:`Axes`)
+    """
+    ax.set_xlabel("X [gal]")
+    ax.set_ylabel("Y [gal]")
+    ax.set_zlabel("Z [gal]")
+    ax.set_xlim([min(x) - margin, max(x) + margin])
+    ax.set_ylim([min(y) - margin, max(y) + margin])
+    ax.set_zlim([min(z) - margin, max(z) + margin])
+
 def plot_oasis(controller: ApsimController):
     """Generate a 3D plot representation of an OASIS simulation.
 
     Args:
         controller (:obj:`ApsimController`)
     """
-    ax = plt.figure().add_subplot(projection="3d")
-    x, y, z, labels = [], [], [], []
+    fig = plt.figure(figsize=(10, 8))
+    geox = fig.add_subplot(211, projection="3d")
+    h2ox = fig.add_subplot(212, projection="3d")
+    x, y, z = [], [], []
     for field in controller.fields:
-        x.append(field.coords[0])
-        y.append(field.coords[1])
-        z.append(field.coords[2]) 
-        labels.append(field.name)
+        plot_field(geox, h2ox, field)
+        [x_coord, y_coord, z_coord] = field.coords
+        x.append(float(x_coord))
+        y.append(float(y_coord))
+        z.append(float(z_coord))
 
-    x = np.array(x,dtype="float")
-    y = np.array(y,dtype="float")
-    z = np.array(z,dtype="float")
+    _format_geo_plot(geox, x, y, z)
+    _format_h2o_plot(h2ox, x, y, z)
 
-    ax.scatter(x, y, z)
-    [ax.text(_x, _y, _z, label) for _x, _y, _z, label in zip(x, y, z, labels)]
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-
+    geox.set_title(f"Sample Apsim Field Positions")
+    h2ox.set_title(f"Sample Apsim Field Total H2O Volumes")
+    plt.tight_layout()
     plt.show()
 
 if __name__ == '__main__':
@@ -388,40 +526,3 @@ if __name__ == '__main__':
     # Plot simulation.
     # TODO(nubby): Integrate irrigation with colors.
     plot_oasis(apsim)
-    """
-    # Code for testing with echo server
-    #start_str = socket.recv_string()
-    #if start_str != "connect":
-    #    raise ValueError(f"Did not get correct start starting, got {start_str}, expected 'connect'")
-
-    #sendCommand(socket, "get", ["[Manager].Script.cumsumfert"])
-
-    #print('Do we get a reply?')
-    #reply = socket.recv_multipart()
-    #print(reply)
-
-    # make plot
-    plt.figure()
-
-    plt.plot(ts_arr, esw1_arr)
-    plt.plot(ts_arr, esw2_arr)
-    plt.xlabel("Time (Unix epochs)")
-    plt.ylabel("Volumetric Water Content")
-    plt.axvline(x=rain_day_ts, color='red', linestyle='--', label="Rain day")
-
-    plt.twinx()
-    plt.plot(ts_arr, rain_arr, color="orange")
-    plt.ylabel("Rain")
-
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-    """
-    """
-    # Test for FieldNode setup.
-    patonfigs = {
-            "Name": "pato",
-            "Bird": "duck"
-        }
-    pato = FieldNode(configs=patonfigs)
-    """
