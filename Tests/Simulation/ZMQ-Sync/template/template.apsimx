@@ -70,6 +70,9 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
           "Name": "TemplateField",
           "ResourceName": null,
           "Children": [
