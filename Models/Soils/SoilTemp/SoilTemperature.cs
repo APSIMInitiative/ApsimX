@@ -243,12 +243,14 @@ namespace Models.Soils.SoilTemp
                 result = 0.333 - 0.333 * volumetricFractionIce(layer) /
                          (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer));
                 // CHECK, the value of shapeFactorIce is not used...?
+                return result; // CHECK, not right but replicate what was in the code
             }
             else if (name == "Air")
             {
                 result = 0.333 - 0.333 * volumetricFractionAir(layer) /
                     (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer));
                 // CHECK, the value of shapeFactorAir is not used...?
+                return result; // CHECK, not right but replicate what was in the code
             }
             else if (name == "Minerals")
             {
