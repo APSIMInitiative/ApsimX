@@ -6,6 +6,7 @@ using System.Reflection;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
+using Models.Optimisation;
 using Newtonsoft.Json;
 
 namespace Models.Core
@@ -18,6 +19,7 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
+    [ValidParent(typeof(CroptimizR))]
     public abstract class Model : IModel
     {
         [NonSerialized]
