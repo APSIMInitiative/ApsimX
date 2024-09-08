@@ -313,7 +313,7 @@ namespace Models.Soils.SoilTemp
         /// <param name="AirPressure">air pressure (hPa)</param>
         /// <returns>density of air (kg/m3)</returns>
         /// <remarks>From - CHECK</remarks>
-        private double RhoA(double temperature, double AirPressure)
+        private double airDensity(double temperature, double AirPressure)
         {
             const double MWair = 0.02897;     // molecular weight air (kg/mol)
             const double RGAS = 8.3143;       // universal gas constant (J/mol/K)
@@ -335,7 +335,7 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>The Stefan-Boltzmann constant (W/m2/K4)</summary>
         /// <remarks>Power per unit area emitted by a black body as a function of its temperature</remarks>
-        private const double STEFAN_BOLTZMANNconst = 0.0000000567;
+        private const double stefanBoltzmannConstant = 0.0000000567;
 
         /// <summary>The index of the node in the atmosphere (aboveground)</summary>
         private const int airNode = 0;
@@ -350,15 +350,15 @@ namespace Models.Soils.SoilTemp
         /// <remarks>These are needed for the lower BC to work properly, invisible externally</remarks>
         private const int numPhantomNodes = 5;
 
-        /// <summary></summary>
-        private double maxTTimeDefault = 14.0;
-
         /// <summary>Boundary layer conductance, if constant (W/m2/K)</summary>
         /// <remarks>From Program 12.2, p140, Campbell, Soil Physics with Basic</remarks>
         private const double constantBoundaryLayerConductance = 20;
 
         /// <summary>Number of iterations to calculate atmosphere boundary layer conductance</summary>
         private const int numIterationsForBoundaryLayerConductance = 1;
+
+        /// <summary>Time of maximum temperature (h)</summary>
+        private double defaultTimeOfMaximumTemperature = 14.0;  // FIXME, there should be an input ot calculation for non-default (also fot minT)
 
         /// <summary>Default wind speed (m/s)</summary>
         private double defaultWindSpeed = 3.0;
@@ -380,7 +380,7 @@ namespace Models.Soils.SoilTemp
         private bool doInit1Stuff = false;
 
         /// <summary>Internal time-step (s)</summary>
-        private double gDt = 0.0;
+        private double internalTimeStep = 0.0;
 
         /// <summary>Time of day from midnight (s)</summary>
         private double timeOfDaySecs = 0.0;
@@ -390,6 +390,9 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Number of layers in the soil profile</summary>
         private int numLayers = 0;
+
+        /// <summary>Depths of nodes (m)</summary>
+        private double[] nodeDepth;
 
         /// <summary>Parameter 1 for computing thermal conductivity of soil solids</summary>
         private double[] thermCondPar1;
@@ -404,7 +407,7 @@ namespace Models.Soils.SoilTemp
         private double[] thermCondPar4;
 
         /// <summary>Volumetric specific heat of...CHECK (J/m3/K)</summary>
-        private double[] volSpecHeatSoil;     // 
+        private double[] volSpecHeatSoil;
 
         /// <summary>Temperature of each soil layer (oC)</summary>
         private double[] soilTemp;
@@ -425,13 +428,10 @@ namespace Models.Soils.SoilTemp
         private double boundaryLayerConductance = 0.0;
 
         /// <summary>Soil temperature at the end of this iteration (oC)</summary>
-        private double[] tempNew;
-
-        /// <summary>Depths of nodes (m)</summary>
-        private double[] depth;
+        private double[] newTemperature;
 
         /// <summary>Air temperature (oC)</summary>
-        private double airTemp = 0.0;
+        private double airTemperature = 0.0;
 
         /// <summary>Yesterday's maximum daily air temperature (oC)</summary>
         private double maxTempYesterday = 0.0;
@@ -448,23 +448,41 @@ namespace Models.Soils.SoilTemp
         /// <summary>Maximum soil temperature (oC)</summary>
         private double[] maxSoilTemp;
 
-        /// <summary>CHECK</summary>
-        private double[] aveSoilTemp;  // FIXME - optional. Allow setting from set in manager or get from input //init to average soil temperature
+        /// <summary>Average soil temperature (oC)</summary>
+        private double[] aveSoilTemp;
 
-        /// <summary>Soil bulk density (g/cm3)</summary>
+        /// <summary>Thickness of each soil, includes phantom layer (mm)</summary>
+        private double[] thickness;
+
+        /// <summary>Soil bulk density, includes phantom layer (g/cm3)</summary>
         private double[] bulkDensity;
 
-        /// <summary>Thickness of each soil (mm)</summary>
-        private double[] thickness;
+        /// <summary>Volumetric fraction of rocks in each soil layer (%)</summary>
+        private double[] rocks;
+
+        /// <summary>Volumetric fraction of carbon (CHECK) in each soil layer (%)</summary>
+        private double[] carbon;
+
+        /// <summary>Volumetric fraction of sand in each soil layer (%)</summary>
+        private double[] sand;
+
+        /// <summary>Volumetric fraction of silt in each soil layer (%)</summary>
+        private double[] silt;
+
+        /// <summary>Volumetric fraction of clay in each soil layer (%)</summary>
+        private double[] clay;
+
+        /// <summary>Height of soil roughness (mm)</summary>
+        private double soilRoughnessHeight = 0.0;
 
         /// <summary>Height of instruments above soil surface (m)</summary>
         private double instrumentHeight = 0.0;
 
         /// <summary>Daily atmosphere pressure (hPa)</summary>
-        private double airPressure = 0.0;
+        private double airPressure = 0.0;   // FIXME, need to read from weather
 
-        /// <summary>Daily wind run (km)</summary>
-        private double windSpeed = 0.0;
+        /// <summary>Daily wind run (km, CHECK)</summary>
+        private double windSpeed = 0.0;   // FIXME, need to read from weather
 
         /// <summary>Net radiation per internal time-step (MJ)</summary>
         private double netRadiation = 0.0;
@@ -472,29 +490,11 @@ namespace Models.Soils.SoilTemp
         /// <summary>Height of canopy above ground (m)</summary>
         private double canopyHeight = 0.0;
 
-        /// <summary>Height of soil roughness (mm)</summary>
-        private double soilRoughnessHeight = 0.0;
-
-        /// <summary>Volumetric fraction of rocks in each soil layer (% - CHECK unit)</summary>
-        private double[] rocks;
-
-        /// <summary>Volumetric fraction of carbon (CHECK) in each soil layer (% - CHECK unit)</summary>
-        private double[] carbon;
-
-        /// <summary>Volumetric fraction of sand in each soil layer (% - CHECK unit)</summary>
-        private double[] sand;
-
-        /// <summary>Volumetric fraction of silt in each soil layer (% - CHECK unit)</summary>
-        private double[] silt;
-
-        /// <summary>Volumetric fraction of clay in each soil layer (% - CHECK unit)</summary>
-        private double[] clay;
-
         /// <summary>Height of instruments above ground</summary>
-        private double instrumHeight = 0.0;
+        private double instrumHeight = 0.0;  // FIXME, this should be read in (or deleted, use default)
 
-        /// <summary>Altitude at site (m)</summary>
-        private double altitude = 0.0;
+//        /// <summary>Altitude at site (m)</summary>
+//        private double altitude = 0.0;   // FIXME, this should be read from weather(?)
 
         /// <summary>Forward/backward differencing coefficient (0-1)</summary>
         /// <remarks>
@@ -520,10 +520,10 @@ namespace Models.Soils.SoilTemp
         /// </remarks>
         private double nu = 0.6;
 
-        /// <summary></summary>
+        /// <summary>Flag whether boundary layer conductance is calculated or gotten from input</summary>
         private string boundarLayerConductanceSource = "calc";
 
-        /// <summary></summary>
+        /// <summary>Flag whether net radiation is calculated or gotten from input</summary>
         private string netRadiationSource = "calc";
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -531,6 +531,7 @@ namespace Models.Soils.SoilTemp
         #region Input for this model  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Depth strings. Wrapper around Thickness</summary>
+        /// <remarks>Use for display only, values taken from thickness</remarks>
         [Display]
         [Summary]
         [Units("mm")]
@@ -544,14 +545,14 @@ namespace Models.Soils.SoilTemp
         /// <summary>Thickness of soil layers (mm)</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Initial values</summary>
+        /// <summary>Initial values for the temperature in each layer (oC)</summary>
         [Summary]
         [Display(Format = "N2")]
         [Units("oC")]
         public double[] InitialValues { get; set; }
 
         /// <summary>Depth down to the constant temperature (mm)</summary>
-        [JsonIgnore]
+        [JsonIgnore]   //FIXME, should this be in GUI?
         [Units("mm")]
         public double DepthToConstantTemperature { get; set; } = 10000.0;
 
@@ -559,7 +560,7 @@ namespace Models.Soils.SoilTemp
 
         #region Outputs from this model - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Temperature at end of last time-step within a day, i.e. at midnight</summary>
+        /// <summary>Temperatures over the soil profile at end of a day, i.e. at midnight</summary>
         [Units("oC")]
         public double[] FinalSoilTemp
         {
@@ -571,14 +572,16 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary>Temperature at end of last time-step within a day, i.e. at midnight</summary>
+        /// <summary>Temperature of soil surface at end of a day, i.e. at midnight</summary>
         [Units("oC")]
         public double FinalSoilSurfaceTemp { get { return soilTemp[surfaceNode]; } }
 
-        /// <summary>Mandatory for ISoilTemperature interface. For now, just return average daily values - CHECK</summary>
+        /// <summary>Temperature of soil layers averaged over a day</summary>
+        /// <remarks>Mandatory for ISoilTemperature interface. For now, just return average daily values - CHECK</remarks>
+        [Units("oC")]
         public double[] Value { get { return AverageSoilTemp; } }
 
-        /// <summary>Temperature over soil profile averaged over all time-steps within a day</summary>
+        /// <summary>Temperatures over soil profile averaged over a day</summary>
         /// <remarks>If called during init1, this will return an array of length 100 with all elements as 0.0</remarks>
         [Units("oC")]
         public double[] AverageSoilTemp
@@ -591,11 +594,11 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary>Temperature at the soil surface averaged over all time-steps within a day</summary>
-        [Units("oC")]  // CHECk, description is not right
+        /// <summary>Temperature of soil surface averaged over a day</summary>
+        [Units("oC")]
         public double AverageSoilSurfaceTemp { get { return aveSoilTemp[surfaceNode]; } }
 
-        /// <summary></summary>
+        /// <summary>Minimum temperatures over the soil profile within a day</summary>
         [Units("oC")]
         public double[] MinSoilTemp
         {
@@ -607,11 +610,11 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary></summary>
+        /// <summary>Minimum temperatures of soil surface within a day</summary>
         [Units("oC")]
         public double minSoilSurfaceTemp { get { return minSoilTemp[surfaceNode]; } }
 
-        /// <summary></summary>
+        /// <summary>Maximum temperatures over the soil profile within a day</summary>
         [Units("oC")]
         public double[] MaxSoilTemp
         {
@@ -623,16 +626,16 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary></summary>
+        /// <summary>Maximum temperatures of soil surface within a day</summary>
         [Units("oC")]
         public double MaxSoilSurfaceTemp { get { return maxSoilTemp[surfaceNode]; } }
 
-        /// <summary></summary>
-        [Units("J/sec/m/K")]
+        /// <summary>Atmosphere boundary layer conductance averaged over a day</summary>
+        [Units("J/sec/m/K")]  // FIXME, units are wrong
         public double BoundaryLayerConductance { get { return boundaryLayerConductance; } }
 
-        /// <summary></summary>
-        [Units("J/sec/m/K")]
+        /// <summary>Thermal conductivity over the soil profile</summary>
+        [Units("J/sec/m/K")]  // FIXME, units are wrong
         public double[] ThermalConductivity
         {
             get
@@ -643,8 +646,8 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary></summary>
-        [Units("J/m3/K/s")]
+        /// <summary>Heat capacity over the soil profile</summary>
+        [Units("J/m3/K/s")]  // FIXME, units are wrong
         public double[] HeatCapacity
         {
             get
@@ -655,8 +658,8 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary></summary>
-        [Units("J/m3/K/s")]
+        /// <summary>Heat storage over the soil profile</summary>
+        [Units("J/m3/K/s")]  //FIXME, check units
         public double[] HeatStore
         {
             get
@@ -667,7 +670,7 @@ namespace Models.Soils.SoilTemp
             }
         }
 
-        /// <summary></summary>
+        /// <summary>FIXME</summary>
         [Units("oC")]
         public double[] Thr_profile  // CHECK, needed anywhere??
         {
@@ -706,7 +709,7 @@ namespace Models.Soils.SoilTemp
         [EventSubscribe("DoSoilTemperature")]
         private void OnProcess(object sender, EventArgs e)
         {
-            GetOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
+            getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
 
             if (doInit1Stuff)
             {
@@ -718,20 +721,20 @@ namespace Models.Soils.SoilTemp
                 else
                 {
                     // set t and tnew values to TAve. soil_temp is currently not used
-                    CalcSoilTemp(ref soilTemp);
+                    calcSoilTemperature(ref soilTemp);
                     InitialValues = new double[numLayers];
                     Array.ConstrainedCopy(soilTemp, topsoilNode, InitialValues, 0, numLayers);
                 }
                 
                 soilTemp[airNode] = weather.MeanT;
-                soilTemp[surfaceNode] = SurfaceTemperatureInit();
+                soilTemp[surfaceNode] = calcSurfaceTemperature();
 
-                // initialise the phantom nodes.
+                // initialise the phantom nodes
                 for (int i = numNodes + 1; i < soilTemp.Length; i++)
                     soilTemp[i] = weather.Tav;
 
                 // gT_zb(gNz + 1) = gT_zb(gNz)
-                soilTemp.CopyTo(tempNew, 0);
+                soilTemp.CopyTo(newTemperature, 0);
 
                 // 'gTAve = tav
                 // 'For node As Integer = AIRNODE To gNz + 1      ' FIXME - need here until variable passing on init2 enabled
@@ -751,6 +754,7 @@ namespace Models.Soils.SoilTemp
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the tasks to reset the model</summary>
+        /// <param name="values">The value of soil temperature to set the model (optional)</param>
         public void Reset(double[] values = null)
         {
             if (values == null)
@@ -769,46 +773,40 @@ namespace Models.Soils.SoilTemp
             }
         
             soilTemp[airNode] = weather.MeanT;
-            soilTemp[surfaceNode] = SurfaceTemperatureInit();
+            soilTemp[surfaceNode] = calcSurfaceTemperature();
             int firstPhantomNode = topsoilNode + InitialValues.Length;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
             {
                 soilTemp[i] = weather.Tav;
             }
 
-            soilTemp.CopyTo(tempNew, 0);
+            soilTemp.CopyTo(newTemperature, 0);
         }
 
         /// <summary>Initialise global variables to initial values</summary>
         /// <remarks></remarks>
         private void getIniVariables()
         {
-            BoundCheck(weather.Tav, -30.0, 50.0, "tav (oC)");
+            boundCheck(weather.Tav, -30.0, 50.0, "tav (oC)");
 
             if ((instrumHeight > 0.00001))
                 instrumentHeight = instrumHeight;
             else
                 instrumentHeight = defaultInstrumentHeight;
-            BoundCheck(instrumentHeight, 0.0, 5.0, "instrumentHeight (m)");
 
-            BoundCheck(altitude, -100.0, 6000.0, "altitude (m)");
             double AltitudeMetres = 0.0;
-            // If (altitude >= 0.0) Then
-            // AltitudeMetres = altitude
-            // Else
             AltitudeMetres = defaultAltitude;       // FIXME - need to detect if altitude not supplied elsewhere.
-                                                    // End If
 
             airPressure = 101325.0 * Math.Pow((1.0 - 2.25577 * 0.00001 * AltitudeMetres), 5.25588) / 100.0;
-            BoundCheck(airPressure, 800.0, 1200.0, "air pressure (hPa)");
+            boundCheck(airPressure, 800.0, 1200.0, "air pressure (hPa)");
         }
 
         /// <summary>Set global variables to new soil profile state</summary>
         /// <remarks>
-        /// mapping of layers to nodes:
-        ///  3layer - air surface 1 2 ... NumLayers NumLayers+1
-        ///  node  - 0   1       2 3 ... Nz        Nz+1
-        ///  thus the node 1 is at the soil surface and Nz = NumLayers + 1
+        /// mapping of nodes to layers:
+        ///  node 0 is in the air, node 1 is on the soil surface, 
+        ///  node 2 at the middle of layer 1, node 3 in layer 3 and so on,
+        ///  the last node is below the soil profile, thus at NumLayers + 1
         /// </remarks>
         private void getProfileVariables()  // CHECK, probably not needed
         {
@@ -821,23 +819,23 @@ namespace Models.Soils.SoilTemp
 
             // add enough to make last node at 9-10 meters - should always be enough to assume constant temperature
             // Depth added below profile to take last node to constant temperature zone (m)
-            double belowProfileDepth = Math.Max(DepthToConstantTemperature - SumOfRange(thickness, 1, numLayers), 1000.0);
+            double belowProfileDepth = Math.Max(DepthToConstantTemperature - MathUtilities.Sum(thickness, 1, numLayers), 1000.0);
 
             double thicknessForPhantomNodes = belowProfileDepth * 2.0 / numPhantomNodes; // double depth so that bottom node at mid-point is at the ConstantTempDepth
             int firstPhantomNode = numLayers;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
                 thickness[i] = thicknessForPhantomNodes;   
-            var oldDepth = depth;
-            depth = new double[numNodes + 1 + 1];
+            var oldDepth = nodeDepth;
+            nodeDepth = new double[numNodes + 1 + 1];
 
             // Set the node depths to approx middle of soil layers
             if (oldDepth != null)
-                Array.Copy(oldDepth, depth, Math.Min(numNodes + 1 + 1, oldDepth.Length));      // Z_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
-            depth[airNode] = 0.0;
-            depth[surfaceNode] = 0.0;
-            depth[topsoilNode] = 0.5 * thickness[1] / 1000.0;
+                Array.Copy(oldDepth, nodeDepth, Math.Min(numNodes + 1 + 1, oldDepth.Length));      // Z_zb dimensioned for nodes 0 to Nz + 1 extra for zone below bottom layer
+            nodeDepth[airNode] = 0.0;
+            nodeDepth[surfaceNode] = 0.0;
+            nodeDepth[topsoilNode] = 0.5 * thickness[1] / 1000.0;
             for (int node = topsoilNode; node <= numNodes; node++)
-                depth[node + 1] = (SumOfRange(thickness, 1, node - 1) + 0.5 * thickness[node]) / 1000.0;
+                nodeDepth[node + 1] = (MathUtilities.Sum(thickness, 1, node - 1) + 0.5 * thickness[node]) / 1000.0;
             
             // BD
             var oldBulkDensity = bulkDensity;
@@ -903,7 +901,7 @@ namespace Models.Soils.SoilTemp
             volSpecHeatSoil = new double[numNodes + 1];
             soilTemp = new double[numNodes + 1 + 1];
             morningSoilTemp = new double[numNodes + 1 + 1];
-            tempNew = new double[numNodes + 1 + 1];
+            newTemperature = new double[numNodes + 1 + 1];
             thermalConductivity = new double[numNodes + 1];
             heatStorage = new double[numNodes + 1];
             thermalConductance = new double[numNodes + 1 + 1];
@@ -916,8 +914,8 @@ namespace Models.Soils.SoilTemp
             doThermalConductivityCoeffs();
 
             // set t and tn values to TAve. soil_temp is currently not used
-            CalcSoilTemp(ref soilTemp);     // FIXME - returns as zero here because initialisation is not complete.
-            soilTemp.CopyTo(tempNew, 0);
+            calcSoilTemperature(ref soilTemp);     // FIXME - returns as zero here because initialisation is not complete.
+            soilTemp.CopyTo(newTemperature, 0);
             soilRoughnessHeight = bareSoilRoughness;
         }
 
@@ -961,7 +959,7 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Update global variables with external states and check validity of values</summary>
         /// <remarks></remarks>
-        private void GetOtherVariables()
+        private void getOtherVariables()
         {
             waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
@@ -982,12 +980,12 @@ namespace Models.Soils.SoilTemp
         /// <summary>Perform actions for current day</summary>
         private void doProcess()
         {
-            const int ITERATIONSperDAY = 48;     // number of iterations in a day
+            const int interactionsPerDay = 48;     // number of iterations in a day
 
             double cva = 0.0;
             double cloudFr = 0.0;
             double[] solarRadn = new double[49];   // Total incoming short wave solar radiation per time-step
-            doNetRadiation(ref solarRadn, ref cloudFr, ref cva, ITERATIONSperDAY);
+            doNetRadiation(ref solarRadn, ref cloudFr, ref cva, interactionsPerDay);
 
             // zero the temperature profiles
             MathUtilities.Zero(minSoilTemp);
@@ -996,7 +994,7 @@ namespace Models.Soils.SoilTemp
             boundaryLayerConductance = 0.0;
 
             // calc dt
-            gDt = Math.Round(timestep / ITERATIONSperDAY);
+            internalTimeStep = Math.Round(timestep / interactionsPerDay);
 
             // These two call used to be inside the time-step loop. I've taken them outside,
             // as the results do not appear to vary over the course of the day.
@@ -1006,16 +1004,16 @@ namespace Models.Soils.SoilTemp
             doVolumetricSpecificHeat();      // RETURNS volSpecHeatSoil() (volumetric heat capacity of nodes)
             doThermalConductivity();     // RETURNS gThermConductivity_zb()
 
-            for (int timeStepIteration = 1; timeStepIteration <= ITERATIONSperDAY; timeStepIteration++)
+            for (int timeStepIteration = 1; timeStepIteration <= interactionsPerDay; timeStepIteration++)
             {
-                timeOfDaySecs = gDt * System.Convert.ToDouble(timeStepIteration);
-                if (timestep < 24.0 * 60.0 * 60.0)
-                    airTemp = weather.MeanT;
+                timeOfDaySecs = internalTimeStep * System.Convert.ToDouble(timeStepIteration);
+                if (timestep < 24.0 * 60.0 * 60.0)  // CHECK, this seem wrong, shouldn't be '>'?
+                    airTemperature = weather.MeanT;
                 else
-                    airTemp = interpolateTemperature(timeOfDaySecs / 3600.0);
+                    airTemperature = interpolateTemperature(timeOfDaySecs / 3600.0);
                 // Convert to hours //most of the arguments in FORTRAN version are global vars so
                 // do not need to pass them here, they can be accessed inside InterpTemp
-                tempNew[airNode] = airTemp;
+                newTemperature[airNode] = airTemperature;
 
                 netRadiation = interpolateNetRadiation(solarRadn[timeStepIteration], cloudFr, cva);
 
@@ -1033,19 +1031,19 @@ namespace Models.Soils.SoilTemp
                             // heat flow calculation at least once, since surface temperature depends on heat flux to
                             // the atmosphere, but heat flux to the atmosphere is determined, in part, by the surface
                             // temperature.
-                            thermalConductivity[airNode] = getBoundaryLayerConductance(ref tempNew);
+                            thermalConductivity[airNode] = getBoundaryLayerConductance(ref newTemperature);
                             for (int iteration = 1; iteration <= numIterationsForBoundaryLayerConductance; iteration++)
                             {
-                                doThomas(ref tempNew);        // RETURNS TNew_zb()
-                                thermalConductivity[airNode] = getBoundaryLayerConductance(ref tempNew);
+                                doThomas(ref newTemperature);        // RETURNS TNew_zb()
+                                thermalConductivity[airNode] = getBoundaryLayerConductance(ref newTemperature);
                             }
 
                             break;
                         }
                 }
                 // Now start again with final atmosphere boundary layer conductance
-                doThomas(ref tempNew);        // RETURNS gTNew_zb()
-                doUpdate(ITERATIONSperDAY);
+                doThomas(ref newTemperature);        // RETURNS gTNew_zb()
+                doUpdate(interactionsPerDay);
                 if (Math.Abs(timeOfDaySecs - 5.0 * 3600.0) <= Math.Min(timeOfDaySecs, 5.0 * 3600.0) * 0.0001)
                 {
                     soilTemp.CopyTo(morningSoilTemp, 0);
@@ -1111,9 +1109,9 @@ namespace Models.Soils.SoilTemp
             for (int node = surfaceNode; node <= numNodes; node++)
             {
                 int layer = node - 1;     // node n lies at the centre of layer n-1
-                double depthLayerAbove = layer >= 1 ? SumOfRange(thickness, 1, layer) : 0.0;
-                double d1 = depthLayerAbove - (depth[node] * 1000.0);
-                double d2 = depth[node + 1] * 1000.0 - depthLayerAbove;
+                double depthLayerAbove = layer >= 1 ? MathUtilities.Sum(thickness, 1, layer) : 0.0;
+                double d1 = depthLayerAbove - (nodeDepth[node] * 1000.0);
+                double d2 = nodeDepth[node + 1] * 1000.0 - depthLayerAbove;
                 double dSum = d1 + d2;
 
                 nodeArray[node] = MathUtilities.Divide(layerArray[layer] * d1, dSum, 0)
@@ -1140,11 +1138,11 @@ namespace Models.Soils.SoilTemp
             for (int node = surfaceNode; node <= numNodes; node++)
             {
                 // volume of soil around node (m3/m2)
-                double volumeOfSoilAtNode = 0.5 * (depth[node + 1] - depth[node - 1]);   // Volume of soil around node (m^3), assuming area is 1 m^2
-                heatStorage[node] = MathUtilities.Divide(volSpecHeatSoil[node] * volumeOfSoilAtNode, gDt, 0);       // Joules/s/K or W/K
+                double volumeOfSoilAtNode = 0.5 * (nodeDepth[node + 1] - nodeDepth[node - 1]);   // Volume of soil around node (m^3), assuming area is 1 m^2
+                heatStorage[node] = MathUtilities.Divide(volSpecHeatSoil[node] * volumeOfSoilAtNode, internalTimeStep, 0);       // Joules/s/K or W/K
                                                                                                                // rate of heat
                                                                                                                // convert to thermal conductance
-                double elementLength = depth[node + 1] - depth[node];             // (m)
+                double elementLength = nodeDepth[node + 1] - nodeDepth[node];             // (m)
                 thermalConductance[node] = MathUtilities.Divide(thermalConductivity[node], elementLength, 0);  // (W/m/K)
             }
 
@@ -1178,7 +1176,7 @@ namespace Models.Soils.SoilTemp
                 case "calc":
                     {
                         // interpolated from actual net radiation 
-                        radnNet = MathUtilities.Divide(netRadiation * 1000000.0, gDt, 0);
+                        radnNet = MathUtilities.Divide(netRadiation * 1000000.0, internalTimeStep, 0);
                         break;
                     }
 
@@ -1219,7 +1217,7 @@ namespace Models.Soils.SoilTemp
             for (int node = numNodes - 1; node >= surfaceNode; node += -1)
             {
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-                BoundCheck(newTemps[node], -50.0, 100.0, "newTemps(" + node.ToString() + ")");
+                boundCheck(newTemps[node], -50.0, 100.0, "newTemps(" + node.ToString() + ")");
             }
         }
 
@@ -1235,7 +1233,7 @@ namespace Models.Soils.SoilTemp
         private double interpolateTemperature(double timeHours)
         {
             double time = timeHours / 24.0;           // Current time of day as a fraction of a day
-            double maxT_time = maxTTimeDefault / 24.0;     // Time of maximum temperature as a fraction of a day
+            double maxT_time = defaultTimeOfMaximumTemperature / 24.0;     // Time of maximum temperature as a fraction of a day
             double minT_time = maxT_time - 0.5;       // Time of minimum temperature as a fraction of a day
 
             if (time < minT_time)
@@ -1252,16 +1250,16 @@ namespace Models.Soils.SoilTemp
                 else if (tScale < 0)
                     tScale = 0;
 
-                double CurrentTemp = weather.MinT + tScale * (midnightT - weather.MinT);
-                return CurrentTemp;
+                double currentTemperature = weather.MinT + tScale * (midnightT - weather.MinT);
+                return currentTemperature;
             }
             else
             {
                 // Current time of day is at time of minimum temperature or after it up to midnight.
-                double CurrentTemp = Math.Sin((time + 0.25 - maxT_time) * 2.0 * Math.PI)
+                double currentTemperature = Math.Sin((time + 0.25 - maxT_time) * 2.0 * Math.PI)
                                           * (weather.MaxT - weather.MinT) / 2.0
                                           + weather.MeanT;
-                return CurrentTemp;
+                return currentTemperature;
             }
         }
 
@@ -1271,10 +1269,10 @@ namespace Models.Soils.SoilTemp
         private void doUpdate(int numInterationsPerDay)
         {
             // Now transfer to old temperature array
-            tempNew.CopyTo(soilTemp, 0);
+            newTemperature.CopyTo(soilTemp, 0);
 
             // initialise the min & max to soil temperature if this is the first iteration
-            if (timeOfDaySecs < gDt * 1.2)
+            if (timeOfDaySecs < internalTimeStep * 1.2)
             {
                 for (int node = surfaceNode; node <= numNodes; node++)
                 {
@@ -1308,42 +1306,42 @@ namespace Models.Soils.SoilTemp
         /// </remarks>
         private double getBoundaryLayerConductance(ref double[] TNew_zb)
         {
-            const double VONK = 0.41;                 // VK; von Karman's constant
-            const double GRAVITATIONALconst = 9.8;    // GR; gravitational constant (m/s/s)
-            const double CAPP = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
-            const double EMISSIVITYsurface = 0.98;
-            double SpecificHeatAir = CAPP * RhoA(airTemp, airPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
+            const double vonKarmanConstant = 0.41;                 // VK; von Karman's constant
+            const double gravitationalConstant = 9.8;    // GR; gravitational constant (m/s/s)
+            const double specificHeatOfAir = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
+            const double surfaceEmissivity = 0.98;
+            double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, airPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
                                                                         // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
                                                                         // gTNew_zb = TN; gAirT = TA;
 
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
             // been obtained. (Extract from Campbell p138.). Canopy height is the height of the roughness elements.
-            double RoughnessFacMomentum = 0.13 * canopyHeight;    // ZM; surface roughness factor for momentum
-            double RoughnessFacHeat = 0.2 * RoughnessFacMomentum;  // ZH; surface roughness factor for heat
+            double roughnessFactorMomentum = 0.13 * canopyHeight;    // ZM; surface roughness factor for momentum
+            double roughnessFactorHeat = 0.2 * roughnessFactorMomentum;  // ZH; surface roughness factor for heat
             double d = 0.77 * canopyHeight;                       // D; zero plane displacement for the surface
 
-            double SurfaceTemperature = TNew_zb[surfaceNode];    // surface temperature (oC)
+            double surfaceTemperature = TNew_zb[surfaceNode];    // surface temperature (oC)
 
             // To calculate the radiative conductance term of the boundary layer conductance, we need to account for canopy and residue cover
-            // Calculate a diffuce penetration constant (KL Bristow, 1988. Aust. J. Soil Res, 26, 269-80. The Role of Mulch and its Architecture
+            // Calculate a diffuse penetration constant (KL Bristow, 1988. Aust. J. Soil Res, 26, 269-80. The Role of Mulch and its Architecture
             // in modifying soil temperature). Here we estimate this using the Soilwat algorithm for calculating EOS from EO and the cover effects,
             // assuming the cover effects on EO are similar to Bristow's diffuse penetration constant - 0.26 for horizontal mulch treatment and 0.44
             // for vertical mulch treatment.
-            double PenetrationConstant = Math.Max(0.1, waterBalance.Eos) / Math.Max(0.1, waterBalance.Eo);
+            double diffusePenetrationConstant = Math.Max(0.1, waterBalance.Eos) / Math.Max(0.1, waterBalance.Eo);
 
             // Campbell, p136, indicates the radiative conductance is added to the boundary layer conductance to form a combined conductance for
             // heat transfer in the atmospheric boundary layer. Eqn 12.9 modified for residue and plant canopy cover
-            double radiativeConductance = 4.0 * STEFAN_BOLTZMANNconst * EMISSIVITYsurface * PenetrationConstant
-                                               * Math.Pow(kelvinT(airTemp), 3);    // Campbell uses air temperature in leiu of surface temperature
+            double radiativeConductance = 4.0 * stefanBoltzmannConstant * surfaceEmissivity * diffusePenetrationConstant
+                                               * Math.Pow(kelvinT(airTemperature), 3);    // Campbell uses air temperature in leiu of surface temperature
 
             // Zero iteration variables
-            double FrictionVelocity = 0.0;        // FV; UStar
-            double BoundaryLayerCond = 0.0;       // KH; sensible heat flux in the boundary layer;(OUTPUT) thermal conductivity  (W/m2/K)
-            double StabilityParam = 0.0;          // SP; Index of the relative importance of thermal and mechanical turbulence in boundary layer transport.
-            double StabilityCorMomentum = 0.0;    // PM; stability correction for momentum
-            double StabilityCorHeat = 0.0;        // PH; stability correction for heat
-            double HeatFluxDensity = 0.0;         // H; sensible heat flux in the boundary layer
+            double frictionVelocity = 0.0;        // FV; UStar
+            double boundaryLayerCond = 0.0;       // KH; sensible heat flux in the boundary layer;(OUTPUT) thermal conductivity  (W/m2/K)
+            double stabilityParammeter = 0.0;          // SP; Index of the relative importance of thermal and mechanical turbulence in boundary layer transport.
+            double stabilityCorrectionMomentum = 0.0;    // PM; stability correction for momentum
+            double stabilityCorrectionHeat = 0.0;        // PH; stability correction for heat
+            double heatFluxDensity = 0.0;         // H; sensible heat flux in the boundary layer
 
             // Since the boundary layer conductance is a function of the heat flux density, an iterative method must be used to find the boundary layer conductance.
             for (int iteration = 1; iteration <= 3; iteration++)
@@ -1353,23 +1351,23 @@ namespace Models.Soils.SoilTemp
                 // of turbulence above the crop. The level of turbulence, in turn, is determined by the roughness of the surface,
                 // the distance from the surface and the thermal stratification of the boundary layer.
                 // Eqn 12.11 Campbell
-                FrictionVelocity = MathUtilities.Divide(windSpeed * VONK,
-                                                        Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacMomentum,
-                                                                                      RoughnessFacMomentum,
-                                                                                      0)) + StabilityCorMomentum,
+                frictionVelocity = MathUtilities.Divide(windSpeed * vonKarmanConstant,
+                                                        Math.Log(MathUtilities.Divide(instrumentHeight - d + roughnessFactorMomentum,
+                                                                                      roughnessFactorMomentum,
+                                                                                      0)) + stabilityCorrectionMomentum,
                                                         0);
                 // Eqn 12.10 Campbell
-                BoundaryLayerCond = MathUtilities.Divide(SpecificHeatAir * VONK * FrictionVelocity,
-                                                         Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacHeat,
-                                                                                       RoughnessFacHeat, 0)) + StabilityCorHeat,
+                boundaryLayerCond = MathUtilities.Divide(SpecificHeatAir * vonKarmanConstant * frictionVelocity,
+                                                         Math.Log(MathUtilities.Divide(instrumentHeight - d + roughnessFactorHeat,
+                                                                                       roughnessFactorHeat, 0)) + stabilityCorrectionHeat,
                                                          0);
 
-                BoundaryLayerCond += radiativeConductance; // * (1.0 - sunAngleAdjust())
+                boundaryLayerCond += radiativeConductance; // * (1.0 - sunAngleAdjust())
 
-                HeatFluxDensity = BoundaryLayerCond * (SurfaceTemperature - airTemp);
+                heatFluxDensity = boundaryLayerCond * (surfaceTemperature - airTemperature);
                 // Eqn 12.14
-                StabilityParam = MathUtilities.Divide(-VONK * instrumentHeight * GRAVITATIONALconst * HeatFluxDensity,
-                                                      SpecificHeatAir * kelvinT(airTemp) * Math.Pow(FrictionVelocity, 3.0)
+                stabilityParammeter = MathUtilities.Divide(-vonKarmanConstant * instrumentHeight * gravitationalConstant * heatFluxDensity,
+                                                      SpecificHeatAir * kelvinT(airTemperature) * Math.Pow(frictionVelocity, 3.0)
                                                       , 0);
 
                 // The stability correction parameters correct the boundary layer conductance for the effects
@@ -1378,23 +1376,23 @@ namespace Models.Soils.SoilTemp
                 // in a neutral atmosphere. If the air near the surface is colder than the air above, the atmosphere
                 // is unstable and mixing is suppressed.
 
-                if (StabilityParam > 0.0)
+                if (stabilityParammeter > 0.0)
                 {
                     // Stable conditions, when surface temperature is lower than air temperature, the sensible heat flux
                     // in the boundary layer is negative and stability parameter is positive.
                     // Eqn 12.15
-                    StabilityCorHeat = 4.7 * StabilityParam;
-                    StabilityCorMomentum = StabilityCorHeat;
+                    stabilityCorrectionHeat = 4.7 * stabilityParammeter;
+                    stabilityCorrectionMomentum = stabilityCorrectionHeat;
                 }
                 else
                 {
                     // Unstable conditions, when surface temperature is higher than air temperature, sensible heat flux in the
                     // boundary layer is positive and stability parameter is negative.
-                    StabilityCorHeat = -2.0 * Math.Log((1.0 + Math.Sqrt(1.0 - 16.0 * StabilityParam)) / 2.0);    // Eqn 12.16
-                    StabilityCorMomentum = 0.6 * StabilityCorHeat;                // Eqn 12.17
+                    stabilityCorrectionHeat = -2.0 * Math.Log((1.0 + Math.Sqrt(1.0 - 16.0 * stabilityParammeter)) / 2.0);    // Eqn 12.16
+                    stabilityCorrectionMomentum = 0.6 * stabilityCorrectionHeat;                // Eqn 12.17
                 }
             }
-            return BoundaryLayerCond;   // thermal conductivity  (W/m2/K)
+            return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
         }
 
         /// <summary>Convert degrees Celcius to Kelvin</summary>
@@ -1402,8 +1400,8 @@ namespace Models.Soils.SoilTemp
         /// <returns>Temperature (K)</returns>
         private double kelvinT(double celciusT)
         {
-            const double ZEROTkelvin = 273.18;
-            return celciusT + ZEROTkelvin;
+            const double celciusToKelvin = 273.18;
+            return celciusT + celciusToKelvin;
         }
 
         /// <summary>Computes the long-wave radiation emitted by a body</summary>
@@ -1412,12 +1410,12 @@ namespace Models.Soils.SoilTemp
         /// <returns>The radiation emitted (W - CHECK unit)</returns>
         private double longWaveRadn(double emissivity, double tDegC)
         {
-            return STEFAN_BOLTZMANNconst * emissivity * Math.Pow(kelvinT(tDegC), 4);
+            return stefanBoltzmannConstant * emissivity * Math.Pow(kelvinT(tDegC), 4);
         }
 
         /// <summary>Calculates average soil temperature at the centre of each layer</summary>
         /// <param name="soilTempIO">temperature of each layer in profile</param>
-        private void CalcSoilTemp(ref double[] soilTempIO) // CHECK, is byRef a good idea?
+        private void calcSoilTemperature(ref double[] soilTempIO) // CHECK, is byRef a good idea?
         {
             double[] cumulativeDepth = SoilUtilities.ToCumThickness(thickness);
             double w = 2 * Math.PI / (365.25 * 24 * 3600);
@@ -1446,115 +1444,18 @@ namespace Models.Soils.SoilTemp
         /// The difference in temperature between surface and subsurface layers is an exponential function
         /// of the ratio of the depth at the bottom of the layer and the temperature damping depth of the soil
         /// </remarks>
-        private double LayerTemp(double depthLag, double alx, double deltaTemp)
+        private double calcLayerTemperature(double depthLag, double alx, double deltaTemp)
         {
             return weather.Tav + (weather.Amp / 2.0 * Math.Cos(alx - depthLag) + deltaTemp) * Math.Exp(-depthLag);
         }
 
         /// <summary>Calculate initial soil surface temperature</summary>
         /// <returns>The initial soil surface temperature (oC)</returns>
-        private double SurfaceTemperatureInit()
+        private double calcSurfaceTemperature()
         {
             double surfaceT = (1.0 - waterBalance.Salb) * (weather.MeanT + (weather.MaxT - weather.MeanT) * Math.Sqrt(Math.Max(weather.Radn, 0.1) * 23.8846 / 800.0)) + waterBalance.Salb * weather.MeanT;
-            BoundCheck(surfaceT, -100.0, 100.0, "Initial surfaceT");
+            boundCheck(surfaceT, -100.0, 100.0, "Initial surfaceT");
             return surfaceT;
-        }
-
-        /// <summary>Gets the temperature damping depth</summary>
-        /// <returns>soil temperature damping depth (mm)</returns>
-        /// <remarks>
-        /// This is a function of the
-        ///             average bulk density of the soil and the amount of water above
-        ///             the lower limit. I think the damping depth units are
-        ///             mm depth/radian of a year
-        ///  Notes
-        ///       241091 consulted Brian Wall.  For soil temperature an estimate of
-        ///       the water content of the total profile is required, not the plant
-        ///       extractable soil water.  Hence the method used here - difference
-        ///       total lower limit and total soil water instead of sum of differences
-        ///       constrained to and above.  Here the use of lower limit is of no
-        ///       significance - it is merely a reference point, just as 0.0 could
-        ///       have been used.  jngh
-        /// </remarks>
-        private double DampingDepth()
-        {
-            const double SW_AVAIL_TOT_MIN = 0.01;   // minimum available sw (mm water)
-
-            double ave_bd;                // average bulk density over layers (g/cc soil)
-            double sw_avail_tot;          // amount of sw above lower limit (mm water)
-            double b;                     // intermediate variable
-            double cum_depth;             // cumulative depth in profile (mm)
-            double damp_depth_max;        // maximum damping depth (potential)(mm soil/radian of a g_year (58 days))
-            double f;                     // fraction of potential damping depth discounted by water content of soil (0-1)
-            double favbd;                 // a function of average bulk density
-            double wcf;                   // a function of water content (0-1)
-            double bd_tot;                // total bulk density over profile (g/cc soil)
-            double ll_tot;                // total lower limit over profile (mm water)
-            double sw_dep_tot;            // total soil water over profile (mm water)
-            double wc;                    // water content of profile (0-1)
-            double ww;                    // potential sw above lower limit (mm water/mm soil)
-
-            // - Implementation Section ----------------------------------
-
-            // get average bulk density
-
-            bd_tot = MathUtilities.Sum(MathUtilities.Multiply(bulkDensity, thickness));
-            cum_depth = SumOfRange(thickness, 1, numLayers);
-            ave_bd = MathUtilities.Divide(bd_tot, cum_depth, 0.0);
-
-            // favbd ranges from almost 0 to almost 1
-            // damp_depth_max ranges from 1000 to almost 3500
-            // It seems damp_depth_max is the damping depth potential.
-
-            favbd = MathUtilities.Divide(ave_bd, (ave_bd + 686.0 * Math.Exp(-5.63 * ave_bd)), 0.0);
-            damp_depth_max = 1000.0 + 2500.0 * favbd;
-            damp_depth_max = Math.Max(damp_depth_max, 0.0);
-
-            // Potential sw above lower limit - mm water/mm soil depth
-            // note that this function says that average bulk density
-            // can't go above 2.47222, otherwise potential becomes negative.
-            // This function allows potential (ww) to go from 0 to .356
-
-            ww = 0.356 - 0.144 * ave_bd;
-            ww = Math.Max(ww, 0.0);
-
-
-            // calculate amount of soil water, using lower limit as the
-            // reference point.
-
-            var ll15mm = MathUtilities.Multiply(physical.LL15, physical.Thickness);
-            ll_tot = SumOfRange(ll15mm, 0, numLayers - 1);
-            sw_dep_tot = SumOfRange(waterBalance.SWmm, 0, numLayers - 1);
-            sw_avail_tot = sw_dep_tot - ll_tot;
-            sw_avail_tot = Math.Max(sw_avail_tot, SW_AVAIL_TOT_MIN);
-
-            // get fractional water content -
-
-            // wc can range from 0 to 1 while
-            // wcf ranges from 1 to 0
-
-            wc = MathUtilities.Divide(sw_avail_tot, (ww * cum_depth), 1.0);
-            wc = Math.Min(Math.Max(wc, 0.0), 1.0);
-            wcf = MathUtilities.Divide((1.0 - wc), (1.0 + wc), 0.0);
-
-            // Here b can range from -.69314 to -1.94575
-            // and f ranges from 1 to  0.142878
-            // When wc is 0, wcf=1 and f=500/damp_depth_max
-            // and soiln2_SoilTemp_DampDepth=500
-            // When wc is 1, wcf=0 and f=1
-            // and soiln2_SoilTemp_DampDepth=damp_depth_max
-            // and that damp_depth_max is the maximum.
-
-            b = Math.Log(MathUtilities.Divide(500.0, damp_depth_max, 10000000000.0));
-
-            f = Math.Exp(b * Math.Pow(wcf, 2));
-
-            // Get the temperature damping depth. (mm soil/radian of a g_year)
-            // discount the potential damping depth by the soil water deficit.
-            // Here soiln2_SoilTemp_DampDepth ranges from 500 to almost
-            // 3500 mm/58 days.
-
-            return f * damp_depth_max;
         }
 
         /// <summary>Calculate initial variables for net radiation per time-step</summary>
@@ -1566,7 +1467,7 @@ namespace Models.Soils.SoilTemp
         private void doNetRadiation(ref double[] solarRadn, ref double cloudFr, ref double cva, int ITERATIONSperDAY)
         {
             double TSTEPS2RAD = MathUtilities.Divide(2.0 * Math.PI, Convert.ToDouble(ITERATIONSperDAY), 0);          // convert timestep of day to radians
-            const double SOLARconst = 1360.0;     // W/M^2
+            const double solarConstant = 1360.0;     // W/M^2
             double solarDeclination = 0.3985 * Math.Sin(4.869 + (clock.Today.DayOfYear * 2.0 * Math.PI / 365.25) + 0.03345 * Math.Sin(6.224 + (clock.Today.DayOfYear * 2.0 * Math.PI / 365.25)));
             double cD = Math.Sqrt(1.0 - solarDeclination * solarDeclination);
             double[] m1 = new double[ITERATIONSperDAY + 1];
@@ -1580,7 +1481,7 @@ namespace Models.Soils.SoilTemp
                     m1[timestepNumber] = 0.0;
             }
 
-            double psr = m1Tot * SOLARconst * 3600.0 / 1000000.0;   // potential solar radiation for the day (MJ/m^2)
+            double psr = m1Tot * solarConstant * 3600.0 / 1000000.0;   // potential solar radiation for the day (MJ/m^2)
             double fr = MathUtilities.Divide(Math.Max(weather.Radn, 0.1), psr, 0);               // ratio of potential to measured daily solar radiation (0-1)
             cloudFr = 2.33 - 3.33 * fr;    // fractional cloud cover (0-1)
             cloudFr = Math.Min(Math.Max(cloudFr, 0.0), 1.0);
@@ -1601,8 +1502,8 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private double interpolateNetRadiation(double solarRadn, double cloudFr, double cva)
         {
-            const double EMISSIVITYsurface = 0.96;    // Campbell Eqn. 12.1
-            double w2MJ = gDt / 1000000.0;      // convert W to MJ
+            const double surfaceEmissivity = 0.96;    // Campbell Eqn. 12.1
+            double w2MJ = internalTimeStep / 1000000.0;      // convert W to MJ
 
             // Eqns 12.2 & 12.3
             double emissivityAtmos = (1 - 0.84 * cloudFr) * 0.58 * Math.Pow(cva, (1.0 / 7.0)) + 0.84 * cloudFr;
@@ -1612,9 +1513,9 @@ namespace Models.Soils.SoilTemp
                                                               Math.Max(0.1, waterBalance.Eo), 0);
 
             // Eqn 12.1 modified by cover.
-            double lwRinSoil = longWaveRadn(emissivityAtmos, airTemp) * PenetrationConstant * w2MJ;
+            double lwRinSoil = longWaveRadn(emissivityAtmos, airTemperature) * PenetrationConstant * w2MJ;
 
-            double lwRoutSoil = longWaveRadn(EMISSIVITYsurface, soilTemp[surfaceNode]) * PenetrationConstant * w2MJ; // _
+            double lwRoutSoil = longWaveRadn(surfaceEmissivity, soilTemp[surfaceNode]) * PenetrationConstant * w2MJ; // _
                                                                                                                      // + longWaveRadn(emissivityAtmos, (gT_zb(SURFACEnode) + gAirT) * 0.5) * (1.0 - PenetrationConstant) * w2MJ
 
             // Ignore (mulch/canopy) temperature and heat balance
@@ -1625,23 +1526,6 @@ namespace Models.Soils.SoilTemp
             // Dim swRout As Double = (salb + (1.0 - salb) * (1.0 - sunAngleAdjust())) * solarRadn   'FIXME temp test
             double swRnetSoil = (swRin - swRout) * PenetrationConstant;
             return swRnetSoil + lwRnetSoil;
-        }
-
-        /// <summary>
-        /// Get the sum of all elements in an array between 'start' and 'end'
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        private double SumOfRange(double[] array, int start, int end)
-        {
-            return MathUtilities.Sum(array, start, end);
-            /*
-            double result = 0;
-            for (int i = start; i <= end; i++)
-                result += array[i];
-            return result; */
         }
 
         /// <summary>
@@ -1664,15 +1548,15 @@ namespace Models.Soils.SoilTemp
         /// Notes
         ///     reports err if value GT upper or value LT lower or lower GT upper
         /// </remarks>
-        private void BoundCheck(double VariableValue, double Lower, double Upper, string VariableName)
+        private void boundCheck(double VariableValue, double Lower, double Upper, string VariableName)
         {
-            const double MARGIN = 0.00001;          // margin for precision err of lower
-            double LowerBound = Lower - MARGIN;       // calculate a margin for precision err of lower.
-            double UpperBound = Upper + MARGIN;   // calculate a margin for precision err of upper.
+            const double precisionMargin = 0.00001;          // margin for precision err of lower
+            double lowerBound = Lower - precisionMargin;       // calculate a margin for precision err of lower.
+            double upperBound = Upper + precisionMargin;   // calculate a margin for precision err of upper.
 
-            if ((VariableValue > UpperBound | VariableValue < LowerBound))
+            if ((VariableValue > upperBound | VariableValue < lowerBound))
             {
-                if ((LowerBound > UpperBound))
+                if ((lowerBound > upperBound))
                     throw new Exception("Lower bound (" + Lower.ToString() + ") exceeds upper bound (" + Upper.ToString() + ") in bounds checking: Variable is not checked");
                 else
                     throw new Exception(VariableName + " = " + VariableValue.ToString() + " is outside range of " + Lower.ToString() + " to " + Upper.ToString());
