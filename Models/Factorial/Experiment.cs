@@ -6,6 +6,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Extensions.Collections;
 using Models.Core;
 using Models.Core.Run;
+using Models.Optimisation;
 
 namespace Models.Factorial
 {
@@ -17,6 +18,7 @@ namespace Models.Factorial
     [ViewName("UserInterface.Views.ExperimentView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
+    [ValidParent(ParentType = typeof(CroptimizR))]
     [ScopedModel]
     public class Experiment : Model, ISimulationDescriptionGenerator
     {
