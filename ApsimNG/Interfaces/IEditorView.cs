@@ -147,5 +147,8 @@ namespace UserInterface.Interfaces
 
         /// <summary>Gets or sets the widget visibility.</summary>
         bool Visible { get; set; }
+
+        /// <summary>Status of horizontal scrollbars' visibility.</summary>
+        bool IsVerticalScrollBarVisible();
     }
 }

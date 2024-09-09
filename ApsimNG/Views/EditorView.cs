@@ -11,6 +11,8 @@ using UserInterface.Intellisense;
 using UserInterface.Interfaces;
 using Utility;
 using FontDescription = Pango.FontDescription;
+using APSIM.Shared.Documentation.Extensions;
+using System.Collections;
 
 namespace UserInterface.Views
 {
@@ -909,6 +911,20 @@ namespace UserInterface.Views
                 }
             };
             return null;
+        }
+
+        /// <summary>
+        /// Is vertical scroll bar visible?
+        /// </summary>
+        /// <returns></returns>
+        public bool IsVerticalScrollBarVisible()
+        {
+            if (scroller.AllChildren.Count() > 1)
+            {
+                // First Child is Vertical scrollbar.
+                return ((scroller.AllChildren as ArrayList)[1] as Scrollbar).ChildVisible;
+            }
+            return false;
         }
 
         /// <summary>
