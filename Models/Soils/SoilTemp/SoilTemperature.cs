@@ -59,7 +59,7 @@ namespace Models.Soils.SoilTemp
         private Physical physical = null;
 
         [Link]
-        private Organic organic = null;        
+        private Organic organic = null;
 
         [Link]
         ISoilWater waterBalance = null;
@@ -493,8 +493,8 @@ namespace Models.Soils.SoilTemp
         /// <summary>Height of instruments above ground</summary>
         private double instrumHeight = 0.0;  // FIXME, this should be read in (or deleted, use default)
 
-//        /// <summary>Altitude at site (m)</summary>
-//        private double altitude = 0.0;   // FIXME, this should be read from weather(?)
+        //        /// <summary>Altitude at site (m)</summary>
+        //        private double altitude = 0.0;   // FIXME, this should be read from weather(?)
 
         /// <summary>Forward/backward differencing coefficient (0-1)</summary>
         /// <remarks>
@@ -510,7 +510,7 @@ namespace Models.Soils.SoilTemp
         /// The explicit scheme predicts more heat transfer between nodes than would actually occur, and
         /// can therefore become unstable if time steps are too large. Stable numerical solutions are only
         /// obtained when deltaT is less than CH*(deltaZ)^2 / 2*lambda (Simonson, 1975).
-        /// When using 0.5, stable solutions to the heat flow problem will always be obtained, while if 
+        /// When using 0.5, stable solutions to the heat flow problem will always be obtained, while if
         /// set to a too small value, the solutions may oscillate. The reason for this is that simulated
         /// heat transfer between nodes 'overshoots' (thus in the next time step the excess heat must be
         /// transferred back). If the parameter is closer to one, the temperature difference will be too
@@ -725,7 +725,7 @@ namespace Models.Soils.SoilTemp
                     InitialValues = new double[numLayers];
                     Array.ConstrainedCopy(soilTemp, topsoilNode, InitialValues, 0, numLayers);
                 }
-                
+
                 soilTemp[airNode] = weather.MeanT;
                 soilTemp[surfaceNode] = calcSurfaceTemperature();
 
@@ -771,7 +771,7 @@ namespace Models.Soils.SoilTemp
 
                 Array.ConstrainedCopy(values, 0, soilTemp, topsoilNode, values.Length);
             }
-        
+
             soilTemp[airNode] = weather.MeanT;
             soilTemp[surfaceNode] = calcSurfaceTemperature();
             int firstPhantomNode = topsoilNode + InitialValues.Length;
@@ -804,7 +804,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>Set soil variables, from layers to nodes over the soil profile</summary>
         /// <remarks>
         /// mapping of nodes to layers:
-        ///  node 0 is in the air, node 1 is on the soil surface, 
+        ///  node 0 is in the air, node 1 is on the soil surface,
         ///  node 2 at the middle of layer 1, node 3 in layer 3 and so on,
         ///  the last node is below the soil profile, thus at NumLayers + 1
         /// </remarks>
@@ -824,7 +824,7 @@ namespace Models.Soils.SoilTemp
             double thicknessForPhantomNodes = belowProfileDepth * 2.0 / numPhantomNodes; // double depth so that bottom node at mid-point is at the ConstantTempDepth
             int firstPhantomNode = numLayers;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
-                thickness[i] = thicknessForPhantomNodes;   
+                thickness[i] = thicknessForPhantomNodes;
             var oldDepth = nodeDepth;
             nodeDepth = new double[numNodes + 1 + 1];
 
@@ -836,7 +836,7 @@ namespace Models.Soils.SoilTemp
             nodeDepth[topsoilNode] = 0.5 * thickness[1] / 1000.0;
             for (int node = topsoilNode; node <= numNodes; node++)
                 nodeDepth[node + 1] = (MathUtilities.Sum(thickness, 1, node - 1) + 0.5 * thickness[node]) / 1000.0;
-            
+
             // BD
             var oldBulkDensity = bulkDensity;
             bulkDensity = new double[numLayers + 1 + numPhantomNodes];
@@ -844,8 +844,8 @@ namespace Models.Soils.SoilTemp
                 Array.Copy(oldBulkDensity, bulkDensity, Math.Min(numLayers + 1 + numPhantomNodes, oldBulkDensity.Length));     // Rhob dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
             physical.BD.CopyTo(bulkDensity, 1);
             bulkDensity[numNodes] = bulkDensity[numLayers];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                bulkDensity[layer] = bulkDensity[numLayers]; 
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                bulkDensity[layer] = bulkDensity[numLayers];
 
             // SW
             var oldSoilWater = soilWater;
@@ -864,36 +864,36 @@ namespace Models.Soils.SoilTemp
             carbon = new double[numLayers + 1 + numPhantomNodes];
             for (int layer = 1; layer <= numLayers; layer++)
                 carbon[layer] = organic.Carbon[layer - 1];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                carbon[layer] = carbon[numLayers]; 
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                carbon[layer] = carbon[numLayers];
 
             // Rocks
             rocks = new double[numLayers + 1 + numPhantomNodes];
             for (int layer = 1; layer <= numLayers; layer++)
                 rocks[layer] = physical.Rocks[layer - 1];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                rocks[layer] = rocks[numLayers]; 
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                rocks[layer] = rocks[numLayers];
 
             // Sand
             sand = new double[numLayers + 1 + numPhantomNodes];
             for (int layer = 1; layer <= numLayers; layer++)
                 sand[layer] = physical.ParticleSizeSand[layer - 1];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                sand[layer] = sand[numLayers];    
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                sand[layer] = sand[numLayers];
 
             // Silt
             silt = new double[numLayers + 1 + numPhantomNodes];
             for (int layer = 1; layer <= numLayers; layer++)
                 silt[layer] = physical.ParticleSizeSilt[layer - 1];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                silt[layer] = silt[numLayers];                               
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                silt[layer] = silt[numLayers];
 
             // Clay
             clay = new double[numLayers + 1 + numPhantomNodes];
             for (int layer = 1; layer <= numLayers; layer++)
                 clay[layer] = physical.ParticleSizeClay[layer - 1];
-            for (int layer = numLayers+1; layer <= numLayers + numPhantomNodes; layer++)
-                clay[layer] = clay[numLayers];                 
+            for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                clay[layer] = clay[numLayers];
 
             maxSoilTemp = new double[numLayers + 1 + numPhantomNodes];
             minSoilTemp = new double[numLayers + 1 + numPhantomNodes];
@@ -1065,14 +1065,14 @@ namespace Models.Soils.SoilTemp
             for (int node = 1; node <= numNodes; node++)
             {
                 volSpecHeatSoil[node] = 0;
-                foreach (var constituentName in soilConstituentNames.Except(new string[] {"Minerals"}))
+                foreach (var constituentName in soilConstituentNames.Except(new string[] { "Minerals" }))
                 {
                     volSpecHeatSoil[node] += volumetricSpecificHeat(constituentName, node) * 1000000.0 * soilWater[node];
                 }
             }
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
             mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);
-        }        
+        }
 
         /// <summary>Calculate the thermal conductivity of each soil layer (K.m/W)</summary>
         private void doThermalConductivity()
@@ -1081,7 +1081,7 @@ namespace Models.Soils.SoilTemp
 
             for (int node = 1; node <= numNodes; node++)
             {
-                double numerator = 0.0; 
+                double numerator = 0.0;
                 double denominator = 0.0;
                 foreach (var constituentName in soilConstituentNames)
                 {
@@ -1138,8 +1138,8 @@ namespace Models.Soils.SoilTemp
                 // volume of soil around node (m3/m2)
                 double volumeOfSoilAtNode = 0.5 * (nodeDepth[node + 1] - nodeDepth[node - 1]);   // Volume of soil around node (m^3), assuming area is 1 m^2
                 heatStorage[node] = MathUtilities.Divide(volSpecHeatSoil[node] * volumeOfSoilAtNode, internalTimeStep, 0);       // Joules/s/K or W/K
-                                                                                                               // rate of heat
-                                                                                                               // convert to thermal conductance
+                                                                                                                                 // rate of heat
+                                                                                                                                 // convert to thermal conductance
                 double elementLength = nodeDepth[node + 1] - nodeDepth[node];             // (m)
                 thermalConductance[node] = MathUtilities.Divide(thermalConductivity[node], elementLength, 0);  // (W/m/K)
             }
@@ -1173,7 +1173,7 @@ namespace Models.Soils.SoilTemp
             {
                 case "calc":
                     {
-                        // interpolated from actual net radiation 
+                        // interpolated from actual net radiation
                         radnNet = MathUtilities.Divide(netRadiation * 1000000.0, internalTimeStep, 0);
                         break;
                     }
@@ -1292,7 +1292,7 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Calculate atmospheric boundary layer conductance</summary>
         /// <returns>thermal conductivity of surface layer (K/W)</returns>
-        /// <remarks> 
+        /// <remarks>
         /// From Program 12.2, p140, Campbell, Soil Physics with Basic.
         /// During first stage drying, evaporation prevents the surface from becoming hot,
         /// so stability corrections are small. Once the surface dries and becomes hot, boundary layer
@@ -1309,8 +1309,8 @@ namespace Models.Soils.SoilTemp
             const double specificHeatOfAir = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
             const double surfaceEmissivity = 0.98;
             double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, airPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
-                                                                        // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
-                                                                        // gTNew_zb = TN; gAirT = TA;
+                                                                                                  // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
+                                                                                                  // gTNew_zb = TN; gAirT = TA;
 
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
@@ -1418,15 +1418,15 @@ namespace Models.Soils.SoilTemp
             double[] cumulativeDepth = SoilUtilities.ToCumThickness(thickness);
             double w = 2 * Math.PI / (365.25 * 24 * 3600);
             double dh = 0.6;   // this needs to be in mm a default value for a loam at field capacity - consider makeing this settable
-            double zd = Math.Sqrt( 2 * dh / w);
-            double offset = 0.25;  // moves the "0" and rise in the sin to the spring equinox for southern latitudes 
+            double zd = Math.Sqrt(2 * dh / w);
+            double offset = 0.25;  // moves the "0" and rise in the sin to the spring equinox for southern latitudes
             if (weather.Latitude > 0.0)  // to cope with the northern summer
                 offset = -0.25;
 
             double[] soilTemp = new double[numNodes + 1 + 1];
             for (int nodes = 1; nodes <= numNodes; nodes++)
             {
-                soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) * 
+                soilTemp[nodes] = weather.Tav + weather.Amp * Math.Exp(-1 * cumulativeDepth[nodes] / zd) *
                                                               Math.Sin((clock.Today.DayOfYear / 365.0 + offset) * 2.0 * Math.PI - cumulativeDepth[nodes] / zd);
             }
 
