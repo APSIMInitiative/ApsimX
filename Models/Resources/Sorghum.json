@@ -3191,7 +3191,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.087,
+                              "FixedValue": 0.2,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -3212,7 +3212,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
+                              "FixedValue": 0.2,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -4447,7 +4447,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.087,
+                          "FixedValue": 1.2,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,
@@ -4468,7 +4468,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1.1,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,

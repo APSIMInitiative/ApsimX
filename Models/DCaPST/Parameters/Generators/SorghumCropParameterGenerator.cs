@@ -70,13 +70,13 @@ namespace Models.DCAPST
         {
             return new PathwayParameters()
             {
-                IntercellularToAirCO2Ratio = 0.4,
+                IntercellularToAirCO2Ratio = 0.45,
                 FractionOfCyclicElectronFlow = 0.5,
                 RespirationSLNRatio = 0.0,
-                MaxRubiscoActivitySLNRatio = 0.28,
-                MaxElectronTransportSLNRatio = 2.5,
-                MaxPEPcActivitySLNRatio = 1.1,
-                MesophyllCO2ConductanceSLNRatio = 0.0146,
+                MaxRubiscoActivitySLNRatio = 0.349,
+                MaxElectronTransportSLNRatio = 3.0,
+                MaxPEPcActivitySLNRatio = 1.165,
+                MesophyllCO2ConductanceSLNRatio = 0.011,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
                 ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
