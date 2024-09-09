@@ -133,7 +133,7 @@ namespace Models.Soils.SoilTemp
             return result;
         }
 
-        /// <summary>Gets the thermal conductance of soil constituents (W/m/K) - CHECK, unit should be W/K</summary>
+        /// <summary>Gets the thermal conductance of soil constituents (W/K)</summary>
         /// <param name="name">The name of the constituent</param>
         /// <param name="layer">The layer index</param>
         private double ThermalConductance(string name, int layer)
@@ -268,35 +268,35 @@ namespace Models.Soils.SoilTemp
             return result;
         }
 
-        /// <summary>Volumetric fraction of rocks in the soil</summary>
+        /// <summary>Volumetric fraction of rocks in the soil (m3/m3)</summary>
         private double volumetricFractionRocks(int layer) => rocks[layer] / 100.0;
 
-        /// <summary>Volumetric fraction of organic matter in the soil</summary>
+        /// <summary>Volumetric fraction of organic matter in the soil (m3/m3)</summary>
         private double volumetricFractionOrganicMatter(int layer) => carbon[layer] / 100.0 * 2.5 * bulkDensity[layer] / pom;
 
-        /// <summary>Volumetric fraction of sand in the soil</summary>
+        /// <summary>Volumetric fraction of sand in the soil (m3/m3)</summary>
         private double volumetricFractionSand(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
                                                        sand[layer] / 100.0 * bulkDensity[layer] / ps;
 
-        /// <summary>Volumetric fraction of silt in the soil</summary>
+        /// <summary>Volumetric fraction of silt in the soil (m3/m3)</summary>
         private double volumetricFractionSilt(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
                                                        silt[layer] / 100.0 * bulkDensity[layer] / ps;
 
-        /// <summary>Volumetric fraction of clay in the soil</summary>
+        /// <summary>Volumetric fraction of clay in the soil (m3/m3)</summary>
         private double volumetricFractionClay(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
                                                        clay[layer] / 100.0 * bulkDensity[layer] / ps;
 
-        /// <summary>Volumetric fraction of water in the soil</summary>
+        /// <summary>Volumetric fraction of water in the soil (m3/m3)</summary>
         private double volumetricFractionWater(int layer) => (1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer];
 
-        /// <summary>Volumetric fraction of ice in the soil</summary>
+        /// <summary>Volumetric fraction of ice in the soil (m3/m3)</summary>
         /// <remarks>
         /// Not implemented yet, might be simulated in the future. Something like:
         ///  (1 - VolumetricFractionOrganicMatter(i)) * waterBalance.Ice[i];
         /// </remarks>
         private double volumetricFractionIce(int layer) => 0.0;
 
-        /// <summary>Volumetric fraction of air in the soil</summary>
+        /// <summary>Volumetric fraction of air in the soil (m3/m3)</summary>
         private double volumetricFractionAir(int layer)
         {
             return 1.0 - volumetricFractionRocks(layer) -
@@ -350,7 +350,7 @@ namespace Models.Soils.SoilTemp
         /// <remarks>These are needed for the lower BC to work properly, invisible externally</remarks>
         private const int numPhantomNodes = 5;
 
-        /// <summary>Boundary layer conductance, if constant (W/m2/K)</summary>
+        /// <summary>Boundary layer conductance, if constant (K/W)</summary>
         /// <remarks>From Program 12.2, p140, Campbell, Soil Physics with Basic</remarks>
         private const double constantBoundaryLayerConductance = 20;
 
@@ -376,8 +376,8 @@ namespace Models.Soils.SoilTemp
 
         #region Internal variables for this model   - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Flag whether initialisation is needed - CHECK</summary>
-        private bool doInit1Stuff = false;
+        /// <summary>Flag whether initialisation is needed</summary>
+        private bool doInitialisationStuff = false;
 
         /// <summary>Internal time-step (s)</summary>
         private double internalTimeStep = 0.0;
@@ -406,22 +406,22 @@ namespace Models.Soils.SoilTemp
         /// <summary>Parameter 4 for computing thermal conductivity of soil solids</summary>
         private double[] thermCondPar4;
 
-        /// <summary>Volumetric specific heat of...CHECK (J/m3/K)</summary>
+        /// <summary>Volumetric specific heat over the soil profile (J/K/m3)</summary>
         private double[] volSpecHeatSoil;
 
         /// <summary>Temperature of each soil layer (oC)</summary>
         private double[] soilTemp;
 
-        /// <summary>Some soil temperature - CHECK</summary>
+        /// <summary>Soil temperature over the soil profile at morning (oC)</summary>
         private double[] morningSoilTemp;
 
-        /// <summary>CP, heat storage between nodes (W/K) - index is same as upper node</summary>
+        /// <summary>CP, heat storage between nodes (J/K) - index is same as upper node</summary>
         private double[] heatStorage;
 
-        /// <summary>K, conductance of element between nodes (CHECK) - index is same as upper node</summary>
+        /// <summary>K, conductance of element between nodes (W/K) - index is same as upper node</summary>
         private double[] thermalConductance;
 
-        /// <summary>thermal conductivity (W/m2/K)</summary>
+        /// <summary>thermal conductivity (W.m/K)</summary>
         private double[] thermalConductivity;
 
         /// <summary>Average daily atmosphere boundary layer conductance</summary>
@@ -460,7 +460,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>Volumetric fraction of rocks in each soil layer (%)</summary>
         private double[] rocks;
 
-        /// <summary>Volumetric fraction of carbon (CHECK) in each soil layer (%)</summary>
+        /// <summary>Volumetric fraction of carbon (CHECK, OM?) in each soil layer (%)</summary>
         private double[] carbon;
 
         /// <summary>Volumetric fraction of sand in each soil layer (%)</summary>
@@ -631,23 +631,23 @@ namespace Models.Soils.SoilTemp
         public double MaxSoilSurfaceTemp { get { return maxSoilTemp[surfaceNode]; } }
 
         /// <summary>Atmosphere boundary layer conductance averaged over a day</summary>
-        [Units("J/sec/m/K")]  // FIXME, units are wrong
+        [Units("W/K")]
         public double BoundaryLayerConductance { get { return boundaryLayerConductance; } }
 
         /// <summary>Thermal conductivity over the soil profile</summary>
-        [Units("J/sec/m/K")]  // FIXME, units are wrong
+        [Units("W.m/K")]
         public double[] ThermalConductivity
         {
             get
             {
                 double[] result = new double[numNodes];
-                Array.ConstrainedCopy(thermalConductivity, 1, result, 0, numNodes);
+                Array.ConstrainedCopy(thermalConductivity, 1, result, 0, numNodes);  // FIXME - should index be 2?
                 return result;
             }
         }
 
-        /// <summary>Heat capacity over the soil profile</summary>
-        [Units("J/m3/K/s")]  // FIXME, units are wrong
+        /// <summary>Volumetric heat capacity over the soil profile</summary>
+        [Units("J/K/m3")]
         public double[] HeatCapacity
         {
             get
@@ -659,7 +659,7 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>Heat storage over the soil profile</summary>
-        [Units("J/m3/K/s")]  //FIXME, check units
+        [Units("J/K")]
         public double[] HeatStore
         {
             get
@@ -693,7 +693,7 @@ namespace Models.Soils.SoilTemp
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            doInit1Stuff = true;
+            doInitialisationStuff = true;
             getIniVariables();
             getProfileVariables();
             readParam();
@@ -711,7 +711,7 @@ namespace Models.Soils.SoilTemp
         {
             getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
 
-            if (doInit1Stuff)
+            if (doInitialisationStuff)
             {
                 if (MathUtilities.ValuesInArray(InitialValues))
                 {
@@ -743,7 +743,7 @@ namespace Models.Soils.SoilTemp
                 // 'Next node
                 maxTempYesterday = weather.MaxT;
                 minTempYesterday = weather.MinT;
-                doInit1Stuff = false;
+                doInitialisationStuff = false;
             }
 
             doProcess();
@@ -801,14 +801,14 @@ namespace Models.Soils.SoilTemp
             boundCheck(airPressure, 800.0, 1200.0, "air pressure (hPa)");
         }
 
-        /// <summary>Set global variables to new soil profile state</summary>
+        /// <summary>Set soil variables, from layers to nodes over the soil profile</summary>
         /// <remarks>
         /// mapping of nodes to layers:
         ///  node 0 is in the air, node 1 is on the soil surface, 
         ///  node 2 at the middle of layer 1, node 3 in layer 3 and so on,
         ///  the last node is below the soil profile, thus at NumLayers + 1
         /// </remarks>
-        private void getProfileVariables()  // CHECK, probably not needed
+        private void getProfileVariables()
         {
             numLayers = physical.Thickness.Length;
             numNodes = numLayers + numPhantomNodes;
@@ -924,7 +924,7 @@ namespace Models.Soils.SoilTemp
         private void doThermalConductivityCoeffs()
         {
             var oldGC1 = thermCondPar1;
-            thermCondPar1 = new double[numNodes + 1];  // CHECK, needed these copies??
+            thermCondPar1 = new double[numNodes + 1];
             if (oldGC1 != null)
                 Array.Copy(oldGC1, thermCondPar1, Math.Min(numNodes + 1, oldGC1.Length));     // C1 dimensioned for nodes 0 to Nz
             var oldGC2 = thermCondPar2;
@@ -1042,7 +1042,7 @@ namespace Models.Soils.SoilTemp
                         }
                 }
                 // Now start again with final atmosphere boundary layer conductance
-                doThomas(ref newTemperature);        // RETURNS gTNew_zb()
+                doThomas(ref newTemperature);
                 doUpdate(interactionsPerDay);
                 if (Math.Abs(timeOfDaySecs - 5.0 * 3600.0) <= Math.Min(timeOfDaySecs, 5.0 * 3600.0) * 0.0001)
                 {
@@ -1054,8 +1054,8 @@ namespace Models.Soils.SoilTemp
             maxTempYesterday = weather.MaxT;
         }
 
-        /// <summary>Calculate the volumetric specific heat capacity (Cv, Joules*m-3*K-1) of each soil layer</summary>
-        /// <remarks> CHECK
+        /// <summary>Calculate the volumetric specific heat capacity (Cv, J/K/m3) of each soil layer</summary>
+        /// <remarks>
         /// Modified from Campbell, G.S. (1985). Soil physics with BASIC: Transport models for soil-plant systems
         /// </remarks>
         private void doVolumetricSpecificHeat()
@@ -1071,12 +1071,10 @@ namespace Models.Soils.SoilTemp
                 }
             }
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
-            mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);            
-            //volSpecHeatSoil.CopyTo(this.volSpecHeatSoil, 1);     // map volumetric heat capacity (Cv) from layers to nodes (node 2 in centre of layer 1)
-            //this.volSpecHeatSoil[1] = volSpecHeatSoil[1];        // assume surface node Cv is same as top layer Cv
+            mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);
         }        
 
-        /// <summary>Calculate the thermal conductivity of each soil layer (CHECK unit)</summary>
+        /// <summary>Calculate the thermal conductivity of each soil layer (K.m/W)</summary>
         private void doThermalConductivity()
         {
             double[] thermCondLayers = new double[numNodes + 1];
@@ -1150,7 +1148,7 @@ namespace Models.Soils.SoilTemp
             double g = 1 - nu;
             for (int node = surfaceNode; node <= numNodes; node++)
             {
-                c[node] = (-nu) * thermalConductance[node];   //
+                c[node] = (-nu) * thermalConductance[node];
                 a[node + 1] = c[node];             // Eqn 4.13
                 b[node] = nu * (thermalConductance[node] + thermalConductance[node - 1]) + heatStorage[node];    // Eqn 4.12
                                                                                                                  // Eqn 4.14
@@ -1293,7 +1291,7 @@ namespace Models.Soils.SoilTemp
         }
 
         /// <summary>Calculate atmospheric boundary layer conductance</summary>
-        /// <returns>thermal conductivity of surface layer (W/m2/K) - CHECK units</returns>
+        /// <returns>thermal conductivity of surface layer (K/W)</returns>
         /// <remarks> 
         /// From Program 12.2, p140, Campbell, Soil Physics with Basic.
         /// During first stage drying, evaporation prevents the surface from becoming hot,
@@ -1407,7 +1405,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>Computes the long-wave radiation emitted by a body</summary>
         /// <param name="emissivity">The emissivity of a body</param>
         /// <param name="tDegC">The temperature of the body</param>
-        /// <returns>The radiation emitted (W - CHECK unit)</returns>
+        /// <returns>The radiation emitted (W/m2)</returns>
         private double longWaveRadn(double emissivity, double tDegC)
         {
             return stefanBoltzmannConstant * emissivity * Math.Pow(kelvinT(tDegC), 4);
@@ -1528,26 +1526,11 @@ namespace Models.Soils.SoilTemp
             return swRnetSoil + lwRnetSoil;
         }
 
-        /// <summary>
-        ///     checks if a variable lies outside lower and upper bounds.
-        ///     Reports an err if it does.
-        /// </summary>
+        /// <summary>Checks whether a variable within lower and upper bounds</summary>
         /// <param name="VariableValue">value to be validated</param>
         /// <param name="Lower">lower limit of value</param>
         /// <param name="Upper">upper limit of value</param>
         /// <param name="VariableName">variable name to be validated</param>
-        /// <remarks>
-        ///  Definition
-        ///     This subroutine will issue a warning message using the
-        ///     name of "value", "vname", if "value" is greater than
-        ///     ("upper" + 2 * error_margin("upper")) or if "value" is less than
-        ///     ("lower" - 2 *error_margin("lower")).  If  "lower" is greater
-        ///     than ("upper" + 2 * error_margin("upper")) , then a warning
-        ///     message will be flagged to that effect.
-        ///     '''
-        /// Notes
-        ///     reports err if value GT upper or value LT lower or lower GT upper
-        /// </remarks>
         private void boundCheck(double VariableValue, double Lower, double Upper, string VariableName)
         {
             const double precisionMargin = 0.00001;          // margin for precision err of lower
