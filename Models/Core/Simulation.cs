@@ -3,6 +3,7 @@ using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
+using Models.Optimisation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
+    [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
