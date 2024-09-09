@@ -360,9 +360,6 @@ namespace Models.Soils.SoilTemp
         /// <summary>Time of maximum temperature (h)</summary>
         private double defaultTimeOfMaximumTemperature = 14.0;  // FIXME, there should be an input ot calculation for non-default (also fot minT)
 
-        /// <summary>Default wind speed (m/s)</summary>
-        private double defaultWindSpeed = 3.0;
-
         /// <summary>Default altitude (m)</summary>
         private const double defaultAltitude = 18.0;
 
@@ -480,9 +477,6 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Daily atmosphere pressure (hPa)</summary>
         private double airPressure = 0.0;   // FIXME, need to read from weather
-
-        /// <summary>Daily wind run (km, CHECK)</summary>
-        private double windSpeed = 0.0;   // FIXME, need to read from weather
 
         /// <summary>Net radiation per internal time-step (MJ)</summary>
         private double netRadiation = 0.0;
@@ -963,7 +957,6 @@ namespace Models.Soils.SoilTemp
         {
             waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
-            windSpeed = defaultWindSpeed;
             if (microClimate != null)
             {
                 canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) / 1000.0;
@@ -1349,7 +1342,7 @@ namespace Models.Soils.SoilTemp
                 // of turbulence above the crop. The level of turbulence, in turn, is determined by the roughness of the surface,
                 // the distance from the surface and the thermal stratification of the boundary layer.
                 // Eqn 12.11 Campbell
-                frictionVelocity = MathUtilities.Divide(windSpeed * vonKarmanConstant,
+                frictionVelocity = MathUtilities.Divide(weather.Wind * vonKarmanConstant,
                                                         Math.Log(MathUtilities.Divide(instrumentHeight - d + roughnessFactorMomentum,
                                                                                       roughnessFactorMomentum,
                                                                                       0)) + stabilityCorrectionMomentum,
