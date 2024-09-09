@@ -550,7 +550,7 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Temperatures over the soil profile at end of a day, i.e. at midnight</summary>
         [Units("oC")]
-        public double[] FinalSoilTemp
+        public double[] FinalSoilTemperature
         {
             get
             {
@@ -562,17 +562,17 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Temperature of soil surface at end of a day, i.e. at midnight</summary>
         [Units("oC")]
-        public double FinalSoilSurfaceTemp { get { return soilTemp[surfaceNode]; } }
+        public double FinalSoilSurfaceTemperature { get { return soilTemp[surfaceNode]; } }
 
         /// <summary>Temperature of soil layers averaged over a day</summary>
         /// <remarks>Mandatory for ISoilTemperature interface. For now, just return average daily values - CHECK</remarks>
         [Units("oC")]
-        public double[] Value { get { return AverageSoilTemp; } }
+        public double[] Value { get { return AverageSoilTemperature; } }
 
         /// <summary>Temperatures over soil profile averaged over a day</summary>
         /// <remarks>If called during init1, this will return an array of length 100 with all elements as 0.0</remarks>
         [Units("oC")]
-        public double[] AverageSoilTemp
+        public double[] AverageSoilTemperature
         {
             get
             {
@@ -584,11 +584,11 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Temperature of soil surface averaged over a day</summary>
         [Units("oC")]
-        public double AverageSoilSurfaceTemp { get { return aveSoilTemp[surfaceNode]; } }
+        public double AverageSoilSurfaceTemperature { get { return aveSoilTemp[surfaceNode]; } }
 
         /// <summary>Minimum temperatures over the soil profile within a day</summary>
         [Units("oC")]
-        public double[] MinSoilTemp
+        public double[] MinimumSoilTemperature
         {
             get
             {
@@ -600,11 +600,11 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Minimum temperatures of soil surface within a day</summary>
         [Units("oC")]
-        public double minSoilSurfaceTemp { get { return minSoilTemp[surfaceNode]; } }
+        public double MinimumSoilSurfaceTemperature { get { return minSoilTemp[surfaceNode]; } }
 
         /// <summary>Maximum temperatures over the soil profile within a day</summary>
         [Units("oC")]
-        public double[] MaxSoilTemp
+        public double[] MaximumSoilTemperature
         {
             get
             {
@@ -616,7 +616,7 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Maximum temperatures of soil surface within a day</summary>
         [Units("oC")]
-        public double MaxSoilSurfaceTemp { get { return maxSoilTemp[surfaceNode]; } }
+        public double MaximumSoilSurfaceTemperature { get { return maxSoilTemp[surfaceNode]; } }
 
         /// <summary>Atmosphere boundary layer conductance averaged over a day</summary>
         [Units("W/K")]
