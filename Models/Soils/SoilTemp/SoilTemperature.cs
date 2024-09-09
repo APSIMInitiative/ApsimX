@@ -360,9 +360,6 @@ namespace Models.Soils.SoilTemp
         /// <summary>Time of maximum temperature (h)</summary>
         private double defaultTimeOfMaximumTemperature = 14.0;  // FIXME, there should be an input ot calculation for non-default (also fot minT)
 
-        /// <summary>Default altitude (m)</summary>
-        private const double defaultAltitude = 18.0;
-
         /// <summary>Default instrument height (m)</summary>
         private const double defaultInstrumentHeight = 1.2;
 
@@ -474,9 +471,6 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Height of instruments above soil surface (m)</summary>
         private double instrumentHeight = 0.0;
-
-        /// <summary>Daily atmosphere pressure (hPa)</summary>
-        private double airPressure = 0.0;   // FIXME, need to read from weather
 
         /// <summary>Net radiation per internal time-step (MJ)</summary>
         private double netRadiation = 0.0;
@@ -787,12 +781,6 @@ namespace Models.Soils.SoilTemp
                 instrumentHeight = instrumHeight;
             else
                 instrumentHeight = defaultInstrumentHeight;
-
-            double AltitudeMetres = 0.0;
-            AltitudeMetres = defaultAltitude;       // FIXME - need to detect if altitude not supplied elsewhere.
-
-            airPressure = 101325.0 * Math.Pow((1.0 - 2.25577 * 0.00001 * AltitudeMetres), 5.25588) / 100.0;
-            boundCheck(airPressure, 800.0, 1200.0, "air pressure (hPa)");
         }
 
         /// <summary>Set soil variables, from layers to nodes over the soil profile</summary>
@@ -1301,7 +1289,7 @@ namespace Models.Soils.SoilTemp
             const double gravitationalConstant = 9.8;    // GR; gravitational constant (m/s/s)
             const double specificHeatOfAir = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
             const double surfaceEmissivity = 0.98;
-            double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, airPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
+            double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, weather.AirPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
                                                                                                   // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
                                                                                                   // gTNew_zb = TN; gAirT = TA;
 
