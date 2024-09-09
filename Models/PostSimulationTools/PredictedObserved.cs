@@ -125,7 +125,7 @@ namespace Models.PostSimulationTools
                 if (PredictedTableName == null || ObservedTableName == null)
                     return;
 
-                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM _InitialConditions");
+                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM _Simulations");
                 if (dt == null)
                     throw new ApsimXException(this, "Datastore is empty, please re-run simulations");
 
