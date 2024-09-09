@@ -9249,13 +9249,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 114",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 114",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "early",
                   "ResourceName": null,
@@ -9269,13 +9273,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 157",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 157",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "medium",
                   "ResourceName": null,
@@ -9289,13 +9297,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 201",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 201",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "late",
                   "ResourceName": null,
@@ -9311,7 +9323,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
@@ -9319,7 +9333,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "ATX623xRTX430",
                   "ResourceName": null,
@@ -9337,7 +9353,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
@@ -9347,7 +9365,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "A35xQL36",
                   "ResourceName": null,
@@ -9390,7 +9410,10 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
+
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
@@ -9401,7 +9424,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "QL39xQL36",
                   "ResourceName": null,
@@ -9423,7 +9448,9 @@
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
@@ -9437,7 +9464,9 @@
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "M35-1",
                   "ResourceName": null,
@@ -9457,7 +9486,9 @@
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
@@ -9469,7 +9500,9 @@
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079"
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
