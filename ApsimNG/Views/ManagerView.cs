@@ -79,7 +79,7 @@ namespace UserInterface.Views
             }
 
             //default value for no cursor
-            if (cursor.ScrollH.Valid == false)
+            if (cursor.ScrollV.Valid == false)
             {
                 cursor = scriptEditor.Location;
                 notebook.Drawn -= OnDrawn;
@@ -88,7 +88,7 @@ namespace UserInterface.Views
 
             if (this.TabIndex == TAB_SCRIPT)
             {
-                if (cursor.ScrollH.Upper == scriptEditor.Location.ScrollH.Upper)
+                if (cursor.ScrollV.Upper == scriptEditor.Location.ScrollV.Upper)
                 {
                     scriptEditor.Location = cursor;
                     notebook.Drawn -= OnDrawn;
