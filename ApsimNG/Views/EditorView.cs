@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,8 +10,6 @@ using UserInterface.Intellisense;
 using UserInterface.Interfaces;
 using Utility;
 using FontDescription = Pango.FontDescription;
-using APSIM.Shared.Documentation.Extensions;
-using System.Collections;
 
 namespace UserInterface.Views
 {
@@ -343,6 +340,8 @@ namespace UserInterface.Views
             
             textEditor = new SourceView();
             textEditor.DragDataReceived += TextEditorDragDataReceived;
+            textEditor.AutoIndent = true;
+            textEditor.InsertSpacesInsteadOfTabs = true;
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
 
@@ -695,7 +694,6 @@ namespace UserInterface.Views
         {
             try
             {
-                //textEditor.Document.ReadOnly = false;
                 textEditor.GrabFocus();
             }
             catch (Exception err)
@@ -914,17 +912,19 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Is vertical scroll bar visible?
+        /// Hide the Text Editor
         /// </summary>
-        /// <returns></returns>
-        public bool IsVerticalScrollBarVisible()
+        public void Hide()
         {
-            if (scroller.AllChildren.Count() > 1)
-            {
-                // First Child is Vertical scrollbar.
-                return ((scroller.AllChildren as ArrayList)[1] as Scrollbar).ChildVisible;
-            }
-            return false;
+            textEditor.Visible = false;
+        }
+
+        /// <summary>
+        /// Show the Text Editor
+        /// </summary>
+        public void Show()
+        {
+            textEditor.Visible = true;
         }
 
         /// <summary>

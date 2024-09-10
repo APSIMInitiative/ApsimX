@@ -11,7 +11,6 @@ namespace UserInterface.Views
         private IEditorView scriptEditor;
         private Notebook notebook;
         private ManagerCursorLocation cursor;
-        private int drawCount; //used to count how many times the screen has been drawn for drawn event handler
 
         //constants for the tab indicies
         private const int TAB_PROPERTY = 0;
@@ -28,18 +27,15 @@ namespace UserInterface.Views
             scriptEditor = new EditorView(this)
             {
                 ShowLineNumbers = true,
-                Language = "c-sharp",
-                ReadOnly = true
+                Language = "c-sharp"
             };
+
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
-            drawCount = 0;
-
             notebook.SwitchPage += OnPageChanged;
             notebook.Drawn += OnDrawn;
-            
         }
 
         /// <summary>
@@ -66,29 +62,42 @@ namespace UserInterface.Views
         /// </summary>
         public void OnDrawn(object sender, EventArgs e)
         {
-            //Wait either 40 frames or until the scrollbars match in size
             //This is required because the text is loaded in over time from a buffer, so big files
             //can take a while to completely load in. If we set the scrollbar too early, it scrolls
             //to the wrong position as more text is loaded.
-            //Checking if a vertical scrollbar makes it so long scripts are checked but short ones get made read only much quicker.
-            //There was an issues where short scripts would be stuck in read-only, if something like this was not checked.
             if (cursor == null)
-                cursor = CursorLocation;
+            {
+                if (CursorLocation != null)
+                {
+                    cursor = CursorLocation;
+                }
+                else
+                {
+                    notebook.Drawn -= OnDrawn;
+                    return;
+                }
+            }
 
-            if (drawCount < 40 && 
-                !(scriptEditor.Location.ScrollV.Upper == cursor.ScrollV.Upper && scriptEditor.Location.ScrollH.Upper == cursor.ScrollH.Upper) &&
-                scriptEditor.IsVerticalScrollBarVisible()
-                )
+            //default value for no cursor
+            if (cursor.ScrollH.Valid == false)
             {
-                drawCount += 1;
-            } 
-            else
-            {
-                scriptEditor.ReadOnly = false;
+                cursor = scriptEditor.Location;
                 notebook.Drawn -= OnDrawn;
-                if (cursor != null && this.TabIndex == TAB_SCRIPT)
+                return;
+            }
+
+            if (this.TabIndex == TAB_SCRIPT)
+            {
+                if (cursor.ScrollH.Upper == scriptEditor.Location.ScrollH.Upper)
                 {
                     scriptEditor.Location = cursor;
+                    notebook.Drawn -= OnDrawn;
+                    scriptEditor.Show();
+                }
+                else
+                {
+                    if (scriptEditor.Visible == true)
+                        scriptEditor.Hide();
                 }
             }
         }
