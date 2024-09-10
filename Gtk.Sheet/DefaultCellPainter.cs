@@ -46,9 +46,9 @@ namespace Gtk.Sheet
 
             rowIndex -= sheet.NumberFrozenRows;
 
-            if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.ReadOnly)
+            if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetCellState.ReadOnly)
                 return States.Insensitive;
-            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetDataProviderCellState.Calculated)
+            else if (sheet.DataProvider.GetCellState(columnIndex, rowIndex) == SheetCellState.Calculated)
                 return States.Calculated;
             else
                 return States.Normal;

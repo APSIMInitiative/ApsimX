@@ -24,7 +24,7 @@ public class UrineDungReturn
     /// <param name="fractionUrineLostToSimulation">Fraction of the urine lost to simulation.</param>
     /// <param name="fractionDungLostToSimulation">Fraction of the dung lost to simulation.</param>
     /// <returns>The amount of urine and dung added to soil and lost from the simulation</returns>
-    public static UrineDung CalculateUrineDungReturn(List<DigestibleBiomass> grazedForages,
+    public static UrineDung CalculateUrineDungReturn(List<Forages.MaterialRemoved> grazedForages,
                                                      double fractionDefoliatedBiomassToSoil,
                                                      double fractionDefoliatedNToSoil,
                                                      double fractionExcretedNToDung,
@@ -39,8 +39,8 @@ public class UrineDungReturn
             foreach (var grazedForage in grazedForages)
             {
                 returnedToSoilWt += fractionDefoliatedBiomassToSoil *
-                                    (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                returnedToSoilN += fractionDefoliatedNToSoil * grazedForage.Total.N * 10;           // g/m2 to kg/ha
+                                    (1 - grazedForage.Digestibility) * grazedForage.Wt;
+                returnedToSoilN += fractionDefoliatedNToSoil * grazedForage.N;
             }
 
             double dungNReturned;

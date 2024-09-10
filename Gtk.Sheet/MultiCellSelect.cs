@@ -29,7 +29,7 @@ namespace Gtk.Sheet
         /// <returns>True if selected, false otherwise.</returns>
         public override bool IsSelected(int columnIndex, int rowIndex)
         {
-            return columnIndex >= selectedColumnIndex && columnIndex <= selectedColumnIndexRight && 
+            return columnIndex >= selectedColumnIndex && columnIndex <= selectedColumnIndexRight &&
                    rowIndex >= selectedRowIndex && rowIndex <= selectedRowIndexBottom;
         }
 
@@ -256,8 +256,8 @@ namespace Gtk.Sheet
             selectedColumnIndex = 0;
             selectedColumnIndexRight = sheet.DataProvider.ColumnCount - 1;
 
-            selectedRowIndex = 0;
-            selectedRowIndexBottom = sheet.DataProvider.RowCount - 1;
+            selectedRowIndex = sheet.NumberFrozenRows;
+            selectedRowIndexBottom = sheet.NumberFrozenRows + sheet.DataProvider.RowCount - 1;
         }
 
         /// <summary>Delete contents of cells.</summary>
