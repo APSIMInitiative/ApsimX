@@ -81,7 +81,7 @@ namespace APSIM.Documentation.Models
                 {typeof(GrazeAndRewind), typeof(DocPhase)},
                 {typeof(GotoPhase), typeof(DocPhase)},
                 {typeof(GerminatingPhase), typeof(DocPhase)},
-                // {typeof(GenericPhase), typeof(DocPhase)},
+                {typeof(GenericPhase), typeof(DocPhase)},
 
 
               

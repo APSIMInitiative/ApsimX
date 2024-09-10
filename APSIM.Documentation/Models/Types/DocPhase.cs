@@ -17,7 +17,7 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="DocPhase" /> class.
         /// </summary>
-        public DocPhase(IModel model): base(model) {}
+        public DocPhase(IModel model) : base(model) { }
 
         /// <summary>
         /// Document the model.
@@ -25,14 +25,20 @@ namespace APSIM.Documentation.Models.Types
         public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
         {
             List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
-            
+
+            // Removes the summary tag in each is phase is different.
+            Section section = newTags.ElementAt(0) as Section;
+            List<ITag> sectionChildren = section.Children.ToList();
+            sectionChildren.RemoveAt(0);
+            Section newSection = new(section.Title, sectionChildren);
+            newTags.RemoveAt(0);
+            newTags.Add(newSection);
+
             List<ITag> subTags = new List<ITag>();
 
             string text = GetPhaseText();
             if (text.Length > 0)
-                subTags.Add(new Paragraph(text));
-
-            newTags.Add(new Section(model.Name, subTags));
+                newTags.Add(new Paragraph(text));
 
             return newTags;
         }
@@ -69,7 +75,7 @@ namespace APSIM.Documentation.Models.Types
             }
             else if (model is LeafAppearancePhase leafAppearancePhase)
             {
-                return $"This phase goes from {leafAppearancePhase.Start.ToLower()} to {leafAppearancePhase.End.ToLower()} and it continues until the final main-stem leaf has finished expansion."+
+                return $"This phase goes from {leafAppearancePhase.Start.ToLower()} to {leafAppearancePhase.End.ToLower()} and it continues until the final main-stem leaf has finished expansion." +
                     $"The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber)";
             }
             else if (model is GrazeAndRewind grazeAndRewind)
@@ -85,18 +91,34 @@ namespace APSIM.Documentation.Models.Types
                 return $"The phase goes from {germinatingPhase.Start.ToLower()} to {germinatingPhase.End.ToLower()} and assumes {germinatingPhase.End.ToLower()} will be reached on the day after " +
                     $"sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.";
             }
-            // TODO: Needs work.
+            // TODO: Needs work. See if Function documentation can be used here instead.
             else if (model is GenericPhase genericPhase)
             {
                 var targetChild = genericPhase.FindChild("Target");
                 var progressionChild = genericPhase.FindChild<VariableReference>("Progression");
                 if (targetChild != null && progressionChild != null)
                 {
-                    return $"This phase goes from {genericPhase.Start.ToLower()} to {genericPhase.End.ToLower()}.\n\n" +
-                    $"The *Target* for completion is calculated as:\n\n" +
-                    $"{(targetChild as Constant).Value} {(targetChild as Constant).Units}\n\n" +
-                    $"*Progression* through phase is calculated daily and accumulated until the *Target* is reached." +
-                    $"{AutoDocumentation.Document(progressionChild)}";
+                    string units = "";
+                    if (targetChild is AddFunction)
+                    {
+                        List<string> targetChildrenNames = new();
+                        foreach (IFunction function in targetChild.FindAllChildren<IFunction>())
+                            targetChildrenNames.Add(function.Name);
+                        return $"This phase goes from {genericPhase.Start.ToLower()} to {genericPhase.End.ToLower()}.\n\n" +
+                            $"The *Target* for completion is calculated as the :\n\n" +
+                            $"{string.Join(" + ", targetChildrenNames)}\n\n" +
+                            $"*Progression* through phase is calculated daily and accumulated until the *Target* is reached.\n\n" +
+                            $"Variable Reference: {(progressionChild as VariableReference).VariableName}";
+                    }
+                    else
+                    {
+                        units = (targetChild as Constant).Units ?? "";
+                        return $"This phase goes from {genericPhase.Start.ToLower()} to {genericPhase.End.ToLower()}.\n\n" +
+                        $"The *Target* for completion is calculated as:\n\n" +
+                        $"{(targetChild as Constant).Value()} {units}\n\n" +
+                        $"*Progression* through phase is calculated daily and accumulated until the *Target* is reached.\n\n" +
+                        $"Variable Reference: {(progressionChild as VariableReference).VariableName}";
+                    }
                 }
                 else return "";
             }
