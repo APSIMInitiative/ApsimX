@@ -16,30 +16,18 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.XYPairsView")]
     [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
     [Description("Returns the corresponding Y value for a given X value, based on the line shape defined by the specified XY matrix.")]
-    public class XYPairs : Model, IFunction, IIndexedFunction, IGridModel
+    public class XYPairs : Model, IFunction, IIndexedFunction
     {
         /// <summary>Gets or sets the x.</summary>
         [Description("X")]
+        [Display]
         public double[] X { get; set; }
 
         /// <summary>Gets or sets the y.</summary>
         [Description("Y")]
+        [Display]
         public double[] Y { get; set; }
 
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                var columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("X", new VariableProperty(this, GetType().GetProperty("X"))));
-                columns.Add(new GridTableColumn("Y", new VariableProperty(this, GetType().GetProperty("Y"))));
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-                return tables;
-            }
-        }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

@@ -9,8 +9,7 @@ using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
-using Models.Utilities;
-using System.Data;
+using System.Globalization;
 
 namespace Models.Agroforestry
 {
@@ -35,21 +34,32 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class TreeProxy : Model, IUptake, IGridModel
+    public class TreeProxy : Model, IUptake
     {
+        private TreeProxySpatial _spatial;
+
         [Link]
         IWeather weather = null;
         [Link]
         IClock clock = null;
 
         /// <summary>
-        /// Gets or sets the table data.
-        /// Be careful when working with this property!
-        /// The first list contains the column headers (e.g. 1 row of data).
-        /// The subsequent lists all contain columns of data(?!).
+        /// Tree proxy spatial data.
         /// </summary>
-        /// <value>The table.</value>
-        public List<List<string>> Table { get; set; }
+        public TreeProxySpatial Spatial
+        {
+            get
+            {
+                if (_spatial == null)
+                    _spatial = new();
+                _spatial.TreeProxyInstance = this;
+                return _spatial;
+            }
+            set
+            {
+                _spatial = value;
+            }
+        }
 
         /// <summary>
         /// Reference to the parent agroforestry system.
@@ -164,19 +174,42 @@ namespace Models.Agroforestry
         /// Date list for tree heights over lime
         /// </summary>
         [Summary]
+        [Display]
         public DateTime[] Dates { get; set; }
 
         /// <summary>
-        /// Tree heights
+        /// Tree heights (mm)
         /// </summary>
         [Summary]
         [Units("mm")]
         public double[] Heights { get; set; }
 
         /// <summary>
+        /// Tree heights (m)
+        /// </summary>
+        [JsonIgnore]
+        [Summary]
+        [Display(DisplayName = "Height")]
+        [Units("m")]
+        public double[] HeightsM
+        {
+            get
+            {
+                if (Heights != null)
+                    return MathUtilities.Divide_Value(Heights, 1000);
+                return null;
+            }
+            set
+            {
+                Heights = MathUtilities.Multiply_Value(value, 1000);
+            }
+        }
+
+        /// <summary>
         /// Tree N demands
         /// </summary>
         [Summary]
+        [Display(DisplayName = "NDemand")]
         [Units("g/m2")]
         public double[] NDemands { get; set; }
 
@@ -184,30 +217,9 @@ namespace Models.Agroforestry
         /// Shade Modifiers
         /// </summary>
         [Summary]
+        [Display]
+        [Units(">=0")]
         public double[] ShadeModifiers { get; set; }
-
-        /// <summary>
-        /// Tables
-        /// </summary>
-        public List<GridTable> Tables
-        {
-            get {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Date", new VariableProperty(this, GetType().GetProperty("Dates"))));
-                columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
-                columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
-                columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
-                GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
-                grid1.SetUnits(1, "m");
-                grid1.SetUnits(3, "(>=0)");
-
-                columns = new List<GridTableColumn>();
-                GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
-
-                List<GridTable> list = new List<GridTable>() { grid1, grid2 };
-                return list;
-            }
-        }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
@@ -215,181 +227,7 @@ namespace Models.Agroforestry
         private Zone treeZone;
         private ISoilWater treeZoneWater;
 
-        /// <summary>
-        /// Combines the live and dead forages into a single row for display and renames columns
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
-        {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
-            {
-                //convert height in mm to height in metres
-                //first row is units, so skip
-                for(int i = 1; i < dt.Rows.Count; i++)
-                    if (!String.IsNullOrEmpty(dt.Rows[i]["Height"].ToString()))
-                        dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) / 1000;
-                return dt;
-            }
-            //this is a special case, we need to manually handle the changes to Table
-            else if (dt.TableName.Equals("TreeProxySpatial"))
-            {
-                var data = new DataTable();
-                data.TableName = dt.TableName;
-                data.Columns.Add("Parameter");
-                data.Columns.Add("0");
-                data.Columns.Add("0.5h");
-                data.Columns.Add("1h");
-                data.Columns.Add("1.5h");
-                data.Columns.Add("2h");
-                data.Columns.Add("2.5h");
-                data.Columns.Add("3h");
-                data.Columns.Add("4h");
-                data.Columns.Add("5h");
-                data.Columns.Add("6h");
 
-                if (!(this.Parent is AgroforestrySystem))
-                    throw new ApsimXException(this, "Error: TreeProxy must be a child of ForestrySystem.");
-
-                IEnumerable<Zone> zones = this.Parent.FindAllDescendants<Zone>();
-
-                // Get the first soil. For now we're assuming all soils have the same structure.
-                var physical = zones.First().FindInScope<Physical>();
-
-                if (this.Table.Count < 2)
-                {
-                    DataRow row = data.NewRow();
-                    row["Parameter"] = "Shade (%)";
-                    //fill in with 0s
-                    for (int i = 1; i < row.ItemArray.Length; i++)
-                        row[i] = 0;
-                    data.Rows.Add(row);
-
-                    //these are left empty
-                    row = data.NewRow();
-                    row["Parameter"] = "Root Length Density (cm/cm3)";
-                    data.Rows.Add(row);
-
-                    //these are left empty
-                    row = data.NewRow();
-                    row["Parameter"] = "Depth (cm)";
-                    data.Rows.Add(row);
-
-                    foreach (string s in SoilUtilities.ToDepthStringsCM(physical.Thickness))
-                    {
-                        row = data.NewRow();
-                        row["Parameter"] = s;
-                        //fill in with 0s
-                        for (int i = 1; i < row.ItemArray.Length; i++)
-                            row[i] = 0;
-                        data.Rows.Add(row);
-                    }
-                }
-                else
-                {
-                    for (int x = 0; x < this.Table[1].Count; x++)
-                    {
-                        //clean up any empty rows
-                        bool empty = true;
-                        DataRow row = data.NewRow();
-                        for (int y = 1; y < this.Table.Count; y++)
-                        {
-                            if (this.Table[y][x] != null)
-                                if (this.Table[y][x].ToString().Length > 0)
-                                    empty = false;
-                            row[y-1] = this.Table[y][x];
-                        }
-                        if (!empty)
-                            data.Rows.Add(row);
-                    }
-                    
-                    /*
-                    // add Zones not in the table
-                    IEnumerable<string> except = colNames.Except(forestryModel.Table[0]);
-                    foreach (string s in except)
-                        forestryModel.Table.Add(Enumerable.Range(1, forestryModel.Table[1].Count).Select(x => "0").ToList());
-
-                    forestryModel.Table[0].AddRange(except);
-                    for (int i = 2; i < forestryModel.Table.Count; i++)
-                    {
-                        // Set Depth and RLD rows to empty strings.
-                        forestryModel.Table[i][2] = string.Empty;
-                    }
-
-                    // Remove Zones from table that don't exist in simulation.
-                    except = forestryModel.Table[0].Except(colNames);
-                    List<int> indexes = new List<int>();
-                    foreach (string s in except.ToArray())
-                        indexes.Add(forestryModel.Table[0].FindIndex(x => s == x));
-
-                    indexes.Sort();
-                    indexes.Reverse();
-
-                    foreach (int i in indexes)
-                    {
-                        forestryModel.Table[0].RemoveAt(i);
-                        forestryModel.Table.RemoveAt(i + 1);
-                    }
-                    */
-                }
-                return data;
-            }
-            else
-            {
-                return dt;
-            }
-        }
-
-        /// <summary>
-        /// Breaks the lines into the live and dead parts and changes headers to match class
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-            if (dt.TableName.Equals("TreeProxyTemporal"))
-            {
-                //convert height in m to height in mm
-                //first row is units, so skip
-                for (int i = 1; i < dt.Rows.Count; i++)
-                    if (!String.IsNullOrEmpty(dt.Rows[i]["Height"].ToString()))
-                        dt.Rows[i]["Height"] = Convert.ToDouble(dt.Rows[i]["Height"]) * 1000;
-                return dt;
-            }
-            else if (dt.TableName.Equals("TreeProxySpatial"))
-            {
-                //add all datas
-                List<List<string>> newTable = new List<List<string>>();
-                
-                //removes blank line that gets added sometimes
-                int startRow = 1;
-                for (int x = 0; x < dt.Columns.Count; x++)
-                    if (dt.Rows[0][x].ToString().Length > 0)
-                        startRow = 0;
-
-                for (int x = 0; x < dt.Columns.Count; x++)
-                {
-                    List<string> row = new List<string>();
-                    for (int y = startRow; y < dt.Rows.Count; y++)
-                    {
-                        row.Add(dt.Rows[y][x].ToString());
-                    }
-                    newTable.Add(row);
-                }
-
-                //add headers - Yes, this is how it's supposed to be
-                newTable.Insert(0, new List<string>());
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    newTable[0].Add(dt.Columns[i].ColumnName);
-                }
-                
-                this.Table = newTable;
-
-                //since we don't want the gridtable to edit anything in the model, we just return an empty datatable here.
-                return new DataTable();
-            }
-            else
-            {
-                return dt;
-            }
-        }
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -486,22 +324,28 @@ namespace Models.Agroforestry
         /// </summary>
         private void SetupTreeProperties()
         {
-            //These need to match the column names in the UI
-            double[] THCutoffs = new double[] { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
+            double[] shadeValues = Spatial.Shade;
+            shade.Add(0, shadeValues[0]);
+            shade.Add(0.5, shadeValues[1]);
+            shade.Add(1, shadeValues[2]);
+            shade.Add(1.5, shadeValues[3]);
+            shade.Add(2, shadeValues[4]);
+            shade.Add(2.5, shadeValues[5]);
+            shade.Add(3, shadeValues[6]);
+            shade.Add(4, shadeValues[7]);
+            shade.Add(5, shadeValues[8]);
+            shade.Add(6, shadeValues[9]);
 
-            for (int i = 2; i < Table.Count; i++)
-            {
-                if (Table[i][0].Length == 0)
-                    throw new Exception($"Cell at position [{Table[0][i-2]}, {Table[1][i]}] is empty");
-
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0],
-                                                             System.Globalization.CultureInfo.InvariantCulture));
-                List<double> getRLDs = new List<double>();
-                for (int j = 3; j < Table[1].Count; j++)
-                    if (!string.IsNullOrEmpty(Table[i][j]))
-                        getRLDs.Add(Convert.ToDouble(Table[i][j], System.Globalization.CultureInfo.InvariantCulture));
-                rld.Add(THCutoffs[i - 2], getRLDs.ToArray());
-            }
+            rld.Add(0, Spatial.Rld(0));
+            rld.Add(0.5, Spatial.Rld(0.5));
+            rld.Add(1, Spatial.Rld(1));
+            rld.Add(1.5, Spatial.Rld(1.5));
+            rld.Add(2, Spatial.Rld(2));
+            rld.Add(2.5, Spatial.Rld(2.5));
+            rld.Add(3, Spatial.Rld(3));
+            rld.Add(4, Spatial.Rld(4));
+            rld.Add(5, Spatial.Rld(5));
+            rld.Add(6, Spatial.Rld(6));
         }
 
         private double GetHeightToday()

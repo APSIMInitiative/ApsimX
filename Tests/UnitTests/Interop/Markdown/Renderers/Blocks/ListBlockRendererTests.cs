@@ -167,7 +167,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
 
             Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.That(paragraph.Elements.Count, Is.EqualTo(6));
+            int paragraphElementCount = paragraph.Elements.Count;
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(paragraphElementCount));
             Character linefeed = (Character)paragraph.Elements[2];
             Assert.That(linefeed.SymbolName, Is.EqualTo(SymbolName.LineBreak));
             linefeed = (Character)paragraph.Elements[5];

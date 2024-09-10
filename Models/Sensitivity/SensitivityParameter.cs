@@ -1,5 +1,5 @@
-﻿using System;
-
+using System;
+using Models.Core;
 namespace Models.Sensitivity
 {
     /// <summary>A encapsulation of a parameter to analyse</summary>
@@ -7,15 +7,19 @@ namespace Models.Sensitivity
     public class Parameter
     {
         /// <summary>Name of parameter</summary>
-        public string Name;
+        [Display]
+        public string Name { get; set; }
 
         /// <summary>Model path of parameter</summary>
-        public string Path;
+        [Display]
+        public string Path { get; set; }
 
         /// <summary>Lower bound of parameter</summary>
-        public double LowerBound;
+        [Display]
+        public double LowerBound { get; set; }
 
         /// <summary>Upper bound of parameter</summary>
-        public double UpperBound;
+        [Display]
+        public double UpperBound { get; set; }
     }
 }

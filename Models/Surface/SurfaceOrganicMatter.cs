@@ -1219,7 +1219,7 @@ namespace Models.Surface
                 else
                     SurfOM[SOMNo].no3 += no3;
 
-                if (nh4 != 0)
+                if (nh4 < 0) // this was "!0" for some reason
                     SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
                 else
                     SurfOM[SOMNo].nh4 += nh4;

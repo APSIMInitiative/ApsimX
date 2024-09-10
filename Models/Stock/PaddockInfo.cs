@@ -1,5 +1,6 @@
 ﻿using System;
 using Models.Core;
+using Models.ForageDigestibility;
 using Models.Soils;
 using Models.Surface;
 
@@ -25,6 +26,7 @@ namespace Models.GrazPlan
             if (zone != null)
             {
                 AddFaecesObj = (SurfaceOrganicMatter)zone.FindInScope<SurfaceOrganicMatter>();
+                ForagesModel = (Forages)zone.FindInScope<Forages>();
                 var soilPhysical = zone.FindInScope<IPhysical>();
                 SoilLayerThickness = soilPhysical.Thickness;
                 AddUrineObj = (ISolute)zone.FindInScope("Urea");
@@ -54,6 +56,13 @@ namespace Models.GrazPlan
         /// </summary>
         [NonSerialized]
         public SurfaceOrganicMatter AddFaecesObj;
+
+        
+        /// <summary>
+        /// Gets or sets the faeces destination
+        /// </summary>
+        [NonSerialized]
+        public Forages ForagesModel;
 
         /// <summary>
         /// Gets or sets the urine destination

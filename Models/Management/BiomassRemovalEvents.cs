@@ -24,7 +24,7 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class BiomassRemovalEvents : Model, IGridModel
+    public class BiomassRemovalEvents : Model
     {
         /// <summary>
         /// Crop to remove biomass from
@@ -62,6 +62,7 @@ namespace Models.Management
         public string RemovalDatesInput { get; set; }
 
         /// <summary>Removal Options in Table</summary>
+        [Display]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
 
         /// <summary>Cutting Event</summary>
@@ -99,33 +100,6 @@ namespace Models.Management
                     dates.Add(DateUtilities.GetDate(input));
 
                 return dates.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                LinkCrop();
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("PlantName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("OrganName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("TypeString", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("LiveToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("DeadToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("LiveToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("DeadToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
             }
         }
 

@@ -5,23 +5,23 @@ namespace Gtk.Sheet
     /// <summary>
     /// Wraps a .NET DataTable as a data provider for a sheet widget.
     /// </summary>
-    public class DataTableProvider : ISheetDataProvider
+    public class DataTableProvider : IDataProvider
     {
         /// <summary>The optional units for each column in the data table. Can be null.</summary>
         private readonly IList<string> units;
 
         /// <summary>A matrix of cell booleans to indicate if a cell is calculated (rather than measured).</summary>
-        private List<List<SheetDataProviderCellState>> cellStates;
+        private List<List<SheetCellState>> cellStates;
 
         /// <summary>An event invoked when a cell changes.</summary>
-        public event ISheetDataProvider.CellChangedDelegate CellChanged;
+        public event IDataProvider.CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
         /// <param name="isReadOnly">Is the data readonly?</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
         /// <param name="cellStates">A column order matrix of cell states</param>
-        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<SheetDataProviderCellState>> cellStates = null)
+        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null, List<List<SheetCellState>> cellStates = null)
         {
             if (dataSource == null)
                 Data = new DataTable();
@@ -96,7 +96,7 @@ namespace Gtk.Sheet
             for(int i = colIndices.Length-1; i >= 0; i-- )
             {
                 var cellState = GetCellState(colIndices[i], rowIndices[i]);
-                if (cellState == SheetDataProviderCellState.Normal || cellState == SheetDataProviderCellState.Calculated)
+                if (cellState == SheetCellState.Normal || cellState == SheetCellState.Calculated)
                 {
                     while (rowIndices[i] >= Data.Rows.Count)
                         Data.Rows.Add(Data.NewRow());
@@ -122,8 +122,8 @@ namespace Gtk.Sheet
                     List<bool> rowEmptyStates = new();    
                     foreach(DataColumn column in Data.Columns)
                     {
-                        SheetDataProviderCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
-                        if(cellState != SheetDataProviderCellState.ReadOnly)
+                        SheetCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
+                        if(cellState != SheetCellState.ReadOnly)
                         {
                             var dataValue = Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal];
                             if(dataValue.ToString().Equals(""))
@@ -142,8 +142,8 @@ namespace Gtk.Sheet
                     {
                         foreach(DataColumn column in Data.Columns)
                         {
-                            SheetDataProviderCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
-                            if(cellState == SheetDataProviderCellState.ReadOnly)
+                            SheetCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
+                            if(cellState == SheetCellState.ReadOnly)
                             {
                                 column.ReadOnly = false;
                                 Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal] = "";
@@ -169,14 +169,14 @@ namespace Gtk.Sheet
         /// <summary>Is the column readonly?</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
-        public SheetDataProviderCellState GetCellState(int colIndex, int rowIndex)
+        public SheetCellState GetCellState(int colIndex, int rowIndex)
         {
             if (Data.Columns[colIndex].ReadOnly)
-                return SheetDataProviderCellState.ReadOnly;
+                return SheetCellState.ReadOnly;
             else if (cellStates != null && colIndex < cellStates.Count && cellStates[colIndex] != null && rowIndex < cellStates[colIndex].Count)
                 return cellStates[colIndex][rowIndex];
             else
-                return SheetDataProviderCellState.Normal;
+                return SheetCellState.Normal;
         }
 
         /// <summary>Set the cell state.</summary>

@@ -479,7 +479,7 @@ namespace APSIM.Interop.Markdown.Renderers
             if (!inListItem)
                 throw new NotImplementedException("Nested lists not implemented (or programmer is missing a call to StartListItem())");
             inListItem = false;
-            GetLastParagraph().AddText(Environment.NewLine);
+            GetLastParagraph().AddText("\n");
         }
 
         /// <summary>

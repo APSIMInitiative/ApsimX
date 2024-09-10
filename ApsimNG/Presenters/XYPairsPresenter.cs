@@ -64,9 +64,8 @@ namespace UserInterface.Presenters
             this.xYPairsView = view as XYPairsView;
             this.presenter = explorerPresenter as ExplorerPresenter;
 
-            List<GridTable> tables = this.xYPairs.Tables;
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid, this.presenter);
+            gridPresenter.Attach(model, this.xYPairsView.VariablesGrid, this.presenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             // Populate the graph.
@@ -170,7 +169,7 @@ namespace UserInterface.Presenters
         /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
         /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
         /// <param name="values">The cell values.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
             // Refresh the graph.
             if (this.graph != null)
