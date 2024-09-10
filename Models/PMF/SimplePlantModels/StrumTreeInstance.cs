@@ -40,6 +40,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Trunk mass when maximum dimension reached (t/ha)")] 
         public double TrunkMassAtMaxDimension { get; set; }
 
+        /// <summary>Wood density</summary>
+        [Description("WoodDensity (g/l)")]
+        public double WoodDensity { get; set; }
+
         /// <summary>Bud Break (Days after Winter Solstice)</summary>
         [Separator("Tree Phenology.  Specify when canopy stages occur in days since the winter solstice")]
         [Description("Bud Break (Days after Winter Solstice)")]
@@ -128,6 +132,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Maximum cover of tree canopy (0-1)")]
         public double MaxCover { get; set; }
 
+        /// <summary>Radiation Use Efficiency</summary>
+        [Description("Radiation use efficiency (g/MJ)")]
+        public double RUE { get; set; }
+
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
         [Separator("Water demand and response")]
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
@@ -146,7 +154,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [Separator("Fruit parameters")]
 
-        [Description("Fruit number retained (/m2 post thinning)")]
+        [Description("Fruit number retained (/m of row length)")]
         public int Number { get; set; }
 
         /// <summary>Maximum green cover</summary>
@@ -242,6 +250,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
             {"ProductNConc","[STRUM].Fruit.MaxNConcAtHarvest.FixedValue = "},
             {"ResidueNConc","[STRUM].Leaf.MaxNConcAtStartLeafFall.FixedValue = "},
+            {"WoodDensity","[STRUM].Trunk.EnergyBalance.DeadAreaIndex.Volume.Density.FixedValue = " },
             {"RootNConc","[STRUM].Root.MaximumNConc.FixedValue = "},
             {"WoodNConc","[STRUM].Trunk.MaximumNConc.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
@@ -251,6 +260,7 @@ namespace Models.PMF.SimplePlantModels
             {"EverGreenSenescence", "[STRUM].Leaf.SenescenceRate.EvergreenSenescence.Coefficient.FixedValue = "},
             {"GSMax","[STRUM].Leaf.Gsmax350 = " },
             {"R50","[STRUM].Leaf.R50 = " },
+            {"RUE","[STRUM].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"InitialTrunkWt","[STRUM].Trunk.InitialWt.Structural.FixedValue = "},
             {"InitialRootWt", "[STRUM].Root.InitialWt.Structural.FixedValue = " },
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.Structural.FixedValue = "},
@@ -367,6 +377,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Proot"] += Proot.ToString();
             treeParams["Pleaf"] += Pleaf.ToString();
             treeParams["Ptrunk"] += Ptrunk.ToString();
+            treeParams["WoodDensity"] += WoodDensity.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
             treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
@@ -378,11 +389,12 @@ namespace Models.PMF.SimplePlantModels
             treeParams["WoodNConc"] += TrunkNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
-            treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover-BaseCover)) / (ExtinctCoeff * -1))).ToString();
+            treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover)) / (ExtinctCoeff * -1)) - (Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["DecidiousSenescence"] += (Decidious ? 1 : 0);
             treeParams["EverGreenSenescence"] += (Decidious ? 0 : 1);
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
+            treeParams["RUE"] += RUE.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += Number.ToString();
@@ -399,10 +411,10 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            treeParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            treeParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
+            treeParams["InitialTrunkWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
+            treeParams["InitialRootWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40 * (Decidious ? 0 : 1 )).ToString();
+            treeParams["InitialLeafWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40 * (Decidious ? 0 : 1 )).ToString();
                 
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
