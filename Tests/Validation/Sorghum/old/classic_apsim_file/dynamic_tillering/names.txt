@@ -1,4 +1,0 @@
-Sorghum_Gatton_Tiller_x_Density_1=LE20Density_1
-Sorghum_Gatton_Tiller_x_Density_2=LE20Density_2
-Sorghum_Gatton_Tiller_x_Density_3=LE20Density_3
-Sorghum_Gatton_Tiller_x_Density_4=LE20Density_4

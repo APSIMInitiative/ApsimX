@@ -469,38 +469,6 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
-          "Name": "CultivarParameters",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
-              "Name": "Sorghum",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.SpectralCorrectionFactor = 0.3466"
-                  ],
-                  "Name": "CSH13R",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "Enabled": true,
