@@ -91,32 +91,27 @@ namespace APSIM.Documentation.Models
 
         /// <summary>Writes the description of a class to the tags.</summary>
         /// <param name="model">The model to get documentation for.</param>
-        /// <param name="tags">The tags to add to.</param>
-        /// <param name="headingLevel">The heading level to use.</param>
-        /// <param name="indent">The indentation level.</param>
-        public static IEnumerable<ITag> Document(IModel model, List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        /// <param name="heading">The heading level to use.</param>
+        public static List<ITag> Document(IModel model, int heading = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
-
-            IEnumerable<ITag> newTags;
+            List<ITag> newTags;
 
             DefineFunctions().TryGetValue(model.GetType(), out Type docType);
 
             if (docType != null) 
             {
                 object documentClass = Activator.CreateInstance(docType, new object[]{model});
-                newTags = (documentClass as DocGeneric).Document(tags, headingLevel, indent);
+                newTags = (documentClass as DocGeneric).Document(heading);
             }
             else if (docType == null && model as IFunction != null)
             {
-                newTags = new DocFunction(model).Document(tags, headingLevel, indent);
+                newTags = new DocFunction(model).Document(heading);
             }
             else
             {
-                newTags = new DocGeneric(model).Document(tags, headingLevel, indent);
+                newTags = new DocGeneric(model).Document(heading);
             }
-                            
+
             return newTags;
         }
 
@@ -173,7 +168,7 @@ namespace APSIM.Documentation.Models
                     sims.Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
-                    AutoDocumentation.Document(modelToDocument, tags, headingLevel);
+                    AutoDocumentation.Document(modelToDocument, headingLevel);
 
                     // Unresolve links.
                     sims.Links.Unresolve(clonedSimulation, true);
@@ -492,7 +487,7 @@ namespace APSIM.Documentation.Models
                             paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                         else
                         {
-                            Document(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, targetHeadingLevel + 1);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -505,7 +500,7 @@ namespace APSIM.Documentation.Models
                         Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
                         foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                         {
-                            Document(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, targetHeadingLevel + 1);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -548,7 +543,7 @@ namespace APSIM.Documentation.Models
                 foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
-                        Document(child, tags, headingLevel + 1, indent);
+                        Document(child, headingLevel + 1);
                 }
             }
         }
@@ -692,7 +687,7 @@ namespace APSIM.Documentation.Models
             foreach (IModel child in model.Children)
                 if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
-                    Document(child, tags, headingLevel + 1, indent);
+                    Document(child, headingLevel + 1);
         }
 
         /// <summary>
@@ -726,7 +721,7 @@ namespace APSIM.Documentation.Models
                 tags.Add(new Paragraph("Where:", indent));
 
                 foreach (IModel child in childrenToDocument)
-                    Document(child, tags, headingLevel + 1, indent + 1);
+                    Document(child, headingLevel + 1);
             }
 
             return childrenToDocument;

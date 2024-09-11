@@ -22,77 +22,77 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
 
             // Removes the summary tag in each is phase is different.
-            Section section = newTags.ElementAt(0) as Section;
+            Section section = tags[0] as Section;
             List<ITag> sectionChildren = section.Children.ToList();
             sectionChildren.RemoveAt(0);
             Section newSection = new(section.Title, sectionChildren);
-            newTags.RemoveAt(0);
-            newTags.Add(newSection);
+            tags.RemoveAt(0);
+            tags.Add(newSection);
 
             List<ITag> subTags = new List<ITag>();
 
-            string text = GetPhaseText();
+            string text = GetPhaseText(model as IPhase);
             if (text.Length > 0)
-                newTags.Add(new Paragraph(text));
+                tags.Add(new Paragraph(text));
 
-            return newTags;
+            return tags;
         }
 
         /// <summary>
         /// Gets the text for a specific type of Phase model.
         /// </summary>
-        public string GetPhaseText()
+        public static string GetPhaseText(IPhase phase)
         {
-            if (model is StartPhase startPhase)
+            if (phase is StartPhase startPhase)
             {
                 return $"This phase goes from {startPhase.Start.ToLower()} to {startPhase.End.ToLower()}." +
                     $"It has no length but sets plant status to emerged once progressed.";
             }
-            else if (model is PhotoperiodPhase photoperiodPhase)
+            else if (phase is PhotoperiodPhase photoperiodPhase)
             {
                 return $"This phase goes from {photoperiodPhase.Start} to {photoperiodPhase.End}. " +
                     $"The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing). " +
                     $"The base model uses a critical photoperiod of {photoperiodPhase.CricialPhotoperiod} hours ({photoperiodPhase.PPDirection}).";
             }
-            else if (model is VernalisationPhase vernalisationPhase)
+            else if (phase is VernalisationPhase vernalisationPhase)
             {
-                return $"The {model.Name} phase goes from the {vernalisationPhase.Start} stage to the {vernalisationPhase.End}" +
+                return $"The {phase.Name} phase goes from the {vernalisationPhase.Start} stage to the {vernalisationPhase.End}" +
                 $" stage and reaches {vernalisationPhase.End} when vernalisation saturation occurs.";
             }
-            else if (model is NodeNumberPhase nodeNumberPhase)
+            else if (phase is NodeNumberPhase nodeNumberPhase)
             {
                 return $"This phase goes from {nodeNumberPhase.Start.ToLower()} to {nodeNumberPhase.End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved." +
                     $"The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target";
             }
-            else if (model is LeafDeathPhase leafDeafPhase)
+            else if (phase is LeafDeathPhase leafDeafPhase)
             {
                 return $"The *{leafDeafPhase.Name}* phase goes from the *{leafDeafPhase.Start}* stage to the *{leafDeafPhase.End}* stage, which occurs when all leaves have fully senesced.";
             }
-            else if (model is LeafAppearancePhase leafAppearancePhase)
+            else if (phase is LeafAppearancePhase leafAppearancePhase)
             {
                 return $"This phase goes from {leafAppearancePhase.Start.ToLower()} to {leafAppearancePhase.End.ToLower()} and it continues until the final main-stem leaf has finished expansion." +
                     $"The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber)";
             }
-            else if (model is GrazeAndRewind grazeAndRewind)
+            else if (phase is GrazeAndRewind grazeAndRewind)
             {
                 return $"When the {grazeAndRewind.Start} phase is reached, phenology is rewound to the {grazeAndRewind.PhaseNameToGoto} phase.";
             }
-            else if (model is GotoPhase gotoPhase)
+            else if (phase is GotoPhase gotoPhase)
             {
                 return $"When the {gotoPhase.Start} phase is reached, phenology is rewound to the {gotoPhase.PhaseNameToGoto} phase.";
             }
-            else if (model is GerminatingPhase germinatingPhase)
+            else if (phase is GerminatingPhase germinatingPhase)
             {
                 return $"The phase goes from {germinatingPhase.Start.ToLower()} to {germinatingPhase.End.ToLower()} and assumes {germinatingPhase.End.ToLower()} will be reached on the day after " +
                     $"sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.";
             }
             // TODO: Needs work. See if Function documentation can be used here instead.
-            else if (model is GenericPhase genericPhase)
+            else if (phase is GenericPhase genericPhase)
             {
                 var targetChild = genericPhase.FindChild("Target");
                 var progressionChild = genericPhase.FindChild<VariableReference>("Progression");
@@ -122,8 +122,10 @@ namespace APSIM.Documentation.Models.Types
                 }
                 else return "";
             }
-            else return "The {model.Name} does not specify stages.";
-
+            else 
+            {
+                return $"The {phase.Name} does not specify stages.";
+            }
         }
     }
 }

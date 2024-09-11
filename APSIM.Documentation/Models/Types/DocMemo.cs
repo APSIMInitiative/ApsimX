@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models;
-using System.Linq;
 
 namespace APSIM.Documentation.Models.Types;
 
@@ -19,13 +18,15 @@ public class DocMemo : DocGeneric
     /// <summary>
     /// Document the model.
     /// </summary>
-    public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+    public override List<ITag> Document(int heading = 0)
     {
-        List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+        List<ITag> tags = new List<ITag>();
+        if (heading == 0)
+            tags = base.Document(heading);
 
         string memoText = (model as Memo).Text;
 
-        newTags.Add(new Paragraph(memoText));
-        return newTags;
+        tags.Add(new Paragraph(memoText));
+        return tags;
     }
 }

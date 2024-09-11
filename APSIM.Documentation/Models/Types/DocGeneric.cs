@@ -30,14 +30,13 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model
         /// </summary>
-        public virtual IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public virtual List<ITag> Document(int heading = 0)
         {
-            if (tags == null)
-                tags = new List<ITag>();
+
+            List<ITag> tags = new List<ITag>();
 
             List<ITag> subTags = new List<ITag>();
-
-            if (headingLevel == 0)
+            if (heading == 0)
             {
                 subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
                 subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
@@ -45,7 +44,7 @@ namespace APSIM.Documentation.Models.Types
 
             // write children.
             foreach (IModel child in model.FindAllChildren<Memo>())
-                subTags = AutoDocumentation.Document(child, subTags, headingLevel + 1, indent + 1).ToList();
+                subTags = AutoDocumentation.Document(child, heading + 1).ToList();
 
             tags.Add(new Section(model.Name, subTags));
             return tags;

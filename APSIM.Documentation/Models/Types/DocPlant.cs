@@ -8,7 +8,6 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
-using Svg;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -26,9 +25,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
             
             List<ITag> subTags = new List<ITag>();
 
@@ -69,10 +68,10 @@ namespace APSIM.Documentation.Models.Types
                         if (type.IsAssignableFrom(child.GetType()))
                         {
                             if (child is Phenology)
-                                subTags.AddRange(AutoDocumentation.Document(child, subTags, headingLevel+1, indent+1));
+                                subTags.AddRange(AutoDocumentation.Document(child, heading+1));
                             else
                             {
-                                List<ITag> childTags = AutoDocumentation.Document(child, new List<ITag>(), 0, 0).ToList();
+                                List<ITag> childTags = AutoDocumentation.Document(child, 0);
                                 subTags.Add(new Section(new List<ITag> { childTags.First() }));
                             }
                         }
@@ -96,8 +95,8 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
 
-            newTags.Add(new Section($"The APSIM {model.Name} Model", subTags));
-            return newTags;
+            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
+            return tags;
         }
     }
 }

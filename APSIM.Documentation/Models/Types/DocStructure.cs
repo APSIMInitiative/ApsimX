@@ -1,10 +1,8 @@
 using APSIM.Shared.Documentation;
 using Models.Core;
 using System.Collections.Generic;
-using System.Linq;
 using Models.PMF.Struct;
 using Models.Functions;
-using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types;
 
@@ -21,11 +19,11 @@ public class DocStructure : DocGeneric
     /// <summary>
     /// Document the model.
     /// </summary>
-    public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+    public override List<ITag> Document(int heading = 0)
     {
-        List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+        List<ITag> tags = base.Document(heading);
 
-        newTags.Add(new Section("Plant and Main-Stem Population", new Paragraph(
+        tags.Add(new Section("Plant and Main-Stem Population", new Paragraph(
                 $"The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method. " +
                 $"The *PrimaryBudNumber* is also sent with the Sow method. The main-stem population (*MainStemPopn*) is calculated as:\n\n" +
                 $"*MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*\n\n" +
@@ -58,7 +56,7 @@ public class DocStructure : DocGeneric
             leafTags.AddRange(finalLeafNumberTags);
         }
 
-        newTags.Add(new Section("Main-Stem leaf appearance", leafTags));
+        tags.Add(new Section("Main-Stem leaf appearance", leafTags));
 
         var branchingTags = new List<ITag>()
         {
@@ -83,7 +81,7 @@ public class DocStructure : DocGeneric
             branchingTags.AddRange(branchMortalityTags);
         }
 
-        newTags.Add(new Section("Branching and Branch Mortality", branchingTags));
+        tags.Add(new Section("Branching and Branch Mortality", branchingTags));
 
         var heightTags = new List<ITag>
         {
@@ -94,8 +92,8 @@ public class DocStructure : DocGeneric
         {
             heightTags.AddRange(heightModelTags);
         }
-        newTags.Add(new Section("Height", heightTags));
+        tags.Add(new Section("Height", heightTags));
 
-        return newTags;
+        return tags;
     }
 }

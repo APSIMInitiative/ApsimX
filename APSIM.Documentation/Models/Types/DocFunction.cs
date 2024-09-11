@@ -24,50 +24,50 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
             
-            string text = GetFunctionText();
+            string text = GetFunctionText(this.model as IFunction);
             if (text.Length > 0)
-                newTags.Add(new Paragraph(text));
+                tags.Add(new Paragraph(text));
 
             foreach (IModel child in model.FindAllChildren())
-                newTags = AutoDocumentation.Document(child, newTags, headingLevel+1, indent+1).ToList();
+                tags = AutoDocumentation.Document(child, heading+1);
 
-            return newTags;
+            return tags;
         }
 
         /// <summary>
         /// Get paragraph text on simple functions
         /// </summary>
-        public string GetFunctionText()
+        public static string GetFunctionText(IFunction function)
         {
-            if (model is AccumulateAtEvent accumulateAtEvent)
-                return $"**{model.Name}** is a daily accumulation of the values of functions listed below between the {accumulateAtEvent.StartStageName} and {(model as AccumulateAtEvent).EndStageName} stages.";
-            else if (model is AccumulateResetAtStage accumulateResetAtStage)
-                return $"**{model.Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {accumulateResetAtStage.ResetStageName} is passed.";
-            else if (model is Constant constant)
-                return $"**{model.Name} = {constant.FixedValue} {FindUnits(constant)}";
-            else if (model is AccumulateFunction accumulateFunction)
-                return $"*{model.Name}* = Accumulated {ChildFunctionList(model)} and between {accumulateFunction.StartStageName.ToLower()} and {accumulateFunction.EndStageName.ToLower()}";
-            else if (model is AddFunction addFunction)
+            if (function is AccumulateAtEvent accumulateAtEvent)
+                return $"**{function.Name}** is a daily accumulation of the values of functions listed below between the {accumulateAtEvent.StartStageName} and {(function as AccumulateAtEvent).EndStageName} stages.";
+            else if (function is AccumulateResetAtStage accumulateResetAtStage)
+                return $"**{function.Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {accumulateResetAtStage.ResetStageName} is passed.";
+            else if (function is Constant constant)
+                return $"**{function.Name} = {constant.FixedValue} {FindUnits(constant)}";
+            else if (function is AccumulateFunction accumulateFunction)
+                return $"*{function.Name}* = Accumulated {ChildFunctionList(function)} and between {accumulateFunction.StartStageName.ToLower()} and {accumulateFunction.EndStageName.ToLower()}";
+            else if (function is AddFunction addFunction)
                 return DocumentMathFunction('+', addFunction);
-            else if (model is SubtractFunction subtractFunction)
+            else if (function is SubtractFunction subtractFunction)
                 return DocumentMathFunction('-', subtractFunction);
-            else if (model is MultiplyFunction multiplyFunction)
+            else if (function is MultiplyFunction multiplyFunction)
                 return DocumentMathFunction('x', multiplyFunction);
-            else if (model is DivideFunction divideFunction)
+            else if (function is DivideFunction divideFunction)
                 return DocumentMathFunction('/', divideFunction);
-            else if (model is DailyMeanVPD dailyMeanVPD)
+            else if (function is DailyMeanVPD dailyMeanVPD)
                 return $"*MaximumVPDWeight = {dailyMeanVPD.MaximumVPDWeight}*";
-            else if (model is DeltaFunction deltaFunction)
-                return $"*{model.Name}* is the daily differential of {ChildFunctionList(model)}";
-            else if (model is ExpressionFunction expressionFunction)
-                return $"{model.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
-            else if (model is HoldFunction holdFunction && holdFunction.FindChild<IFunction>() != null)
-                return $"*{model.Name}* = *{holdFunction.FindChild<IFunction>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
-            else if (model is LessThanFunction lessThanFunction)
+            else if (function is DeltaFunction deltaFunction)
+                return $"*{function.Name}* is the daily differential of {ChildFunctionList(function)}";
+            else if (function is ExpressionFunction expressionFunction)
+                return $"{function.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
+            else if (function is HoldFunction holdFunction && holdFunction.FindChild<IFunction>() != null)
+                return $"*{function.Name}* = *{holdFunction.FindChild<IFunction>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
+            else if (function is LessThanFunction lessThanFunction)
             {
                 List<IFunction> childFunctions = lessThanFunction.FindAllChildren<IFunction>().ToList();
                 if (childFunctions.Count == 4)
@@ -75,35 +75,35 @@ namespace APSIM.Documentation.Models.Types
                 else
                     return "";
             }
-            else if (model is LinearAfterThresholdFunction linearAfterThresholdFunction)
-                return $"*{model.Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}*. *Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}*";
-            else if (model is MovingAverageFunction movingAverageFunction && model.FindChild<IFunction>() != null)
-                return $"{model.Name} is calculated from a moving average of {model.FindChild<IFunction>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
-            else if (model is MovingSumFunction movingSumFunction && model.FindChild<IFunction>() != null)
-                return $"{model.Name} is calculated from a moving sum of {model.FindChild<IFunction>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
-            else if (model is BudNumberFunction budNumberFunction && model.FindChild<IFunction>() != null)
+            else if (function is LinearAfterThresholdFunction linearAfterThresholdFunction)
+                return $"*{function.Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}*. *Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}*";
+            else if (function is MovingAverageFunction movingAverageFunction && function.FindChild<IFunction>() != null)
+                return $"{function.Name} is calculated from a moving average of {function.FindChild<IFunction>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
+            else if (function is MovingSumFunction movingSumFunction && function.FindChild<IFunction>() != null)
+                return $"{function.Name} is calculated from a moving sum of {function.FindChild<IFunction>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
+            else if (function is BudNumberFunction budNumberFunction && function.FindChild<IFunction>() != null)
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"*{budNumberFunction.FindChild<IFunction>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
-            else if (model is PhaseLookup phaseLookup)
-                return $"{model.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
-            else if (model is PhaseLookupValue phaseLookupValue)
-                return $"{model.Name} has a value between {phaseLookupValue.Start} and {phaseLookupValue.End} calculated as:";
-            else if (model is PhotoperiodFunction photoperiodFunction)
+            else if (function is PhaseLookup phaseLookup)
+                return $"{function.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
+            else if (function is PhaseLookupValue phaseLookupValue)
+                return $"{function.Name} has a value between {phaseLookupValue.Start} and {phaseLookupValue.End} calculated as:";
+            else if (function is PhotoperiodFunction photoperiodFunction)
                 return $"*Twilight = {photoperiodFunction.Twilight} (degrees)*";
-            else if (model is SigmoidFunction sigmoidFunction)
+            else if (function is SigmoidFunction sigmoidFunction)
                 return $"Values of Ymax, Xo, b and XValue are calcuated as defined below.";
-            else if (model is StringComparisonFunction stringComparisonFunction)
+            else if (function is StringComparisonFunction stringComparisonFunction)
                 return $"If {stringComparisonFunction.PropertyName} = {stringComparisonFunction.StringValue} Then:";
-            else if (model is VariableReference variableReference)
-                return $"*{model.Name} = {StringUtilities.RemoveTrailingString(variableReference.VariableName, ".Value()")}*";
-            else if (model is WangEngelTempFunction wangEngelTempFunction)
-                return $"{model.Name} is calculated using a Wang and Engel beta function which has a value of zero below {wangEngelTempFunction.MinTemp} {wangEngelTempFunction.Units} increasing to a maximum value at {wangEngelTempFunction.OptTemp} {wangEngelTempFunction.Units} and decreasing to zero again at {wangEngelTempFunction.MaxTemp} {wangEngelTempFunction.Units} ([WangEngel1998]).";
-            else if (model is WeightedTemperatureFunction weightedTemperatureFunction)
+            else if (function is VariableReference variableReference)
+                return $"*{function.Name} = {StringUtilities.RemoveTrailingString(variableReference.VariableName, ".Value()")}*";
+            else if (function is WangEngelTempFunction wangEngelTempFunction)
+                return $"{function.Name} is calculated using a Wang and Engel beta function which has a value of zero below {wangEngelTempFunction.MinTemp} {wangEngelTempFunction.Units} increasing to a maximum value at {wangEngelTempFunction.OptTemp} {wangEngelTempFunction.Units} and decreasing to zero again at {wangEngelTempFunction.MaxTemp} {wangEngelTempFunction.Units} ([WangEngel1998]).";
+            else if (function is WeightedTemperatureFunction weightedTemperatureFunction)
                 return $"*MaximumTemperatureWeighting = {weightedTemperatureFunction.MaximumTemperatureWeighting}*";
-            else if (model is AllometricDemandFunction allometricDemandFunction)
+            else if (function is AllometricDemandFunction allometricDemandFunction)
                 return $"YValue = {allometricDemandFunction.Const} * XValue ^ {allometricDemandFunction.Power}";
-            else if (model is PartitionFractionDemandFunction partitionFractionDemandFunction)
-                return $"*{model.Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*";
+            else if (function is PartitionFractionDemandFunction partitionFractionDemandFunction)
+                return $"*{function.Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*";
             else
                 return $"";
         }
@@ -130,7 +130,7 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Get the units for a constant
         /// </summary>
-        private string FindUnits(Constant model)
+        private static string FindUnits(Constant model)
         {
             if (!string.IsNullOrEmpty(model.Units))
                 return $"({model.Units})";

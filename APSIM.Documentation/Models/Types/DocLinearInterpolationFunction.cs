@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
-using System.Linq;
 using Models.Functions;
 
 namespace APSIM.Documentation.Models.Types
@@ -20,9 +19,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
             
             List<ITag> subTags = new List<ITag>();
 
@@ -30,11 +29,11 @@ namespace APSIM.Documentation.Models.Types
 
             XYPairs xyPairs = model.FindChild<XYPairs>();
             if (xyPairs != null)
-                subTags = AutoDocumentation.Document(xyPairs, subTags, headingLevel+1, indent+1).ToList();               
+                subTags = AutoDocumentation.Document(xyPairs, heading);
 
-            newTags.Add(new Section(model.Name, subTags));
+            tags.Add(new Section(model.Name, subTags));
 
-            return newTags;
+            return tags;
         }
     }
 }

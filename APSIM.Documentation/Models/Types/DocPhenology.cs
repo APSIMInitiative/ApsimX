@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Documentation;
-using Models;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -21,9 +19,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
 
             List<ITag> subTags = new()
             {
@@ -32,7 +30,7 @@ namespace APSIM.Documentation.Models.Types
                     new Table((model as Phenology).GetPhaseTable())),
             };
 
-            newTags.Add(new Section("Phenology", subTags));
+            tags.Add(new Section("Phenology", subTags));
             return tags;
         }
     }

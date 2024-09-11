@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
-using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 using System.Data;
@@ -23,9 +22,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
             
             List<ITag> subTags = new List<ITag>();
             
@@ -71,9 +70,9 @@ namespace APSIM.Documentation.Models.Types
             subTags.Add(new Table(table));
             subTags.Add(CreateGraph());
 
-            newTags.Add(new Section(model.Name, subTags));
+            tags.Add(new Section(model.Name, subTags));
 
-            return newTags;
+            return tags;
         }
 
         private Graph CreateGraph()

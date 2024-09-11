@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF;
@@ -21,19 +20,19 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
 
             Organ parentOrgan = FindParentOrgan(model.Parent);
 
             // add a description of the equation for this function
-            newTags.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
-                + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-            newTags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
-                + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
+            tags.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+                + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>"));
+            tags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+                + parentOrgan.Name + "].NitrogenDemandSwitch."));
 
-            return newTags;
+            return tags;
         }
 
         private Organ FindParentOrgan(IModel model)

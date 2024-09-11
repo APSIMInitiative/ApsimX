@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
-using System.Linq;
 using Models.Functions;
 using Models.Interfaces;
 
@@ -21,9 +20,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
             
             List<ITag> subTags = new List<ITag>();
 
@@ -35,12 +34,12 @@ namespace APSIM.Documentation.Models.Types
             {
                 subTags.Add(new Paragraph($"{model.Name} is the {sub.agregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}."));
                 subTags.Add(new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {sub.agregationMethod} taken to give daily {sub.Name}"));
-                subTags.AddRange(AutoDocumentation.Document(Response, subTags, headingLevel+1, indent+1));
-                subTags.AddRange(AutoDocumentation.Document(InterpolationMethod as IModel, subTags, headingLevel+1, indent+1));
+                subTags.AddRange(AutoDocumentation.Document(Response, heading+1));
+                subTags.AddRange(AutoDocumentation.Document(InterpolationMethod as IModel, heading+1));
             }
-            newTags.Add(new Section(model.Name, subTags));
+            tags.Add(new Section(model.Name, subTags));
 
-            return newTags;
+            return tags;
         }
     }
 }

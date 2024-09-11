@@ -22,11 +22,11 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
 
-            var subTags = new List<ITag>();
+            List<ITag> subTags = new List<ITag>();
 
             foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
             {
@@ -39,7 +39,7 @@ namespace APSIM.Documentation.Models.Types
             IEnumerable<Experiment> experiments = model.FindAllChildren<Experiment>().Where(experiment => experiment.Enabled);
             if (experiments.Any())
             {
-                var experimentsTag = new List<ITag>();
+                List<ITag> experimentsTag = new List<ITag>();
                 DataTable table = new DataTable();
                 table.Columns.Add("Experiment Name", typeof(string));
                 table.Columns.Add("Design (Number of Treatments)", typeof(string));
@@ -61,7 +61,7 @@ namespace APSIM.Documentation.Models.Types
                 // No experiments - look for free standing simulations.
                 foreach (Simulation simulation in model.FindAllChildren<Simulation>().Where(simulation => simulation.Enabled))
                 {
-                    var graphPageTags = new List<ITag>();
+                    List<ITag> graphPageTags = new List<ITag>();
                     foreach (Folder folder in simulation.FindAllChildren<Folder>().Where(folder => folder.Enabled && folder.ShowInDocs))
                     {
                         var childGraphs = (model as Folder).GetChildGraphs(folder);
@@ -98,8 +98,8 @@ namespace APSIM.Documentation.Models.Types
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 subTags.AddRange(AutoDocumentation.Document(folder));
 
-            newTags.Add(new Section(model.Name, subTags));
-            return newTags;
+            tags.Add(new Section(model.Name, subTags));
+            return tags;
         }
 
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF;
@@ -21,9 +20,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document(List<ITag> tags = null, int headingLevel = 0, int indent = 0)
+        public override List<ITag> Document(int heading = 0)
         {
-            List<ITag> newTags = base.Document(tags, headingLevel, indent).ToList();
+            List<ITag> tags = base.Document(heading);
 
             string organs = "";
             foreach (string name in (model as CompositeBiomass).OrganNames)
@@ -33,9 +32,9 @@ namespace APSIM.Documentation.Models.Types
             subTags.Add(new Paragraph($"{model.Name} summarises the following biomass objects:"));
             subTags.Add(new Paragraph(organs));
 
-            newTags.Add(new Section("Organs", subTags));
+            tags.Add(new Section("Organs", subTags));
 
-            return newTags;
+            return tags;
         }
     }
 }
