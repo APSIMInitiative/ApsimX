@@ -91,11 +91,23 @@ namespace APSIM.Documentation.Models.Types
                 return $"The phase goes from {germinatingPhase.Start.ToLower()} to {germinatingPhase.End.ToLower()} and assumes {germinatingPhase.End.ToLower()} will be reached on the day after " +
                     $"sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.";
             }
-            // TODO: Needs work. See if Function documentation can be used here instead.
-            else if (phase is GenericPhase genericPhase)
+            else if (phase is EndPhase)
             {
-                var targetChild = genericPhase.FindChild("Target");
-                var progressionChild = genericPhase.FindChild<VariableReference>("Progression");
+                return "It is the end phase in phenology and the crop will sit, unchanging, in this phase until it is harvested or removed by other method";
+            }
+            else if (phase is EmergingPhase emergingPhase)
+            {
+                return $"This phase goes from {emergingPhase.Start.ToLower()} to {emergingPhase.End.ToLower()} and simulates time to {emergingPhase.End.ToLower()} as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:\n\n" +
+                    "*Target* = *SowingDepth* x *ShootRate* + *ShootLag*\n\n" +
+                    "Where:\n\n" +
+                    $"*SowingDepth* (mm) is sent from the manager with the sowing event.\n\n" +
+                    $"Progress toward emergence is driven by thermal time accumulation, where thermal time is calculated using model: {emergingPhase.FindChild<VariableReference>().Name}";
+            }
+            // TODO: Needs work. See if Function documentation can be used here instead.
+            else if (phase is GenericPhase)
+            {
+                var targetChild = phase.FindChild("Target");
+                var progressionChild = phase.FindChild<VariableReference>("Progression");
                 if (targetChild != null && progressionChild != null)
                 {
                     string units = "";
@@ -104,7 +116,7 @@ namespace APSIM.Documentation.Models.Types
                         List<string> targetChildrenNames = new();
                         foreach (IFunction function in targetChild.FindAllChildren<IFunction>())
                             targetChildrenNames.Add(function.Name);
-                        return $"This phase goes from {genericPhase.Start.ToLower()} to {genericPhase.End.ToLower()}.\n\n" +
+                        return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                             $"The *Target* for completion is calculated as the :\n\n" +
                             $"{string.Join(" + ", targetChildrenNames)}\n\n" +
                             $"*Progression* through phase is calculated daily and accumulated until the *Target* is reached.\n\n" +
@@ -113,7 +125,7 @@ namespace APSIM.Documentation.Models.Types
                     else
                     {
                         units = (targetChild as Constant).Units ?? "";
-                        return $"This phase goes from {genericPhase.Start.ToLower()} to {genericPhase.End.ToLower()}.\n\n" +
+                        return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                         $"The *Target* for completion is calculated as:\n\n" +
                         $"{(targetChild as Constant).Value()} {units}\n\n" +
                         $"*Progression* through phase is calculated daily and accumulated until the *Target* is reached.\n\n" +

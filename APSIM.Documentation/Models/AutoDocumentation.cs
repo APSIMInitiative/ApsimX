@@ -20,7 +20,6 @@ using Models.Storage;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
-using APSIM.Shared.Graphing;
 
 namespace APSIM.Documentation.Models
 {
@@ -82,9 +81,9 @@ namespace APSIM.Documentation.Models
                 {typeof(GotoPhase), typeof(DocPhase)},
                 {typeof(GerminatingPhase), typeof(DocPhase)},
                 {typeof(GenericPhase), typeof(DocPhase)},
-
-
-              
+                {typeof(EndPhase), typeof(DocPhase)},
+                {typeof(EmergingPhase), typeof(DocPhase)},
+                {typeof(SorghumLeaf), typeof(DocSorghumLeaf)}
             };
             return documentMap;
         }

@@ -32,8 +32,11 @@ namespace APSIM.Documentation.Models.Types
             if (text.Length > 0)
                 tags.Add(new Paragraph(text));
 
+            List<ITag> subTags = new();
             foreach (IModel child in model.FindAllChildren())
-                tags = AutoDocumentation.Document(child, heading+1);
+                subTags = AutoDocumentation.Document(child, heading+1);
+
+            tags.AddRange(subTags);
 
             return tags;
         }
