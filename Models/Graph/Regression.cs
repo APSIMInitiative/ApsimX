@@ -52,13 +52,6 @@ namespace Models
         [Description("Display equation?")]
         public bool showEquation { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether a stats should be shown for each series.
-        /// </summary>
-        /// <value><c>true</c> if [for each series]; otherwise, <c>false</c>.</value>
-        [Description("Display stats?")]
-        public bool showStats { get; set; } = true;
-
         /// <summary>Get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
         /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
@@ -243,11 +236,8 @@ namespace Models
                     TextAnnotation equation = new TextAnnotation();
                     StringBuilder text = new StringBuilder();
                     text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r\u00B2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
-                    if (showStats)
-                    {
-                        text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
-                        text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
-                    }
+                    text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
+                    text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
                     equation.Name = $"Regression{i}";
                     equation.text = text.ToString();
                     equation.colour = equationColours[i];
