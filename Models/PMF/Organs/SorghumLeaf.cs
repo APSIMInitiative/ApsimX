@@ -355,18 +355,6 @@ namespace Models.PMF.Organs
         public double Height { get; set; }
 
         /// <summary>Sets the actual water demand.</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double Evapotranspiration 
-        {
-            get
-            {
-                // TODO_JS Add Evaporation here.
-                return WaterDemand + 0.0;
-            }
-        }
-
-        /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
 
