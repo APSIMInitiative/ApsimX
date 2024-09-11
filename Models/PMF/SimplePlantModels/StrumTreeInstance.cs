@@ -6,9 +6,11 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Soils;
+using Models.Zones;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
 
 namespace Models.PMF.SimplePlantModels
@@ -26,9 +28,40 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Tree Type")]
         [Description("Is the tree decidious? Tick box if yes")]
         public bool Decidious { get; set; }
-        
+
+        /// <summary>Distance between tree rows (years)</summary>
+        [Separator("Orchid Information")]
+        [Description("Row spacing (m)")]
+        public double RowSpacing { get; set; }
+
+        /// <summary>Distance between trees within rows (years)</summary>
+        [Description("InterRow spacing (m)")]
+        public double InterRowSpacing { get; set; }
+
+        /// <summary>Width of the alley zone between tree rows (m)</summary>
+        [Description("Alley Zone Width (m)")]
+        public double AlleyZoneWidth { get; set; }
+
+        /// <summary>Tree population density (/ha)</summary>
+        public double RowZoneWidth
+        {
+            get
+            {
+                if (AlleyZoneWidth > RowSpacing)
+                    throw new Exception("Alley Zone Width can not exceed Row spacing");
+                return RowSpacing-AlleyZoneWidth;
+            }
+        }
+
+        /// <summary>Tree population density (/ha)</summary>
+        public double TreePopulation
+        { get
+            {
+                return 10000 / (RowSpacing * InterRowSpacing);
+            } 
+        }
+
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Separator("Tree Age")]
         [Description("Tree Age At Start of Simulation (years)")]
         public double AgeAtSimulationStart { get; set; }
 
@@ -154,20 +187,20 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [Separator("Fruit parameters")]
 
-        [Description("Fruit number retained (/m of row length)")]
+        [Description("Fruit number retained (per tree)")]
         public int Number { get; set; }
 
-        /// <summary>Maximum green cover</summary>
-        [Description("Potential Fruit Size (mm diameter)")]
-        public double Size { get; set; }
-
-        /// <summary>Fruit Density </summary>
-        [Description("Fruit Density (g/cm3)")]
-        public double Density { get; set; }
+        /// <summary>Potential Fruit Fresh Wt </summary>
+        [Description("Potential Fruit Fresh Wt (g)")]
+        public double PotentialFWPerFruit { get; set; }
 
         /// <summary>Fruit DM conc </summary>
         [Description("Product DM conc (g/g)")]
         public double DMC { get; set; }
+
+        /// <summary>Fruit Density </summary>
+        [Description("Fruit Density (g/cm3)")]
+        public double FruitDensity { get; set; }
 
         /// <summary>Maximum Bloom </summary>
         [Description("Maximum Bloom (Days After Winter Solstice)")]
@@ -222,14 +255,19 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Scoped)]
         private Root root = null;
 
+        
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
+
+        /// <summary>The zones in the simulation/// </summary>
+        //List<Zone> zones = null;
 
         [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
 
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
+
 
        
         [JsonIgnore]
@@ -268,8 +306,7 @@ namespace Models.PMF.SimplePlantModels
             {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"YearsToMaxRD","[STRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
-            {"Size","[STRUM].Fruit.MaximumSize.FixedValue = " },
-            {"Density","[STRUM].Fruit.Density.FixedValue = " },
+            {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
             {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
             {"DAWSMaxBloom","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
             {"DAWSLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
@@ -278,6 +315,7 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
             {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
+            {"PotentialFWPerFruit","[STRUM].Fruit.PotentialFWPerFruit.FixedValue = " }
         };
 
         /// <summary>
@@ -397,14 +435,14 @@ namespace Models.PMF.SimplePlantModels
             treeParams["RUE"] += RUE.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            treeParams["Number"] += Number.ToString();
-            treeParams["Size"] += Size.ToString();
-            treeParams["Density"] += Density.ToString();
+            treeParams["Number"] += (Number/InterRowSpacing).ToString();
+            treeParams["FruitDensity"] += FruitDensity.ToString();
             treeParams["DryMatterContent"] += DMC.ToString();
             treeParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
             treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
             treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
             treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
+            treeParams["PotentialFWPerFruit"] += PotentialFWPerFruit.ToString();
 
 
             if (AgeAtSimulationStart <= 0)
@@ -421,6 +459,29 @@ namespace Models.PMF.SimplePlantModels
 
             Cultivar TreeValues = new Cultivar(this.Name, commands);
             return TreeValues;
+        }
+
+        private void SetUpZones()
+        {
+            bool hasAlleyZone = false;
+            bool hasRowZone = false;
+            List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+            foreach (Zone z in zones)
+            {
+                if (z.Name == "Row")
+                    hasRowZone = true;
+                if (z.Name == "Alley")
+                    hasAlleyZone = true;
+            }
+            if (hasRowZone == false)
+                throw new Exception("Strum tree instance must be in a zone named Row");
+            if (hasAlleyZone == false)
+                throw new Exception("No Alley zone in simulation.  Add Alley zone or set Alley width to zero");
+            object ZoneLength = 100;
+            simulation.Set("[Row].Width", (object)RowZoneWidth);
+            simulation.Set("[Row].Length", ZoneLength);
+            simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
+            simulation.Set("[Alley].Length", ZoneLength);
         }
         
         [EventSubscribe("DoManagement")]
@@ -442,7 +503,18 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
+            SetUpZones();
             Establish();
         }
+ 
+            
+
+
+
+            
+
+        
+       
+
     }
 }
