@@ -33,7 +33,7 @@ namespace APSIM.Documentation.Models.Types
                 tags.Add(new Paragraph(text));
 
             foreach (IModel child in model.FindAllChildren())
-                tags = AutoDocumentation.Document(child, heading+1);
+                tags.AddRange(AutoDocumentation.Document(child, heading+1));
 
             return tags;
         }
