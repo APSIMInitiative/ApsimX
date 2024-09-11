@@ -97,6 +97,12 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow24CKCL Grow24_CKCL { get; set; }
 
         /// <summary>
+        /// Wool parameters for the Grow24 activity
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrow24CW Grow24_CW { get; set; }
+
+        /// <summary>
         /// Parameters for the RuminantParametersMethaneCharmley activity
         /// </summary>
         [JsonIgnore]

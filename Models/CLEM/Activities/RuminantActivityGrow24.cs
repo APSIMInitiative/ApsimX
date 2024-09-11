@@ -8,6 +8,7 @@ using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
+using Models.PMF.Phen;
 
 namespace Models.CLEM.Activities
 {
@@ -217,7 +218,7 @@ namespace Models.CLEM.Activities
         {
             if (ind.Energy.ForLactation > 0)
             {
-                if (ind.Energy.AfterLactation >= 0)
+                if (ind.Energy.AfterWool >= 0)
                 {
                     ind.Energy.Kg = 0.95 * kl;
                 }
@@ -228,7 +229,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ind.Energy.AfterLactation >= 0)
+                if (ind.Energy.AfterWool >= 0)
                 {
                     ind.Energy.Kg = 0.042 * ind.Intake.MDSolid + 0.006;
                 }
@@ -277,8 +278,6 @@ namespace Models.CLEM.Activities
                     ind.Energy.ForFetus = CalculatePregnancyEnergy(female);
                     ind.Energy.ForLactation = CalculateLactationEnergy(female);
                 }
-
-                CalculateGrowthEfficiency(ind);
             }
             else // Unweaned
             {
@@ -314,9 +313,6 @@ namespace Models.CLEM.Activities
             // adjusted feeding level is FeedingLevel (already includes a -1) - 1 as used in following equations.
             double adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 2;
 
-            // Wool production
-            ind.Energy.ForWool = CalculateWoolEnergy(ind);
-
             //TODO: add draught individual energy requirement: does this also apply to unweaned individuals? If so move outside loop
 
             // Equations 46-49   ==================================================
@@ -331,6 +327,12 @@ namespace Models.CLEM.Activities
             ind.Intake.kDPLS = (ind.IsWeaned)? ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             ind.Weight.Protein.ForMaintenence = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
+            // Wool production
+            CalculateWool(ind);
+
+            if (ind.IsWeaned)
+                CalculateGrowthEfficiency(ind);
+
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6) / (ind.Parameters.Grow24_CG.ConditionMaxEffect_CG7 - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6)), 1));
@@ -338,7 +340,7 @@ namespace Models.CLEM.Activities
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
             //double test = ind.Intake.kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth / ind.Intake.kDPLS));
-            double proteinAvailableForGain = ind.Intake.UseableDPLS - ind.ProteinRequiredBeforeGrowth;
+            double proteinAvailableForGain = ind.Intake.UseableDPLS - ind.ProteinRequiredBeforeGrowth - (ind.Intake.kDPLS * ind.Weight.Protein.ForWool / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseForWool_CG1);
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
             // Equation 105  units = kg protein/kg gain
@@ -348,7 +350,7 @@ namespace Models.CLEM.Activities
             // Equation 101 EG1 and EG2  units MJ tissue gain/kg ebg
             double energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
             if (MathUtilities.IsPositive(energyAvailableForGain))
-                energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
+                 energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
             // Equation 109  - the amount of protein required for the growth based on energy available
             double proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain);
 
@@ -539,13 +541,30 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Ruminant individual.</param>
         /// <returns>Daily energy required for wool production time step.</returns>
-        private double CalculateWoolEnergy(Ruminant ind)
+        private void CalculateWool(Ruminant ind)
         {
-            // Equations 77-87   ==================================================
+            if (ind.Parameters.Grow24_CW is null)
+                return;
 
-            // TODO: wool production energy here!
-            // TODO: include wool production here.
-            return 0;
+            // age factor for wool
+            double ageFactorWool = ind.Parameters.Grow24_CW.WoolGrowthProportionAtBirth_CW5 + ((1 - ind.Parameters.Grow24_CW.WoolGrowthProportionAtBirth_CW5) * (1 - Math.Exp(-1 * ind.Parameters.Grow24_CW.AgeFactorExponent_CW12 * ind.AgeInDays)));
+
+            double milkProtein = 0; // just a local store
+            if(ind is RuminantFemale female)
+                milkProtein = female.Milk.Protein;
+            double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.Grow24_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + milkProtein)));
+
+            double mEAvailableForWool = Math.Max(0, ind.Intake.ME - (ind.Energy.ForFetus + ind.Energy.ForLactation));
+
+            double pwInst = Math.Min(ind.Parameters.Grow24_CW.DPLSLimitationForWoolGrowth_CW7 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * dPLSAvailableForWool, ind.Parameters.Grow24_CW.MEILimitationOnWoolGrowth_CW8 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * mEAvailableForWool);
+
+            double pwToday = ((1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.Wool.Previous) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
+
+            ind.Weight.Wool.Adjust(pwToday / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
+            ind.Weight.WoolClean.Adjust(pwToday * events.Interval);
+            ind.Weight.Protein.ForWool = pwToday * events.Interval;
+
+            ind.Energy.ForWool = (ind.Parameters.Grow24_CW.EnergyContentCleanWool_CW1 * (pwToday - (ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize)) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3;
         }
 
         /// <summary>

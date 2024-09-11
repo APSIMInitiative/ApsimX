@@ -62,6 +62,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Track wool weight (kg)
         /// </summary>
+        public RuminantTrackingItem WoolClean { get; set; } = new();
+
+        /// <summary>
+        /// Track wool weight (kg)
+        /// </summary>
         public RuminantTrackingItem Cashmere { get; set; } = new();
 
         /// <summary>
@@ -174,7 +179,7 @@ namespace Models.CLEM.Resources
         public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Live / NormalisedForAge; } }
 
         /// <summary>
-        /// Relative size (normalised weight / standard reference weight)
+        /// Relative size (normalised weight / standard reference weight), Z
         /// </summary>
         [FilterByProperty]
         public double RelativeSize { get { return  NormalisedForAge / StandardReferenceWeight; }  }
@@ -195,6 +200,17 @@ namespace Models.CLEM.Resources
         /// Empty body mass change  (kg)
         /// </summary>
         public double EmptyBodyMassChange { get; private set; }
+
+        /// <summary>
+        /// The empty body mass of the individual including fleece weight (kg)
+        /// </summary>
+        [FilterByProperty]
+        public double EmptyBodyMassWithFleece { get { return EmptyBodyMass + Wool.Amount; } }
+
+        /// <summary>
+        /// Empty body mass change including fleece weight (kg)
+        /// </summary>
+        public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + Wool.Change; } }
 
         /// <summary>
         /// Adjust weight by a given live weight change

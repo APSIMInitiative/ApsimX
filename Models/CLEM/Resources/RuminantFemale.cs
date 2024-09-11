@@ -606,9 +606,9 @@ namespace Models.CLEM.Resources
         public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
 
         /// <summary>
-        /// Report protein required for maintenance pregnancy and lactationsaved from reduced lactation (kg)
+        /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
         /// </summary>
-        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein + Weight.Protein.ForWool; } }
+        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein; } }
 
         /// <summary>
         /// The body condition score at birth.
