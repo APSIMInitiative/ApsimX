@@ -7,6 +7,7 @@ using APSIM.Shared.Utilities;
 using System;
 using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
+using Models;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -34,7 +35,8 @@ namespace APSIM.Documentation.Models.Types
 
             List<ITag> subTags = new();
             foreach (IModel child in model.FindAllChildren())
-                subTags = AutoDocumentation.Document(child, heading+1);
+                if (!(child is Memo))
+                    subTags = AutoDocumentation.Document(child, heading+1);
 
             tags.AddRange(subTags);
 
@@ -51,7 +53,7 @@ namespace APSIM.Documentation.Models.Types
             else if (function is AccumulateResetAtStage accumulateResetAtStage)
                 return $"**{function.Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {accumulateResetAtStage.ResetStageName} is passed.";
             else if (function is Constant constant)
-                return $"**{function.Name} = {constant.FixedValue} {FindUnits(constant)}";
+                return $"**{function.Name}** = {constant.FixedValue} {FindUnits(constant)}";
             else if (function is AccumulateFunction accumulateFunction)
                 return $"*{function.Name}* = Accumulated {ChildFunctionList(function)} and between {accumulateFunction.StartStageName.ToLower()} and {accumulateFunction.EndStageName.ToLower()}";
             else if (function is AddFunction addFunction)
