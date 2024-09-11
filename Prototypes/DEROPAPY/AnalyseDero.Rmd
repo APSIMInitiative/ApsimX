@@ -1,0 +1,227 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Analysis of Deropapy behaviour (sensibility tests)
+
+```{r, LoadLibs}
+library("data.table")
+library("RSQLite")
+library("tidyverse")
+library("plotly")
+library("GGally")
+```
+
+# Find db to be used
+```{r}
+# working wit develop base sim for now
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+```
+
+```{r}
+# 1. Find files
+dbFileList <- list.files(pattern='Deropapy.db$', full.names = TRUE,include.dirs = FALSE,no..= FALSE)
+print(dbFileList)
+```
+Function to get data from db
+
+```{r}
+
+# 2. Extract data
+GetApsimNGTable <- function(dbLoc, table) 
+{
+  connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW) #The connection to the database
+  table <- dbReadTable(connection, table, row.names=NULL) # The data in a table
+  dbDisconnect(connection)
+  return(table)
+}
+```
+
+# Get data
+```{r}
+info_out_raw <- data.table()
+list_of_dts <- list()
+
+# which table to extract?
+#TableName <- "ReportSensitivity" # annual outputs
+TableName <- c("Output", "Report", "ReportSensitivity") # annual outputs
+
+for (i in 1:length(TableName)) {
+  
+  db.name <- dbFileList
+  
+  db.full.path <- file.path(db.name)
+  
+  # connect to the SQLite db file    
+  con <- dbConnect(SQLite(), dbname = db.full.path, flags = SQLITE_RW)
+  
+  # get a list of all tables from db
+  alltables <- dbListTables(con)
+  alltables
+  dbDisconnect(con)
+  #gc()
+  
+  # get table as a `data.frame`
+  temp1 <- data.table()
+  temp1 <- GetApsimNGTable(db.full.path, TableName[i])
+  
+ # info_out_raw <- rbind(info_out_raw, temp1)
+  
+  list_of_dts[[i]] <- temp1
+  
+}
+
+#summary(info_out_raw)
+summary(list_of_dts)
+list_of_dts[[3]]
+```
+# Create formated version of data
+```{r}
+
+# columns as factor 
+columns_as_factors <- c("Experiment","Crop","Location","Irrigation","GCM","RCP","TimeSlice","SoilStamp", "Lat", "Lon", "Zone", "ClimateSensCO2",     "ClimateSensTemp",    "ClimateSensRain", "AGENT_NO")
+
+
+info_out_work <- list_of_dts[[1]] %>% 
+  mutate(across(all_of(columns_as_factors), factor))%>%
+  mutate(ReportDate=as.Date(ymd_hms(ReportDate)))
+
+summary(info_out_work)
+```
+
+# set crops
+```{r}
+thisCropPerennials <- c("Grapevine","Avocado","Macadamia","Lemons")
+thisCropAnnuals <- c("Maize","Wheat","Hemp","OSR")
+seleted_yield_columns <- c("AboveGround_kgPerHa", "Product_kgPerHa")
+```
+
+# Check yield ANNUALS
+
+```{r, fig.width=8}
+
+thisDF <- info_out_work %>%
+  dplyr::filter(Crop==thisCropAnnuals) %>%
+  dplyr::select(columns_as_factors, seleted_yield_columns) %>%
+  dplyr::filter(RCP != "ERA") 
+
+thisDF %>%
+  tidyr::gather(VarName,VarValue, seleted_yield_columns) %>%
+  ggplot(aes(x=RCP,y=VarValue, colour=Irrigation)) +
+  geom_boxplot(alpha=0.2) +
+  geom_point(position = position_dodge(width = 0.75)) +
+  facet_grid(Crop~VarName)
+```
+
+# Check yield PERENNIALS
+```{r, fig.width=8}
+thisDF <- info_out_work %>%
+  dplyr::filter(Crop==thisCropPerennials) %>%
+  dplyr::select(columns_as_factors, seleted_yield_columns) %>%
+  dplyr::filter(RCP != "ERA") 
+
+thisDF %>%
+  tidyr::gather(VarName,VarValue, seleted_yield_columns) %>%
+  ggplot(aes(x=RCP,y=VarValue, colour=Irrigation)) +
+  geom_boxplot() +
+  geom_point(position = position_dodge(width = 0.75)) +
+  facet_grid(Crop~VarName)
+```
+
+
+
+# Create formated version of data
+```{r}
+
+# columns as factor 
+columns_as_factors <- c("Experiment","Crop","GCM","RCP","TimeSlice","SoilStamp", "Lat", "Lon", "Zone", "ClimateSensCO2",     "ClimateSensTemp",    "ClimateSensRain", "AGENT_NO")
+
+
+info_out_work <- list_of_dts[[3]]  %>% 
+  mutate(across(all_of(columns_as_factors), factor))%>%
+  mutate(ReportDate=as.Date(ymd_hms(ReportDate)))
+
+summary(info_out_work)
+```
+
+
+```{r}
+thisCropPerennials <- c("Grapevine","Avocado","Macadamia","Lemons")
+thisCropAnnuals <- c("Maize","Wheat","Hemp","OSR")
+seleted_yield_columns <- c("AboveGround_kgPerHa", "Product_kgPerHa", "Transpiration_Cum")
+selected_sens_vars <- c("Weather.CO2", "Rainfall_Cum", "Weather.MeanT")
+```
+
+#Check sensitivity
+
+```{r, fig.width=11}
+thisDf <- info_out_work %>%
+  dplyr::filter(Experiment=="SensitivityCO2")  %>%
+  tidyr::gather(VarName,VarValue, seleted_yield_columns)
+
+thisDf %>%
+  ggplot(aes(x=Weather.CO2, y=VarValue))+
+  geom_point(aes(colour=Crop))+
+  geom_line(aes(colour=Crop)) +
+  facet_wrap(VarName~., scales="free", ncol=2)
+
+
+```
+#Check sensitivity
+
+```{r, fig.width=11}
+thisDf <- info_out_work %>%
+  dplyr::filter(Experiment=="SensitivityTemp")  %>%
+  tidyr::gather(VarName,VarValue, seleted_yield_columns)
+
+thisDf %>%
+  ggplot(aes(x=Weather.MeanT, y=VarValue))+
+  geom_point(aes(colour=Crop))+
+  geom_line(aes(colour=Crop)) +
+  facet_wrap(VarName~., scales="free", ncol=2)
+
+
+```
+
+#Check sensitivity
+
+```{r, fig.width=11}
+thisDf <- info_out_work %>%
+  dplyr::filter(Experiment=="SensitivityRain")  %>%
+  tidyr::gather(VarName,VarValue, seleted_yield_columns)
+
+thisDf %>%
+  ggplot(aes(x=Rainfall_Cum, y=VarValue))+
+  geom_point(aes(colour=Crop))+
+  geom_line(aes(colour=Crop)) +
+  facet_wrap(VarName~., scales="free", ncol=2)
+
+
+```
+
+# Create formated version of data
+```{r}
+
+# columns as factor 
+  columns_as_factors <- c("Experiment","Crop","Location", "ClimateSensTemp")
+
+
+info_out_work <- list_of_dts[[2]]  %>% 
+  mutate(across(all_of(columns_as_factors), factor))%>%
+  mutate(ReportDate=as.Date(ymd_hms(Clock.Today)))
+
+summary(info_out_work)
+```
+
+```{r, fig.width=11}
+thisDf <- info_out_work
+
+thisDf %>%
+  ggplot(aes(x=Weather.MinT, y=DEROPAPY.Leaf.FrostFraction))+
+  geom_point(aes(colour=Crop))+
+  geom_line(aes(colour=Crop)) 
+
+
+```

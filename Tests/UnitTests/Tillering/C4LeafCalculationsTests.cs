@@ -24,7 +24,7 @@ namespace UnitTests.Tillering
             double result = C4LeafCalculations.CalculateLargestLeafPosition(ax0i, ax0s, finalLeafNo, culmNo);
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.That(expected, Is.EqualTo(result));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace UnitTests.DCaPST
         public static void AssertDCaPSTParametersValuesEqual(DCaPSTParameters lhs, DCaPSTParameters rhs)
         {
             // Assert
-            Assert.AreEqual(lhs.Rpar, rhs.Rpar);
+            Assert.That(lhs.Rpar, Is.EqualTo(Is.EqualTo(rhs.Rpar)));
             // Canopy params
             AssertCanopyValuesEqual(lhs.Canopy, rhs.Canopy);
             // Pathway params
@@ -37,8 +37,8 @@ namespace UnitTests.DCaPST
             var lhsSerialized = JsonConvert.SerializeObject(lhs);
             var rhsSerialized = JsonConvert.SerializeObject(rhs);
 
-            Assert.AreEqual(lhsSerialized, rhsSerialized);
-        }
+            Assert.That(lhsSerialized, Is.EqualTo(rhsSerialized));
+       }
 
         /// <summary>
         /// Assert Canopies equal
@@ -47,23 +47,23 @@ namespace UnitTests.DCaPST
         /// <param name="rhs"></param>
         private static void AssertCanopyValuesEqual(CanopyParameters lhs, CanopyParameters rhs)
         {            
-            Assert.AreEqual(lhs.Type, rhs.Type);
-            Assert.AreEqual(lhs.AirO2, rhs.AirO2);
-            Assert.AreEqual(lhs.AirCO2, rhs.AirCO2);
-            Assert.AreEqual(lhs.LeafAngle, rhs.LeafAngle);
-            Assert.AreEqual(lhs.LeafWidth, rhs.LeafWidth);
-            Assert.AreEqual(lhs.LeafScatteringCoeff, rhs.LeafScatteringCoeff);
-            Assert.AreEqual(lhs.LeafScatteringCoeffNIR, rhs.LeafScatteringCoeffNIR);
-            Assert.AreEqual(lhs.DiffuseExtCoeff, rhs.DiffuseExtCoeff);
-            Assert.AreEqual(lhs.DiffuseExtCoeffNIR, rhs.DiffuseExtCoeffNIR);
-            Assert.AreEqual(lhs.DiffuseReflectionCoeff, rhs.DiffuseReflectionCoeff);
-            Assert.AreEqual(lhs.DiffuseReflectionCoeffNIR, rhs.DiffuseReflectionCoeffNIR);
-            Assert.AreEqual(lhs.Windspeed, rhs.Windspeed);
-            Assert.AreEqual(lhs.WindSpeedExtinction, rhs.WindSpeedExtinction);
-            Assert.AreEqual(lhs.CurvatureFactor, rhs.CurvatureFactor);
-            Assert.AreEqual(lhs.DiffusivitySolubilityRatio, rhs.DiffusivitySolubilityRatio);
-            Assert.AreEqual(lhs.MinimumN, rhs.MinimumN);
-            Assert.AreEqual(lhs.SLNRatioTop, rhs.SLNRatioTop);
+            Assert.That(lhs.Type, Is.EqualTo(Is.EqualTo(rhs.Type)));
+            Assert.That(lhs.AirO2, Is.EqualTo(Is.EqualTo(rhs.AirO2)));
+            Assert.That(lhs.AirCO2, Is.EqualTo(Is.EqualTo(rhs.AirCO2)));
+            Assert.That(lhs.LeafAngle, Is.EqualTo(Is.EqualTo(rhs.LeafAngle)));
+            Assert.That(lhs.LeafWidth, Is.EqualTo(Is.EqualTo(rhs.LeafWidth)));
+            Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(Is.EqualTo(rhs.LeafScatteringCoeff)));
+            Assert.That(lhs.LeafScatteringCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.LeafScatteringCoeffNIR)));
+            Assert.That(lhs.DiffuseExtCoeff, Is.EqualTo(Is.EqualTo(rhs.DiffuseExtCoeff)));
+            Assert.That(lhs.DiffuseExtCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.DiffuseExtCoeffNIR)));
+            Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(Is.EqualTo(rhs.DiffuseReflectionCoeff)));
+            Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.DiffuseReflectionCoeffNIR)));
+            Assert.That(lhs.Windspeed, Is.EqualTo(Is.EqualTo(rhs.Windspeed)));
+            Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(Is.EqualTo(rhs.WindSpeedExtinction)));
+            Assert.That(lhs.CurvatureFactor, Is.EqualTo(Is.EqualTo(rhs.CurvatureFactor)));
+            Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(Is.EqualTo(rhs.DiffusivitySolubilityRatio)));
+            Assert.That(lhs.MinimumN, Is.EqualTo(Is.EqualTo(rhs.MinimumN)));
+            Assert.That(lhs.SLNRatioTop, Is.EqualTo(Is.EqualTo(rhs.SLNRatioTop)));
         }
 
         /// <summary>
@@ -73,16 +73,16 @@ namespace UnitTests.DCaPST
         /// <param name="rhs"></param>
         private static void AssertPathwayValuesEqual(PathwayParameters lhs, PathwayParameters rhs)
         {            
-            Assert.AreEqual(lhs.IntercellularToAirCO2Ratio, rhs.IntercellularToAirCO2Ratio);
-            Assert.AreEqual(lhs.FractionOfCyclicElectronFlow, rhs.FractionOfCyclicElectronFlow);
-            Assert.AreEqual(lhs.RespirationSLNRatio, rhs.RespirationSLNRatio);
-            Assert.AreEqual(lhs.MaxRubiscoActivitySLNRatio, rhs.MaxRubiscoActivitySLNRatio);
-            Assert.AreEqual(lhs.MaxElectronTransportSLNRatio, rhs.MaxElectronTransportSLNRatio);
-            Assert.AreEqual(lhs.MaxPEPcActivitySLNRatio, rhs.MaxPEPcActivitySLNRatio);
-            Assert.AreEqual(lhs.MesophyllCO2ConductanceSLNRatio, rhs.MesophyllCO2ConductanceSLNRatio);
-            Assert.AreEqual(lhs.MesophyllElectronTransportFraction, rhs.MesophyllElectronTransportFraction);
-            Assert.AreEqual(lhs.ATPProductionElectronTransportFactor, rhs.ATPProductionElectronTransportFactor);
-            Assert.AreEqual(lhs.ExtraATPCost, rhs.ExtraATPCost);
+            Assert.That(lhs.IntercellularToAirCO2Ratio, Is.EqualTo(rhs.IntercellularToAirCO2Ratio));
+            Assert.That(lhs.FractionOfCyclicElectronFlow, Is.EqualTo(rhs.FractionOfCyclicElectronFlow));
+            Assert.That(lhs.RespirationSLNRatio, Is.EqualTo(rhs.RespirationSLNRatio));
+            Assert.That(lhs.MaxRubiscoActivitySLNRatio, Is.EqualTo(rhs.MaxRubiscoActivitySLNRatio));
+            Assert.That(lhs.MaxElectronTransportSLNRatio, Is.EqualTo(rhs.MaxElectronTransportSLNRatio));
+            Assert.That(lhs.MaxPEPcActivitySLNRatio, Is.EqualTo(rhs.MaxPEPcActivitySLNRatio));
+            Assert.That(lhs.MesophyllCO2ConductanceSLNRatio, Is.EqualTo(rhs.MesophyllCO2ConductanceSLNRatio));
+            Assert.That(lhs.MesophyllElectronTransportFraction, Is.EqualTo(rhs.MesophyllElectronTransportFraction));
+            Assert.That(lhs.ATPProductionElectronTransportFactor, Is.EqualTo(rhs.ATPProductionElectronTransportFactor));
+            Assert.That(lhs.ExtraATPCost, Is.EqualTo(rhs.ExtraATPCost));
             AssertTempratureResponseValuesEqual(lhs.RubiscoCarboxylation, rhs.RubiscoCarboxylation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoOxygenation, rhs.RubiscoOxygenation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoCarboxylationToOxygenation, rhs.RubiscoCarboxylationToOxygenation);
@@ -93,10 +93,10 @@ namespace UnitTests.DCaPST
             AssertTempratureResponseValuesEqual(lhs.Respiration, rhs.Respiration);
             AssertLeafTemperatureParametersValuesEqual(lhs.ElectronTransportRateParams, rhs.ElectronTransportRateParams);
             AssertTempratureResponseValuesEqual(lhs.MesophyllCO2ConductanceParams, rhs.MesophyllCO2ConductanceParams);
-            Assert.AreEqual(lhs.SpectralCorrectionFactor, rhs.SpectralCorrectionFactor);
-            Assert.AreEqual(lhs.PS2ActivityFraction, rhs.PS2ActivityFraction);
-            Assert.AreEqual(lhs.PEPRegeneration, rhs.PEPRegeneration);
-            Assert.AreEqual(lhs.BundleSheathConductance, rhs.BundleSheathConductance);
+            Assert.That(lhs.SpectralCorrectionFactor, Is.EqualTo(rhs.SpectralCorrectionFactor));
+            Assert.That(lhs.PS2ActivityFraction, Is.EqualTo(rhs.PS2ActivityFraction));
+            Assert.That(lhs.PEPRegeneration, Is.EqualTo(rhs.PEPRegeneration));
+            Assert.That(lhs.BundleSheathConductance, Is.EqualTo(rhs.BundleSheathConductance));
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace UnitTests.DCaPST
         /// <param name="rhs"></param>
         private static void AssertTempratureResponseValuesEqual(TemperatureResponseValues lhs, TemperatureResponseValues rhs)
         {
-            Assert.AreEqual(lhs.At25, rhs.At25);
-            Assert.AreEqual(lhs.Factor, rhs.Factor);
+            Assert.That(lhs.At25, Is.EqualTo(rhs.At25));
+            Assert.That(lhs.Factor, Is.EqualTo(rhs.Factor));
         }
 
         /// <summary>
@@ -117,11 +117,11 @@ namespace UnitTests.DCaPST
         /// <param name="rhs"></param>
         private static void AssertLeafTemperatureParametersValuesEqual(LeafTemperatureParameters lhs, LeafTemperatureParameters rhs)
         {
-            Assert.AreEqual(lhs.TMin, rhs.TMin);
-            Assert.AreEqual(lhs.TOpt, rhs.TOpt);
-            Assert.AreEqual(lhs.TMax, rhs.TMax);
-            Assert.AreEqual(lhs.C, rhs.C);
-            Assert.AreEqual(lhs.Beta, rhs.Beta);
+            Assert.That(lhs.TMin, Is.EqualTo(rhs.TMin));
+            Assert.That(lhs.TOpt, Is.EqualTo(rhs.TOpt));
+            Assert.That(lhs.TMax, Is.EqualTo(rhs.TMax));
+            Assert.That(lhs.C, Is.EqualTo(rhs.C));
+            Assert.That(lhs.Beta, Is.EqualTo(rhs.Beta));
         }
     }
 }

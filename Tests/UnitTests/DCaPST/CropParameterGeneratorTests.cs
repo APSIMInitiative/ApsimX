@@ -19,7 +19,7 @@ namespace UnitTests.DCaPST
             var cropParams = cropParameterGenerator.Generate(cropName);
 
             // Assert
-            Assert.IsNotNull(cropParams);
+            Assert.That(cropParams, Is.Not.Null);
         }
 
         [TestCase("InvalidCropName")]
@@ -32,7 +32,7 @@ namespace UnitTests.DCaPST
             var cropParams = cropParameterGenerator.Generate(cropName);
 
             // Assert
-            Assert.IsNull(cropParams);
+            Assert.That(cropParams, Is.Null);
         }
 
         #endregion

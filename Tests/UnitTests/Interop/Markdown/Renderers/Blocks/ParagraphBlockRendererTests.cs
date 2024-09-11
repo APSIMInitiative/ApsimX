@@ -66,7 +66,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             pdfBuilder.AppendText("existing paragraph", TextStyle.Normal);
             renderer.Write(pdfBuilder, paragraph);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             renderer.Write(pdfBuilder, paragraph);
             pdfBuilder.AppendText("additional content", TextStyle.Normal);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         public void EnsureChildrenAreWritten()
         {
             renderer.Write(pdfBuilder, paragraph);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph inserted = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(paragraphText, inserted.GetRawText());
+            Assert.That(inserted.GetRawText(), Is.EqualTo(paragraphText));
         }
     }
 }

@@ -149,18 +149,22 @@ namespace UserInterface.Views
 
         private void OnTreeDragBegin(object sender, DragBeginArgs args)
         {
-            if (SelectedIndicies.Length > 0)
+            if (table.Columns.Contains("Description"))
             {
-                ReportDragObject dragObject = new()
+                if (SelectedIndicies.Length > 0)
                 {
-                    Index = SelectedIndicies[0],
-                    Description = table.Rows[SelectedIndicies[0]]["Description"].ToString(),
-                    Code = table.Rows[SelectedIndicies[0]]["Code"].ToString(),
-                    OtherArgs = args
-                };
+                    ReportDragObject dragObject = new()
+                    {
+                        Index = SelectedIndicies[0],
+                        Description = table.Rows[SelectedIndicies[0]]["Description"].ToString(),
+                        Code = table.Rows[SelectedIndicies[0]]["Code"].ToString(),
+                        OtherArgs = args
+                    };
 
-                DragStart.Invoke(sender, dragObject);
+                    DragStart.Invoke(sender, dragObject);
+                }
             }
+
         }
 
         /// <summary>Invoked when the user changes the selection</summary>

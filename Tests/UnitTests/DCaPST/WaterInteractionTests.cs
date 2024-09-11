@@ -34,7 +34,7 @@ namespace UnitTests.DCaPST
             var actual = water.UnlimitedWaterResistance(A, Ca, Ci);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -61,7 +61,7 @@ namespace UnitTests.DCaPST
             var actual = water.LimitedWaterResistance(available);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -88,7 +88,7 @@ namespace UnitTests.DCaPST
             var actual = water.HourlyWaterUse(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace UnitTests.DCaPST
             var actual = water.TotalCO2Conductance(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -140,7 +140,7 @@ namespace UnitTests.DCaPST
             var actual = water.LeafTemperature(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

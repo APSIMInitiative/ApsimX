@@ -26,24 +26,39 @@ namespace Models.Management
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class FarmMachinery : Model, IGridModel
+    public class FarmMachinery : Model
     {
+        private List<string> _tractorNames = new();
+
         /// <summary> </summary>
         [Description("Fuel Cost ($/l)" )]
         public double FuelCost {get; set;}
 
         /////////////  Arrays of combined machinery pair (tractor + implement) parameters
         /// <summary> </summary>
-        public string[] TractorNames {get; set;}
+        [Display]
+        public List<string> TractorNames 
+         {
+            get {
+               CollectMachineryAndImplements();
+               return _tractorNames;
+            }
+            set { 
+               _tractorNames = value;
+            }
+         }
+               
         /// <summary> </summary>
-        public string[] ImplementNames {get; set;}
+        [Display]
+        public List<string> ImplementNames {get; set;} = new();
 
         /// <summary> Coverage - work rate (ha/hr) </summary>
-        public double[] WorkRates {get; set;}
+        [Display]
+        public List<double> WorkRates {get; set;} = new();
     
         /// <summary> Fuel consumption rate</summary>
-        public double[] FuelConsRates {get; set;}
-
+        [Display]
+        public List<double> FuelConsRates {get; set;} = new();
 
         /// <summary> The daily amount of fuel consumed (litres) </summary>
         public double FuelConsumption {get; set;}
@@ -113,55 +128,43 @@ namespace Models.Management
            return result;
         }
 
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                // fixme - these should be dropdown lists
-                columns.Add(new GridTableColumn("Tractor", new VariableProperty(this, GetType().GetProperty("TractorNames"))));
-                columns.Add(new GridTableColumn("Implement", new VariableProperty(this, GetType().GetProperty("ImplementNames"))));
-                columns.Add(new GridTableColumn("Work Rate (ha/hr)", new VariableProperty(this, GetType().GetProperty("WorkRates"))));
-                columns.Add(new GridTableColumn("Fuel Consumption (l/hr)", new VariableProperty(this, GetType().GetProperty("FuelConsRates"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-                return tables;
-            }
-        }
         /// <summary>
-        /// 
+        /// Go through all child components and ensure they are in the tractor/implement arrays
+        /// so that the user can modify them.
         /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-           return(dt);
-        }
-
-        /// <summary>
-        /// Ensure any new child components added by user are present in the arrays
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
+        public void CollectMachineryAndImplements()
         { 
-            var newCombos = new List<string>();
+            // Add in missing tractor / implements
             foreach (var t in getTractorNames()) 
                foreach(var i in getImplementNames()) 
-                  newCombos.Add(t + "." + i);
-
-            var dtCombos = new List<string>();
-            for (var row = 0; row < dt.Rows.Count; row++) 
-               dtCombos.Add(dt.Rows[row]["Tractor"].ToString() + "." + dt.Rows[row]["Implement"].ToString());
-
-            foreach (var combo in newCombos)
-               if ( ! dtCombos.Contains(combo)) {
-                  DataRow newRow = dt.NewRow();
-                  newRow["Tractor"] = combo.Split(".")[0];
-                  newRow["Implement"] = combo.Split(".")[1];
-                  dt.Rows.Add(newRow);
+               {
+                  var alreadyExists = _tractorNames.Zip(ImplementNames)
+                                                   .Any(zip => zip.First == t && zip.Second == i);
+                  if (!alreadyExists)
+                  {
+                     _tractorNames.Add(t);
+                     ImplementNames.Add(i);
+                     WorkRates.Add(0);
+                     FuelConsRates.Add(0);
+                  }
                }
-            return(dt);
+
+            var childTractorNames = getTractorNames();
+            var childImplementNames = getImplementNames();
+
+            // Remove tractor / implements that no longer exist.
+            for (int i = _tractorNames.Count - 1; i >= 0; i--)
+            {
+               bool remove = !childTractorNames.Contains(_tractorNames[i]) || 
+                             !childImplementNames.Contains(ImplementNames[i]);
+               if (remove)
+               {
+                  _tractorNames.RemoveAt(i);
+                  ImplementNames.RemoveAt(i);
+                  WorkRates.RemoveAt(i);
+                  FuelConsRates.RemoveAt(i);
+               }
+            }
         }
 
         /// <summary> </summary>
@@ -282,13 +285,13 @@ namespace Models.Management
       /// <summary> Index into the arrays for this tractor/implement combination </summary>
       private int getComboIndex(string tractor, string implement){
            int iRow;
-           for(iRow = 0; iRow < TractorNames.Length; iRow++) {
+           for(iRow = 0; iRow < TractorNames.Count; iRow++) {
                if (TractorNames[iRow] == tractor &&
                    ImplementNames[iRow] == implement)
                   break;
            }
 
-           if (iRow >= TractorNames.Length)
+           if (iRow >= TractorNames.Count)
                throw new Exception($"Cant find work rates for {tractor} and {implement}");
             return(iRow);
         }
@@ -348,3 +351,4 @@ namespace Models.Management
       public double Area { get; set; }
    }
 }
+

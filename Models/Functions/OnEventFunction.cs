@@ -36,8 +36,8 @@ namespace Models.Functions
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
             _Value = PreEventValue.Value();
         }

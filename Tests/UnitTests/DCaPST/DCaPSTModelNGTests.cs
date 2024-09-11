@@ -26,7 +26,7 @@ namespace UnitTests.DCaPST
 
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
-            Assert.AreEqual(model.CropName, cropName);
+            Assert.That(model.CropName, Is.EqualTo(cropName));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace UnitTests.DCaPST
 
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
-            Assert.AreEqual(model.CropName, cropName);
+            Assert.That(model.CropName, Is.EqualTo(cropName));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace UnitTests.DCaPST
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
             mock.Verify(cropGen => cropGen.Generate(differentCropName), Times.Once());
-            Assert.AreEqual(model.CropName, differentCropName);
+            Assert.That(model.CropName, Is.EqualTo(differentCropName));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace UnitTests.DCaPST
             );
 
             // Assert - Nothing else can be tested.
-            Assert.AreEqual(model.B, 0.409);
+            Assert.That(model.B, Is.EqualTo(0.409));
         }
 
         #endregion

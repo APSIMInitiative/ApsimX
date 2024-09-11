@@ -120,8 +120,8 @@ namespace UserInterface.Views
             textView.FocusInEvent += OnGainFocus;
             textView.FocusOutEvent += OnLoseFocus;
 
-            handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
-            regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+            handCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Hand2);
+            regularCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Xterm);
 
             textView.KeyPressEvent += OnTextViewKeyPress;
         }
@@ -702,6 +702,11 @@ namespace UserInterface.Views
             var strikethrough = new TextTag("Strikethrough");
             strikethrough.Strikethrough = true;
             textView.Buffer.TagTable.Add(strikethrough);
+
+            // Give Gtk time to digest these additions to the tag table
+            // Otherwise we can sometimes get nulls when we access the tags
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         // Looks at all tags covering the position (x, y) in the text view,

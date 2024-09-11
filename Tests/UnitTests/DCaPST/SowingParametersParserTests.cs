@@ -107,8 +107,8 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNotNull(cultivar);
-            Assert.AreEqual(cultivarName, cultivar.Name);
+            Assert.That(cultivar, Is.Not.Null);
+            Assert.That(cultivarName, Is.EqualTo(cultivar.Name));
         }
 
         [TestCase(
@@ -159,7 +159,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace UnitTests.DCaPST
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
 
             // Assert
-            Assert.IsNull(cultivar);
+            Assert.That(cultivar, Is.Null);
         }
         #endregion
     }

@@ -12,6 +12,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CS8600,CS8601,CS8602,CS8603,CS8604,CS8618</NoWarn>
   </PropertyGroup>
   
   <PropertyGroup>
