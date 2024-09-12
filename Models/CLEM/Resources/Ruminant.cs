@@ -58,6 +58,17 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
 
+        /// <summary>
+        /// Report total intake as a proportion of live weight
+        /// </summary>
+        public double IntakeAsProportionLiveWeight 
+        {
+            get
+            {
+                return (Intake.SolidsDaily.Actual + Intake.MilkDaily.Actual) / Weight.Live;
+            }
+        }
+
         #region General properties
 
         /// <summary>
@@ -733,6 +744,13 @@ namespace Models.CLEM.Resources
                 else
                     // need to double calculate so we have a normalised weight to assign
                     setWeight = CalculateNormalisedWeight(setAge, true);
+            }
+
+            if (Parameters.Grow24_CW is not null)
+            {
+                // assuming half way betwen last shearing and next shearing
+                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * 0.5);
+                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
             }
 
             // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.

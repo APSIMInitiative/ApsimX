@@ -23,77 +23,77 @@ namespace Models.CLEM.Resources
     public class RuminantParametersGrow24CW : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
-        ///  (SCA CW1) MJ kg-1
+        /// Standard Fleece Weight
         /// </summary>
         [Category("Farm", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Standard Fleece Weight")]
         public double StandardFleeceWeight { get; set; } = 4;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1
+        /// Energy Content Clean Wool (SCA CW1) MJ kg-1
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Energy Content Clean Wool [CW1]")]
         public double EnergyContentCleanWool_CW1 { get; set; } = 24;
 
         /// <summary>
-        ///  (SCA CW2) MJ kg-1
+        /// Basal Clean Wool Growth (SCA CW2)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Basal Clean Wool Growth [CW2]")]
         public double BasalCleanWoolGrowth_CW2 { get; set; } = 0.004;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1   -- USER
+        /// Clean To Greasy C Ratio (SCA CW3)   -- USER
         /// </summary>
         [Category("Farm", "Wool")] 
-        [Description(" [CW1]")]
+        [Description("Clean To Greasy C Ratio [CW3]")]
         public double CleanToGreasyCRatio_CW3 { get; set; } = 0.7;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1
+        /// Lag Factor For Wool (SCA CW4)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Lag Factor For Wool [CW4]")]
         public double LagFactorForWool_CW4 { get; set; } = 0.04;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1 
+        /// Wool Growth Proportion At Birth (SCA CW5)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Wool Growth Proportion At Birth [CW5]")]
         public double WoolGrowthProportionAtBirth_CW5 { get; set; } = 0.25;
 
         // CW6 - photoperiod effect NOT INCLUDED
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1  
+        /// DPLS Limitation For Wool Growth (SCA CW7)  
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("DPLS Limitation For Wool Growth [CW7]")]
         public double DPLSLimitationForWoolGrowth_CW7 { get; set; } = 1.35;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1   -- kg MJ-1
+        /// MEI Limitation On Wool Growth (SCA CW8)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("MEI Limitation On Wool Growth [CW8]")]
         public double MEILimitationOnWoolGrowth_CW8 { get; set; } = 0.016;
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1   -- kg MJ-1
+        /// Pregnancy Lactation Adjustment (SCA CW9)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Pregnancy Lactation Adjustment [CW9]")]
         public double PregLactationAdjustment_CW9 { get; set; } = 1.0;
 
         // CW10 and CW11 - not included - Fibre diameter
 
         /// <summary>
-        ///  (SCA CW1) MJ kg-1   -- kg MJ-1
+        /// Age Factor Exponent (SCA CW12)
         /// </summary>
         [Category("Breed", "Wool")]
-        [Description(" [CW1]")]
+        [Description("Age Factor Exponent [CW12]")]
         public double AgeFactorExponent_CW12 { get; set; } = 0.025;
 
         /// <summary>
@@ -103,21 +103,17 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CP clonedParameters = new()
+            RuminantParametersGrow24CW clonedParameters = new()
             {
-                FetalNormWeightParameter_CP2 = FetalNormWeightParameter_CP2,
-                FetalNormWeightParameter2_CP3 = FetalNormWeightParameter2_CP3,
-                EffectFetalRelativeSizeOnBirthWeight_CP4 = EffectFetalRelativeSizeOnBirthWeight_CP4,
-                ConceptusWeightRatio_CP5 = ConceptusWeightRatio_CP5,
-                ConceptusWeightParameter_CP6 = ConceptusWeightParameter_CP6,
-                ConceptusWeightParameter2_CP7 = ConceptusWeightParameter2_CP7,
-                ConceptusEnergyContent_CP8 = ConceptusEnergyContent_CP8,
-                ConceptusEnergyParameter_CP9 = ConceptusEnergyParameter_CP9,
-                ConceptusEnergyParameter2_CP10 = ConceptusEnergyParameter2_CP10,
-                ConceptusProteinPercent_CP11 = ConceptusProteinPercent_CP11,
-                ConceptusProteinParameter_CP12 = ConceptusProteinParameter_CP12,
-                ConceptusProteinParameter2_CP13 = ConceptusProteinParameter2_CP13,
-                FetalGrowthPoorCondition_CP14 = FetalGrowthPoorCondition_CP14
+                EnergyContentCleanWool_CW1 = EnergyContentCleanWool_CW1,
+                BasalCleanWoolGrowth_CW2 = BasalCleanWoolGrowth_CW2,
+                CleanToGreasyCRatio_CW3 = CleanToGreasyCRatio_CW3,
+                LagFactorForWool_CW4 = LagFactorForWool_CW4,
+                WoolGrowthProportionAtBirth_CW5 = WoolGrowthProportionAtBirth_CW5,
+                DPLSLimitationForWoolGrowth_CW7 = DPLSLimitationForWoolGrowth_CW7,
+                MEILimitationOnWoolGrowth_CW8 = MEILimitationOnWoolGrowth_CW8,
+                PregLactationAdjustment_CW9 = PregLactationAdjustment_CW9,
+                AgeFactorExponent_CW12 = AgeFactorExponent_CW12
             };
             return clonedParameters;
         }
