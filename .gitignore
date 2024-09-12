@@ -63,8 +63,3 @@ launchSettings.json
 /testEnvironments.json
 .mono
 ApsimX.xml
-/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.out
-/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.sim
-/Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.out
-/Tests/Validation/DCaPST/Sorghum/classic_apsim_file/validation/*.sim
-ApsimX.xml/Tests/Validation/Sorghum/old/classic_apsim_file/**/*.out

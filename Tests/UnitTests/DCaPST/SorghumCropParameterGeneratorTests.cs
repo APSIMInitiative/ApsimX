@@ -63,13 +63,13 @@ namespace UnitTests.DCaPST
                 0.39609236234459, // spectralCorrectionFactor
                 0.1, // ps2ActivityFraction
                 0.003, // bundleSheathConductance
-                0.28, // maxRubiscoActivitySLNRatio
-                2.5, // maxElectronTransportSLNRatio  2.7 * PsiFactor or 1.9
+                0.349, // maxRubiscoActivitySLNRatio
+                3.0, // maxElectronTransportSLNRatio  2.7 * PsiFactor or 1.9
                 0.0, // respirationSLNRatio
-                1.1, // maxPEPcActivitySLNRatio
-                0.0146, // mesophyllCO2ConductanceSLNRatio
+                1.165, // maxPEPcActivitySLNRatio
+                0.011, // mesophyllCO2ConductanceSLNRatio
                 2, // extraATPCost
-                0.40 // intercellularToAirCO2Ratio
+                0.45 // intercellularToAirCO2Ratio
             );
 
             return new DCaPSTParameters

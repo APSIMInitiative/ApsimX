@@ -17,7 +17,7 @@ namespace UnitTests.DCaPST
         public static void AssertDCaPSTParametersValuesEqual(DCaPSTParameters lhs, DCaPSTParameters rhs)
         {
             // Assert
-            Assert.That(lhs.Rpar, Is.EqualTo(Is.EqualTo(rhs.Rpar)));
+            Assert.That(lhs.Rpar, Is.EqualTo(rhs.Rpar));
             // Canopy params
             AssertCanopyValuesEqual(lhs.Canopy, rhs.Canopy);
             // Pathway params
@@ -47,23 +47,23 @@ namespace UnitTests.DCaPST
         /// <param name="rhs"></param>
         private static void AssertCanopyValuesEqual(CanopyParameters lhs, CanopyParameters rhs)
         {            
-            Assert.That(lhs.Type, Is.EqualTo(Is.EqualTo(rhs.Type)));
-            Assert.That(lhs.AirO2, Is.EqualTo(Is.EqualTo(rhs.AirO2)));
-            Assert.That(lhs.AirCO2, Is.EqualTo(Is.EqualTo(rhs.AirCO2)));
-            Assert.That(lhs.LeafAngle, Is.EqualTo(Is.EqualTo(rhs.LeafAngle)));
-            Assert.That(lhs.LeafWidth, Is.EqualTo(Is.EqualTo(rhs.LeafWidth)));
-            Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(Is.EqualTo(rhs.LeafScatteringCoeff)));
-            Assert.That(lhs.LeafScatteringCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.LeafScatteringCoeffNIR)));
-            Assert.That(lhs.DiffuseExtCoeff, Is.EqualTo(Is.EqualTo(rhs.DiffuseExtCoeff)));
-            Assert.That(lhs.DiffuseExtCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.DiffuseExtCoeffNIR)));
-            Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(Is.EqualTo(rhs.DiffuseReflectionCoeff)));
-            Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(Is.EqualTo(rhs.DiffuseReflectionCoeffNIR)));
-            Assert.That(lhs.Windspeed, Is.EqualTo(Is.EqualTo(rhs.Windspeed)));
-            Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(Is.EqualTo(rhs.WindSpeedExtinction)));
-            Assert.That(lhs.CurvatureFactor, Is.EqualTo(Is.EqualTo(rhs.CurvatureFactor)));
-            Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(Is.EqualTo(rhs.DiffusivitySolubilityRatio)));
-            Assert.That(lhs.MinimumN, Is.EqualTo(Is.EqualTo(rhs.MinimumN)));
-            Assert.That(lhs.SLNRatioTop, Is.EqualTo(Is.EqualTo(rhs.SLNRatioTop)));
+            Assert.That(lhs.Type, Is.EqualTo(rhs.Type));
+            Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
+            Assert.That(lhs.AirCO2, Is.EqualTo(rhs.AirCO2));
+            Assert.That(lhs.LeafAngle, Is.EqualTo(rhs.LeafAngle));
+            Assert.That(lhs.LeafWidth, Is.EqualTo(rhs.LeafWidth));
+            Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(rhs.LeafScatteringCoeff));
+            Assert.That(lhs.LeafScatteringCoeffNIR, Is.EqualTo(rhs.LeafScatteringCoeffNIR));
+            Assert.That(lhs.DiffuseExtCoeff, Is.EqualTo(rhs.DiffuseExtCoeff));
+            Assert.That(lhs.DiffuseExtCoeffNIR, Is.EqualTo(rhs.DiffuseExtCoeffNIR));
+            Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(rhs.DiffuseReflectionCoeff));
+            Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(rhs.DiffuseReflectionCoeffNIR));
+            Assert.That(lhs.Windspeed, Is.EqualTo(rhs.Windspeed));
+            Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(rhs.WindSpeedExtinction));
+            Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
+            Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(rhs.DiffusivitySolubilityRatio));
+            Assert.That(lhs.MinimumN, Is.EqualTo(rhs.MinimumN));
+            Assert.That(lhs.SLNRatioTop, Is.EqualTo(rhs.SLNRatioTop));
         }
 
         /// <summary>
