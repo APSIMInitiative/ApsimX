@@ -13,7 +13,7 @@ namespace APSIM.Shared.Documentation
     public class Section : ITag
     {
         /// <summary>Child tags.</summary>
-        public IEnumerable<ITag> Children { get; private set; }
+        public List<ITag> Children { get; private set; }
 
         /// <summary>The section title.</summary>
         public string Title { get; private set; }
@@ -26,7 +26,7 @@ namespace APSIM.Shared.Documentation
         public Section(string title, IEnumerable<ITag> children)
         {
             Title = title;
-            this.Children = children;
+            this.Children = children.ToList();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace APSIM.Shared.Documentation
         public Section(IEnumerable<ITag> children)
         {
             Title = null;
-            this.Children = children;
+            this.Children = children.ToList();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace APSIM.Shared.Documentation
         public Section(string title, ITag child)
         {
             Title = title;
-            Children = child.ToEnumerable();
+            Children = new List<ITag>() {child};
         }
 
         /// <summary>

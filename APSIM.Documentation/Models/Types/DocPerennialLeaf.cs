@@ -29,7 +29,7 @@ namespace APSIM.Documentation.Models.Types
             foreach (var constant in model.FindAllChildren<Constant>())
                 subTags.AddRange(AutoDocumentation.Document(constant, heading+1));
 
-            tags.Add(new Section(model.Name, subTags));
+            tags.Add(new Section("Constants", subTags));
 
             return tags;
         }
