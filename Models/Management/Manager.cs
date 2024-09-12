@@ -371,22 +371,5 @@ namespace Models
         {
             this.CodeArray = CodeFormatting.Reformat(this.CodeArray);
         }
-
-        /// <summary>
-        /// Document the script iff it overrides its Document() method.
-        /// Otherwise, return nothing.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            if (Children.Count > 0)
-            {
-                var script = ScriptModel;
-
-                Type scriptType = script.GetType();
-                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                    foreach (ITag tag in script.Document())
-                        yield return tag;
-            }
-        }
     }
 }

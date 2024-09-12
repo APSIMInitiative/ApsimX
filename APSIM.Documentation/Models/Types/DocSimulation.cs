@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using M = Models;
 using Models.Core;
 
 namespace APSIM.Documentation.Models.Types
@@ -22,7 +23,8 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = base.Document(heading);
             
             foreach (IModel child in model.Children)
-                tags = AutoDocumentation.Document(child, heading+1);
+                if (child is M.Memo || child is M.Graph || child is M.Map || child is M.Manager)
+                    (tags[0] as Section).Children.AddRange(AutoDocumentation.Document(child, heading+1));
 
             return tags;
         }

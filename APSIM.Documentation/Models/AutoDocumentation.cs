@@ -20,6 +20,8 @@ using Models.Storage;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
+using Models.Factorial;
+using Models.Functions.SupplyFunctions;
 
 namespace APSIM.Documentation.Models
 {
@@ -89,6 +91,9 @@ namespace APSIM.Documentation.Models
                 {typeof(Nodule), typeof(DocNodule)},
                 {typeof(Leaf), typeof(DocLeaf)},
                 {typeof(Manager), typeof(DocManager)},
+                {typeof(Experiment), typeof(DocGenericWithChildren)},
+                {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
+                {typeof(RUEModel), typeof(DocGenericWithChildren)},
             };
             return documentMap;
         }

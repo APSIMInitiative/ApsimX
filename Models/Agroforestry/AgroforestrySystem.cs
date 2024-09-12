@@ -135,11 +135,5 @@ namespace Models.Agroforestry
                     return 1.0;
 
         }
-
-        /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            throw new NotImplementedException("tbi");
-        }
     }
 }

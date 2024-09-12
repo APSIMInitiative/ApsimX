@@ -84,17 +84,6 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// Document the model, and any child models which should be documented.
-        /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, DocumentChildren());
-        }
-
-        /// <summary>
         /// Document the appropriate children of the experiment (memos,
         /// graphs, and folders).
         /// </summary>

@@ -36,7 +36,7 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> subTags = new();
             foreach (IModel child in model.FindAllChildren())
                 if (!(child is Memo))
-                    subTags = AutoDocumentation.Document(child, heading+1);
+                    subTags.AddRange(AutoDocumentation.Document(child, heading+1));
 
             (tags[0] as Section).Children.AddRange(subTags);
 

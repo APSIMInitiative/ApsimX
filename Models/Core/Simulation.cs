@@ -344,29 +344,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Document the model, and any child models which should be documented.
-        /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, DocumentChildren());
-        }
-
-        private IEnumerable<ITag> DocumentChildren()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-            foreach (ITag tag in DocumentChildren<Graph>())
-                yield return tag;
-            foreach (ITag tag in DocumentChildren<Map>())
-                yield return tag;
-            foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
-                yield return tag;
-        }
-
-        /// <summary>
         /// Check that there aren't multiple soil water models in a zone.
         /// </summary>
         /// <param name="parentZone">The zone to check.</param>
