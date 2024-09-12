@@ -40,11 +40,38 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double NitrogenPercent { get; set; }
 
+        private double rumenDegradableProteinPercent;
+
         /// <inheritdoc/>
-        public double RumenDegradableProteinPercent { get; set; }
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
 
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
+
+        /// <summary>
+        /// Method to calculate the Acid Detergent Insoluable Protein based on the rumen degradable protein and type of feed
+        /// </summary>
+        /// <param name="rumenDegradableProteinPercent">RDP of feed</param>
+        /// <param name="typeOfFeed">Type of feed to identify forage</param>
+        /// <returns>ADIP</returns>
+        public static double CalculateAcidDetergentInsoluableProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
+        {
+            if (typeOfFeed == FeedType.Concentrate | typeOfFeed == FeedType.Milk)
+                return Math.Max(0.03, 0.87 - (1.09 * rumenDegradableProteinPercent / 100));
+            else
+                return 0.19 * (1 - rumenDegradableProteinPercent / 100);
+        }
 
         /// <summary>
         /// Factor used to convert the Nitrogen percentage and DM to crude protein

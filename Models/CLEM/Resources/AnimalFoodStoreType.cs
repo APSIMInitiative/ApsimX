@@ -93,16 +93,26 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double NitrogenPercent { get; set; }
 
-        /// <inheritdoc/>
-        [Description("Rumen degradable protein percent")]
-        [Required, GreaterThanEqualValue(0), Percentage]
-        [Units("%")]
-        public double RumenDegradableProteinPercent { get; set; } = 70.0;
+        private double rumenDegradableProteinPercent; 
 
         /// <inheritdoc/>
-        [Description("Acid detergent insoluable protein")]
-        [Required, GreaterThanEqualValue(0), Proportion]
-        [Units("g/g Protein")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Description("Rumen degradable protein percent (%, g/g CP * 100)")]
+        [Units("%")]
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
+
+        /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <summary>
@@ -184,6 +194,8 @@ namespace Models.CLEM.Resources
                 NitrogenPercent = UserCrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
                 CrudeProteinPercent = UserCrudeProteinPercent;
             }
+
+            AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(RumenDegradableProteinPercent, TypeOfFeed);
 
             // initialise the current state and details of this store
             CurrentStoreDetails = new FoodResourcePacket(this);

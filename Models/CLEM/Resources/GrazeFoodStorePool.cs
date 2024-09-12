@@ -37,7 +37,21 @@ namespace Models.CLEM.Resources
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        public double RumenDegradableProteinPercent { get; set; }
+        private double rumenDegradableProteinPercent;
+
+        /// <inheritdoc/>
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
 
         /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }

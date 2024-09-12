@@ -53,12 +53,25 @@ namespace Models.CLEM.Resources
         [Units("MJ/kg DM")]
         public double MetabolisableEnergyContent { get; set; }
 
-        /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
-        public double RumenDegradableProteinPercent { get; set; }
+        private double rumenDegradableProteinPercent;
 
         /// <inheritdoc/>
-        [Required, Proportion, GreaterThanEqualValue(0)]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Description("Degradable protein percent (%, g/g CP * 100)")]
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
+
+        /// <inheritdoc/>
         public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
@@ -84,9 +97,10 @@ namespace Models.CLEM.Resources
         [Description("Proportion of legume in this pasture")]
         public double ProportionLegumeInPasture { get; set; } = 0;
 
+        //ToDo: NOT SURE THIS IS USED!
         /// <inheritdoc/>
         [Description("Crude protein degradability")]
-        public double CPDegradability { get; set; }
+        public double CPDegradability { get; set; } 
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -468,6 +482,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double TonnesPerHectareStartOfTimeStep { get; set; }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(RumenDegradableProteinPercent, TypeOfFeed);
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

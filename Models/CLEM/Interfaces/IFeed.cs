@@ -52,13 +52,12 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Percent rumen Degradable protein as percent (g/g CP * 100) (100-Rumen Undegradable Protein)
         /// </summary>
-        [Description("Degradable protein percent (%, g/g CP * 100)")]
+        [Description("Rumen degradable protein percent (%, g/g CP * 100)")]
         public double RumenDegradableProteinPercent { get; set; }
 
         /// <summary>
         /// Acid detergent insoluable protein
         /// </summary>
-        [Description("Acid detergent insoluable protein")]
         public double AcidDetergentInsoluableProtein { get; set; }
     }
 }
