@@ -55,12 +55,12 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem ConceptusFat { get; set; } = new();
 
         /// <summary>
-        /// Track wool weight (kg)
+        /// Track greasy wool weight (kg)
         /// </summary>
         public RuminantTrackingItem Wool { get; set; } = new();
 
         /// <summary>
-        /// Track wool weight (kg)
+        /// Track clean wool weight (kg)
         /// </summary>
         public RuminantTrackingItem WoolClean { get; set; } = new();
 
@@ -327,8 +327,8 @@ namespace Models.CLEM.Resources
             }
 
             // set fat and protein energy based on initial amounts
-            individual.Energy.Fat.Set(individual.Weight.Fat.Change * 39.3);
-            individual.Energy.Protein.Set(individual.Weight.Protein.Change * 23.6);
+            individual.Energy.Fat.Set(individual.Weight.Fat.Amount * 39.3);
+            individual.Energy.Protein.Set(individual.Weight.Protein.Amount * 23.6);
         }
     }
 }
