@@ -105,6 +105,7 @@ namespace Models.CLEM.Resources
         {
             RuminantParametersGrow24CW clonedParameters = new()
             {
+                StandardFleeceWeight = StandardFleeceWeight,
                 EnergyContentCleanWool_CW1 = EnergyContentCleanWool_CW1,
                 BasalCleanWoolGrowth_CW2 = BasalCleanWoolGrowth_CW2,
                 CleanToGreasyCRatio_CW3 = CleanToGreasyCRatio_CW3,
