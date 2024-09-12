@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 175,
+  "Version": 181,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1374,7 +1374,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -1419,7 +1419,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -1566,9 +1566,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -2148,7 +2148,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -2422,7 +2422,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -2453,7 +2453,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -2600,9 +2600,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -3383,7 +3383,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -3414,7 +3414,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -3526,9 +3526,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -4355,7 +4355,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -4386,7 +4386,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -4533,9 +4533,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -5083,7 +5083,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -5357,7 +5357,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -5381,7 +5381,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -5549,9 +5549,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -6332,7 +6332,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -6349,7 +6349,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -6510,9 +6510,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -7067,7 +7067,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -7362,7 +7362,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -7386,7 +7386,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -7477,9 +7477,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -8034,7 +8034,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -8329,7 +8329,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -8353,7 +8353,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -8444,9 +8444,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -9277,7 +9277,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -9501,9 +9501,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -10248,7 +10248,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -10490,9 +10490,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -11234,7 +11234,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -11399,9 +11399,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -11987,7 +11987,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": null,
+                          "OperationsList": null,
                           "Name": "FertiliserSchedule",
                           "ResourceName": null,
                           "Children": [],
@@ -12012,7 +12012,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12045,7 +12045,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12092,7 +12092,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12139,7 +12139,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": null,
+                          "OperationsList": null,
                           "Name": "FertiliserSchedule",
                           "ResourceName": null,
                           "Children": [],
@@ -12164,7 +12164,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12197,7 +12197,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12244,7 +12244,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -12529,7 +12529,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": null,
+                          "OperationsList": null,
                           "Name": "FertiliserSchedule",
                           "ResourceName": null,
                           "Children": [],
@@ -12701,9 +12701,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -13472,7 +13472,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -14110,9 +14110,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -14622,7 +14622,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [],
+                              "OperationsList": [],
                               "Name": "Low",
                               "ResourceName": null,
                               "Children": [],
@@ -14631,7 +14631,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -14648,7 +14648,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -14840,7 +14840,7 @@
                             "                if(TilleringMethod == TilleringMethodType.ObservedTillers)",
                             "                {",
                             "                    //hack to set fixed tillers inside of experiment",
-                            "                    if (fertiliserSchedule.Operation.Count == 3)",
+                            "                    if (fertiliserSchedule.OperationsList.Count == 3)",
                             "                    {",
                             "                        if(Cultivar == \"A35xQL36\")",
                             "                        {",
@@ -14940,7 +14940,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -15020,7 +15020,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [],
+                          "OperationsList": [],
                           "Name": "FertiliserSchedule",
                           "ResourceName": null,
                           "Children": [],
@@ -15122,9 +15122,9 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
