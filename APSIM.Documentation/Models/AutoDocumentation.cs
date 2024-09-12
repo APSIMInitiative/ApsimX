@@ -101,7 +101,8 @@ namespace APSIM.Documentation.Models
                 {typeof(RootShapeCylinder), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiEllipse), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
-                {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)}
+                {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
+                {typeof(BasialBuds), typeof(DocGenericWithChildren)},
             };
             return documentMap;
         }
