@@ -92,6 +92,16 @@
         double DiffuseExtCoeff { get; set; }
 
         /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        double ExtCoeffReductionSlope { get; set; }
+
+        /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        double ExtCoeffReductionIntercept { get; set; }
+
+        /// <summary>
         /// Extinction coefficient for near-infrared diffuse radiation
         /// </summary>
         double DiffuseExtCoeffNIR { get; set; }

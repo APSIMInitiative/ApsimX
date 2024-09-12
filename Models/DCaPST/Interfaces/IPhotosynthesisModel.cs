@@ -10,8 +10,14 @@
         /// </summary>
         /// <param name="lai"></param>
         /// <param name="sln"></param>
-        /// <param name="soilWater"></param>
-        /// <param name="RootShootRatio"></param>
-        void DailyRun(double lai, double sln, double soilWater, double RootShootRatio);
+        void DailyRun(double lai, double sln);
+
+        /// <summary>
+        /// Calculates the biomass using the supplied soil water and the ratio that 
+        /// should be attributed to the roots.
+        /// </summary>
+        /// <param name="soilWaterAvailable"></param>
+        /// <param name="rootShootRatio"></param>
+        void CalculateBiomass(double soilWaterAvailable, double rootShootRatio);
     }
 }

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using APSIM.Shared.Documentation;
-using Models.Factorial;
-using Models.PMF;
-using Models.PMF.Interfaces;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using APSIM.Shared.Documentation;
+    using Models.Factorial;
+    using Models.PMF;
+    using Models.PMF.Interfaces;
+    using Models.DCAPST;
 
 namespace Models.Core
 {
@@ -27,6 +28,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     [ValidParent(ParentType = typeof(IPlant))]
+    [ValidParent(ParentType = typeof(DCaPSTModelNG))]
     public class Folder : Model
     {
         /// <summary>Show in the autodocs?</summary>

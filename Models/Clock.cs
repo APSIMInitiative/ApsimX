@@ -387,6 +387,8 @@ namespace Models
                 if (DoUpdateWaterDemand != null)
                     DoUpdateWaterDemand.Invoke(this, args);
 
+                DoDCAPST?.Invoke(this, args);
+
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
 
@@ -398,8 +400,6 @@ namespace Models
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
-
-                DoDCAPST?.Invoke(this, args);
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
