@@ -88,6 +88,7 @@ namespace APSIM.Documentation.Models
                 {typeof(PerennialLeaf), typeof(DocPerennialLeaf)},
                 {typeof(Nodule), typeof(DocNodule)},
                 {typeof(Leaf), typeof(DocLeaf)},
+                {typeof(Manager), typeof(DocManager)},
             };
             return documentMap;
         }

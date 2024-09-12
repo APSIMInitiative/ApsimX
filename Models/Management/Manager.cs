@@ -12,7 +12,7 @@ namespace Models
 {
 
     /// <summary>
-    /// The manager model
+    /// Manager scripts are used to modify the simulation with C# code.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
