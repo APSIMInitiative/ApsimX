@@ -22,6 +22,7 @@ using Models.PMF.Struct;
 using Models.Functions.DemandFunctions;
 using Models.Factorial;
 using Models.Functions.SupplyFunctions;
+using Models.Functions.RootShape;
 
 namespace APSIM.Documentation.Models
 {
@@ -95,6 +96,11 @@ namespace APSIM.Documentation.Models
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
                 {typeof(RUEModel), typeof(DocGenericWithChildren)},
                 {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)}
+                {typeof(RUECO2Function), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiCircle), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeCylinder), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiEllipse), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
             };
             return documentMap;
         }
