@@ -84,7 +84,8 @@ namespace APSIM.Documentation.Models
                 {typeof(EndPhase), typeof(DocPhase)},
                 {typeof(EmergingPhase), typeof(DocPhase)},
                 {typeof(SorghumLeaf), typeof(DocSorghumLeaf)},
-                {typeof(ReproductiveOrgan), typeof(DocReproductiveOrgan) }
+                {typeof(ReproductiveOrgan), typeof(DocReproductiveOrgan) },
+                {typeof(PerennialLeaf), typeof(DocPerennialLeaf)}
             };
             return documentMap;
         }
