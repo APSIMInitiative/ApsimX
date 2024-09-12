@@ -9,6 +9,8 @@ using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using Models.PMF.Phen;
+using Models.GrazPlan;
+using StdUnits;
 
 namespace Models.CLEM.Activities
 {
@@ -250,7 +252,7 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Indivudal ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
         {
-            const double proteinContentOfFatFreeTissueGainWetBasis = 0.22;
+            const double proteinContentOfFatFreeTissueGainWetBasis = 0.21;
             const double mJEnergyPerKgFat = 39.3;
             const double mJEnergyPerKgProtein = 23.6;
 
@@ -393,7 +395,7 @@ namespace Models.CLEM.Activities
             ind.Energy.ForGain = energyAvailableForGain;
 
             double finalprotein;
-            if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation
+            if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation, wool
             {
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
@@ -558,13 +560,14 @@ namespace Models.CLEM.Activities
 
             double pwInst = Math.Min(ind.Parameters.Grow24_CW.DPLSLimitationForWoolGrowth_CW7 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * dPLSAvailableForWool, ind.Parameters.Grow24_CW.MEILimitationOnWoolGrowth_CW8 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * mEAvailableForWool);
 
-            double pwToday = ((1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.Wool.Previous) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
+            // pwToday is either the calculation or 0.04 (CW2) * relative size
+            double pwToday = Math.Max(ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize, (1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.Wool.Previous) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
 
             ind.Weight.Wool.Adjust(pwToday / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
             ind.Weight.WoolClean.Adjust(pwToday * events.Interval);
             ind.Weight.Protein.ForWool = pwToday * events.Interval;
 
-            ind.Energy.ForWool = (ind.Parameters.Grow24_CW.EnergyContentCleanWool_CW1 * (pwToday - (ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize)) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3;
+            ind.Energy.ForWool = (ind.Parameters.Grow24_CW.EnergyContentCleanWool_CW1 * (pwToday - (ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize)) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
         }
 
         /// <summary>
@@ -685,6 +688,20 @@ namespace Models.CLEM.Activities
                 double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.Grow24_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays)))));
                 if (ind.ProportionOfPregnancy(currentDays) == 0)
                     ind.Weight.Fetus.Set(normalWeightFetus);
+
+                if (ind.ProportionOfPregnancy(currentDays) >= 0.7 && ind.WeightAt70PctPregnant == 0)
+                    ind.WeightAt70PctPregnant = ind.Weight.Base.Amount;
+
+                if (ind.NumberOfFetuses >= 2 && ind.ProportionOfPregnancy(currentDays) > 0.7)
+                {
+                    double toxaemiaRate = StdMath.SIG((ind.WeightAt70PctPregnant - ind.Weight.Base.Amount) / ind.Weight.NormalisedForAge,
+                     ind.Parameters.Grow24_CP.ToxaemiaCoefficients);
+                    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * events.Interval))
+                    {
+                        ind.Died = true;
+                        ind.SaleFlag = HerdChangeReason.DiedToxaemia;
+                    }
+                }
 
                 // change in normal fetus weight across time-step
                 int daysToEnd = Math.Min(events.Interval - currentDays, smallestInterval);
