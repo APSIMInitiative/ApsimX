@@ -1281,12 +1281,5 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Paragraph($"Area = {Area}");
-        }
     }
 }
