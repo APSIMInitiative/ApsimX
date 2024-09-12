@@ -2123,31 +2123,5 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-
-        /// <summary>Document this model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            var tags = new List<ITag>();
-            tags.Add(new Paragraph("The most important DM supply from leaf is the photosynthetic fixation supply.  Radiation interception is calculated from LAI using an extinction coefficient of:"));
-            tags.AddRange(ExtinctionCoeff.Document());
-            tags.AddRange(Photosynthesis.Document());
-            yield return new Section("Dry Matter Fixation", tags);
-
-            // Document Constants
-            var constantTags = new List<ITag>();
-            foreach (var constant in FindAllChildren<Constant>())
-                foreach (var tag in constant.Document())
-                    constantTags.Add(tag);
-            yield return new Section("Constants", constantTags);
-
-            // Document everything else.
-            foreach (var child in Children.Where(child => !(child is Constant) &&
-                                                          child != ExtinctionCoeff &&
-                                                          child != Photosynthesis))
-                yield return new Section(child.Name, child.Document());
-        }
     }
 }

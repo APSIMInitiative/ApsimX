@@ -86,7 +86,8 @@ namespace APSIM.Documentation.Models
                 {typeof(SorghumLeaf), typeof(DocSorghumLeaf)},
                 {typeof(ReproductiveOrgan), typeof(DocReproductiveOrgan) },
                 {typeof(PerennialLeaf), typeof(DocPerennialLeaf)},
-                {typeof(Nodule), typeof(DocNodule)}
+                {typeof(Nodule), typeof(DocNodule)},
+                {typeof(Leaf), typeof(DocLeaf)},
             };
             return documentMap;
         }
