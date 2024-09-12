@@ -94,6 +94,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Experiment), typeof(DocGenericWithChildren)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
                 {typeof(RUEModel), typeof(DocGenericWithChildren)},
+                {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)}
             };
             return documentMap;
         }
