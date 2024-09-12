@@ -101,6 +101,14 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double ConceptionDuringLactationProbability { get; set; } = 1.0;
 
+        /// <summary>
+        /// Probability of dystocia at birth coefficients
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Probability of dystocia at birth coefficients")]
+        [Required]
+        public double[] DystociaCoefficients { get; set; } = new [] { 0.0, 0.0 };
+
         ///// <summary>
         ///// Proportion of wet mother's with no offspring accepting orphan
         ///// </summary>

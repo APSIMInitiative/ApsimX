@@ -184,7 +184,15 @@ namespace Models.CLEM
         /// <summary>
         /// Sale of weaner
         /// </summary>
-        WeanerSale
+        WeanerSale,
+        /// <summary>
+        /// Died from dystocia
+        /// </summary>
+        DiedDystocia,
+        /// <summary>
+        /// Died from toxaemia
+        /// </summary>
+        DiedToxaemia
     }
 
     /// <summary>

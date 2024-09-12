@@ -120,6 +120,14 @@ namespace Models.CLEM.Resources
         // CP15 relative size birth weight (see Parameters.General.BirthScalar) 
 
         /// <summary>
+        /// Probability of toxaemia during late pregnancy coefficients
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Probability of toxaemia during late pregnancy coefficients")]
+        [Required]
+        public double[] ToxaemiaCoefficients { get; set; } = new[] { 0.0, 0.0 };
+
+        /// <summary>
         /// Create copy of this class
         /// </summary>
         /// <returns></returns>

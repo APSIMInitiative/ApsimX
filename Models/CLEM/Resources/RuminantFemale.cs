@@ -4,6 +4,9 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Reporting;
 using Models.Core;
+using Models.GrazPlan;
+using PdfSharpCore.Pdf.Filters;
+using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -178,6 +181,11 @@ namespace Models.CLEM.Resources
         /// Highest weight achieved when not pregnant
         /// </summary>
         public double HighWeightWhenNotPregnant { get; private set; }
+
+        /// <summary>
+        /// Weight at 70% of pregnancy
+        /// </summary>
+        public double WeightAt70PctPregnant { get; set; }
 
         /// <summary>
         /// Track the highest weight of a female when not pregnant
@@ -457,6 +465,7 @@ namespace Models.CLEM.Resources
             {
                 bool isMale = RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale;
                 Fetuses.Add(isMale ? Sex.Male : Sex.Female);
+                WeightAt70PctPregnant = 0;
             }
 
             //ToDo: Check this is correct
@@ -513,8 +522,11 @@ namespace Models.CLEM.Resources
                 //   * use the weight of fetus at birth as calculated during pregnancy
 
                 double weight = Weight.Fetus.Amount;
+                double expectedWeight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (0.66 + (0.33 * Weight.RelativeSize));
                 if (Weight.Fetus.Amount == 0)
-                    weight = Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
+                    weight = expectedWeight;
+                // previous calculation of expected weight
+                // weight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
 
                 Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
                 newSucklingRuminant.Parameters = new RuminantParameters(Parameters);
@@ -528,8 +540,8 @@ namespace Models.CLEM.Resources
                     newSucklingRuminant.Weight.Fat.Set(weight / Weight.Conceptus.Amount *  Weight.ConceptusFat.Amount);
                     newSucklingRuminant.Weight.Protein.Set(weight / Weight.Conceptus.Amount * Weight.ConceptusFat.Amount);
                     // set fat and protein energy based on initial amounts
-                    newSucklingRuminant.Energy.Fat.Set(newSucklingRuminant.Weight.Fat.Change * 39.3);
-                    newSucklingRuminant.Energy.Protein.Set(newSucklingRuminant.Weight.Protein.Change * 23.6);
+                    newSucklingRuminant.Energy.Fat.Set(newSucklingRuminant.Weight.Fat.Amount * 39.3);
+                    newSucklingRuminant.Energy.Protein.Set(newSucklingRuminant.Weight.Protein.Amount * 23.6);
                 }
 
                 // add attributes inherited from mother
@@ -539,6 +551,16 @@ namespace Models.CLEM.Resources
                 // create freemartin if needed (not allowed if no breeding params provided)
                 if (newSucklingRuminant.Sex == Sex.Female && (Parameters.Breeding?.AllowFreemartins ?? false) && MixedSexMultipleFetuses)
                     newSucklingRuminant.AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
+
+                // dystocia 
+                double dystociaRate = StdMath.SIG(newSucklingRuminant.Weight.Live / expectedWeight *
+                                       Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
+
+                if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
+                {
+                    newSucklingRuminant.Died = true;
+                    newSucklingRuminant.SaleFlag = HerdChangeReason.DiedDystocia;
+                }
 
                 herd.AddRuminant(newSucklingRuminant, activity);
 
