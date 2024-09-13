@@ -84,18 +84,6 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// Document the appropriate children of the experiment (memos,
-        /// graphs, and folders).
-        /// </summary>
-        private IEnumerable<ITag> DocumentChildren()
-        {
-            IEnumerable<ITag> result = DocumentChildren<Memo>();
-            result = result.AppendMany(DocumentChildren<Models.Graph>());
-            result = result.AppendMany(DocumentChildren<Folder>());
-            return result;
-        }
-
-        /// <summary>
         /// Get a human-readable description of the experiment (e.g. "NRate x Water").
         /// </summary>
         public string GetDesign()

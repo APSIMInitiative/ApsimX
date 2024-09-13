@@ -107,6 +107,18 @@ namespace APSIM.Documentation.Models
                 {typeof(OilPalm), typeof(DocGenericWithChildren)},
                 {typeof(GenericOrgan), typeof(DocGenericOrgan)},
                 {typeof(WaterSenescenceFunction), typeof(DocWaterSenescenceFunction)}
+                {typeof(CanopyGrossPhotosynthesisHourly), typeof(DocGenericWithChildren)},
+                {typeof(CanopyPhotosynthesis), typeof(DocGenericWithChildren)},
+                {typeof(LeafLightUseEfficiency), typeof(DocGenericWithChildren)},
+                {typeof(LeafMaxGrossPhotosynthesis), typeof(DocGenericWithChildren)},
+                {typeof(LimitedTranspirationRate), typeof(DocGenericWithChildren)},
+                {typeof(StomatalConductanceCO2Modifier), typeof(DocGenericWithChildren)},
+                {typeof(BiomassDemand), typeof(DocGenericWithChildren)},
+                {typeof(BiomassDemandAndPriority), typeof(DocGenericWithChildren)},
+                {typeof(Experiment), typeof(DocGenericWithChildren)},   
+                {typeof(EnergyBalance), typeof(DocGenericWithChildren)}, 
+                            
+                
             };
             return documentMap;
         }
