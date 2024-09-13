@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,7 +9,7 @@ using Models.PMF.Organs;
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentMathFunction /]
+    ///Water Senescense
     /// </summary>
     [Serializable]
     [Description("Water Senescence")]
