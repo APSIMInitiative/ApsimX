@@ -115,7 +115,8 @@ namespace APSIM.Documentation.Models
                 {typeof(StomatalConductanceCO2Modifier), typeof(DocGenericWithChildren)},
                 {typeof(BiomassDemand), typeof(DocGenericWithChildren)},
                 {typeof(BiomassDemandAndPriority), typeof(DocGenericWithChildren)},
-                {typeof(EnergyBalance), typeof(DocGenericWithChildren)}
+                {typeof(EnergyBalance), typeof(DocGenericWithChildren)},
+                {typeof(Alias), typeof(DocAlias)},
             };
             return documentMap;
         }
