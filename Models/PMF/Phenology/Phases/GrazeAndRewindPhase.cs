@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Management;
 using Newtonsoft.Json;
-using PdfSharpCore.Pdf.Content.Objects;
 
 namespace Models.PMF.Phen
 {

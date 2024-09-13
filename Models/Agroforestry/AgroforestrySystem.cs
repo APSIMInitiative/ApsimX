@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using Models.Core;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.Agroforestry
 {
