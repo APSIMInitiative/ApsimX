@@ -6175,7 +6175,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 25,
+                  "FixedValue": 20,
                   "Units": "%",
                   "Name": "maxSLAAdjustment",
                   "ResourceName": null,
@@ -9448,6 +9448,7 @@
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
                     "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
@@ -9464,6 +9465,7 @@
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
                     "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
@@ -9486,6 +9488,7 @@
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
                     "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
@@ -9500,6 +9503,7 @@
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
                     "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
