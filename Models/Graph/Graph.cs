@@ -390,15 +390,7 @@ namespace Models
         /// </remarks>
         public override IEnumerable<ITag> Document()
         {
-            try
-            {
-                return new[] { ToGraph() };
-            }
-            catch (Exception err)
-            {
-                Console.Error.WriteLine(err);
-                return Enumerable.Empty<ITag>();
-            }
+            return new[] { ToGraph() };
         }
 
         /// <summary>
