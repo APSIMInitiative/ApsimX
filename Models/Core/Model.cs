@@ -617,16 +617,5 @@ namespace Models.Core
                 return locator;
             }
         }
-
-        /// <summary>
-        /// Document the model, and any child models which should be documented.
-        /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public virtual IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, new Paragraph(""));
-        }
     }
 }
