@@ -82,9 +82,10 @@ namespace APSIM.Documentation.Models.Types
                 if (model.Parent != null)
                 {
                     var childGraphs = new List<Shared.Documentation.Graph>();
-                    if ((model as Folder).GetChildGraphs(model.Parent) != null)
+                    if ((model as Folder).GetChildGraphs(model) != null)
                     {
-                        while (childGraphs.Any())
+                        childGraphs = (model as Folder).GetChildGraphs(model).ToList();
+                        if (childGraphs != null)
                             subTags.Add(new Shared.Documentation.GraphPage(childGraphs));
                     }
                 }
@@ -98,7 +99,7 @@ namespace APSIM.Documentation.Models.Types
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 subTags.AddRange(AutoDocumentation.Document(folder));
 
-            tags.Add(new Section(model.Name, subTags));
+            tags.AddRange(subTags);
             return tags;
         }
 

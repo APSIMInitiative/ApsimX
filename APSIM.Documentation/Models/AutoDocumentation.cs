@@ -23,6 +23,7 @@ using Models.Factorial;
 using Models.Functions.SupplyFunctions;
 using Models.Functions.RootShape;
 using Models.PMF.OilPalm;
+using M = Models;
 
 namespace APSIM.Documentation.Models
 {
@@ -116,6 +117,8 @@ namespace APSIM.Documentation.Models
                 {typeof(BiomassDemandAndPriority), typeof(DocGenericWithChildren)},
                 {typeof(EnergyBalance), typeof(DocGenericWithChildren)},
                 {typeof(Alias), typeof(DocAlias)},
+                {typeof(Simulations), typeof(DocSimulations)},
+                {typeof(M.Graph), typeof(DocGraph)},
             };
             return documentMap;
         }
