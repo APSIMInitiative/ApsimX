@@ -134,15 +134,6 @@ namespace Models
         }
 
         /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            // tbi
-            yield break;
-        }
-
-        /// <summary>
         /// Hide individual graph titles?
         /// </summary>
         [Description("Hide individual graph titles?")]
