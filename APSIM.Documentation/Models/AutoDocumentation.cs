@@ -106,6 +106,7 @@ namespace APSIM.Documentation.Models
                 {typeof(BasialBuds), typeof(DocGenericWithChildren)},
                 {typeof(OilPalm), typeof(DocGenericWithChildren)},
                 {typeof(GenericOrgan), typeof(DocGenericOrgan)},
+                {typeof(WaterSenescenceFunction), typeof(DocWaterSenescenceFunction)}
             };
             return documentMap;
         }
