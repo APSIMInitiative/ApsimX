@@ -21,14 +21,15 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
+            List<ITag> tags = new List<ITag>();
 
-            foreach (ITag tag in section.Children)
-                section.Add(tag);
+            foreach (ITag tag in GetSummaryAndRemarksSection(model).Children)
+                tags.Add(tag);
+
             foreach (IModel child in model.FindAllChildren<Folder>())
-                section.Add(AutoDocumentation.Document(child));
+                tags.AddRange(AutoDocumentation.Document(child));
 
-            return new List<ITag>() {section};
+            return tags;
         }
     }
 }
