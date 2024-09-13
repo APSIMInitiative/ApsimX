@@ -94,7 +94,7 @@ namespace APSIM.Documentation.Models.Types
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in leafCohortParameters.FindAllChildren<Constant>())
-                foreach (var tag in constant.Document())
+                foreach (var tag in AutoDocumentation.Document(constant))
                     constantTags.Add(tag);
             subTags.Add(new Section("Constants", constantTags));
 
