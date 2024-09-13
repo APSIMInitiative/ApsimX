@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
-using Models.PMF.Struct;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen

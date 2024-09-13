@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Soils.Nutrients;
 
 namespace Models.Soils.NutrientPatching
 {
