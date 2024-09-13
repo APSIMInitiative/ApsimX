@@ -95,11 +95,14 @@ namespace APSIM.Documentation.Models
                 {typeof(Experiment), typeof(DocGenericWithChildren)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
                 {typeof(RUEModel), typeof(DocGenericWithChildren)},
+                {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
                 {typeof(RUECO2Function), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiCircle), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeCylinder), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiEllipse), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
+                {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
+                {typeof(BasialBuds), typeof(DocGenericWithChildren)},
                 {typeof(GenericOrgan), typeof(DocGenericOrgan)},
             };
             return documentMap;
