@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-
+using APSIM.Shared.Documentation;
 using Models.Soils;
 
 namespace Models.Core
