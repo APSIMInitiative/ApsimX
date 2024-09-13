@@ -19,7 +19,7 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document()
+        public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
             section.Add(new Paragraph($"An alias for {(model as Alias).FindAncestor<Cultivar>()?.Name}"));

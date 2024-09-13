@@ -19,17 +19,16 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document(int none = 0)
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
-            List<ITag> subTags = new List<ITag>();
-            foreach (ITag tag in (tags[0] as Section).Children)
-                subTags.Add(tag);
+            foreach (ITag tag in section.Children)
+                section.Add(tag);
             foreach (IModel child in model.FindAllChildren<Folder>())
-                subTags.AddRange(AutoDocumentation.Document(child, heading+1));
+                section.Add(AutoDocumentation.Document(child));
 
-            return subTags;
+            return new List<ITag>() {section};
         }
     }
 }

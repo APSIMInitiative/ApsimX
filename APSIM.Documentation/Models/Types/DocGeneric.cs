@@ -28,7 +28,7 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model
         /// </summary>
-        public virtual List<ITag> Document()
+        public virtual List<ITag> Document(int none = 0)
         {
             return new List<ITag>() {GetSummaryAndRemarksSection(model)};
         }
@@ -36,7 +36,7 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Get a section with the Summary, Remarks and Memo text included.
         /// </summary>
-        public Section GetSummaryAndRemarksSection(IModel model) {
+        public static Section GetSummaryAndRemarksSection(IModel model) {
             
             List<ITag> tags = new List<ITag>();
             tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));

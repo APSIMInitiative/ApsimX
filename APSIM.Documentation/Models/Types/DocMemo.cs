@@ -18,7 +18,7 @@ public class DocMemo : DocGeneric
     /// <summary>
     /// Document the model.
     /// </summary>
-    public override List<ITag> Document()
+    public override List<ITag> Document(int none = 0)
     {
         return new List<ITag>() {new Paragraph((model as Memo).Text)};
     }

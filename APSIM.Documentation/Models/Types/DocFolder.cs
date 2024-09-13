@@ -22,15 +22,13 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document()
+        public override List<ITag> Document(int none = 0)
         {
-            List<ITag> tags = base.Document(heading);
-
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
 
             foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
             {
-                subTags.AddRange(AutoDocumentation.Document(map));
+                section.Add(AutoDocumentation.Document(map));
             }
 
             // Write experiment descriptions. We don't call experiment.Document() here,
@@ -53,7 +51,7 @@ namespace APSIM.Documentation.Models.Types
                 }
                 experimentsTag.Add(new Paragraph("**List of experiments.**"));
                 experimentsTag.Add(new Table(table));
-                subTags.Add(new Section("Experiments", experimentsTag));
+                section.Add(new Section("Experiments", experimentsTag));
 
             }
             else
@@ -71,8 +69,8 @@ namespace APSIM.Documentation.Models.Types
                                 graphPageTags.Add(graph);
                         }
                     }
-                    subTags.Add(new Paragraph($"**{simulation.Name}**"));
-                    subTags.Add(new Section(graphPageTags));
+                    section.Add(new Paragraph($"**{simulation.Name}**"));
+                    section.Add(new Section(graphPageTags));
                 }
             }
 
@@ -86,21 +84,20 @@ namespace APSIM.Documentation.Models.Types
                     {
                         childGraphs = (model as Folder).GetChildGraphs(model).ToList();
                         if (childGraphs != null)
-                            subTags.Add(new Shared.Documentation.GraphPage(childGraphs));
+                            section.Add(new Shared.Documentation.GraphPage(childGraphs));
                     }
                 }
             }
 
             // Document experiments individually.
             foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
-                subTags.AddRange(AutoDocumentation.Document(experiment));
+                section.Add(AutoDocumentation.Document(experiment));
 
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
-                subTags.AddRange(AutoDocumentation.Document(folder));
+                section.Add(AutoDocumentation.Document(folder));
 
-            tags.AddRange(subTags);
-            return tags;
+            return new List<ITag>() {section};
         }
 
     }
