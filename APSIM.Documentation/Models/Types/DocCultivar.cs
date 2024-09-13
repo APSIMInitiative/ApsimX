@@ -22,17 +22,21 @@ public class DocCultivar : DocGeneric
     /// </summary>
     public override List<ITag> Document(int heading = 0)
     {
+        Cultivar cultivarModel = model as Cultivar;
         List<ITag> tags = base.Document(heading);
 
         // Get table of Parameter overrides.
         DataTable overridesTable = new();
         overridesTable.Columns.Add("Parameter overrides");
-        foreach(string paramOverride in (model as Cultivar).Command)
-            overridesTable.Rows.Add(paramOverride);
+        if (cultivarModel.Command != null)
+        {
+            foreach (string paramOverride in (model as Cultivar).Command)
+                overridesTable.Rows.Add(paramOverride);
+        }
         Table paramOverridesDisplayTable = new(overridesTable);
 
-        ITag aliasTag = (model as Cultivar).GetNames().Any() ? 
-            new Section("Aliases", new Paragraph(string.Join(',', (model as Cultivar).GetNames()))) : 
+        ITag aliasTag = cultivarModel.GetNames().Any() ? 
+            new Section("Aliases", new Paragraph(string.Join(',', cultivarModel.GetNames()))) : 
             new Paragraph("");
 
         List<ITag> subTags = new()
