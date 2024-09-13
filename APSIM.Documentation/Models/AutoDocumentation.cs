@@ -105,6 +105,7 @@ namespace APSIM.Documentation.Models
                 {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
                 {typeof(BasialBuds), typeof(DocGenericWithChildren)},
                 {typeof(OilPalm), typeof(DocGenericWithChildren)},
+                {typeof(GenericOrgan), typeof(DocGenericOrgan)},
             };
             return documentMap;
         }
