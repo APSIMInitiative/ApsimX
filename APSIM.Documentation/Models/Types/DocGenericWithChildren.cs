@@ -26,7 +26,7 @@ namespace APSIM.Documentation.Models.Types
             foreach (IModel child in model.FindAllChildren())
                 subTags.AddRange(AutoDocumentation.Document(child, heading+1));
 
-            tags.Add(new Section(model.Name, subTags));
+            (tags[0] as Section).Children.AddRange(subTags);
 
             return tags;
         }

@@ -23,6 +23,7 @@ using Models.Functions.DemandFunctions;
 using Models.Factorial;
 using Models.Functions.SupplyFunctions;
 using Models.Functions.RootShape;
+using Models.PMF.OilPalm;
 
 namespace APSIM.Documentation.Models
 {
@@ -103,6 +104,7 @@ namespace APSIM.Documentation.Models
                 {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
                 {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
                 {typeof(BasialBuds), typeof(DocGenericWithChildren)},
+                {typeof(OilPalm), typeof(DocGenericWithChildren)},
                 {typeof(GenericOrgan), typeof(DocGenericOrgan)},
             };
             return documentMap;
