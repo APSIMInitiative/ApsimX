@@ -18,15 +18,15 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
             
             foreach (IModel child in model.Children)
                 if (child is M.Memo || child is M.Graph || child is M.Map || child is M.Manager)
-                    (tags[0] as Section).Children.AddRange(AutoDocumentation.Document(child, heading+1));
+                    section.Add(AutoDocumentation.Document(child));
 
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

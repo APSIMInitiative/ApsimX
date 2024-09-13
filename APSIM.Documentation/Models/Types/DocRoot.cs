@@ -20,11 +20,10 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
+            section.Title = $"The APSIM {model.Name} Model";
 
             List<ITag> growthTags = new List<ITag>();
             growthTags.Add(new Paragraph("Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension."));
@@ -35,13 +34,13 @@ namespace APSIM.Documentation.Models.Types
             growthTags.Add(new Paragraph("_RAw~i~ = -WaterUptake~i~ / LiveRootWt~i~ x LayerThickness~i~ x ProportionThroughLayer_"));
             growthTags.Add(new Paragraph("The amount of root mass partitioned to a layer is then proportional to root activity"));
             growthTags.Add(new Paragraph("_DMAllocated~i~ = TotalDMAllocated x RAw~i~ / TotalRAw_"));
-            subTags.Add(new Section("Growth", growthTags));
+            section.Add(new Section("Growth", growthTags));
 
-            subTags.Add(new Section("Dry Matter Demands", new Paragraph("A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural. The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.")));
+            section.Add(new Section("Dry Matter Demands", new Paragraph("A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural. The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.")));
 
-            subTags.Add(new Section("Nitrogen Demands", new Paragraph("The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero.")));
+            section.Add(new Section("Nitrogen Demands", new Paragraph("The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero.")));
 
-            subTags.Add(new Section("Nitrogen Uptake", new Paragraph(
+            section.Add(new Section("Nitrogen Uptake", new Paragraph(
                 "Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into. " +
                 "In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction " +
                 "(kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries. " +
@@ -52,7 +51,7 @@ namespace APSIM.Documentation.Models.Types
                 "The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand" +
                 "each plant instance will be allowed to take up.")));
 
-            subTags.Add(new Section("Water Uptake", new Paragraph(
+            section.Add(new Section("Water Uptake", new Paragraph(
                 "Potential water uptake by the root system is calculated for each soil layer that the roots have extended into. " +
                 "In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) " +
                 "and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and " +
@@ -62,12 +61,11 @@ namespace APSIM.Documentation.Models.Types
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in model.FindAllChildren<Constant>())
-                constantTags = AutoDocumentation.Document(constant, heading+1);
+                constantTags = AutoDocumentation.Document(constant);
 
-            subTags.Add(new Section("Constants", constantTags));
+            section.Add(new Section("Constants", constantTags));
 
-            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

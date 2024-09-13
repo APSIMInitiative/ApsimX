@@ -19,18 +19,11 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-
-            List<ITag> subTags = new()
-            {
-                new Section("Area", new Paragraph($"Area = {(model as LeafCohort).Area}"))
-            };
-
-            tags.Add(new Section(subTags));
-
-            return tags;
+            Section section = GetSummaryAndRemarksSection(model);
+            section.Add(new Section("Area", new Paragraph($"Area = {(model as LeafCohort).Area}")));
+            return new List<ITag>() {section};
         }
     }
 }

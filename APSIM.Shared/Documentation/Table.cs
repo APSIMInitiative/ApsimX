@@ -1,4 +1,6 @@
+using System;
 using System.Data;
+using System.Collections.Generic;
 
 namespace APSIM.Shared.Documentation
 {
@@ -48,6 +50,16 @@ namespace APSIM.Shared.Documentation
             this.indent = indent;
             this.ColumnWidth = width;
             Style = style;
+        }
+
+        /// <summary>Adds an ITag as a child of this ITag</summary>
+        public void Add(ITag tag) {
+            throw new Exception("Table cannot have child tags");
+        }
+
+        /// <summary>Adds a list of ITags as a children of this ITag</summary>
+        public void Add(List<ITag> tags) {
+            throw new Exception("Table cannot have child tags");
         }
     }
 }

@@ -20,19 +20,19 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-
+            Section section = GetSummaryAndRemarksSection(model);
+            
             Organ parentOrgan = FindParentOrgan(model.Parent);
 
             // add a description of the equation for this function
-            tags.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+            section.Add(new Paragraph("<i>" + model.Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
                 + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>"));
-            tags.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+            section.Add(new Paragraph("The demand for storage N is further reduced by a factor specified by the ["
                 + parentOrgan.Name + "].NitrogenDemandSwitch."));
 
-            return tags;
+            return new List<ITag>() {section};
         }
 
         private Organ FindParentOrgan(IModel model)

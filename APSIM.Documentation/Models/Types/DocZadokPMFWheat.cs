@@ -20,11 +20,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-
-            var subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
                 
             // Write a table containing growth phases and descriptions.
             DataTable table = new DataTable();
@@ -47,7 +45,7 @@ namespace APSIM.Documentation.Models.Types
             row[1] = "ZadokStage is interpolated from values of stage number using the following table";
             table.Rows.Add(row);
             Table growthPhaseTable = new(table);
-            subTags.Add(new Section("List of growth phases", growthPhaseTable));
+            section.Add(new Section("List of growth phases", growthPhaseTable));
 
             // Write a table containing growth stages
             table = new DataTable();
@@ -96,10 +94,9 @@ namespace APSIM.Documentation.Models.Types
             row[2] = 90;
             table.Rows.Add(row);
             var growthStageTable = new Table(table);
-            subTags.Add(new Section("List of growth stages", growthStageTable));
+            section.Add(new Section("List of growth stages", growthStageTable));
             
-            tags.Add(new Section(model.Name, subTags));
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

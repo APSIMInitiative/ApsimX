@@ -20,12 +20,13 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
+           
+            Section section = GetSummaryAndRemarksSection(model);
+
             var leafCohortParameters = model as LeafCohortParameters;
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+
             var laiTags = new List<ITag>();
             laiTags.Add(new Paragraph("Leaf area index is calculated as the sum of the area of each cohort of leaves. " +
                                         "The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one. " +
@@ -41,7 +42,7 @@ namespace APSIM.Documentation.Models.Types
             laiTags.AddRange(AutoDocumentation.Document(leafCohortParameters.SenescenceDuration));
             laiTags.Add(new Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes too great. Each cohort models the proportion of its area that is lost to shade induced senescence each day as:"));
             laiTags.AddRange(AutoDocumentation.Document(leafCohortParameters.ShadeInducedSenescenceRate));
-            subTags.Add(new Section("Potential Leaf Area index", laiTags));
+            section.Add(new Section("Potential Leaf Area index", laiTags));
 
             var stressTags = new List<ITag>();
             stressTags.Add(new Paragraph("Stress reduces leaf area in a number of ways. Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size. Leaf captures this by multiplying the *MaxSize* of each cohort by a *CellDivisionStress* factor which is calculated as:"));
@@ -52,7 +53,7 @@ namespace APSIM.Documentation.Models.Types
             stressTags.AddRange(AutoDocumentation.Document(leafCohortParameters.ExpansionStress));
             stressTags.Add(new Paragraph("Stresses can also acellerate the onset and rate of senescence in a number of ways. Nitrogen shortage will cause N to be retranslocated out of lower order leaves to support the expansion of higher order leaves and other organs When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them."));
             stressTags.Add(new Paragraph("Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases. This is done by multiplying thermal time accumulation by *DroughtInducedLagAcceleration* and *DroughtInducedSenescenceAcceleration* factors, respectively"));
-            subTags.Add(new Section("Stress effects on Leaf Area Index", stressTags));
+            section.Add(new Section("Stress effects on Leaf Area Index", stressTags));
 
             var dmDemandTags = new List<ITag>();
             dmDemandTags.Add(new Paragraph("Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds. " +
@@ -63,7 +64,7 @@ namespace APSIM.Documentation.Models.Types
             dmDemandTags.Add(new Paragraph("Non-storage DM Demand is then seperated into structural and metabolic DM demands using the *StructuralFraction*:"));
             dmDemandTags.AddRange(AutoDocumentation.Document(leafCohortParameters.StructuralFraction));
             dmDemandTags.Add(new Paragraph("The storage DM demand is calculated from the sum of metabolic and structural DM (including todays demands) multiplied by a *NonStructuralFraction*"));
-            subTags.Add(new Section("Dry matter Demand", dmDemandTags));
+            section.Add(new Section("Dry matter Demand", dmDemandTags));
 
             var nDemandTags = new List<ITag>();
             nDemandTags.Add(new Paragraph("Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds."));
@@ -73,7 +74,7 @@ namespace APSIM.Documentation.Models.Types
             nDemandTags.AddRange(AutoDocumentation.Document(leafCohortParameters.CriticalNConc));
             nDemandTags.Add(new Paragraph("Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands) multiplied by *LuxaryNconc* (*MaximumNConc* - *CriticalNConc*) less the amount of storage N already present.  *MaximumNConc* is given by:"));
             nDemandTags.AddRange(AutoDocumentation.Document(leafCohortParameters.MaximumNConc));
-            subTags.Add(new Section("Nitrogen Demand", nDemandTags));
+            section.Add(new Section("Nitrogen Demand", nDemandTags));
 
             var dmSupplyTags = new List<ITag>();
             dmSupplyTags.Add(new Paragraph("In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM:" +
@@ -81,7 +82,7 @@ namespace APSIM.Documentation.Models.Types
             dmSupplyTags.AddRange(AutoDocumentation.Document(leafCohortParameters.DMReallocationFactor));
             dmSupplyTags.Add(new Paragraph("Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :"));
             dmSupplyTags.AddRange(AutoDocumentation.Document(leafCohortParameters.DMRetranslocationFactor));
-            subTags.Add(new Section("Drymatter supply", dmSupplyTags));
+            section.Add(new Section("Drymatter supply", dmSupplyTags));
 
             var nSupplyTags = new List<ITag>();
             nSupplyTags.Add(new Paragraph("Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material " +
@@ -89,18 +90,16 @@ namespace APSIM.Documentation.Models.Types
             nSupplyTags.AddRange(AutoDocumentation.Document(leafCohortParameters.NReallocationFactor));
             nSupplyTags.Add(new Paragraph("Retranslocation supply is calculated as a proportion of the amount of storage and metabolic N in each cohort where the proportion is set by :"));
             nSupplyTags.AddRange(AutoDocumentation.Document(leafCohortParameters.NRetranslocationFactor));
-            subTags.Add(new Section("Nitrogen supply", nSupplyTags));
+            section.Add(new Section("Nitrogen supply", nSupplyTags));
 
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in leafCohortParameters.FindAllChildren<Constant>())
                 constantTags.AddRange(AutoDocumentation.Document(constant));
 
-            subTags.Add(new Section("Constants", constantTags));
+            section.Add(new Section("Constants", constantTags));
 
-            tags.Add(new Section(subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

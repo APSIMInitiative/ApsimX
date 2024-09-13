@@ -22,23 +22,23 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in model.FindAllChildren<Constant>())
                 constantTags.AddRange(AutoDocumentation.Document(constant));
-            tags.Add(new Section("Constants", constantTags));
+            section.Add(new Section("Constants", constantTags));
 
             // Document everything else.
             List<ITag> childrenTags = new();
             foreach (var child in model.Children.Where(child => !(child is Constant) && !(child is Memo)))
                 childrenTags.AddRange(AutoDocumentation.Document(child));
-            tags.Add(new Section("Children", childrenTags));
+            section.Add(new Section("Children", childrenTags));
 
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

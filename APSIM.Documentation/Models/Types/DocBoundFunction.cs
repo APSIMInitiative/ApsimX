@@ -20,11 +20,10 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
             
-            List<ITag> subTags = new List<ITag>();
             List<IFunction> childFunctions = model.FindAllChildren<IFunction>().ToList();
 
             IFunction Upper = null;
@@ -41,18 +40,16 @@ namespace APSIM.Documentation.Models.Types
             {
                 if (child != Upper && child != Lower)
                 {
-                    subTags.Add(new Paragraph($"{model.Name} is the value of {child.Name} bound between a lower and upper bound where:"));
-                    subTags = AutoDocumentation.Document(child, heading + 1).ToList();
+                    section.Add(new Paragraph($"{model.Name} is the value of {child.Name} bound between a lower and upper bound where:"));
+                    section.Add(AutoDocumentation.Document(child));
                 }
             }
             if (Lower != null)
-                subTags = AutoDocumentation.Document(Lower, heading + 1).ToList();
+                section.Add(AutoDocumentation.Document(Lower));
             if (Upper != null)
-                subTags = AutoDocumentation.Document(Upper, heading + 1).ToList();
+                section.Add(AutoDocumentation.Document(Upper));
 
-            tags.Add(new Section(model.Name, subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

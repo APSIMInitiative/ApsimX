@@ -19,18 +19,11 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-
-            List<ITag> subTags = new List<ITag>()
-            {
-                new Paragraph($"An alias for {(model as Alias).FindAncestor<Cultivar>()?.Name}")
-            };
-
-            (tags[0] as Section).Children.AddRange(subTags);
-
-            return tags;
+            Section section = GetSummaryAndRemarksSection(model);
+            section.Add(new Paragraph($"An alias for {(model as Alias).FindAncestor<Cultivar>()?.Name}"));
+            return new List<ITag>() {section};
         }
     }
 }

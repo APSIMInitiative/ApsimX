@@ -22,11 +22,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
             
             XYPairs xyPairs = model as XYPairs;
 
@@ -67,12 +65,10 @@ namespace APSIM.Documentation.Models.Types
                 table.Rows.Add(row);
             }
 
-            subTags.Add(new Table(table));
-            subTags.Add(CreateGraph());
+            section.Add(new Table(table));
+            section.Add(CreateGraph());
 
-            tags.Add(new Section(model.Name, subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
 
         private Graph CreateGraph()

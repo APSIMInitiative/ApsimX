@@ -21,20 +21,20 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             foreach (IModel child in model.FindAllChildren())
-                tags.AddRange(AutoDocumentation.Document(child, heading+1));
+                section.Add(AutoDocumentation.Document(child));
 
             string type = "Max";
             if (model is MinimumFunction)
                 type = "Min";
 
-            tags.AddRange(DocumentMinMaxFunction(type, model.Name, model.Children));
+            section.Add(DocumentMinMaxFunction(type, model.Name, model.Children));
 
-            return tags;
+            return new List<ITag>() {section};
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

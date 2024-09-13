@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation.Extensions;
 
 namespace APSIM.Shared.Documentation
 {
@@ -13,10 +10,10 @@ namespace APSIM.Shared.Documentation
     public class Section : ITag
     {
         /// <summary>Child tags.</summary>
-        public List<ITag> Children { get; private set; }
+        public List<ITag> Children { get; set; }
 
         /// <summary>The section title.</summary>
-        public string Title { get; private set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
@@ -72,6 +69,16 @@ namespace APSIM.Shared.Documentation
                     return false;
             }
             return true;
+        }
+
+        /// <summary>Adds an ITag as a child of this ITag</summary>
+        public void Add(ITag tag) {
+            Children.Add(tag);
+        }
+
+        /// <summary>Adds a list of ITags as a children of this ITag</summary>
+        public void Add(IEnumerable<ITag> tags) {
+            Children.AddRange(tags);
         }
     }
 }

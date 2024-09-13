@@ -20,21 +20,18 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             string organs = "";
             foreach (string name in (model as CompositeBiomass).OrganNames)
                 organs += $"- {name}" + Environment.NewLine;
 
-            List<ITag> subTags = new List<ITag>();
-            subTags.Add(new Paragraph($"{model.Name} summarises the following biomass objects:"));
-            subTags.Add(new Paragraph(organs));
+            section.Add(new Paragraph($"{model.Name} summarises the following biomass objects:"));
+            section.Add(new Paragraph(organs));
 
-            tags.Add(new Section("Organs", subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

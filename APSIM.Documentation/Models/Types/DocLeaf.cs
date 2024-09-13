@@ -20,11 +20,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
 
             List<ITag> dmfTags = new()
             {
@@ -43,11 +41,9 @@ namespace APSIM.Documentation.Models.Types
             dmfTags.AddRange(AutoDocumentation.Document((model as Leaf).FindChild("Photosynthesis")));
 
             var dmfSection = new Section("Dry Matter Fixation", dmfTags);
-            subTags.Add(dmfSection);
+            section.Add(dmfSection);
 
-            tags.Add(new Section(model.Name, subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

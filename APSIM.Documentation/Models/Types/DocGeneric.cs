@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using Models;
@@ -30,61 +28,24 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model
         /// </summary>
-        public virtual List<ITag> Document(int heading = 0)
+        public virtual List<ITag> Document()
         {
-
-            List<ITag> tags = new List<ITag>();
-
-            List<ITag> subTags = new List<ITag>();
-            if (heading == 0)
-            {
-                subTags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-                subTags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
-            }
-
-            // write children.
-            foreach (IModel child in model.FindAllChildren<Memo>())
-                subTags = AutoDocumentation.Document(child, heading + 1).ToList();
-
-            tags.Add(new Section(model.Name, subTags));
-            return tags;
+            return new List<ITag>() {GetSummaryAndRemarksSection(model)};
         }
 
         /// <summary>
-        /// Gets a list of Event Handles that are Invoked in the provided function
+        /// Get a section with the Summary, Remarks and Memo text included.
         /// </summary>
-        /// <remarks>
-        /// Model source file must be included as embedded resource in project xml
-        /// </remarks>
-        protected IEnumerable<ITag> GetModelEventsInvoked(Type type, string functionName, string filter = "", bool filterOut = false)
-        {
-            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder(type, functionName);
+        public Section GetSummaryAndRemarksSection(IModel model) {
+            
+            List<ITag> tags = new List<ITag>();
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
-            List<string[]> eventNamesFiltered = new List<string[]>();
-            if (filter.Length > 0)
-            {
-                foreach (string[] name in eventNames)
-                    if (name[0].Contains(filter) == !filterOut)
-                    { 
-                        eventNamesFiltered.Add(name); 
-                    }           
-            }
-            yield return new Paragraph($"Function {functionName} of Model {model.Name} contains the following Events in the given order.\n");
+            foreach (IModel child in model.FindAllChildren<Memo>())
+                tags = AutoDocumentation.Document(child).ToList();
 
-            DataTable data = new DataTable();
-            data.Columns.Add("Event Handle", typeof(string));
-            data.Columns.Add("Summary", typeof(string));
-
-            for (int i = 1; i < eventNamesFiltered.Count; i++)
-            {
-                string[] parts = eventNamesFiltered[i];
-
-                DataRow row = data.NewRow();
-                data.Rows.Add(row);
-                row["Event Handle"] = parts[0];
-                row["Summary"] = parts[1];
-            }
-            yield return new Table(data);
+            return new Section(model.Name, tags);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             List<ITag> subTags = new()
             {
@@ -30,8 +30,8 @@ namespace APSIM.Documentation.Models.Types
                     new Table((model as Phenology).GetPhaseTable())),
             };
 
-            tags.Add(new Section("Phenology", subTags));
-            return tags;
+            section.Add(new Section("Phenology", subTags));
+            return new List<ITag>() {section};
         }
     }
 }

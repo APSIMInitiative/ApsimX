@@ -20,10 +20,11 @@ public class DocCultivar : DocGeneric
     /// <summary>
     /// Document the model.
     /// </summary>
-    public override List<ITag> Document(int heading = 0)
+    public override List<ITag> Document()
     {
+        Section section = GetSummaryAndRemarksSection(model);
+
         Cultivar cultivarModel = model as Cultivar;
-        List<ITag> tags = base.Document(heading);
 
         // Get table of Parameter overrides.
         DataTable overridesTable = new();
@@ -39,13 +40,9 @@ public class DocCultivar : DocGeneric
             new Section("Aliases", new Paragraph(string.Join(',', cultivarModel.GetNames()))) : 
             new Paragraph("");
 
-        List<ITag> subTags = new()
-        {
-            aliasTag,
-            paramOverridesDisplayTable
-        };
+        section.Add(aliasTag);
+        section.Add(paramOverridesDisplayTable);
 
-        tags.Add(new Section(model.Name, subTags));
-        return tags;
+        return new List<ITag>() {section};
     }
 }

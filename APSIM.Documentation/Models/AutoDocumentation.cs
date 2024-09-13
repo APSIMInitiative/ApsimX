@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -256,7 +255,7 @@ namespace APSIM.Documentation.Models
 
             return string.Empty;
         }
-
+        /*
         /// <summary>
         /// Document the summary description of a model.
         /// </summary>
@@ -277,7 +276,7 @@ namespace APSIM.Documentation.Models
             if (summaryText != null)
                 ParseTextForTags(summaryText, model, tags, headingLevel, indent, documentAllChildren);
         }
-
+        */
         /// <summary>
         /// Get the summary of a member (field, property)
         /// </summary>
@@ -439,7 +438,7 @@ namespace APSIM.Documentation.Models
             }
             return null;
         }
-
+        /*
         /// <summary>
         /// Parse a string into documentation tags
         /// </summary>
@@ -579,7 +578,7 @@ namespace APSIM.Documentation.Models
                 }
             }
         }
-
+        
         private static string RemoveMacros(IModel model, string line)
         {
             if (model == null || string.IsNullOrEmpty(line))
@@ -619,7 +618,7 @@ namespace APSIM.Documentation.Models
 
             return line;
         }
-
+        
         /// <summary>
         /// Evaluate a path that can include child models, properties or method calls.
         /// </summary>
@@ -657,7 +656,7 @@ namespace APSIM.Documentation.Models
 
             return obj;
         }
-
+        
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
             if (paragraphSoFar.Trim() != string.Empty)
@@ -717,7 +716,7 @@ namespace APSIM.Documentation.Models
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (/*child.IncludeInDocumentation &&*/
+                if (//child.IncludeInDocumentation &&
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     Document(child, headingLevel + 1);
         }
@@ -793,6 +792,7 @@ namespace APSIM.Documentation.Models
             msg += child.Name;
             return false;
         }
+        */
     }
     
 }

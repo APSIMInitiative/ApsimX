@@ -22,25 +22,24 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             // Removes the summary tag in each is phase is different.
-            Section section = tags[0] as Section;
             List<ITag> sectionChildren = section.Children.ToList();
             sectionChildren.RemoveAt(0);
             Section newSection = new(section.Title, sectionChildren);
-            tags.RemoveAt(0);
-            tags.Add(newSection);
+            section.Children.RemoveAt(0);
+            section.Add(newSection);
 
             List<ITag> subTags = new List<ITag>();
 
             string text = GetPhaseText(model as IPhase);
             if (text.Length > 0)
-                tags.Add(new Paragraph(text));
+                section.Add(new Paragraph(text));
 
-            return tags;
+            return new List<ITag>() {section};
         }
 
         /// <summary>

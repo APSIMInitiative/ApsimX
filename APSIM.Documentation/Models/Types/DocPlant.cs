@@ -25,16 +25,15 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
+            section.Title = $"The APSIM {model.Name} Model";
 
-            subTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
+            section.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Table
-            subTags.Add(new Paragraph("**List of Plant Model Components.**"));
+            section.Add(new Paragraph("**List of Plant Model Components.**"));
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
@@ -48,7 +47,7 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            subTags.Add(new Table(tableData));
+            section.Add(new Table(tableData));
 
             List<Type> documentableModels = new()
             {
@@ -68,11 +67,11 @@ namespace APSIM.Documentation.Models.Types
                         if (type.IsAssignableFrom(child.GetType()))
                         {
                             if (child is Phenology)
-                                subTags.AddRange(AutoDocumentation.Document(child, heading+1));
+                                section.Add(AutoDocumentation.Document(child));
                             else
                             {
                                 List<ITag> childTags = AutoDocumentation.Document(child, 0);
-                                subTags.Add(new Section(new List<ITag> { childTags.First() }));
+                                section.Add(new Section(new List<ITag> { childTags.First() }));
                             }
                         }
                 }
@@ -91,12 +90,10 @@ namespace APSIM.Documentation.Models.Types
                             cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames});
                         }
                     }
-                    subTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
+                    section.Add(new Section("Cultivars", new Table(cultivarNameTable)));
                 }
             }
-
-            tags.Add(new Section($"The APSIM {model.Name} Model", subTags));
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

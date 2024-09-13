@@ -20,11 +20,9 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
 
             SubDailyInterpolation sub = model as SubDailyInterpolation;
             IIndexedFunction Response = sub.FindChild<IIndexedFunction>("Response");
@@ -32,14 +30,13 @@ namespace APSIM.Documentation.Models.Types
 
             if (Response != null)
             {
-                subTags.Add(new Paragraph($"{model.Name} is the {sub.agregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}."));
-                subTags.Add(new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {sub.agregationMethod} taken to give daily {sub.Name}"));
-                subTags.AddRange(AutoDocumentation.Document(Response, heading+1));
-                subTags.AddRange(AutoDocumentation.Document(InterpolationMethod as IModel, heading+1));
+                section.Add(new Paragraph($"{model.Name} is the {sub.agregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}."));
+                section.Add(new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {sub.agregationMethod} taken to give daily {sub.Name}"));
+                section.Add(AutoDocumentation.Document(Response));
+                section.Add(AutoDocumentation.Document(InterpolationMethod as IModel));
             }
-            tags.Add(new Section(model.Name, subTags));
 
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

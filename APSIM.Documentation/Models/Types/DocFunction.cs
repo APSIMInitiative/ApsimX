@@ -25,22 +25,22 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
             
             string text = GetFunctionText(this.model as IFunction);
             if (text.Length > 0)
-                (tags[0] as Section).Children.Add(new Paragraph(text));
+                section.Add(new Paragraph(text));
 
             List<ITag> subTags = new();
             foreach (IModel child in model.FindAllChildren())
                 if (!(child is Memo))
-                    subTags.AddRange(AutoDocumentation.Document(child, heading+1));
+                    subTags.AddRange(AutoDocumentation.Document(child));
 
-            (tags[0] as Section).Children.AddRange(subTags);
+            section.Add(subTags);
 
-            return tags;
+            return new List<ITag>() {section};
         }
 
         /// <summary>

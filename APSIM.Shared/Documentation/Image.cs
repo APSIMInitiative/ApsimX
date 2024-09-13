@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using SkiaSharp;
-using Bitmap = System.Drawing.Bitmap;
 
 namespace APSIM.Shared.Documentation
 {

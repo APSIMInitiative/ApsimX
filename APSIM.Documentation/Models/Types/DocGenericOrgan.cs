@@ -21,21 +21,20 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
 
             // List the parameters, properties, and processes from this organ that need to be documented:
 
             // Document DM demands.
-            subTags.Add(new Section("Dry Matter Demand", DocumentDMDemand(model.FindChild("dmDemands"))));
+            section.Add(new Section("Dry Matter Demand", DocumentDMDemand(model.FindChild("dmDemands"))));
 
             // Document N demands.
-            subTags.Add(new Section("Nitrogen Demand", DocumentNDemand(model.FindChild("nDemands"))));
+            section.Add(new Section("Nitrogen Demand", DocumentNDemand(model.FindChild("nDemands"))));
 
             // Document N concentration thresholds.
-            subTags.Add(new Section("N Concentration Thresholds", DocumentNConcentrationThresholds(model as GenericOrgan)));
+            section.Add(new Section("N Concentration Thresholds", DocumentNConcentrationThresholds(model as GenericOrgan)));
 
             IModel nDemandSwitch = model.FindChild("NitrogenDemandSwitch");
             List<ITag> demandTags = new List<ITag>();
@@ -49,24 +48,22 @@ namespace APSIM.Documentation.Models.Types
                 demandTags.Add(new Paragraph($"The demand for N is reduced by a factor specified by the NitrogenDemandSwitch."));
                 demandTags.AddRange(AutoDocumentation.Document(nDemandSwitch));
             }
-            subTags.Add(new Section("Nitrogen Demand Switch", demandTags));
+            section.Add(new Section("Nitrogen Demand Switch", demandTags));
 
             // Document DM supplies.
-            subTags.Add(new Section("Dry Matter Supply", DocumentDMSupply(model as GenericOrgan)));
+            section.Add(new Section("Dry Matter Supply", DocumentDMSupply(model as GenericOrgan)));
 
             // Document N supplies.
-            subTags.Add(new Section("Nitrogen Supply", DocumentNSupply(model as GenericOrgan)));
+            section.Add(new Section("Nitrogen Supply", DocumentNSupply(model as GenericOrgan)));
 
             // Document senescence and detachment.
-            subTags.Add(new Section("Senescence and Detachment", DocumentSenescence(model as GenericOrgan)));
+            section.Add(new Section("Senescence and Detachment", DocumentSenescence(model as GenericOrgan)));
 
             IModel biomassRemovalModel = model.FindChild<BiomassRemoval>();
             if (biomassRemovalModel != null)
-                subTags.AddRange(AutoDocumentation.Document(biomassRemovalModel));
+                section.Add(AutoDocumentation.Document(biomassRemovalModel));
 
-            (tags[0] as Section).Children.AddRange(subTags);
-
-            return tags;
+            return new List<ITag>() {section};
         }
 
         private static IEnumerable<ITag> DocumentDMDemand(IModel dmDemands)

@@ -19,21 +19,17 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
-            
-            List<ITag> subTags = new List<ITag>();
+            Section section = GetSummaryAndRemarksSection(model);
 
-            subTags.Add(new Paragraph($"*{model.Name}* is calculated using linear interpolation"));
+            section.Add(new Paragraph($"*{model.Name}* is calculated using linear interpolation"));
 
             XYPairs xyPairs = model.FindChild<XYPairs>();
             if (xyPairs != null)
-                subTags = AutoDocumentation.Document(xyPairs, heading);
+                section.Add(AutoDocumentation.Document(xyPairs));
 
-            tags.Add(new Section(model.Name, subTags));
-
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }

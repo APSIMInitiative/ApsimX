@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Graphing;
 using M = Models;
 using Models.Core;
-using System.Linq;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -21,14 +19,14 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override List<ITag> Document(int heading = 0)
+        public override List<ITag> Document()
         {
-            List<ITag> tags = base.Document(heading);
+            Section section = GetSummaryAndRemarksSection(model);
 
             M.Graph graph = model as M.Graph;
-            (tags[0] as Section).Children.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+            section.Children.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
 
-            return tags;
+            return new List<ITag>() {section};
         }
     }
 }
