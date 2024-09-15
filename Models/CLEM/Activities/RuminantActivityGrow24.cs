@@ -399,11 +399,12 @@ namespace Models.CLEM.Activities
             {
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
-                    if (proteinAvailableForGain < proteinNeededForGrowth) // diet protein limited
-                        // fat can be laid down without protein so all energy passed for fat production. 
-                        finalprotein = proteinAvailableForGain;
-                    else // energy limited
-                        finalprotein = proteinNeededForGrowth;
+                    finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
+                    //if (proteinAvailableForGain < proteinNeededForGrowth) // diet protein limited
+                    //    // fat can be laid down without protein so all energy passed for fat production. 
+                    //    finalprotein = proteinAvailableForGain;
+                    //else // energy limited
+                    //    finalprotein = proteinNeededForGrowth;
                 }
                 else
                 {
@@ -420,6 +421,11 @@ namespace Models.CLEM.Activities
 
             double MJProteinChange = finalprotein * mJEnergyPerKgProtein;
             double MJFatChange = energyAvailableForGain;
+
+            if (ind.ID == 1)
+                Console.WriteLine($"{proteinAvailableForGain}/t{proteinNeededForGrowth}/t{finalprotein}/t{ind.Energy.ForGain}/t{energyAvailableForGain}/t{MJProteinChange}/t{MJFatChange}");
+
+
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
             ind.Weight.Protein.Adjust(MJProteinChange / mJEnergyPerKgProtein * events.Interval); // for time step
@@ -470,7 +476,7 @@ namespace Models.CLEM.Activities
             double rdpReq;
             ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
             ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
-            ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
+            //ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
 
             double adjustedFeedingLevel = -1;
             if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))

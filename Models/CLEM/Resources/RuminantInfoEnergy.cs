@@ -31,11 +31,6 @@ namespace Models.CLEM.Resources
         public double FromIntake { get { return ruminantIntake.ME; } }
 
         /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double ForMaintenance { get; set; }
-
-        /// <summary>
         /// Energy used for basal metabolism
         /// </summary>
         public double ForBasalMetabolism { get; set; }
@@ -61,6 +56,16 @@ namespace Models.CLEM.Resources
         public double ForGrazing { get { return ToMove + ToGraze; } }
 
         /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double ForMaintenance { get { return ForBasalMetabolism + ForHPViscera + ForGrazing; } }
+
+        /// <summary>
+        /// Energy available after maintenance
+        /// </summary>
+        public double AfterMaintenance { get { return FromIntake - ForMaintenance; } }
+
+        /// <summary>
         /// Energy used for fetal development
         /// </summary>
         public double ForFetus { get; set; }
@@ -68,7 +73,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy available after accounting for pregnancy
         /// </summary>
-        public double AfterPregnancy { get { return FromIntake - ForMaintenance - ForFetus; } }
+        public double AfterPregnancy { get { return AfterMaintenance - ForFetus; } }
 
         /// <summary>
         /// Energy used for milk production
@@ -93,7 +98,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy available for growth
         /// </summary>
-        public double Net { get { return FromIntake - AfterWool; } }
+        public double Net { get { return AfterWool; } }
 
         /// <summary>
         /// Energy available for growth
@@ -135,7 +140,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            ForMaintenance = 0;
             ForBasalMetabolism = 0;
             ForHPViscera = 0;
             ForFetus = 0;

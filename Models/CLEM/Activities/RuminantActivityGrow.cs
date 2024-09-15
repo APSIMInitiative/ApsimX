@@ -442,7 +442,7 @@ namespace Models.CLEM.Activities
                 double EnergyBalance = energyMilkConsumed + energyMetabolicFromIntake - energyMaintenance;
                 //ind.Energy.FromIntake = energyMilkConsumed + energyMetabolicFromIntake;
                 ind.Energy.ForFetus = 0;
-                ind.Energy.ForMaintenance = energyMaintenance;
+                ind.Energy.ForBasalMetabolism = energyMaintenance;
                 ind.Energy.ForLactation = 0;
 
                 double feedingValue;
@@ -516,7 +516,7 @@ namespace Models.CLEM.Activities
                 double feedingValue;
                 //ind.EnergyFromIntake = energyMetabolicFromIntake;
                 ind.Energy.ForFetus = energyFetus;
-                ind.Energy.ForMaintenance = energyMaintenance;
+                ind.Energy.ForBasalMetabolism = energyMaintenance;
                 ind.Energy.ForLactation = energyMilk;
 
                 //
