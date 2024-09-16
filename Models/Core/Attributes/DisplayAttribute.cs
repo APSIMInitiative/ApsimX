@@ -107,7 +107,12 @@ namespace Models.Core
         /// <summary>
         /// This is a list of SCRUMcrop model harvest stages.
         /// </summary>
-        ScrumHarvestStages
+        ScrumHarvestStages,
+        
+        /// <summary>
+        /// This is a list of STRUM tree types.
+        /// </summary>
+        StrumTreeTypes
     }
 
     /// <summary>

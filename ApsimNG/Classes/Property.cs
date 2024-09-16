@@ -368,6 +368,11 @@ namespace UserInterface.Classes
                     DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
                     break;
 
+                case DisplayType.StrumTreeTypes:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[2] { "Ever green", "Deciduious" };
+                    break;
+
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
                 default:
