@@ -22,13 +22,26 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StrumTreeInstance: Model
+    public class StrumTreeInstance : Model
     {
-        /// <summary>Is the tree decidious</summary>
+        ///<summary>Is the tree decidious</summary>
         [Separator("Tree Type")]
-        [Description("Is the tree decidious? Tick box if yes")]
-        public bool Decidious { get; set; }
+        [Description("Is the tree decidious or ever green")]
+        [Display(Type = DisplayType.StrumTreeTypes)]
+        public string TreeType { get; set; }
 
+        /// <summary>Is the tree decidious</summary>
+        public bool Decidious
+        {
+            get
+            {
+                if (TreeType == "Ever green")
+                    return false;
+                if (TreeType == "Decidious")
+                    return true;
+                throw new Exception("Invalid tree type specified");
+            }
+        }
         /// <summary>Distance between tree rows (years)</summary>
         [Separator("Orchid Information")]
         [Description("Row spacing (m)")]
@@ -49,7 +62,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (AlleyZoneWidth > RowSpacing)
                     throw new Exception("Alley Zone Width can not exceed Row spacing");
-                return RowSpacing-AlleyZoneWidth;
+                return RowSpacing - AlleyZoneWidth;
             }
         }
 
@@ -58,7 +71,7 @@ namespace Models.PMF.SimplePlantModels
         { get
             {
                 return 10000 / (RowSpacing * InterRowSpacing);
-            } 
+            }
         }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
@@ -70,7 +83,7 @@ namespace Models.PMF.SimplePlantModels
         public int YearsToMaxDimension { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Trunk mass when maximum dimension reached (t/ha)")] 
+        [Description("Trunk mass when maximum dimension reached (t/ha)")]
         public double TrunkMassAtMaxDimension { get; set; }
 
         /// <summary>Wood density</summary>
@@ -134,7 +147,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Width of mature tree before pruning (mm)</summary>
         [Description("Width of mature tree before pruning (mm)")]
         public double MaxWidth { get; set; }
-        
+
         /// <summary>Root Nitrogen Concentration</summary>
         [Separator("Tree Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
@@ -202,17 +215,21 @@ namespace Models.PMF.SimplePlantModels
         [Description("Fruit Density (g/cm3)")]
         public double FruitDensity { get; set; }
 
-        /// <summary>Maximum Bloom </summary>
-        [Description("Maximum Bloom (Days After Winter Solstice)")]
-        public int DAWSMaxBloom { get; set; }
+        /// <summary> Date of year max bloom occurs </summary>
+        [Description("Date (d-mmm) of maximum bloom")]
+        public string DateMaxBloom { get; set; }
 
         /// <summary>Start Linear Growth </summary>
-        [Description("Start Linear Growth (Days After Winter Solstice)")]
-        public int DAWSLinearGrowth { get; set; }
+        [Description("Start Linear Growth (Days After maximum bloom)")]
+        public int DAFStartLinearGrowth { get; set; }
 
-        /// <summary>Maximum Size </summary>
-        [Description("Max Size (Days After Winter Solstice)")]
-        public int DAWSMaxSize { get; set; }
+        /// <summary>End Linear Growth </summary>
+        [Description("End Linear Growth (Days After maximum bloom)")]
+        public int DAFEndLinearGrowth { get; set; }
+
+        /// <summary>Max Size </summary>
+        [Description("Max size (Days After maximum bloom)")]
+        public int DAFMaxSize {get; set;}
 
         /// <summary>Management events</summary>
         [Separator("Management Event Timings.  May be sent from a manager if not set here")]
@@ -308,14 +325,15 @@ namespace Models.PMF.SimplePlantModels
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
             {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
-            {"DAWSMaxBloom","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
-            {"DAWSLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
-            {"DAWSEndLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
-            {"DAWSMaxSize","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
+            {"DateMaxBloom","[STRUM].Phenology.DaysSinceFlowering.ReduceEventDate = "},
+            {"DAFStartLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
+            {"DAFEndLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
+            {"DAFMaxSize","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
             {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
             {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
-            {"PotentialFWPerFruit","[STRUM].Fruit.PotentialFWPerFruit.FixedValue = " }
+            {"PotentialFWPerFruit","[STRUM].Fruit.PotentialFWPerFruit.FixedValue = " },
+            
         };
 
         /// <summary>
@@ -438,11 +456,12 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Number"] += (Number/InterRowSpacing).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
             treeParams["DryMatterContent"] += DMC.ToString();
-            treeParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
-            treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
-            treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
-            treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
+            treeParams["DateMaxBloom"] += DateMaxBloom;
+            treeParams["DAFStartLinearGrowth"] += DAFStartLinearGrowth.ToString();
+            treeParams["DAFEndLinearGrowth"] +=  DAFEndLinearGrowth.ToString();
+            treeParams["DAFMaxSize"] += DAFMaxSize.ToString();
             treeParams["PotentialFWPerFruit"] += PotentialFWPerFruit.ToString();
+            
 
 
             if (AgeAtSimulationStart <= 0)
