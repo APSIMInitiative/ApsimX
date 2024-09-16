@@ -29,10 +29,6 @@ namespace Models.Functions
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
-        /// <summary>The phenology</summary>
-        [Link]
-        Phenology phenology = null;
-
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
@@ -42,11 +38,7 @@ namespace Models.Functions
 
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-
-        private int startStageIndex;
-
-        private int endStageIndex;
-       
+     
         private double AccumulatedValue = 0;
 
         private bool AccumulateToday = false;
@@ -62,7 +54,6 @@ namespace Models.Functions
 
         /// <summary>The start stage name</summary>
         [Separator("Optional, specify stages or events to accumulate between, accumulates for duration of simulation if all are blank")]
-        [Separator("Only specify Stage names, or Event names, or Dates.  Leave others blank")]
         [Description("(optional for plant models) Stage name to start accumulation")]
         [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
@@ -140,15 +131,8 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-            if (StartStageName != "")
-            {
-                startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
-            }
-            if (EndStageName != "")
-            {
-                endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
-            }
-            if (StartEventName == null)
+
+            if (!String.IsNullOrEmpty(StartEventName) && !String.IsNullOrEmpty(StartStageName) && !String.IsNullOrEmpty(StartDate))
             {
                 AccumulateToday = true;
             }
@@ -166,19 +150,19 @@ namespace Models.Functions
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
-            if (StartEventName != null)
+            if (!String.IsNullOrEmpty(StartEventName))
             { 
                 events.Subscribe(StartEventName, OnStartEvent); 
             }
-            if (EndEventName != null)
+            if (!String.IsNullOrEmpty(EndEventName))
             { 
                 events.Subscribe(EndEventName, OnEndEvent); 
             }
-            if (AccumulateEventName != null)
+            if (!String.IsNullOrEmpty(AccumulateEventName))
             { 
                 events.Subscribe(AccumulateEventName, OnAccumulateEvent); 
             }
-            if (ReduceEventName != "")
+            if (!String.IsNullOrEmpty(ReduceEventName))
             { 
                 events.Subscribe(ReduceEventName, OnRemoveEvent); 
             }
@@ -189,23 +173,19 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnAccumulateEvent(object sender, EventArgs e)
         {
-            if ((StartStageName != "") && (EndStageName != ""))
+            if (!String.IsNullOrEmpty(StartDate))
             {
-                if (phenology.Between(startStageIndex, endStageIndex))
+                if (DateUtilities.WithinDates(StartDate, clock.Today, StartDate))
                 {
                     AccumulateToday = true;
-                }
-                else
-                {
-                    AccumulateToday = false;
                 }
             }
 
-            if ((StartDate != null) && (EndDate != null))
+            if (!String.IsNullOrEmpty(EndDate)) 
             {
-                if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))
+                if (DateUtilities.WithinDates(EndDate, clock.Today, EndDate))
                 {
-                    AccumulateToday = true;
+                    AccumulateToday = false;
                 }
             }
 
@@ -222,7 +202,7 @@ namespace Models.Functions
                 AccumulatedValue += DailyIncrement;
             }
 
-            if (ReduceEventDate != null)
+            if (!String.IsNullOrEmpty(ReduceEventDate))
             {
                 if (DateUtilities.WithinDates(ReduceEventDate, clock.Today, ReduceEventDate))
                 {
@@ -238,7 +218,19 @@ namespace Models.Functions
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (ReduceStageName != null)
+            if (!String.IsNullOrEmpty(StartStageName))
+            {
+                if (phaseChange.StageName == StartStageName)
+                    AccumulateToday = true;
+            }
+
+            if (!String.IsNullOrEmpty(EndStageName))
+            {
+                if(phaseChange.StageName == EndStageName)
+                    AccumulateToday = false;
+            }
+            
+            if (!String.IsNullOrEmpty(ReduceStageName))
             {
                 if (phaseChange.StageName == ReduceStageName)
                     if (!Double.IsNaN(FractionRemovedOnReduce))
@@ -282,6 +274,7 @@ namespace Models.Functions
                 foreach (var tag in child.Document())
                     yield return tag;
         }
+
 
         /// <summary>Called when [cut].</summary>
         /// <param name="sender">The sender.</param>
