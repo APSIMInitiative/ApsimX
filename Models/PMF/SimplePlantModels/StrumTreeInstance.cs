@@ -231,37 +231,12 @@ namespace Models.PMF.SimplePlantModels
         [Description("Max size (Days After maximum bloom)")]
         public int DAFMaxSize {get; set;}
 
-        /// <summary>Management events</summary>
-        [Separator("Management Event Timings.  May be sent from a manager if not set here")]
-
-        [Description("Tick this box if you are sending pruning and harvest events from a manager.  If not untick the box and specify days below")]
-        public bool PrunAndHarvestFromManager { get; set; }
-
-        /// <summary></summary>
-        [Description("Pruning (Days After Winter Solstice)")]
-        public int pruneDAWS { get; set; }
-
-        /// <summary></summary>
-        [Description("Harvest (Days After Winter Solstice)")]
-        public int harvestDAWS { get; set; }
-
-
-        /// <summary>Cutting Event</summary>
-        public event EventHandler<EventArgs> PhenologyHarvest;
-
-        /// <summary>Grazing Event</summary>
-        public event EventHandler<EventArgs> PhenologyPrune;
-
-
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant strum = null;
 
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
-
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private Weather weather = null;
 
         [Link(Type = LinkType.Scoped)]
         private Soil soil = null;
@@ -325,7 +300,7 @@ namespace Models.PMF.SimplePlantModels
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
             {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
-            {"DateMaxBloom","[STRUM].Phenology.DaysSinceFlowering.ReduceEventDate = "},
+            {"DateMaxBloom","[STRUM].Phenology.DaysSinceFlowering.StartDate = "},
             {"DAFStartLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
             {"DAFEndLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
             {"DAFMaxSize","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
@@ -503,22 +478,6 @@ namespace Models.PMF.SimplePlantModels
             simulation.Set("[Alley].Length", ZoneLength);
         }
         
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {
-            if (PrunAndHarvestFromManager == false)
-            {
-                if (weather.DaysSinceWinterSolstice == harvestDAWS)
-                {
-                    PhenologyHarvest?.Invoke(this, new EventArgs());
-                }
-                if (weather.DaysSinceWinterSolstice == pruneDAWS)
-                {
-                    PhenologyPrune?.Invoke(this, new EventArgs());
-                }
-            }
-        }
-
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
