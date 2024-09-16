@@ -1,5 +1,7 @@
 # ApsimX
 
+MINOR CHANGE To TRIGGER JENKINS
+
 ApsimX is the next generation of [APSIM](https://www.apsim.info)
 
 * APSIM is an agricultural modelling framework used extensively worldwide.
@@ -13,7 +15,7 @@ Any questions, please email apsim@csiro.au.
 
 ## Getting Started
 
-**Hardware required**: 
+**Hardware required**:
 
 Any recent PC with a minimum of 8Gb of RAM.
 
@@ -33,6 +35,6 @@ Intellectual property rights in APSIM are retained by the AI. If a licensee make
 
 Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
-## Publications 
+## Publications
 
 * [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)
