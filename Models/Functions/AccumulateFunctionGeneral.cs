@@ -7,6 +7,8 @@ using Models.PMF.Library;
 using Models.PMF.Phen;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using StdUnits;
 
 
 namespace Models.Functions
@@ -14,11 +16,12 @@ namespace Models.Functions
     /// <summary>Accumulates a child function between a start and end stage or start and end events.
     /// </summary>
     [Serializable]
-    [Description("Adds the value of all children functions to the previous accumulation each time the Specified Accumulate Event occurs." +
-        "Option for crop models is to specify start and end stages for accumulation." +
-        "Option for all models is to specify stant and and events for accumulation." +
-        "If neither are specified will accumulate every time the accumulate event occurs." +
-        "Optional full or partial removal of accumulated values can occur on specified events or stages")]
+    [Description("Adds the value of all children functions to the previous accumulation each time the Specified Accumulate Event occurs.  " +
+        "Option for crop models is to specify start and end stages for accumulation.  " +
+        "Option for all models is to specify start and end events for accumulation.  " +
+        "Option for all models is to specify start and end dates for accumulation.  " +
+        "If none are specified will accumulate every time the accumulate event occurs.  " +
+        "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateFunctionGeneral : Model, IFunction
@@ -33,6 +36,9 @@ namespace Models.Functions
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
+
+        [Link]
+        private Clock clock = null;
 
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
@@ -55,8 +61,8 @@ namespace Models.Functions
         public string AccumulateEventName { get; set; }
 
         /// <summary>The start stage name</summary>
-        [Separator("Optional, specify stages or events to accumulate between")]
-        [Separator("Can not specify both start/end events and stages")]
+        [Separator("Optional, specify stages or events to accumulate between, accumulates for duration of simulation if all are blank")]
+        [Separator("Only specify Stage names, or Event names, or Dates.  Leave others blank")]
         [Description("(optional for plant models) Stage name to start accumulation")]
         [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
@@ -74,9 +80,16 @@ namespace Models.Functions
         [Description("(optional for any model) Event name to stop accumulation")]
         public string EndEventName { get; set; }
 
+        /// <summary>The start event</summary>
+        [Description("(optional for any model) Date (d-mmm) to start accumulation")]
+        public string StartDate { get; set; }
+
+        /// <summary>The end event</summary>
+        [Description("(optional for any model) Date (d-mmm) to stop accumulation")]
+        public string EndDate { get; set; }
+
         /// <summary>The reset stage name</summary>
         [Separator("Optional, reduce accumulation")]
-        [Separator("Can not specify both events and stages for reducing accumulation")]
         [Description("(optional for plant models) Stage name to reduce accumulation")]
         [Display(Type = DisplayType.CropStageName)]
         public string ReduceStageName { get; set; }
@@ -84,6 +97,10 @@ namespace Models.Functions
         /// <summary>The end event</summary>
         [Description("(optional for any model)  Event name to reduce accumulation.")]
         public string ReduceEventName { get; set; }
+
+        /// <summary>The end event</summary>
+        [Description("(optional for any model)  Date (d-mmm) to reduce accumulation.")]
+        public string ReduceEventDate { get; set; }
 
         /// <summary>Fraction to reduce accumalation to</summary>
         [Description("Fraction to remove on stage or event specified above")]
@@ -161,7 +178,7 @@ namespace Models.Functions
             { 
                 events.Subscribe(AccumulateEventName, OnAccumulateEvent); 
             }
-            if (ReduceEventName != null)
+            if (ReduceEventName != "")
             { 
                 events.Subscribe(ReduceEventName, OnRemoveEvent); 
             }
@@ -184,6 +201,14 @@ namespace Models.Functions
                 }
             }
 
+            if ((StartDate != null) && (EndDate != null))
+            {
+                if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))
+                {
+                    AccumulateToday = true;
+                }
+            }
+
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
 
@@ -195,6 +220,14 @@ namespace Models.Functions
                     DailyIncrement += function.Value();
                 }
                 AccumulatedValue += DailyIncrement;
+            }
+
+            if (ReduceEventDate != null)
+            {
+                if (DateUtilities.WithinDates(ReduceEventDate, clock.Today, ReduceEventDate))
+                {
+                    AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+                }
             }
 
         }
