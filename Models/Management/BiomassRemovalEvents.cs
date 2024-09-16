@@ -56,8 +56,14 @@ namespace Models.Management
         /// <summary>
         /// Dates to trigger biomass removal events
         /// </summary>
-        [Description("Removal Event Dates (comma seperated dd/mm/yyyy")]
+        [Description("Specific Removal Event Dates (comma seperated dd/mm/yyyy")]
         public string RemovalDatesInput { get; set; }
+
+        /// <summary>
+        /// Date to trigger annual biomass removal events
+        /// </summary>
+        [Description("Annual Removal Event Date (d-mmm).  Removal occurs on the same date each year")]
+        public string RemovalDate { get; set; }
 
         /// <summary>Removal Options in Table</summary>
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
@@ -197,6 +203,14 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(RemovalDate))
+            {
+                if (DateUtilities.WithinDates(RemovalDate, Clock.Today, RemovalDate))
+                {
+                    Remove();
+                }
+            }
+
             if (String.IsNullOrEmpty(RemovalDatesInput))
                 return;
 
@@ -206,6 +220,8 @@ namespace Models.Management
                 if (DateUtilities.CompareDates(date, Clock.Today) == 0)
                     Remove();
             }
+
+
             return;
         }
 
