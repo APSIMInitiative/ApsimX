@@ -125,7 +125,7 @@ namespace Models.Climate
         /// <summary>
         /// The index of the diffuse radiation fraction column in the weather file
         /// </summary>
-        private int DiffuseFractionIndex;
+        private int diffuseFractionIndex;
 
         /// <summary>
         /// The index of the day length column in the weather file
@@ -300,9 +300,6 @@ namespace Models.Climate
                 }
             }
         }
-
-        /// <summary>Flag whether we're one the first day of simulation</summary>
-        private bool First = true;
 
         /// <summary>Gets the number of days since the winter solstice</summary>
         [Units("d")]
@@ -555,7 +552,7 @@ namespace Models.Climate
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.co2Index = -1;
-            this.DiffuseFractionIndex = 0;
+            this.diffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
             if (AirPressure == 0)
                 this.AirPressure = 1010;
@@ -582,15 +579,6 @@ namespace Models.Climate
 
             foreach (var message in Validate())
                 summary.WriteMessage(this, message, MessageType.Warning);
-        }
-
-        /// <summary>
-        /// Performs the necessary initialisation at the start of simulation
-        /// </summary>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
-        {
-            First = true;
         }
 
         /// <summary>Overrides the base class method to allow for clean up task</summary>
@@ -649,7 +637,7 @@ namespace Models.Climate
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
-            if (First)
+            if (clock.Today.Date == clock.StartDate.Date)
             {
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
@@ -661,13 +649,14 @@ namespace Models.Climate
                 }
                 else
                     DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
-
-                First = false;
             }
-
-            if (clock.Today.DayOfYear == WinterSolsticeDOY & First == false)
-                DaysSinceWinterSolstice = 0;
-            else DaysSinceWinterSolstice += 1;
+            else
+            {
+                if (clock.Today.DayOfYear == WinterSolsticeDOY)
+                    DaysSinceWinterSolstice = 0;
+                else
+                    DaysSinceWinterSolstice += 1;
+            }
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
@@ -778,7 +767,7 @@ namespace Models.Climate
             else
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
-            if (this.DiffuseFractionIndex == -1)
+            if (this.diffuseFractionIndex == -1)
             {
                 // estimate diffuse fraction using the approach of Bristow and Campbell
                 double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
@@ -790,7 +779,7 @@ namespace Models.Climate
                 if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
             }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.diffuseFractionIndex], CultureInfo.InvariantCulture);
 
             if (this.dayLengthIndex == -1)  // DayLength is not a column - check for a constant
             {
@@ -878,7 +867,7 @@ namespace Models.Climate
                     this.rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "RainHours");
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
-                    this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
+                    this.diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
                     this.co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
