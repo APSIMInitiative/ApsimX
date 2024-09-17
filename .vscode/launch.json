@@ -44,13 +44,13 @@
             "name": ".NET Core Launch (APSIM Server)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "Build Debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
                 "-a", "127.0.0.1", 
                 //"-p", "5555",
                 "-P", "interactive",
-                "-f", "${workspaceRoot}/Tests/Simulation/ZMQ-Sync/template/template.apsimx"
+                "-f", "${workspaceRoot}/Tests/Simulation/ZMQ-Sync/MetompkinFarm/MetompkinFarm.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",

@@ -339,10 +339,10 @@ def poll_zmq(controller : ApsimController) -> tuple:
         ts = controller.send_command("get", ["[Clock].Today"])
         ts_arr.append(ts.to_unix())
         
-        sw1 = controller.send_command("get", ["sum([Field1].HeavyClay.Water.Volumetric)"])
+        sw1 = controller.send_command("get", ["sum([Field1].Munden:118087.Water.Volumetric)"])
         esw1_arr.append(sw1)
         
-        sw2 = controller.send_command("get", ["sum([Field2].HeavyClay.Water.Volumetric)"])
+        sw2 = controller.send_command("get", ["sum([Field2].Munden:118087.Water.Volumetric)"])
         esw2_arr.append(sw2)
 
         rain = controller.send_command("get", ["[Weather].Rain"])
@@ -546,7 +546,7 @@ if __name__ == '__main__':
 
     # TODO(nubby): Integrate polling into ZMQServer object.
     ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
-
+    
     # Plot simulation.
     # TODO(nubby): Integrate irrigation with colors.
     plot_oasis(apsim)
