@@ -34,10 +34,47 @@ namespace Models.Climate
         private ISummary summary = null;
 
         /// <summary>
-        /// A reference to the text file reader object
+        /// Event that will be invoked immediately before the daily weather data is updated
         /// </summary>
+        /// <remarks>
+        /// This provides models and scripts an opportunity to change the weather data before
+        /// other models access them
+        /// </remarks>
+        public event EventHandler PreparingNewWeatherData;
+
+        /// <summary>Event that will be invoked at the start of spring </summary>
+        public event EventHandler StartOfSpring;
+
+        /// <summary>Event that will be invoked at the start of summer</summary>
+        public event EventHandler StartOfSummer;
+
+        /// <summary>Event that will be invoked at the start of autumn</summary>
+        public event EventHandler StartOfAutumn;
+
+        /// <summary>Event that will be invoked at the start of winter</summary>
+        public event EventHandler StartOfWinter;
+
+        /// <summary>Event that will be invoked at the end of spring</summary>
+        public event EventHandler EndOfSpring;
+
+        /// <summary>Event that will be invoked at the end of summer</summary>
+        public event EventHandler EndOfSummer;
+
+        /// <summary>Event that will be invoked at the end of autumn</summary>
+        public event EventHandler EndOfAutumn;
+
+        /// <summary>Event that will be invoked at the end of winter</summary>
+        public event EventHandler EndOfWinter;
+
+        /// <summary>A reference to the text file reader object</summary>
         [NonSerialized]
         private ApsimTextFile reader = null;
+
+        /// <summary>
+        /// A LinkedList of weather that has previously been read. The data is stored in order of
+        /// date, from newest to oldest, as most recent weather is most likely to be searched for
+        /// </summary>
+        private LinkedList<WeatherRecordEntry> weatherCache = new LinkedList<WeatherRecordEntry>();
 
         /// <summary>
         /// The index of the maximum temperature column in the weather file
@@ -96,31 +133,18 @@ namespace Models.Climate
         private int dayLengthIndex;
 
         /// <summary>
-        /// Event that will be invoked immediately before the daily weather data is updated.
-        /// This provides models and scripts an opportunity to change the weather data before
-        /// other models access them
-        /// </summary>
-        public event EventHandler PreparingNewWeatherData;
-
-        /// <summary>
-        /// Stores the optional constants file name. This should only be accessed via
-        /// <see cref="ConstantsFile" />, which handles conversion between
-        /// relative/absolute paths
-        /// </summary>
-        private string constantsFile;
-
-        /// <summary>
-        /// A LinkedList of weather that has previously been read. The data is stored in order of
-        /// date, from newest to oldest, as most recent weather is most likely to be searched for
-        /// </summary>
-        private LinkedList<WeatherRecordEntry> weatherCache = new LinkedList<WeatherRecordEntry>();
-
-        /// <summary>
         /// Stores the CO2 value from either the default 350 or from a column in met file. Public property can then also check
         /// if this value was supplied by a constant
         /// </summary>
         [JsonIgnore]
         private double co2Value { get; set; }
+
+        /// <summary>
+        /// Stores the optional constants file name. This should only be accessed via
+        /// <see cref="ConstantsFile"/>, which handles conversion between
+        /// relative/absolute paths
+        /// </summary>
+        private string constantsFile;
 
         /// <summary>
         /// Gets or sets the optional constants file name. Allows to specify a second file which
@@ -196,9 +220,7 @@ namespace Models.Climate
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
 
-        /// <summary>
-        /// Gets the start date of the weather file
-        /// </summary>
+        /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate
         {
             get
@@ -210,9 +232,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the end date of the weather file
-        /// </summary>
+        /// <summary>Gets the end date of the weather file</summary>
         public DateTime EndDate
         {
             get
@@ -224,30 +244,22 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets or sets the maximum air temperature (oC)
-        /// </summary>
+        /// <summary>Gets or sets the maximum air temperature (oC)</summary>
         [Units("°C")]
         [JsonIgnore]
         public double MaxT { get; set; }
 
-        /// <summary>
-        /// Gets or sets the minimum air temperature (oC)
-        /// </summary>
+        /// <summary>Gets or sets the minimum air temperature (oC)</summary>
         [JsonIgnore]
         [Units("°C")]
         public double MinT { get; set; }
 
-        /// <summary>
-        /// Daily mean air temperature (oC)
-        /// </summary>
+        /// <summary>Daily mean air temperature (oC)</summary>
         [Units("°C")]
         [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
-        /// <summary>
-        /// Gets the daily mean vapour pressure deficit (hPa)
-        /// </summary>
+        /// <summary>Gets the daily mean vapour pressure deficit (hPa)</summary>
         [Units("hPa")]
         [JsonIgnore]
         public double VPD
@@ -265,9 +277,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the day for the winter solstice (day)
-        /// </summary>
+        /// <summary>Gets the day for the winter solstice (day)</summary>
         [Units("day")]
         [JsonIgnore]
         public int WinterSolsticeDOY
@@ -291,83 +301,64 @@ namespace Models.Climate
             }
         }
 
+        /// <summary>Flag whether we're one the first day of simulation</summary>
         private bool First = true;
-        /// <summary>
-        /// Gets the number of days since the winter solstice
-        /// </summary>
+
+        /// <summary>Gets the number of days since the winter solstice</summary>
         [Units("d")]
         [JsonIgnore]
         public int DaysSinceWinterSolstice { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum clear sky radiation (MJ/m2)
-        /// </summary>
+        /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
         [Units("MJ/m2")]
         [JsonIgnore]
         public double Qmax { get; set; }
 
-        /// <summary>
-        /// Gets or sets the rainfall amount (mm)
-        /// </summary>
+        /// <summary>Gets or sets the rainfall amount (mm)</summary>
         [Units("mm")]
         [JsonIgnore]
         public double Rain { get; set; }
 
-        /// <summary>
-        /// Gets or sets the solar radiation (MJ/m2)
-        /// </summary>
+        /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
         [Units("MJ/m2")]
         [JsonIgnore]
         public double Radn { get; set; }
 
-        /// <summary>
-        /// Gets or sets the class A pan evaporation (mm)
-        /// </summary>
+        /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
         [Units("mm")]
         [JsonIgnore]
         public double PanEvap { get; set; }
 
-        /// <summary>
-        /// Gets or sets the number duration of rainfall within a day (h)
-        /// </summary>
+        /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
         [Units("h")]
         [JsonIgnore]
         public double RainfallHours { get; set; }
 
-        /// <summary>
-        /// Gets or sets the air vapour pressure (hPa)
-        /// </summary>
+        /// <summary>Gets or sets the air vapour pressure (hPa)/// </summary>
         [Units("hPa")]
         [JsonIgnore]
         public double VP { get; set; }
 
-        /// <summary>
-        /// Gets or sets the average wind speed (m/s)
-        /// </summary>
+        /// <summary>Gets or sets the average wind speed (m/s)</summary>
         [Units("m/s")]
         [JsonIgnore]
         public double Wind { get; set; }
 
-        /// <summary>
-        /// Gets or sets the diffuse radiation fraction (0-1)
-        /// </summary>
+        /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
         [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction { get; set; }
 
-        /// <summary>
-        /// Gets or sets the day length, period with light (h)
-        /// </summary>
+        /// <summary>Gets or sets the day length, period with light (h)</summary>
         [Units("h")]
         [JsonIgnore]
         public double DayLength { get; set; }
 
-        /// <summary>
-        /// Gets or sets the CO2 level in the atmosphere (ppm)
-        /// </summary>
+        /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
         [Units("ppm")]
         [JsonIgnore]
-        public double CO2 { 
+        public double CO2
+        {
             get
             {
                 if (this.reader == null || this.reader.Constant("co2") == null)
@@ -375,22 +366,18 @@ namespace Models.Climate
                 else
                     return this.reader.ConstantAsDouble("co2");
             }
-            set 
+            set
             {
                 co2Value = value;
             }
         }
 
-        /// <summary>
-        /// Gets or sets the mean atmospheric air pressure
-        /// </summary>
+        /// <summary>Gets or sets the mean atmospheric air pressure</summary>
         [Units("hPa")]
         [JsonIgnore]
         public double AirPressure { get; set; }
 
-        /// <summary>
-        /// Gets the latitude (decimal degrees)
-        /// </summary>
+        /// <summary>Gets the latitude (decimal degrees)</summary>
         [Units("degrees")]
         public double Latitude
         {
@@ -403,9 +390,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the longitude (decimal degrees)
-        /// </summary>
+        /// <summary>Gets the longitude (decimal degrees)</summary>
         [Units("degrees")]
         public double Longitude
         {
@@ -418,9 +403,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the long-term average air temperature (oC)
-        /// </summary>
+        /// <summary>Gets the long-term average air temperature (oC)</summary>
         [Units("oC")]
         public double Tav
         {
@@ -435,9 +418,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the long-term average temperature amplitude (oC)
-        /// </summary>
+        /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
         public double Amp
         {
             get
@@ -450,18 +431,6 @@ namespace Models.Climate
                 return this.reader.ConstantAsDouble("amp");
             }
         }
-
-        /// <summary>Met data from yesterday</summary>
-        [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get { return GetAdjacentMetData(-1); } }
-
-        /// <summary>Met data for today</summary>
-        [JsonIgnore]
-        public DailyMetDataFromFile TodaysMetData { get; set; }
-
-        /// <summary>Met data for tomorrow</summary>
-        [JsonIgnore]
-        public DailyMetDataFromFile TomorrowsMetData { get { return GetAdjacentMetData(1); } }
 
         /// <summary>Gets or sets the first date of summer (dd-mmm)</summary>
         [JsonIgnore]
@@ -479,6 +448,18 @@ namespace Models.Climate
         [JsonIgnore]
         public string FirstDateOfSpring { get; set; } = "1-Sep";
 
+        /// <summary>Met data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get { return GetAdjacentMetData(-1); } }
+
+        /// <summary>Met data for today</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TodaysMetData { get; set; }
+
+        /// <summary>Met data for tomorrow</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get { return GetAdjacentMetData(1); } }
+
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
@@ -494,30 +475,6 @@ namespace Models.Climate
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore] public int ShowYears = 1;
-
-        /// <summary>Event that will be invoked at the start of spring </summary>
-        public event EventHandler StartOfSpring;
-
-        /// <summary>Event that will be invoked at the start of summer</summary>
-        public event EventHandler StartOfSummer;
-
-        /// <summary>Event that will be invoked at the start of autumn</summary>
-        public event EventHandler StartOfAutumn;
-
-        /// <summary>Event that will be invoked at the start of winter</summary>
-        public event EventHandler StartOfWinter;
-
-        /// <summary>Event that will be invoked at the end of spring</summary>
-        public event EventHandler EndOfSpring;
-
-        /// <summary>Event that will be invoked at the end of summer</summary>
-        public event EventHandler EndOfSummer;
-
-        /// <summary>Event that will be invoked at the end of autumn</summary>
-        public event EventHandler EndOfAutumn;
-
-        /// <summary>Event that will be invoked at the end of winter</summary>
-        public event EventHandler EndOfWinter;
 
         /// <summary>Name of current season</summary>
         public string Season
@@ -738,7 +695,7 @@ namespace Models.Climate
                     break;
                 }
             }
-            
+
             if (this.reader == null)
                 if (!this.OpenDataFile())
                     throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
@@ -766,7 +723,7 @@ namespace Models.Climate
                 this.weatherCache.AddBefore(this.weatherCache.Find(previousEntry), record);
             else
                 this.weatherCache.AddFirst(record);
-            
+
             return CheckDailyMetData(readMetData);
         }
 
