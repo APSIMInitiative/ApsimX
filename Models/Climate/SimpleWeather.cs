@@ -386,8 +386,8 @@ namespace Models.Climate
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            maximumTemperatureIndex = 0;
             minimumTemperatureIndex = 0;
+            maximumTemperatureIndex = 0;
             radiationIndex = 0;
             rainIndex = 0;
             evaporationIndex = 0;
@@ -399,10 +399,7 @@ namespace Models.Climate
             dayLengthIndex = 0;
             if (CO2 == 0)
                 CO2 = 350;
-            if (AirPressure == 0)
-                AirPressure = calculateAirPressure(27.09); // to default 1010;
-            if (DiffuseFraction == 0)
-                DiffuseFraction = -1;
+
             if (reader != null)
             {
                 reader.Close();
@@ -468,9 +465,9 @@ namespace Models.Climate
             }
 
             // assign values to output variables
-            Radn = TodaysMetData.Radn;
-            MaxT = TodaysMetData.MaxT;
             MinT = TodaysMetData.MinT;
+            MaxT = TodaysMetData.MaxT;
+            Radn = TodaysMetData.Radn;
             Rain = TodaysMetData.Rain;
             PanEvap = TodaysMetData.PanEvap;
             RainfallHours = TodaysMetData.RainfallHours;
@@ -480,6 +477,7 @@ namespace Models.Climate
             DayLength = TodaysMetData.DayLength;
             if (co2Index != -1)
                 CO2 = TodaysMetData.CO2;
+            AirPressure = calculateAirPressure(27.08889); // to default 1010;
 
             // invoke event that allows other models to modify weather data
             if (PreparingNewWeatherData != null)
@@ -524,20 +522,20 @@ namespace Models.Climate
         /// <returns>The weather data structure with values checked</returns>
         private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
         {
-            if (radiationIndex != -1)
-                readMetData.Radn = Convert.ToSingle(readMetData.Raw[radiationIndex], CultureInfo.InvariantCulture);
+            if (minimumTemperatureIndex != -1)
+                readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.Radn = reader.ConstantAsDouble("radn");
+                readMetData.MinT = reader.ConstantAsDouble("mint");
 
             if (maximumTemperatureIndex != -1)
                 readMetData.MaxT = Convert.ToSingle(readMetData.Raw[maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.MaxT = reader.ConstantAsDouble("maxt");
 
-            if (minimumTemperatureIndex != -1)
-                readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
+            if (radiationIndex != -1)
+                readMetData.Radn = Convert.ToSingle(readMetData.Raw[radiationIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.MinT = reader.ConstantAsDouble("mint");
+                readMetData.Radn = reader.ConstantAsDouble("radn");
 
             if (rainIndex != -1)
                 readMetData.Rain = Convert.ToSingle(readMetData.Raw[rainIndex], CultureInfo.InvariantCulture);
@@ -617,8 +615,8 @@ namespace Models.Climate
                         throw new Exception(message);
                     }
 
-                    maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Maxt");
                     minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Mint");
+                    maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Maxt");
                     radiationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Radn");
                     rainIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Rain");
                     evaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Evap");
@@ -638,13 +636,13 @@ namespace Models.Climate
                                 reader.AddConstant(constant.Name, constant.Value, constant.Units, constant.Comment);
                     }
 
-                    if (maximumTemperatureIndex == -1)
-                        if (reader == null || reader.Constant("maxt") == null)
-                            throw new Exception("Cannot find MaxT in weather file: " + FileName);
-
                     if (minimumTemperatureIndex == -1)
                         if (reader == null || reader.Constant("mint") == null)
                             throw new Exception("Cannot find MinT in weather file: " + FileName);
+
+                    if (maximumTemperatureIndex == -1)
+                        if (reader == null || reader.Constant("maxt") == null)
+                            throw new Exception("Cannot find MaxT in weather file: " + FileName);
 
                     if (radiationIndex == -1)
                         if (reader == null || reader.Constant("radn") == null)
@@ -764,10 +762,6 @@ namespace Models.Climate
             {
                 throw new Exception("Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")");
             }
-            if (weatherToday.VP <= 0)
-            {
-                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has vapour pressure (" + weatherToday.VP + ") which is below 0");
-            }
             if (weatherToday.Radn < 0)
             {
                 throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative solar radiation (" + weatherToday.Radn + ")");
@@ -779,6 +773,10 @@ namespace Models.Climate
             if (weatherToday.Rain < 0)
             {
                 throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
+            }
+            if (weatherToday.VP <= 0)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has vapour pressure (" + weatherToday.VP + ") which is below 0");
             }
         }
     }
