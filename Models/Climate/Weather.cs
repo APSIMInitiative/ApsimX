@@ -532,7 +532,7 @@ namespace Models.Climate
             diffuseFractionIndex = 0;
             dayLengthIndex = 0;
             if (AirPressure == 0)
-                AirPressure = 1010;
+                AirPressure = calculateAirPressure(27.09); // to default 1010;
             if (DiffuseFraction == 0)
                 DiffuseFraction = -1;
             if (reader != null)
@@ -921,6 +921,23 @@ namespace Models.Climate
 
             result = SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
             return result;
+        }
+
+        /// <summary>Computes the air pressure for a given location</summary>
+        /// <param name="localAltitude">The altitude (m)</param>
+        /// <returns>The air pressure (hPa)</returns>
+        private double calculateAirPressure(double localAltitude)
+        {
+            const double baseTemperature = 288.15;             // (K)
+            const double basePressure = 101325.0;              // (Pa)
+            const double lapseRate = 0.0065;                   // (K/m)
+            const double gravitationalAcceleration = 9.80665;  // (m/s)
+            const double molarMassOfAir = 0.0289644;           // (kg/mol)
+            const double universalGasConstant = 8.3144598;     // (J/mol/K)
+            double result;
+            result = basePressure * Math.Pow(1.0 - localAltitude * lapseRate / baseTemperature,
+                     gravitationalAcceleration * molarMassOfAir / (universalGasConstant * lapseRate));
+            return result / 100.0;  // to hPa
         }
 
         /// <summary>Computes the number of days since winter solstice</summary>
