@@ -1,7 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Packaging;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -149,6 +147,11 @@ namespace Models.Climate
         private const double defaultCO2 = 350.0;
 
         /// <summary>
+        /// Default value for solar angle for computing twilight (degrees)
+        /// </summary>
+        private const double defaultTwilight = 6.0;
+
+        /// <summary>
         /// Stores the optional constants file name. This should only be accessed via
         /// <see cref="ConstantsFile"/>, which handles conversion between
         /// relative/absolute paths
@@ -255,16 +258,16 @@ namespace Models.Climate
 
         /// <summary>Gets or sets the daily minimum air temperature (oC)</summary>
         [JsonIgnore]
-        [Units("°C")]
+        [Units("oC")]
         public double MinT { get; set; }
 
         /// <summary>Gets or sets the daily maximum air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         [JsonIgnore]
         public double MaxT { get; set; }
 
         /// <summary>Gets or sets the daily mean air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         [JsonIgnore]
         public double MeanT { get; set; }
 
@@ -365,7 +368,7 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the long-term average air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         public double Tav
         {
             get
@@ -380,7 +383,7 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         public double Amp
         {
             get
@@ -667,7 +670,7 @@ namespace Models.Climate
             else
                 weatherCache.AddFirst(record);
 
-            return CheckDailyMetData(readMetData);
+            return checkDailyMetData(readMetData);
         }
 
         /// <summary>Checks the values for weather data, uses either daily values or a constant</summary>
@@ -680,7 +683,7 @@ namespace Models.Climate
         /// </remarks>
         /// <param name="readMetData">The weather data structure with values for one line</param>
         /// <returns>The weather data structure with values checked</returns>
-        private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
+        private DailyMetDataFromFile checkDailyMetData(DailyMetDataFromFile readMetData)
         {
             if (minimumTemperatureIndex != -1)
                 readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
@@ -889,7 +892,7 @@ namespace Models.Climate
 
         /// <summary>Computes the duration of the day, with light (hours)</summary>
         /// <param name="Twilight">The angle to measure time for twilight (degrees)</param>
-        /// <returns>The length of day light</returns>
+        /// <returns>The number of hours of daylight</returns>
         public double CalculateDayLength(double Twilight)
         {
             if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
@@ -913,11 +916,13 @@ namespace Models.Climate
         }
 
         /// <summary>Estimate diffuse radiation fraction (0-1)</summary>
-        /// <remarks>Uses the approach of Bristow and Campbell (0000)</remarks>
+        /// <remarks>
+        /// Uses the approach of Bristow and Campbell (1984). On the relationship between incoming solar
+        /// radiation and daily maximum and minimum temperature. Agricultural and Forest Meteorology
+        /// </remarks>
         /// <returns>The diffuse radiation fraction</returns>
         private double calculateDiffuseRadiationFraction(double todaysRadiation)
         {
-            // estimate diffuse fraction using the approach of Bristow and Campbell
             double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
             double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
             double B = Qmax / Q0;
@@ -950,6 +955,7 @@ namespace Models.Climate
         }
 
         /// <summary>Computes the air pressure for a given location</summary>
+        /// <remarks>From Jacobson (2005). Fundamentals of atmospheric modeling</remarks>
         /// <param name="localAltitude">The altitude (m)</param>
         /// <returns>The air pressure (hPa)</returns>
         private double calculateAirPressure(double localAltitude)

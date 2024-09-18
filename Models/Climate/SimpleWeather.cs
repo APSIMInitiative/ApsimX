@@ -77,9 +77,9 @@ namespace Models.Climate
         private int rainIndex;
 
         /// <summary>
-        /// The index of the evaporation column in the weather file
+        /// The index of the pan evaporation column in the weather file
         /// </summary>
-        private int evaporationIndex;
+        private int panEvaporationIndex;
 
         /// <summary>
         /// The index of the rainfall duration column in the weather file
@@ -97,8 +97,7 @@ namespace Models.Climate
         private int windIndex;
 
         /// <summary>
-        /// The index of the co2 column in the weather file, or -1
-        /// if the weather file doesn't contain co2.
+        /// The index of the co2 column in the weather file
         /// </summary>
         private int co2Index;
 
@@ -116,6 +115,11 @@ namespace Models.Climate
         /// Default value for atmospheric CO2 concentration (ppm)
         /// </summary>
         private const double defaultCO2 = 350.0;
+
+        /// <summary>
+        /// Default value for solar angle for computing twilight (degrees)
+        /// </summary>
+        private const double defaultTwilight = 6.0;
 
         /// <summary>
         /// Stores the optional constants file name. This should only be accessed via
@@ -227,16 +231,16 @@ namespace Models.Climate
 
         /// <summary>Gets or sets the daily minimum air temperature (oC)</summary>
         [JsonIgnore]
-        [Units("°C")]
+        [Units("oC")]
         public double MinT { get; set; }
 
         /// <summary>Gets or sets the daily maximum air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         [JsonIgnore]
         public double MaxT { get; set; }
 
         /// <summary>Gets or sets the daily mean air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         [JsonIgnore]
         public double MeanT { get; set; }
 
@@ -337,7 +341,7 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the long-term average air temperature (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         public double Tav
         {
             get
@@ -349,7 +353,7 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
-        [Units("°C")]
+        [Units("oC")]
         public double Amp
         {
             get
@@ -407,7 +411,7 @@ namespace Models.Climate
             dayLengthIndex = 0;
             diffuseFractionIndex = 0;
             rainIndex = 0;
-            evaporationIndex = 0;
+            panEvaporationIndex = 0;
             rainfallHoursIndex = 0;
             vapourPressureIndex = 0;
             windIndex = 0;
@@ -490,7 +494,7 @@ namespace Models.Climate
             VP = TodaysMetData.VP;
             Wind = TodaysMetData.Wind;
             CO2 = TodaysMetData.CO2;
-            AirPressure = calculateAirPressure(27.08889); // to default 1010;
+            AirPressure = TodaysMetData.AirPressure;
 
             // invoke event that allows other models to modify weather data
             if (PreparingNewWeatherData != null)
@@ -499,6 +503,7 @@ namespace Models.Climate
             // compute a series of values derived from weather data
             MeanT = (MaxT + MinT) / 2.0;
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
+            VPD = calculateVapourPressureDefict(MinT, MaxT, VP);
 
             // do sanity check on weather
             SensibilityCheck(clock as Clock, this);
@@ -527,13 +532,20 @@ namespace Models.Climate
             if (date != reader.GetDateFromValues(readMetData.Raw))
                 throw new Exception("Non consecutive dates found in file: " + _fileName + ".");
 
-            return CheckDailyMetData(readMetData);
+            return checkDailyMetData(readMetData);
         }
 
         /// <summary>Checks the values for weather data, uses either daily values or a constant</summary>
+        /// <remarks>
+        /// For each variable handled by Weather, this method will firstly check whether there is a column 
+        /// with daily data in the met file (i.e. there is an index equal or greater than zero), if not, it
+        /// will check whether a constant value was given (a single value in the met file, like latitude or
+        /// TAV). If that fails, either a default value is supplied or 'null' is returned (which results in
+        /// an exception being thrown later on)
+        /// </remarks>
         /// <param name="readMetData">The weather data structure with values for one line</param>
         /// <returns>The weather data structure with values checked</returns>
-        private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
+        private DailyMetDataFromFile checkDailyMetData(DailyMetDataFromFile readMetData)
         {
             if (minimumTemperatureIndex != -1)
                 readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
@@ -570,10 +582,10 @@ namespace Models.Climate
             else
                 readMetData.Rain = reader.ConstantAsDouble("rain");
 
-            if (evaporationIndex == -1)
+            if (panEvaporationIndex == -1)
                 readMetData.PanEvap = double.NaN;
             else
-                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[evaporationIndex], CultureInfo.InvariantCulture);
+                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[panEvaporationIndex], CultureInfo.InvariantCulture);
 
             if (rainfallHoursIndex == -1)
                 readMetData.RainfallHours = double.NaN;
@@ -644,7 +656,7 @@ namespace Models.Climate
                     dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DayLength");
                     diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DifFr");
                     rainIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Rain");
-                    evaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Evap");
+                    panEvaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Evap");
                     rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "RainHours");
                     vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "VP");
                     windIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Wind");
@@ -700,7 +712,7 @@ namespace Models.Climate
 
         /// <summary>Computes the duration of the day, with light (hours)</summary>
         /// <param name="Twilight">The angle to measure time for twilight (degrees)</param>
-        /// <returns>The length of day light</returns>
+        /// <returns>The number of hours of daylight</returns>
         public double CalculateDayLength(double Twilight)
         {
             if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
@@ -724,11 +736,13 @@ namespace Models.Climate
         }
 
         /// <summary>Estimate diffuse radiation fraction (0-1)</summary>
-        /// <remarks>Uses the approach of Bristow and Campbell (0000)</remarks>
+        /// <remarks>
+        /// Uses the approach of Bristow and Campbell (1984). On the relationship between incoming solar
+        /// radiation and daily maximum and minimum temperature. Agricultural and Forest Meteorology
+        /// </remarks>
         /// <returns>The diffuse radiation fraction</returns>
         private double calculateDiffuseRadiationFraction(double todaysRadiation)
         {
-            // estimate diffuse fraction using the approach of Bristow and Campbell
             double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
             double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
             double B = Qmax / Q0;
@@ -748,6 +762,7 @@ namespace Models.Climate
         private double calculateVapourPressureDefict(double minTemp, double maxTemp, double vapourPressure)
         {
             const double SVPfrac = 0.66;
+
             double result;
             double VPDmint = MetUtilities.svp(minTemp) - vapourPressure;
             VPDmint = Math.Max(VPDmint, 0.0);
@@ -760,6 +775,7 @@ namespace Models.Climate
         }
 
         /// <summary>Computes the air pressure for a given location</summary>
+        /// <remarks>From Jacobson (2005). Fundamentals of atmospheric modeling</remarks>
         /// <param name="localAltitude">The altitude (m)</param>
         /// <returns>The air pressure (hPa)</returns>
         private double calculateAirPressure(double localAltitude)
