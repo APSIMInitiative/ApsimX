@@ -370,7 +370,7 @@ namespace UserInterface.Classes
 
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = new string[2] { "Ever green", "Deciduious" };
+                    DropDownOptions = new string[2] { "Ever green", "Deciduous" };
                     break;
 
                 // Should never happen - presenter should handle this(?)
