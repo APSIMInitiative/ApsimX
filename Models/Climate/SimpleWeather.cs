@@ -103,6 +103,21 @@ namespace Models.Climate
         private int co2Index;
 
         /// <summary>
+        /// The index of the air pressure column in the weather file
+        /// </summary>
+        private int airPressureIndex;
+
+        /// <summary>
+        /// Default value for wind speed (m/s)
+        /// </summary>
+        private const double defaultWind = 3.0;
+
+        /// <summary>
+        /// Default value for atmospheric CO2 concentration (ppm)
+        /// </summary>
+        private const double defaultCO2 = 350.0;
+
+        /// <summary>
         /// Stores the optional constants file name. This should only be accessed via
         /// <see cref="ConstantsFile"/>, which handles conversion between
         /// relative/absolute paths
@@ -397,6 +412,7 @@ namespace Models.Climate
             vapourPressureIndex = 0;
             windIndex = 0;
             co2Index = 0;
+            airPressureIndex = 0;
 
             if (reader != null)
             {
@@ -534,6 +550,21 @@ namespace Models.Climate
             else
                 readMetData.Radn = reader.ConstantAsDouble("radn");
 
+            if (dayLengthIndex == -1)  // DayLength is not a column - check for a constant
+            {
+                if (reader.Constant("daylength") != null)
+                    readMetData.DayLength = reader.ConstantAsDouble("daylength");
+                else
+                    readMetData.DayLength = -1;
+            }
+            else
+                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
+
+            if (diffuseFractionIndex == -1)
+                readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
+            else
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
+
             if (rainIndex != -1)
                 readMetData.Rain = Convert.ToSingle(readMetData.Raw[rainIndex], CultureInfo.InvariantCulture);
             else
@@ -555,34 +586,31 @@ namespace Models.Climate
                 readMetData.VP = Convert.ToSingle(readMetData.Raw[vapourPressureIndex], CultureInfo.InvariantCulture);
 
             if (windIndex == -1)
-                readMetData.Wind = 3.0;
+                readMetData.Wind = defaultWind;
             else
                 readMetData.Wind = Convert.ToSingle(readMetData.Raw[windIndex], CultureInfo.InvariantCulture);
 
             if (co2Index == -1)
             { // CO2 is not a column - check for a constant
                 if (reader.Constant("co2") != null)
-                    readMetData.DayLength = reader.ConstantAsDouble("co2");
+                    readMetData.CO2 = reader.ConstantAsDouble("co2");
                 else
-                    readMetData.CO2 = 350;
+                    readMetData.CO2 = defaultCO2;
             }
             else
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
-            if (diffuseFractionIndex == -1)
-                readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
-            else
-                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
-
-            if (dayLengthIndex == -1)  // DayLength is not a column - check for a constant
+            if (airPressureIndex >= 0)
             {
-                if (reader.Constant("daylength") != null)
-                    readMetData.DayLength = reader.ConstantAsDouble("daylength");
-                else
-                    readMetData.DayLength = -1;
+                readMetData.AirPressure = Convert.ToDouble(readMetData.Raw[airPressureIndex], CultureInfo.InvariantCulture);
             }
             else
-                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("airpressure") != null)
+                    readMetData.AirPressure = reader.ConstantAsDouble("airpressure");
+                else
+                    readMetData.AirPressure = calculateAirPressure(27.08889); // returns default 1010;
+            }
 
             return readMetData;
         }
@@ -613,14 +641,15 @@ namespace Models.Climate
                     minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Mint");
                     maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Maxt");
                     radiationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Radn");
+                    dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DayLength");
+                    diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DifFr");
                     rainIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Rain");
                     evaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Evap");
                     rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "RainHours");
                     vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "VP");
                     windIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Wind");
-                    diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DifFr");
-                    dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DayLength");
                     co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
+                    airPressureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "AirPressure");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {
