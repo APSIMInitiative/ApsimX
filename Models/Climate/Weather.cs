@@ -102,7 +102,7 @@ namespace Models.Climate
         private int evaporationIndex;
 
         /// <summary>
-        /// The index of the evaporation column in the weather file
+        /// The index of the rainfall duration column in the weather file
         /// </summary>
         private int rainfallHoursIndex;
 
@@ -259,6 +259,41 @@ namespace Models.Climate
         [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
+        /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
+        [Units("MJ/m2")]
+        [JsonIgnore]
+        public double Radn { get; set; }
+
+        /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
+        [Units("MJ/m2")]
+        [JsonIgnore]
+        public double Qmax { get; set; }
+
+        /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
+        [Units("0-1")]
+        [JsonIgnore]
+        public double DiffuseFraction { get; set; }
+
+        /// <summary>Gets or sets the rainfall amount (mm)</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double Rain { get; set; }
+
+        /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PanEvap { get; set; }
+
+        /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
+        [Units("h")]
+        [JsonIgnore]
+        public double RainfallHours { get; set; }
+
+        /// <summary>Gets or sets the air vapour pressure (hPa)/// </summary>
+        [Units("hPa")]
+        [JsonIgnore]
+        public double VP { get; set; }
+
         /// <summary>Gets the daily mean vapour pressure deficit (hPa)</summary>
         [Units("hPa")]
         [JsonIgnore]
@@ -277,74 +312,10 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>Gets the day for the winter solstice (day)</summary>
-        [Units("day")]
-        [JsonIgnore]
-        public int WinterSolsticeDOY
-        {
-            get
-            {
-                if (Latitude <= 0)
-                {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        return 173;
-                    else
-                        return 172;
-                }
-                else
-                {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        return 356;
-                    else
-                        return 355;
-                }
-            }
-        }
-
-        /// <summary>Gets the number of days since the winter solstice</summary>
-        [Units("d")]
-        [JsonIgnore]
-        public int DaysSinceWinterSolstice { get; set; }
-
-        /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
-        [JsonIgnore]
-        public double Qmax { get; set; }
-
-        /// <summary>Gets or sets the rainfall amount (mm)</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double Rain { get; set; }
-
-        /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
-        [JsonIgnore]
-        public double Radn { get; set; }
-
-        /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PanEvap { get; set; }
-
-        /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
-        [Units("h")]
-        [JsonIgnore]
-        public double RainfallHours { get; set; }
-
-        /// <summary>Gets or sets the air vapour pressure (hPa)/// </summary>
-        [Units("hPa")]
-        [JsonIgnore]
-        public double VP { get; set; }
-
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
         [Units("m/s")]
         [JsonIgnore]
         public double Wind { get; set; }
-
-        /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
-        [Units("0-1")]
-        [JsonIgnore]
-        public double DiffuseFraction { get; set; }
 
         /// <summary>Gets or sets the day length, period with light (h)</summary>
         [Units("h")]
@@ -401,7 +372,7 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the long-term average air temperature (oC)</summary>
-        [Units("oC")]
+        [Units("°C")]
         public double Tav
         {
             get
@@ -409,13 +380,14 @@ namespace Models.Climate
                 if (this.reader == null)
                     return 0;
                 else if (this.reader.Constant("tav") == null)
-                    this.CalcTAVAMP();
+                    this.calculateTAVAMP();
 
                 return this.reader.ConstantAsDouble("tav");
             }
         }
 
         /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
+        [Units("°C")]
         public double Amp
         {
             get
@@ -423,11 +395,40 @@ namespace Models.Climate
                 if (this.reader == null)
                     return 0;
                 else if (this.reader.Constant("amp") == null)
-                    this.CalcTAVAMP();
+                    this.calculateTAVAMP();
 
                 return this.reader.ConstantAsDouble("amp");
             }
         }
+
+        /// <summary>Gets the day for the winter solstice (day)</summary>
+        [Units("day")]
+        [JsonIgnore]
+        public int WinterSolsticeDOY
+        {
+            get
+            {
+                if (Latitude <= 0)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 173;
+                    else
+                        return 172;
+                }
+                else
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 356;
+                    else
+                        return 355;
+                }
+            }
+        }
+
+        /// <summary>Gets the number of days since the winter solstice</summary>
+        [Units("d")]
+        [JsonIgnore]
+        public int DaysSinceWinterSolstice { get; set; }
 
         /// <summary>Gets or sets the first date of summer (dd-mmm)</summary>
         [JsonIgnore]
@@ -462,11 +463,13 @@ namespace Models.Climate
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore] public int ActiveTabIndex = 0;
+
         /// <summary>
         /// Temporarily stores the starting date for charts.
         /// Meaningful only within the GUI
         /// </summary>
         [JsonIgnore] public int StartYear = -1;
+
         /// <summary>
         /// Temporarily stores the years to show in charts.
         /// Meaningful only within the GUI
@@ -592,29 +595,7 @@ namespace Models.Climate
             this.reader = null;
         }
 
-        /// <summary>Get the DataTable view of the weather data</summary>
-        /// <returns>The DataTable</returns>
-        public DataTable GetAllData()
-        {
-            this.reader = null;
-
-            if (this.OpenDataFile())
-            {
-                List<string> metProps = new List<string>();
-                metProps.Add("mint");
-                metProps.Add("maxt");
-                metProps.Add("radn");
-                metProps.Add("rain");
-                metProps.Add("wind");
-                metProps.Add("diffr");
-
-                return this.reader.ToTable(metProps);
-            }
-            else
-                return null;
-        }
-
-        /// <summary> Performs the tasks to update the weather data </summary>
+        /// <summary> Performs the tasks to update the weather data</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The arguments of the event</param>
         [EventSubscribe("DoWeather")]
@@ -639,7 +620,6 @@ namespace Models.Climate
 
             if (clock.Today.Date == clock.StartDate.Date)
             {
-                //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year - 1))
@@ -660,13 +640,33 @@ namespace Models.Climate
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
-            //do sanity check on weather
+            // do sanity check on weather
             SensibilityCheck(clock as Clock, this);
         }
 
-        /// <summary>
-        /// Reads the weather data for one day from file
-        /// </summary>
+        /// <summary>Get the DataTable view of the weather data</summary>
+        /// <returns>The DataTable</returns>
+        public DataTable GetAllData()
+        {
+            this.reader = null;
+
+            if (this.OpenDataFile())
+            {
+                List<string> metProps = new List<string>();
+                metProps.Add("mint");
+                metProps.Add("maxt");
+                metProps.Add("radn");
+                metProps.Add("rain");
+                metProps.Add("wind");
+                metProps.Add("diffr");
+
+                return this.reader.ToTable(metProps);
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Reads the weather data for one day from file</summary>
         /// <param name="date">The date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
@@ -721,7 +721,6 @@ namespace Models.Climate
         /// <returns>The weather data structure with values checked</returns>
         private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
         {
-
             if (this.radiationIndex != -1)
                 readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
             else
@@ -932,13 +931,13 @@ namespace Models.Climate
         /// Calculates the values for the constants Tav and Amp for this weather file
         /// and store the values into the reader constants list.
         /// </summary>
-        private void CalcTAVAMP()
+        private void calculateTAVAMP()
         {
             double tav = 0;
             double amp = 0;
 
             // do the calculations
-            this.ProcessMonthlyTAVAMP(out tav, out amp);
+            this.processMonthlyTAVAMP(out tav, out amp);
 
             if (this.reader.Constant("tav") == null)
                 this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
@@ -956,7 +955,7 @@ namespace Models.Climate
         /// </summary>
         /// <param name="tav">The calculated tav value</param>
         /// <param name="amp">The calculated amp value</param>
-        private void ProcessMonthlyTAVAMP(out double tav, out double amp)
+        private void processMonthlyTAVAMP(out double tav, out double amp)
         {
             long savedPosition = reader.GetCurrentPosition();
 

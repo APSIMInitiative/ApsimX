@@ -12,7 +12,7 @@ using System.Linq;
 namespace Models.Climate
 {
     ///<summary>
-    /// Reads in weather data and makes it available to other models.
+    /// Reads in weather data from a met file and makes it available to other models
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -22,20 +22,27 @@ namespace Models.Climate
     public class SimpleWeather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
-        /// A link to the clock model.
+        /// A link to the clock model
         /// </summary>
         [Link]
         private IClock clock = null;
 
         /// <summary>
-        /// A link to the the summary
+        /// A link to the summary (log file)
         /// </summary>
         [Link]
         private ISummary summary = null;
 
         /// <summary>
-        /// A reference to the text file reader object
+        /// Event that will be invoked immediately before the daily weather data is updated
         /// </summary>
+        /// <remarks>
+        /// This provides models and scripts an opportunity to change the weather data before
+        /// other models access them
+        /// </remarks>
+        public event EventHandler PreparingNewWeatherData;
+
+        /// <summary>A reference to the text file reader object</summary>
         [NonSerialized]
         private ApsimTextFile reader = null;
 
@@ -65,17 +72,17 @@ namespace Models.Climate
         private int evaporationIndex;
 
         /// <summary>
-        /// The index of the evaporation column in the weather file
+        /// The index of the rainfall duration column in the weather file
         /// </summary>
         private int rainfallHoursIndex;
 
         /// <summary>
-        /// The index of the vapor pressure column in the weather file
+        /// The index of the vapour pressure column in the weather file
         /// </summary>
         private int vapourPressureIndex;
 
         /// <summary>
-        /// The index of the wind column in the weather file
+        /// The index of the wind speed column in the weather file
         /// </summary>
         private int windIndex;
 
@@ -86,32 +93,26 @@ namespace Models.Climate
         private int co2Index;
 
         /// <summary>
-        /// The index of the DiffuseFraction column in the weather file
+        /// The index of the diffuse radiation fraction column in the weather file
         /// </summary>
-        private int DiffuseFractionIndex;
+        private int diffuseFractionIndex;
 
         /// <summary>
-        /// The index of the DayLength column in the weather file
+        /// The index of the day length column in the weather file
         /// </summary>
         private int dayLengthIndex;
 
         /// <summary>
-        /// This event will be invoked immediately before models get their weather data.
-        /// models and scripts an opportunity to change the weather data before other models
-        /// reads it.
-        /// </summary>
-        public event EventHandler PreparingNewWeatherData;
-
-        /// <summary>
-        /// Optional constants file name. This should only be accessed via
-        /// <see cref="ConstantsFile" />, which handles conversion between
-        /// relative/absolute paths.
+        /// Stores the optional constants file name. This should only be accessed via
+        /// <see cref="ConstantsFile"/>, which handles conversion between
+        /// relative/absolute paths
         /// </summary>
         private string constantsFile;
 
         /// <summary>
-        /// Allows to specify a second file which contains constants such as lat, long,
-        /// tav, amp, etc. Really only used when the actual met data is in a .csv file.
+        /// Gets or sets the optional constants file name. Allows to specify a second file which
+        /// contains constants such as latitude, longitude, tav, amp, etc.; really only used when
+        /// the actual met data is in a .csv file
         /// </summary>
         [Description("Constants file")]
         public string ConstantsFile
@@ -141,14 +142,14 @@ namespace Models.Climate
         }
 
         /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
+        /// Gets or sets the weather file name. Should be relative file path where possible
         /// </summary>
         [Summary]
         [Description("Weather file name")]
         public string _fileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path).
+        /// Gets or sets the full file name (with path). Needed for the user interface
         /// </summary>
         [JsonIgnore]
         public string FileName
@@ -175,19 +176,17 @@ namespace Models.Climate
                 else
                     this._fileName = value;
                 if (this.reader != null)
-                   this.reader.Close();
+                    this.reader.Close();
                 this.reader = null;
             }
         }
 
         /// <summary>
-        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+        /// Gets or sets the WorkSheet name with weather data, if data is supplied as an Excel file
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
 
-        /// <summary>
-        /// Gets the start date of the weather file
-        /// </summary>
+        /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate
         {
             get
@@ -199,9 +198,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the end date of the weather file
-        /// </summary>
+        /// <summary>Gets the end date of the weather file</summary>
         public DateTime EndDate
         {
             get
@@ -213,30 +210,57 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets or sets the maximum temperature (oC)
-        /// </summary>
+        /// <summary>Gets or sets the maximum air temperature (oC)</summary>
         [Units("°C")]
         [JsonIgnore]
         public double MaxT { get; set; }
 
-        /// <summary>
-        /// Gets or sets the minimum temperature (oC)
-        /// </summary>
+        /// <summary>Gets or sets the minimum air temperature (oC)</summary>
         [JsonIgnore]
         [Units("°C")]
         public double MinT { get; set; }
 
-        /// <summary>
-        /// Daily Mean temperature (oC)
-        /// </summary>
+        /// <summary>Daily mean air temperature (oC)</summary>
         [Units("°C")]
         [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
-        /// <summary>
-        /// Daily mean VPD (hPa)
-        /// </summary>
+        /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
+        [Units("MJ/m2")]
+        [JsonIgnore]
+        public double Radn { get; set; }
+
+        /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
+        [Units("MJ/m2")]
+        [JsonIgnore]
+        public double Qmax { get; set; }
+
+        /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
+        [Units("0-1")]
+        [JsonIgnore]
+        public double DiffuseFraction { get; set; }
+
+        /// <summary>Gets or sets the rainfall amount (mm)</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double Rain { get; set; }
+
+        /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PanEvap { get; set; }
+
+        /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
+        [Units("h")]
+        [JsonIgnore]
+        public double RainfallHours { get; set; }
+
+        /// <summary>Gets or sets the air vapour pressure (hPa)/// </summary>
+        [Units("hPa")]
+        [JsonIgnore]
+        public double VP { get; set; }
+
+        /// <summary>Gets the daily mean vapour pressure deficit (hPa)</summary>
         [Units("hPa")]
         [JsonIgnore]
         public double VPD
@@ -254,83 +278,28 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Maximum clear sky radiation (MJ/m2)
-        /// </summary>
-        [Units("MJ/M2")]
-        [JsonIgnore]
-        public double Qmax { get; set; }
-
-        /// <summary>
-        /// Gets or sets the rainfall (mm)
-        /// </summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double Rain { get; set; }
-
-        /// <summary>
-        /// Gets or sets the solar radiation. MJ/m2/day
-        /// </summary>
-        [Units("MJ/m^2/d")]
-        [JsonIgnore]
-        public double Radn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Pan Evaporation (mm) (Class A pan)
-        /// </summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PanEvap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of hours rainfall occured in
-        /// </summary>
-        [JsonIgnore]
-        public double RainfallHours { get; set; }
-
-        /// <summary>
-        /// Gets or sets the vapor pressure (hPa)
-        /// </summary>
-        [Units("hPa")]
-        [JsonIgnore]
-        public double VP { get; set; }
-
-        /// <summary>
-        /// Gets or sets the wind value found in weather file or zero if not specified. (code says 3.0 not zero)
-        /// </summary>
+        /// <summary>Gets or sets the average wind speed (m/s)</summary>
+        [Units("m/s")]
         [JsonIgnore]
         public double Wind { get; set; }
 
-        /// <summary>
-        /// Gets or sets the DF value found in weather file or zero if not specified
-        /// </summary>
-        [Units("0-1")]
-        [JsonIgnore]
-        public double DiffuseFraction { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Daylength value found in weather file or zero if not specified
-        /// </summary>
+        /// <summary>Gets or sets the day length, period with light (h)</summary>
+        [Units("h")]
         [JsonIgnore]
         public double DayLength { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
-        /// </summary>
+        /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
+        [Units("ppm")]
         [JsonIgnore]
         public double CO2 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
-        /// </summary>
+        /// <summary>Gets or sets the mean atmospheric air pressure</summary>
         [Units("hPa")]
         [JsonIgnore]
         public double AirPressure { get; set; }
 
-        /// <summary>
-        /// Gets the latitude
-        /// </summary>
+        /// <summary>Gets the latitude (decimal degrees)</summary>
+        [Units("degrees")]
         public double Latitude
         {
             get
@@ -342,9 +311,8 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the longitude
-        /// </summary>
+        /// <summary>Gets the longitude (decimal degrees)</summary>
+        [Units("degrees")]
         public double Longitude
         {
             get
@@ -356,9 +324,7 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the average temperature
-        /// </summary>
+        /// <summary>Gets the long-term average air temperature (oC)</summary>
         [Units("°C")]
         public double Tav
         {
@@ -370,9 +336,8 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Gets the temperature amplitude.
-        /// </summary>
+        /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
+        [Units("°C")]
         public double Amp
         {
             get
@@ -383,33 +348,33 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>Met Data from yesterday</summary>
+        /// <summary>Met data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get; set; } 
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
 
-        /// <summary>Met Data for Today</summary>
+        /// <summary>Met data for today</summary>
         [JsonIgnore]
         public DailyMetDataFromFile TodaysMetData { get; set; }
 
-        /// <summary>Met Data from yesterday</summary>
+        /// <summary>Met data for tomorrow</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile TomorrowsMetData { get ; set; }
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
-        /// <summary>Return our input filenames</summary>
+        /// <summary>Returns our input file names</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
             return new string[] { FileName };
         }
 
-        /// <summary>Remove all paths from referenced filenames.</summary>
+        /// <summary>Remove all paths from referenced file names</summary>
         public void RemovePathsFromReferencedFileNames()
         {
             _fileName = Path.GetFileName(_fileName);
         }
 
-        /// <summary>
-        /// Gets the duration of the day in hours.
-        /// </summary>
+        /// <summary>Computes the duration of the day, with light (hours)</summary>
+        /// <param name="Twilight">The angle to measure time for twilight (degrees)</param>
+        /// <returns>The length of day light</returns>
         public double CalculateDayLength(double Twilight)
         {
             if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
@@ -418,14 +383,14 @@ namespace Models.Climate
                 return this.DayLength;
         }
 
-        /// <summary> calculate the time of sun rise</summary>
+        /// <summary>Computes the time of sun rise (h)</summary>
         /// <returns>Sun rise time</returns>
         public double CalculateSunRise()
         {
             return 12 - CalculateDayLength(-6) / 2;
         }
 
-        /// <summary> calculate the time of sun set</summary>
+        /// <summary>Computes the time of sun set (h)</summary>
         /// <returns>Sun set time</returns>
         public double CalculateSunSet()
         {
@@ -433,7 +398,7 @@ namespace Models.Climate
         }
 
         /// <summary>
-        /// Check values in weather and return a collection of warnings.
+        /// Check values in weather and return a collection of warnings
         /// </summary>
         public IEnumerable<string> Validate()
         {
@@ -443,9 +408,9 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for initialization.
-        /// </summary>
+        /// <summary>Overrides the base class method to allow for initialization of this model </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -458,7 +423,7 @@ namespace Models.Climate
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.co2Index = -1;
-            this.DiffuseFractionIndex = 0;
+            this.diffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
             if (CO2 == 0)
                 this.CO2 = 350;
@@ -476,30 +441,33 @@ namespace Models.Climate
                 summary.WriteMessage(this, message, MessageType.Warning);
         }
 
-        /// <summary>
-        /// Perform the necessary initialisation at the start of simulation.
-        /// </summary>
+        /// <summary>Overrides the base class method to perform the necessary initialisation</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             bool hasYesterday = true;
-            try {
-               YesterdaysMetData = GetMetData(clock.Today.AddDays(-1));
-            } catch (Exception) {
-               hasYesterday = false;
+            try
+            {
+                YesterdaysMetData = GetMetData(clock.Today.AddDays(-1));
+            }
+            catch (Exception)
+            {
+                hasYesterday = false;
             }
 
             TodaysMetData = GetMetData(clock.Today);
 
-            if (!hasYesterday) 
-               YesterdaysMetData = TodaysMetData;
+            if (!hasYesterday)
+                YesterdaysMetData = TodaysMetData;
 
             TomorrowsMetData = GetMetData(clock.Today.AddDays(1));
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
+        /// <summary>Overrides the base class method to allow for clean up task</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
@@ -508,9 +476,7 @@ namespace Models.Climate
             this.reader = null;
         }
 
-        /// <summary>
-        /// An event handler for the daily DoWeather event.
-        /// </summary>
+        /// <summary> Performs the tasks to update the weather data</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The arguments of the event</param>
         [EventSubscribe("DoWeather")]
@@ -518,11 +484,14 @@ namespace Models.Climate
         {
             YesterdaysMetData = TodaysMetData;
             TodaysMetData = TomorrowsMetData;
-            try {
-               TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
-            } catch (Exception) {
-               // If this fails, we've run out of met data
-               TomorrowsMetData = GetMetData(this.clock.Today);
+            try
+            {
+                TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
+            }
+            catch (Exception)
+            {
+                // If this fails, we've run out of met data
+                TomorrowsMetData = GetMetData(this.clock.Today);
             }
 
             this.Radn = TodaysMetData.Radn;
@@ -543,21 +512,19 @@ namespace Models.Climate
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
-            //do sanity check on weather
+            // do sanity check on weather
             SensibilityCheck(clock as Clock, this);
         }
 
-        /// <summary>
-        /// Method to read one days met data in from file
-        /// </summary>
-        /// <param name="date">the date to read met data</param>
+        /// <summary>Reads the weather data for one day from file</summary>
+        /// <param name="date">The date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
             if (this.reader == null)
                 if (!this.OpenDataFile())
                     throw new ApsimXException(this, "Cannot find weather file '" + this._fileName + "'");
 
-            //get weather for that date
+            // get the weather data for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
             try
             {
@@ -575,9 +542,11 @@ namespace Models.Climate
             return CheckDailyMetData(readMetData);
         }
 
+        /// <summary>Checks the values for weather data, uses either daily values or a constant</summary>
+        /// <param name="readMetData">The weather data structure with values for one line</param>
+        /// <returns>The weather data structure with values checked</returns>
         private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
         {
-
             if (this.radiationIndex != -1)
                 readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
             else
@@ -621,9 +590,9 @@ namespace Models.Climate
             if (co2Index != -1)
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
-            if (this.DiffuseFractionIndex == -1)
+            if (this.diffuseFractionIndex == -1)
             {
-                // Estimate Diffuse Fraction using the Approach of Bristow and Campbell
+                // estimate diffuse fraction using the approach of Bristow and Campbell
                 double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
                 double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
                 double B = Qmax / Q0;
@@ -633,9 +602,9 @@ namespace Models.Climate
                 if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
             }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.diffuseFractionIndex], CultureInfo.InvariantCulture);
 
-            if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
+            if (this.dayLengthIndex == -1)  // DayLength is not a column - check for a constant
             {
                 if (this.reader.Constant("daylength") != null)
                     readMetData.DayLength = this.reader.ConstantAsDouble("daylength");
@@ -648,29 +617,7 @@ namespace Models.Climate
             return readMetData;
         }
 
-        /// <summary>
-        /// An event handler for the start of day event.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// An event handler for the end of day event.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("EndOfDay")]
-        private void OnEndOfDay(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// Open the weather data file.
-        /// </summary>
+        /// <summary>Opens the weather data file</summary>
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
@@ -701,7 +648,7 @@ namespace Models.Climate
                     this.rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "RainHours");
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
-                    this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
+                    this.diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
                     co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
@@ -744,10 +691,8 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>
-        /// Read a user-defined value from today's weather data.
-        /// </summary>
-        /// <param name="columnName">Name of the column.</param>
+        /// <summary>Read a user-defined variable from today's weather data</summary>
+        /// <param name="columnName">Name of the column/variable to retrieve</param>
         public double GetValue(string columnName)
         {
             int columnIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, columnName);
@@ -756,39 +701,38 @@ namespace Models.Climate
             return Convert.ToDouble(TodaysMetData.Raw[columnIndex], CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Does a santiy check on this weather data to check that temperatures,
-        /// VP, radition and rain are potentially valid numbers.
-        /// Also checks that every day has weather.
-        /// </summary>
+        /// <summary>Checks the weather data to ensure values are valid/sensible</summary>
+        /// <remarks>
+        /// This will send an error message if:
+        ///  - MinT is less than MaxT
+        ///  - Radn is greater than 0.0 or greater than 40.0
+        ///  - Rain is less than 0.0
+        ///  - VP is less or equal to 0.0
+        /// Also checks that every day has weather
+        /// </remarks>
         /// <param name="clock">The clock</param>
         /// <param name="weatherToday">The weather</param>
         private void SensibilityCheck(Clock clock, SimpleWeather weatherToday)
         {
-            //things to check:
-            //Mint > MaxtT
-            //VP(if present) <= 0
-            //Radn < 0 or Radn > 40
-            //Rain < 0
             if (weatherToday.MinT > weatherToday.MaxT)
             {
-                throw new Exception( "Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")");
             }
             if (weatherToday.VP <= 0)
             {
-                throw new Exception( "Error: Weather on " + clock.Today.ToString() + " has Vapor Pressure (" + weatherToday.VP + ") which is below 0");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has vapour pressure (" + weatherToday.VP + ") which is below 0");
             }
-            if (weatherToday.Radn <= 0)
+            if (weatherToday.Radn < 0)
             {
-                throw new Exception( "Error: Weather on " + clock.Today.ToString() + " has negative solar raditation (" + weatherToday.Radn + ")");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative solar radiation (" + weatherToday.Radn + ")");
             }
             if (weatherToday.Radn > 40)
             {
-                throw new Exception( "Error: Weather on " + clock.Today.ToString() + " has solar radiation (" + weatherToday.Radn + ") which is above 40");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has solar radiation (" + weatherToday.Radn + ") which is above 40");
             }
             if (weatherToday.Rain < 0)
             {
-                throw new Exception( "Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
             }
         }
     }
