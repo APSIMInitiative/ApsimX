@@ -37,7 +37,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (TreeType == "Ever green")
                     return false;
-                if (TreeType == "Decidious")
+                if (TreeType == "Deciduous")
                     return true;
                 throw new Exception("Invalid tree type specified");
             }
@@ -260,8 +260,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
 
-
-       
+        /// <summary>Total daily solar radiation available per tree/// </summary>
+        [Units("MJ per m tree")]
+        public double TotalSolarRadiation { get; set; }
+               
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -471,11 +473,10 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("Strum tree instance must be in a zone named Row");
             if (hasAlleyZone == false)
                 throw new Exception("No Alley zone in simulation.  Add Alley zone or set Alley width to zero");
-            object ZoneLength = 100;
             simulation.Set("[Row].Width", (object)RowZoneWidth);
-            simulation.Set("[Row].Length", ZoneLength);
+            simulation.Set("[Row].Length", (object)InterRowSpacing);
             simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
-            simulation.Set("[Alley].Length", ZoneLength);
+            simulation.Set("[Alley].Length", (object)InterRowSpacing);
         }
         
         [EventSubscribe("StartOfSimulation")]
