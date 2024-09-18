@@ -285,7 +285,7 @@ namespace Models.Climate
         [JsonIgnore]
         public double AirPressure { get; set; }
 
-        /// <summary>Gets the latitude (decimal degrees)</summary>
+        /// <summary>Gets or sets the latitude (decimal degrees)</summary>
         [Units("degrees")]
         public double Latitude
         {
@@ -296,9 +296,14 @@ namespace Models.Climate
 
                 return reader.ConstantAsDouble("Latitude");
             }
+            set
+            {
+                if (this.reader != null)
+                    reader.Constant("Latitude").Value = value.ToString();
+            }
         }
 
-        /// <summary>Gets the longitude (decimal degrees)</summary>
+        /// <summary>Gets or sets the longitude (decimal degrees)</summary>
         [Units("degrees")]
         public double Longitude
         {
@@ -308,6 +313,11 @@ namespace Models.Climate
                     return 0;
                 else
                     return reader.ConstantAsDouble("Longitude");
+            }
+            set
+            {
+                if (reader != null)
+                    reader.Constant("Longitude").Value = value.ToString();
             }
         }
 
