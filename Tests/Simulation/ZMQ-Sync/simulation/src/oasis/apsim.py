@@ -13,7 +13,6 @@ Todo:
     * Make the ZMQServer object run as part of its own thread, reading from a
         dedicated queue.
 """
-import csv
 import zmq
 import msgpack
 
@@ -146,28 +145,12 @@ class ApsimController:
         if msg != "setup":
             # TODO error handling
             pass
-        
-        # Create all your Fields here.
+         
+    def energize(self):
+        """Begin the simulation
+       
+        This is normally called after all fields are created. 
         """
-        Format (dict[list]): [{
-            "Name": "(str)",
-            "Radius": "(float)",
-            "SW": "(float)",
-            "X": "(float)",
-            "Y": "(float)",
-            "Z": "(float)"
-            }...]
-        """
-        field_configs = read_csv_file(path)
-        [
-            self.fields.append(
-                FieldNode(
-                    server=self.server,
-                    configs=config
-                )
-            ) for config in field_configs
-        ]
-        [print(field) for field in self.fields]
         # Begin the simulation.
         msg = self.send_command("energize", [], unpack=False)
 
@@ -193,20 +176,3 @@ class ApsimController:
         else:
             raise ValueError
         return rc
-
-
-# Function decs.
-## Helpers.
-def read_csv_file(fpath: str) -> list[dict]:
-    data = []
-    print(f"Reading from {fpath}...")
-    with open(fpath, "r+") as csvs:
-        reader = csv.DictReader(csvs)
-        for row in reader:
-            data.append(row)
-    print(f"    DONE")
-    if (not data):
-        print(f"WARNING!! {fpath} is an empty file!")
-    return data
-
-
