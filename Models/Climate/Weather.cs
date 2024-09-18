@@ -77,15 +77,20 @@ namespace Models.Climate
         private LinkedList<WeatherRecordEntry> weatherCache = new LinkedList<WeatherRecordEntry>();
 
         /// <summary>
+        /// The index of the minimum temperature column in the weather file
+        /// </summary>
+        private int minimumTemperatureIndex;
+
+        /// <summary>
         /// The index of the maximum temperature column in the weather file
         /// </summary>
         private int maximumTemperatureIndex;
 
         /// <summary>
-        /// The index of the minimum temperature column in the weather file
+        /// The index of the mean temperature column in the weather file
         /// </summary>
-        private int minimumTemperatureIndex;
-
+        private int meanTemperatureIndex;
+        
         /// <summary>
         /// The index of the solar radiation column in the weather file
         /// </summary>
@@ -519,6 +524,7 @@ namespace Models.Climate
         {
             minimumTemperatureIndex = 0;
             maximumTemperatureIndex = 0;
+            meanTemperatureIndex = 0;
             radiationIndex = 0;
             dayLengthIndex = 0;
             diffuseFractionIndex = 0;
@@ -576,6 +582,7 @@ namespace Models.Climate
             // assign values to output variables
             MinT = TodaysMetData.MinT;
             MaxT = TodaysMetData.MaxT;
+            MeanT = TodaysMetData.MeanT;
             Radn = TodaysMetData.Radn;
             DayLength = TodaysMetData.DayLength;
             DiffuseFraction = TodaysMetData.DiffuseFraction;
@@ -592,7 +599,6 @@ namespace Models.Climate
                 PreparingNewWeatherData.Invoke(this, new EventArgs());
 
             // compute a series of values derived from weather data
-            MeanT = (MaxT + MinT) / 2.0;
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
             VPD = calculateVapourPressureDefict(MinT, MaxT, VP);
             DaysSinceWinterSolstice = calculateDaysSinceSolstice(DaysSinceWinterSolstice);
@@ -701,6 +707,18 @@ namespace Models.Climate
             else
             {
                 readMetData.MaxT = reader.ConstantAsDouble("maxt");
+            }
+
+            if (meanTemperatureIndex >= 0)
+            {
+                readMetData.MeanT = Convert.ToDouble(readMetData.Raw[meanTemperatureIndex], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (reader.Constant("meant") != null)
+                    readMetData.MeanT = reader.ConstantAsDouble("meant");
+                else
+                    readMetData.MeanT = (readMetData.MinT + readMetData.MaxT) / 2.0;
             }
 
             if (radiationIndex >= 0)
@@ -887,6 +905,7 @@ namespace Models.Climate
 
                     minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Mint");
                     maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Maxt");
+                    meanTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Meant");
                     radiationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Radn");
                     dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DayLength");
                     diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DifFr");
