@@ -271,6 +271,11 @@ namespace Models.Climate
         [JsonIgnore]
         public double Qmax { get; set; }
 
+        /// <summary>Gets or sets the day length, period with light (h)</summary>
+        [Units("h")]
+        [JsonIgnore]
+        public double DayLength { get; set; }
+
         /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
         [Units("0-1")]
         [JsonIgnore]
@@ -305,11 +310,6 @@ namespace Models.Climate
         [Units("m/s")]
         [JsonIgnore]
         public double Wind { get; set; }
-
-        /// <summary>Gets or sets the day length, period with light (h)</summary>
-        [Units("h")]
-        [JsonIgnore]
-        public double DayLength { get; set; }
 
         /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
         [Units("ppm")]
@@ -523,14 +523,14 @@ namespace Models.Climate
             minimumTemperatureIndex = 0;
             maximumTemperatureIndex = 0;
             radiationIndex = 0;
+            dayLengthIndex = 0;
+            diffuseFractionIndex = 0;
             rainIndex = 0;
             evaporationIndex = 0;
             rainfallHoursIndex = 0;
             vapourPressureIndex = 0;
             windIndex = 0;
-            co2Index = -1;
-            diffuseFractionIndex = 0;
-            dayLengthIndex = 0;
+            co2Index = 0;
 
             if (reader != null)
             {
@@ -538,7 +538,7 @@ namespace Models.Climate
                 reader = null;
             }
 
-            if (Latitude > 0)
+            if (Latitude > 0.0)
             {
                 // Swap summer and winter dates.
                 var temp = FirstDateOfSummer;
@@ -579,13 +579,13 @@ namespace Models.Climate
             MinT = TodaysMetData.MinT;
             MaxT = TodaysMetData.MaxT;
             Radn = TodaysMetData.Radn;
+            DayLength = TodaysMetData.DayLength;
             DiffuseFraction = TodaysMetData.DiffuseFraction;
             Rain = TodaysMetData.Rain;
             PanEvap = TodaysMetData.PanEvap;
             RainfallHours = TodaysMetData.RainfallHours;
             VP = TodaysMetData.VP;
             Wind = TodaysMetData.Wind;
-            DayLength = TodaysMetData.DayLength;
             CO2 = TodaysMetData.CO2;
             AirPressure = calculateAirPressure(27.08889); // to default 1010;
 
@@ -721,26 +721,22 @@ namespace Models.Climate
                 readMetData.Wind = Convert.ToSingle(readMetData.Raw[windIndex], CultureInfo.InvariantCulture);
 
             if (co2Index == -1)
-                readMetData.CO2 = 350;
+            { // CO2 is not a column - check for a constant
+                if (reader.Constant("co2") != null)
+                    readMetData.DayLength = reader.ConstantAsDouble("co2");
+                else
+                    readMetData.CO2 = 350;
+            }
             else
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
             if (diffuseFractionIndex == -1)
-            {
-                // estimate diffuse fraction using the approach of Bristow and Campbell
-                double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
-                double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
-                double B = Qmax / Q0;
-                double Tt = MathUtilities.Bound(readMetData.Radn / Q0, 0, 1);
-                if (Tt > B) Tt = B;
-                readMetData.DiffuseFraction = (1 - Math.Exp(0.6 * (1 - B / Tt) / (B - 0.4)));
-                if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
-            }
+                readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
             else
                 readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
 
-            if (dayLengthIndex == -1)  // DayLength is not a column - check for a constant
-            {
+            if (dayLengthIndex == -1)
+            { // DayLength is not a column - check for a constant
                 if (reader.Constant("daylength") != null)
                     readMetData.DayLength = reader.ConstantAsDouble("daylength");
                 else
@@ -899,6 +895,23 @@ namespace Models.Climate
         public double CalculateSunSet()
         {
             return 12 + CalculateDayLength(-6) / 2;
+        }
+
+        /// <summary>Estimate diffuse radiation fraction (0-1)</summary>
+        /// <remarks>Uses the approach of Bristow and Campbell (0000)</remarks>
+        /// <returns>The diffuse radiation fraction</returns>
+        private double calculateDiffuseRadiationFraction(double todaysRadiation)
+        {
+            // estimate diffuse fraction using the approach of Bristow and Campbell
+            double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
+            double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
+            double B = Qmax / Q0;
+            double Tt = MathUtilities.Bound(todaysRadiation / Q0, 0, 1);
+            if (Tt > B) Tt = B;
+            double result = (1 - Math.Exp(0.6 * (1 - B / Tt) / (B - 0.4)));
+            if (Tt > 0.5 && result < 0.1)
+                result = 0.1;
+            return result;
         }
 
         /// <summary>Computes today's atmospheric vapour pressure deficit (hPa)</summary>
