@@ -16,6 +16,10 @@ namespace UserInterface.Views
         private const int TAB_PROPERTY = 0;
         private const int TAB_SCRIPT = 1;
 
+        //Used when first loading a script to wait a bit and refresh after the text is loaded.
+        private int DRAW_WAIT = 40;
+        private int drawCounter;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -81,23 +85,25 @@ namespace UserInterface.Views
             //default value for no cursor
             if (cursor.ScrollV.Valid == false)
             {
-                cursor = scriptEditor.Location;
-                notebook.Drawn -= OnDrawn;
+                if (drawCounter < DRAW_WAIT)
+                {
+                    drawCounter += 1;
+                }
+                else
+                {
+                    scriptEditor.Refresh();
+                    cursor = scriptEditor.Location;
+                    notebook.Drawn -= OnDrawn;
+                }
                 return;
             }
 
             if (this.TabIndex == TAB_SCRIPT)
             {
-                if (cursor.ScrollV.Upper == scriptEditor.Location.ScrollV.Upper)
+                if (cursor.ScrollV.Upper == scriptEditor.Location.ScrollV.Upper && cursor.ScrollH.Upper == scriptEditor.Location.ScrollH.Upper)
                 {
                     scriptEditor.Location = cursor;
                     notebook.Drawn -= OnDrawn;
-                    scriptEditor.Show();
-                }
-                else
-                {
-                    if (scriptEditor.Visible == true)
-                        scriptEditor.Hide();
                 }
             }
         }
