@@ -547,22 +547,34 @@ namespace Models.Climate
         /// <returns>The weather data structure with values checked</returns>
         private DailyMetDataFromFile checkDailyMetData(DailyMetDataFromFile readMetData)
         {
-            if (minimumTemperatureIndex != -1)
-                readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
+            if (minimumTemperatureIndex >= 0)
+            {
+                readMetData.MinT = Convert.ToDouble(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 readMetData.MinT = reader.ConstantAsDouble("mint");
+            }
 
-            if (maximumTemperatureIndex != -1)
-                readMetData.MaxT = Convert.ToSingle(readMetData.Raw[maximumTemperatureIndex], CultureInfo.InvariantCulture);
+            if (maximumTemperatureIndex >= 0)
+            {
+                readMetData.MaxT = Convert.ToDouble(readMetData.Raw[maximumTemperatureIndex], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 readMetData.MaxT = reader.ConstantAsDouble("maxt");
+            }
 
-            if (radiationIndex != -1)
-                readMetData.Radn = Convert.ToSingle(readMetData.Raw[radiationIndex], CultureInfo.InvariantCulture);
+            if (radiationIndex >= 0)
+            {
+                readMetData.Radn = Convert.ToDouble(readMetData.Raw[radiationIndex], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 readMetData.Radn = reader.ConstantAsDouble("radn");
+            }
 
-            if (dayLengthIndex == -1)  // DayLength is not a column - check for a constant
+            if (dayLengthIndex == -1)
             {
                 if (reader.Constant("daylength") != null)
                     readMetData.DayLength = reader.ConstantAsDouble("daylength");
@@ -572,45 +584,86 @@ namespace Models.Climate
             else
                 readMetData.DayLength = Convert.ToSingle(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
 
-            if (diffuseFractionIndex == -1)
-                readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
+            if (diffuseFractionIndex >= 0)
+            {
+                readMetData.DiffuseFraction = Convert.ToDouble(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
+            }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("diffr") != null)
+                    readMetData.DiffuseFraction = reader.ConstantAsDouble("diffr");
+                else
+                    readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
+            }
 
-            if (rainIndex != -1)
-                readMetData.Rain = Convert.ToSingle(readMetData.Raw[rainIndex], CultureInfo.InvariantCulture);
+            if (rainIndex >= 0)
+            {
+                readMetData.Rain = Convert.ToDouble(readMetData.Raw[rainIndex], CultureInfo.InvariantCulture);
+            }
             else
+            {
                 readMetData.Rain = reader.ConstantAsDouble("rain");
+            }
 
-            if (panEvaporationIndex == -1)
-                readMetData.PanEvap = double.NaN;
+            if (panEvaporationIndex >= 0)
+            {
+                readMetData.PanEvap = Convert.ToDouble(readMetData.Raw[panEvaporationIndex], CultureInfo.InvariantCulture);
+            }
             else
-                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[panEvaporationIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("evap") != null)
+                    readMetData.PanEvap = reader.ConstantAsDouble("evap");
+                else
+                    readMetData.PanEvap = double.NaN;
+            }
 
-            if (rainfallHoursIndex == -1)
-                readMetData.RainfallHours = double.NaN;
+            if (rainfallHoursIndex >= 0)
+            {
+                readMetData.RainfallHours = Convert.ToDouble(readMetData.Raw[rainfallHoursIndex], CultureInfo.InvariantCulture);
+            }
             else
-                readMetData.RainfallHours = Convert.ToSingle(readMetData.Raw[rainfallHoursIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("rainhours") != null)
+                    readMetData.RainfallHours = reader.ConstantAsDouble("rainhours");
+                else
+                    readMetData.RainfallHours = double.NaN;
+            }
 
-            if (vapourPressureIndex == -1)
-                readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
+            if (vapourPressureIndex >= 0)
+            {
+                readMetData.VP = Convert.ToDouble(readMetData.Raw[vapourPressureIndex], CultureInfo.InvariantCulture);
+            }
             else
-                readMetData.VP = Convert.ToSingle(readMetData.Raw[vapourPressureIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("vp") != null)
+                    readMetData.VP = reader.ConstantAsDouble("vp");
+                else
+                    readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
+            }
 
-            if (windIndex == -1)
-                readMetData.Wind = defaultWind;
+            if (windIndex >= 0)
+            {
+                readMetData.Wind = Convert.ToDouble(readMetData.Raw[windIndex], CultureInfo.InvariantCulture);
+            }
             else
-                readMetData.Wind = Convert.ToSingle(readMetData.Raw[windIndex], CultureInfo.InvariantCulture);
+            {
+                if (reader.Constant("wind") != null)
+                    readMetData.Wind = reader.ConstantAsDouble("wind");
+                else
+                    readMetData.Wind = defaultWind;
+            }
 
-            if (co2Index == -1)
-            { // CO2 is not a column - check for a constant
+            if (co2Index >= 0)
+            {
+                readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
+            }
+            else
+            {
                 if (reader.Constant("co2") != null)
                     readMetData.CO2 = reader.ConstantAsDouble("co2");
                 else
                     readMetData.CO2 = defaultCO2;
             }
-            else
-                readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
             if (airPressureIndex >= 0)
             {
