@@ -712,15 +712,17 @@ namespace Models.Climate
                 readMetData.Radn = reader.ConstantAsDouble("radn");
             }
 
-            if (dayLengthIndex == -1)
+            if (dayLengthIndex >= 0)
+            {
+                readMetData.DayLength = Convert.ToDouble(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
+            }
+            else
             {
                 if (reader.Constant("daylength") != null)
                     readMetData.DayLength = reader.ConstantAsDouble("daylength");
                 else
-                    readMetData.DayLength = -1;
+                    readMetData.DayLength = MathUtilities.DayLength(clock.Today.DayOfYear, defaultTwilight, Latitude);
             }
-            else
-                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
 
             if (diffuseFractionIndex >= 0)
             {
@@ -948,10 +950,14 @@ namespace Models.Climate
         /// <returns>The number of hours of daylight</returns>
         public double CalculateDayLength(double Twilight)
         {
-            if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
+            if (dayLengthIndex == -1 && (reader.Constant("daylength") == null))
+            { // day length was not given as column or set as a constant
                 return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
+            }
             else
+            {
                 return DayLength;
+            }
         }
 
         /// <summary>Computes the time of sun rise (h)</summary>
