@@ -121,23 +121,23 @@ namespace Models.Climate
             {
                 Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(this.constantsFile, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(constantsFile, simulation.FileName);
                 else
                 {
                     Simulations simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(this.constantsFile, simulations.FileName);
+                        return PathUtilities.GetAbsolutePath(constantsFile, simulations.FileName);
                     else
-                        return this.constantsFile;
+                        return constantsFile;
                 }
             }
             set
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    this.constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
-                    this.constantsFile = value;
+                    constantsFile = value;
             }
         }
 
@@ -158,26 +158,26 @@ namespace Models.Climate
             {
                 Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(this._fileName, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(_fileName, simulation.FileName);
                 else
                 {
                     Simulations simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(this._fileName, simulations.FileName);
+                        return PathUtilities.GetAbsolutePath(_fileName, simulations.FileName);
                     else
-                        return this._fileName;
+                        return _fileName;
                 }
             }
             set
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    this._fileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    _fileName = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
-                    this._fileName = value;
-                if (this.reader != null)
-                    this.reader.Close();
-                this.reader = null;
+                    _fileName = value;
+                if (reader != null)
+                    reader.Close();
+                reader = null;
             }
         }
 
@@ -191,10 +191,10 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null && !this.OpenDataFile())
+                if (reader == null && !OpenDataFile())
                     return new DateTime(0);
 
-                return this.reader.FirstDate;
+                return reader.FirstDate;
             }
         }
 
@@ -203,10 +203,10 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null && !this.OpenDataFile())
+                if (reader == null && !OpenDataFile())
                     return new DateTime(0);
 
-                return this.reader.LastDate;
+                return reader.LastDate;
             }
         }
 
@@ -304,10 +304,10 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null && !this.OpenDataFile())
+                if (reader == null && !OpenDataFile())
                     return 0;
 
-                return this.reader.ConstantAsDouble("Latitude");
+                return reader.ConstantAsDouble("Latitude");
             }
         }
 
@@ -317,10 +317,10 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Longitude") == null)
+                if (reader == null || reader.Constant("Longitude") == null)
                     return 0;
                 else
-                    return this.reader.ConstantAsDouble("Longitude");
+                    return reader.ConstantAsDouble("Longitude");
             }
         }
 
@@ -330,9 +330,9 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null)
+                if (reader == null)
                     return 0;
-                return this.reader.ConstantAsDouble("tav");
+                return reader.ConstantAsDouble("tav");
             }
         }
 
@@ -342,9 +342,9 @@ namespace Models.Climate
         {
             get
             {
-                if (this.reader == null)
+                if (reader == null)
                     return 0;
-                return this.reader.ConstantAsDouble("amp");
+                return reader.ConstantAsDouble("amp");
             }
         }
 
@@ -378,9 +378,9 @@ namespace Models.Climate
         public double CalculateDayLength(double Twilight)
         {
             if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
-                return MathUtilities.DayLength(this.clock.Today.DayOfYear, Twilight, this.Latitude);
+                return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
             else
-                return this.DayLength;
+                return DayLength;
         }
 
         /// <summary>Computes the time of sun rise (h)</summary>
@@ -414,23 +414,23 @@ namespace Models.Climate
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            this.maximumTemperatureIndex = 0;
-            this.minimumTemperatureIndex = 0;
-            this.radiationIndex = 0;
-            this.rainIndex = 0;
-            this.evaporationIndex = 0;
-            this.rainfallHoursIndex = 0;
-            this.vapourPressureIndex = 0;
-            this.windIndex = 0;
-            this.co2Index = -1;
-            this.diffuseFractionIndex = 0;
-            this.dayLengthIndex = 0;
+            maximumTemperatureIndex = 0;
+            minimumTemperatureIndex = 0;
+            radiationIndex = 0;
+            rainIndex = 0;
+            evaporationIndex = 0;
+            rainfallHoursIndex = 0;
+            vapourPressureIndex = 0;
+            windIndex = 0;
+            co2Index = -1;
+            diffuseFractionIndex = 0;
+            dayLengthIndex = 0;
             if (CO2 == 0)
-                this.CO2 = 350;
+                CO2 = 350;
             if (AirPressure == 0)
-                this.AirPressure = 1010;
+                AirPressure = 1010;
             if (DiffuseFraction == 0)
-                this.DiffuseFraction = -1;
+                DiffuseFraction = -1;
             if (reader != null)
             {
                 reader.Close();
@@ -471,9 +471,9 @@ namespace Models.Climate
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
-                this.reader.Close();
-            this.reader = null;
+            if (reader != null)
+                reader.Close();
+            reader = null;
         }
 
         /// <summary> Performs the tasks to update the weather data</summary>
@@ -486,29 +486,29 @@ namespace Models.Climate
             TodaysMetData = TomorrowsMetData;
             try
             {
-                TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
+                TomorrowsMetData = GetMetData(clock.Today.AddDays(1));
             }
             catch (Exception)
             {
                 // If this fails, we've run out of met data
-                TomorrowsMetData = GetMetData(this.clock.Today);
+                TomorrowsMetData = GetMetData(clock.Today);
             }
 
-            this.Radn = TodaysMetData.Radn;
-            this.MaxT = TodaysMetData.MaxT;
-            this.MinT = TodaysMetData.MinT;
-            this.Rain = TodaysMetData.Rain;
-            this.PanEvap = TodaysMetData.PanEvap;
-            this.RainfallHours = TodaysMetData.RainfallHours;
-            this.VP = TodaysMetData.VP;
-            this.Wind = TodaysMetData.Wind;
-            this.DiffuseFraction = TodaysMetData.DiffuseFraction;
-            this.DayLength = TodaysMetData.DayLength;
+            Radn = TodaysMetData.Radn;
+            MaxT = TodaysMetData.MaxT;
+            MinT = TodaysMetData.MinT;
+            Rain = TodaysMetData.Rain;
+            PanEvap = TodaysMetData.PanEvap;
+            RainfallHours = TodaysMetData.RainfallHours;
+            VP = TodaysMetData.VP;
+            Wind = TodaysMetData.Wind;
+            DiffuseFraction = TodaysMetData.DiffuseFraction;
+            DayLength = TodaysMetData.DayLength;
             if (co2Index != -1)
                 CO2 = TodaysMetData.CO2;
 
-            if (this.PreparingNewWeatherData != null)
-                this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+            if (PreparingNewWeatherData != null)
+                PreparingNewWeatherData.Invoke(this, new EventArgs());
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
@@ -520,15 +520,15 @@ namespace Models.Climate
         /// <param name="date">The date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
-            if (this.reader == null)
-                if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this._fileName + "'");
+            if (reader == null)
+                if (!OpenDataFile())
+                    throw new ApsimXException(this, "Cannot find weather file '" + _fileName + "'");
 
             // get the weather data for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
             try
             {
-                this.reader.SeekToDate(date);
+                reader.SeekToDate(date);
                 readMetData.Raw = reader.GetNextLineOfData();
             }
             catch (IndexOutOfRangeException err)
@@ -536,8 +536,8 @@ namespace Models.Climate
                 throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {_fileName}", err);
             }
 
-            if (date != this.reader.GetDateFromValues(readMetData.Raw))
-                throw new Exception("Non consecutive dates found in file: " + this._fileName + ".");
+            if (date != reader.GetDateFromValues(readMetData.Raw))
+                throw new Exception("Non consecutive dates found in file: " + _fileName + ".");
 
             return CheckDailyMetData(readMetData);
         }
@@ -547,50 +547,50 @@ namespace Models.Climate
         /// <returns>The weather data structure with values checked</returns>
         private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
         {
-            if (this.radiationIndex != -1)
-                readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
+            if (radiationIndex != -1)
+                readMetData.Radn = Convert.ToSingle(readMetData.Raw[radiationIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.Radn = this.reader.ConstantAsDouble("radn");
+                readMetData.Radn = reader.ConstantAsDouble("radn");
 
-            if (this.maximumTemperatureIndex != -1)
-                readMetData.MaxT = Convert.ToSingle(readMetData.Raw[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
+            if (maximumTemperatureIndex != -1)
+                readMetData.MaxT = Convert.ToSingle(readMetData.Raw[maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.MaxT = this.reader.ConstantAsDouble("maxt");
+                readMetData.MaxT = reader.ConstantAsDouble("maxt");
 
-            if (this.minimumTemperatureIndex != -1)
-                readMetData.MinT = Convert.ToSingle(readMetData.Raw[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
+            if (minimumTemperatureIndex != -1)
+                readMetData.MinT = Convert.ToSingle(readMetData.Raw[minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.MinT = this.reader.ConstantAsDouble("mint");
+                readMetData.MinT = reader.ConstantAsDouble("mint");
 
-            if (this.rainIndex != -1)
-                readMetData.Rain = Convert.ToSingle(readMetData.Raw[this.rainIndex], CultureInfo.InvariantCulture);
+            if (rainIndex != -1)
+                readMetData.Rain = Convert.ToSingle(readMetData.Raw[rainIndex], CultureInfo.InvariantCulture);
             else
-                readMetData.Rain = this.reader.ConstantAsDouble("rain");
+                readMetData.Rain = reader.ConstantAsDouble("rain");
 
-            if (this.evaporationIndex == -1)
+            if (evaporationIndex == -1)
                 readMetData.PanEvap = double.NaN;
             else
-                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[this.evaporationIndex], CultureInfo.InvariantCulture);
+                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[evaporationIndex], CultureInfo.InvariantCulture);
 
-            if (this.rainfallHoursIndex == -1)
+            if (rainfallHoursIndex == -1)
                 readMetData.RainfallHours = double.NaN;
             else
-                readMetData.RainfallHours = Convert.ToSingle(readMetData.Raw[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
+                readMetData.RainfallHours = Convert.ToSingle(readMetData.Raw[rainfallHoursIndex], CultureInfo.InvariantCulture);
 
-            if (this.vapourPressureIndex == -1)
+            if (vapourPressureIndex == -1)
                 readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
             else
-                readMetData.VP = Convert.ToSingle(readMetData.Raw[this.vapourPressureIndex], CultureInfo.InvariantCulture);
+                readMetData.VP = Convert.ToSingle(readMetData.Raw[vapourPressureIndex], CultureInfo.InvariantCulture);
 
-            if (this.windIndex == -1)
+            if (windIndex == -1)
                 readMetData.Wind = 3.0;
             else
-                readMetData.Wind = Convert.ToSingle(readMetData.Raw[this.windIndex], CultureInfo.InvariantCulture);
+                readMetData.Wind = Convert.ToSingle(readMetData.Raw[windIndex], CultureInfo.InvariantCulture);
 
             if (co2Index != -1)
                 readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
-            if (this.diffuseFractionIndex == -1)
+            if (diffuseFractionIndex == -1)
             {
                 // estimate diffuse fraction using the approach of Bristow and Campbell
                 double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
@@ -602,17 +602,17 @@ namespace Models.Climate
                 if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
             }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.diffuseFractionIndex], CultureInfo.InvariantCulture);
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[diffuseFractionIndex], CultureInfo.InvariantCulture);
 
-            if (this.dayLengthIndex == -1)  // DayLength is not a column - check for a constant
+            if (dayLengthIndex == -1)  // DayLength is not a column - check for a constant
             {
-                if (this.reader.Constant("daylength") != null)
-                    readMetData.DayLength = this.reader.ConstantAsDouble("daylength");
+                if (reader.Constant("daylength") != null)
+                    readMetData.DayLength = reader.ConstantAsDouble("daylength");
                 else
                     readMetData.DayLength = -1;
             }
             else
-                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[this.dayLengthIndex], CultureInfo.InvariantCulture);
+                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[dayLengthIndex], CultureInfo.InvariantCulture);
 
             return readMetData;
         }
@@ -621,17 +621,17 @@ namespace Models.Climate
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FileName))
+            if (System.IO.File.Exists(FileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
                     if (ExcelUtilities.IsExcelFile(FileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
                         throw new Exception($"Unable to open excel file {FileName}: no sheet name is specified");
 
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string message = "Cannot find the expected header in ";
                         if (ExcelUtilities.IsExcelFile(FileName))
@@ -640,16 +640,16 @@ namespace Models.Climate
                         throw new Exception(message);
                     }
 
-                    this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
-                    this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
-                    this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
-                    this.rainIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Rain");
-                    this.evaporationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Evap");
-                    this.rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "RainHours");
-                    this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
-                    this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
-                    this.diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
-                    this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+                    maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Maxt");
+                    minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Mint");
+                    radiationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Radn");
+                    rainIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Rain");
+                    evaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Evap");
+                    rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "RainHours");
+                    vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "VP");
+                    windIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Wind");
+                    diffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DifFr");
+                    dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "DayLength");
                     co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
@@ -658,29 +658,29 @@ namespace Models.Climate
                         constantsReader.Open(ConstantsFile);
                         if (constantsReader.Constants != null)
                             foreach (ApsimConstant constant in constantsReader.Constants)
-                                this.reader.AddConstant(constant.Name, constant.Value, constant.Units, constant.Comment);
+                                reader.AddConstant(constant.Name, constant.Value, constant.Units, constant.Comment);
                     }
 
-                    if (this.maximumTemperatureIndex == -1)
-                        if (this.reader == null || this.reader.Constant("maxt") == null)
-                            throw new Exception("Cannot find MaxT in weather file: " + this.FileName);
+                    if (maximumTemperatureIndex == -1)
+                        if (reader == null || reader.Constant("maxt") == null)
+                            throw new Exception("Cannot find MaxT in weather file: " + FileName);
 
-                    if (this.minimumTemperatureIndex == -1)
-                        if (this.reader == null || this.reader.Constant("mint") == null)
-                            throw new Exception("Cannot find MinT in weather file: " + this.FileName);
+                    if (minimumTemperatureIndex == -1)
+                        if (reader == null || reader.Constant("mint") == null)
+                            throw new Exception("Cannot find MinT in weather file: " + FileName);
 
-                    if (this.radiationIndex == -1)
-                        if (this.reader == null || this.reader.Constant("radn") == null)
-                            throw new Exception("Cannot find Radn in weather file: " + this.FileName);
+                    if (radiationIndex == -1)
+                        if (reader == null || reader.Constant("radn") == null)
+                            throw new Exception("Cannot find Radn in weather file: " + FileName);
 
-                    if (this.rainIndex == -1)
-                        if (this.reader == null || this.reader.Constant("rain") == null)
-                            throw new Exception("Cannot find Rain in weather file: " + this.FileName);
+                    if (rainIndex == -1)
+                        if (reader == null || reader.Constant("rain") == null)
+                            throw new Exception("Cannot find Rain in weather file: " + FileName);
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                        reader.SeekToDate(reader.FirstDate);
                 }
 
                 return true;
