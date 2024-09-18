@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oasis"
+description = "OASIS Simulation Client"
+version = "0.0.1"
+authors = [
+  { name="Morgan Masters", email="mwmaster@ucsc.edu" },
+  { name="John Madden", email="jtmadden@ucss.edu" },
+  { name="Jake Lee", email="jlee211@ucsc.edu" },
+]
+dependencies = [
+  "pyzmq",
+  "msgpack",
+  "matplotlib",
+  "numpy",
+]
+requires-python = ">=3.7"
+
+[project.scripts]
+oasis = "oasis.cli:entry"
