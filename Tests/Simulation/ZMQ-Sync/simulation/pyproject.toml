@@ -19,5 +19,10 @@ dependencies = [
 ]
 requires-python = ">=3.7"
 
+[project-optional-dependencies]
+dev = [
+  "ruff",
+]
+
 [project.scripts]
 oasis = "oasis.cli:entry"
