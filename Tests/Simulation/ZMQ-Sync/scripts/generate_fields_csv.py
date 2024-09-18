@@ -74,7 +74,7 @@ def kraww():
     class GristConfigs:
         dim_x: int = 4
         dim_y: int = 4
-        dim_z: int = 4
+        dim_z: int = 1
 
     configs = GristConfigs()
     grist = generate_data(configs)
