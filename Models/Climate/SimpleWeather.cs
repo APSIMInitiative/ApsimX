@@ -210,20 +210,20 @@ namespace Models.Climate
             }
         }
 
-        /// <summary>Gets or sets the maximum air temperature (oC)</summary>
-        [Units("°C")]
-        [JsonIgnore]
-        public double MaxT { get; set; }
-
-        /// <summary>Gets or sets the minimum air temperature (oC)</summary>
+        /// <summary>Gets or sets the daily minimum air temperature (oC)</summary>
         [JsonIgnore]
         [Units("°C")]
         public double MinT { get; set; }
 
-        /// <summary>Daily mean air temperature (oC)</summary>
+        /// <summary>Gets or sets the daily maximum air temperature (oC)</summary>
         [Units("°C")]
         [JsonIgnore]
-        public double MeanT { get { return (MaxT + MinT) / 2; } }
+        public double MaxT { get; set; }
+
+        /// <summary>Gets or sets the daily mean air temperature (oC)</summary>
+        [Units("°C")]
+        [JsonIgnore]
+        public double MeanT { get; set; }
 
         /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
         [Units("MJ/m2")]
@@ -260,23 +260,10 @@ namespace Models.Climate
         [JsonIgnore]
         public double VP { get; set; }
 
-        /// <summary>Gets the daily mean vapour pressure deficit (hPa)</summary>
+        /// <summary>Gets or sets the daily mean vapour pressure deficit (hPa)</summary>
         [Units("hPa")]
         [JsonIgnore]
-        public double VPD
-        {
-            get
-            {
-                const double SVPfrac = 0.66;
-                double VPDmint = MetUtilities.svp((float)MinT) - VP;
-                VPDmint = Math.Max(VPDmint, 0.0);
-
-                double VPDmaxt = MetUtilities.svp((float)MaxT) - VP;
-                VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-                return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
-            }
-        }
+        public double VPD { get; set; }
 
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
         [Units("m/s")]
@@ -372,31 +359,6 @@ namespace Models.Climate
             _fileName = Path.GetFileName(_fileName);
         }
 
-        /// <summary>Computes the duration of the day, with light (hours)</summary>
-        /// <param name="Twilight">The angle to measure time for twilight (degrees)</param>
-        /// <returns>The length of day light</returns>
-        public double CalculateDayLength(double Twilight)
-        {
-            if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
-                return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
-            else
-                return DayLength;
-        }
-
-        /// <summary>Computes the time of sun rise (h)</summary>
-        /// <returns>Sun rise time</returns>
-        public double CalculateSunRise()
-        {
-            return 12 - CalculateDayLength(-6) / 2;
-        }
-
-        /// <summary>Computes the time of sun set (h)</summary>
-        /// <returns>Sun set time</returns>
-        public double CalculateSunSet()
-        {
-            return 12 + CalculateDayLength(-6) / 2;
-        }
-
         /// <summary>
         /// Check values in weather and return a collection of warnings
         /// </summary>
@@ -482,6 +444,7 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
+            // read weather data (for yesterday, today, and tomorrow)
             YesterdaysMetData = TodaysMetData;
             TodaysMetData = TomorrowsMetData;
             try
@@ -490,10 +453,11 @@ namespace Models.Climate
             }
             catch (Exception)
             {
-                // If this fails, we've run out of met data
+                // if this fails, we've run out of met data
                 TomorrowsMetData = GetMetData(clock.Today);
             }
 
+            // assign values to output variables
             Radn = TodaysMetData.Radn;
             MaxT = TodaysMetData.MaxT;
             MinT = TodaysMetData.MinT;
@@ -507,9 +471,12 @@ namespace Models.Climate
             if (co2Index != -1)
                 CO2 = TodaysMetData.CO2;
 
+            // invoke event that allows other models to modify weather data
             if (PreparingNewWeatherData != null)
                 PreparingNewWeatherData.Invoke(this, new EventArgs());
 
+            // compute a series of values derived from weather data
+            MeanT = (MaxT + MinT) / 2.0;
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
             // do sanity check on weather
@@ -689,6 +656,58 @@ namespace Models.Climate
             {
                 return false;
             }
+        }
+
+        /// <summary>Closes the data file</summary>
+        public void CloseDataFile()
+        {
+            if (reader != null)
+                reader.Close();
+            reader = null;
+        }
+
+        /// <summary>Computes the duration of the day, with light (hours)</summary>
+        /// <param name="Twilight">The angle to measure time for twilight (degrees)</param>
+        /// <returns>The length of day light</returns>
+        public double CalculateDayLength(double Twilight)
+        {
+            if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
+                return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
+            else
+                return DayLength;
+        }
+
+        /// <summary>Computes the time of sun rise (h)</summary>
+        /// <returns>Sun rise time</returns>
+        public double CalculateSunRise()
+        {
+            return 12 - CalculateDayLength(-6) / 2;
+        }
+
+        /// <summary>Computes the time of sun set (h)</summary>
+        /// <returns>Sun set time</returns>
+        public double CalculateSunSet()
+        {
+            return 12 + CalculateDayLength(-6) / 2;
+        }
+
+        /// <summary>Computes today's atmospheric vapour pressure deficit (hPa)</summary>
+        /// <param name="minTemp">Today's minimum temperature (oC)</param>
+        /// <param name="maxTemp">Today's maximum temperature (oC)</param>
+        /// <param name="vapourPressure">Today's vapour pressure (hPa)</param>
+        /// <returns>The vapour pressure deficit (hPa)</returns>
+        private double calculateVapourPressureDefict(double minTemp, double maxTemp, double vapourPressure)
+        {
+            const double SVPfrac = 0.66;
+            double result;
+            double VPDmint = MetUtilities.svp(minTemp) - vapourPressure;
+            VPDmint = Math.Max(VPDmint, 0.0);
+
+            double VPDmaxt = MetUtilities.svp(MaxT) - vapourPressure;
+            VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+            result = SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
+            return result;
         }
 
         /// <summary>Read a user-defined variable from today's weather data</summary>
