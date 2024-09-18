@@ -274,7 +274,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxRootDepth","[STRUM].Root.MaximumRootDepth.FixedValue = "},
             {"Proot","[STRUM].Root.DMDemands.Structural.PartitionFraction.FixedValue = " },
             {"Pleaf","[STRUM].Leaf.DMDemands.Structural.PartitionFraction.FixedValue = " },
-            {"Ptrunk","[STRUM].Trunk.DMDemands.Structural.PartitionFraction.FixedValue = " },
+            {"Ptrunk","[STRUM].Trunk.DMDemands.Structural.Available.PartitionFraction.FixedValue = " },
             {"MaxPrunedHeight","[STRUM].MaxPrunedHeight.FixedValue = " },
             {"CanopyBaseHeight","[STRUM].Height.CanopyBaseHeight.Maximum.FixedValue = " },
             {"MaxSeasonalHeight","[STRUM].Height.SeasonalGrowth.Maximum.FixedValue = " },
@@ -298,6 +298,7 @@ namespace Models.PMF.SimplePlantModels
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.Structural.FixedValue = "},
             {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
             {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
+            {"TrunkWtAtMaturity","[STRUM].Trunk.MatureWt.FixedValue = " },
             {"YearsToMaxRD","[STRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
@@ -429,6 +430,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
+            treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 100).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += (Number/InterRowSpacing).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
