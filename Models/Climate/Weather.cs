@@ -590,23 +590,23 @@ namespace Models.Climate
             if (PreparingNewWeatherData != null)
                 PreparingNewWeatherData.Invoke(this, new EventArgs());
 
+            // do basic sanity checks on weather data
+            sensibilityCheck(clock as Clock, this);
+
             // check whether some variables need to be set with 'default' values (functions)
             if (MeanT == double.NaN)
                 MeanT = (MinT + MaxT) / 2.0;
             if (DiffuseFraction == double.NaN)
                 DiffuseFraction = calculateDiffuseRadiationFraction(Radn);
             if (VP == double.NaN)
-                VP = Math.Max(0, MetUtilities.svp(MinT));
+                VP = Math.Max(0.0, MetUtilities.svp(MinT));
             if (AirPressure == double.NaN)
                 AirPressure = calculateAirPressure(27.08889); // returns default 1010;
 
-            // compute a series of values derived from weather data
+            // compute additional outputs derived from weather data
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
             VPD = calculateVapourPressureDefict(MinT, MaxT, VP);
             DaysSinceWinterSolstice = calculateDaysSinceSolstice(DaysSinceWinterSolstice);
-
-            // do sanity check on weather
-            SensibilityCheck(clock as Clock, this);
         }
 
         /// <summary>Get the DataTable view of the weather data</summary>
@@ -1232,7 +1232,7 @@ namespace Models.Climate
         /// </remarks>
         /// <param name="clock">The clock</param>
         /// <param name="weatherToday">The weather</param>
-        private void SensibilityCheck(Clock clock, Weather weatherToday)
+        private void sensibilityCheck(Clock clock, Weather weatherToday)
         {
             if (weatherToday.MinT > weatherToday.MaxT)
             {
@@ -1250,7 +1250,7 @@ namespace Models.Climate
             {
                 summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative rainfall (" + weatherToday.Radn + ")", MessageType.Warning);
             }
-            if (weatherToday.VP <= 0)
+            if (weatherToday.VP != double.NaN && weatherToday.VP <= 0)
             {
                 summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has vapour pressure (" + weatherToday.VP + ") which is below 0", MessageType.Warning);
             }
