@@ -157,3 +157,50 @@ def plot_oasis(controller: ApsimController):
     h2ox.set_title(f"Sample Apsim Field Total H2O Volumes")
     plt.tight_layout()
     plt.show()
+   
+def plot_vwc_layer(ts_arr, vwc_arr):
+    """Plots fields as columns with vwc of soil layers as rows"""
+ 
+    shape = vwc_arr.shape
+    vwc_arr = vwc_arr.reshape(shape[0], shape[1]*shape[2], shape[3])
+    
+    fields = vwc_arr.shape[1]
+    layers = vwc_arr.shape[2]
+
+    fig, axs = plt.subplots(layers, fields, figsize=(12, 8))
+    
+    for i in range(fields):
+        axs[0,i].set_title(f"Field{i}")
+        for j in range(layers):
+            if i == 0:
+                axs[j,0].set_ylabel(f"Layer{j}")
+            ax = axs[j,i]
+            ax.plot(ts_arr, vwc_arr[:,i,j])
+            ax.set_title(f"Field ({i},{j})")
+            ax.grid()
+
+    axs[0,0].legend()
+
+    plt.tight_layout()
+    plt.show() 
+    
+def plot_vwc_field_grid(ts_arr, vwc_arr):
+    """Plots the vwc of each field in a grid""" 
+    
+    rows = vwc_arr.shape[1]
+    cols = vwc_arr.shape[2]
+
+    fig, axs = plt.subplots(rows, cols, figsize=(12, 8))
+    
+    for i in range(rows):
+        for j in range(cols):
+            ax = axs[i,j]
+            ax.plot(ts_arr, vwc_arr[:,i,j,:])
+            ax.set_title(f"Field ({i},{j})")
+            ax.grid()
+
+    axs[0,0].legend()
+
+    plt.tight_layout()
+    plt.show()
+    

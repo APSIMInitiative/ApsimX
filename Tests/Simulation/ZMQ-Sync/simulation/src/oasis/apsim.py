@@ -19,6 +19,12 @@ import msgpack
 class ZMQServer(object):
     """Object for interacting with the OASIS 0MQ server.
     
+    Implements a response loop to control the simulation and transfer data. The
+    sequence of commands in the format (server -> client) are as follows:
+        connect     -> ok
+        paused      -> resume/get/set/do
+        finished    -> ok
+    
     Attributes:
         context (:obj: `zmq.Context`)
         info (:obj: `dict`): { address: str, port: str } 

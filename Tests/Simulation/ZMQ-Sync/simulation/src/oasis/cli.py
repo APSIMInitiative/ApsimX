@@ -5,69 +5,10 @@ from dataclasses import dataclass
 import os
 
 from .apsim import ApsimController
-from .plots import plot_oasis
+from .simulation import Simulation
+from .plots import plot_oasis, plot_vwc_layer, plot_vwc_field_grid
 from .config import generate_csv_from_grist, generate_data
 
-# iteration that rain happens on
-RAIN_DAY = 90
-rain_day_ts = 0
-
-## MEAT.
-def poll_zmq(controller : ApsimController) -> tuple:
-    """Runs the simulation and obtains simulated data
-
-    Implements a response loop to control the simulation and transfer data. The
-    sequence of commands in the format (server -> client) are as follows:
-        connect     -> ok
-        paused      -> resume/get/set/do
-        finished    -> ok
-
-    Args:
-        controller: Reference to apsim controller
-
-    Returns:
-        Returns a tuple of (timestamp, extractable soil water (mm), rain)
-    """
-
-    ts_arr = []
-    esw1_arr = []
-    esw2_arr = []
-    rain_arr = []
-
-    counter = 0
-    
-    running = True
-
-    while (running):
-        ts = controller.send_command("get", ["[Clock].Today"])
-        ts_arr.append(ts.to_unix())
-        
-        sw1 = controller.send_command("get", ["sum([Field1].Munden:118087.Water.Volumetric)"])
-        esw1_arr.append(sw1)
-        
-        sw2 = controller.send_command("get", ["sum([Field2].Munden:118087.Water.Volumetric)"])
-        esw2_arr.append(sw2)
-
-        rain = controller.send_command("get", ["[Weather].Rain"])
-        rain_arr.append(rain)
-
-        if counter == RAIN_DAY:
-            print("Applying irrigation")
-            controller.send_command(
-                "do",
-                ["applyIrrigation", "amount", 204200.0, "field", 0],
-                unpack=False
-                )
-            global rain_day_ts
-            rain_day_ts = ts.to_unix()
-
-        # resume simulation until next ReportEvent
-        running = not controller.step()
-
-        # increment counter
-        counter += 1
-
-    return (ts_arr, esw1_arr, esw2_arr, rain_arr)
 
 def client(args):
     """Starts oasis client
@@ -76,14 +17,18 @@ def client(args):
     """
 
     # initialize connection
-    apsim = ApsimController(args.config, addr=args.addr, port=args.port) 
-
-    # TODO(nubby): Integrate polling into ZMQServer object.
-    ts_arr, esw1_arr, esw2_arr, rain_arr = poll_zmq(apsim)
+    apsim = ApsimController(args.config, addr=args.addr, port=args.port)
+    
+    sim = Simulation(apsim, args.config)
+    
+    # add any commands here
+    ts_arr, vwc_arr = sim.run()
     
     # Plot simulation.
     # TODO(nubby): Integrate irrigation with colors.
-    plot_oasis(apsim)
+    #plot_oasis(apsim)
+    plot_vwc_layer(ts_arr, vwc_arr)
+    plot_vwc_field_grid(ts_arr, vwc_arr)
 
 def kraww(args):
     """Procedurally generate a CSV file of APSIM Field configs.

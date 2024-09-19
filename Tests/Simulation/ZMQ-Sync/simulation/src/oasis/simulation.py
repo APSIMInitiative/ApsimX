@@ -94,37 +94,16 @@ class FieldNode:
             "big",
             signed=False
         )
-        
+         
     def vwc(self) -> List[float]:
-        """Get the vwc of each layer in the field
+        """Get the vwc for all soil layers
         
-        Returns: 
-            List of vwc at each layer 
-        """
-       
-        vwc_list = [] 
-    
-        # loop over layers
-        # NOTE: the layers are currently hardcoded as I (jtmadden173) do not know
-        # how to get the available number of layers    
-        for i in range(1, N_LAYERS+1):
-            vwc = self.vwc_layer(i)
-            vwc_list.append(vwc)
-            
-        return vwc_list
-    
-    def vwc_layer(self, layer : int=1) -> float:
-        """Get the vwc of a specific soil layer of the field
-        
-        Args:
-            layer: Soil layer. 1 indexed
-            
         Returns:
-            Decimal vwc format
+            List of floats for each layer
         """
-       
+        
         # get vwc 
-        sw = self.send_command("get", [f"[{self.name}].{SOIL_PROFILE}.Water.Volumetric({layer})"])
+        sw = self.send_command("get", [f"[{self.name}].{SOIL_PROFILE}.Water.Volumetric"])
         return sw
     
     def runoff(self) -> float:
@@ -144,9 +123,10 @@ class FieldNode:
             depth: Depth below surface
             amount: Amount of water to irrigate 
         """
-       
+      
         # get field index 
-        field_idx = self.name.rstrip("Field")
+        field_idx = self.name.strip("Field")
+        field_idx = int(field_idx)
        
         # send irrigate command 
         self.send_command(
@@ -199,14 +179,15 @@ class Simulation:
         shape_x = 0
         shape_y = 0 
         for config in field_configs:
-            shape_x = max(shape_x, config["X"])
-            shape_y = max(shape_y, config["Y"]) 
+            shape_x = max(shape_x, int(config["X"]))
+            shape_y = max(shape_y, int(config["Y"])) 
+     
        
         # create 2d array of fields 
-        fields = np.empty((shape_x, shape_y), dtype=FieldNode)
+        fields = np.empty((shape_x+1, shape_y+1), dtype=FieldNode)
         for config in field_configs:
             field = FieldNode(server=self.apsim, configs=config)
-            fields[config["X"]][config["Y"]] = field 
+            fields[int(config["X"])][int(config["Y"])] = field 
         
         return fields
 
@@ -256,15 +237,18 @@ class Simulation:
             List of vwc at each layer for each field. The shape is formatted as
             (x, y, layer).
         """
+        
+        # get the number of layers
+        layers = len(self.fields[0,0].vwc())
        
         # get the vwc for each field 
-        shape = self.fields.shape       
-        vwc_arr = np.empty_like(self.fields, dtype=list) 
-        for i in shape[0]:
-            for j in shape[1]:
-                vwc_arr[i][j] = self.fields[i][j].vwc()
+        shape = self.fields.shape + (layers,)
+        vwc_arr = np.empty(shape, dtype=float) 
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                vwc_arr[i][j] = np.array(self.fields[i][j].vwc())
                 
-        return np.array(vwc_arr)
+        return vwc_arr
     
     def runoff(self) -> NDArray:
         """Get the runoff for fields"""
@@ -272,8 +256,9 @@ class Simulation:
         # get the vwc for each field 
         shape = self.fields.shape       
         vwc_arr = np.empty_like(self.fields, dtype=float) 
-        for i in shape[0]:
-            for j in shape[1]:
+        
+        for i in range(shape[0]):
+            for j in range(shape[1]):
                 vwc_arr[i][j] = self.fields[i][j].runoff()
                 
         return vwc_arr
@@ -286,6 +271,7 @@ class Simulation:
         """
         
         ts = self.apsim.send_command("get", ["[Clock].Today"])
+        ts = ts.to_datetime()
         return ts
     
     def run(self) -> tuple[NDArray, NDArray]:
@@ -324,12 +310,12 @@ class Simulation:
             # get runoff        
             runoff = self.runoff()
             # loop over each element
-            for i in runoff.shape[0]:
-                for j in runoff.shape[1]:
+            for i in range(runoff.shape[0]):
+                for j in range(runoff.shape[1]):
                     # naive split 4 ways
                     split_runoff = runoff[i][j] / 4
                   
-                    # get valid neighbors 
+                    # get valid neighbors
                     neighbors = [] 
                     # x-axis pos
                     if (i+1 > 0) and (i+1 < runoff.shape[0]):
@@ -350,7 +336,7 @@ class Simulation:
            
             # get vwc of entire field
             vwc = self.vwc()
-            vwc_arr.append(vwc)
+            vwc_arr.append(vwc) 
             
             # step to next date
             running = not self.apsim.step()
@@ -363,6 +349,22 @@ class Simulation:
 # Function decs.
 ## Helpers.
 def read_csv_file(fpath: str) -> list[dict]:
+    """Read configuration file
+
+    Args:
+        fpath: Path to csv file
+
+    Returns:
+        List of dictionaries for each row in the csv. The following is an example:
+        {
+            'Name': 'Field0',
+            'Radius': '0.5',
+            'SW': '1.6726570467430772',
+            'X': '0.0',
+            'Y': '0.0',
+            'Z': '0.0'
+        }
+    """
     data = []
     print(f"Reading from {fpath}...")
     with open(fpath, "r+") as csvs:

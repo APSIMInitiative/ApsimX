@@ -32,7 +32,7 @@ def generate_data(configs: dict) -> list[dict]:
     }
 
     r_default = 0.5 # Acres?
-    spacing_default = 2.0
+    spacing_default = 1
     vol_h2o_min = 0.1
     vol_h2o_max = 2.0
     index = 0
