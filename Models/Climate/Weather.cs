@@ -90,7 +90,7 @@ namespace Models.Climate
         /// The index of the mean temperature column in the weather file
         /// </summary>
         private int meanTemperatureIndex;
-        
+
         /// <summary>
         /// The index of the solar radiation column in the weather file
         /// </summary>
@@ -591,7 +591,7 @@ namespace Models.Climate
                 PreparingNewWeatherData.Invoke(this, new EventArgs());
 
             // do basic sanity checks on weather data
-                sensibilityCheck(clock as Clock, this);
+            sensibilityCheck(clock as Clock, this);
 
             // check whether some variables need to be set with 'default' values (functions)
             if (double.IsNaN(MeanT))

@@ -170,38 +170,35 @@ namespace Models.Climate
         /// </summary>
         [Summary]
         [Description("Weather file name")]
-        public string _fileName { get; set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). Needed for the user interface
         /// </summary>
         [JsonIgnore]
-        public string FileName
+        public string FullFileName
         {
             get
             {
                 Simulation simulation = FindAncestor<Simulation>();
-                if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(_fileName, simulation.FileName);
+                if (simulation != null && simulation.FileName != null)
+                    return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                 else
                 {
                     Simulations simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(_fileName, simulations.FileName);
+                        return PathUtilities.GetAbsolutePath(FileName, simulations.FileName);
                     else
-                        return _fileName;
+                        return PathUtilities.GetAbsolutePath(FileName, "");
                 }
             }
             set
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    _fileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
-                    _fileName = value;
-                if (reader != null)
-                    reader.Close();
-                reader = null;
+                    FileName = value;
             }
         }
 
@@ -322,8 +319,10 @@ namespace Models.Climate
             }
             set
             {
-                if (this.reader != null)
+                if (reader != null)
+                {
                     reader.Constant("Latitude").Value = value.ToString();
+                }
             }
         }
 
@@ -384,13 +383,13 @@ namespace Models.Climate
         /// <summary>Returns our input file names</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return new string[] { FullFileName };
         }
 
         /// <summary>Remove all paths from referenced file names</summary>
         public void RemovePathsFromReferencedFileNames()
         {
-            _fileName = Path.GetFileName(_fileName);
+            FileName = Path.GetFileName(FileName);
         }
 
         /// <summary>
@@ -531,7 +530,7 @@ namespace Models.Climate
         {
             if (reader == null)
                 if (!OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + _fileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + FileName + "'");
 
             // get the weather data for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
@@ -542,11 +541,11 @@ namespace Models.Climate
             }
             catch (IndexOutOfRangeException err)
             {
-                throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {_fileName}", err);
+                throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {FileName}", err);
             }
 
             if (date != reader.GetDateFromValues(readMetData.Raw))
-                throw new Exception("Non consecutive dates found in file: " + _fileName + ".");
+                throw new Exception("Non consecutive dates found in file: " + FileName + ".");
 
             return checkDailyMetData(readMetData);
         }
@@ -714,22 +713,26 @@ namespace Models.Climate
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(FileName))
+            if (!System.IO.File.Exists(FullFileName) &&
+                System.IO.Path.GetExtension(FullFileName) == string.Empty)
+                FileName += ".met";
+
+            if (System.IO.File.Exists(FullFileName))
             {
                 if (reader == null)
                 {
-                    if (ExcelUtilities.IsExcelFile(FileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
-                        throw new Exception($"Unable to open excel file {FileName}: no sheet name is specified");
+                    if (ExcelUtilities.IsExcelFile(FullFileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
+                        throw new Exception($"Unable to open excel file {FullFileName}: no sheet name is specified");
 
                     reader = new ApsimTextFile();
-                    reader.Open(FileName, ExcelWorkSheetName);
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
                     if (reader.Headings == null)
                     {
                         string message = "Cannot find the expected header in ";
-                        if (ExcelUtilities.IsExcelFile(FileName))
+                        if (ExcelUtilities.IsExcelFile(FullFileName))
                             message += $"sheet '{ExcelWorkSheetName}' of ";
-                        message += $"weather file: {FileName}";
+                        message += $"weather file: {FullFileName}";
                         throw new Exception(message);
                     }
 
@@ -758,19 +761,19 @@ namespace Models.Climate
 
                     if (minimumTemperatureIndex == -1)
                         if (reader == null || reader.Constant("mint") == null)
-                            throw new Exception("Cannot find MinT in weather file: " + FileName);
+                            throw new Exception("Cannot find MinT in weather file: " + FullFileName);
 
                     if (maximumTemperatureIndex == -1)
                         if (reader == null || reader.Constant("maxt") == null)
-                            throw new Exception("Cannot find MaxT in weather file: " + FileName);
+                            throw new Exception("Cannot find MaxT in weather file: " + FullFileName);
 
                     if (radiationIndex == -1)
                         if (reader == null || reader.Constant("radn") == null)
-                            throw new Exception("Cannot find Radn in weather file: " + FileName);
+                            throw new Exception("Cannot find Radn in weather file: " + FullFileName);
 
                     if (rainIndex == -1)
                         if (reader == null || reader.Constant("rain") == null)
-                            throw new Exception("Cannot find Rain in weather file: " + FileName);
+                            throw new Exception("Cannot find Rain in weather file: " + FullFileName);
                 }
                 else
                 {
@@ -886,7 +889,7 @@ namespace Models.Climate
         {
             int columnIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, columnName);
             if (columnIndex == -1)
-                throw new InvalidOperationException($"Column {columnName} does not exist in {_fileName}");
+                throw new InvalidOperationException($"Column {columnName} does not exist in {FileName}");
             return Convert.ToDouble(TodaysMetData.Raw[columnIndex], CultureInfo.InvariantCulture);
         }
 
