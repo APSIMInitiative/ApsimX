@@ -349,8 +349,11 @@ namespace Models.Climate
             }
             set
             {
-                if (this.reader != null)
+                if (reader != null)
+                {
                     reader.Constant("Latitude").Value = value.ToString();
+                    checkSeasonDates();
+                }
             }
         }
 
@@ -542,18 +545,7 @@ namespace Models.Climate
                 reader = null;
             }
 
-            if (Latitude > 0.0)
-            {
-                // Swap summer and winter dates.
-                var temp = FirstDateOfSummer;
-                FirstDateOfSummer = FirstDateOfWinter;
-                FirstDateOfWinter = temp;
-
-                // Swap spring and autumn dates.
-                temp = FirstDateOfSpring;
-                FirstDateOfSpring = FirstDateOfAutumn;
-                FirstDateOfAutumn = temp;
-            }
+            checkSeasonDates();
 
             foreach (var message in Validate())
                 summary.WriteMessage(this, message, MessageType.Warning);
@@ -962,6 +954,25 @@ namespace Models.Climate
             if (reader != null)
                 reader.Close();
             reader = null;
+        }
+
+        /// <summary>
+        /// Checks whether the dates defining the seasons should be swapped if in the northern hemisphere
+        /// </summary>
+        private void checkSeasonDates()
+        {
+            if (Latitude > 0.0)
+            {
+                // Swap summer and winter dates.
+                var temp = FirstDateOfSummer;
+                FirstDateOfSummer = FirstDateOfWinter;
+                FirstDateOfWinter = temp;
+
+                // Swap spring and autumn dates.
+                temp = FirstDateOfSpring;
+                FirstDateOfSpring = FirstDateOfAutumn;
+                FirstDateOfAutumn = temp;
+            }
         }
 
         /// <summary>Computes the duration of the day, with light (hours)</summary>
