@@ -142,6 +142,21 @@ namespace Models.Climate
         private int airPressureIndex;
 
         /// <summary>
+        /// The index of the potential ET column in the weather file
+        /// </summary>
+        private int potentialEvapotranspirationIndex;
+
+        /// <summary>
+        /// The index of the potential evaporation column in the weather file
+        /// </summary>
+        private int potentialEvaporationIndex;
+
+        /// <summary>
+        /// The index of the actual evaporation column in the weather file
+        /// </summary>
+        private int actualEvaporationIndex;
+
+        /// <summary>
         /// Default value for wind speed (m/s)
         /// </summary>
         private const double defaultWind = 3.0;
@@ -335,6 +350,21 @@ namespace Models.Climate
         [Units("hPa")]
         [JsonIgnore]
         public double AirPressure { get; set; }
+
+        /// <summary>Gets or sets the potential evapotranspiration</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double GivenPotentialEvapotranspiration { get; set; }
+
+        /// <summary>Gets or sets the potential soil evaporation</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double GivenPotentialSoilEvaporation { get; set; }
+
+        /// <summary>Gets or sets the actual soil evaporation</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double GivenActualSoilEvaporation { get; set; }
 
         /// <summary>Gets or sets the latitude (decimal degrees)</summary>
         [Units("degrees")]
@@ -538,6 +568,9 @@ namespace Models.Climate
             windIndex = 0;
             co2Index = 0;
             airPressureIndex = 0;
+            potentialEvapotranspirationIndex = 0;
+            potentialEvaporationIndex = 0;
+            actualEvaporationIndex = 0;
 
             if (reader != null)
             {
@@ -837,6 +870,42 @@ namespace Models.Climate
                     readMetData.AirPressure = double.NaN;
             }
 
+            if (potentialEvapotranspirationIndex >= 0)
+            {
+                readMetData.PotentialEvapotranspiration = Convert.ToDouble(readMetData.Raw[potentialEvapotranspirationIndex], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (reader.Constant("pet") != null)
+                    readMetData.PotentialEvapotranspiration = reader.ConstantAsDouble("pet");
+                else
+                    readMetData.PotentialEvapotranspiration = double.NaN;
+            }
+
+            if (potentialEvaporationIndex >= 0)
+            {
+                readMetData.PotentialSoilEvaporation = Convert.ToDouble(readMetData.Raw[potentialEvaporationIndex], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (reader.Constant("potevap") != null)
+                    readMetData.PotentialSoilEvaporation = reader.ConstantAsDouble("potevap");
+                else
+                    readMetData.PotentialSoilEvaporation = double.NaN;
+            }
+
+            if (actualEvaporationIndex >= 0)
+            {
+                readMetData.ActualSoilEvaporation = Convert.ToDouble(readMetData.Raw[actualEvaporationIndex], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                if (reader.Constant("actualevap") != null)
+                    readMetData.ActualSoilEvaporation = reader.ConstantAsDouble("actualevap");
+                else
+                    readMetData.ActualSoilEvaporation = double.NaN;
+            }
+
             return readMetData;
         }
 
@@ -918,6 +987,9 @@ namespace Models.Climate
                     windIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "Wind");
                     co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
                     airPressureIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "AirPressure");
+                    potentialEvapotranspirationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "PET");
+                    potentialEvaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "PotEvap");
+                    actualEvaporationIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "ActaulEvap");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {

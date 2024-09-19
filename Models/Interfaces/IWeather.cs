@@ -123,6 +123,15 @@ namespace Models.Interfaces
         /// <summary> Gets or sets the atmospheric air pressure (hPa)</summary>
         public double AirPressure { get; set; }
 
+        /// <summary> Gets or sets the potential evapotranspiration (mm)</summary>
+        public double PotentialEvapotranspiration { get; set; }
+
+        /// <summary> Gets or sets the potential evaporation (mm)</summary>
+        public double PotentialSoilEvaporation { get; set; }
+
+        /// <summary> Gets or sets the actual soil evaporation (mm)</summary>
+        public double ActualSoilEvaporation { get; set; }
+
         /// <summary>
         /// Raw data straight from the met file. This can be used to access
         /// non-standard variables which aren't auto-mapped to properties.
