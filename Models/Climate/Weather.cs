@@ -30,7 +30,7 @@ namespace Models.Climate
         /// <summary>
         /// A link to the zone model
         /// </summary>
-        [Link]
+        [Link(IsOptional = true)]
         private Zone zone = null;
 
         /// <summary>
