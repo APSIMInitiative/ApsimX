@@ -127,6 +127,11 @@ namespace Models.Climate
         private const double defaultTwilight = 6.0;
 
         /// <summary>
+        /// Maximum value expected for mean long-term temperature amplitude (oC)
+        /// </summary>
+        private const double maximumAMP = 25.0;
+
+        /// <summary>
         /// Stores the optional constants file name. This should only be accessed via
         /// <see cref="ConstantsFile"/>, which handles conversion between
         /// relative/absolute paths
@@ -397,9 +402,9 @@ namespace Models.Climate
         /// </summary>
         public IEnumerable<string> Validate()
         {
-            if (Amp > 20)
+            if (Amp > maximumAMP)
             {
-                yield return $"The value of Weather.AMP ({Amp}) is > 20 oC. Please check the value.";
+                yield return $"The value of Weather.AMP ({Amp}) is > {maximumAMP} oC. Please check the value.";
             }
         }
 
@@ -554,7 +559,7 @@ namespace Models.Climate
         /// <remarks>
         /// For each variable handled by Weather, this method will firstly check whether there is a column 
         /// with daily data in the met file (i.e. there is an index equal or greater than zero), if not, it
-        /// will check whether a constant value was given (a single value in the met file, like latitude or
+        /// will check whether a constant value was given (a single value in the met file, like Latitude or
         /// TAV). If that fails, either a default value is supplied or 'null' is returned (which results in
         /// an exception being thrown later on)
         /// </remarks>
@@ -896,8 +901,8 @@ namespace Models.Climate
         /// <summary>Checks the weather data to ensure values are valid/sensible</summary>
         /// <remarks>
         /// This will send an error message if:
-        ///  - MinT is less than MaxT
-        ///  - Radn is greater than 0.0 or greater than 40.0
+        ///  - MinT is greater than MaxT
+        ///  - Radn is less than 0.0 or greater than 40.0
         ///  - Rain is less than 0.0
         ///  - VP is less or equal to 0.0
         /// Also checks that every day has weather
@@ -920,7 +925,7 @@ namespace Models.Climate
             }
             if (weatherToday.Rain < 0)
             {
-                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative rainfall (" + weatherToday.Radn + ")");
             }
             if (!double.IsNaN(weatherToday.VP) && weatherToday.VP <= 0)
             {
