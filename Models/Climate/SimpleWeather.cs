@@ -511,13 +511,13 @@ namespace Models.Climate
             sensibilityCheck(clock as Clock, this);
 
             // check whether some variables need to be set with 'default' values (functions)
-            if (MeanT == double.NaN)
+            if (double.IsNaN(MeanT))
                 MeanT = (MinT + MaxT) / 2.0;
-            if (DiffuseFraction == double.NaN)
+            if (double.IsNaN(DiffuseFraction))
                 DiffuseFraction = calculateDiffuseRadiationFraction(Radn);
-            if (VP == double.NaN)
-                VP = Math.Max(0, MetUtilities.svp(MinT));
-            if (AirPressure == double.NaN)
+            if (double.IsNaN(VP))
+                VP = Math.Max(0.0, MetUtilities.svp(MinT));
+            if (double.IsNaN(AirPressure))
                 AirPressure = calculateAirPressure(27.08889); // returns default 1010;
 
             // compute additional outputs derived from weather data
@@ -919,7 +919,7 @@ namespace Models.Climate
             {
                 throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
             }
-            if (weatherToday.VP != double.NaN && weatherToday.VP <= 0)
+            if (!double.IsNaN(weatherToday.VP) && weatherToday.VP <= 0)
             {
                 throw new Exception("Error: Weather on " + clock.Today.ToString() + " has vapour pressure (" + weatherToday.VP + ") which is below 0");
             }
