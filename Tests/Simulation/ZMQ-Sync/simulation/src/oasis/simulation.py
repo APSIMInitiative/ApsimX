@@ -1,10 +1,16 @@
 from typing import List
+from collections.abc import Callable
 from numpy.typing import NDArray
 
 import csv
 import numpy as np
+from datetime import datetime
 
 from .apsim import ApsimController
+
+# hardcoded values until we find a better way
+N_LAYERS = 10
+SOIL_PROFILE = "Munden:118087"
 
 class FieldNode:
     """A single Field, corresponding to a node in the OASIS sim.
@@ -90,12 +96,64 @@ class FieldNode:
         )
         
     def vwc(self) -> List[float]:
-        """Get the vwc of each layer in the field"""
-        pass
+        """Get the vwc of each layer in the field
+        
+        Returns: 
+            List of vwc at each layer 
+        """
+       
+        vwc_list = [] 
     
-    def vwc_layer(self, layer : int=0) -> float:
-        """Get the vwc of a specific soil layer of hte field"""
-        pass
+        # loop over layers
+        # NOTE: the layers are currently hardcoded as I (jtmadden173) do not know
+        # how to get the available number of layers    
+        for i in range(1, N_LAYERS+1):
+            vwc = self.vwc_layer(i)
+            vwc_list.append(vwc)
+            
+        return vwc_list
+    
+    def vwc_layer(self, layer : int=1) -> float:
+        """Get the vwc of a specific soil layer of the field
+        
+        Args:
+            layer: Soil layer. 1 indexed
+            
+        Returns:
+            Decimal vwc format
+        """
+       
+        # get vwc 
+        sw = self.send_command("get", [f"[{self.name}].{SOIL_PROFILE}.Water.Volumetric({layer})"])
+        return sw
+    
+    def runoff(self) -> float:
+        """Water runoff from field
+        
+        Returns:
+            Soil water runoff 
+        """
+        
+        runoff = self.send_command("get", [f"[{self.name}].{SOIL_PROFILE}.SoilWater.Runoff"])
+        return runoff
+    
+    def irrigate(self, depth : float, amount : float):
+        """Irrigate field at depth with amount
+        
+        Args:
+            depth: Depth below surface
+            amount: Amount of water to irrigate 
+        """
+       
+        # get field index 
+        field_idx = self.name.rstrip("Field")
+       
+        # send irrigate command 
+        self.send_command(
+            "do",
+            ["applyIrrigation", "amount", amount, "field", field_idx],
+            unpack=False
+            )
 
 class Simulation:
     """Simulation class that preforms actions on fields"""
@@ -108,12 +166,11 @@ class Simulation:
         """
         
         self.apsim = apsim
+        self.action_list = {}
        
         # create fields 
         self.fields = self.create_fields(config)
        
-        # start simulation 
-        self.apsim.energize()
     
     def create_fields(self, config : str) -> NDArray:
         """Create new fields on the server given a config
@@ -153,19 +210,30 @@ class Simulation:
         
         return fields
 
-    def irrigate_idx(self, idx : int, amount : float) -> FieldNode:
-        """Irrigate a field based on its index
-       
+    def add_action(self, date : datetime, action : Callable, args : List) -> FieldNode:
+        """Adds an action to take on a specific date
+     
+        Supported methods are:
+            irrigate 
+      
         Args:
-            idx: Field index
-            amount: Amount of irrigation
+            date: Date of the event
+            action: Action to perform
+            args: List of arguments of the action
             
-        Returns:
-            Object that was irrigated
+        Raises:
+            NotImplementedError: When action does not refer to an implemented action
         """
-        pass
+        
+        if action in dir(self):
+            if date in self.action_list:
+                self.action_list[date].append([getattr(self, action), args])
+            else:
+                self.action_list[date] = [[getattr(self, action), args]]
+        else:
+            raise NotImplementedError(f"Action {action} is not implemented")
 
-    def irrigate_loc(self, x, y, depth : float, amount : float) -> FieldNode:
+    def irrigate(self, x, y, depth : float, amount : float) -> FieldNode:
         """Irrigate a field based on its location and soil depth
        
         Args:
@@ -177,16 +245,120 @@ class Simulation:
         Returns:
             Object that was irrigated
         """
-        pass
+        field = self.fields[x][y]
+        field.irrigate(depth, amount)
+        return field
 
-    def vwc(self):
-        """Get the volumetric water content of all fields"""
-        pass
+    def vwc(self) -> NDArray:
+        """Get the volumetric water content of all fields
+        
+        Returns:
+            List of vwc at each layer for each field. The shape is formatted as
+            (x, y, layer).
+        """
+       
+        # get the vwc for each field 
+        shape = self.fields.shape       
+        vwc_arr = np.empty_like(self.fields, dtype=list) 
+        for i in shape[0]:
+            for j in shape[1]:
+                vwc_arr[i][j] = self.fields[i][j].vwc()
+                
+        return np.array(vwc_arr)
     
-    def runoff(self):
+    def runoff(self) -> NDArray:
         """Get the runoff for fields"""
-        pass
+        
+        # get the vwc for each field 
+        shape = self.fields.shape       
+        vwc_arr = np.empty_like(self.fields, dtype=float) 
+        for i in shape[0]:
+            for j in shape[1]:
+                vwc_arr[i][j] = self.fields[i][j].runoff()
+                
+        return vwc_arr
+             
+    def date(self) -> datetime:
+        """Get the date of the simulation step
+        
+        Returns:
+            Date in datetime format 
+        """
+        
+        ts = self.apsim.send_command("get", ["[Clock].Today"])
+        return ts
     
+    def run(self) -> tuple[NDArray, NDArray]:
+        """Run the simulation and return vwc history
+        
+        Returns:
+            Arrays of dates and vwc in the format (date_arr, vwc_arr). The
+            vwc_arr is a 4-dim array of each fields vwc at each step with vwc at
+            each layer. The shape corresponds to (date, x, y, layer).
+        """
+        
+        # start simulation 
+        self.apsim.energize()
+       
+        # timestamp array 
+        date_arr = []
+        # volumetric water content array
+        vwc_arr = []
+      
+        running = True
+        while (running):
+            # run commands
+            date = self.date()
+            date_arr.append(date)
+
+            # NOTE Order does not matter between the gets and the actions.
+            # Actions are added to a queue that runs on the "DoManagement" event
+            # within Apsim 
+            
+            # call all actions specified on the date 
+            if date in self.action_list:
+                while self.action_list[date]:
+                    action, args = self.action_list[date].pop()
+                    action(*args)
+            
+            # get runoff        
+            runoff = self.runoff()
+            # loop over each element
+            for i in runoff.shape[0]:
+                for j in runoff.shape[1]:
+                    # naive split 4 ways
+                    split_runoff = runoff[i][j] / 4
+                  
+                    # get valid neighbors 
+                    neighbors = [] 
+                    # x-axis pos
+                    if (i+1 > 0) and (i+1 < runoff.shape[0]):
+                        neighbors.append([i+1, j])
+                    # x-axis neg
+                    if (i-1 > 0) and (i-1 < runoff.shape[0]):
+                        neighbors.append([i-1, j])
+                    # y-axis pos
+                    if (j+1 > 0) and (j+1 < runoff.shape[1]):
+                        neighbors.append([i, j+1])
+                    # y-axis neg
+                    if (j-1 > 0) and (j+1 < runoff.shape[1]):
+                        neighbors.append([i, j-1])
+                       
+                    # irrigate neighbors 
+                    for neighbor in neighbors:
+                        self.irrigate(neighbor[0], neighbor[1], 0, split_runoff)
+           
+            # get vwc of entire field
+            vwc = self.vwc()
+            vwc_arr.append(vwc)
+            
+            # step to next date
+            running = not self.apsim.step()
+            
+        date_arr = np.array(date_arr)
+        vwc_arr = np.array(vwc_arr)
+
+        return (date_arr, vwc_arr)
     
 # Function decs.
 ## Helpers.
