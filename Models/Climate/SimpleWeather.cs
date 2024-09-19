@@ -601,7 +601,7 @@ namespace Models.Climate
                 if (reader.Constant("daylength") != null)
                     readMetData.DayLength = reader.ConstantAsDouble("daylength");
                 else
-                    readMetData.DayLength = MathUtilities.DayLength(clock.Today.DayOfYear, defaultTwilight, Latitude);
+                    readMetData.DayLength = -1;
             }
 
             if (diffuseFractionIndex >= 0)
@@ -789,7 +789,7 @@ namespace Models.Climate
         /// <returns>The number of hours of daylight</returns>
         public double CalculateDayLength(double Twilight)
         {
-            if (dayLengthIndex == -1 && (reader.Constant("daylength") == null))
+            if (dayLengthIndex == -1 && DayLength == -1)
             { // day length was not given as column or set as a constant
                 return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
             }
