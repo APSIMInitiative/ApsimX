@@ -871,15 +871,15 @@ namespace Models.Climate
         /// <returns>The air pressure (hPa)</returns>
         private double calculateAirPressure(double localAltitude)
         {
-            const double baseTemperature = 288.15;             // (K)
-            const double basePressure = 101325.0;              // (Pa)
-            const double lapseRate = 0.0065;                   // (K/m)
-            const double gravitationalAcceleration = 9.80665;  // (m/s)
-            const double molarMassOfAir = 0.0289644;           // (kg/mol)
-            const double universalGasConstant = 8.3144598;     // (J/mol/K)
+            const double standardAtmosphericTemperature = 288.15;      // (K)
+            const double standardAtmosphericPressure = 101325.0;       // (Pa)
+            const double StandardTemperatureLapseRate = 0.0065;        // (K/m)
+            const double standardGravitationalAcceleration = 9.80665;  // (m/s)
+            const double standardAtmosphericMolarMass = 0.0289644;     // (kg/mol)
+            const double universalGasConstant = 8.3144598;             // (J/mol/K)
             double result;
-            result = basePressure * Math.Pow(1.0 - localAltitude * lapseRate / baseTemperature,
-                     gravitationalAcceleration * molarMassOfAir / (universalGasConstant * lapseRate));
+            result = standardAtmosphericPressure * Math.Pow(1.0 - localAltitude * StandardTemperatureLapseRate / standardAtmosphericTemperature,
+                     standardGravitationalAcceleration * standardAtmosphericMolarMass / (universalGasConstant * StandardTemperatureLapseRate));
             return result / 100.0;  // to hPa
         }
 
