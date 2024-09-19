@@ -28,6 +28,12 @@ namespace Models.Climate
         private IClock clock = null;
 
         /// <summary>
+        /// A link to the zone model
+        /// </summary>
+        [Link]
+        private Zone zone = null;
+
+        /// <summary>
         /// A link to the summary (log file)
         /// </summary>
         [Link]
@@ -634,7 +640,7 @@ namespace Models.Climate
             if (double.IsNaN(VP))
                 VP = Math.Max(0.0, MetUtilities.svp(MinT));
             if (double.IsNaN(AirPressure))
-                AirPressure = calculateAirPressure(27.08889); // returns default 1010;
+                AirPressure = calculateAirPressure(zone.Altitude);
 
             // compute additional outputs derived from weather data
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
