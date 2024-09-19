@@ -507,6 +507,16 @@ namespace Models.Climate
             if (PreparingNewWeatherData != null)
                 PreparingNewWeatherData.Invoke(this, new EventArgs());
 
+            // check whether some variables need to be set with 'default' values (functions)
+            if (MeanT == double.NaN)
+                MeanT = (MinT + MaxT) / 2.0;
+            if (DiffuseFraction == double.NaN)
+                DiffuseFraction = calculateDiffuseRadiationFraction(Radn);
+            if (VP == double.NaN)
+                VP = Math.Max(0, MetUtilities.svp(MinT));
+            if (AirPressure == double.NaN)
+                AirPressure = calculateAirPressure(27.08889); // returns default 1010;
+
             // compute a series of values derived from weather data
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
             VPD = calculateVapourPressureDefict(MinT, MaxT, VP);
@@ -580,7 +590,7 @@ namespace Models.Climate
                 if (reader.Constant("meant") != null)
                     readMetData.MeanT = reader.ConstantAsDouble("meant");
                 else
-                    readMetData.MeanT = (readMetData.MinT + readMetData.MaxT) / 2.0;
+                    readMetData.MeanT = double.NaN;
             }
 
             if (radiationIndex >= 0)
@@ -613,7 +623,7 @@ namespace Models.Climate
                 if (reader.Constant("diffr") != null)
                     readMetData.DiffuseFraction = reader.ConstantAsDouble("diffr");
                 else
-                    readMetData.DiffuseFraction = calculateDiffuseRadiationFraction(readMetData.Radn);
+                    readMetData.DiffuseFraction = double.NaN;
             }
 
             if (rainIndex >= 0)
@@ -658,7 +668,7 @@ namespace Models.Climate
                 if (reader.Constant("vp") != null)
                     readMetData.VP = reader.ConstantAsDouble("vp");
                 else
-                    readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
+                    readMetData.VP = double.NaN;
             }
 
             if (windIndex >= 0)
@@ -694,7 +704,7 @@ namespace Models.Climate
                 if (reader.Constant("airpressure") != null)
                     readMetData.AirPressure = reader.ConstantAsDouble("airpressure");
                 else
-                    readMetData.AirPressure = calculateAirPressure(27.08889); // returns default 1010;
+                    readMetData.AirPressure = double.NaN;
             }
 
             return readMetData;
