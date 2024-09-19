@@ -22,6 +22,23 @@ namespace Models.Zones
         public List<Zone> Zones;
 
         /// <summary>
+        /// Width across all zones in simulation
+        /// </summary>
+        public double TotalWidth
+        {
+            get
+            {
+                double totalWidth = 0;
+                foreach (Zone zone in Zones) 
+                {
+                    totalWidth += (zone as RectangularZone).Width;
+                }
+                return totalWidth;
+            }
+        }
+
+
+        /// <summary>
         /// The total area of the zones in the simulation
         /// </summary>
         [Units("m2")]
@@ -48,7 +65,7 @@ namespace Models.Zones
         { 
             get
             {
-                return AreaWeightedMean("[Soil].SoilWater.Eo");
+                return AreaWeightedMean("[Plant].Leaf.PotentialEP");
 
             }
         }
@@ -85,7 +102,7 @@ namespace Models.Zones
         {
             get 
             {
-                return (double)this.Parent.FindAllDescendants<Weather>().FirstOrDefault().Radn * SimulationArea;
+                return (double)this.Parent.FindAllDescendants<Weather>().FirstOrDefault().Radn * TotalWidth;
             }
         }
 
@@ -99,16 +116,14 @@ namespace Models.Zones
             {
                 double greenRadn = 0;
                 foreach (Zone zone in Zones) 
-                { 
+                {
                     foreach (ICanopy canopy in zone.Canopies)
                     {
-                        double canopyRadn = 0;
                         if (canopy.LightProfile != null)
                         {
                             for (int i = 0; i < canopy.LightProfile.Length; i++)
-                                canopyRadn += canopy.LightProfile[i].AmountOnGreen;
+                                greenRadn += canopy.LightProfile[i].AmountOnGreen;
                         }
-                        greenRadn += canopyRadn; //* zone.Area*10000;
                     }
                 }
                 return greenRadn;
@@ -126,15 +141,13 @@ namespace Models.Zones
                 double deadRadn = 0;
                 foreach (Zone zone in Zones)
                 {
-                    double canopyRadn = 0;
                     foreach (ICanopy canopy in zone.Canopies)
                     {
                         if (canopy.LightProfile != null)
                         {
                             for (int i = 0; i < canopy.LightProfile.Length; i++)
-                                canopyRadn += canopy.LightProfile[i].AmountOnDead;
+                                deadRadn += canopy.LightProfile[i].AmountOnDead;
                         }
-                        deadRadn += canopyRadn * zone.Area * 10000;
                     }
                 }
                 return deadRadn;
@@ -186,7 +199,7 @@ namespace Models.Zones
             double variable = 0;
             foreach (Zone zone in Zones)
             {
-                variable += (double)zone.Get(varName) * zone.Area * 10000; 
+                variable += (double)zone.Get(varName) * TotalWidth; 
 
             }
             return variable;

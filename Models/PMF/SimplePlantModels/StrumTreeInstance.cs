@@ -45,32 +45,62 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Distance between tree rows (years)</summary>
         [Separator("Orchid Information")]
         [Description("Row spacing (m)")]
+        [Units("m")]
         public double RowSpacing { get; set; }
 
         /// <summary>Distance between trees within rows (years)</summary>
         [Description("InterRow spacing (m)")]
+        [Units("m")]
         public double InterRowSpacing { get; set; }
 
-        /// <summary>Width of the alley zone between tree rows (m)</summary>
-        [Description("Alley Zone Width (m)")]
-        public double AlleyZoneWidth { get; set; }
+        /// <summary>Proportion of the row width taken up by alley zone(0-1)</summary>
+        [Description("Alley Zone Width (Proportion of the row width taken up by alley zone(0-1))")]
+        [Units("0-1")]
+        public double AlleyZoneWidthFrac { get; set; }
 
-        /// <summary>Tree population density (/ha)</summary>
+        /// <summary>Width of the alley zone between tree rows (0-1)</summary>
+        [Units("0-1")]
+        public double AlleyZoneWidth
+        {
+            get
+            {
+                if ((AlleyZoneWidthFrac >= 1) || (AlleyZoneWidthFrac <= 0))
+                    throw new Exception("Alley zone width fraction must be greater than zero and less than 1");
+                return RowSpacing * AlleyZoneWidthFrac;
+            }
+        }
+
+        /// <summary>Width of the zone trees are planted in (m)</summary>
+        [Units("m")]
         public double RowZoneWidth
         {
             get
             {
                 if (AlleyZoneWidth > RowSpacing)
                     throw new Exception("Alley Zone Width can not exceed Row spacing");
-                return RowSpacing - AlleyZoneWidth;
+                return RowSpacing * (1-AlleyZoneWidthFrac);
             }
         }
 
         /// <summary>Tree population density (/ha)</summary>
+        [Units("/ha)")]
         public double TreePopulation
-        { get
+        { 
+            get
             {
                 return 10000 / (RowSpacing * InterRowSpacing);
+            }
+        }
+
+        /// <summary>
+        /// The Area of the tree canopy at maximum width.  Assums canopy remains touching within rows
+        /// </summary>
+        [Units("m2")]
+        public double TreeCanopyArea
+        {
+            get 
+            {
+                return MaxWidth/1000 * InterRowSpacing;
             }
         }
 
@@ -195,9 +225,7 @@ namespace Models.PMF.SimplePlantModels
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
-        /// <summary>
-        /// Parameters relating to fruit size and growth
-        /// </summary>
+        /// <summary> Parameters relating to fruit size and growth </summary>
         [Separator("Fruit parameters")]
 
         [Description("Fruit number retained (per tree)")]
@@ -263,7 +291,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Total daily solar radiation available per tree/// </summary>
         [Units("MJ per m tree")]
         public double TotalSolarRadiation { get; set; }
-               
+
+        private bool hasAlleyZone = false;
+        private bool hasRowZone = false;
+
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -311,7 +342,8 @@ namespace Models.PMF.SimplePlantModels
             {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
             {"PotentialFWPerFruit","[STRUM].Fruit.PotentialFWPerFruit.FixedValue = " },
-            
+            {"RowWidth","[STRUM].RowWidth.FixedValue = " },
+            {"InterRowSpacing","[STRUM].InterRowSpacing.FixedValue = " }
         };
 
         /// <summary>
@@ -432,7 +464,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 100).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            treeParams["Number"] += (Number/InterRowSpacing).ToString();
+            treeParams["Number"] += (Number/TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
             treeParams["DryMatterContent"] += DMC.ToString();
             treeParams["DateMaxBloom"] += DateMaxBloom;
@@ -440,6 +472,18 @@ namespace Models.PMF.SimplePlantModels
             treeParams["DAFEndLinearGrowth"] +=  DAFEndLinearGrowth.ToString();
             treeParams["DAFMaxSize"] += DAFMaxSize.ToString();
             treeParams["PotentialFWPerFruit"] += PotentialFWPerFruit.ToString();
+
+
+            if (hasAlleyZone)
+            {
+                treeParams["RowWidth"] += (RowZoneWidth + AlleyZoneWidth).ToString();
+                treeParams["InterRowSpacing"] += InterRowSpacing.ToString();
+            }
+            else
+            {
+                treeParams["RowWidth"] += (1.0).ToString();
+                treeParams["InterRowSpacing"] += (1.0).ToString();
+            }
             
 
 
@@ -448,7 +492,7 @@ namespace Models.PMF.SimplePlantModels
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
             treeParams["InitialTrunkWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            treeParams["InitialRootWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
+            treeParams["InitialRootWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 15).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
             treeParams["InitialLeafWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40 * (Decidious ? 0 : 1 )).ToString();
                 
@@ -461,8 +505,6 @@ namespace Models.PMF.SimplePlantModels
 
         private void SetUpZones()
         {
-            bool hasAlleyZone = false;
-            bool hasRowZone = false;
             List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
             foreach (Zone z in zones)
             {
@@ -473,12 +515,21 @@ namespace Models.PMF.SimplePlantModels
             }
             if (hasRowZone == false)
                 throw new Exception("Strum tree instance must be in a zone named Row");
-            if (hasAlleyZone == false)
-                throw new Exception("No Alley zone in simulation.  Add Alley zone or set Alley width to zero");
-            simulation.Set("[Row].Width", (object)RowZoneWidth);
-            simulation.Set("[Row].Length", (object)InterRowSpacing);
-            simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
-            simulation.Set("[Alley].Length", (object)InterRowSpacing);
+            
+            if (hasAlleyZone != false)
+            {
+                simulation.Set("[Row].Width", (object)RowZoneWidth);
+                simulation.Set("[Row].Length", (object)InterRowSpacing);
+                simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
+                simulation.Set("[Alley].Length", (object)InterRowSpacing);
+            }
+            else
+            {
+                simulation.Set("[Row].Width", (object)1.0);
+                simulation.Set("[Row].Length", (object)1.0);
+            }
+
+
         }
         
         [EventSubscribe("StartOfSimulation")]
