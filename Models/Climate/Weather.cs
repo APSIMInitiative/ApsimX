@@ -640,7 +640,12 @@ namespace Models.Climate
             if (double.IsNaN(VP))
                 VP = Math.Max(0.0, MetUtilities.svp(MinT));
             if (double.IsNaN(AirPressure))
-                AirPressure = calculateAirPressure(zone.Altitude);
+            {
+                if (zone != null)
+                    AirPressure = calculateAirPressure(zone.Altitude);
+                else
+                    AirPressure = calculateAirPressure(27.08889);
+            }
 
             // compute additional outputs derived from weather data
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
