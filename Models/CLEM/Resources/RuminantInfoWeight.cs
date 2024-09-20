@@ -22,46 +22,74 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Track protein weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Mass of protein excluding conceptus and fleece
+        /// </remarks>
         public RuminantTrackingItemProtein Protein { get; set; } = new();
 
         /// <summary>
         /// Track fat weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Mass of fat excluding conceptus
+        /// </remarks>
         public RuminantTrackingItem Fat { get; set; } = new();
 
         /// <summary>
         /// Track base weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Live weight excluding conceptus and fleece
+        /// </remarks>
         public RuminantTrackingItem Base { get; set; } = new();
 
         /// <summary>
         /// Track conceptus weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Weight of conceptus and fetus. Set each timestep by calculation including weight.Fetus
+        /// </remarks>
         public RuminantTrackingItem Conceptus { get; set; } = new();
 
         /// <summary>
         /// Track fetus weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Weight of fetus. Running store of each fetus
+        /// </remarks>
         public RuminantTrackingItem Fetus { get; set; } = new();
 
         /// <summary>
         /// Track conceptus protein weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Weight of conceptus protein, includes fetus.
+        /// </remarks>
         public RuminantTrackingItem ConceptusProtein { get; set; } = new();
 
         /// <summary>
         /// Track conceptus fat weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Weight of conceptus fat, includes fetus.
+        /// </remarks>
         public RuminantTrackingItem ConceptusFat { get; set; } = new();
 
         /// <summary>
         /// Track greasy wool weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Current Weight of greasy wool
+        /// </remarks>
+
         public RuminantTrackingItem Wool { get; set; } = new();
 
         /// <summary>
         /// Track clean wool weight (kg)
         /// </summary>
+        /// <remarks>
+        /// Current Weight of clean wool
+        /// </remarks>
         public RuminantTrackingItem WoolClean { get; set; } = new();
 
         /// <summary>
@@ -70,48 +98,64 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem Cashmere { get; set; } = new();
 
         /// <summary>
-        /// Current weight of individual  (kg)
-        /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
-        /// This should be true as these are either doen early (birth) on activitiy (shear) or in the growth model before weight gain.
+        /// Current weight of individual (kg) includes conceptus and wool
         /// </summary>
+        /// <remarks>
+        /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
+        /// This should be true as these are either done early (birth) on activitiy (shear) or in the growth model before weight gain.
+        /// </remarks>
         [FilterByProperty]
         public double Live { get { return live; } }
 
         /// <summary>
-        /// Previous weight of individual  (kg)
+        /// Previous live weight of individual (kg)
         /// </summary>
+        /// <remarks>
+        /// The live weight in the last timestep inclused conceptus and fleece
+        /// </remarks>
         public double Previous { get { return Base.Previous + Conceptus.Previous + Wool.Previous; } }
 
         /// <summary>
-        /// Current weight of individual  (kg)
+        /// Current live weight gain of individual (kg)
         /// </summary>
         [FilterByProperty]
         public double Gain { get { return Live - Previous; } }
 
         /// <summary>
-        /// Highest weight attained  (kg)
+        /// Highest weight attained (kg)
         /// </summary>
         public double HighestAttained { get; private set; }
 
         /// <summary>
-        /// Adult equivalent
+        /// Highest base weight attained (kg)
+        /// </summary>
+        public double HighestBaseAttained { get; private set; }
+
+        /// <summary>
+        /// Adult equivalent (live weight) 
         /// </summary>
         [FilterByProperty]
         public double AdultEquivalent { get; private set; }
 
         /// <summary>
-        /// Weight at birth (kg)
+        /// Live Weight at birth (kg)
         /// </summary>
         public double AtBirth { get; private set; }
 
         /// <summary>
         /// Maximum normalised weight for current age
         /// </summary>
+        /// <remarks>
+        /// Based on Base weight
+        /// </remarks>
         public double MaximumNormalisedForAge { get; private set; }
 
         /// <summary>
         /// Normalised weight for current age
         /// </summary>
+        /// <remarks>
+        /// Based on Base weight
+        /// </remarks>
         [FilterByProperty]
         public double NormalisedForAge { get; private set; }
 
@@ -136,6 +180,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard reference weight
         /// </summary>
+        /// <remarks>
+        /// The mature base weight of an adult female (not pregnant, not lactating) at midpoint of BCS where achieved skeletal maturity.
+        /// Technically includes fleece but can be ignored for most purposes and so assume.
+        /// </remarks>
         public double StandardReferenceWeight { get; private set; }
 
         /// <summary>
@@ -148,21 +196,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Relative size based on highest weight achieved (high weight / standard reference weight)
+        /// Relative size based on highest base weight achieved (highest base weight / standard reference weight)
         /// </summary>
         [FilterByProperty]
-        public double RelativeSizeByHighWeight { get { return HighestAttained / StandardReferenceWeight; } }
-
-        /// <summary>
-        /// Relative size based on live weight (live weight / standard reference weight)
-        /// </summary>
-        [FilterByProperty]
-        public double RelativeSizeByLiveWeight { get { return Live / StandardReferenceWeight; } }
+        public double RelativeSizeByHighWeight { get { return HighestBaseAttained / StandardReferenceWeight; } }
 
         /// <summary>
         /// Relative condition (base weight / normalised weight)
         /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </summary>
+        /// <remarks>
+        /// Does not include conceptus weight in pregnant females, or wool in sheep.
+        /// </remarks>
         [FilterByProperty]
         public double RelativeCondition { get { return Base.Amount / NormalisedForAge; } }
 
@@ -173,10 +218,10 @@ namespace Models.CLEM.Resources
         public double BodyCondition { get { return Base.Amount / NormalisedForAge; } }
 
         /// <summary>
-        /// The current live weight as a proportion of normalised weight for age
+        /// The current base weight as a proportion of normalised weight for age
         /// </summary>
         [FilterByProperty]
-        public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Live / NormalisedForAge; } }
+        public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Base.Amount / NormalisedForAge; } }
 
         /// <summary>
         /// Relative size (normalised weight / standard reference weight), Z
@@ -193,6 +238,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The empty body mass of the individual (kg)
         /// </summary>
+        /// <remarks>
+        /// Empty body mass excludes fleece and conceptus and is adjusted by gut fill when added to Live Weight.
+        /// </remarks>
         [FilterByProperty]
         public double EmptyBodyMass { get; private set; }
 
@@ -232,6 +280,7 @@ namespace Models.CLEM.Resources
 
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
             HighestAttained = Math.Max(HighestAttained, Live);
+            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
         }
 
         /// <summary>
@@ -252,6 +301,7 @@ namespace Models.CLEM.Resources
 
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
             HighestAttained = Math.Max(HighestAttained, Live);
+            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
         }
 
         /// <summary>

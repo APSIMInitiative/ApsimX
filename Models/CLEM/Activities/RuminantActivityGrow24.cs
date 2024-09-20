@@ -116,12 +116,12 @@ namespace Models.CLEM.Activities
         {
             // Equation 3 ==================================================
             double cf = 1.0;
-            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
+            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
             {
-                if (ind.Weight.BodyCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
+                if (ind.Weight.RelativeCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
                     cf = 0;
                 else
-                    cf = Math.Min(1.0, ind.Weight.BodyCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.BodyCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
+                    cf = Math.Min(1.0, ind.Weight.RelativeCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
             }
 
             // Equation 4 ================================================== The proportion of solid intake sucklings have as function of age.
@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
                     lf = 1 + ind.Parameters.Grow24_CI.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings-1] * Math.Pow(mi, ind.Parameters.Grow24_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.Grow24_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
                     // Equation 12  ==================================================
-                    double wl = ind.Weight.RelativeSize * ((female.BodyConditionParturition - ind.Weight.BodyCondition) / female.DaysLactating(events.Interval / 2.0));
+                    double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / female.DaysLactating(events.Interval / 2.0));
                     // Equation 11  ==================================================
                     if (female.DaysLactating(events.Interval / 2.0) >= ind.Parameters.Lactation.MilkPeakDay && wl > ind.Parameters.Grow24_CI.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.Grow24_CI.LactationConditionLossThreshold_CI13 * female.DaysLactating(events.Interval / 2.0), 2.0)))
                     {
@@ -157,7 +157,7 @@ namespace Models.CLEM.Activities
                     if (female.SucklingOffspringList.Any())
                     {
                         // Equation 10 ==================================================
-                        lf *= lb * (1 - ind.Parameters.Grow24_CI.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.Grow24_CI.ConditionAtParturitionAdjustment_CI15 * female.BodyConditionParturition);
+                        lf *= lb * (1 - ind.Parameters.Grow24_CI.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.Grow24_CI.ConditionAtParturitionAdjustment_CI15 * female.RelativeConditionAtParturition);
                     }
                     else
                     {
@@ -319,9 +319,9 @@ namespace Models.CLEM.Activities
 
             // Equations 46-49   ==================================================
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
-            double EndogenousUrinaryProtein = ind.Parameters.Grow24_CM.BreedEUPFactor1_CM12 * Math.Log(ind.Weight.Live) - ind.Parameters.Grow24_CM.BreedEUPFactor2_CM13;
+            double EndogenousUrinaryProtein = ind.Parameters.Grow24_CM.BreedEUPFactor1_CM12 * Math.Log(ind.Weight.Base.Amount) - ind.Parameters.Grow24_CM.BreedEUPFactor2_CM13;
             double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26e-4 * milkStore?.ME??0); 
-            double DermalProtein = ind.Parameters.Grow24_CM.DermalLoss_CM14 * Math.Pow(ind.Weight.Live,0.75);
+            double DermalProtein = ind.Parameters.Grow24_CM.DermalLoss_CM14 * Math.Pow(ind.Weight.Base.Amount,0.75);
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;
 
@@ -335,7 +335,7 @@ namespace Models.CLEM.Activities
             if (ind.IsWeaned)
                 CalculateGrowthEfficiency(ind);
 
-            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestAttained / ind.Weight.StandardReferenceWeight));
+            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestBaseAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6) / (ind.Parameters.Grow24_CG.ConditionMaxEffect_CG7 - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6)), 1));
 
@@ -354,7 +354,7 @@ namespace Models.CLEM.Activities
             if (MathUtilities.IsPositive(energyAvailableForGain))
                  energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
             // Equation 109  - the amount of protein required for the growth based on energy available
-            double proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain);
+            double proteinNeededForGrowth = Math.Max(0.0, proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain));
 
             ind.Weight.Protein.ForGain = proteinNeededForGrowth;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGain;
@@ -400,14 +400,14 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
                     finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
-                    //if (proteinAvailableForGain < proteinNeededForGrowth) // diet protein limited
-                    //    // fat can be laid down without protein so all energy passed for fat production. 
-                    //    finalprotein = proteinAvailableForGain;
-                    //else // energy limited
-                    //    finalprotein = proteinNeededForGrowth;
                 }
                 else
                 {
+                    // protein available from diet but defecit in energy
+                    // This protein from diet needs to be limited based on the condition and proximity to max protein for individual at maturity
+                    // we can't assume we can just keep using fat energy stores to put on all available protein
+                    // this result in too much protein gain and too much fat loss in the animal
+                    // All appears in breeding females.
                     finalprotein = proteinAvailableForGain;
                 }
 
@@ -474,7 +474,7 @@ namespace Models.CLEM.Activities
             ind.Energy.ToGraze /= km;
 
             double rdpReq;
-            ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Live, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
+            ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
             ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
             //ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
 

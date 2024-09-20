@@ -132,12 +132,12 @@ namespace Models.CLEM.Activities
         {
             // CF - Condition factor SCA Eq.3
             double cf = 1.0;
-            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.BodyCondition > 1)
+            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
             {
-                if (ind.Weight.BodyCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
+                if (ind.Weight.RelativeCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
                     cf = 0;
                 else
-                    cf = Math.Min(1.0, ind.Weight.BodyCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.BodyCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
+                    cf = Math.Min(1.0, ind.Weight.RelativeCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
             }
 
             // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
