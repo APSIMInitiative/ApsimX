@@ -168,11 +168,6 @@ namespace Models.CLEM.Resources
         public double WeightAtConception { get; set; }
 
         /// <summary>
-        /// Body condition at parturition
-        /// </summary>
-        public double BodyConditionParturition { get; set; }
-
-        /// <summary>
         /// Live weight at parturition
         /// </summary>
         public double WeightAtParturition { get; set; }
@@ -590,7 +585,6 @@ namespace Models.CLEM.Resources
             base.Weight.Fetus.Reset();
             base.Weight.ConceptusFat.Reset();
             base.Weight.ConceptusProtein.Reset();
-            BodyConditionParturition = Weight.BodyCondition;
             WeightAtParturition = Weight.Live;
             DateOfLastBirth = date;
             Milk.Lag = 1;
