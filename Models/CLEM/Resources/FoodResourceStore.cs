@@ -93,7 +93,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Digestibility undegradable protein.
+        /// Digestibility Undegradable Pprotein.
         /// </summary>
         public double DUDP
         {
@@ -104,7 +104,7 @@ namespace Models.CLEM.Resources
                     FeedType.HaySilage or 
                     FeedType.PastureTemperate or
                     FeedType.PastureTropical => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinPercent - 0.178, 0.85)),
-                    FeedType.Concentrate => 0.9 * (1 - (MathUtilities.IsGreaterThan(Details.UndegradableCrudeProteinPercent, 0)?Details.AcidDetergentInsoluableProtein / (Details.UndegradableCrudeProteinPercent / 100.0):0)),
+                    FeedType.Concentrate => 0.9 * (1 - (MathUtilities.IsGreaterThan(Details.UndegradableCrudeProteinPercent, 0)?Details.AcidDetergentInsoluableProtein / ((Details.UndegradableCrudeProteinPercent / 100.0) * (Details.CrudeProteinPercent / 100)) : 0)),
                     _ => 0,
                 };
             }
