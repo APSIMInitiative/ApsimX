@@ -32,7 +32,7 @@
                     new WeatherSampler()
                     {
                         FileName = weatherFilePath,
-                        Years = new int[] { 1995, 1952, 1993 }
+                        SampleYears = new int[] { 1995, 1952, 1993 }
                     },
                     new MockSummary()
                 }
@@ -139,7 +139,7 @@
                     new WeatherSampler()
                     {
                         FileName = weatherFilePath,
-                        Years = new int[] { 1995, 1952, 1993 },
+                        SampleYears = new int[] { 1995, 1952, 1993 },
                         SplitDate = "2-jun"
                     },
                     new MockSummary()
