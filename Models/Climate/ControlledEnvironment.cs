@@ -22,12 +22,6 @@ namespace Models.Climate
         private IClock clock = null;
 
         /// <summary>
-        /// A link to the summary (log file)
-        /// </summary>
-        [Link]
-        private ISummary summary = null;
-
-        /// <summary>
         /// Event that will be invoked immediately before the daily weather data is updated
         /// </summary>
         /// <remarks>
