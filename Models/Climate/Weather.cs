@@ -322,7 +322,7 @@ namespace Models.Climate
         [JsonIgnore]
         public double RainfallHours { get; set; }
 
-        /// <summary>Gets or sets the air vapour pressure (hPa)/// </summary>
+        /// <summary>Gets or sets the air vapour pressure (hPa)</summary>
         [Units("hPa")]
         [JsonIgnore]
         public double VP { get; set; }
@@ -573,7 +573,7 @@ namespace Models.Climate
             reader = null;
         }
 
-        /// <summary> Performs the tasks to update the weather data</summary>
+        /// <summary>Performs the tasks to update the weather data</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The arguments of the event</param>
         [EventSubscribe("DoWeather")]
