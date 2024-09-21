@@ -242,73 +242,73 @@ namespace Models.Climate
         public double MinT { get; set; }
 
         /// <summary>Gets or sets the daily maximum air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double MaxT { get; set; }
 
         /// <summary>Gets or sets the daily mean air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double MeanT { get; set; }
 
         /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
         [JsonIgnore]
+        [Units("MJ/m2")]
         public double Radn { get; set; }
 
         /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
         [JsonIgnore]
+        [Units("MJ/m2")]
         public double Qmax { get; set; }
 
         /// <summary>Gets or sets the day length, period with light (h)</summary>
-        [Units("h")]
         [JsonIgnore]
+        [Units("h")]
         public double DayLength { get; set; }
 
         /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
-        [Units("0-1")]
         [JsonIgnore]
+        [Units("0-1")]
         public double DiffuseFraction { get; set; }
 
         /// <summary>Gets or sets the rainfall amount (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double Rain { get; set; }
 
         /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double PanEvap { get; set; }
 
         /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
-        [Units("h")]
         [JsonIgnore]
+        [Units("h")]
         public double RainfallHours { get; set; }
 
         /// <summary>Gets or sets the air vapour pressure (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VP { get; set; }
 
         /// <summary>Gets or sets the daily mean vapour pressure deficit (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VPD { get; set; }
 
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
-        [Units("m/s")]
         [JsonIgnore]
+        [Units("m/s")]
         public double Wind { get; set; }
 
         /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
-        [Units("ppm")]
         [JsonIgnore]
+        [Units("ppm")]
         public double CO2 { get; set; }
 
         /// <summary>Gets or sets the mean atmospheric air pressure</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double AirPressure { get; set; }
 
         /// <summary>Gets or sets the latitude (decimal degrees)</summary>
@@ -462,17 +462,6 @@ namespace Models.Climate
             TomorrowsMetData = GetMetData(clock.Today.AddDays(1));
         }
 
-        /// <summary>Overrides the base class method to allow for clean up task</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            if (reader != null)
-                reader.Close();
-            reader = null;
-        }
-
         /// <summary>Performs the tasks to update the weather data</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The arguments of the event</param>
@@ -529,7 +518,19 @@ namespace Models.Climate
             VPD = calculateVapourPressureDefict(MinT, MaxT, VP);
         }
 
-        /// <summary>Reads the weather data for one day from file</summary>
+        /// <summary>Overrides the base class method to allow for clean up task</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            if (reader != null)
+                reader.Close();
+            reader = null;
+        }
+
+        /// <summary>Reads the weather data for a given date from file</summary>
+        /// <remarks>Will throw an exception if date is not found</remarks>
         /// <param name="date">The date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {

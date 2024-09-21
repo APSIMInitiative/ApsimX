@@ -278,73 +278,73 @@ namespace Models.Climate
         public double MinT { get; set; }
 
         /// <summary>Gets or sets the daily maximum air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double MaxT { get; set; }
 
         /// <summary>Gets or sets the daily mean air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double MeanT { get; set; }
 
         /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
         [JsonIgnore]
+        [Units("MJ/m2")]
         public double Radn { get; set; }
 
         /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
         [JsonIgnore]
+        [Units("MJ/m2")]
         public double Qmax { get; set; }
 
         /// <summary>Gets or sets the day length, period with light (h)</summary>
-        [Units("h")]
         [JsonIgnore]
+        [Units("h")]
         public double DayLength { get; set; }
 
         /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
-        [Units("0-1")]
         [JsonIgnore]
+        [Units("0-1")]
         public double DiffuseFraction { get; set; }
 
         /// <summary>Gets or sets the rainfall amount (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double Rain { get; set; }
 
         /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double PanEvap { get; set; }
 
         /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
-        [Units("h")]
         [JsonIgnore]
+        [Units("h")]
         public double RainfallHours { get; set; }
 
         /// <summary>Gets or sets the air vapour pressure (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VP { get; set; }
 
         /// <summary>Gets or sets the daily mean vapour pressure deficit (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VPD { get; set; }
 
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
-        [Units("m/s")]
         [JsonIgnore]
+        [Units("m/s")]
         public double Wind { get; set; }
 
         /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
-        [Units("ppm")]
         [JsonIgnore]
+        [Units("ppm")]
         public double CO2 { get; set; }
 
         /// <summary>Gets or sets the mean atmospheric air pressure</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double AirPressure { get; set; }
 
         /// <summary>Gets or sets the latitude (decimal degrees)</summary>
@@ -417,8 +417,8 @@ namespace Models.Climate
         }
 
         /// <summary>Gets the day for the winter solstice (day)</summary>
-        [Units("day")]
         [JsonIgnore]
+        [Units("day")]
         public int WinterSolsticeDOY
         {
             get
@@ -441,8 +441,8 @@ namespace Models.Climate
         }
 
         /// <summary>Gets or sets the number of days since the winter solstice</summary>
-        [Units("d")]
         [JsonIgnore]
+        [Units("d")]
         public int DaysSinceWinterSolstice { get; set; }
 
         /// <summary>Gets or sets the first date of summer (dd-mmm)</summary>
@@ -562,15 +562,42 @@ namespace Models.Climate
                 summary.WriteMessage(this, message, MessageType.Warning);
         }
 
-        /// <summary>Overrides the base class method to allow for clean up task</summary>
+        /// <summary>Performs tasks at the start of the day</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (reader != null)
-                reader.Close();
-            reader = null;
+            if (StartOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today))
+                StartOfSummer.Invoke(this, e);
+
+            if (StartOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today))
+                StartOfAutumn.Invoke(this, e);
+
+            if (StartOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today))
+                StartOfWinter.Invoke(this, e);
+
+            if (StartOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today))
+                StartOfSpring.Invoke(this, e);
+        }
+
+        /// <summary>Performs the tasks for the end of the day</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            if (EndOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
+                EndOfSummer.Invoke(this, e);
+
+            if (EndOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
+                EndOfAutumn.Invoke(this, e);
+
+            if (EndOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
+                EndOfWinter.Invoke(this, e);
+
+            if (EndOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
+                EndOfSpring.Invoke(this, e);
         }
 
         /// <summary>Performs the tasks to update the weather data</summary>
@@ -625,6 +652,17 @@ namespace Models.Climate
             DaysSinceWinterSolstice = calculateDaysSinceSolstice(DaysSinceWinterSolstice);
         }
 
+        /// <summary>Overrides the base class method to allow for clean up task</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            if (reader != null)
+                reader.Close();
+            reader = null;
+        }
+
         /// <summary>Get the DataTable view of the weather data</summary>
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
@@ -647,7 +685,8 @@ namespace Models.Climate
                 return null;
         }
 
-        /// <summary>Reads the weather data for one day from file</summary>
+        /// <summary>Reads the weather data for a given date from file</summary>
+        /// <remarks>Will throw an exception if date is not found</remarks>
         /// <param name="date">The date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
@@ -854,44 +893,6 @@ namespace Models.Climate
             }
 
             return readMetData;
-        }
-
-        /// <summary>Performs tasks at the start of the day</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-            if (StartOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today))
-                StartOfSummer.Invoke(this, e);
-
-            if (StartOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today))
-                StartOfAutumn.Invoke(this, e);
-
-            if (StartOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today))
-                StartOfWinter.Invoke(this, e);
-
-            if (StartOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today))
-                StartOfSpring.Invoke(this, e);
-        }
-
-        /// <summary>Performs the tasks for the end of the day</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The arguments of the event</param>
-        [EventSubscribe("EndOfDay")]
-        private void OnEndOfDay(object sender, EventArgs e)
-        {
-            if (EndOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
-                EndOfSummer.Invoke(this, e);
-
-            if (EndOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
-                EndOfAutumn.Invoke(this, e);
-
-            if (EndOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
-                EndOfWinter.Invoke(this, e);
-
-            if (EndOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
-                EndOfSpring.Invoke(this, e);
         }
 
         /// <summary>Opens the weather data file</summary>

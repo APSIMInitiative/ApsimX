@@ -87,8 +87,8 @@ namespace Models.Climate
         public double VP { get; set; }
 
         /// <summary>Gets the daily mean vapour pressure deficit (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VPD { get { return calculateVapourPressureDefict(MinT, MaxT, VP); } }
 
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
