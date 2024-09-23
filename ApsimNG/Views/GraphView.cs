@@ -568,11 +568,14 @@ namespace UserInterface.Views
                 this.plot1.Model.Series.Add(series);
                 if (xError != null || yError != null)
                 {
-                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
-                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType);
-                    errorSeries.XAxisKey = xAxisType.ToString();
-                    errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                    NamedScatterErrorSeries errorSeries = new(series.Name)
+                    {
+                        Title = series.Title,
+                        ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType),
+                        XAxisKey = xAxisType.ToString(),
+                        YAxisKey = yAxisType.ToString(),
+                        ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B),
+                    };
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
@@ -1250,21 +1253,26 @@ namespace UserInterface.Views
                     if (reselectedSeriesNames != null)
                         if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            series.Title = (series as INameableSeries).Name;
+                            if (series is NamedScatterErrorSeries == false)
+                            {
+                                series.Title = (series as INameableSeries).Name;
+                            }
                             series.IsVisible = true;
                         }
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
                         foreach (var nameToRemove in namesOfSeriesToRemove)
-                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                            if ((series as INameableSeries).Name == nameToRemove)
                                 series.IsVisible = false;
                 }
                 // Tidy up duplicate names.
                 var matchingSeries = FindMatchingSeries(series);
                 if (matchingSeries != null)
+                {
                     // Make it so it doesn't show in legend.
                     matchingSeries.Title = null;
+                }
             }
         }
 
@@ -1419,27 +1427,13 @@ namespace UserInterface.Views
         {
             foreach (var s in plot1.Model.Series)
             {
-                if (s != series && s.Title == series.Title)
+                if (s != series && s.Title == series.Title && series is NamedScatterErrorSeries == false)
                     return s;
 
             }
             return null;
         }
 
-        /// <summary>
-        /// Find a graph series that has the same title as the specified series.
-        /// </summary>
-        /// <param name="series">The series to match.</param>
-        /// <returns>The series or null if not found.</returns>
-        private INameableSeries FindMatchingSeries(INameableSeries series)
-        {
-            foreach (INameableSeries s in plot1.Model.Series)
-            {
-                if (s != series && s.Name == series.Name)
-                    return s;
-            }
-            return null;
-        }
 
         /// <summary>
         /// Event handler for when user clicks close
