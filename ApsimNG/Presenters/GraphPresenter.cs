@@ -157,7 +157,7 @@ namespace UserInterface.Presenters
 
                 int pointsOutsideAxis = 0;
                 int pointsInsideAxis = 0;
-                foreach (SeriesDefinition definition in definitions)
+                foreach (SeriesDefinition definition in definitions) // TODO: If A NamedScatterErrorSeries is found, the largest error value should be halved and added to axis minimum and maximum
                 {
                     string seriesName = graph.Name;
                     if (definition.Series != null)
@@ -186,6 +186,7 @@ namespace UserInterface.Presenters
 
                         valuesX.Add(xDouble);
                     }
+
                     foreach (var y in definition.Y)
                     {
                         double yDouble = 0;
