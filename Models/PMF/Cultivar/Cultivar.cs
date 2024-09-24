@@ -66,9 +66,14 @@ namespace Models.PMF
         /// <summary>
         /// Return all names by which this cultivar is known.
         /// </summary>
-        public IEnumerable<string> GetNames()
+        public List<string> GetNames()
         {
-            yield return Name;
+            List<string> names = new List<string>();
+            names.Add(Name);
+            foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
+                names.Add(name);
+                
+            return names;
         }
 
         /// <summary>Apply commands.</summary>
