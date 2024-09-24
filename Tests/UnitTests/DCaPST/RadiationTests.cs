@@ -22,7 +22,7 @@ namespace UnitTests.DCaPST
             return mock;
         }        
 
-        [TestCaseSource(typeof(RadiationTestData), "HourlyRadiationTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.HourlyRadiationTestCases))]
         public void HourlyRadiation_WhenTimeOutOfBounds_ThrowsException(double time, double sunAngle)
         {
             // Arrange            
@@ -39,7 +39,7 @@ namespace UnitTests.DCaPST
             Assert.Throws<Exception>(() => radiation.UpdateRadiationValues(time));
         }
 
-        [TestCaseSource(typeof(RadiationTestData), "IncidentRadiationTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.IncidentRadiationTestCases))]
         public void IncidentRadiation_GivenValidInput_MatchesExpectedValue(double time, double expected, double sunAngle)
         {
             // Arrange
@@ -55,11 +55,11 @@ namespace UnitTests.DCaPST
             var actual = radiation.Total;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }
 
-        [TestCaseSource(typeof(RadiationTestData), "DiffuseRadiationTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.DiffuseRadiationTestCases))]
         public void DiffuseRadiation_GivenValidInput_MatchesExpectedValue(double time, double expected, double sunAngle)
         {
             // Arrange
@@ -75,11 +75,11 @@ namespace UnitTests.DCaPST
             var actual = radiation.Diffuse;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }
 
-        [TestCaseSource(typeof(RadiationTestData), "DirectRadiationTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.DirectRadiationTestCases))]
         public void DirectRadiation_GivenValidInput_MatchesExpectedValue(double time, double expected, double sunAngle)
         {
             // Arrange
@@ -95,11 +95,11 @@ namespace UnitTests.DCaPST
             var actual = radiation.Direct;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }
 
-        [TestCaseSource(typeof(RadiationTestData), "DiffuseRadiationParTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.DiffuseRadiationParTestCases))]
         public void DiffuseRadiationPAR_GivenValidInput_MatchesExpectedValue(double time, double expected, double sunAngle)
         {
             // Arrange
@@ -115,11 +115,11 @@ namespace UnitTests.DCaPST
             var actual = radiation.DiffusePAR;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }
 
-        [TestCaseSource(typeof(RadiationTestData), "DirectRadiationParTestCases")]
+        [TestCaseSource(typeof(RadiationTestData), nameof(RadiationTestData.DirectRadiationParTestCases))]
         public void DirectRadiationPAR_GivenValidInput_MatchesExpectedValue(double time, double expected, double sunAngle)
         {
             // Arrange
@@ -135,7 +135,7 @@ namespace UnitTests.DCaPST
             var actual = radiation.DirectPAR;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }
     }

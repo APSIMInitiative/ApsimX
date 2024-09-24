@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Factorial;
@@ -23,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 173; } }
+        public static int LatestVersion { get { return 181; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -105,11 +106,19 @@ namespace Models.Core.ApsimFile
         /// <returns>True if model was changed.</returns>
         private static bool EnsureSoilHasInitWaterAndSample(JObject root)
         {
-            string rootType = JsonUtilities.Type(root, true);
+            JObject soilRoot = root;
+            string rootType = JsonUtilities.Type(soilRoot, true);
+
+            //ASRIS soils are held below the parent when in xml form, so we should check for that.
+            if (rootType == null && (root["Children"] as JArray != null) && root["Children"].Count() > 0)
+            {
+                soilRoot = root["Children"][0] as JObject;
+                rootType = JsonUtilities.Type(soilRoot, true);
+            }
 
             if (rootType != null && rootType == "Models.Soils.Soil")
             {
-                JArray soilChildren = root["Children"] as JArray;
+                JArray soilChildren = soilRoot["Children"] as JArray;
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
@@ -147,7 +156,7 @@ namespace Models.Core.ApsimFile
                         res = true;
                     }
 
-                    var physical = JsonUtilities.ChildWithName(root, "Physical");
+                    var physical = JsonUtilities.ChildWithName(soilRoot, "Physical");
                     bool hasPhysical = false;
                     int nLayers = 1;
 
@@ -229,7 +238,19 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
+                    // Add a soil temperature model.
+                    var soilTemperature = JsonUtilities.ChildWithName(soilRoot, "Temperature");
+                    if (soilTemperature == null)
+                        JsonUtilities.AddModel(soilRoot, typeof(CERESSoilTemperature), "Temperature");
 
+                    // Add a nutrient model.
+                    var nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
+                    if (nutrient == null)
+                    {
+                        JsonUtilities.AddModel(soilRoot, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
+                        nutrient["ResourceName"] = "Nutrient";
+                    }
 
                     return res;
                 }
@@ -278,7 +299,7 @@ namespace Models.Core.ApsimFile
         }
 
         ///<summary>
-        /// Upgrades to version 50. Fixes the RelativeTo property of 
+        /// Upgrades to version 50. Fixes the RelativeTo property of
         /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
         /// <param name="root"></param>
@@ -309,7 +330,7 @@ namespace Models.Core.ApsimFile
         private static void UpgradeToVersion51(JObject root, string fileName)
         {
             // Create a list of models that might have gsmax.
-            // Might need to add in other models that implement ICanopy 
+            // Might need to add in other models that implement ICanopy
             // e.g. OilPalm, AgPastureSpecies, SimpleTree, Sugarcane
 
             var models = new List<JObject>();
@@ -591,7 +612,7 @@ namespace Models.Core.ApsimFile
                     {
                         if (specifications.Count > 1)
                         {
-                            // must be a compound factor. 
+                            // must be a compound factor.
 
                             // Change our Factor to a CompositeFactor
                             factor["$type"] = "Models.Factorial.CompositeFactor, Models";
@@ -604,7 +625,7 @@ namespace Models.Core.ApsimFile
                             var siteFactor = JsonUtilities.ChildWithName(parent as JObject, "Site") as JObject;
                             if (siteFactor == null)
                             {
-                                // Create a site factor 
+                                // Create a site factor
                                 siteFactor = new JObject();
                                 siteFactor["$type"] = "Models.Factorial.Factor, Models";
                                 JsonUtilities.RenameModel(siteFactor, "Site");
@@ -1448,7 +1469,7 @@ namespace Models.Core.ApsimFile
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
                 // The linking code previously had a hack which automatically enabled link by name if the target
-                // model type is IFunction or Biomass (or any inherited class thereof). I've removed this hack 
+                // model type is IFunction or Biomass (or any inherited class thereof). I've removed this hack
                 // from the link resolution code, which means that all such links must be adjusted accordingly.
 
                 // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
@@ -1565,7 +1586,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of 
+        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of
         /// string property called XProperty and YProperty that it then had to locate.  Aiming to get all things using get for properties
         /// to be doing it via Variable reference so we can stream line scoping rules
         /// </summary>
@@ -3187,7 +3208,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change report and manager scripts for soil variables that have been out of soil class. 
+        /// Change report and manager scripts for soil variables that have been out of soil class.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -3500,7 +3521,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add some extra constants to GenericOrgan to make 
+        /// Add some extra constants to GenericOrgan to make
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -3538,7 +3559,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Rename DroughtInducedSenescence and Lag functions so they can be used for other stresses 
+        /// Rename DroughtInducedSenescence and Lag functions so they can be used for other stresses
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -3665,7 +3686,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add priority factor functions into each demand function 
+        /// Add priority factor functions into each demand function
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -3934,7 +3955,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Add in a Forages model at the simulation level if Stock or SimpleGrazing 
+        /// Add in a Forages model at the simulation level if Stock or SimpleGrazing
         /// are in the simulation.
         /// </summary>
         /// <param name="root">Root node.</param>
@@ -5027,7 +5048,7 @@ namespace Models.Core.ApsimFile
                         indent = code.IndexOf(code.Substring(pos).First(ch => ch != ' '), pos) - pos;
                     }
 
-                    // Delete the removal fraction matches lines. 
+                    // Delete the removal fraction matches lines.
                     // Do it in reverse order so that match.Index remains valid.
                     foreach (Match match in matches.Reverse())
                         code = code.Remove(match.Index, match.Length);
@@ -5126,7 +5147,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Adds a line property to the Operation object. This stores the input that is given, 
+        /// Adds a line property to the Operation object. This stores the input that is given,
         /// even if it is not able to be parsed as an Operation
         /// </summary>
         /// <param name="root"></param>
@@ -5465,6 +5486,300 @@ namespace Models.Core.ApsimFile
                     manager.Save();
             }
         }
+
+        /// <summary>
+        /// Change name based system to id based system in directed graphs
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion174(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                //give each node an id
+                int id = 0;
+                foreach (var node in rotationManager["Nodes"])
+                {
+                    id += 1;
+                    node["ID"] = id;
+                    node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
+                }
+
+                //give each arc an id
+                foreach (var arc in rotationManager["Arcs"])
+                {
+                    id += 1;
+                    arc["ID"] = id;
+                    arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
+
+                    //connect up arc source/dest with ids instead of names
+                    string sourceName = arc["SourceName"].ToString();
+                    int sourceID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == sourceName)
+                            sourceID = (int)node["ID"];
+
+                    string destinationName = arc["DestinationName"].ToString();
+                    int destinationID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == destinationName)
+                            destinationID = (int)node["ID"];
+
+                    arc["SourceID"] = sourceID;
+                    arc["DestinationID"] = destinationID;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add ResourceName to MicroClimate
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion175(JObject root, string fileName)
+        {
+            foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
+                microClimate["ResourceName"] = "MicroClimate";
+        }
+
+        /// <summary>
+        /// Rename Wheat Report Variables
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion176(JObject root, string fileName)
+        {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.AppearedCohortNo", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Phyllochron", "[Wheat].Phenology.Phyllochron");
+            }
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.AppearedCohortNo", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.ExpandedCohortNo", "Wheat.Leaf.Ligules");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Height", "Wheat.Leaf.Height");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Leaf.FinalLeafNumber");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Phyllochron", "Wheat.Phenology.Phyllochron");
+            }
+        }
+
+        /// <summary>
+        /// Change BiomassRemovalEvents.PlantToRemoveFrom property from IModel to a string.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion177(JObject root, string fileName)
+        {
+            foreach (var biomassRemovalEvents in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+            {
+                var plantToRemoveFromObj = biomassRemovalEvents["PlantToRemoveFrom"];
+                if (plantToRemoveFromObj.Any())
+                {
+                    string plantName = biomassRemovalEvents["PlantToRemoveFrom"]["Name"].ToString();
+                    biomassRemovalEvents["PlantToRemoveBiomassFrom"] = plantName;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a NitrificationInhibition model to CERESNitrificationModel.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion178(JObject root, string fileName)
+        {
+            foreach (var rate in JsonUtilities.ChildrenOfType(root, "CERESNitrificationModel"))
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(rate, "NitrificationInhibition", "1.0");
+            }
+        }
+
+        private class ForageParameter
+        {
+            public string LiveDigestibility { get; set; }
+            public string DeadDigestibility { get; set; }
+            public double LiveFractionConsumable { get; set; }
+            public double DeadFractionConsumable { get; set; }
+            public double LiveMinimumAmount { get; set;}
+            public double DeadMinimumAmount { get; set; }
+        }
+
+        /// <summary>
+        /// Rearrange the forage parameters.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion179(JObject root, string fileName)
+        {
+            foreach (var forage in JsonUtilities.ChildrenOfType(root, "Forages"))
+            {
+                Dictionary<string, ForageParameter> parameters = new();
+                JArray oldForageParameters = forage["Parameters"] as JArray;
+                if (oldForageParameters != null)
+                {
+                    foreach (JObject forageParameters in oldForageParameters)
+                    {
+                        // get values of existing parameters.
+                        string name = forageParameters["Name"].Value<string>();
+                        bool isLive = forageParameters["IsLive"].Value<bool>();
+                        string digestibilityString = forageParameters["DigestibilityString"].Value<string>();
+                        double fractionConsumable = forageParameters["FractionConsumable"].Value<double>();
+                        double minimumAmount = forageParameters["MinimumAmount"].Value<double>();
+                        bool useDigestibilityFromModel = forageParameters["UseDigestibilityFromModel"].Value<bool>();
+                        if (useDigestibilityFromModel)
+                            digestibilityString = "FromModel";
+
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            // remove old parameters.
+                            forageParameters.Remove("IsLive");
+                            forageParameters.Remove("DigestibilityString");
+                            forageParameters.Remove("FractionConsumable");
+                            forageParameters.Remove("MinimumAmount");
+                            forageParameters.Remove("UseDigestibilityFromModel");
+
+                            // store parameters in dictionary.
+                            if (!parameters.TryGetValue(name, out var value))
+                            {
+                                parameters.Add(name, new());
+                                value = parameters[name];
+                            }
+                            if (isLive)
+                            {
+                                value.LiveDigestibility = digestibilityString;
+                                value.LiveFractionConsumable = fractionConsumable;
+                                value.LiveMinimumAmount = minimumAmount;
+                            }
+                            else
+                            {
+                                value.DeadDigestibility = digestibilityString;
+                                value.DeadFractionConsumable = fractionConsumable;
+                                value.DeadMinimumAmount = minimumAmount;
+                            }
+                        }
+                    }
+
+                    // Write all parameters to JSON
+                    JArray parametersArray = new();
+                    foreach (var parameter in parameters)
+                    {
+                        parametersArray.Add(new JObject()
+                        {
+                            ["Name"] = parameter.Key,
+                            ["LiveDigestibility"] = parameter.Value.LiveDigestibility,
+                            ["DeadDigestibility"] = parameter.Value.DeadDigestibility,
+                            ["LiveFractionConsumable"] = parameter.Value.LiveFractionConsumable,
+                            ["DeadFractionConsumable"] = parameter.Value.DeadFractionConsumable,
+                            ["LiveMinimumBiomass"] = parameter.Value.LiveMinimumAmount,
+                            ["DeadMinimumBiomass"] = parameter.Value.DeadMinimumAmount,
+                        });
+                    }
+                    forage["Parameters"] = parametersArray;
+                }
+            }
+
+            // Convert TreeProxy parameters.
+            foreach (var treeProxy in JsonUtilities.ChildrenOfType(root, "TreeProxy"))
+            {
+                JArray tables = treeProxy["Table"] as JArray;
+
+                JArray parameters = new();
+
+                // add shade
+                CreateTreeProxyParameterObj(parameters, "Shade (%)", tables.Skip(2).Select(table => (table as JArray)[0].Value<string>()).ToArray());
+
+                // add two documentation lines.
+                //CreateTreeProxyParameterObj(parameters, "Root Length Density (cm/cm3)", Enumerable.Repeat(string.Empty, 10).ToArray());
+                //CreateTreeProxyParameterObj(parameters, "Depth (cm)", Enumerable.Repeat(string.Empty, 10).ToArray());
+
+                // add depths
+                var depths = (tables[1] as JArray).Skip(3).Select(i => i).ToArray();
+                for (int i = 0; i < depths.Length; i++)
+                {
+                    string depth = depths[i].Value<string>();
+                    string parameterName;
+                    if (i == 0)
+                        parameterName = $"Root Length Density (cm/cm3): {depth}cm";
+                    else
+                        parameterName = $"{depth}cm";
+                    CreateTreeProxyParameterObj(parameters, parameterName, tables.Skip(2).Select(table => (table as JArray)[i + 3].Value<string>()).ToArray());
+                }
+
+                JObject spatial = new();
+                treeProxy["Spatial"] = spatial;
+                spatial["Parameters"] = parameters;
+            }
+        }
+
+        /// <summary>
+        /// Create a TreeProxy parameter instance.
+        /// </summary>
+        /// <param name="parameters">The JSON array to add the instance to.</param>
+        /// <param name="name">The name of the parameter to add.</param>
+        /// <param name="values">The values of the parameters.</param>
+        private static void CreateTreeProxyParameterObj(JArray parameters, string name, string[] values)
+        {
+            parameters.Add(new JObject()
+            {
+                ["Name"] = name,
+                ["THCutOff0"] = values[0],
+                ["THCutOff05"] = values[1],
+                ["THCutOff1"] = values[2],
+                ["THCutOff15"] = values[3],
+                ["THCutOff2"] = values[4],
+                ["THCutOff25"] = values[5],
+                ["THCutOff3"] = values[6],
+                ["THCutOff4"] = values[7],
+                ["THCutOff5"] = values[8],
+                ["THCutOff6"] = values[9],
+            });
+        }
+        
+        /// <summary>
+        /// Renames the Operation property of Operations to OperationsList to avoid name conficts with the Operation class
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion180(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                operations["OperationsList"] = operations["Operation"];
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                //rename uses of ScriptModel to Script
+                bool changeMade = manager.Replace(".Operation.", ".OperationsList.", true);
+                if (changeMade)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Renames Models.PMF.Organs.Leaf+LeafCohortParameters to Models.PMF.Organs.LeafCohortParameters.
+        /// LeafCohortParameters class was moved from the Leaf.cs to LeafCohortParameters.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion181(JObject root, string fileName)
+        {
+            foreach (JObject leafCohortParametersObject in JsonUtilities.ChildrenRecursively(root, "Models.PMF.Organs.Leaf+LeafCohortParameters"))
+                leafCohortParametersObject["$type"] = leafCohortParametersObject["$type"].ToString().Replace("Models.PMF.Organs.Leaf+LeafCohortParameters", "Models.PMF.Organs.LeafCohortParameters");
+        }
     }
+    
 }
 

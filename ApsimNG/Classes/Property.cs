@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -20,12 +21,14 @@ namespace UserInterface.Classes
         DropDown,
         Checkbox,
         Colour,
+        ColourPicker,
         File,
         Files,
         Directory,
         //Directories,
         Font,
-        Numeric
+        Numeric,
+        Code
     }
 
     /// <summary>
@@ -239,6 +242,12 @@ namespace UserInterface.Classes
                     else
                         DisplayMethod = PropertyType.SingleLineText;
                     break;
+                case DisplayType.Code:
+                    DisplayMethod = PropertyType.Code;
+                    break;
+                case DisplayType.ColourPicker:
+                    DisplayMethod = PropertyType.ColourPicker;
+                    break;
                 case DisplayType.FileName:
                     DisplayMethod = PropertyType.File;
                     break;
@@ -309,12 +318,26 @@ namespace UserInterface.Classes
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
                     break;
+                case DisplayType.CSVCrops:
+                    DisplayMethod = PropertyType.DropDown;
+                    PropertyInfo namesPropInfo = model.GetType().GetProperty("CropNames");
+                    string[] names = namesPropInfo?.GetValue(model) as string[] ;
+                    if (names != null)
+                        DropDownOptions = names;
+                    break;
                 case DisplayType.CropPhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     Plant plantyy = model.FindInScope<Plant>();
                     if (plantyy != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
                     break;
+                case DisplayType.PlantOrganList:
+                    DisplayMethod = PropertyType.DropDown;
+                    Zone zone1 = model.FindAncestor<Zone>();
+                    List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
+                    if (plants != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
+                    break;  
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
@@ -367,6 +390,12 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
                     break;
+                case DisplayType.PlantName:
+                    DisplayMethod = PropertyType.DropDown;
+                    var plantModels = model.FindAllInScope<Plant>();
+                    if (plantModels != null)
+                        DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
+                    break;                    
 
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:

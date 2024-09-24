@@ -161,9 +161,15 @@ namespace UserInterface.Presenters
                         PresenterList.TryGetValue("Summary", out IPresenter selectedPresenter);
                         (selectedPresenter as CLEMSummaryPresenter).Refresh();
                     }
+                    else if (ClemModel.SelectedTab == "Messages")
+                    {
+                        PresenterList.TryGetValue("Messages", out IPresenter selectedPresenter);
+                        (selectedPresenter as MessagePresenter).Refresh();
+                    }
+
                 }
 
-                if(ClemModel != null && ClemModel.SelectedTab is null && PresenterList.Count > 0)
+                if (ClemModel != null && ClemModel.SelectedTab is null && PresenterList.Count > 0)
                     if (PresenterList.FirstOrDefault().Value is IRefreshPresenter)
                         (PresenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
             }

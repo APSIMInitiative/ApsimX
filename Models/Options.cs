@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
@@ -84,6 +85,12 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
+        /// List enabled simulation names without running them.
+        /// </summary>
+        [Option('e', "list-enabled-simulations", HelpText = "List enabled simulation names without running them.")]
+        public bool ListEnabledSimulationNames { get; set; }
+
+        /// <summary>
         /// List all files that are referenced by an .apsimx file(s) with absolute paths.
         /// </summary>
         [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s) as an absolute path.")]
@@ -127,13 +134,28 @@ namespace Models
         public string Apply { get; set; }
 
         /// <summary>
-        /// Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones.
+        /// Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.
         /// </summary>
-        /// <remarks>
-        /// Intended to provide a overall approach to simulation handling.
-        /// </remarks>
-        [Option('p', "playlist", HelpText = "Uses a config file to apply instructions. Can be used to create new simulations and modify existing ones."),]
+        [Option('p', "playlist", HelpText = "Allows a group of simulations to be selectively run. Requires a playlist node to be present in the APSIM file.")]
         public string Playlist { get; set; }
+
+        /// <summary>
+        /// Sets the verbosity level of all summary files.
+        /// </summary>
+        [Option('l', "log", HelpText = "Sets the verbosity level of all summary nodes in file(s).")]
+        public string Log { get; set; }
+
+        /// <summary>
+        /// Sets Simulations to use in memory database rather than database files.
+        /// </summary>
+        [Option("in-memory-db", HelpText = "Sets datastore to use memory instead of database." )]
+        public bool InMemoryDB {get; set;}
+
+        /// <summary>
+        /// Allows the use of a batch file which specifies a series of changes to make to an apsimx file. Used in conjunction with --apply switch.
+        /// </summary>
+        [Option('b', "batch", HelpText="Allows the use of a batch file which specifies a series of changes to make to an apsimx file. To be used with the --apply switch.")]
+        public string Batch{ get; set; }
 
         /// <summary>
         /// Type of runner used to run the simulations.
@@ -172,6 +194,12 @@ namespace Models
                                          {
                                              Files = new[] { "/path/to/file.apsimx" },
                                              EditFilePath = "/path/to/config/file.txt"
+                                         });
+                yield return new Example("Reconfigure a file with a config file",
+                                         new Options()
+                                         {
+                                             Files = new[] { "/path/to/file.apsimx" },
+                                             Apply = "/path/to/config/file.txt"
                                          });
             }
         }

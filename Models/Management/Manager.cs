@@ -34,9 +34,6 @@ namespace Models
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
-        /// <summary>Is the model after creation.</summary>
-        private bool afterCreation = false;
-
         /// <summary>
         /// At design time the [Link] above will be null. In that case search for a 
         /// Simulations object and get its compiler.
@@ -62,17 +59,9 @@ namespace Models
                 var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
-                SetCompiler(simulations.ScriptCompiler);
+                scriptCompiler = simulations.ScriptCompiler;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Set compiler to given script compiler
-        /// </summary>
-        private void SetCompiler(ScriptCompiler compiler)
-        {
-            scriptCompiler = compiler;
         }
 
         /// <summary>Which child is the compiled script model.</summary>
@@ -102,15 +91,7 @@ namespace Models
         {
             get
             {
-                string output = "";
-                for (int i = 0; i < cSharpCode.Length; i++)
-                {
-                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
-                    output += line;
-                    if (i < cSharpCode.Length-1)
-                        output += "\n";
-                }
-                return output;
+                return CodeFormatting.Combine(cSharpCode);
             }
             set
             {
@@ -120,7 +101,7 @@ namespace Models
                 }
                 else
                 {
-                    cSharpCode = value.Split('\n');
+                    cSharpCode = CodeFormatting.Split(value);
                     RebuildScriptModel();
                 }
             }
@@ -145,16 +126,19 @@ namespace Models
         private bool SuccessfullyCompiledLast { get; set; } = false;
 
         /// <summary>
+        /// Stores errors that were generated the last time the script was compiled.
+        /// </summary>
+        [JsonIgnore]
+        public string Errors { get; private set; } = null;
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
         public override void OnCreated()
         {
             base.OnCreated();
-            afterCreation = true;
-
-            if (TryGetCompiler())
-                RebuildScriptModel(true);
+            RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -165,25 +149,40 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            // throw an exception to stop simulations from running with an old binary
-            if (ScriptModel != null && SuccessfullyCompiledLast == false)
-                throw new Exception("Errors found in manager model " + Name);
-            GetParametersFromScriptModel();
-            SetParametersInScriptModel();
+            if (Enabled && ScriptModel != null)
+            {
+                // throw an exception to stop simulations from running with an old binary
+                if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                    throw new Exception("Errors found in manager model " + Name);
+                GetParametersFromScriptModel();
+                SetParametersInScriptModel();
+            }
+        }
+
+        /// <summary>
+        /// Set compiler to given script compiler
+        /// </summary>
+        public void SetCompiler(ScriptCompiler compiler)
+        {
+            scriptCompiler = compiler;
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
-            if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
+            if (!TryGetCompiler())
+                return;
+
+            if (Enabled && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
                 if (ScriptModel != null)
                     GetParametersFromScriptModel();
 
                 var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
-                if (results.ErrorMessages == null)
+                this.Errors = results.ErrorMessages;
+                if (this.Errors == null)
                 {
                     //remove all old script children
                     for(int i = this.Children.Count - 1; i >= 0; i--)
@@ -207,7 +206,8 @@ namespace Models
                 else
                 {
                     SuccessfullyCompiledLast = false;
-                    throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
+                    Parameters = null;
+                    throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
                 }
 
                 SetParametersInScriptModel();
@@ -256,7 +256,7 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (ScriptModel != null)
+            if (Enabled && ScriptModel != null)
             {
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
@@ -362,6 +362,14 @@ namespace Models
                 index += 1;
             }
             return RunMethod(name, args);
+        }
+
+        /// <summary>
+        /// Adjusts whitespace and newlines to fit dev team's normal formatting. For use with user scripts that have poor formatting.
+        /// </summary>
+        public void Reformat()
+        {
+            this.CodeArray = CodeFormatting.Reformat(this.CodeArray);
         }
 
         /// <summary>

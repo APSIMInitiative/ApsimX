@@ -1,20 +1,23 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using UserInterface.EventArguments;
+using Models;
+using Models.Core;
+using Models.Storage;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using Configuration = Utility.Configuration;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using APSIM.Shared.Documentation.Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Models.Storage;
-    using Views;
+
 
     /// <summary>
     /// A presenter for a graph.
@@ -127,7 +130,7 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
-                if (definitions.Count() == 0)
+                if (definitions.Count() == 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                     explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No data matches the properties and filters set for this graph", Simulation.MessageType.Warning, false);
 
                 foreach (SeriesDefinition definition in definitions)
@@ -230,7 +233,7 @@
                                 pointsInsideAxis += 1;
                         }
                     }
-                    if (xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
+                    if (Configuration.Settings.EnableGraphDebuggingMessages && xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
                     {
                         explorerPresenter.MainPresenter.ShowMessage($"{seriesName}: NaN Values found in points. These may be empty cells in the datastore.", Simulation.MessageType.Information, false);
                         if (xNaNCount > 0)
@@ -242,11 +245,11 @@
                     }
                 }
 
-                if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
+                if (pointsOutsideAxis > 0 && pointsInsideAxis == 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 {
                     explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values.", Simulation.MessageType.Warning, false);
                 }
-                else if (pointsOutsideAxis > 0)
+                else if (pointsOutsideAxis > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
                 {
                     explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
                 }
@@ -338,7 +341,7 @@
             {
                 try
                 {
-                    System.Drawing.Color colour = GetColour(definition.Colour);
+                    System.Drawing.Color colour = definition.Colour;
 
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
@@ -428,16 +431,6 @@
             }
         }
 
-        private System.Drawing.Color GetColour(System.Drawing.Color colour)
-        {
-            // If dark theme is active, and colour is black, use white instead.
-            // This won't help at all if the colour is a dark grey.
-            if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                return System.Drawing.Color.White;
-
-            return colour;
-        }
-
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
@@ -503,7 +496,7 @@
                                         textAnnotation.textRotation,
                                         AxisPosition.Bottom,
                                         AxisPosition.Left,
-                                        GetColour(textAnnotation.colour));
+                                        textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -514,7 +507,7 @@
                                         lineAnnotation.y2,
                                         lineAnnotation.type,
                                         lineAnnotation.thickness,
-                                        GetColour(lineAnnotation.colour),
+                                        lineAnnotation.colour,
                                         lineAnnotation.InFrontOfSeries,
                                         lineAnnotation.ToolTip);
                 }

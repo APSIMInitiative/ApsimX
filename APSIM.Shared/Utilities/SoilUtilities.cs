@@ -83,6 +83,22 @@ namespace APSIM.Shared.Utilities
             return depth_of_root_in_layer / thickness[layerIndex];
         }
 
+        
+        /// <summary>Keep the top x mm of soil and zero the rest.</summary>
+        /// <param name="values">The layered values.</param>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="depth">The depth of soil to keep</param>
+        public static double[] KeepTopXmm(IReadOnlyList<double> values, double[] thickness, double depth)
+        {
+            double[] returnValues = values.ToArray();
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                double proportion = ProportionThroughLayer(thickness, i, depth);
+                returnValues[i] *= proportion;
+            }
+            return returnValues;
+        }        
+
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="thickness">Soil layer thickness.</param>
         /// <param name="bd">Bulk density.</param>
@@ -469,11 +485,10 @@ namespace APSIM.Shared.Utilities
         /// <param name="f">The function to call to get a missing value.</param>
         public static (double[] values, string[] metadata) FillMissingValues(double[] values, string[] valuesMetadata, int numValues, Func<int, double> f)
         {
-            double[] newValues = values?.ToArray(); // clones
-            newValues ??= Enumerable.Repeat(double.NaN, numValues).ToArray();  // if null, initialises to double.NaN
+            double[] newValues = MathUtilities.SetArrayOfCorrectSize(values, numValues).ToArray();
             for (int i = 0; i < numValues; i++)
             {
-                if (double.IsNaN(newValues[i])) 
+                if (i >= newValues.Length || double.IsNaN(newValues[i])) 
                     newValues[i] = f(i);
             }
             return (newValues, DetermineMetadata(values, valuesMetadata, newValues, "Calculated"));

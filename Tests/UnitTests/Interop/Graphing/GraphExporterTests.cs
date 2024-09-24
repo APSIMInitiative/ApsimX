@@ -86,8 +86,8 @@ namespace UnitTests.Interop.Graphing
         public void TestEmptyGraph()
         {
             PlotModel plot = (PlotModel)exporter.ToPlotModel(graph);
-            Assert.AreEqual(0, plot.Series.Count);
-            Assert.AreEqual(0, plot.Axes.Count);
+            Assert.That(plot.Series.Count, Is.EqualTo(0));
+            Assert.That(plot.Axes.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace UnitTests.Interop.Graphing
             series.Add(CreateSimpleLineSeries(Enumerable.Empty<object>(), Enumerable.Empty<object>()));
             PlotModel plot = (PlotModel)exporter.ToPlotModel(graph);
             // Plot model should have 0 axes, and 1 series with no data.
-            Assert.AreEqual(1, plot.Series.Count);
-            Assert.AreEqual(0, plot.Axes.Count);
+            Assert.That(plot.Series.Count, Is.EqualTo(1));
+            Assert.That(plot.Axes.Count, Is.EqualTo(0));
 
             var graphSeries = plot.Series.First();
-            Assert.AreEqual(typeof(LineSeriesWithTracker), graphSeries.GetType());
+            Assert.That(graphSeries.GetType(), Is.EqualTo(typeof(LineSeriesWithTracker)));
             LineSeriesWithTracker lineSeries = (LineSeriesWithTracker)graphSeries;
-            Assert.False(lineSeries.ItemsSource.GetEnumerator().MoveNext(), "Series contains data, but it should not");
+            Assert.That(lineSeries.ItemsSource.GetEnumerator().MoveNext(), Is.False, "Series contains data, but it should not");
         }
 
         // fixme: the exception gets thrown in the series constructor,
