@@ -142,58 +142,7 @@ namespace UserInterface.Presenters
                 graphView.UpdateView();
 
                 //check if the axes are too small, update if so
-                const double tolerance = 0.00001;
-                double xAxisLargestErrorValue = 0.0;
-                double yAxisLargestErrorValue = 0.0;
-                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis) //TODO: Appears to be working, needs to calculate values dynamically now.
-                {
-                    double minimum = graphView.AxisMinimum(axis.Position);
-                    double maximum = graphView.AxisMaximum(axis.Position);
-                    if (axis.Maximum - axis.Minimum < tolerance)
-                    {
-                        axis.Minimum -= tolerance / 2;
-                        axis.Maximum += tolerance / 2;
-                    }
-                    // Add space for error bars if they exist for the axes
-                    // Bottom axis (x)
-                    if (axis.Position == AxisPosition.Bottom)
-                    {
-                        // x is usually at the bottom.
-                        foreach(SeriesDefinition seriesDef in definitions)
-                        {
-                            if (seriesDef.XError != null)
-                            {
-                                double largestErrorValue = MathUtilities.Max(seriesDef.XError);
-                                if (largestErrorValue > xAxisLargestErrorValue)
-                                    xAxisLargestErrorValue = largestErrorValue;
-                            }
-                        }
-                        // Add error values to min and max.
-                        axis.Minimum = minimum-1500;
-                        axis.Maximum = maximum+1500;
-                    }
-                    // Left axis (y)
-                    if (axis.Position == AxisPosition.Left)
-                    {
-                        // x is usually at the bottom.
-                        foreach(SeriesDefinition seriesDef in definitions)
-                        {
-                            if (seriesDef.YError != null)
-                            {
-                                double largestErrorValue = MathUtilities.Max(seriesDef.YError);
-                                if (largestErrorValue > yAxisLargestErrorValue)
-                                    yAxisLargestErrorValue = largestErrorValue;
-                            }
-                        }
-                        // Add values to min and max.
-                        // axis.Minimum -= yAxisLargestErrorValue;
-                        // axis.Maximum += yAxisLargestErrorValue;
-                        axis.Minimum = minimum-1500;
-                        axis.Maximum = maximum+1500;
-                    }
-
-                    FormatAxis(axis);
-                }
+                AdjustAxesboundaries(definitions);
 
                 int pointsOutsideAxis = 0;
                 int pointsInsideAxis = 0;
@@ -232,7 +181,7 @@ namespace UserInterface.Presenters
                         double yDouble = 0;
                         if (y is DateTime)
                             yDouble = ((DateTime)y).ToOADate();
-                        else if (y is string) 
+                        else if (y is string)
                             yDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             yDouble = Convert.ToDouble(y);
@@ -325,6 +274,66 @@ namespace UserInterface.Presenters
                 graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
 
                 graphView.Refresh();
+            }
+        }
+
+        private void AdjustAxesboundaries(IEnumerable<SeriesDefinition> definitions)
+        {
+            const double tolerance = 0.00001;
+            double xAxisLargestErrorValue = 0.0;
+            double yAxisLargestErrorValue = 0.0;
+            foreach (Axis axis in graph.Axis)
+            {
+                double minimum = graphView.AxisMinimum(axis.Position);
+                double maximum = graphView.AxisMaximum(axis.Position);
+                if (axis.Maximum - axis.Minimum < tolerance)
+                {
+                    axis.Minimum -= tolerance / 2;
+                    axis.Maximum += tolerance / 2;
+                }
+                // Add space for error bars if they exist for the axes
+                // Bottom axis (x)
+                if (axis.Position == AxisPosition.Bottom)
+                {
+                    // x is usually at the bottom.
+                    foreach (SeriesDefinition seriesDef in definitions)
+                    {
+                        if (seriesDef.XError != null)
+                        {
+                            double largestErrorValue = MathUtilities.Max(seriesDef.XError);
+                            if (largestErrorValue > xAxisLargestErrorValue)
+                                xAxisLargestErrorValue = largestErrorValue;
+                        }
+                    }
+                    // Add error values to min and max.
+                    if (xAxisLargestErrorValue != 0)
+                    {
+                        axis.Minimum = minimum - (xAxisLargestErrorValue / 2);
+                        axis.Maximum = maximum + (xAxisLargestErrorValue / 2);
+                    }
+
+                }
+                // Left axis (y)
+                if (axis.Position == AxisPosition.Left)
+                {
+                    // x is usually at the bottom.
+                    foreach (SeriesDefinition seriesDef in definitions)
+                    {
+                        if (seriesDef.YError != null)
+                        {
+                            double largestErrorValue = MathUtilities.Max(seriesDef.YError);
+                            if (largestErrorValue > yAxisLargestErrorValue)
+                                yAxisLargestErrorValue = largestErrorValue;
+                        }
+                    }
+                    // Add values to min and max.
+                    if (yAxisLargestErrorValue != 0)
+                    {
+                        axis.Minimum = minimum - (yAxisLargestErrorValue / 2);
+                        axis.Maximum = maximum + (yAxisLargestErrorValue / 2);
+                    }
+                }
+                FormatAxis(axis);
             }
         }
 
