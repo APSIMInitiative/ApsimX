@@ -1,6 +1,7 @@
 using OxyPlot.Series;
+using APSIM.Shared.Graphing;
 
-namespace APSIM.Shared.Graphing;
+namespace ApsimNG.Graphing;
 
 /// <summary>
 /// A Nameable ScatterErrorSeries.

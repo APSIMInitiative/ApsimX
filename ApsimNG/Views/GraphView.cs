@@ -10,6 +10,7 @@ using APSIM.Interop.Graphing.Extensions;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using ApsimNG.Graphing;
 using Gtk;
 using MathNet.Numerics.Statistics;
 using OxyPlot;

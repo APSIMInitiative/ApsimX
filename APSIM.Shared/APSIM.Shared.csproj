@@ -24,7 +24,6 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
-    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
   </ItemGroup>
   
   <ItemGroup>
