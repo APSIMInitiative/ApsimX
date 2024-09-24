@@ -143,7 +143,9 @@ namespace UserInterface.Presenters
 
                 //check if the axes are too small, update if so
                 const double tolerance = 0.00001;
-                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                double xAxisLargestErrorValue = 0.0;
+                double yAxisLargestErrorValue = 0.0;
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis) //TODO: Appears to be working, needs to calculate values dynamically now.
                 {
                     double minimum = graphView.AxisMinimum(axis.Position);
                     double maximum = graphView.AxisMaximum(axis.Position);
@@ -152,12 +154,50 @@ namespace UserInterface.Presenters
                         axis.Minimum -= tolerance / 2;
                         axis.Maximum += tolerance / 2;
                     }
+                    // Add space for error bars if they exist for the axes
+                    // Bottom axis (x)
+                    if (axis.Position == AxisPosition.Bottom)
+                    {
+                        // x is usually at the bottom.
+                        foreach(SeriesDefinition seriesDef in definitions)
+                        {
+                            if (seriesDef.XError != null)
+                            {
+                                double largestErrorValue = MathUtilities.Max(seriesDef.XError);
+                                if (largestErrorValue > xAxisLargestErrorValue)
+                                    xAxisLargestErrorValue = largestErrorValue;
+                            }
+                        }
+                        // Add error values to min and max.
+                        axis.Minimum = minimum-1500;
+                        axis.Maximum = maximum+1500;
+                    }
+                    // Left axis (y)
+                    if (axis.Position == AxisPosition.Left)
+                    {
+                        // x is usually at the bottom.
+                        foreach(SeriesDefinition seriesDef in definitions)
+                        {
+                            if (seriesDef.YError != null)
+                            {
+                                double largestErrorValue = MathUtilities.Max(seriesDef.YError);
+                                if (largestErrorValue > yAxisLargestErrorValue)
+                                    yAxisLargestErrorValue = largestErrorValue;
+                            }
+                        }
+                        // Add values to min and max.
+                        // axis.Minimum -= yAxisLargestErrorValue;
+                        // axis.Maximum += yAxisLargestErrorValue;
+                        axis.Minimum = minimum-1500;
+                        axis.Maximum = maximum+1500;
+                    }
+
                     FormatAxis(axis);
                 }
 
                 int pointsOutsideAxis = 0;
                 int pointsInsideAxis = 0;
-                foreach (SeriesDefinition definition in definitions) // TODO: If A NamedScatterErrorSeries is found, the largest error value should be halved and added to axis minimum and maximum
+                foreach (SeriesDefinition definition in definitions)
                 {
                     string seriesName = graph.Name;
                     if (definition.Series != null)
