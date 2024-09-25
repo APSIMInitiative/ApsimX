@@ -63,11 +63,8 @@ namespace APSIM.Documentation.Models.Types
                     foreach (Folder folder in simulation.FindAllChildren<Folder>().Where(folder => folder.Enabled && folder.ShowInDocs))
                     {
                         var childGraphs = (model as Folder).GetChildGraphs(folder);
-                        while (childGraphs.Any())
-                        {
-                            foreach(Shared.Documentation.Graph graph in childGraphs)
-                                graphPageTags.Add(graph);
-                        }
+                        foreach(Shared.Documentation.Graph graph in childGraphs)
+                            graphPageTags.Add(graph);
                     }
                     section.Add(new Paragraph($"**{simulation.Name}**"));
                     section.Add(new Section(graphPageTags));
