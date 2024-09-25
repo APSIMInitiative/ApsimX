@@ -945,7 +945,6 @@ namespace APSIM.Shared.Utilities
             double SumOfSquaredResiduals = 0;   //SUM i=1->n  ((P(i) - O(i)) ^ 2)
             double SumOfResiduals = 0;          //SUM i=1->n   (P(i) - O(i))
             double SumOfAbsResiduals = 0;       //SUM i=1->n  |(P(i) - O(i))|
-            double SumOfSquaredOPResiduals = 0; //SUM i=1->n  ((O(i) - P(i)) ^ 2)
             double SumOfSquaredSD = 0;          //SUM i=1->n  ((O(i) - Omean) ^ 2)
 
             stats.Name = name;
@@ -978,7 +977,6 @@ namespace APSIM.Shared.Utilities
                     SumOfSquaredResiduals += Math.Pow(yValue - xValue, 2);
                     SumOfResiduals += yValue - xValue;
                     SumOfAbsResiduals += Math.Abs(yValue - xValue);
-                    SumOfSquaredOPResiduals += Math.Pow(yValue - xValue, 2);
 
                     Num_points++;
                 }
