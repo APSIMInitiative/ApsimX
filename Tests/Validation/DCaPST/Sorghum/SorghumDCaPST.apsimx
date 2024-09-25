@@ -369,7 +369,7 @@
             "        private string simulationName;",
             "        private PhenologyRecord highestPhenologyStageReached = new PhenologyRecord(DateTime.MinValue, 0.0, string.Empty);",
             "        private readonly Dictionary<string, double> specialCaseExperiments = GetSpecialCaseExperiments();",
-            "        private const int END_OF_GRAIN_FILL_STAGE = 8;",
+            "        private const int END_OF_GRAIN_FILL_STAGE = 9;",
             "",
             "        [Serializable]",
             "        public class PhenologyRecord",
@@ -564,7 +564,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
-              "Name": "Harvest Biomass",
+              "Name": "Harvest Biomass DCaPST",
               "ResourceName": null,
               "Children": [
                 {
@@ -1104,7 +1104,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "HE1",
               "ResourceName": null,
               "Children": [
@@ -2143,7 +2143,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "HE2",
               "ResourceName": null,
               "Children": [
@@ -3198,7 +3198,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "HE3",
               "ResourceName": null,
               "Children": [
@@ -4145,7 +4145,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "HE4",
               "ResourceName": null,
               "Children": [
@@ -5138,7 +5138,9 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "HE5CultivarCSH13R"
+              ],
               "Name": "HE5",
               "ResourceName": null,
               "Children": [
@@ -6210,7 +6212,9 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "HE6CultivarCSH13R"
+              ],
               "Name": "HE6",
               "ResourceName": null,
               "Children": [
@@ -7192,7 +7196,9 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "HE7CultivarCSH13R"
+              ],
               "Name": "HE7",
               "ResourceName": null,
               "Children": [
@@ -8180,7 +8186,9 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "HE8CultivarCSH13R"
+              ],
               "Name": "HE8",
               "ResourceName": null,
               "Children": [
@@ -11178,7 +11186,9 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "LE17CvCSH13R"
+              ],
               "Name": "LE17",
               "ResourceName": null,
               "Children": [
@@ -12223,7 +12233,12 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "LE19FertHighCvCSH13R",
+                "LE19FertMedCvCSH13R",
+                "LE19FertLowCvCSH13R",
+                "LE19FertOffCvCSH13R"
+              ],
               "Name": "LE19",
               "ResourceName": null,
               "Children": [
@@ -14892,7 +14907,11 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "LE21CvCSH13RFertHigh",
+                "LE21CvCSH13RFertMed",
+                "LE21CvCSH13RFertLow"
+              ],
               "Name": "LE21",
               "ResourceName": null,
               "Children": [
