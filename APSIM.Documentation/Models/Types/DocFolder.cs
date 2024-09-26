@@ -25,7 +25,10 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-
+            // Remove summary, summary is superfluous.
+            if (section.Children.Count >= 2)
+                section.Children.RemoveAt(0);
+            
             foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
             {
                 section.Add(AutoDocumentation.Document(map));

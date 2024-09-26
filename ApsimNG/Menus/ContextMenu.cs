@@ -997,6 +997,11 @@ namespace UserInterface.Presenters
                 string modelTypeName = String.Empty;
                 if (modelToDocument is Models.PMF.Plant)
                     modelTypeName = modelToDocument.Name;
+                else if (modelToDocument is Simulations)
+                {
+                    var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
+                    modelTypeName = simpleFileName;
+                }
                 else modelTypeName = modelToDocument.GetType().Name;
 
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()

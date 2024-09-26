@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Documentation;
-using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
+using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -25,10 +26,22 @@ namespace APSIM.Documentation.Models.Types
 
             foreach (ITag tag in GetSummaryAndRemarksSection(model).Children)
                 tags.Add(tag);
+            
+            if (model.FindAllChildren<Folder>("Validation").Any())
+            {
+                // Find a single instance of all unique Plant models.
+                var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
+                foreach(Plant plant in plants)
+                {
+                    tags.AddRange(AutoDocumentation.Document(plant));
+                }
+            }
 
             foreach (IModel child in model.FindAllChildren<Folder>())
-                tags.AddRange(AutoDocumentation.Document(child));
-
+            {
+                if(child.Name != "Replacements")
+                    tags.AddRange(AutoDocumentation.Document(child));
+            }
             return tags;
         }
     }

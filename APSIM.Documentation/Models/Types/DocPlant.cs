@@ -6,8 +6,7 @@ using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
 using Models.PMF;
-using Models.PMF.Interfaces;
-using Models.PMF.Phen;
+using Graph = Models.Graph;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -28,7 +27,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            section.Title = $"The APSIM {model.Name} Model";
+            // section.Title = $"The APSIM {model.Name} Model";
 
             section.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
@@ -49,32 +48,8 @@ namespace APSIM.Documentation.Models.Types
             }
             section.Add(new Table(tableData));
 
-            List<Type> documentableModels = new()
-            {
-                typeof(IOrgan), 
-                typeof(IPhenology), 
-                typeof(IArbitrator),
-                typeof(IBiomass),
-            };
-
-            Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
-            // Document children.
             foreach (IModel child in this.model.Children)
             {
-                if (child != introduction)
-                {
-                    foreach (Type type in documentableModels)
-                        if (type.IsAssignableFrom(child.GetType()))
-                        {
-                            if (child is Phenology)
-                                section.Add(AutoDocumentation.Document(child));
-                            else
-                            {
-                                List<ITag> childTags = AutoDocumentation.Document(child, 0);
-                                section.Add(new Section(new List<ITag> { childTags.First() }));
-                            }
-                        }
-                }
                 if (child is Folder && child.Name == "Cultivars")
                 {
                     DataTable cultivarNameTable = new();
@@ -92,7 +67,43 @@ namespace APSIM.Documentation.Models.Types
                     }
                     section.Add(new Section("Cultivars", new Table(cultivarNameTable)));
                 }
+                else if (child is Memo)
+                {
+                    section.Add(new Paragraph((child as Memo).Text));
+                }
+                else
+                {
+                    section.Add(new Section(new List<ITag>() { GetSummaryAndRemarksSection(child) }));
+                }
             }
+            // List<Type> documentableModels = new()
+            // {
+            //     typeof(IOrgan), 
+            //     typeof(IPhenology), 
+            //     typeof(IArbitrator),
+            //     typeof(IBiomass),
+            // };
+
+            // Memo introduction = this.model.Children?.FirstOrDefault() as Memo;
+            // // Document children.
+            // foreach (IModel child in this.model.Children)
+            // {
+            //     if (child != introduction)
+            //     {
+            //         foreach (Type type in documentableModels)
+            //             if (type.IsAssignableFrom(child.GetType()))
+            //             {
+            //                 if (child is Phenology)
+            //                     section.Add(AutoDocumentation.Document(child));
+            //                 else
+            //                 {
+            //                     List<ITag> childTags = AutoDocumentation.Document(child, 0);
+            //                     section.Add(new Section(new List<ITag> { childTags.First() }));
+            //                 }
+            //             }
+            //     }
+
+            // }
             return new List<ITag>() {section};
         }
     }
