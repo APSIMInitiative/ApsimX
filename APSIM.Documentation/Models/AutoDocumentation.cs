@@ -93,7 +93,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Nodule), typeof(DocNodule)},
                 {typeof(Leaf), typeof(DocLeaf)},
                 {typeof(Manager), typeof(DocManager)},
-                {typeof(Experiment), typeof(DocGenericWithChildren)},
+                {typeof(Experiment), typeof(DocExperiment)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
                 {typeof(RUEModel), typeof(DocGenericWithChildren)},
                 {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
