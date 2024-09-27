@@ -56,9 +56,6 @@ namespace APSIM.Documentation.Models.Types
                     {
                         foreach(IModel simChild in child.FindAllChildren())
                         {
-                            // if(simChild is not Zone && simChild is not Clock &&
-                            //     simChild is not DataStore && simChild is not Summary &&
-                            //     simChild is not Weather && simChild is not SoilArbitrator)
                                 if (simChild is Memo)
                                     tags.AddRange(AutoDocumentation.Document(simChild));
                                 else if (simChild is Graph)
@@ -69,14 +66,9 @@ namespace APSIM.Documentation.Models.Types
                                 }
                         }
                     }
-                    else if (child is Folder)
+                    else if (child is Folder && child.Name != "Replacements")
                     {
                         tags.AddRange(AutoDocumentation.Document(child));
-                        // foreach(Experiment)
-                        // foreach(Folder childFolder in child.FindAllChildren<Folder>())
-                        // {
-                        //     tags.AddRange(AutoDocumentation.Document(childFolder));
-                        // }
                     }
 
                 }
