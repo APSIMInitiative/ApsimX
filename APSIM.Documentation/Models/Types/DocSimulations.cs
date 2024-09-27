@@ -70,6 +70,10 @@ namespace APSIM.Documentation.Models.Types
                     {
                         tags.AddRange(AutoDocumentation.Document(child));
                     }
+                    else if(child is Graph)
+                    {
+                        tags.AddRange(AutoDocumentation.Document(child));
+                    }
 
                 }
             }
