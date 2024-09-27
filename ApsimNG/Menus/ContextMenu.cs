@@ -1006,8 +1006,8 @@ namespace UserInterface.Presenters
 
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
                     + $"{Path.DirectorySeparatorChar}{modelTypeName}.pdf";
-
-                PdfWriter pdf = new PdfWriter();
+                // Options allows images in some tutorials to be found.
+                PdfWriter pdf = new(new PdfOptions(Path.GetDirectoryName(fullDocFileName), null));
 
                 pdf.Write(fullDocFileName, AutoDocumentation.Document(modelToDocument));
 
