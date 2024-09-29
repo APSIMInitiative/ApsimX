@@ -64,9 +64,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Grazing energy as proportion of metabolic energy
         /// </summary>
-        [Description("Grazing energy from metabolic scalar")]
+        [Description("Grazing energy from metabolic scalar [CM6]")]
         [Category("Breed", "Growth")]
-        public double GrazingEnergyFromMetabolicScalar { get; set; } = 0.2;
+        public double GrazingEnergyFromMetabolicScalar_CM6 { get; set; } = 0.0025;
 
         // chewing scalar CM6
 
@@ -79,6 +79,12 @@ namespace Models.CLEM.Resources
         // Solid diet EFP CM10 - hard coded
 
         // milk diet EFP CM11 - hard coded
+        /// <summary>
+        /// Grazing energy as proportion of metabolic energy
+        /// </summary>
+        [Description("Endogenous Fecal Protein from milk diet [CM11]")]
+        [Category("Breed", "Growth")]
+        public double EFPFromMilkDiet_CM11 { get; set; } = 5.26e-4;
 
         /// <summary>
         /// Breed EUP Factor #1 (SCA CM12)
@@ -123,7 +129,8 @@ namespace Models.CLEM.Resources
                 MainExponentForAge_CM3 = MainExponentForAge_CM3,
                 AgeEffectMin_CM4 = AgeEffectMin_CM4,
                 MilkScalar_CM5 = MilkScalar_CM5,
-                GrazingEnergyFromMetabolicScalar = GrazingEnergyFromMetabolicScalar,
+                GrazingEnergyFromMetabolicScalar_CM6 = GrazingEnergyFromMetabolicScalar_CM6,
+                EFPFromMilkDiet_CM11 = EFPFromMilkDiet_CM11,
                 BreedEUPFactor1_CM12 = BreedEUPFactor1_CM12,
                 BreedEUPFactor2_CM13 = BreedEUPFactor2_CM13,
                 DermalLoss_CM14 = DermalLoss_CM14

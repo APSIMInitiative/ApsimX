@@ -320,7 +320,7 @@ namespace Models.CLEM.Activities
             // Equations 46-49   ==================================================
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
             double EndogenousUrinaryProtein = ind.Parameters.Grow24_CM.BreedEUPFactor1_CM12 * Math.Log(ind.Weight.Base.Amount) - ind.Parameters.Grow24_CM.BreedEUPFactor2_CM13;
-            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26e-4 * milkStore?.ME??0); 
+            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (ind.Parameters.Grow24_CM.EFPFromMilkDiet_CM11 * milkStore?.ME??0); 
             double DermalProtein = ind.Parameters.Grow24_CM.DermalLoss_CM14 * Math.Pow(ind.Weight.Base.Amount,0.75);
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;
@@ -400,6 +400,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
                     finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
+                    ind.Weight.Protein.Extra = Math.Max(0, proteinAvailableForGain - proteinNeededForGrowth);
                 }
                 else
                 {
@@ -421,11 +422,6 @@ namespace Models.CLEM.Activities
 
             double MJProteinChange = finalprotein * mJEnergyPerKgProtein;
             double MJFatChange = energyAvailableForGain;
-
-            if (ind.ID == 1)
-                Console.WriteLine($"{proteinAvailableForGain}/t{proteinNeededForGrowth}/t{finalprotein}/t{ind.Energy.ForGain}/t{energyAvailableForGain}/t{MJProteinChange}/t{MJFatChange}");
-
-
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
             ind.Weight.Protein.Adjust(MJProteinChange / mJEnergyPerKgProtein * events.Interval); // for time step
@@ -567,9 +563,9 @@ namespace Models.CLEM.Activities
             double pwInst = Math.Min(ind.Parameters.Grow24_CW.DPLSLimitationForWoolGrowth_CW7 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * dPLSAvailableForWool, ind.Parameters.Grow24_CW.MEILimitationOnWoolGrowth_CW8 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * mEAvailableForWool);
 
             // pwToday is either the calculation or 0.04 (CW2) * relative size
-            double pwToday = Math.Max(ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize, (1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.Wool.Previous) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
+            double pwToday = Math.Max(ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize, (1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.WoolClean.Change) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
 
-            ind.Weight.Wool.Adjust(pwToday / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
+            ind.Weight.Wool.Adjust(pwToday * ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
             ind.Weight.WoolClean.Adjust(pwToday * events.Interval);
             ind.Weight.Protein.ForWool = pwToday * events.Interval;
 
