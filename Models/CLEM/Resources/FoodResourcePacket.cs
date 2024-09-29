@@ -64,7 +64,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="rumenDegradableProteinPercent">RDP of feed</param>
         /// <param name="typeOfFeed">Type of feed to identify forage</param>
-        /// <returns>ADIP</returns>
+        /// <returns>The proportion of crude protein that is ADIP</returns>
         public static double CalculateAcidDetergentInsoluableProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
         {
             if (typeOfFeed == FeedType.Concentrate | typeOfFeed == FeedType.Milk)
