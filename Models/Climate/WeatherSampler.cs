@@ -76,11 +76,61 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Default value for wind speed (m/s)
+        /// </summary>
+        private const double defaultWind = 3.0;
+
+        /// <summary>
+        /// Default value for atmospheric CO2 concentration (ppm)
+        /// </summary>
+        private const double defaultCO2 = 350.0;
+
+        /// <summary>
+        /// Default value for solar angle for computing twilight (degrees)
+        /// </summary>
+        private const double defaultTwilight = 6.0;
+
+        /// <summary>
+        /// Maximum value expected for mean long-term temperature amplitude (oC)
+        /// </summary>
+        private const double maximumAMP = 25.0;
+
+        /// <summary>
         /// Gets or sets the weather file name. Should be relative file path where possible
         /// </summary>
         [Summary]
         [Description("Weather file to sample from")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path)
+        /// </summary>
+        [JsonIgnore]
+        public string FullFileName
+        {
+            get
+            {
+                Simulation simulation = FindAncestor<Simulation>();
+                if (simulation != null && simulation.FileName != null)
+                    return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                else
+                {
+                    Simulations simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(FileName, simulations.FileName);
+                    else
+                        return PathUtilities.GetAbsolutePath(FileName, "");
+                }
+            }
+            set
+            {
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null)
+                    FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    FileName = value;
+            }
+        }
 
         /// <summary>Choice of year sampling type</summary>
         [Description("Type of sampling")]
@@ -97,7 +147,6 @@ namespace Models.Climate
         [Description("Years from which to sample the weather file")]
         [Display(VisibleCallback = "IsSpecifyYearsEnabled")]
         public int[] SampleYears { get; set; }
-
 
         /// <summary>Flag whether random sampling is enabled</summary>
         public bool IsRandomEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSample || TypeOfSampling == RandomiserTypeEnum.RandomChooseFirstYear; } }
@@ -127,73 +176,73 @@ namespace Models.Climate
         public double MaxT { get; set; }
 
         /// <summary>Gets the daily mean air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
         /// <summary>Gets or sets the solar radiation (MJ/m2)</summary>
-        [Units("MJ/m2")]
         [JsonIgnore]
+        [Units("MJ/m2")]
         public double Radn { get; set; }
 
         /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
-        [Units("0-1")]
         [JsonIgnore]
+        [Units("0-1")]
         public double DiffuseFraction { get; set; }
 
         /// <summary>Gets or sets the rainfall amount (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double Rain { get; set; }
 
         /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
-        [Units("mm")]
         [JsonIgnore]
+        [Units("mm")]
         public double PanEvap { get; set; }
 
         /// <summary>Gets or sets the air vapour pressure (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VP { get; set; }
 
         /// <summary>Gets or sets the daily mean vapour pressure deficit (hPa)</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double VPD { get; set; }
 
         /// <summary>Gets or sets the average wind speed (m/s)</summary>
-        [Units("m/s")]
         [JsonIgnore]
+        [Units("m/s")]
         public double Wind { get; set; }
 
         /// <summary>Gets or sets the CO2 level in the atmosphere (ppm)</summary>
-        [Units("ppm")]
         [JsonIgnore]
+        [Units("ppm")]
         public double CO2 { get; set; }
 
         /// <summary>Gets or sets the mean atmospheric air pressure</summary>
-        [Units("hPa")]
         [JsonIgnore]
+        [Units("hPa")]
         public double AirPressure { get; set; }
 
         /// <summary>Gets or sets the latitude (decimal degrees)</summary>
-        [Units("degrees")]
         [JsonIgnore]
+        [Units("degrees")]
         public double Latitude { get; set; }
 
         /// <summary>Gets or sets the longitude (decimal degrees)</summary>
-        [Units("degrees")]
         [JsonIgnore]
+        [Units("degrees")]
         public double Longitude { get; set; }
 
         /// <summary>Gets the long-term average air temperature (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double Tav { get; set; }
 
         /// <summary>Gets the long-term average temperature amplitude (oC)</summary>
-        [Units("oC")]
         [JsonIgnore]
+        [Units("oC")]
         public double Amp { get; set; }
 
         /// <summary>Met Data from yesterday</summary>
@@ -228,7 +277,7 @@ namespace Models.Climate
                 if (file.Constant("CO2") != null)
                     CO2 = Convert.ToDouble(file.Constant("CO2").Value);
                 else
-                    CO2 = 350;
+                    CO2 = defaultCO2;
             }
             finally
             {
