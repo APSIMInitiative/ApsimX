@@ -289,6 +289,7 @@ class Simulation:
         while running:
             # run commands
             date = self.date()
+            date = date.replace(tzinfo=None)
             date_arr.append(date)
 
             # NOTE Order does not matter between the gets and the actions.
@@ -312,16 +313,16 @@ class Simulation:
                     # get valid neighbors
                     neighbors = []
                     # x-axis pos
-                    if (i + 1 > 0) and (i + 1 < runoff.shape[0]):
+                    if (i + 1 >= 0) and (i + 1 < runoff.shape[0]):
                         neighbors.append([i + 1, j])
                     # x-axis neg
-                    if (i - 1 > 0) and (i - 1 < runoff.shape[0]):
+                    if (i - 1 >= 0) and (i - 1 < runoff.shape[0]):
                         neighbors.append([i - 1, j])
                     # y-axis pos
-                    if (j + 1 > 0) and (j + 1 < runoff.shape[1]):
+                    if (j + 1 >= 0) and (j + 1 < runoff.shape[1]):
                         neighbors.append([i, j + 1])
                     # y-axis neg
-                    if (j - 1 > 0) and (j + 1 < runoff.shape[1]):
+                    if (j - 1 >= 0) and (j + 1 < runoff.shape[1]):
                         neighbors.append([i, j - 1])
 
                     # irrigate neighbors

@@ -2,6 +2,7 @@
 
 import argparse
 from dataclasses import dataclass
+from datetime import datetime
 import os
 
 from .apsim import ApsimController
@@ -20,6 +21,8 @@ def client(args):
     apsim = ApsimController(args.config, addr=args.addr, port=args.port)
 
     sim = Simulation(apsim, args.config)
+
+    sim.add_action(datetime(2023, 1, 1), "irrigate", [1, 1, 0, 10000])
 
     # add any commands here
     ts_arr, vwc_arr = sim.run()
