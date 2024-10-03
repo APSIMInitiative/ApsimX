@@ -117,34 +117,48 @@ namespace UserInterface.Views
 
         private void OnTreeHover(object o, QueryTooltipArgs args)
         {
-            if (tree.Model != null)
+            try
             {
-                ListViewArgs newArgs = new ListViewArgs { QueryTooltipArgs = args };
-                tree.ConvertWidgetToTreeCoords(args.X, args.Y, out int tx, out int ty);
-                newArgs.NewX = tx; // TODO: need to store new coordinates for use in ShowTooltip method.
-                newArgs.NewY = ty;
-
-            
-                var pathpos = tree.GetPathAtPos(tx, ty, out TreePath path);
-
-                TreeModel model = tree.Model;
-                var modelIterator = model.GetIter(out TreeIter iter, path);
-                if (modelIterator)
+                if (tree.Model != null)
                 {
-                    if (path.Indices[0] < 0)
-                        newArgs.ListViewRowIndex = 0;
-                    else newArgs.ListViewRowIndex = path.Indices[0];
+                    ListViewArgs newArgs = new ListViewArgs { QueryTooltipArgs = args };
+                    tree.ConvertWidgetToTreeCoords(args.X, args.Y, out int tx, out int ty);
+                    newArgs.NewX = tx; // TODO: need to store new coordinates for use in ShowTooltip method.
+                    newArgs.NewY = ty;
+
+                
+                    var pathpos = tree.GetPathAtPos(tx, ty, out TreePath path);
+
+                    TreeModel model = tree.Model;
+                    var modelIterator = model.GetIter(out TreeIter iter, path);
+                    if (modelIterator)
+                    {
+                        if (path.Indices[0] < 0)
+                            newArgs.ListViewRowIndex = 0;
+                        else newArgs.ListViewRowIndex = path.Indices[0];
+                    }
+
+
+                    if (TreeHover != null)
+                        TreeHover.Invoke(o, newArgs);
                 }
-
-
-                if (TreeHover != null)
-                    TreeHover.Invoke(o, newArgs);
+            }
+            catch (Exception error)
+            {
+                ShowError(error);
             }
         }
 
         private void OnTreeDoubleClicked(object o, RowActivatedArgs args)
         {
-            DoubleClicked.Invoke(o, args);
+            try
+            {
+                DoubleClicked.Invoke(o, args);
+            }
+            catch (Exception error)
+            {
+                ShowError(error);
+            }
         }
 
         private void OnTreeDragBegin(object sender, DragBeginArgs args)
