@@ -153,7 +153,7 @@ namespace UserInterface.Views
         {
             try
             {
-                DoubleClicked.Invoke(o, args);
+                DoubleClicked?.Invoke(o, args);
             }
             catch (Exception error)
             {
