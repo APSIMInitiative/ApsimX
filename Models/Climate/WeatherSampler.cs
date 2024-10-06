@@ -39,6 +39,12 @@ namespace Models.Climate
         private Simulation simulation = null;
 
         /// <summary>
+        /// A link to the summary (log file)
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
+
+        /// <summary>
         /// Event that will be invoked immediately before the daily weather data is updated
         /// </summary>
         /// <remarks>
@@ -185,6 +191,16 @@ namespace Models.Climate
         [Units("MJ/m2")]
         public double Radn { get; set; }
 
+        /// <summary>Gets or sets the maximum clear sky radiation (MJ/m2)</summary>
+        [JsonIgnore]
+        [Units("MJ/m2")]
+        public double Qmax { get; set; }
+
+        /// <summary>Gets or sets the day length, period with light (h)</summary>
+        [JsonIgnore]
+        [Units("h")]
+        public double DayLength { get; set; }
+
         /// <summary>Gets or sets the diffuse radiation fraction (0-1)</summary>
         [JsonIgnore]
         [Units("0-1")]
@@ -194,6 +210,11 @@ namespace Models.Climate
         [JsonIgnore]
         [Units("mm")]
         public double Rain { get; set; }
+
+        /// <summary>Gets or sets the number duration of rainfall within a day (h)</summary>
+        [JsonIgnore]
+        [Units("h")]
+        public double RainfallHours { get; set; }
 
         /// <summary>Gets or sets the class A pan evaporation (mm)</summary>
         [JsonIgnore]
@@ -252,6 +273,17 @@ namespace Models.Climate
         /// <summary>Met Data for tomorrow</summary>
         [JsonIgnore]
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
+
+        /// <summary>
+        /// Check values in weather and return a collection of warnings
+        /// </summary>
+        public IEnumerable<string> Validate()
+        {
+            if (Amp > maximumAMP)
+            {
+                yield return $"The value of Weather.AMP ({Amp}) is > {maximumAMP} oC. Please check the value.";
+            }
+        }
 
         /// <summary>Overrides the base class method to allow for initialization of this model </summary>
         /// <param name="sender">The sender of the event</param>
@@ -333,9 +365,11 @@ namespace Models.Climate
             if (SampleYears == null || SampleYears.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
 
-            if (string.IsNullOrEmpty(SplitDate)) {
+            if (string.IsNullOrEmpty(SplitDate))
                 SplitDate = "1-Jan";
-            }
+
+            foreach (var message in Validate())
+                summary.WriteMessage(this, message, MessageType.Warning);
 
             currentYearIndex = 0;
             currentRowIndex = FindRowForDate(new DateTime(SampleYears[currentYearIndex], clock.StartDate.Month, clock.StartDate.Day));
@@ -414,7 +448,14 @@ namespace Models.Climate
         /// <returns>The number of hours of daylight</returns>
         public double CalculateDayLength(double Twilight)
         {
-            return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, this.Latitude);
+            if (DayLength <= -1)
+            { // day length was not given as column or set as a constant
+                return MathUtilities.DayLength(clock.Today.DayOfYear, Twilight, Latitude);
+            }
+            else
+            {
+                return DayLength;
+            }
         }
 
         /// <summary>Computes the time of sun rise (h)</summary>
