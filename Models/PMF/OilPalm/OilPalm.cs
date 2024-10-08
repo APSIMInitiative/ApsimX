@@ -153,14 +153,6 @@ namespace Models.PMF.OilPalm
             Clear();
         }
 
-        /// <summary>Clears this instance.</summary>
-        private void Clear()
-        {
-            SowingData = new SowingParameters();
-            plant_status = "out";
-            CropInGround = false;
-        }
-
         /// <summary>The plant_status</summary>
         [JsonIgnore]
         public string plant_status = "out";
@@ -719,6 +711,15 @@ namespace Models.PMF.OilPalm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Clear();
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            plant_status = "out";
+            CropInGround = false;
+
             //zero public properties
             CumulativeFrondNumber = 0;
             CumulativeBunchNumber = 0;
