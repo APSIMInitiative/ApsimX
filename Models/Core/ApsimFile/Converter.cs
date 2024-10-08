@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 181; } }
+        public static int LatestVersion { get { return 182; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5778,6 +5778,29 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject leafCohortParametersObject in JsonUtilities.ChildrenRecursively(root, "Models.PMF.Organs.Leaf+LeafCohortParameters"))
                 leafCohortParametersObject["$type"] = leafCohortParametersObject["$type"].ToString().Replace("Models.PMF.Organs.Leaf+LeafCohortParameters", "Models.PMF.Organs.LeafCohortParameters");
+        }
+
+        /// <summary>
+        /// Renames Models.PMF.Organs.Leaf+LeafCohortParameters to Models.PMF.Organs.LeafCohortParameters.
+        /// LeafCohortParameters class was moved from the Leaf.cs to LeafCohortParameters.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion182(JObject root, string fileName)
+        {
+            foreach (JToken water in JsonUtilities.ChildrenRecursively(root, "Water"))
+            {
+                JToken relTo = water.SelectToken("RelativeTo");
+                if (relTo != null)
+                {
+                    string cropsoil = water["RelativeTo"].ToString();
+                    if (cropsoil.EndsWith("Soil"))
+                    {
+                        cropsoil = cropsoil.Substring(0, cropsoil.Length-4);
+                        water["RelativeTo"] = cropsoil;
+                    }
+                }
+            }
         }
     }
     
