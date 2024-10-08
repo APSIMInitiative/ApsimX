@@ -266,6 +266,35 @@ namespace Models.Climate
         [Units("oC")]
         public double Amp { get; set; }
 
+        /// <summary>Gets the day for the winter solstice (day)</summary>
+        [JsonIgnore]
+        [Units("day")]
+        public int WinterSolsticeDOY
+        {
+            get
+            {
+                if (Latitude <= 0)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 173;
+                    else
+                        return 172;
+                }
+                else
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 356;
+                    else
+                        return 355;
+                }
+            }
+        }
+
+        /// <summary>Gets or sets the number of days since the winter solstice</summary>
+        [JsonIgnore]
+        [Units("d")]
+        public int DaysSinceWinterSolstice { get; set; }
+
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
         public DailyMetDataFromFile YesterdaysMetData { get; set; }
