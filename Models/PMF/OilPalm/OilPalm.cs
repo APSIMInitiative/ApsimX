@@ -129,9 +129,37 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return false; } }
+        
+        /// <summary>Occurs when a plant is ended via EndCrop.</summary>
+        public event EventHandler PlantEnding;
 
-        /// <summary>End the crop</summary>
-        public void EndCrop() { }
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary summary = null;
+
+        /// <summary>End the crop.</summary>
+        public void EndCrop()
+        {
+            if (IsAlive == false)
+                throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
+            summary.WriteMessage(this, "Crop ending", MessageType.Information);
+
+            // Undo cultivar changes.
+            cultivarDefinition.Unapply();
+            // Invoke a plant ending event.
+            if (PlantEnding != null)
+                PlantEnding.Invoke(this, new EventArgs());
+
+            Clear();
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            SowingData = new SowingParameters();
+            plant_status = "out";
+            CropInGround = false;
+        }
 
         /// <summary>The plant_status</summary>
         [JsonIgnore]
