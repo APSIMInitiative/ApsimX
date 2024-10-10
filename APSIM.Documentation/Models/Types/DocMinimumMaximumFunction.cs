@@ -26,7 +26,7 @@ namespace APSIM.Documentation.Models.Types
             Section section = GetSummaryAndRemarksSection(model);
 
             foreach (IModel child in model.FindAllChildren())
-                section.Add(AutoDocumentation.Document(child));
+                section.Add(AutoDocumentation.DocumentModel(child));
 
             string type = "Max";
             if (model is MinimumFunction)

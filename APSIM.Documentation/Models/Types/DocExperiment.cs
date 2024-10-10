@@ -28,7 +28,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 if (child is Memo || child is Graph || child is Folder)
                 {
-                    section.Add(AutoDocumentation.Document(child));
+                    section.Add(AutoDocumentation.DocumentModel(child));
                 }
             }
 

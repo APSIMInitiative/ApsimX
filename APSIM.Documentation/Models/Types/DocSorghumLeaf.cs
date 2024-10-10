@@ -45,12 +45,12 @@ namespace APSIM.Documentation.Models.Types
 
                 // TODO: not sure why this section throws out the whole formatting of the document, will investigate later on.
                 // Section rueSection = new("Radiation Use Efficiency", new List<ITag>());
-                // (rueSection.Children as List<ITag>).Add(new Section("Extinction Coefficient Function", AutoDocumentation.Document((model as SorghumLeaf).extinctionCoefficientFunction)));
-                // (rueSection.Children as List<ITag>).Add(new Section("Photosynthesis", AutoDocumentation.Document((model as SorghumLeaf).photosynthesis)));
+                // (rueSection.Children as List<ITag>).Add(new Section("Extinction Coefficient Function", AutoDocumentation.DocumentModel((model as SorghumLeaf).extinctionCoefficientFunction)));
+                // (rueSection.Children as List<ITag>).Add(new Section("Photosynthesis", AutoDocumentation.DocumentModel((model as SorghumLeaf).photosynthesis)));
                 // subTags.Add(rueSection);
 
                 // TODO: This also causes formatting problems and needs correcting.
-                // subTags.AddRange(AutoDocumentation.Document((model as SorghumLeaf).potentialBiomassTEFunction));
+                // subTags.AddRange(AutoDocumentation.DocumentModel((model as SorghumLeaf).potentialBiomassTEFunction));
 
                 new Section("Initial Dry Matter Mass", new Paragraph($"Initial DM mass = {(model as SorghumLeaf).InitialDMWeight} gm^-2^")),
                 new Section("Nitrogen Demand", new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.")),

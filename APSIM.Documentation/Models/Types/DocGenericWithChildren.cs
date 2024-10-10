@@ -23,7 +23,7 @@ namespace APSIM.Documentation.Models.Types
             Section section = GetSummaryAndRemarksSection(model);
 
             foreach (IModel child in model.FindAllChildren())
-                section.Add(AutoDocumentation.Document(child));
+                section.Add(AutoDocumentation.DocumentModel(child));
 
             return new List<ITag>() {section};
         }

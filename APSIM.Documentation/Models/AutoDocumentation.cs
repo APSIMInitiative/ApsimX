@@ -125,8 +125,18 @@ namespace APSIM.Documentation.Models
 
         /// <summary>Writes the description of a class to the tags.</summary>
         /// <param name="model">The model to get documentation for.</param>
-        /// <param name="heading">The heading level to use.</param>
-        public static List<ITag> Document(IModel model, int heading = 0)
+        public static List<ITag> Document(IModel model)
+        {
+            List<ITag> newTags;
+            newTags = AutoDocumentation.DocumentModel(model);
+            newTags = DocumentationUtilities.CleanEmptySections(newTags);
+            newTags = DocumentationUtilities.AddHeader(model.Name, newTags);
+            return newTags;
+        }
+
+        /// <summary>Writes the description of a class to the tags.</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        public static List<ITag> DocumentModel(IModel model)
         {
             List<ITag> newTags;
 
@@ -135,18 +145,17 @@ namespace APSIM.Documentation.Models
             if (docType != null) 
             {
                 object documentClass = Activator.CreateInstance(docType, new object[]{model});
-                newTags = (documentClass as DocGeneric).Document(heading);
+                newTags = (documentClass as DocGeneric).Document(0);
             }
             else if (docType == null && model as IFunction != null)
             {
-                newTags = new DocFunction(model).Document(heading);
+                newTags = new DocFunction(model).Document(0);
             }
             else
             {
-                newTags = new DocGeneric(model).Document(heading);
+                newTags = new DocGeneric(model).Document(0);
             }
-
-            newTags = DocumentationUtilities.GetCleanedDocumentationList(newTags);
+            newTags = DocumentationUtilities.CleanEmptySections(newTags);
             return newTags;
         }
 
@@ -155,7 +164,7 @@ namespace APSIM.Documentation.Models
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
         /// <param name="headingLevel">The starting heading level.</param>
-        public void DocumentModel(IModel rootModel, string modelNameToDocument, List<ITag> tags, int headingLevel)
+        public void DocumentModel2(IModel rootModel, string modelNameToDocument, List<ITag> tags, int headingLevel)
         {
             //This was in my stash, no idea where the function is that was using this in models.
             Simulation simulation = rootModel.FindInScope<Simulation>();
@@ -203,7 +212,7 @@ namespace APSIM.Documentation.Models
                     sims.Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
-                    AutoDocumentation.Document(modelToDocument, headingLevel);
+                    AutoDocumentation.DocumentModel(modelToDocument);
 
                     // Unresolve links.
                     sims.Links.Unresolve(clonedSimulation, true);

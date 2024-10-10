@@ -27,7 +27,7 @@ namespace APSIM.Documentation.Models.Types
 
             XYPairs xyPairs = model.FindChild<XYPairs>();
             if (xyPairs != null)
-                section.Add(AutoDocumentation.Document(xyPairs));
+                section.Add(AutoDocumentation.DocumentModel(xyPairs));
 
             return new List<ITag>() {section};
         }

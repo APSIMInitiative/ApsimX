@@ -46,7 +46,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 demandTags.Add(new Paragraph($"The demand for N is reduced by a factor specified by the NitrogenDemandSwitch."));
-                demandTags.AddRange(AutoDocumentation.Document(nDemandSwitch));
+                demandTags.AddRange(AutoDocumentation.DocumentModel(nDemandSwitch));
             }
             section.Add(new Section("Nitrogen Demand Switch", demandTags));
 
@@ -61,7 +61,7 @@ namespace APSIM.Documentation.Models.Types
 
             IModel biomassRemovalModel = model.FindChild<BiomassRemoval>();
             if (biomassRemovalModel != null)
-                section.Add(AutoDocumentation.Document(biomassRemovalModel));
+                section.Add(AutoDocumentation.DocumentModel(biomassRemovalModel));
 
             return new List<ITag>() {section};
         }
@@ -70,7 +70,7 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> subTags = new List<ITag>();
             subTags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool."));
-            subTags.AddRange(AutoDocumentation.Document(dmDemands));
+            subTags.AddRange(AutoDocumentation.DocumentModel(dmDemands));
             return subTags;
         }
 
@@ -78,7 +78,7 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> subTags = new List<ITag>();
             subTags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool."));
-            subTags.AddRange(AutoDocumentation.Document(nDemands));
+            subTags.AddRange(AutoDocumentation.DocumentModel(nDemands));
             return subTags;
         }
 
@@ -87,19 +87,19 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> subTags = new List<ITag>();
             IModel minNConc = organ.FindChild("MinimumNConc");
             if (minNConc != null)
-                subTags.AddRange(AutoDocumentation.Document(minNConc));
+                subTags.AddRange(AutoDocumentation.DocumentModel(minNConc));
             else
                 subTags.Add(new Paragraph("MinimumNConc not found."));
 
             IModel critNConc = organ.FindChild("CriticalNConc");
             if (critNConc != null)
-                subTags.AddRange(AutoDocumentation.Document(critNConc));
+                subTags.AddRange(AutoDocumentation.DocumentModel(critNConc));
             else
                 subTags.Add(new Paragraph("CritNConc not found."));
 
             IModel maxNConc = organ.FindChild("MaximumNConc");
             if (maxNConc != null)
-                subTags.AddRange(AutoDocumentation.Document(maxNConc));
+                subTags.AddRange(AutoDocumentation.DocumentModel(maxNConc));
             else
                 subTags.Add(new Paragraph("MaxNConc not found."));
 
@@ -120,7 +120,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor."));
-                subTags.AddRange(AutoDocumentation.Document(dmReallocFactor));
+                subTags.AddRange(AutoDocumentation.DocumentModel(dmReallocFactor));
             }
             IModel dmRetransFactor = organ.FindChild("DMRetranslocationFactor");
             if (dmRetransFactor is Constant dmRetransConst)
@@ -133,7 +133,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor."));
-                subTags.AddRange(AutoDocumentation.Document(dmReallocFactor));
+                subTags.AddRange(AutoDocumentation.DocumentModel(dmReallocFactor));
             }
             return subTags;
         }
@@ -152,7 +152,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor."));
-                subTags.AddRange(AutoDocumentation.Document(nReallocFactor));
+                subTags.AddRange(AutoDocumentation.DocumentModel(nReallocFactor));
             }
             IModel nRetransFactor = organ.FindChild("NRetranslocationFactor");
             if (nRetransFactor is Constant nRetransConst)
@@ -165,7 +165,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor."));
-                subTags.AddRange(AutoDocumentation.Document(nRetransFactor));
+                subTags.AddRange(AutoDocumentation.DocumentModel(nRetransFactor));
             }
             return subTags;
         }
@@ -184,7 +184,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate."));
-                subTags.AddRange(AutoDocumentation.Document(senescenceRate));
+                subTags.AddRange(AutoDocumentation.DocumentModel(senescenceRate));
             }
 
             IModel detachmentRate = organ.FindChild("DetachmentRateFunction");
@@ -198,7 +198,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 subTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                subTags.AddRange(AutoDocumentation.Document(detachmentRate));
+                subTags.AddRange(AutoDocumentation.DocumentModel(detachmentRate));
             }
             return subTags;
         }

@@ -29,13 +29,13 @@ namespace APSIM.Documentation.Models.Types
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in model.FindAllChildren<Constant>())
-                constantTags.AddRange(AutoDocumentation.Document(constant));
+                constantTags.AddRange(AutoDocumentation.DocumentModel(constant));
             section.Add(new Section("Constants", constantTags));
 
             // Document everything else.
             List<ITag> childrenTags = new();
             foreach (var child in model.Children.Where(child => !(child is Constant) && !(child is Memo)))
-                childrenTags.AddRange(AutoDocumentation.Document(child));
+                childrenTags.AddRange(AutoDocumentation.DocumentModel(child));
             section.Add(new Section("Children", childrenTags));
 
             return new List<ITag>() {section};

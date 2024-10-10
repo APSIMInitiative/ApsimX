@@ -42,7 +42,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 foreach(IModel child in sims.FindAllChildren())
                 {
-                    tags.AddRange(AutoDocumentation.Document(child));
+                    tags.AddRange(AutoDocumentation.DocumentModel(child));
                 }
             }
 
@@ -59,14 +59,14 @@ namespace APSIM.Documentation.Models.Types
             var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
             foreach(Plant plant in plants)
             {
-                tags.AddRange(AutoDocumentation.Document(plant));
+                tags.AddRange(AutoDocumentation.DocumentModel(plant));
             }
 
             //Then just document the folders that aren't replacements
             foreach (IModel child in model.FindAllChildren<Folder>())
             {
                 if(child.Name != "Replacements")
-                    tags.AddRange(AutoDocumentation.Document(child));
+                    tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
             return tags;
@@ -83,7 +83,7 @@ namespace APSIM.Documentation.Models.Types
                 } 
                 else if(child is Memo || child is Graph || (child is Folder && child.Name != "Replacements"))
                 {
-                    tags.AddRange(AutoDocumentation.Document(child));
+                    tags.AddRange(AutoDocumentation.DocumentModel(child));
                 }
             }
 

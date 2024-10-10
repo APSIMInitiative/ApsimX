@@ -25,8 +25,8 @@ namespace APSIM.Documentation.Models.Types
 
             WaterSenescenceFunction waterSenFuncModel = model as WaterSenescenceFunction;
 
-            section.Add(AutoDocumentation.Document(waterSenFuncModel.FindChild<IFunction>("senWaterTimeConst")));
-            section.Add(AutoDocumentation.Document(waterSenFuncModel.FindChild<IFunction>("senThreshold")));
+            section.Add(AutoDocumentation.DocumentModel(waterSenFuncModel.FindChild<IFunction>("senWaterTimeConst")));
+            section.Add(AutoDocumentation.DocumentModel(waterSenFuncModel.FindChild<IFunction>("senThreshold")));
             section.Add(new Paragraph("SDRatio is the Water Supply divided by the Water Demand (found in Arbitrator). It will return 1.0 unless there is less Supply than Demand"));
 
             return new List<ITag>() {section};

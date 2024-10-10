@@ -35,10 +35,10 @@ namespace APSIM.Documentation.Models.Types
             IModel extinctionCoefficient = (model as Leaf).FindChild("ExtinctionCoefficient");
 
             if (extinctionCoefficient != null)
-                dmfTags.AddRange(AutoDocumentation.Document(extinctionCoefficient));
+                dmfTags.AddRange(AutoDocumentation.DocumentModel(extinctionCoefficient));
             else if (extinctionCoeff != null)
-                dmfTags.AddRange(AutoDocumentation.Document(extinctionCoeff));
-            dmfTags.AddRange(AutoDocumentation.Document((model as Leaf).FindChild("Photosynthesis")));
+                dmfTags.AddRange(AutoDocumentation.DocumentModel(extinctionCoeff));
+            dmfTags.AddRange(AutoDocumentation.DocumentModel((model as Leaf).FindChild("Photosynthesis")));
 
             var dmfSection = new Section("Dry Matter Fixation", dmfTags);
             section.Add(dmfSection);

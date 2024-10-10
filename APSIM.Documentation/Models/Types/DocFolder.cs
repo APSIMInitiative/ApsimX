@@ -31,7 +31,7 @@ namespace APSIM.Documentation.Models.Types
             
             foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
             {
-                section.Add(AutoDocumentation.Document(map));
+                section.Add(AutoDocumentation.DocumentModel(map));
             }
 
             // Write experiment descriptions. We don't call experiment.Document() here,
@@ -104,11 +104,11 @@ namespace APSIM.Documentation.Models.Types
 
             // Document experiments individually.
             foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
-                section.Add(AutoDocumentation.Document(experiment));
+                section.Add(AutoDocumentation.DocumentModel(experiment));
 
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
-                section.Add(AutoDocumentation.Document(folder));
+                section.Add(AutoDocumentation.DocumentModel(folder));
 
             return new List<ITag>() {section};
         }

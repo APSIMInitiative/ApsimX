@@ -94,10 +94,10 @@ namespace APSIM.Documentation.Models.Types
             //             if (type.IsAssignableFrom(child.GetType()))
             //             {
             //                 if (child is Phenology)
-            //                     section.Add(AutoDocumentation.Document(child));
+            //                     section.Add(AutoDocumentation.DocumentModel(child));
             //                 else
             //                 {
-            //                     List<ITag> childTags = AutoDocumentation.Document(child, 0);
+            //                     List<ITag> childTags = AutoDocumentation.DocumentModel(child, 0);
             //                     section.Add(new Section(new List<ITag> { childTags.First() }));
             //                 }
             //             }

@@ -24,7 +24,7 @@ namespace APSIM.Documentation.Models.Types
             
             foreach (IModel child in model.Children)
                 if (child is M.Memo || child is M.Graph || child is M.Map || child is M.Manager)
-                    section.Add(AutoDocumentation.Document(child));
+                    section.Add(AutoDocumentation.DocumentModel(child));
 
             return new List<ITag>() {section};
         }
