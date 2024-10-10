@@ -21,7 +21,7 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
+            Section section = GetSectionTitle(model);
 
             M.Graph graph = model as M.Graph;
             section.Children.Add(graph.ToGraph(graph.GetSeriesDefinitions()));

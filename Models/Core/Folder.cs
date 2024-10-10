@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using Models.Factorial;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -37,33 +34,5 @@ namespace Models.Core
 
         /// <summary>Number of graphs to show per page.</summary>
         public int GraphsPerPage { get; set; } = 6;
-
-        /// <summary>
-        /// Gets child graphs from a folder model.
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        public IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs(IModel parent)
-        {
-            var graphs = new List<APSIM.Shared.Documentation.Graph>();
-            var page = new GraphPage();
-            page.Graphs.AddRange(parent.FindAllChildren<Graph>().Where(g => g.Enabled));
-            var storage = parent.FindInScope<Storage.IDataStore>();
-            List<GraphPage.GraphDefinitionMap> definitionMaps = new();
-            if (storage != null)
-                definitionMaps.AddRange(page.GetAllSeriesDefinitions(this, storage.Reader));
-            foreach (var map in definitionMaps)
-            {
-                try
-                {
-                    graphs.Add(map.Graph.ToGraph(map.SeriesDefinitions));
-                }
-                catch (Exception err)
-                {
-                    Console.Error.WriteLine(err);
-                }
-            }
-            return graphs;
-        }
     }
 }

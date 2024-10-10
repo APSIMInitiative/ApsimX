@@ -20,7 +20,7 @@ namespace APSIM.Interop.Documentation.Renderers
             // Start a new paragraph before and after this tag.
             renderer.StartNewParagraph();
 
-            renderer.SetHeadingLevel(0);
+            renderer.SetHeadingLevel(1);
             renderer.AppendText(header.Title, Markdown.TextStyle.Normal);
             renderer.ClearHeadingLevel();
             

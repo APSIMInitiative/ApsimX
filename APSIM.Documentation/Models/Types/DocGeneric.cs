@@ -36,6 +36,18 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Get a section with the Summary, Remarks and Memo text included.
         /// </summary>
+        public static Section GetSectionTitle(IModel model) {
+            
+            List<ITag> tags = new List<ITag>();
+            foreach (IModel child in model.FindAllChildren<Memo>())
+                tags = AutoDocumentation.DocumentModel(child).ToList();
+
+            return new Section(model.Name, tags);
+        }
+
+        /// <summary>
+        /// Get a section with the Summary, Remarks and Memo text included.
+        /// </summary>
         public static Section GetSummaryAndRemarksSection(IModel model) {
             
             List<ITag> tags = new List<ITag>();

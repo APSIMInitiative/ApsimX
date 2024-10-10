@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using Models;
@@ -28,8 +29,11 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
-
             Simulations sims = model as Simulations;
+
+            string title = Path.GetFileNameWithoutExtension(sims.FileName);
+            tags.Add(new Header(title));
+            
             if (sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
             {
                 tags.AddRange(DocumentValidation(model as Simulations));

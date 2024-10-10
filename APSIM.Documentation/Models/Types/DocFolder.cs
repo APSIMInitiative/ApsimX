@@ -3,8 +3,12 @@ using APSIM.Shared.Documentation;
 using Models.Core;
 using System.Linq;
 using Models;
+using Models.Storage;
 using Models.Factorial;
 using System.Data;
+using System;
+using ModelsGraph = Models.Graph;
+using ModelsGraphPage = Models.GraphPage;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -64,7 +68,7 @@ namespace APSIM.Documentation.Models.Types
                     List<ITag> graphPageTags = new List<ITag>();
                     foreach (Folder folder in simulation.FindAllChildren<Folder>().Where(folder => folder.Enabled && folder.ShowInDocs))
                     {
-                        var childGraphs = (model as Folder).GetChildGraphs(folder);
+                        var childGraphs = GetChildGraphs();
                         foreach(Shared.Documentation.Graph graph in childGraphs)
                             graphPageTags.Add(graph);
                     }
@@ -86,25 +90,61 @@ namespace APSIM.Documentation.Models.Types
                 // Write page of graphs.
                 if ((model as Folder).ShowInDocs)
                 {
-                    if (model.Parent != null)
+                    var childGraphs = new List<Shared.Documentation.Graph>();
+                    if (GetChildGraphs() != null)
                     {
-                        var childGraphs = new List<Shared.Documentation.Graph>();
-                        if ((model as Folder).GetChildGraphs(model) != null)
-                        {
-                            childGraphs = (model as Folder).GetChildGraphs(model).ToList();
-                            if (childGraphs.Count > 0)
-                                section.Add(new Shared.Documentation.GraphPage(childGraphs));
-                        }
-                    }             
+                        childGraphs = GetChildGraphs().ToList();
+                        if (childGraphs.Count > 0)
+                            section.Add(new Shared.Documentation.GraphPage(childGraphs));
+                    }
                 }
+
+                // Document graphs under a simulation
+                foreach (Experiment experiment in model.FindAllChildren<Experiment>().Where(f => f.Enabled))
+                    foreach (ModelsGraph graph in experiment.FindAllChildren<ModelsGraph>().Where(f => f.Enabled))
+                        section.Add(AutoDocumentation.DocumentModel(graph));
+
+                // Document graphs under a experiment
+                foreach (Simulation experiment in model.FindAllChildren<Simulation>().Where(f => f.Enabled))
+                    foreach (ModelsGraph graph in experiment.FindAllChildren<ModelsGraph>().Where(f => f.Enabled))
+                        section.Add(AutoDocumentation.DocumentModel(graph));
             }
 
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 section.Add(AutoDocumentation.DocumentModel(folder));
-
+            
             return new List<ITag>() {section};
         }
 
+        /// <summary>
+        /// Gets child graphs from a folder model.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs()
+        {
+            var graphs = new List<APSIM.Shared.Documentation.Graph>();
+            var page = new ModelsGraphPage();
+            page.Graphs.AddRange(model.FindAllChildren<ModelsGraph>().Where(g => g.Enabled));
+            var storage = model.FindInScope<IDataStore>();
+            List<ModelsGraphPage.GraphDefinitionMap> definitionMaps = new();
+            if (storage != null)
+                definitionMaps.AddRange(page.GetAllSeriesDefinitions(model, storage.Reader));
+            foreach (var map in definitionMaps)
+            {
+                try
+                {
+                    graphs.Add(map.Graph.ToGraph(map.SeriesDefinitions));
+                }
+                catch (Exception err)
+                {
+                    Console.Error.WriteLine(err);
+                }
+            }
+            return graphs;
+        }
+
     }
+
+
 }
