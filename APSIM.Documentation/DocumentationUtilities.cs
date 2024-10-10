@@ -79,17 +79,10 @@ public static class DocumentationUtilities
         List<ITag> newTags = new List<ITag>();
         ITag first = tags.First();
         
-        if (tags.First().GetType() == typeof(Section))
+        if (tags.First().GetType() == typeof(Paragraph))
         {
-            newTags.Add(new Header((first as Section).Title));
-            newTags.AddRange((first as Section).Children);
+            newTags.Add(new Section(title, first));
             tags.Remove(first);
-            newTags.AddRange(tags);
-            return newTags;
-        }
-        else if (tags.First().GetType() == typeof(Paragraph))
-        {
-            newTags.Add(new Header(title));
             newTags.AddRange(tags);
             return newTags;
         }

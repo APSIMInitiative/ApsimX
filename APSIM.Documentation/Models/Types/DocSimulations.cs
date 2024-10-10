@@ -30,9 +30,6 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
-
-            string title = Path.GetFileNameWithoutExtension(sims.FileName);
-            tags.Add(new Header(title));
             
             if (sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
             {
@@ -56,15 +53,22 @@ namespace APSIM.Documentation.Models.Types
         private List<ITag> DocumentValidation(Model m)
         {
             List<ITag> tags = new List<ITag>();
-            foreach (ITag tag in GetSummaryAndRemarksSection(model).Children)
-                tags.Add(tag);
 
             // Find a single instance of all unique Plant models.
             var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
+            List<ITag> plantTags = new List<ITag>();
             foreach(Plant plant in plants)
             {
-                tags.AddRange(AutoDocumentation.DocumentModel(plant));
+                plantTags.AddRange(AutoDocumentation.DocumentModel(plant));
             }
+            
+            if (plantTags.Count > 0)
+            {
+                string title = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
+                plantTags = DocumentationUtilities.AddHeader(title, plantTags);
+                tags.AddRange(plantTags);
+            }
+            
 
             //Then just document the folders that aren't replacements
             foreach (IModel child in model.FindAllChildren<Folder>())
