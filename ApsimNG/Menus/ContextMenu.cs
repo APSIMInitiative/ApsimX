@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Documentation.Models;
 using APSIM.Interop.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
@@ -993,27 +994,27 @@ namespace UserInterface.Presenters
                     explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
                 }
 
-                PdfWriter pdf = new PdfWriter();
-                string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
-
-                //if filename is null, prompt user to save the file
-                if (fileNameWritten == null)
+                string modelTypeName = String.Empty;
+                if (modelToDocument is Models.PMF.Plant)
+                    modelTypeName = modelToDocument.Name;
+                else if (modelToDocument is Simulations)
                 {
-                    explorerPresenter.Save();
-                    fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                    var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
+                    modelTypeName = simpleFileName;
                 }
-                //check if filename is still null (user didn't save) and throw a useful exception
-                if (fileNameWritten == null)
-                {
-                    throw new Exception("You must save this file before documentation can be created");
-                }
+                else modelTypeName = modelToDocument.GetType().Name;
 
-                pdf.Write(fileNameWritten, modelToDocument.Document());
+                string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
+                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.pdf";
+                // Options allows images in some tutorials to be found.
+                PdfWriter pdf = new(new PdfOptions(Path.GetDirectoryName(fullDocFileName), null));
 
-                explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
+                pdf.Write(fullDocFileName, AutoDocumentation.Document(modelToDocument));
+
+                explorerPresenter.MainPresenter.ShowMessage($"Written {fullDocFileName}", Simulation.MessageType.Information);
 
                 // Open the document.
-                ProcessUtilities.ProcessStart(fileNameWritten);
+                ProcessUtilities.ProcessStart(fullDocFileName);
             }
             catch (Exception err)
             {

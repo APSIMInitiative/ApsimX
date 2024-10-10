@@ -1,17 +1,11 @@
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Math;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace APSIM.Shared.Documentation
 {
@@ -140,7 +134,7 @@ namespace APSIM.Shared.Documentation
                     parts[1] = $"{summary}\n";
 
                     eventsNamesInOrder.Add(parts);
-                } 
+                }
                 else
                 {
                     throw new Exception($"Documentation Error: Regex failed on \"{match.Value}\" Event Handle Name was found.");
@@ -190,7 +184,7 @@ namespace APSIM.Shared.Documentation
             int functionPos = fileContents.IndexOf(functionName);
             if (functionPos == -1)
                 throw new Exception($"Documentation Error: {functionName} does not exist in {fileName}.");
-                
+
             int braceStart = fileContents.IndexOf("{", functionPos);
 
             //Move through the file until we find where that curly brace is closed
@@ -210,7 +204,7 @@ namespace APSIM.Shared.Documentation
                 throw new Exception("Documentation Error: Uneven number of curly braces { } in " + fileName);
 
             //remove the last closing curly brace and return all code between start and end
-            return fileContents.Substring(braceStart, i-braceStart);
+            return fileContents.Substring(braceStart, i - braceStart);
         }
     }
 }

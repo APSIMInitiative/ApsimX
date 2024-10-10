@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Shared.Documentation;
+using Models;
+using Models.Core;
 using Models.Functions;
+using APSIM.Documentation.Models.Types;
+using Models.PMF;
+using Models.PMF.Phen;
+using Models.Core.Run;
+using Models.Storage;
+using Models.PMF.Organs;
+using Models.PMF.Struct;
+using Models.Functions.DemandFunctions;
+using Models.Factorial;
+using Models.Functions.SupplyFunctions;
+using Models.Functions.RootShape;
+using Models.PMF.OilPalm;
+using M = Models;
 
-namespace Models.Core
+namespace APSIM.Documentation.Models
 {
 
     /// <summary>
@@ -28,6 +43,182 @@ namespace Models.Core
 
         /// <summary>Flag for whether or not documentation has been loaded.</summary>
         private static bool initialized = false;
+
+        /// <summary>Returns a dictionary to match model classes to document class.</summary>
+        private static Dictionary<Type, Type> DefineFunctions()
+        {
+            Dictionary<Type, Type> documentMap = new()
+            {
+                {typeof(Plant), typeof(DocPlant)},
+                {typeof(Clock), typeof(DocClock)},
+                {typeof(Simulation), typeof(DocGenericWithChildren)},
+                {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
+                {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
+                {typeof(MobilisationSupplyFunction), typeof(DocBiomassArbitrationFunction)},
+                {typeof(PlantPartitionFractions), typeof(DocBiomassArbitrationFunction)},
+                {typeof(NutrientDemandFunctions), typeof(DocGenericWithChildren)},
+                {typeof(NutrientPoolFunctions), typeof(DocGenericWithChildren)},
+                {typeof(NutrientProportionFunctions), typeof(DocGenericWithChildren)},
+                {typeof(NutrientSupplyFunctions), typeof(DocGenericWithChildren)},
+                {typeof(Phenology), typeof(DocPhenology)},
+                {typeof(Root), typeof(DocRoot)},
+                {typeof(Cultivar), typeof(DocCultivar)},
+                {typeof(Map), typeof(DocMap)},
+                {typeof(BoundFunction), typeof(DocBoundFunction)},
+                {typeof(Memo), typeof(DocMemo)},
+                {typeof(Structure), typeof(DocStructure)},
+                {typeof(Folder),typeof(DocFolder)},
+                {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
+                {typeof(HeightFunction), typeof(DocFunction)},
+                {typeof(BudNumberFunction), typeof(DocFunction)},
+                {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
+                {typeof(XYPairs), typeof(DocXYPairs)},
+                {typeof(VernalisationPhase), typeof(DocPhase)},
+                {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
+                {typeof(StorageNDemandFunction), typeof(DocStorageNDemandFunction)},
+                {typeof(StartPhase), typeof(DocPhase)},
+                {typeof(PhotoperiodPhase), typeof(DocPhase)},
+                {typeof(NodeNumberPhase), typeof(DocPhase)},
+                {typeof(LeafDeathPhase), typeof(DocPhase)},
+                {typeof(LeafAppearancePhase), typeof(DocPhase)},
+                {typeof(GrazeAndRewind), typeof(DocPhase)},
+                {typeof(GotoPhase), typeof(DocPhase)},
+                {typeof(GerminatingPhase), typeof(DocPhase)},
+                {typeof(GenericPhase), typeof(DocPhase)},
+                {typeof(EndPhase), typeof(DocPhase)},
+                {typeof(EmergingPhase), typeof(DocPhase)},
+                {typeof(SorghumLeaf), typeof(DocSorghumLeaf)},
+                {typeof(ReproductiveOrgan), typeof(DocReproductiveOrgan) },
+                {typeof(PerennialLeaf), typeof(DocPerennialLeaf)},
+                {typeof(Nodule), typeof(DocNodule)},
+                {typeof(Leaf), typeof(DocLeaf)},
+                {typeof(Manager), typeof(DocManager)},
+                {typeof(Experiment), typeof(DocExperiment)},
+                {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
+                {typeof(RUEModel), typeof(DocGenericWithChildren)},
+                {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
+                {typeof(RUECO2Function), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiCircle), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeCylinder), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiEllipse), typeof(DocGenericWithChildren)},
+                {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
+                {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
+                {typeof(BasialBuds), typeof(DocGenericWithChildren)},
+                {typeof(OilPalm), typeof(DocGenericWithChildren)},
+                {typeof(GenericOrgan), typeof(DocGenericOrgan)},
+                {typeof(WaterSenescenceFunction), typeof(DocWaterSenescenceFunction)},
+                {typeof(CanopyGrossPhotosynthesisHourly), typeof(DocGenericWithChildren)},
+                {typeof(CanopyPhotosynthesis), typeof(DocGenericWithChildren)},
+                {typeof(LeafLightUseEfficiency), typeof(DocGenericWithChildren)},
+                {typeof(LeafMaxGrossPhotosynthesis), typeof(DocGenericWithChildren)},
+                {typeof(LimitedTranspirationRate), typeof(DocGenericWithChildren)},
+                {typeof(StomatalConductanceCO2Modifier), typeof(DocGenericWithChildren)},
+                {typeof(BiomassDemand), typeof(DocGenericWithChildren)},
+                {typeof(BiomassDemandAndPriority), typeof(DocGenericWithChildren)},
+                {typeof(EnergyBalance), typeof(DocGenericWithChildren)},
+                {typeof(Alias), typeof(DocAlias)},
+                {typeof(Simulations), typeof(DocSimulations)},
+                {typeof(M.Graph), typeof(DocGraph)},
+            };
+            return documentMap;
+        }
+
+        /// <summary>Writes the description of a class to the tags.</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        public static List<ITag> Document(IModel model)
+        {
+            List<ITag> newTags;
+            newTags = AutoDocumentation.DocumentModel(model);
+            newTags = DocumentationUtilities.CleanEmptySections(newTags);
+            newTags = DocumentationUtilities.AddHeader(model.Name, newTags);
+            return newTags;
+        }
+
+        /// <summary>Writes the description of a class to the tags.</summary>
+        /// <param name="model">The model to get documentation for.</param>
+        public static List<ITag> DocumentModel(IModel model)
+        {
+            List<ITag> newTags;
+
+            DefineFunctions().TryGetValue(model.GetType(), out Type docType);
+
+            if (docType != null) 
+            {
+                object documentClass = Activator.CreateInstance(docType, new object[]{model});
+                newTags = (documentClass as DocGeneric).Document(0);
+            }
+            else if (docType == null && model as IFunction != null)
+            {
+                newTags = new DocFunction(model).Document(0);
+            }
+            else
+            {
+                newTags = new DocGeneric(model).Document(0);
+            }
+            newTags = DocumentationUtilities.CleanEmptySections(newTags);
+            return newTags;
+        }
+
+        /// <summary>Documents the specified model.</summary>
+        /// <param name="rootModel">The model this model is held in.</param>
+        /// <param name="modelNameToDocument">The model name to document.</param>
+        /// <param name="tags">The auto doc tags.</param>
+        /// <param name="headingLevel">The starting heading level.</param>
+        public void DocumentModel2(IModel rootModel, string modelNameToDocument, List<ITag> tags, int headingLevel)
+        {
+            //This was in my stash, no idea where the function is that was using this in models.
+            Simulation simulation = rootModel.FindInScope<Simulation>();
+            if (simulation != null)
+            {
+                // Find the model of the right name.
+                IModel modelToDocument = simulation.FindInScope(modelNameToDocument);
+
+                // If not found then find a model of the specified type.
+                if (modelToDocument == null)
+                    modelToDocument = simulation.FindByPath("[" + modelNameToDocument + "]")?.Value as IModel;
+
+                // If the simulation has the same name as the model we want to document, dig a bit deeper
+                if (modelToDocument == simulation)
+                    modelToDocument = simulation.FindAllDescendants().Where(m => !m.IsHidden).ToList().FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
+
+                // If still not found throw an error.
+                if (modelToDocument != null)
+                {
+                    // Get the path of the model (relative to parentSimulation) to document so that 
+                    // when replacements happen below we will point to the replacement model not the 
+                    // one passed into this method.
+                    string pathOfSimulation = simulation.FullPath + ".";
+                    string pathOfModelToDocument = modelToDocument.FullPath.Replace(pathOfSimulation, "");
+
+                    // Clone the simulation
+                    SimulationDescription simDescription = new SimulationDescription(simulation);
+
+                    Simulation clonedSimulation = simDescription.ToSimulation();
+
+                    // Prepare the simulation for running - this perform misc cleanup tasks such
+                    // as removing disabled models, standardising the soil, resolving links, etc.
+                    clonedSimulation.Prepare();
+                    rootModel.FindInScope<IDataStore>().Writer.Stop();
+                    // Now use the path to get the model we want to document.
+                    modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
+
+                    if (modelToDocument == null)
+                        throw new Exception("Cannot find model to document: " + modelNameToDocument);
+
+                    //Get the simulations to do linking with
+                    Simulations sims = simulation.FindAncestor<Simulations>();
+
+                    // resolve all links in cloned simulation.
+                    sims.Links.Resolve(clonedSimulation, true);
+
+                    // Document the model.
+                    AutoDocumentation.DocumentModel(modelToDocument);
+
+                    // Unresolve links.
+                    sims.Links.Unresolve(clonedSimulation, true);
+                }
+            }
+        }
 
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
@@ -77,31 +268,7 @@ namespace Models.Core
 
             return string.Empty;
         }
-
-
-        /// <summary>Writes the description of a class to the tags.</summary>
-        /// <param name="model">The model to get documentation for.</param>
-        /// <param name="tags">The tags to add to.</param>
-        /// <param name="headingLevel">The heading level to use.</param>
-        /// <param name="indent">The indentation level.</param>
-        /// <param name="documentAllChildren">Document all children?</param>
-        /// <param name="force">
-        /// Whether or not to force the generation of documentation,
-        /// regardless of the model's IncludeInDocumentation status.
-        /// </param>
-        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
-        {
-            if (model == null)
-                return;
-            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
-            {
-                // if (model is ICustomDocumentation)
-                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                // else
-                DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
-            }
-        }
-
+        /*
         /// <summary>
         /// Document the summary description of a model.
         /// </summary>
@@ -122,7 +289,7 @@ namespace Models.Core
             if (summaryText != null)
                 ParseTextForTags(summaryText, model, tags, headingLevel, indent, documentAllChildren);
         }
-
+        */
         /// <summary>
         /// Get the summary of a member (field, property)
         /// </summary>
@@ -284,7 +451,7 @@ namespace Models.Core
             }
             return null;
         }
-
+        /*
         /// <summary>
         /// Parse a string into documentation tags
         /// </summary>
@@ -299,7 +466,7 @@ namespace Models.Core
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
-            List<IModel> childrenDocumented = new List<Core.IModel>();
+            List<IModel> childrenDocumented = new List<IModel>();
             int numSpacesStartOfLine = -1;
             string paragraphSoFar = string.Empty;
             if (stringToParse.StartsWith("\r\n"))
@@ -364,7 +531,7 @@ namespace Models.Core
                             paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                         else
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, targetHeadingLevel + 1);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -377,7 +544,7 @@ namespace Models.Core
                         Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
                         foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                         {
-                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            Document(child, targetHeadingLevel + 1);
                             childrenDocumented.Add(child);
                         }
                     }
@@ -395,7 +562,7 @@ namespace Models.Core
                                 childrenDocumented.Add(xypairs);
                                 var xName = words[2];
                                 var yName = words[3].Replace("]", "");
-                                tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                                //tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
                             }
                         }
                     }
@@ -420,11 +587,11 @@ namespace Models.Core
                 foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
-                        DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
+                        Document(child, headingLevel + 1);
                 }
             }
         }
-
+        
         private static string RemoveMacros(IModel model, string line)
         {
             if (model == null || string.IsNullOrEmpty(line))
@@ -464,7 +631,7 @@ namespace Models.Core
 
             return line;
         }
-
+        
         /// <summary>
         /// Evaluate a path that can include child models, properties or method calls.
         /// </summary>
@@ -502,7 +669,7 @@ namespace Models.Core
 
             return obj;
         }
-
+        
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
             if (paragraphSoFar.Trim() != string.Empty)
@@ -557,14 +724,14 @@ namespace Models.Core
         /// <param name="headingLevel">Heading level</param>
         /// <param name="indent">Indent level</param>
         /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
-        public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
+        public static void DocumentChildren(IModel model, List<ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
         {
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (/*child.IncludeInDocumentation &&*/
+                if (//child.IncludeInDocumentation &&
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
-                    DocumentModel(child, tags, headingLevel + 1, indent);
+                    Document(child, headingLevel + 1);
         }
 
         /// <summary>
@@ -576,7 +743,7 @@ namespace Models.Core
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         private static List<IModel> DocumentMathFunction(IModel function, char op,
-                                                         List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+                                                         List<ITag> tags, int headingLevel, int indent)
         {
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
@@ -590,15 +757,15 @@ namespace Models.Core
                     childrenToDocument.Add(child);
             }
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
+            tags.Add(new Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
 
             // write children
             if (childrenToDocument.Count > 0)
             {
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+                tags.Add(new Paragraph("Where:", indent));
 
                 foreach (IModel child in childrenToDocument)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                    Document(child, headingLevel + 1);
             }
 
             return childrenToDocument;
@@ -638,201 +805,7 @@ namespace Models.Core
             msg += child.Name;
             return false;
         }
-
-        /// <summary>
-        /// Describes an interface for a auto-doc command.
-        /// </summary>
-        public interface ITag
-        {
-        }
-
-        /// <summary>
-        /// Describes an auto-doc heading command.
-        /// </summary>
-        public class Heading : ITag
-        {
-            /// <summary>The heading text</summary>
-            public string text;
-
-            /// <summary>The heading level</summary>
-            public int headingLevel;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Heading"/> class.
-            /// </summary>
-            /// <param name="text">The heading text.</param>
-            /// <param name="headingLevel">The heading level.</param>
-            public Heading(string text, int headingLevel)
-            {
-                this.text = text;
-                this.headingLevel = headingLevel;
-            }
-        }
-
-        /// <summary>
-        /// Describes an auto-doc paragraph command.
-        /// </summary>
-        public class Paragraph : ITag
-        {
-            /// <summary>The paragraph text.</summary>
-            public string text;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>The bookmark name (optional)</summary>
-            public string bookmarkName;
-
-            /// <summary>Should the paragraph indent all lines except the first?</summary>
-            public bool handingIndent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Paragraph"/> class.
-            /// </summary>
-            /// <param name="text">The paragraph text.</param>
-            /// <param name="indent">The paragraph indent.</param>
-            public Paragraph(string text, int indent)
-            {
-                this.text = text;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc graph and table command.</summary>
-        public class GraphAndTable : ITag
-        {
-            /// <summary>The data to show in graph and table.</summary>
-            public XYPairs xyPairs;
-
-            /// <summary>The graph title</summary>
-            public string title;
-
-            /// <summary>The x axis title.</summary>
-            public string xName;
-
-            /// <summary>The y axis title</summary>
-            public string yName;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="GraphAndTable"/> class.
-            /// </summary>
-            /// <param name="xyPairs">The xy pairs.</param>
-            /// <param name="title">Graph title.</param>
-            /// <param name="xName">The x axis title.</param>
-            /// <param name="yName">The y axis title.</param>
-            /// <param name="indent">The indentation.</param>
-            public GraphAndTable(XYPairs xyPairs, string title, string xName, string yName, int indent)
-            {
-                this.title = title;
-                this.xyPairs = xyPairs;
-                this.xName = xName;
-                this.yName = yName;
-                this.indent = indent;
-            }
-        }
-
-        /// <summary>Describes an auto-doc table command.</summary>
-        public class Table : ITag
-        {
-            /// <summary>The data to show in the table.</summary>
-            public DataView data;
-
-            /// <summary>The indent level.</summary>
-            public int indent;
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public int ColumnWidth { get; private set; }
-
-            /// <summary>Max width of each column (in terms of number of characters).</summary>
-            public string Style { get; private set; } = "Table";
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataTable data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = new DataView(data);
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Table"/> class.
-            /// </summary>
-            /// <param name="data">The column / row data.</param>
-            /// <param name="indent">The indentation.</param>
-            /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            /// <param name="style">The style to use for the table.</param>
-            public Table(DataView data, int indent, int width = 50, string style = "Table")
-            {
-                this.data = data;
-                this.indent = indent;
-                this.ColumnWidth = width;
-                Style = style;
-            }
-        }
-
-        /// <summary>Descibes an image for the tags system.</summary>
-        public class Image : ITag
-        {
-            /// <summary>The image to put into the doc.</summary>
-            public System.Drawing.Image image;
-
-            /// <summary>Unique name for image. Used to save image to temp folder.</summary>
-            public string name;
-        }
-
-        /// <summary>Describes a new page for the tags system.</summary>
-        public class NewPage : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-
-        /// <summary>Page setup tag.</summary>
-        public class PageSetup : ITag
-        {
-            /// <summary>Is new page portrait?</summary>
-            public bool Portrait { get; set; } = true;
-        }
-
-        /// <summary>Describes a model view for the tags system.</summary>
-        public class ModelView : ITag
-        {
-            /// <summary>Model</summary>
-            public IModel model;
-
-            /// <summary>Constructor</summary>
-            /// <param name="modelToDocument">The model to document</param>
-            public ModelView(IModel modelToDocument)
-            {
-                model = modelToDocument;
-            }
-        }
-
-        /// <summary> creates a list of child function names </summary>
-        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
-        {
-            string listofKids = "";
-            int count = 0;
-            foreach (IModel F in ChildFunctions)
-            {
-                count += 1;
-                listofKids += ("*" + F.Name + "*");
-                if (count == ChildFunctions.Count() - 1)
-                    listofKids += " and ";
-                else if (count < ChildFunctions.Count() - 1)
-                    listofKids += ", ";
-            }
-            return listofKids;
-        }
+        */
     }
+    
 }

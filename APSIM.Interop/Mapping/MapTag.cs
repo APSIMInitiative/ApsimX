@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using Models.Mapping;
 
-namespace Models.Mapping
+namespace APSIM.Interop.Mapping
 {
     /// <summary>
     /// A map which can be displayed in autodocs.

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -196,18 +192,6 @@ namespace Models.Soils
         {
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            foreach (ITag tag in GetModelDescription())
-                yield return tag;
         }
 
 
