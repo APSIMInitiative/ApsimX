@@ -445,7 +445,7 @@ namespace Models.CLEM.Activities
             // Do check against NBal gain to TFP and TUP
             if (Math.Abs(ind.Output.NitrogenBalance - TFP - TUP) / ind.Output.NitrogenBalance > 0.05)
             {
-                string warningString = $"Cross-check: Ruminant nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
+                string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
                 Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
             }
 
