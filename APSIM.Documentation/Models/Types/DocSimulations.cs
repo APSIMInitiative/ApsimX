@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
@@ -54,10 +55,15 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
 
-            foreach (IModel child in model.FindAllChildren<Memo>())
-                tags = AutoDocumentation.DocumentModel(child).ToList();
+            string title = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
 
-            
+            foreach (IModel child in model.FindAllChildren<Memo>())
+                tags.AddRange(AutoDocumentation.DocumentModel(child));
+
+            //rename title if there was a memo
+            if (tags.Count > 0)
+                if (tags.First().GetType() == typeof(Paragraph))
+                    DocumentationUtilities.AddHeader(title, tags);
 
             // Find a single instance of all unique Plant models.
             var plants = model.FindAllDescendants<IPlant>().DistinctBy(p => p.Name.ToUpper());
@@ -69,7 +75,6 @@ namespace APSIM.Documentation.Models.Types
             
             if (plantTags.Count > 0)
             {
-                string title = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
                 plantTags = DocumentationUtilities.AddHeader(title, plantTags);
                 tags.AddRange(plantTags);
             }
