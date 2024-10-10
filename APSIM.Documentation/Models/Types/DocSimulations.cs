@@ -54,10 +54,15 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
 
+            foreach (IModel child in model.FindAllChildren<Memo>())
+                tags = AutoDocumentation.DocumentModel(child).ToList();
+
+            
+
             // Find a single instance of all unique Plant models.
-            var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
+            var plants = model.FindAllDescendants<IPlant>().DistinctBy(p => p.Name.ToUpper());
             List<ITag> plantTags = new List<ITag>();
-            foreach(Plant plant in plants)
+            foreach(IPlant plant in plants)
             {
                 plantTags.AddRange(AutoDocumentation.DocumentModel(plant));
             }

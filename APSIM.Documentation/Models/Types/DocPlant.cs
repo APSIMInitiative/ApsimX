@@ -34,7 +34,6 @@ namespace APSIM.Documentation.Models.Types
             newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Table
-            newTags.Add(new Paragraph("**List of Plant Model Components.**"));
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
@@ -48,36 +47,49 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            newTags.Add(new Table(tableData));
+            newTags.Add(new Section("Plant Model Components", new Table(tableData)));
 
+            // Write Composite Biomass Table
+            DataTable tableDataBiomass = new DataTable();
+            tableDataBiomass.Columns.Add("Component Name", typeof(string));
+            tableDataBiomass.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child is Folder && child.Name == "Cultivars")
+                if (child.GetType() == typeof(CompositeBiomass))
                 {
-                    DataTable cultivarNameTable = new();
-                    cultivarNameTable.Columns.Add("Cultivar Name");
-                    cultivarNameTable.Columns.Add("Alternative Name(s)");
-                   
-                    foreach (Folder folder in child.FindAllChildren<Folder>())
-                    {
-                        List<Cultivar> cultivars = folder.FindAllChildren<Cultivar>().ToList();
-                        foreach (Cultivar cultivarChild in cultivars)
-                        {
-                            string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
-                            cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames});
-                        }
-                    }
-                    cultivarSection = new Section("Cultivars", new Table(cultivarNameTable));
-                }
-                else if (child is Memo)
-                {
-                    newTags.Add(new Paragraph((child as Memo).Text));
-                }
-                else
-                {
-                    newTags.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
+                    DataRow row = tableDataBiomass.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableDataBiomass.Rows.Add(row);
                 }
             }
+            if (tableDataBiomass.Rows.Count > 0) 
+            {
+                newTags.Add(new Section("Composite Biomass", new Table(tableDataBiomass)));
+            }
+
+            //Write cultivars table
+            List<Cultivar> cultivars = model.FindAllDescendants<Cultivar>().ToList();
+            if (cultivars.Count > 0) 
+            {
+                DataTable cultivarNameTable = new();
+                cultivarNameTable.Columns.Add("Cultivar Name");
+                cultivarNameTable.Columns.Add("Alternative Name(s)");
+                foreach (Cultivar cultivarChild in cultivars)
+                {
+                    string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
+                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames});
+                }
+                newTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
+            }
+
+            //Write children
+            List<ITag> children = new List<ITag>();
+            foreach (IModel child in this.model.Children)
+                if (child as Memo == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null)
+                    children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
+            newTags.Add(new Section("Child Components", children));
+
             mainSection.Add(newTags);
 
             newTags = new List<ITag>() { mainSection };

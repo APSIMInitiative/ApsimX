@@ -24,6 +24,7 @@ using Models.Functions.SupplyFunctions;
 using Models.Functions.RootShape;
 using Models.PMF.OilPalm;
 using M = Models;
+using Models.AgPasture;
 
 namespace APSIM.Documentation.Models
 {
@@ -50,6 +51,8 @@ namespace APSIM.Documentation.Models
             Dictionary<Type, Type> documentMap = new()
             {
                 {typeof(Plant), typeof(DocPlant)},
+                {typeof(PastureSpecies), typeof(DocPlant)},
+                {typeof(Sugarcane), typeof(DocPlant)},
                 {typeof(Clock), typeof(DocClock)},
                 {typeof(Simulation), typeof(DocGenericWithChildren)},
                 {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
