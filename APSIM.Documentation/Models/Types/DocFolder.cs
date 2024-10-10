@@ -52,9 +52,8 @@ namespace APSIM.Documentation.Models.Types
                     row[1] = experiment.GetDesign();
                     table.Rows.Add(row);
                 }
-                experimentsTag.Add(new Paragraph("**List of experiments.**"));
                 experimentsTag.Add(new Table(table));
-                section.Add(new Section("Experiments", experimentsTag));
+                section.Add(new Section("List of experiments", experimentsTag));
 
             }
             else
@@ -99,12 +98,6 @@ namespace APSIM.Documentation.Models.Types
                     }             
                 }
             }
-
-
-
-            // Document experiments individually.
-            foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
-                section.Add(AutoDocumentation.DocumentModel(experiment));
 
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
