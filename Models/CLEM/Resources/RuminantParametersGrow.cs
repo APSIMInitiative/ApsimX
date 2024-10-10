@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -317,5 +318,19 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant parameters required for RuminantActivityGrow</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
     }
 }

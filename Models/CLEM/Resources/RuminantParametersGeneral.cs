@@ -1,9 +1,11 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -266,6 +268,21 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult($"Having both [MinimumAge1stMating] and [MinimumSize1stMating] set to [0] results in an invalid condition where any female is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
             }
+        }
+
+        #endregion
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("General ruminant parameters used by all activities:</br>");
+            htmlWriter.Write($"Standard reference weight (kg) f:{DisplaySummaryValueSnippet<double>(SRWFemale, warnZero: true)} m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWMaleMultiplier, warnZero: true)} castrate m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWCastrateMaleMultiplier, warnZero: true)}");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

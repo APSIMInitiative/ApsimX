@@ -312,13 +312,31 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new StringWriter();
             htmlWriter.Write("<div class=\"activityentry\">");
-            htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenPercent:0.###}%</span>");
-            if (DryMatterDigestibility > 0)
-                htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility:0.###}%</span>");
-            else
-                htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
+            htmlWriter.Write($"This food is a <span class=\"setvalue\">{TypeOfFeed}%</span></div>");
 
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write($"The Gross Energy Content is <span class=\"setvalue\">{GrossEnergyContent}</span> with a Metabolisable Energy Content of <span class=\"setvalue\">{MetabolisableEnergyContent}</span></div>");
+
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write($"The Dry Matter Digestibility is <span class=\"setvalue\">{DryMatterDigestibility}%</span> with <span class=\"setvalue\">{FatPercent}%</span> fat</div>");
+
+            htmlWriter.Write("<div class=\"activityentry\">");
+            switch (CPContentStyle)
+            {
+                case CrudeProteinContentStyle.SpecifyCrudeProteinContent:
+                    htmlWriter.Write($"This food is <span class=\"setvalue\">{UserCrudeProteinPercent}%</span> crude protein of which <span class=\"setvalue\">{RumenDegradableProteinPercent}%</span> is rumen degradable protein.</div>");
+                    break;
+                case CrudeProteinContentStyle.EstimateFromNitrogenContent:
+                    htmlWriter.Write($"Crude Protein is estimated from the <span class=\"setvalue\">{UserNitrogenPercent}%</span> nitrogen content. <span class=\"setvalue\">{RumenDegradableProteinPercent}%</span> of the crude protein is rumen degradable.</div>");
+                    break;
+                case CrudeProteinContentStyle.NoCrudeProtein:
+                    htmlWriter.Write("This feed contains no Crude Protein.");
+                    break;
+                default:
+                    break;
+            }
             htmlWriter.Write("</div>");
+
             if (StartingAmount > 0)
             {
                 htmlWriter.Write("<div class=\"activityentry\">");

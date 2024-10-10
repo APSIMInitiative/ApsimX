@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,5 +83,19 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant parameters required for grazing activities:</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
     }
 }

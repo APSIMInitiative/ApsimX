@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
@@ -136,5 +137,19 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant breeding parameters used in RuminantActivityGrow</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
     }
 }

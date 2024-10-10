@@ -1,12 +1,17 @@
-﻿using DocumentFormat.OpenXml.Presentation;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Presentation;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.DCAPST.Environment;
+using Models.PMF.Phen;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Runtime.Intrinsics.X86;
 
 namespace Models.CLEM.Resources
@@ -241,17 +246,48 @@ namespace Models.CLEM.Resources
                 {
                     ruminantType = FindAncestor<RuminantType>();
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than 1 (default 1.5)", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed turned off
                 if (IgnoreFeedQualityIntakeAdustment)
                 {
                     ruminantType ??= FindAncestor<RuminantType>();
                     summary ??= FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to false", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
             return new List<ValidationResult>();
         }
+
+        #region descriptive summary 
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant parameters for intake as used in RuminantActivityGrow24</div>");
+            
+            if (FormatForParentControl)
+            {
+                if (RelativeConditionEffect_CI20 == 1.0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"warninglink\">");
+                    htmlWriter.Write($"Ruminant intake reduction based on high condition is disabled<br />To allow this functionality set [Grow24 CI].RelativeConditionEffect_CI20 to a value <span class=\"setvalue\">> 1</span> (default 1.5)");
+                    htmlWriter.Write("</div>");
+                    if(IgnoreFeedQualityIntakeAdustment)
+                        htmlWriter.Write("</br>");
+                }
+                if (IgnoreFeedQualityIntakeAdustment)
+                {
+                    htmlWriter.Write("\r\n<div class=\"warninglink\">");
+                    htmlWriter.Write($"Ruminant intake reduction based on intake quality is disabled<br />To allow this functionality set [Grow24 CI].IgnoreFeedQualityIntakeAdustment to <span class=\"setvalue\">False</span>");
+                    htmlWriter.Write(" </div>");
+                }
+            }
+            return htmlWriter.ToString();
+        }
+
+        #endregion
     }
 }

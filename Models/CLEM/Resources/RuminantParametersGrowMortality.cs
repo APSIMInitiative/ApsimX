@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,5 +89,19 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant parameters for death as used in RuminantActivityGrow</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
     }
 }

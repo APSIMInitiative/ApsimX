@@ -5,6 +5,7 @@ using Models.Core.Attributes;
 using Models.DCAPST.Environment;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Runtime.Intrinsics.X86;
 
 namespace Models.CLEM.Resources
@@ -118,5 +119,19 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("Ruminant parameters for wool as used in RuminantActivityGrow24</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
     }
 }
