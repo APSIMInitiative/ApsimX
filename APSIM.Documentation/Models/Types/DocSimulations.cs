@@ -14,6 +14,9 @@ namespace APSIM.Documentation.Models.Types
     /// </summary>
     public class DocSimulations : DocGeneric
     {
+        private static string PATH_VALIDATION = "/Tests/Validation/";
+        private static string PATH_TUTORIAL = "/Examples/Tutorials/";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DocSimulations" /> class.
         /// </summary>
@@ -25,56 +28,62 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
-            
-            if (model.FindAllChildren<Folder>("Validation").Any())
+
+            Simulations sims = model as Simulations;
+            if (sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
             {
-                foreach (ITag tag in GetSummaryAndRemarksSection(model).Children)
-                    tags.Add(tag);
-
-                // Find a single instance of all unique Plant models.
-                var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
-                foreach(Plant plant in plants)
-                {
-                    tags.AddRange(AutoDocumentation.Document(plant));
-                }
-
-                foreach (IModel child in model.FindAllChildren<Folder>())
-                {
-                    if(child.Name != "Replacements")
-                        tags.AddRange(AutoDocumentation.Document(child));
-                }
+                tags.AddRange(DocumentValidation(model as Simulations));
+            }
+            else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
+            {
+                tags.AddRange(DocumentTutorial(model as Simulations));
             }
             else
             {
-                foreach(IModel child in model.FindAllChildren())
+                foreach(IModel child in sims.FindAllChildren())
                 {
-                    if(child is Memo)
-                    {
-                        tags.AddRange(AutoDocumentation.Document(child));
-                    }
-                    else if (child is Simulation)
-                    {
-                        foreach(IModel simChild in child.FindAllChildren())
-                        {
-                                if (simChild is Memo)
-                                    tags.AddRange(AutoDocumentation.Document(simChild));
-                                else if (simChild is Graph)
-                                {
-                                    List<ITag> graphTags = AutoDocumentation.Document(simChild);
-                                    (graphTags.First() as Section)?.Children?.RemoveAt(0);
-                                    tags.AddRange(graphTags);
-                                }
-                        }
-                    }
-                    else if (child is Folder && child.Name != "Replacements")
-                    {
-                        tags.AddRange(AutoDocumentation.Document(child));
-                    }
-                    else if(child is Graph)
-                    {
-                        tags.AddRange(AutoDocumentation.Document(child));
-                    }
+                    tags.AddRange(AutoDocumentation.Document(child));
+                }
+            }
 
+            return tags;
+        }
+
+        private List<ITag> DocumentValidation(Model m)
+        {
+            List<ITag> tags = new List<ITag>();
+            foreach (ITag tag in GetSummaryAndRemarksSection(model).Children)
+                tags.Add(tag);
+
+            // Find a single instance of all unique Plant models.
+            var plants = model.FindAllDescendants<Plant>().DistinctBy(p => p.Name.ToUpper());
+            foreach(Plant plant in plants)
+            {
+                tags.AddRange(AutoDocumentation.Document(plant));
+            }
+
+            //Then just document the folders that aren't replacements
+            foreach (IModel child in model.FindAllChildren<Folder>())
+            {
+                if(child.Name != "Replacements")
+                    tags.AddRange(AutoDocumentation.Document(child));
+            }
+
+            return tags;
+        }
+
+        private List<ITag> DocumentTutorial(Model m)
+        {
+            List<ITag> tags = new List<ITag>();
+            foreach(IModel child in m.FindAllChildren())
+            {
+                if (child is Simulation)
+                {
+                    tags.AddRange(DocumentTutorial(child as Simulation));
+                } 
+                else if(child is Memo || child is Graph || (child is Folder && child.Name != "Replacements"))
+                {
+                    tags.AddRange(AutoDocumentation.Document(child));
                 }
             }
 
