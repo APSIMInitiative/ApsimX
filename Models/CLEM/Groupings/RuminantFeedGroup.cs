@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using AsyncIO;
+using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -38,7 +39,7 @@ namespace Models.CLEM.Groupings
         /// Value to supply for each month
         /// </summary>
         [Description("Value to supply")]
-        [GreaterThanValue(0)]
+        [GreaterThanEqualValue(0)]
         public double Value { get; set; }
 
         /// <summary>
@@ -66,11 +67,6 @@ namespace Models.CLEM.Groupings
         /// Amount of feed required to satisfy the animals
         /// </summary>
         public double FeedToSatisfy { get; set; }
-
-        ///// <summary>
-        ///// Amount of feed required to over satisfy the animals (if potental intake max modifier >1)
-        ///// </summary>
-        //public double FeedToOverSatisfy { get; set; }
 
         /// <summary>
         /// The current individuals being fed for this feed group
@@ -142,6 +138,12 @@ namespace Models.CLEM.Groupings
                     string error = $"FeedStyle [{feedActivityParent.FeedStyle}] is not supported by [f=RuminantFeedGroup] in [a={NameWithParent}]";
                     summary.WriteMessage(this, error, MessageType.Error);
                     break;
+            }
+
+            if(Value == 0)
+            {
+                string error = $"Amount to feed set to [0] so no feeding will occur for [f={NameWithParent}]";
+                summary.WriteMessage(this, error, MessageType.Warning);
             }
         }
 
@@ -243,6 +245,7 @@ namespace Models.CLEM.Groupings
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                     htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value} kg</span>");
                     break;
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
@@ -251,7 +254,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     if (Value != 1)
                     {
-                        htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value.ToString("0.##%")}</span>");
+                        htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value:0.##%}</span>");
                     }
                     break;
                 default:
@@ -275,6 +278,10 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     htmlWriter.Write(" per individual per day");
                     overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
+                    overfeed = true;
+                    htmlWriter.Write(" per individual per day");
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     overfeed = true;
@@ -306,8 +313,11 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     htmlWriter.Write("is fed to each individual that matches the following conditions:");
                     break;
+                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
+                    htmlWriter.Write("is force-fed to each individual that matches the following conditions:");
+                    break;
                 default:
-                    htmlWriter.Write("is fed to the individuals that match the following conditions:");
+                    htmlWriter.Write($"is fed to the individuals that match the following conditions:");
                     break;
             }
             htmlWriter.Write("</div>");
