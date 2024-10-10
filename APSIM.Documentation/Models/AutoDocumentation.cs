@@ -146,6 +146,7 @@ namespace APSIM.Documentation.Models
                 newTags = new DocGeneric(model).Document(heading);
             }
 
+            newTags = DocumentationUtilities.GetCleanedDocumentationList(newTags);
             return newTags;
         }
 

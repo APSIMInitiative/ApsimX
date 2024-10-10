@@ -74,20 +74,33 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
 
-            // Write page of graphs.
-            if ((model as Folder).ShowInDocs)
+            // Check to see if any ancestor folders are not shown in doc.
+            // If any ancestors are not shown in doc, this should not be either.
+            bool showGraphs = true;
+            List<Folder> folderAncestorList = (model as Folder).FindAllAncestors<Folder>().ToList();
+            foreach (Folder folder in folderAncestorList)
+                if (folder.ShowInDocs == false)
+                    showGraphs = false;
+
+            if (showGraphs)
             {
-                if (model.Parent != null)
+                // Write page of graphs.
+                if ((model as Folder).ShowInDocs)
                 {
-                    var childGraphs = new List<Shared.Documentation.Graph>();
-                    if ((model as Folder).GetChildGraphs(model) != null)
+                    if (model.Parent != null)
                     {
-                        childGraphs = (model as Folder).GetChildGraphs(model).ToList();
-                        if (childGraphs != null)
-                            section.Add(new Shared.Documentation.GraphPage(childGraphs));
-                    }
+                        var childGraphs = new List<Shared.Documentation.Graph>();
+                        if ((model as Folder).GetChildGraphs(model) != null)
+                        {
+                            childGraphs = (model as Folder).GetChildGraphs(model).ToList();
+                            if (childGraphs.Count > 0)
+                                section.Add(new Shared.Documentation.GraphPage(childGraphs));
+                        }
+                    }             
                 }
             }
+
+
 
             // Document experiments individually.
             foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
