@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using M = Models;
 using Models.Core;
+using System.Linq;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -21,12 +22,26 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSectionTitle(model);
 
-            M.Graph graph = model as M.Graph;
-            section.Children.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+            bool showGraphs = true;
+            List<Folder> folderAncestorList = model.FindAllAncestors<Folder>().ToList();
+            foreach (Folder folder in folderAncestorList)
+                if (folder.ShowInDocs == false)
+                    showGraphs = false;
 
-            return new List<ITag>() {section};
+            if (showGraphs)
+            {
+                Section section = GetSectionTitle(model);
+
+                M.Graph graph = model as M.Graph;
+                section.Children.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+
+                return new List<ITag>() {section};
+            }
+            else
+            {
+                return new List<ITag>();
+            }
         }
     }
 }

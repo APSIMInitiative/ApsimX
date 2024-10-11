@@ -16,6 +16,7 @@ namespace APSIM.Documentation.Models.Types
     /// </summary>
     public class DocSimulations : DocGeneric
     {
+        private static string PATH_REVIEW = "/Tests/UnderReview/";
         private static string PATH_VALIDATION = "/Tests/Validation/";
         private static string PATH_TUTORIAL = "/Examples/Tutorials/";
 
@@ -32,7 +33,8 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
             
-            if (sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
+            if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
+                sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
             {
                 tags.AddRange(DocumentValidation(model as Simulations));
             }
@@ -58,26 +60,31 @@ namespace APSIM.Documentation.Models.Types
             string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
             string title = "The APSIM " + name + " Model";
 
-            foreach (IModel child in m.FindAllChildren<Memo>())
-                tags.AddRange(AutoDocumentation.DocumentModel(child));
+            List<ITag> mTags = new List<ITag>();
 
-            //rename title if there was a memo
-            if (tags.Count > 0)
-                if (tags.First().GetType() == typeof(Paragraph))
-                    tags = DocumentationUtilities.AddHeader(title, tags);
+            List<Memo> memos = m.FindAllChildren<Memo>().ToList();
 
             // Find a single instance of all unique Plant models.
             IModel modelToDocument = m.FindDescendant(name);
             if (modelToDocument != null)
             {
-                List<ITag> mTags = AutoDocumentation.DocumentModel(modelToDocument);
-                
-                if (mTags.Count > 0)
-                {
-                    mTags = DocumentationUtilities.AddHeader(title, mTags);
-                    tags.AddRange(mTags);
-                }
+                mTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
             }
+
+            //Sort out heading
+            if (mTags.First().GetType() == typeof(Section))
+            {
+                (mTags.First() as Section).Title = title;
+                if (name.ToLower() != "wheat")          //Wheat has the memo in bot the validation and resource, so don't do it for that.
+                    foreach (IModel child in memos)
+                        (mTags.First() as Section).Add(AutoDocumentation.DocumentModel(child));
+                
+            }
+            else if (mTags.First().GetType() == typeof(Paragraph))
+            {
+                mTags.Add(new Section(title, mTags));
+            }
+            tags.AddRange(mTags);
 
             //Then just document the folders that aren't replacements
             foreach (IModel child in m.FindAllChildren<Folder>())
