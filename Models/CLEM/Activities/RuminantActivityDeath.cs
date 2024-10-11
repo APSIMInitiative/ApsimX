@@ -86,8 +86,6 @@ namespace Models.CLEM.Activities
                 IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(CurrentIndividuals); 
                 group.DetermineDeaths(individualsToCheck);
                 CurrentIndividuals.RemoveAll(a => individualsToCheck.Contains(a));
-                //foreach (var individual in individualsToCheck)
-                //    CurrentIndividuals.Remove(individual);
             }
 
             // remove individuals that died from the herd.
