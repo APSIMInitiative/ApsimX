@@ -11,6 +11,8 @@ using System.ComponentModel.DataAnnotations;
 using Models.PMF.Phen;
 using Models.GrazPlan;
 using StdUnits;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using Models.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -43,6 +45,12 @@ namespace Models.CLEM.Activities
             TypeOfFeed = FeedType.Milk,
             RumenDegradableProteinPercent = 0,
         };
+
+        /// <summary>
+        /// Switch to perform unfed test and reporting.
+        /// </summary>
+        [Description("Perform unfed individuals warning")]
+        public bool ReportUnfed { get; set; } = false;
 
         // =============================================================================================
         // This activity uses the equations of Freer et al. (2012) The GRAZPLAN animal biology model
@@ -90,22 +98,49 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            // Order age descending so breeder females calculate milk production before suckings require it for growth.
-            foreach (var groupInd in CurrentHerd(false).GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
+            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
             {
-                foreach (var ind in groupInd)
+                PotentialIntake(ruminant);
+                if (ruminant is RuminantFemale female)
                 {
-                    ind.Intake.SolidsDaily.Reset();
-                    ind.Intake.MilkDaily.Reset(ind.IsSuckling);
-                    ind.Weight.Protein.TimeStepReset();
-
-                    CalculatePotentialIntake(ind);
-
-                    ind.Intake.Reset();
-                    ind.Energy.Reset();
-                    ind.Output.Reset();
+                    foreach (var suckling in female.SucklingOffspringList)
+                    {
+                        PotentialIntake(suckling);
+                    }
                 }
             }
+
+            // Testing new approach above that avoids a groupby and ordering of the entire herd (i.e. 10,000 + individuals) multiple times each time step.
+
+            // Order age descending so breeder females calculate milk production before suckings require it for growth.
+            //foreach (var groupInd in CurrentHerd(false).GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
+            //{
+            //    foreach (var ind in groupInd)
+            //    {
+            //        ind.Intake.SolidsDaily.Reset();
+            //        ind.Intake.MilkDaily.Reset(ind.IsSuckling);
+            //        ind.Weight.Protein.TimeStepReset();
+
+            //        CalculatePotentialIntake(ind);
+
+            //        ind.Intake.Reset();
+            //        ind.Energy.Reset();
+            //        ind.Output.Reset();
+            //    }
+            //}
+        }
+
+        private void PotentialIntake(Ruminant ind)
+        {
+            ind.Intake.SolidsDaily.Reset();
+            ind.Intake.MilkDaily.Reset(ind.IsSuckling);
+            ind.Weight.Protein.TimeStepReset();
+
+            CalculatePotentialIntake(ind);
+
+            ind.Intake.Reset();
+            ind.Energy.Reset();
+            ind.Output.Reset();
         }
 
         /// <summary>
@@ -184,31 +219,54 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
             Status = ActivityStatus.NotNeeded;
-
-            foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
+            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
             {
-                int unfed = 0;
-                int unfedcalves = 0;
-                // work on herd sorted descending age to ensure mothers are processed before sucklings.
-                foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
+                Status = ActivityStatus.Success;
+                if (ruminant is RuminantFemale female)
                 {
-                    Status = ActivityStatus.Success;
+                    AnimalWeightGain(ruminant, female.IsLactating);
 
-                    // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
-                    if(ind is RuminantFemale rumFemale)
-                        ind.Intake.AdjustIntakeBasedOnFeedQuality(rumFemale.IsLactating, ind);
-                    else
-                        ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
-
-                    CalculateEnergy(ind);
-
-                    if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
-                        unfed++;
-                    else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
-                        unfedcalves++;
+                    foreach (var suckling in female.SucklingOffspringList)
+                    {
+                        AnimalWeightGain(suckling);
+                    }
                 }
-                ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
+                else
+                    AnimalWeightGain(ruminant);
             }
+            ReportUnfedIndividualsWarning();
+
+            //foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
+            //{
+            //    int unfed = 0;
+            //    int unfedcalves = 0;
+            //    // work on herd sorted descending age to ensure mothers are processed before sucklings.
+            //    foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
+            //    {
+            //        Status = ActivityStatus.Success;
+
+            //        // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
+            //        if(ind is RuminantFemale rumFemale)
+            //            ind.Intake.AdjustIntakeBasedOnFeedQuality(rumFemale.IsLactating, ind);
+            //        else
+            //            ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
+
+            //        CalculateEnergy(ind);
+
+            //        if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
+            //            unfed++;
+            //        else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
+            //            unfedcalves++;
+            //    }
+            //    ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
+            //}
+        }
+
+        private void AnimalWeightGain(Ruminant ind, bool lactating = false)
+        {
+            // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
+            ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind);
+            CalculateEnergy(ind);
         }
 
         /// <summary>
@@ -776,21 +834,45 @@ namespace Models.CLEM.Activities
             }
         }
 
-        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
+        private void ReportUnfedIndividualsWarning()
         {
-            // alert user to unfed animals in the month as this should not happen
-            if (unfed > 0)
+            string fix = "\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+            string styleofind = "individuals";
+
+            if (ReportUnfed)
             {
-                string warn = $"individuals of [r={breed.Key}] not fed";
-                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                var unfed = CurrentHerd(false).Where(a => a.Intake.IsUnfed)
+                    .GroupBy(a => new { breed = a.BreedDetails.Name, weaned = a.IsWeaned })
+                    .Select(a => new { group = a.Key, number = a.Count() });
+                foreach (var unfedgrp in unfed)
+                {
+                    if (unfedgrp.number > 0)
+                    {
+                        if (!unfedgrp.group.weaned)
+                        {
+                            styleofind = "sucklings";
+                            fix = "\\r\\nFix: Check sucklings are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                        }
+                        string warn = $"{styleofind} of [r={unfedgrp.group.breed}] not fed";
+                        string warnfull = $"Some {styleofind} of [r={unfedgrp.group.breed}] were not fed in some months (e.g. [{unfedgrp.number}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}]){fix}";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    }
+                }
             }
-            if (unfedcalves > 0)
-            {
-                string warn = $"calves of [r={breed.Key}] not fed";
-                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
+
+            //// alert user to unfed animals in the month as this should not happen
+            //if (unfed > 0)
+            //{
+            //    string warn = $"individuals of [r={breed.Key}] not fed";
+            //    string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+            //}
+            //if (unfedcalves > 0)
+            //{
+            //    string warn = $"calves of [r={breed.Key}] not fed";
+            //    string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+            //}
         }
 
         #region validation

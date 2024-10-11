@@ -412,5 +412,16 @@ namespace Models.CLEM.Resources
                 return sumAmount;
             }
         }
+
+        /// <summary>
+        /// Identifies the individual as unfed.
+        /// </summary>
+        public bool IsUnfed
+        {
+            get
+            {
+                return MathUtilities.IsPositive(SolidsDaily.Expected + MilkDaily.Expected) && (MathUtilities.IsPositive(SolidsDaily.Actual + MilkDaily.Actual) == false);
+            }
+        }
     }
 }
