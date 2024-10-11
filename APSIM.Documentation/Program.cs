@@ -294,7 +294,7 @@ namespace APSIM.Documentation
             Console.WriteLine($"Creating documentation for {name}");
             string model = Path.Combine(resources, modelResourceFile);
             string validation = Path.Combine(Program.validation, Path.GetFileNameWithoutExtension(validationFile), validationFile);
-            IEnumerable<string> files = new string[2] { model, validation };
+            IEnumerable<string> files = new string[1] { validation };
 
             string paramsFileName = $"{Path.GetFileNameWithoutExtension(outFile)}-parameters.pdf";
 
