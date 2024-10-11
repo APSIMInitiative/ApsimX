@@ -55,7 +55,7 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
             foreach (IModel child in model.FindAllChildren<Memo>())
-                tags = AutoDocumentation.DocumentModel(child).ToList();
+                tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 
             return new Section(model.Name, tags);
         }

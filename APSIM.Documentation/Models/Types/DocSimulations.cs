@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
-using Models.PMF;
 using Graph = Models.Graph;
 
 namespace APSIM.Documentation.Models.Types

@@ -26,7 +26,11 @@ namespace APSIM.Shared.Documentation
         /// <param name="t">The type to get the summary for.</param>
         public static string GetSummary(Type t)
         {
-            return GetCustomTag(t, summaryTagName);
+            string text = GetCustomTag(t, summaryTagName);
+            if (text != null)
+                return text.Replace("-", " ");
+            else
+                return "";
         }
 
         /// <summary>
@@ -35,7 +39,11 @@ namespace APSIM.Shared.Documentation
         /// <param name="t">The type.</param>
         public static string GetRemarks(Type t)
         {
-            return GetCustomTag(t, remarksTagName);
+            string text = GetCustomTag(t, remarksTagName);
+            if (text != null)
+                return text.Replace("-", " ");
+            else
+                return "";
         }
 
         /// <summary>

@@ -74,11 +74,17 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in exp.FindAllChildren<Memo>())
                     expTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                childGraphs = exp.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
+                childGraphs = exp.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
                 childIGraphs = new List<IGraph>();
                 foreach(ModelsGraph graph in childGraphs)
-                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
-                expTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
+                {
+                    bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                    if (!hide)
+                        childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+                }
+
+                if (childIGraphs.Count > 0)
+                    expTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
 
                 if (expTags.Count > 0)
                     section.Add(new Section(exp.Name, expTags));
@@ -91,11 +97,17 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in sim.FindAllChildren<Memo>())
                     simTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                childGraphs = sim.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
+                childGraphs = sim.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
                 childIGraphs = new List<IGraph>();
                 foreach(ModelsGraph graph in childGraphs)
-                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
-                simTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
+                {
+                    bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                    if (!hide)
+                        childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+                }
+                    
+                if (childIGraphs.Count > 0)
+                    simTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
 
                 if (simTags.Count > 0)
                     section.Add(new Section(sim.Name, simTags));

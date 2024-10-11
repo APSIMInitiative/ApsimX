@@ -107,7 +107,7 @@ namespace APSIM.Documentation.Models
                 {typeof(RootShapeSemiCircleSorghum), typeof(DocGenericWithChildren)},
                 {typeof(HIReproductiveOrgan), typeof(DocGenericWithChildren)},
                 {typeof(BasialBuds), typeof(DocGenericWithChildren)},
-                {typeof(OilPalm), typeof(DocGenericWithChildren)},
+                {typeof(OilPalm), typeof(DocPlant)},
                 {typeof(GenericOrgan), typeof(DocGenericOrgan)},
                 {typeof(WaterSenescenceFunction), typeof(DocWaterSenescenceFunction)},
                 {typeof(CanopyGrossPhotosynthesisHourly), typeof(DocGenericWithChildren)},
