@@ -61,10 +61,11 @@ namespace APSIM.Documentation.Models.Types
             }
             
             // Write page of graphs.
-            foreach (ModelsGraph graph in model.FindAllChildren<ModelsGraph>().Where(f => f.Enabled))
-            {
-                section.Add(AutoDocumentation.DocumentModel(graph));
-            }
+            List<ModelsGraph> childGraphs = model.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
+            List<IGraph> childIGraphs = new List<IGraph>();
+            foreach(ModelsGraph graph in childGraphs)
+                childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+            section.Add(new Shared.Documentation.GraphPage(childIGraphs));
 
             // Document graphs under a experiment
             foreach (Experiment exp in model.FindAllChildren<Experiment>().Where(f => f.Enabled))
@@ -73,8 +74,12 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in exp.FindAllChildren<Memo>())
                     expTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                foreach (ModelsGraph graph in exp.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled)) 
-                    expTags.AddRange(AutoDocumentation.DocumentModel(graph));
+                childGraphs = exp.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
+                childIGraphs = new List<IGraph>();
+                foreach(ModelsGraph graph in childGraphs)
+                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+                expTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
+
                 if (expTags.Count > 0)
                     section.Add(new Section(exp.Name, expTags));
             }
@@ -86,8 +91,12 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in sim.FindAllChildren<Memo>())
                     simTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                foreach (ModelsGraph graph in sim.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled))
-                    simTags.AddRange(AutoDocumentation.DocumentModel(graph));
+                childGraphs = sim.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
+                childIGraphs = new List<IGraph>();
+                foreach(ModelsGraph graph in childGraphs)
+                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+                simTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
+
                 if (simTags.Count > 0)
                     section.Add(new Section(sim.Name, simTags));
             }

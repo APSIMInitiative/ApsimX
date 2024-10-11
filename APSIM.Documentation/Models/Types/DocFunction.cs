@@ -49,9 +49,9 @@ namespace APSIM.Documentation.Models.Types
         public static string GetFunctionText(IFunction function)
         {
             if (function is AccumulateAtEvent accumulateAtEvent)
-                return $"**{function.Name}** is a daily accumulation of the values of functions listed below between the {accumulateAtEvent.StartStageName} and {(function as AccumulateAtEvent).EndStageName} stages.";
+                return $"{function.Name} is a daily accumulation of the values of functions listed below between the {accumulateAtEvent.StartStageName} and {(function as AccumulateAtEvent).EndStageName} stages.";
             else if (function is AccumulateResetAtStage accumulateResetAtStage)
-                return $"**{function.Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {accumulateResetAtStage.ResetStageName} is passed.";
+                return $"{function.Name} is a daily accumulation of the values of functions listed below and set to zero each time the {accumulateResetAtStage.ResetStageName} is passed.";
             else if (function is Constant constant)
                 return $"{function.Name} = {constant.FixedValue} {FindUnits(constant)}";
             else if (function is AccumulateFunction accumulateFunction)

@@ -60,31 +60,37 @@ namespace APSIM.Documentation.Models.Types
             string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
             string title = "The APSIM " + name + " Model";
 
-            List<ITag> mTags = new List<ITag>();
+            List<ITag> modelTags = new List<ITag>();
 
             List<Memo> memos = m.FindAllChildren<Memo>().ToList();
+            List<ITag> memoTags = new List<ITag>();
+            if (name.ToLower() != "wheat")          //Wheat has the memo in bot the validation and resource, so don't do it for that.
+                    foreach (IModel child in memos)
+                        memoTags.AddRange(AutoDocumentation.DocumentModel(child));
 
             // Find a single instance of all unique Plant models.
             IModel modelToDocument = m.FindDescendant(name);
             if (modelToDocument != null)
             {
-                mTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
+                modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
             }
 
             //Sort out heading
-            if (mTags.First().GetType() == typeof(Section))
+            Section firstSection = new Section(title, memoTags);
+            foreach(ITag tag in modelTags)
             {
-                (mTags.First() as Section).Title = title;
-                if (name.ToLower() != "wheat")          //Wheat has the memo in bot the validation and resource, so don't do it for that.
-                    foreach (IModel child in memos)
-                        (mTags.First() as Section).Add(AutoDocumentation.DocumentModel(child));
-                
+                if (tag.GetType() == typeof(Section))
+                {
+                    foreach(ITag subtag in (tag as Section).Children)
+                        firstSection.Add(subtag);
+                }
+                else if (tag.GetType() == typeof(Paragraph))
+                {
+                    firstSection.Add(tag);
+                }
             }
-            else if (mTags.First().GetType() == typeof(Paragraph))
-            {
-                mTags.Add(new Section(title, mTags));
-            }
-            tags.AddRange(mTags);
+            
+            tags.Add(firstSection);
 
             //Then just document the folders that aren't replacements
             foreach (IModel child in m.FindAllChildren<Folder>())
