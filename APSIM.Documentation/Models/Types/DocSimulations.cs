@@ -55,33 +55,32 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
 
-            string title = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
+            string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
+            string title = "The APSIM " + name + " Model";
 
-            foreach (IModel child in model.FindAllChildren<Memo>())
+            foreach (IModel child in m.FindAllChildren<Memo>())
                 tags.AddRange(AutoDocumentation.DocumentModel(child));
 
             //rename title if there was a memo
             if (tags.Count > 0)
                 if (tags.First().GetType() == typeof(Paragraph))
-                    DocumentationUtilities.AddHeader(title, tags);
+                    tags = DocumentationUtilities.AddHeader(title, tags);
 
             // Find a single instance of all unique Plant models.
-            var plants = model.FindAllDescendants<IPlant>().DistinctBy(p => p.Name.ToUpper());
-            List<ITag> plantTags = new List<ITag>();
-            foreach(IPlant plant in plants)
+            IModel modelToDocument = m.FindDescendant(name);
+            if (modelToDocument != null)
             {
-                plantTags.AddRange(AutoDocumentation.DocumentModel(plant));
+                List<ITag> mTags = AutoDocumentation.DocumentModel(modelToDocument);
+                
+                if (mTags.Count > 0)
+                {
+                    mTags = DocumentationUtilities.AddHeader(title, mTags);
+                    tags.AddRange(mTags);
+                }
             }
-            
-            if (plantTags.Count > 0)
-            {
-                plantTags = DocumentationUtilities.AddHeader(title, plantTags);
-                tags.AddRange(plantTags);
-            }
-            
 
             //Then just document the folders that aren't replacements
-            foreach (IModel child in model.FindAllChildren<Folder>())
+            foreach (IModel child in m.FindAllChildren<Folder>())
             {
                 if(child.Name != "Replacements")
                     tags.AddRange(AutoDocumentation.DocumentModel(child));

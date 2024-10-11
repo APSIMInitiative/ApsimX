@@ -22,9 +22,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
+            Section section = GetSectionTitle(model);
             Map map = model as Map;
-            section.Add(new Section(model.Name, new MapTag(map.Center, map.Zoom, map.GetCoordinates())));
+            section.Add(new MapTag(map.Center, map.Zoom, map.GetCoordinates()));
             return new List<ITag>() {section};
         }        
     }

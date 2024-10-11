@@ -100,14 +100,30 @@ namespace APSIM.Documentation.Models.Types
                 }
 
                 // Document graphs under a simulation
-                foreach (Experiment experiment in model.FindAllChildren<Experiment>().Where(f => f.Enabled))
-                    foreach (ModelsGraph graph in experiment.FindAllChildren<ModelsGraph>().Where(f => f.Enabled))
-                        section.Add(AutoDocumentation.DocumentModel(graph));
+                foreach (Experiment exp in model.FindAllChildren<Experiment>().Where(f => f.Enabled))
+                {
+                    List<ITag> simTags = new List<ITag>();
+                    foreach (Memo memo in exp.FindAllChildren<Memo>())
+                        simTags.AddRange(AutoDocumentation.DocumentModel(memo));
+
+                    foreach (ModelsGraph graph in exp.FindAllChildren<ModelsGraph>().Where(f => f.Enabled)) 
+                        simTags.AddRange(AutoDocumentation.DocumentModel(graph));
+
+                    section.Add(new Section(exp.Name, simTags));
+                }
 
                 // Document graphs under a experiment
-                foreach (Simulation experiment in model.FindAllChildren<Simulation>().Where(f => f.Enabled))
-                    foreach (ModelsGraph graph in experiment.FindAllChildren<ModelsGraph>().Where(f => f.Enabled))
-                        section.Add(AutoDocumentation.DocumentModel(graph));
+                foreach (Simulation sim in model.FindAllChildren<Simulation>().Where(f => f.Enabled))
+                {
+                    List<ITag> simTags = new List<ITag>();
+                    foreach (Memo memo in sim.FindAllChildren<Memo>())
+                        simTags.AddRange(AutoDocumentation.DocumentModel(memo));
+
+                    foreach (ModelsGraph graph in sim.FindAllChildren<ModelsGraph>().Where(f => f.Enabled)) 
+                        simTags.AddRange(AutoDocumentation.DocumentModel(graph));
+
+                    section.Add(new Section(sim.Name, simTags));
+                }
             }
 
             // Document child folders.
