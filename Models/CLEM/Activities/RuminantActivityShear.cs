@@ -53,6 +53,13 @@ namespace Models.CLEM.Activities
         public string CashmereProductStoreName { get; set; }
 
         /// <summary>
+        /// The proportion of the fleece weight clipped and removed (i.e. fleece taken)
+        /// </summary>
+        [Description("Proportion fleece clipped")]
+        [Required, Proportion]
+        public double ProportionFleeceRemoved { get; set; } = 1.0;
+
+        /// <summary>
         /// Product store for wool clip
         /// </summary>
         [JsonIgnore]
@@ -114,7 +121,9 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
-            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weight.Wool.Amount > 0); //+ a.CashmereWeight
+            // no filters applied here as we don't want to assume anything. User can filter based on ruminant.ProportionFleeceAttained or fleece weight and allow MarkedForSale in time-step.
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>();
+            //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weight.Wool.Amount > 0); //+ a.CashmereWeight
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
@@ -144,7 +153,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per kg fleece":
-                                amountToDo = uniqueIndividuals.Sum(a => a.Weight.Wool.Amount + a.Weight.Cashmere.Amount);
+                                amountToDo = uniqueIndividuals.Sum(a => (a.Weight.Wool.Amount + a.Weight.Cashmere.Amount)*ProportionFleeceRemoved);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -194,12 +203,16 @@ namespace Models.CLEM.Activities
                 int shorn = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    kgWoolShorn += ruminant.Weight.Wool.Amount;
-                    amountToDo -= ruminant.Weight.Wool.Amount;
-                    kgCashmereShorn += ruminant.Weight.Cashmere.Amount;
-                    amountToDo -= ruminant.Weight.Cashmere.Amount;
-                    ruminant.Weight.Wool.Reset();
-                    ruminant.Weight.Cashmere.Reset();
+                    double amount = ruminant.Weight.Wool.Amount * ProportionFleeceRemoved;
+                    kgWoolShorn += amount;
+                    amountToDo -= amount;
+                    ruminant.Weight.Wool.Adjust(amount*-1.0);
+                    ruminant.Weight.WoolClean.Adjust(ruminant.Weight.WoolClean.Amount * ProportionFleeceRemoved);
+
+                    amount = ruminant.Weight.Cashmere.Amount * ProportionFleeceRemoved;
+                    kgCashmereShorn += amount;
+                    amountToDo -= amount;
+                    ruminant.Weight.Cashmere.Adjust(amount*-1.0);
                     shorn++;
                     if (amountToDo <= 0)
                         break;
@@ -222,7 +235,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set")}");
             htmlWriter.Write(" and cashmere clip in ");
             htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set")}");
-            htmlWriter.Write("</div>");
+            htmlWriter.Write($" removing {ProportionFleeceRemoved:%} of the fleece.</div>");
             return htmlWriter.ToString();
         }
         #endregion

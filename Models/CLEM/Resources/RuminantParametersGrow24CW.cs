@@ -98,6 +98,16 @@ namespace Models.CLEM.Resources
         public double AgeFactorExponent_CW12 { get; set; } = 0.025;
 
         /// <summary>
+        /// Calculate the age factor for wool growth
+        /// </summary>
+        /// <param name="ageInDays">Age of the individual in days</param>
+        /// <returns>The proportion of standard fleece weight expected for age</returns>
+        public double AgeFactorForWool(int ageInDays) 
+        { 
+            return WoolGrowthProportionAtBirth_CW5 + ((1 - WoolGrowthProportionAtBirth_CW5) * (1 - Math.Exp(-1 * AgeFactorExponent_CW12 * ageInDays)));
+        }
+
+        /// <summary>
         /// Create copy of this class
         /// </summary>
         /// <returns></returns>

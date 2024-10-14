@@ -81,7 +81,6 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// Current Weight of greasy wool
         /// </remarks>
-
         public RuminantTrackingItem Wool { get; set; } = new();
 
         /// <summary>
@@ -203,19 +202,12 @@ namespace Models.CLEM.Resources
 
         /// <summary>
         /// Relative condition (base weight / normalised weight)
-        /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </summary>
         /// <remarks>
         /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </remarks>
         [FilterByProperty]
         public double RelativeCondition { get { return Base.Amount / NormalisedForAge; } }
-
-        /// <summary>
-        /// Body condition
-        /// </summary>
-        [FilterByProperty]
-        public double BodyCondition { get { return Base.Amount / NormalisedForAge; } }
 
         /// <summary>
         /// The current base weight as a proportion of normalised weight for age
@@ -259,6 +251,20 @@ namespace Models.CLEM.Resources
         /// Empty body mass change including fleece weight (kg)
         /// </summary>
         public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + Wool.Change; } }
+
+        /// <summary>
+        /// Calculate the current fleece weight as a proportion of standard fleece weight
+        /// </summary>
+        /// <param name="woolParameters">The object holding the individual's wool parameters</param>
+        /// <param name="ageInDays">The age of the individual in days</param>
+        /// <returns>Current greasy fleece weight as proportion of  </returns>
+        public double FleeceWeightAsProportionOfSFW(RuminantParametersGrow24CW woolParameters, int ageInDays)
+        {
+            double expectedFleeceWeight = woolParameters.StandardFleeceWeight * StandardReferenceWeight * woolParameters.AgeFactorForWool(ageInDays);
+            if (expectedFleeceWeight == 0)
+                return 0;
+            return Wool.Amount / (expectedFleeceWeight);
+        }
 
         /// <summary>
         /// Adjust weight by a given live weight change

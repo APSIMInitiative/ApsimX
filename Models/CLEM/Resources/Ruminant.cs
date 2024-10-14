@@ -492,6 +492,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Fleece weight as proportion of fleece weight expected for age
+        /// </summary>
+        public double ProportionFleeceAttained 
+        {
+            get
+            {
+                if (Parameters.Grow24_CW is null)
+                    return 0;
+                return Weight.FleeceWeightAsProportionOfSFW(Parameters.Grow24_CW, AgeInDays);
+            }
+        }
+
+        /// <summary>
         /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
         /// </summary>
         public abstract double ProteinRequiredBeforeGrowth { get; }
