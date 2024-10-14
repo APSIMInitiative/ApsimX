@@ -35,6 +35,11 @@ namespace Models.CLEM.Resources
         public double Extra { get; set; }
 
         /// <summary>
+        /// Amount provided (used to track excess) energy or protein
+        /// </summary>
+        public double ProteinLimited { get; set; } = 0;
+
+        /// <summary>
         /// Adjust this tracking item with change.
         /// </summary>
         /// <param name="change">Amount to change by.</param>

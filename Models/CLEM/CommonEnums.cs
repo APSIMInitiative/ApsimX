@@ -1227,4 +1227,23 @@ namespace Models.CLEM
         Developer
     }
 
+    /// <summary>
+    /// Ways allocation can be limited in growth
+    /// </summary>
+    public enum LimitedByType
+    {
+        /// <summary>
+        /// No limit
+        /// </summary>
+        None,
+        /// <summary>
+        /// Available energy was the limit
+        /// </summary>
+        Energy,
+        /// <summary>
+        /// Available protein was the limit
+        /// </summary>
+        Protein,
+    }
+
 }

@@ -618,12 +618,15 @@ namespace Models.CLEM.Activities
 
             double mEAvailableForWool = Math.Max(0, ind.Intake.ME - (ind.Energy.ForFetus + ind.Energy.ForLactation));
 
-            double pwInst = Math.Min(ind.Parameters.Grow24_CW.DPLSLimitationForWoolGrowth_CW7 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * dPLSAvailableForWool, ind.Parameters.Grow24_CW.MEILimitationOnWoolGrowth_CW8 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * mEAvailableForWool);
+            double prtWool = ind.Parameters.Grow24_CW.DPLSLimitationForWoolGrowth_CW7 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * dPLSAvailableForWool;
+            double eWool = ind.Parameters.Grow24_CW.MEILimitationOnWoolGrowth_CW8 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * ageFactorWool * mEAvailableForWool;
+            ind.Weight.Wool.ProteinLimited = prtWool - eWool;
 
+            double pwInst = Math.Min(prtWool, eWool);
             // pwToday is either the calculation or 0.04 (CW2) * relative size
             double pwToday = Math.Max(ind.Parameters.Grow24_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize, (1 - ind.Parameters.Grow24_CW.LagFactorForWool_CW4) * ind.Weight.WoolClean.Change) + (ind.Parameters.Grow24_CW.LagFactorForWool_CW4 * pwInst);
 
-            ind.Weight.Wool.Adjust(pwToday * ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
+            ind.Weight.Wool.Adjust(pwToday / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3 * events.Interval );
             ind.Weight.WoolClean.Adjust(pwToday * events.Interval);
             ind.Weight.Protein.ForWool = pwToday * events.Interval;
 
