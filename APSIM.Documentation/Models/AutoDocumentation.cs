@@ -158,7 +158,6 @@ namespace APSIM.Documentation.Models
             {
                 newTags = new DocGeneric(model).Document(0);
             }
-            newTags = DocumentationUtilities.CleanEmptySections(newTags);
             return newTags;
         }
 

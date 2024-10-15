@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Models;
 using APSIM.Shared.Documentation;
+using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
 
 namespace APSIM.Documentation;
 
@@ -17,12 +17,12 @@ public static class DocumentationUtilities
     /// <returns></returns>
     public static List<ITag> CleanEmptySections(List<ITag> tags)
     {
-        bool areSectionsExcluded = true;
-        while (areSectionsExcluded)
+        bool blankFound = CheckForBlankTags(tags);
+        while (blankFound)
         {
-            (bool sectionsExcluded, List<ITag> cleanedTags) = CreateListWithoutEmptyTags(tags);
-            areSectionsExcluded = sectionsExcluded;
+            List<ITag> cleanedTags = CreateListWithoutEmptyTags(tags);
             tags = cleanedTags;
+            blankFound = CheckForBlankTags(tags);
         }
         return tags;
     }
@@ -32,10 +32,9 @@ public static class DocumentationUtilities
     /// </summary>
     /// <param name="tags"></param>
     /// <returns>Tuple with boolean that notifies if any tags where empty and a list of tags that are not empty.</returns>
-    private static (bool, List<ITag>) CreateListWithoutEmptyTags(List<ITag> tags)
+    private static List<ITag> CreateListWithoutEmptyTags(List<ITag> tags)
     {            
         List<ITag> newTags = new();
-        bool excluded = false;
         foreach(ITag tag in tags)
         {
             if (tag is Section)
@@ -44,28 +43,64 @@ public static class DocumentationUtilities
                 List<ITag> children = (tag as Section).Children;
                 if (children.Count > 0)
                 {
-                    bool sectionsExcluded;
-                    (sectionsExcluded, children) = CreateListWithoutEmptyTags(children);
+                    children = CreateListWithoutEmptyTags(children);
                     newTags.Add(new Section(title, children));
-                }
-                else
-                {
-                    excluded = true;
                 }
             }
             else if (tag is Paragraph paragraph)
             {
                 if (!string.IsNullOrWhiteSpace(paragraph.text))
                     newTags.Add(tag);
-                else
-                    excluded = true;
+            }
+            else if (tag is DocumentationGraphPage graphPage)
+            {
+                if (graphPage.Graphs.Count() > 0)
+                    newTags.Add(tag);
             }
             else
             {
                 newTags.Add(tag);
             }
         }
-        return (excluded, newTags);
+        return newTags;
+    }
+
+    /// <summary>
+    /// Cleans a list of documentation tags.
+    /// </summary>
+    /// <param name="tags"></param>
+    /// <returns>Tuple with boolean that notifies if any tags where empty and a list of tags that are not empty.</returns>
+    private static bool CheckForBlankTags(List<ITag> tags)
+    {
+        bool blankFound = false;
+        foreach(ITag tag in tags)
+        {
+            if (tag is Section)
+            {
+                List<ITag> children = (tag as Section).Children;
+                if (children.Count > 0)
+                {
+                    bool result = CheckForBlankTags(children);
+                    if (result == true)
+                        blankFound = true;
+                }
+                else
+                {
+                    blankFound = true;
+                }
+            }
+            else if (tag is Paragraph paragraph)
+            {
+                if (string.IsNullOrWhiteSpace(paragraph.text))
+                    blankFound = true;
+            }
+            else if (tag is DocumentationGraphPage graphPage)
+            {
+                if (graphPage.Graphs.Count() == 0)
+                    blankFound = true;
+            }
+        }
+        return blankFound;
     }
 
     /// <summary>
