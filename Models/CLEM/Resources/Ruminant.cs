@@ -492,7 +492,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Fleece weight as proportion of fleece weight expected for age
+        /// Current fleece weight as proportion of fleece weight expected for age
         /// </summary>
         public double ProportionFleeceAttained 
         {
