@@ -984,15 +984,8 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
                 IModel currentN = explorerPresenter.CurrentNode;
-                IModel modelToDocument;
-
-                if (currentN is Models.Graph || currentN is Simulation)
-                    modelToDocument = currentN;
-                else
-                {
-                    modelToDocument = currentN.Clone();
-                    explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
-                }
+                IModel modelToDocument = currentN;
+                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
                 string modelTypeName = String.Empty;
                 if (modelToDocument is Models.PMF.Plant)

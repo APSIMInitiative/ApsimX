@@ -64,7 +64,12 @@ namespace APSIM.Documentation.Models.Types
             List<ModelsGraph> childGraphs = model.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
             List<IGraph> childIGraphs = new List<IGraph>();
             foreach(ModelsGraph graph in childGraphs)
-                childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+            {
+                bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                if (!hide)
+                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
+            }
+                
             section.Add(new Shared.Documentation.GraphPage(childIGraphs));
 
             // Document graphs under a experiment
