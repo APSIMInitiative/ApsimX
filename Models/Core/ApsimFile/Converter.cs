@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 181; } }
+        public static int LatestVersion { get { return 182; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5778,6 +5778,29 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject leafCohortParametersObject in JsonUtilities.ChildrenRecursively(root, "Models.PMF.Organs.Leaf+LeafCohortParameters"))
                 leafCohortParametersObject["$type"] = leafCohortParametersObject["$type"].ToString().Replace("Models.PMF.Organs.Leaf+LeafCohortParameters", "Models.PMF.Organs.LeafCohortParameters");
+        }
+
+        
+        /// <summary>
+        /// Reparents graphs incorrectly placed under a Simulation under an Experiment
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion182(JObject root, string fileName)
+        {
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                var graphParent = JsonUtilities.Parent(graph);
+                if(JsonUtilities.Type(graphParent) == "Simulation")
+                {
+                    var simParent = JsonUtilities.Parent(graphParent);
+                    if(JsonUtilities.Type(simParent) == "Experiment")
+                    {
+                        JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
+                        JsonUtilities.AddChild((JObject)simParent, graph);
+                    }
+                }
+            }
         }
     }
     
