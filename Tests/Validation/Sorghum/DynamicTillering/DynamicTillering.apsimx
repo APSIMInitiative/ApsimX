@@ -414,6 +414,28 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "Name": "Cultivars",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Root].DMDemands.Structural.ratioRootShoot.BetweenEmergenceAndFloralInit.rootFraction.FixedValue = 0.9",
+                "[Leaf].DMSupplyFixation.ratioRootShoot.BetweenEmergenceAndFloralInit.rootFraction.FixedValue = 1.9"
+              ],
+              "Name": "Buster",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,

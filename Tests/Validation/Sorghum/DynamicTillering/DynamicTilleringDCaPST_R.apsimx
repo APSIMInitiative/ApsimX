@@ -334,7 +334,15 @@
             "[Arbitrator].N.TotalPlantDemand as TotalPlantNDemand",
             "[Phenology].DltTT.Stress as stress",
             "[Arbitrator].NitrogenUptakeMethod.NDiffusionSupply as NDiffusionSupply",
-            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply"
+            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply",
+            "",
+            "[Root].DMDemands.Structural.ratioRootShoot.BetweenEmergenceAndFloralInit.rootFraction.FixedValue as ef",
+            "[Root].DMDemands.Structural.ratioRootShoot.BetweenFloralInitAndFlowering.rootFraction.FixedValue as ff",
+            "[Root].DMDemands.Structural.ratioRootShoot.BetweenFloweringAndGrainFill.rootFraction.FixedValue as fg",
+            "[Root].DMDemands.Structural.ratioRootShoot.BetweenGrainFillAndHarvest.rootFraction.FixedValue as gh",
+            "[Sorghum].Phenology.Stage as Stage",
+            "[Sorghum].Phenology.CurrentStageName",
+            "[Sorghum].Phenology.CurrentPhase.Name"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -2069,6 +2077,35 @@
                               "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[SorghumLeaf].SLA as SLA",
+                            "[SorghumLeaf].MaxSLA as MaxSLA",
+                            "([SorghumLeaf].MaxSLA * 0.85) as LowerBound",
+                            "[Root].DMDemands.Structural.ratioRootShoot.BetweenEmergenceAndFloralInit.rootFraction.FixedValue as ef",
+                            "[Root].DMDemands.Structural.ratioRootShoot.BetweenFloralInitAndFlowering.rootFraction.FixedValue as ff",
+                            "[Root].DMDemands.Structural.ratioRootShoot.BetweenFloweringAndGrainFill.rootFraction.FixedValue as fg",
+                            "[Root].DMDemands.Structural.ratioRootShoot.BetweenGrainFillAndHarvest.rootFraction.FixedValue as gh",
+                            "[Sorghum].Phenology.Stage as Stage",
+                            "[Sorghum].Phenology.CurrentStageName",
+                            "[Sorghum].Phenology.CurrentPhase.Name",
+                            "[Leaf].DMSupplyFixation.ratioRootShoot.BetweenEmergenceAndFloralInit.rootFraction.FixedValue as LeafEF",
+                            "[Leaf].DMSupplyFixation.ratioRootShoot.BetweenFloralInitAndFlowering.rootFraction.FixedValue as LeafFF",
+                            "[Leaf].DMSupplyFixation.ratioRootShoot.BetweenFloweringAndGrainFill.rootFraction.FixedValue as LeafFG",
+                            "[Leaf].DMSupplyFixation.ratioRootShoot.BetweenGrainFillAndHarvestRipe.rootFraction.FixedValue as LeafGH"
+                          ],
+                          "EventNames": [
+                            "[Sorghum].Flowering"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "Test",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -32716,7 +32753,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "Tillers",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -32871,7 +32908,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "Tillers",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33026,7 +33063,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "Tillers",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33181,7 +33218,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "Tillers",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33346,7 +33383,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "SLA",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33530,7 +33567,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "SLA",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33714,7 +33751,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "SLA",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -33898,7 +33935,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
+                  "Title": "SLA",
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -35486,7 +35523,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": true,
-                  "Name": "Biomass Popn2",
+                  "Name": "Biomass Popn2  DCaPST",
                   "ResourceName": null,
                   "Children": [
                     {

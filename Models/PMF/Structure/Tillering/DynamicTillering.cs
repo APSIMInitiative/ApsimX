@@ -257,6 +257,7 @@ namespace Models.PMF.Struct
                 tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio,
                 0.0
             );
+            CalculatedTillerNumber = Math.Min(CalculatedTillerNumber, 7);
         }
 
         void AddInitialTillers()
@@ -454,8 +455,11 @@ namespace Models.PMF.Struct
         private void CalculateMaxSLALeafGrowth(double nLeaves)
         {
             var slaLeafNoCoefficientValue = slaLeafNoCoefficient.Value();
+            double adj = maxSLAAdjustment.Value();
+            adj = 50;
             MaxSLA = 429.72 - slaLeafNoCoefficientValue * (nLeaves);
-            MaxSLA *= (100 + maxSLAAdjustment.Value()) / 100.0;
+//            MaxSLA *= (100 + maxSLAAdjustment.Value()) / 100.0;
+            MaxSLA *= (100 + adj) / 100.0;
             MaxSLA = Math.Min(400, MaxSLA);
             MaxSLA = Math.Max(150, MaxSLA);
         }

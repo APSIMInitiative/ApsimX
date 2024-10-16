@@ -114,7 +114,7 @@ namespace Models.PMF
         {
             // Sum the area of each leaf plus the fraction of the last.
             double area = 0;
-            for (int i = 0; i < Math.Ceiling(nLeaves) && Math.Ceiling(nLeaves) < culm.LeafSizes.Count; i++)
+           for (int i = 0; i < Math.Ceiling(nLeaves) && i < culm.LeafSizes.Count; i++)
             {
                 double fraction = Math.Min(1.0, nLeaves - i);
                 area += culm.LeafSizes[i] * fraction;
