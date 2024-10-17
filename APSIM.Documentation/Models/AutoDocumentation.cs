@@ -25,6 +25,7 @@ using Models.Functions.RootShape;
 using Models.PMF.OilPalm;
 using M = Models;
 using Models.AgPasture;
+using Models.Soils.Nutrients;
 
 namespace APSIM.Documentation.Models
 {
@@ -122,6 +123,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Alias), typeof(DocAlias)},
                 {typeof(Simulations), typeof(DocSimulations)},
                 {typeof(M.Graph), typeof(DocGraph)},
+                {typeof(Nutrient), typeof(DocNutrient)},
             };
             return documentMap;
         }

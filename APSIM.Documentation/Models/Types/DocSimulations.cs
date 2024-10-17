@@ -107,11 +107,21 @@ namespace APSIM.Documentation.Models.Types
         private List<ITag> DocumentTutorial(Model m)
         {
             List<ITag> tags = new List<ITag>();
+
+            if (m is not Simulation)
+            {
+                string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
+                string title = name + " Tutorial";
+                //Sort out heading
+                var firstSection = new Section(title, new List<ITag>() { new Paragraph("----") });
+                tags.Add(firstSection);
+            }
+
             foreach(IModel child in m.FindAllChildren())
             {
                 if (child is Simulation)
-                {
-                    tags.AddRange(DocumentTutorial(child as Simulation));
+                { 
+                    tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
                 } 
                 else if(child is Memo || child is Graph || (child is Folder && child.Name != "Replacements"))
                 {
