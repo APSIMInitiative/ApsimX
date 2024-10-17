@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Graph = Models.Graph;
@@ -31,20 +32,23 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
             
-            if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
-                sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
+            if (!string.IsNullOrEmpty(sims.FileName))
             {
-                tags.AddRange(DocumentValidation(model as Simulations));
-            }
-            else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
-            {
-                tags.AddRange(DocumentTutorial(model as Simulations));
-            }
-            else
-            {
-                foreach(IModel child in sims.FindAllChildren())
+                if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
+                    sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
                 {
-                    tags.AddRange(AutoDocumentation.DocumentModel(child));
+                    tags.AddRange(DocumentValidation(model as Simulations));
+                }
+                else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
+                {
+                    tags.AddRange(DocumentTutorial(model as Simulations));
+                }
+                else
+                {
+                    foreach(IModel child in sims.FindAllChildren())
+                    {
+                        tags.AddRange(AutoDocumentation.DocumentModel(child));
+                    }
                 }
             }
 
