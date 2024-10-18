@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using SixLabors.ImageSharp;
 
 namespace Models.CLEM.Activities
 {
@@ -94,33 +96,54 @@ namespace Models.CLEM.Activities
         {
             if(this.TimingOK)
             {
-                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
+                int malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
                 if (!UseLocalMales || malebreeders > 0)
                 {
                     // get number of females
-                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
+                    int breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {
                         double newbysex = breeders * this.OffspringPerBreeder / 2.0;
-                        OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                        int singlesex = 0;
+
+                        // apply stochasticity to determine proportional numbers to integers
+                        if(newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.Next())
+                            singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
+                        else
+                            singlesex = Convert.ToInt32(Math.Floor(newbysex));
+
+                        double newweight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
+                        if (singlesex > 1)
                         {
-                            Age = 0,
-                            Weight = 0,
-                            Sex = Sex.Male,
-                            Number = newbysex,
-                            SaleFlag = HerdChangeReason.Born
-                        };
-                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
-                        OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                            OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                            {
+                                Age = 0,
+                                Weight = newweight,
+                                Sex = Sex.Male,
+                                Number = singlesex,
+                                SaleFlag = HerdChangeReason.Born
+                            };
+                            SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
+                        }
+
+                        if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.NextDouble())
+                            singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
+                        else
+                            singlesex = Convert.ToInt32(Math.Floor(newbysex));
+
+                        if (singlesex > 1)
                         {
-                            Age = 0,
-                            Weight = 0,
-                            Sex = Sex.Female,
-                            Number = newbysex,
-                            SaleFlag = HerdChangeReason.Born
-                        };
-                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
+                            OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                            {
+                                Age = 0,
+                                Weight = newweight,
+                                Sex = Sex.Female,
+                                Number = singlesex,
+                                SaleFlag = HerdChangeReason.Born
+                            };
+                            SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
+                        }
                     }
                 }
             }
