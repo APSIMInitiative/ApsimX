@@ -173,7 +173,7 @@ namespace Models.CLEM.Groupings
             double value = CurrentValue;
             double feedToSatisfy = 0;
             double feedToOverSatisfy = 0;
-            double feedNeeed = 0;
+            double feedNeeded = 0;
 
             var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
             {
@@ -189,22 +189,22 @@ namespace Models.CLEM.Groupings
                 switch (feedActivityParent.FeedStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        feedNeeed = value * 30.4;
+                        feedNeeded = value * 30.4;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        feedNeeed = (value * 30.4) * selectedIndividuals.Count;
+                        feedNeeded = (value * 30.4) * selectedIndividuals.Count;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        feedNeeed = value * selectedIndividuals.Weight * 30.4;
+                        feedNeeded = value * selectedIndividuals.Weight * 30.4;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        feedNeeed = value * selectedIndividuals.PotentialIntake;
+                        feedNeeded = value * selectedIndividuals.PotentialIntake;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        feedNeeed = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
+                        feedNeeded = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        feedNeeed = value * feedActivityParent.FeedType.Amount;
+                        feedNeeded = value * feedActivityParent.FeedType.Amount;
                         break;
                     default:
                         break;
@@ -219,10 +219,10 @@ namespace Models.CLEM.Groupings
 
                 if (feedActivityParent.StopFeedingWhenSatisfied)
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
-                    feedNeeed = Math.Min(feedNeeed, Math.Max(feedToOverSatisfy, feedToSatisfy));
+                    feedNeeded = Math.Min(feedNeeded, Math.Max(feedToOverSatisfy, feedToSatisfy));
 
-                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeed;
-                currentFeedRequest.Required = feedNeeed;
+                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeded;
+                currentFeedRequest.Required = feedNeeded;
             }
         }
 
