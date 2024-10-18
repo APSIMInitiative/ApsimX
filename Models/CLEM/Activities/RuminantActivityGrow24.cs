@@ -8,11 +8,7 @@ using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
-using Models.PMF.Phen;
-using Models.GrazPlan;
 using StdUnits;
-using DocumentFormat.OpenXml.ExtendedProperties;
-using Models.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -519,6 +515,8 @@ namespace Models.CLEM.Activities
         /// <param name="sexEffect">The sex effect to apply</param>
         private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect)
         {
+            int maxReductionAllowed = 3;
+
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
             km *= ind.Parameters.Grow24_CG.BreedMainenanceEfficiencyScalar;
@@ -527,75 +525,75 @@ namespace Models.CLEM.Activities
             ind.Energy.ToMove /= km;
             ind.Energy.ToGraze /= km;
 
-            double rdpReq;
-            ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
-            ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
-            //ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
-
-            double adjustedFeedingLevel = -1;
-            if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))
+            int reductionCount = 0;
+            double rumenDegradableProteinIntake = 0;
+            double rumenDegradableProteinRequirement = 1;
+            while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
-                adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
-            }
-            rdpReq = CalculateCrudeProtein(ind, adjustedFeedingLevel);
+                ind.Energy.ForBasalMetabolism = ((ind.Parameters.Grow24_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.Grow24_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.Grow24_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.Grow24_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
+                ind.Energy.ForHPViscera = ind.Parameters.Grow24_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
 
-            ind.Intake.CalculateDigestibleProteinLeavingStomach(rdpReq, ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5);
+                double adjustedFeedingLevel = -1;
+                if (MathUtilities.GreaterThan(ind.Energy.FromIntake, 0, 2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0, 2))
+                {
+                    adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
+                }
+                rumenDegradableProteinIntake = CalculateRumenDegradableProteinIntake(ind, adjustedFeedingLevel);
+                rumenDegradableProteinRequirement = (ind.Parameters.Grow24_CACRD.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.Grow24_CACRD.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.Grow24_CACRD.RumenDegradableProteinExponent_CRD6 *
+                    (adjustedFeedingLevel + 1)))) * ind.Intake.FMEI;
+
+                if (rumenDegradableProteinIntake < rumenDegradableProteinRequirement)
+                {
+                    ind.Intake.ReduceIntakeByProportion((1 - rumenDegradableProteinIntake / rumenDegradableProteinRequirement) * ind.Parameters.Grow24_CI.IntakeReductionFromIsufficientRDPIntake);
+                    reductionCount++;
+                }
+                else
+                {
+                    reductionCount = 999;
+                }
+            }
+
+            ind.Intake.CalculateDigestibleProteinLeavingStomach(rumenDegradableProteinRequirement, ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5);
         }
 
-        private static double CalculateCrudeProtein(Ruminant ind, double feedingLevel)
+        private static double CalculateRumenDegradableProteinIntake(Ruminant ind, double feedingLevel)
         {
-            // 1. calc RDP intake. Rumen Degradable Protein
+            //// Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
+            //// Ignored from GrassGro latitude factor for now.
+            //// double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
 
-            double FMEIterm = 1;
-            if (feedingLevel > 0)
+            double rdpi = 0;
+            if (feedingLevel <= 0)
             {
-                FMEIterm = 0;
-                double FMEIrf = 0;
-                double DPrf = 0;
+                foreach (var store in ind.Intake.GetAllStores)
+                {
+                    if (store.Key != FeedType.Milk)
+                        rdpi += store.Value.DegradableCrudeProtein;
+                }
+            }
+            else
+            {
                 foreach (var store in ind.Intake.GetAllStores)
                 {
                     switch (store.Key)
                     {
                         case FeedType.Concentrate:
-                            // Equation 50 ==================================================
-                            DPrf = 1 - ind.Parameters.Grow24_CACRD.RumenDegradabilityConcentrateSlope_CRD3 * feedingLevel; //Eq50
-                            FMEIrf = 1; // set as 1 and there is no reduction for concentrates.
-                            break;
-                        case FeedType.HaySilage:
-                            DPrf = 1 - (ind.Parameters.Grow24_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.Grow24_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
-                            FMEIrf = 1; // ToDo: add later depending on feed type, need to add new types PastureTrop, PastureTemp, HaySilage (non-grazed forage). ?? Lucena
-                            break;
-                        case FeedType.Milk:
-                            FMEIrf = 0; // ignore milk. solids only
-                            break;
-                        case FeedType.PastureTemperate:
-                            DPrf = 1 - (ind.Parameters.Grow24_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.Grow24_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
-                            FMEIrf = 1;
+                            rdpi += (1 - ind.Parameters.Grow24_CACRD.RumenDegradabilityConcentrateSlope_CRD3 * feedingLevel) * store.Value.DegradableCrudeProtein;
                             break;
                         case FeedType.PastureTropical:
-                            DPrf = 1 - (ind.Parameters.Grow24_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.Grow24_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel; // DMD in proportion
-                            FMEIrf = 1;
+                        case FeedType.PastureTemperate:
+                        case FeedType.HaySilage:
+                            rdpi += (1 - (ind.Parameters.Grow24_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.Grow24_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel) * store.Value.DegradableCrudeProtein; 
+                            break;
+                        case FeedType.Milk:
                             break;
                         default:
                             break;
                     }
-                    if(store.Key != FeedType.Milk && DPrf < 1.0)
-                        store.Value.ReduceDegradableProtein(DPrf);
-                    FMEIterm += (FMEIrf * store.Value.FME);
                 }
             }
 
-            // 2. calc UDP intake by difference(CPI-RDPI)
-            // now a property of intake
-
-            // 3.calculate RDP requirement
-
-            // Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
-            // Ignored from GrassGro latitude factor for now.
-            // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
-
-            return (ind.Parameters.Grow24_CACRD.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.Grow24_CACRD.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.Grow24_CACRD.RumenDegradableProteinExponent_CRD6 *
-                (feedingLevel + 1)))) * FMEIterm;
+            return rdpi;
         }
 
         /// <summary>

@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
                         break;
                 }
                 iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Expected);
-                item.Value.ReduceAmount(iReduction);
+                item.Value.ReduceInaakeByAmount(iReduction);
                 SolidsDaily.Unneeded += iReduction;
                 sumFs += FS;
             }
@@ -396,6 +396,30 @@ namespace Models.CLEM.Resources
                 return CrudeProtein - RDP;
             }
         }
+
+        /// <summary>
+        /// FME Intake
+        /// </summary>
+        public double FMEI
+        {
+            get
+            {
+                return feedTypeStoreDict.Sum(a => a.Value.FME);
+            }
+        }
+
+        /// <summary>
+        /// Causes a proportional reduction in intake (and RPD )
+        /// </summary>
+        /// <param name="proportion">Proportional reduction</param>
+        public void ReduceIntakeByProportion(double proportion)
+        {
+            foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
+            {
+                item.Value.ReduceIntakeByProportion(proportion);
+            }
+        }
+
 
         /// <summary>
         /// Indigestible undegradable protein.

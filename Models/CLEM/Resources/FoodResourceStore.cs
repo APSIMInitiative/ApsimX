@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
         /// Reduce current amount supplied
         /// </summary>
         /// <param name="amount">the amount to add or subtract</param>
-        public void ReduceAmount(double amount)
+        public void ReduceInaakeByAmount(double amount)
         {
             if (MathUtilities.IsGreaterThan(amount, Details.Amount))
             {
@@ -83,6 +83,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Reduce current amount by proportion
+        /// </summary>
+        /// <param name="proportion">the proportion to reduce by</param>
+        public void ReduceIntakeByProportion(double proportion)
+        {
+            if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThanOrEqual(proportion, 1.0))
+            {
+                Details.Amount *= proportion;
+                CrudeProtein *= proportion;
+                DegradableCrudeProtein *= proportion;
+            }
+        }
+
+        /// <summary>
         /// Reduce the rumen degradable protein by a proportion provided.
         /// </summary>
         /// <param name="factor">The reduction factor.</param>
@@ -93,7 +107,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Digestibility Undegradable Pprotein.
+        /// Digestibility Undegradable Protein.
         /// </summary>
         public double DUDP
         {
@@ -126,7 +140,20 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Fermentable metabolisable energy.
         /// </summary>
-        public double FME { get { return 0.7 * ME; } } 
+        public double FME 
+        { 
+            get 
+            {
+                return Details.TypeOfFeed switch
+                {
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => ME - (23.6 * UndegradableCrudeProtein),
+                    FeedType.Concentrate => ME - (23.6 * UndegradableCrudeProtein) - (39.3 * (Details.FatPercent / 100) * Details.Amount),
+                    _ => 0,
+                };
+            }
+        } 
 
         /// <summary>
         /// Reset running stores.

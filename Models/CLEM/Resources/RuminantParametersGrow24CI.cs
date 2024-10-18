@@ -30,6 +30,13 @@ namespace Models.CLEM.Resources
     public class RuminantParametersGrow24CI : CLEMModel, ISubParameters, ICloneable, IValidatableObject
     {
         /// <summary>
+        /// Intake reduction factor due to insufficient RDP Intake.
+        /// </summary>
+        [Description("Intake reduction due to insifficient RDP intake")]
+        [Category("Breed", "Intake")]
+        public double IntakeReductionFromIsufficientRDPIntake { get; set; } = 1.0; // 0.5 Bos indicus, 0.75 cross bred
+
+        /// <summary>
         /// Switch to ignore the adjustment og intake as a function of feed quality.
         /// </summary>
         [Description("Do not adjust intake by quality")]
