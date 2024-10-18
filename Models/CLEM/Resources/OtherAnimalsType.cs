@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -19,8 +20,14 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an other animal type (e.g. chickens)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
-    public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
+    public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IHandlesActivityCompanionModels
     {
+        /// <summary>
+        /// Age (months) to weight relationship
+        /// </summary>
+        [XmlIgnore]
+        public Relationship AgeWeightRelationship { get; set; } = null;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -28,16 +35,17 @@ namespace Models.CLEM.Resources
         public string Units { get; set; }
 
         /// <summary>
+        /// Age when individuals die
+        /// </summary>
+        [Description("Maximum age before death (months)")]
+        [Required, GreaterThanValue(0.0)]
+        public double MaxAge { get; set; }
+
+        /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
         [JsonIgnore]
         public List<OtherAnimalsTypeCohort> Cohorts;
-
-        /// <summary>
-        /// The last group of individuals to be added or removed (for reporting)
-        /// </summary>
-        [JsonIgnore]
-        public OtherAnimalsTypeCohort LastCohortChanged { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -45,6 +53,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            // locate age to weight relationship
+            AgeWeightRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Age to weight");
+
             Initialise();
         }
 
@@ -58,20 +69,6 @@ namespace Models.CLEM.Resources
                 Cohorts.Clear();
             Cohorts = null;
         }
-
-        /// <summary>
-        /// Age when individuals become adults for feeding and breeding rates
-        /// </summary>
-        [Description("Age when adult (months)")]
-        [Required]
-        public double AgeWhenAdult { get; set; }
-
-        /// <summary>
-        /// Age when individuals die
-        /// </summary>
-        [Description("Maximum age before death (months)")]
-        [Required]
-        public double MaxAge { get; set; }
 
         /// <summary>
         /// Initialise resource type
@@ -100,6 +97,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <inheritdoc/>
+        public LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() { "Age to weight" },
+                        measures: new List<string>()
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
+        }
 
         #region Transactions
 
@@ -128,7 +139,7 @@ namespace Models.CLEM.Resources
             else
                 cohortexists.Number += cohortToAdd.Number;
 
-            LastCohortChanged = cohortToAdd;
+            (Parent as OtherAnimals).LastCohortChanged = cohortToAdd;
 
             ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, cohortToAdd);
         }
@@ -144,6 +155,7 @@ namespace Models.CLEM.Resources
             OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Sex == cohortToRemove.Sex).First();
 
+            double numberAdjusted = 0;
             if (cohortexists == null)
             {
                 // tried to remove individuals that do not exist
@@ -151,12 +163,15 @@ namespace Models.CLEM.Resources
             }
             else
             {
+                numberAdjusted = cohortToRemove.Number;
                 cohortexists.Number -= cohortToRemove.Number;
                 cohortexists.Number = Math.Max(0, cohortexists.Number);
             }
 
-            LastCohortChanged = cohortToRemove;
-            ReportTransaction(TransactionType.Loss, cohortToRemove.Number, activity, "", reason, this, cohortToRemove);
+            (Parent as OtherAnimals).LastCohortChanged = cohortToRemove;
+            ReportTransaction(TransactionType.Loss, numberAdjusted, activity, "", reason, this, cohortToRemove);
+            if (cohortToRemove.Number == 0)
+                cohortToRemove.Age = 0;
         }
 
         /// <summary>

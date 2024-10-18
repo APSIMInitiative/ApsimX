@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -16,6 +17,11 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimals.htm")]
     public class OtherAnimals : ResourceBaseWithTransactions
     {
+        /// <summary>
+        /// The last group of individuals to be added or removed (for reporting)
+        /// </summary>
+        [JsonIgnore]
+        public OtherAnimalsTypeCohort LastCohortChanged { get; set; }
 
     }
 }

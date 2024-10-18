@@ -38,22 +38,19 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Number")]
         [Required, GreaterThanEqualValue(0)]
-        public double Number { get; set; }
+        public int Number { get; set; }
 
         /// <summary>
         /// Starting Weight
         /// </summary>
-        [Description("Weight (kg)")]
-        [Units("kg")]
-        [Required, GreaterThanEqualValue(0)]
         public double Weight { get; set; }
 
-        /// <summary>
-        /// Standard deviation of starting weight. Use 0 to use starting weight only
-        /// </summary>
-        [Description("Standard deviation of starting weight")]
-        [Required]
-        public double StartingWeightSD { get; set; }
+        ///// <summary>
+        ///// Standard deviation of starting weight. Use 0 to use starting weight only
+        ///// </summary>
+        //[Description("Standard deviation of starting weight")]
+        //[Required]
+        //public double StartingWeightSD { get; set; }
 
         /// <summary>
         /// Flag to identify individual ready for sale
