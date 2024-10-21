@@ -113,6 +113,9 @@ namespace Models.PMF.Struct
         [JsonIgnore]
         public double SupplyDemandRatio { get; private set; }
 
+        /// <summary>A value that can be used to override the calculated tillers.</summary>
+        public double TillerNumberOverride { get; set; } = -1.0;
+
         private int floweringStage;
         private int endJuvenilePhase;
         private int startOfGrainFillPhase;
@@ -245,7 +248,6 @@ namespace Models.PMF.Struct
             var mainCulm = culms.Culms[0];
             double L5Area = areaMethod.CalculateIndividualLeafArea(5, mainCulm);
             double L9Area = areaMethod.CalculateIndividualLeafArea(9, mainCulm);
-
             double Phy5 = culms.GetLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
 
             // Calc Demand = LA9 - LA5
@@ -253,10 +255,20 @@ namespace Models.PMF.Struct
             var supply = PTQ * L5Area * Phy5;
             SupplyDemandRatio = MathUtilities.Divide(supply, demand, 0);
 
-            CalculatedTillerNumber = Math.Max(
-                tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio,
-                0.0
-            );
+            // If the tiller number override has been set (we initialise it to -1) then use that rather
+            // than calculating the tiller number using the slope/intercept etc.
+            if (TillerNumberOverride >= 0)
+            {
+                CalculatedTillerNumber = TillerNumberOverride;
+            }
+            else
+            {
+                CalculatedTillerNumber = Math.Max(
+                    tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio,
+                    0.0
+                );
+            }
+
             CalculatedTillerNumber = Math.Min(CalculatedTillerNumber, 7);
         }
 
@@ -568,6 +580,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("StartOfSimulation")]
         private void StartOfSim(object sender, EventArgs e)
         {
+            TillerNumberOverride = -1.0;
             CurrentTillerNumber = 0.0;
             CalculatedTillerNumber = 0.0;
             DltTillerNumber = 0.0;
