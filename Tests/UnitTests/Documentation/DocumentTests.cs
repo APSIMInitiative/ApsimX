@@ -12,6 +12,11 @@ using DocGraph = APSIM.Shared.Documentation.Graph;
 using DocGraphPage = APSIM.Shared.Documentation.GraphPage;
 using Newtonsoft.Json.Linq;
 using System.Data;
+using System.IO;
+using System.Reflection;
+using Models;
+using APSIM.Interop.Mapping;
+using Models.Mapping;
 
 namespace UnitTests.Documentation
 {
@@ -19,25 +24,53 @@ namespace UnitTests.Documentation
     [TestFixture]
     public class DocumentationTests
     {
+
+        static List<string> FILES = new List<string>{"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
+
+        static bool REGENERATE_FILES = false;
+
         /// <summary>
-        /// Test
+        /// This runs through a set of stored apsimx files and generates documentation for them, both validation and tutorials.
+        /// If the documentation structure is changed, or some of the crop models are changed drastically, this will run false.
+        /// If the stored tagged need to be recreated (due to an indended change), set REGENERATE_FILES to true and run the test.
         /// </summary>
         [Test]
         public void TestDocumentationStructure()
         {
+            if (REGENERATE_FILES)
+                GenerateComparisionJSONs();
 
-            List<string> files = new List<string>{"Wheat", "Barley", "Potato", "Nutrient", "MicroClimate", "OilPalm", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
-
-            foreach (string file in files)
+            foreach (string file in FILES)
             {
                 //read in our base test that we'll use for this
                 string json = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".apsimx");
                 Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
-                Models.Climate.Weather weather = sims.FindDescendant<Models.Climate.Weather>();
-                weather.FullFileName = "%root%/Examples/WeatherFiles/Dalby.met";
 
-                Runner runner = new Runner(sims);
-                List<Exception> errors = runner.Run();
+                if (file == "Report" || file == "Manager" || file == "Morris")
+                    sims.FileName = "/Examples/Tutorials/"+file+".apsimx";
+                else
+                    sims.FileName = "/Tests/Validation/"+file+".apsimx";
+
+                List<ITag> actualTags = AutoDocumentation.Document(sims);
+
+                string savedJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".json");
+                List<ITag> expectedTags = GetTags(savedJSON);
+
+                MatchTagStructure(expectedTags, actualTags);
+            }
+        }
+
+        /// <summary>
+        /// This function creates each of the example doc structure jsons that the test TestDocumentationStructure uses to compare against.
+        /// This needs to be run again if the documentation structure code is changed in a way that causes the structure of docs to change.
+        /// </summary>
+        public void GenerateComparisionJSONs()
+        {
+            foreach (string file in FILES)
+            {
+                string json = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".apsimx");
+                Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+
                 if (file == "Report" || file == "Manager")
                     sims.FileName = "/Examples/Tutorials/"+file+".apsimx";
                 else
@@ -46,18 +79,16 @@ namespace UnitTests.Documentation
                 List<ITag> actualTags = AutoDocumentation.Document(sims);
 
                 //use this to recreate the json file for an apsimx doc if changes to it's structure are made.
-                string newJSON = GetJSON(actualTags); 
-
-                string wheat = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".json");
-                List<ITag> expectedTags = GetTags(wheat);
-
-                //MatchTagStructure(expectedTags, actualTags);
+                string newJSON = GetJSON(actualTags);
+                string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string fileName =Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Tests", "UnitTests", "Documentation", "TestFiles", file+".json"));
+                File.WriteAllText(fileName, newJSON);
             }
         }
 
         public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags)
         {
-            Assert.That(expectedTags.Count, Is.EqualTo(actualTags.Count));
+            Assert.That(actualTags.Count, Is.EqualTo(expectedTags.Count));
 
             for (int i = 0; i < expectedTags.Count; i++) {
                 ITag expected = expectedTags[i];
@@ -65,14 +96,14 @@ namespace UnitTests.Documentation
                 Assert.That(expected.GetType() == actual.GetType());
                 if (expected.GetType() == typeof(Section))
                 {
-                    Assert.That((expected as Section).Title, Is.EqualTo((actual as Section).Title));
+                    Assert.That((actual as Section).Title, Is.EqualTo((expected as Section).Title));
                     MatchTagStructure((expected as Section).Children, (actual as Section).Children);
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
                     string textE = (expected as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
                     string textA = (actual as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
-                    Assert.That(textE, Is.EqualTo(textA));
+                    Assert.That(textA, Is.EqualTo(textE));
                 }
             }
         }
@@ -81,7 +112,6 @@ namespace UnitTests.Documentation
         }
 
         public string TagsToJSON(List<ITag> tags) {
-
             string output = "";
 
             for(int i = 0; i < tags.Count; i++) {
@@ -152,6 +182,10 @@ namespace UnitTests.Documentation
 
                 } else if (obj["type"].ToString() == typeof(DocGraph).ToString()) {
                     output.Add(new DocGraph(obj["text"].ToString(), "", null, null, null, null));
+
+                }  else if (obj["type"].ToString() == typeof(MapTag).ToString()) {
+                    Coordinate center = new Coordinate(0, 0);
+                    output.Add(new MapTag(center, 0, new List<Coordinate>()));
                 }
             }
 
