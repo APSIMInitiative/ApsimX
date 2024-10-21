@@ -764,9 +764,9 @@ namespace Models.AgPasture
                     amountUrineNReturned += urineDung.UrineNToSoil;
 
                     UrineDungReturn.DoUrineReturn(urineDung, physical.Thickness, urea, depthUrineIsAdded);
-                    summary.WriteMessage(this.Zone, $"Urine N added to the soil of {urineDung} to a depth of {depthUrineIsAdded} mm", MessageType.Information);
+                    summary.WriteMessage(this.Zone, $"Urine N added to the soil of {urineDung.UrineNToSoil} to a depth of {depthUrineIsAdded} mm", MessageType.Diagnostic);
                     UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
-                    summary.WriteMessage(this.Zone, $"Dung N and C added to the surface organic matter {urineDung}", MessageType.Information);
+                    summary.WriteMessage(this.Zone, $"Dung N and C added to the surface organic matter {urineDung.DungNToSoil}", MessageType.Diagnostic);
 
                     if (doTrampling)
                     {
