@@ -5819,7 +5819,21 @@ namespace Models.Core.ApsimFile
                     if(JsonUtilities.Type(simParent) == "Experiment")
                     {
                         JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
-                        JsonUtilities.AddChild((JObject)simParent, graph);
+                        var experimentChildren = (simParent as JObject).Children();
+
+                        bool duplicateGraphExists = false;
+                        var experiment = FileFormat.ReadFromString<Experiment>(simParent.ToString(), e => throw e, false).NewModel as Experiment;
+                        foreach(IModel child in experiment.Children)
+                        {
+                            // TODO: Needs to not add a graph to an experiment if another object
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
+                            // that causes issues.
+                            if (child.Name.Equals(graph["Name"].ToString()))
+                                duplicateGraphExists = true;
+                        }
+
+                        if (duplicateGraphExists == false)
+                            JsonUtilities.AddChild((JObject)simParent, graph);
                     }
                 }
             }
