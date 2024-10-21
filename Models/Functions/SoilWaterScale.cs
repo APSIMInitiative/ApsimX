@@ -70,10 +70,10 @@ namespace Models.Functions
                 throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is more than SoilWater SW length {soilwater.SW.Length}.");
 
             if (arrayIndex >= physical.SAT.Length)
-                throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for SAT array length {sats.Length}.");
+                throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for SAT array length {physical.SAT.Length}.");
 
             if (arrayIndex >= physical.DUL.Length)
-                throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for DUL array length {duls.Length}.");
+                throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for DUL array length {physical.DUL.Length}.");
 
             if (arrayIndex >= lls.Length)
                 throw new Exception($"Soil Water Scale ({Parent.Name}.{Name}): ArrayIndex {arrayIndex} is invalid index for LL array length {lls.Length}.");
