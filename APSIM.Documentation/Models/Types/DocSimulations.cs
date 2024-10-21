@@ -57,16 +57,18 @@ namespace APSIM.Documentation.Models.Types
 
         private List<ITag> DocumentValidation(Model m)
         {
-            List<ITag> tags = new List<ITag>();
-
             string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
             string title = "The APSIM " + name + " Model";
 
+            if (name.ToLower() == "SpeciesTable".ToLower()) //This is a special case file, we may want to review this in the future to remove/merge it
+                return (new DocSpeciesTable(m)).Document();
+
+            List<ITag> tags = new List<ITag>();
             List<ITag> modelTags = new List<ITag>();
 
             List<Memo> memos = m.FindAllChildren<Memo>().ToList();
             List<ITag> memoTags = new List<ITag>();
-            if (name.ToLower() != "wheat")          //Wheat has the memo in bot the validation and resource, so don't do it for that.
+            if (name.ToLower() != "wheat")          //Wheat has the memo in both the validation and resource, so don't do it for that.
                     foreach (IModel child in memos)
                         memoTags.AddRange(AutoDocumentation.DocumentModel(child));
 
