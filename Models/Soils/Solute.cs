@@ -30,6 +30,10 @@ namespace Models.Soils
         [Link]
         private Water water = null;
 
+        /// <summary>Access the summary model.</summary>
+        [Link]
+        private Summary summary = null;
+
         /// <summary>
         /// An enumeration for specifying soil water units
         /// </summary>
@@ -196,6 +200,17 @@ namespace Models.Soils
         {
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];
+        }
+
+        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="depth">Depth to add solute (mm).</param>
+        public virtual void AddAtDepth(double amount, double depth)
+        {
+            double[] weights = SoilUtilities.ProportionOfCumThickness(physical.Thickness, depth);
+            double[] amountToAdd = MathUtilities.Multiply_Value(weights, amount);
+            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
+            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added to depth of {depth} mm", MessageType.Information);
         }
 
         /// <summary>
