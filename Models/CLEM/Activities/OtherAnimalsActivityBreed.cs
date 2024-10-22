@@ -124,7 +124,8 @@ namespace Models.CLEM.Activities
                                 Number = singlesex,
                                 SaleFlag = HerdChangeReason.Born
                             };
-                            SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
+                            SelectedOtherAnimalsType.Add(newmales, this, null, "Births");
+                            Status = ActivityStatus.Success;
                         }
 
                         if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.NextDouble())
@@ -142,7 +143,8 @@ namespace Models.CLEM.Activities
                                 Number = singlesex,
                                 SaleFlag = HerdChangeReason.Born
                             };
-                            SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
+                            SelectedOtherAnimalsType.Add(newfemales, this, null, "Births");
+                            Status = ActivityStatus.Success;
                         }
                     }
                 }

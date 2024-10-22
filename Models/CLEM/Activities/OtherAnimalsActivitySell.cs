@@ -10,6 +10,10 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Microsoft.VisualBasic.FileIO;
+using System.Text.Json.Serialization;
+using Models.LifeCycle;
+using Models.PMF.Organs;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Models.CLEM.Activities
 {
@@ -27,6 +31,10 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivitySell : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private IEnumerable<OtherAnimalsGroup> filterGroups;
+        private int numberToDo = 0;
+        private int numberSold = 0;
+        private double totalValue = 0;
+        private FinanceType bankAccount = null;
 
         /// <summary>
         /// Bank account to use
@@ -35,7 +43,35 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         [System.ComponentModel.DefaultValueAttribute("No finance required")]
-        public string AccountName { get; set; }
+        public string BankAccountName { get; set; }
+
+        /// <summary>
+        /// Sale flag to use
+        /// </summary>
+        [Description("Sale reason to apply")]
+        [GreaterThanValue(0, ErrorMessage = "A sale reason must be provided")]
+        [HerdSaleReason("sale", ErrorMessage = "The herd change reason provided must relate to a sale")]
+        public HerdChangeReason SaleFlagToUse { get; set; } = HerdChangeReason.MarkedSale;
+
+        /// <summary>
+        /// The name of the animal type.
+        /// </summary>
+        [JsonIgnore]
+        public string PredictedAnimalType { get; set; } = "";
+
+        /// <summary>
+        /// The list of cohorts remaining to be sold in the current time-step
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<OtherAnimalsTypeCohort> CohortsToBeSold { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public OtherAnimalsActivitySell()
+        {
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -44,6 +80,15 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             filterGroups = GetCompanionModelsByIdentifier<OtherAnimalsGroup>(true, false);
+
+            // check if finance is available and warn if not supplying bank account.
+            if (Resources.ResourceItemsExist<Finance>())
+            {
+                if (BankAccountName == "")
+                    Summary.WriteMessage(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.", MessageType.Warning);
+            }
+            if (BankAccountName != "")
+                bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -54,17 +99,19 @@ namespace Models.CLEM.Activities
                 case "OtherAnimalsGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        measures: new List<string>() { "Individuals" }
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Number sold"
+                            "Number to sell",
+                            "Value of sales"
                         },
                         measures: new List<string>() {
                             "fixed",
-                            "per head"
+                            "per head",
+                            "total"
                         }
                         );
                 default:
@@ -73,72 +120,147 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalSell")]
+        private void OnCLEMAnimalBuyPerformActivity(object sender, EventArgs e)
+        {
+            if (TimingOK)
+            {
+                ManageActivityResourcesAndTasks();
+            }
+        }
+
+        /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            amountToDo = 0;
-            feedEstimated = 0;
-            CohortsToBeFed = new List<OtherAnimalsTypeCohort>();
-            List<string> animalsIncluded = new();
+            List<string> predictedTypes = new ();
 
             foreach (var filter in filterGroups)
             {
-                if (!animalsIncluded.Contains(filter.SelectedOtherAnimalsType.Name))
-                    animalsIncluded.Add(filter.SelectedOtherAnimalsType.Name);
-                CohortsToBeFed = CohortsToBeFed.Union(filter.Filter(filter.SelectedOtherAnimalsType.Cohorts));
+                foreach (OtherAnimalsTypeCohort cohort in filter.SelectedOtherAnimalsType.Cohorts)
+                {
+                    cohort.AdjustedNumber = cohort.Number;
+                    if(!predictedTypes.Contains(cohort.AnimalType.Name))
+                    {
+                        predictedTypes.Add(cohort.AnimalType.Name);
+                    }
+                }
             }
 
-            numberToDo = CohortsToBeFed.Sum(a => a.Number);
+            if (predictedTypes.Count() == 1)
+                PredictedAnimalType = string.Join(',', predictedTypes);
+            else
+                PredictedAnimalType = "Mixed types";
 
-            if (animalsIncluded.Any())
+            CohortsToBeSold = new HashSet<OtherAnimalsTypeCohort>();
+
+            foreach (var filter in filterGroups)
             {
-                if (animalsIncluded.Count == 1)
-                    PredictedAnimalName = animalsIncluded[0];
+                IEnumerable<OtherAnimalsTypeCohort> cohorts = filter.Filter(filter.SelectedOtherAnimalsType.Cohorts);
+
+                IEnumerable<TakeFromFiltered> takeSkipFilters = filter.FindAllChildren<TakeFromFiltered>();
+
+                if (takeSkipFilters.Any())
+                {
+                    // adjust the numbers based on take and skip filters
+                    foreach (var child in filter.FindAllChildren<TakeFromFiltered>())
+                    {
+                        int totalNumber = cohorts.Sum(a => a.AdjustedNumber);
+                        int numberToTake = 0;
+                        int numberToSkip = 0;
+
+                        switch (child.TakeStyle)
+                        {
+                            case TakeFromFilterStyle.TakeProportion:
+                                numberToTake = Convert.ToInt32(totalNumber * child.Value);
+                                break;
+                            case TakeFromFilterStyle.TakeIndividuals:
+                                numberToTake = Convert.ToInt32(child.Value);
+                                break;
+                            case TakeFromFilterStyle.SkipProportion:
+                                numberToSkip = Convert.ToInt32(totalNumber * child.Value);
+                                numberToTake = totalNumber - numberToSkip;
+                                break;
+                            case TakeFromFilterStyle.SkipIndividuals:
+                                numberToSkip = Convert.ToInt32(child.Value);
+                                numberToTake = totalNumber - numberToSkip;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (numberToSkip == 0 & totalNumber - numberToTake > 0 & child.TakePositionStyle == TakeFromFilteredPositionStyle.End)
+                        {
+                            numberToSkip = totalNumber - numberToTake;
+                        }
+
+                        // step through cohorts and adjust numbers based on skip and take using position start/end
+                        foreach (OtherAnimalsTypeCohort cohort in cohorts)
+                        {
+                            if (numberToSkip > 0)
+                            {
+                                int numberSkipped = Math.Min(numberToSkip, cohort.AdjustedNumber);
+                                numberToSkip -= numberSkipped;
+                                cohort.AdjustedNumber -= numberSkipped;
+                            }
+                            if (cohort.AdjustedNumber > 0 & numberToTake > 0)
+                            {
+                                int numberTaken = Math.Min(numberToTake, cohort.AdjustedNumber);
+                                numberToTake -= numberTaken;
+                                cohort.AdjustedNumber = numberTaken;
+                            }
+                        }
+                    }
+                }
                 else
-                    PredictedAnimalName = "Multiple animals";
+                {
+
+                }
+                CohortsToBeSold = CohortsToBeSold.Union(cohorts);
             }
+
+            // number to sell
+            numberToDo = CohortsToBeSold.Sum(a => a.AdjustedNumber);
+            numberSold = 0;
+            // value of sale
+            totalValue = CohortsToBeSold.Sum(a => a.AdjustedNumber * a.AnimalType.GetPriceGroupOfCohort(a, PurchaseOrSalePricingStyleType.Sale)?.Value??0);
         }
 
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
-            feedEstimated = filterGroups.OfType<OtherAnimalsFeedGroup>().Sum(a => a.CurrentResourceRequest.Required);
-
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                int number = numberToDo;
-
                 switch (valueToSupply.Key.type)
                 {
-                    case "OtherAnimalsFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
+                    case "OtherAnimalsGroup":
+                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
                         break;
                     case "LabourRequirement":
                     case "ActivityFee":
                         switch (valueToSupply.Key.identifier)
                         {
-                            case "Number fed":
+                            case "Number to sell":
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
                                         valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = number;
+                                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                                 }
                                 break;
-                            case "Feed provided":
+                            case "Value of sales":
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
                                         valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
-                                    case "per kg fed":
-                                        amountToDo = feedEstimated;
-                                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
+                                    case "total":
+                                        valuesForCompanionModels[valueToSupply.Key] = totalValue;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -156,18 +278,54 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForTimestep(double argument = 0)
+        protected override void AdjustResourcesForTimestep()
         {
-            if (feedEstimated > 0)
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                if (feedEstimated - filterGroups.OfType<OtherAnimalsFeedGroup>().Sum(a => a.CurrentResourceRequest.Required) > 0)
+                // get greatest shortfall by proportion
+                var sellShort = shortfalls.OrderBy(a => a.Provided / a.Required).FirstOrDefault();
+
+                foreach (var cohort in CohortsToBeSold.Where(a => a.AdjustedNumber > 0 & a.Number > 0))
                 {
-                    Status = ActivityStatus.Partial;
-                    return;
+                    int reduce = Convert.ToInt32((cohort.Number - cohort.AdjustedNumber) * sellShort.Provided / sellShort.Required);
+                    cohort.AdjustedNumber -= reduce;
                 }
-                Status = ActivityStatus.Success;
             }
         }
 
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            Status = ActivityStatus.NotNeeded;
+            // Perform sales
+
+            double finalSaleAmount = 0;
+            // walk through each OtherAnimalsGroup and sell the required number using the NumberAdjusted property
+            foreach (var cohort in CohortsToBeSold.Where(a => a.AdjustedNumber > 0))
+            {
+                OtherAnimalsTypeCohort newCohort = new ()
+                {
+                    Age = cohort.Age,
+                    Weight = cohort.Weight,
+                    Number = cohort.AdjustedNumber,
+                    Sex = cohort.Sex,
+                    SaleFlag = SaleFlagToUse,
+                    AnimalType = cohort.AnimalType,
+                    AnimalTypeName = cohort.AnimalTypeName
+                };
+                numberSold += newCohort.Number;
+                finalSaleAmount += newCohort.Number * cohort.CurrentPriceGroups.Sell.Value;
+                cohort.AnimalType.Remove(newCohort, this, SaleFlagToUse.ToString());
+            }
+
+            if (numberSold == 0)
+                return;
+
+            // payment to nominated bank accounts
+            bankAccount?.Add(finalSaleAmount, this, PredictedAnimalType, TransactionCategory);
+
+            SetStatusSuccessOrPartial(numberSold < numberToDo);
+        }
     }
 }
