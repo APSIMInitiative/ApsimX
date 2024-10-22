@@ -5,7 +5,10 @@ using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -18,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("Selects specific individuals from the other animals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/OtherAnimalsGroup.htm")]
-    [ValidParent(ParentType = typeof(OtherAnimalsActivityFeed))]
+    [ValidParent(ParentType = typeof(OtherAnimalsActivitySell))]
     public class OtherAnimalsGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
         /// <summary>
@@ -47,6 +50,44 @@ namespace Models.CLEM.Groupings
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             SelectedOtherAnimalsType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, AnimalTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
+        }
+
+        /// <summary>
+        /// Method to make changes to the adjustednumber of individuals based on the take and skip filters provided
+        /// </summary>
+        /// <param name="cohorts"></param>
+        public void AdjustCohortNumbersWhereTakeSkip(IEnumerable<OtherAnimalsTypeCohort> cohorts)
+        {
+            int totalNumber = cohorts.Sum(a => a.Number);
+            //int skipNumber = 0;
+            //int takeNumber = 0;
+
+            foreach (var skip in FindAllChildren<TakeFromFiltered>())
+            {
+
+
+            }
+
+
+            foreach (OtherAnimalsTypeCohort ind in cohorts)
+            {
+                // calculate number to take
+
+                // calculate number to skip
+
+                // walk through cohorts and adjust numbers based on skip and take using position start/end
+
+
+
+                //if (ind.SaleFlag == HerdChangeReason.Take)
+                //{
+                //    ind.Number = 0;
+                //}
+                //if (ind.SaleFlag == HerdChangeReason.Skip)
+                //{
+                //    ind.Number = 0;
+                //}
+            }
         }
     }
 }

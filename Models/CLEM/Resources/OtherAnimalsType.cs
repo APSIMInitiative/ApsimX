@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -22,6 +23,8 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IHandlesActivityCompanionModels
     {
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+
         /// <summary>
         /// Age (months) to weight relationship
         /// </summary>
@@ -47,6 +50,18 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public List<OtherAnimalsTypeCohort> Cohorts;
 
+        /// <summary>
+        /// Current value of individuals in the herd
+        /// </summary>
+        [JsonIgnore]
+        public AnimalPricing PriceList;
+
+        /// <summary>
+        /// Determine if a price schedule has been provided for this breed
+        /// </summary>
+        /// <returns>boolean</returns>
+        public bool PricingAvailable() { return (PriceList != null); }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -56,6 +71,14 @@ namespace Models.CLEM.Resources
             // locate age to weight relationship
             AgeWeightRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Age to weight");
 
+            // clone pricelist so model can modify if needed and not affect initial parameterisation
+            if (FindAllChildren<AnimalPricing>().Count() > 0)
+            {
+                PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+
+                priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
+            }
             Initialise();
         }
 
@@ -65,8 +88,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Cohorts != null)
-                Cohorts.Clear();
+            Cohorts?.Clear();
             Cohorts = null;
         }
 
@@ -78,9 +100,9 @@ namespace Models.CLEM.Resources
             Cohorts = new List<OtherAnimalsTypeCohort>();
             foreach (var child in this.Children)
             {
-                if (child is OtherAnimalsTypeCohort)
+                if (child is OtherAnimalsTypeCohort cohort)
                 {
-                    ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
+                    cohort.SaleFlag = HerdChangeReason.InitialHerd;
                     Add(child, null, null, "Initial numbers");
                 }
             }
@@ -112,6 +134,46 @@ namespace Models.CLEM.Resources
             }
         }
 
+
+        /// <summary>
+        /// Get value of a specific individual
+        /// </summary>
+        /// <returns>value</returns>
+        public AnimalPriceGroup GetPriceGroupOfCohort(OtherAnimalsTypeCohort cohort, PurchaseOrSalePricingStyleType purchaseStyle, string warningMessage = "")
+        {
+            if (PricingAvailable())
+            {
+                AnimalPriceGroup animalPrice = (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase) ? cohort.CurrentPriceGroups.Buy : cohort.CurrentPriceGroups.Sell;
+                if (animalPrice == null || !animalPrice.Filter(cohort))
+                {
+                    // search through RuminantPriceGroups for first match with desired purchase or sale flag
+                    foreach (AnimalPriceGroup priceGroup in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                        if (priceGroup.Filter(cohort))
+                        {
+                            if (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase)
+                            {
+                                cohort.CurrentPriceGroups = (priceGroup, cohort.CurrentPriceGroups.Sell);
+                                return priceGroup;
+                            }
+                            else
+                            {
+                                cohort.CurrentPriceGroups = (cohort.CurrentPriceGroups.Buy, priceGroup);
+                                return priceGroup;
+                            }
+                        }
+
+                    // no price match found.
+                    string warningString = warningMessage;
+                    if (warningString == "")
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={cohort.Name}] meeting the required criteria [f=age: {cohort.Age}] [f=sex: {cohort.Sex}] [f=weight: {cohort.Weight:##0}]";
+                    Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
+                }
+                return animalPrice;
+            }
+            return null;
+        }
+
+
         #region Transactions
 
         /// <summary>
@@ -129,13 +191,18 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void Add(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
         {
-            OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToAdd = (OtherAnimalsTypeCohort)(addIndividuals as OtherAnimalsTypeCohort).Clone();
 
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Sex == cohortToAdd.Sex).FirstOrDefault();
 
             if (cohortexists == null)
+            {
                 // add new
+                cohortToAdd.AnimalType = this;
+                cohortToAdd.AnimalTypeName = this.NameWithParent;
+
                 Cohorts.Add(cohortToAdd);
+            }
             else
                 cohortexists.Number += cohortToAdd.Number;
 
@@ -171,7 +238,10 @@ namespace Models.CLEM.Resources
             (Parent as OtherAnimals).LastCohortChanged = cohortToRemove;
             ReportTransaction(TransactionType.Loss, numberAdjusted, activity, "", reason, this, cohortToRemove);
             if (cohortToRemove.Number == 0)
+            {
+                cohortToRemove.AdjustedNumber = 0;
                 cohortToRemove.Age = 0;
+            }
         }
 
         /// <summary>
