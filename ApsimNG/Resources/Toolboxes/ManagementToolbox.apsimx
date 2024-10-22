@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 181,
+  "Version": 182,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -3970,6 +3970,20 @@
             "        {",
             "            return d1.Year == d2.Year && d1.DayOfYear == d2.DayOfYear;",
             "        }",
+            "        ",
+            "        public void AddClTracer(double Amount, double Depth)",
+            "        {",
+            "                double[] weights = GetLayerWeights();",
+            "                double[] tracer2Add = new double[soilPhysical.Thickness.Length];",
+            "                double cumulativeDepth = 0.0;",
+            "                ",
+            "                for (int i = 0; i < soilPhysical.Thickness.Length; i++)",
+            "                 \ttracer2Add[i] = weights[i] * Amount;",
+            "",
+            "                Cl.AddKgHaDelta(SoluteSetterType.Soil, tracer2Add);",
+            "                summary.WriteMessage(this, \"Chloride tracer of \" + Amount + \" kg /ha to a depth of \" + Depth + \" mm\", MessageType.Information); ",
+            "        }",
+            "",
             "    }",
             "}"
           ],
