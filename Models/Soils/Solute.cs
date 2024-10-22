@@ -202,10 +202,10 @@ namespace Models.Soils
                 kgha[i] += delta[i];
         }
 
-        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <summary>Add an amount of solute to a specified depth.</summary>
         /// <param name="amount">Amount of solute to add (kg/ha).</param>
-        /// <param name="depth">Depth to add solute (mm).</param>
-        public virtual void AddAtDepth(double amount, double depth)
+        /// <param name="depth">Depth (mm) to add solute to.</param>
+        public virtual void AddToDepth(double amount, double depth)
         {
             double[] weights = SoilUtilities.ProportionOfCumThickness(physical.Thickness, depth);
             double[] amountToAdd = MathUtilities.Multiply_Value(weights, amount);
