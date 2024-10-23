@@ -1,0 +1,8 @@
+{
+  "basefile": "MetompkinFarm.apsimx",
+  "basedir": ".",
+  "start_date": "2022-07-19",
+  "end_date": "2023-11-09",
+  "lat": 37.7448,
+  "lon": -75.5833
+}
