@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 namespace APSIM.Shared.Utilities
@@ -37,6 +38,36 @@ namespace APSIM.Shared.Utilities
                     CumThickness[Layer] = Thickness[Layer] + CumThickness[Layer - 1];
             }
             return CumThickness;
+        }
+
+        /// <summary>Returns an array that gives the proportion of each layer contributing to a given depth.</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <param name="GivenDepth">The supplied depth (mm).</param>
+        static public double[] ProportionOfCumThickness(double[] Thickness, double GivenDepth)
+        {
+            // ------------------------------------------------
+            // Return the proportion of the layer contributing to Given Depth - mm/mm
+            // ------------------------------------------------
+            
+            // find the layer in which GivenDepth lies
+            int GivenDepthLayer = LayerIndexOfClosestDepth(Thickness, GivenDepth);
+            
+            double[] ProportionOfCumThickness = new double[Thickness.Length];
+            double[] CumThickness = ToCumThickness(Thickness);
+
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                if (i < GivenDepthLayer)
+                    ProportionOfCumThickness[i] = Thickness[i] / GivenDepth;  // the entire layer in in the target depth
+                else if (i == GivenDepthLayer)
+                    if (i == 0)
+                        ProportionOfCumThickness[i] = (GivenDepth - 0) / GivenDepth;
+                    else
+                        ProportionOfCumThickness[i] = (GivenDepth - CumThickness[i-1]) / GivenDepth;  
+                else
+                    ProportionOfCumThickness[i] = 0.0;
+            }
+            return ProportionOfCumThickness;
         }
 
         /// <summary>Return the index of the layer that contains the specified depth.</summary>
@@ -82,6 +113,22 @@ namespace APSIM.Shared.Utilities
 
             return depth_of_root_in_layer / thickness[layerIndex];
         }
+
+        
+        /// <summary>Keep the top x mm of soil and zero the rest.</summary>
+        /// <param name="values">The layered values.</param>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="depth">The depth of soil to keep</param>
+        public static double[] KeepTopXmm(IReadOnlyList<double> values, double[] thickness, double depth)
+        {
+            double[] returnValues = values.ToArray();
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                double proportion = ProportionThroughLayer(thickness, i, depth);
+                returnValues[i] *= proportion;
+            }
+            return returnValues;
+        }        
 
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="thickness">Soil layer thickness.</param>
@@ -469,11 +516,10 @@ namespace APSIM.Shared.Utilities
         /// <param name="f">The function to call to get a missing value.</param>
         public static (double[] values, string[] metadata) FillMissingValues(double[] values, string[] valuesMetadata, int numValues, Func<int, double> f)
         {
-            double[] newValues = values?.ToArray(); // clones
-            newValues ??= Enumerable.Repeat(double.NaN, numValues).ToArray();  // if null, initialises to double.NaN
+            double[] newValues = MathUtilities.SetArrayOfCorrectSize(values, numValues).ToArray();
             for (int i = 0; i < numValues; i++)
             {
-                if (double.IsNaN(newValues[i])) 
+                if (i >= newValues.Length || double.IsNaN(newValues[i])) 
                     newValues[i] = f(i);
             }
             return (newValues, DetermineMetadata(values, valuesMetadata, newValues, "Calculated"));

@@ -367,7 +367,7 @@ namespace Models.AgPasture
                                                                        .Sum(z => z.Area);
             zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
                                                                 f => f,
-                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones))
+                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones, summary))
                                                        .ToList();
 
 
@@ -556,7 +556,8 @@ namespace Models.AgPasture
                 return true;
 
             // Do graze if expression is true
-            return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1];
+            // this was return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1]; but this assessment shoudl be against total DM
+            return PreGrazeDM > PreGrazeDMArray[clock.Today.Month - 1];
         }
 
         /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>
@@ -593,13 +594,15 @@ namespace Models.AgPasture
             private double amountUrineNReturned;
             private double dmRemovedToday;
             private double areaWeighting;
-            private List<DigestibleBiomass> grazedForages = new List<DigestibleBiomass>();
+            private List<Forages.MaterialRemoved> grazedForages = new();
+            private ISummary summary;
 
             /// <summary>onstructor</summary>
             /// <param name="zone">Our zone.</param>
             /// <param name="forages">Our forages.</param>
             /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
-            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones)
+            /// <param name="summary">The Summary file.</param>
+            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones, ISummary summary)
             {
                 this.Zone = zone;
                 this.forages = forages;
@@ -607,6 +610,7 @@ namespace Models.AgPasture
                 urea = zone.FindInScope<Solute>("Urea");
                 physical = zone.FindInScope<IPhysical>();
                 areaWeighting = zone.Area / areaOfAllZones;
+                this.summary = summary;
             }
 
             public Zone Zone { get; private set; }
@@ -710,9 +714,9 @@ namespace Models.AgPasture
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                            grazedDM += grazed.Total.Wt * 10;  // kg/ha
-                            grazedN += grazed.Total.N * 10;    // kg/ha
-                            grazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
+                            grazedDM += grazed.Wt;  // kg/ha
+                            grazedN += grazed.N;    // kg/ha
+                            grazedME += grazedMetabolisableEnergy * grazed.Wt;
 
                             grazedForages.Add(grazed);
                         }
@@ -745,51 +749,29 @@ namespace Models.AgPasture
                                     double sendDungElsewhere,
                                     double sendUrineElsewhere)
             {
-                if (grazedForages.Any())
+                var urineDung = UrineDungReturn.CalculateUrineDungReturn(grazedForages,  
+                                                                         GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month),
+                                                                         GetValueFromMonthArray(fractionDefoliatedNToSoil, month),
+                                                                         GetValueFromMonthArray(fractionExcretedNToDung, month),
+                                                                         CNRatioDung,
+                                                                         sendUrineElsewhere,
+                                                                         sendDungElsewhere);
+
+                if (urineDung != null)
                 {
-                    double returnedToSoilWt = 0;
-                    double returnedToSoilN = 0;
-                    foreach (var grazedForage in grazedForages)
-                    {
-                        returnedToSoilWt += GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month) *
-                                            (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                        returnedToSoilN += GetValueFromMonthArray(fractionDefoliatedNToSoil, month) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
-                    }
+                    amountDungNReturned += urineDung.DungNToSoil;
+                    amountDungWtReturned += urineDung.DungWtToSoil;
+                    amountUrineNReturned += urineDung.UrineNToSoil;
 
-                    double dungNReturned;
-                    if (fractionExcretedNToDung != null)
-                        dungNReturned = GetValueFromMonthArray(fractionExcretedNToDung, month) * returnedToSoilN;
-                    else
-                    {
-                        const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
-                        dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
-                    }
-
-                    amountDungNReturned += dungNReturned;
-                    amountDungWtReturned += returnedToSoilWt;
-                    amountUrineNReturned += returnedToSoilN - dungNReturned;
-
-                    // We will do the urine and dung return.
-                    // find the layer that the fertilizer is to be added to.
-                    int layer = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depthUrineIsAdded);
-                    var ureaValues = urea.kgha;
-                    ureaValues[layer] += AmountUrineNReturned * (1- sendUrineElsewhere);
-                    urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
-
-                    // Send dung to surface
-                    var SOMData = new BiomassRemovedType();
-                    SOMData.crop_type = "RuminantDung_PastureFed";
-                    SOMData.dm_type = new string[] { SOMData.crop_type };
-                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned * ((float)1.0 - (float)sendDungElsewhere)};
-                    SOMData.dlt_dm_p = new float[] { 0.0F };
-                    SOMData.fraction_to_residue = new float[] { 1.0F };
-                    surfaceOrganicMatter.OnBiomassRemoved(SOMData);
+                    UrineDungReturn.DoUrineReturn(urineDung, physical.Thickness, urea, depthUrineIsAdded);
+                    summary.WriteMessage(this.Zone, $"Urine N added to the soil of {urineDung.UrineNToSoil} to a depth of {depthUrineIsAdded} mm", MessageType.Diagnostic);
+                    UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
+                    summary.WriteMessage(this.Zone, $"Dung N and C added to the surface organic matter {urineDung.DungNToSoil}", MessageType.Diagnostic);
 
                     if (doTrampling)
                     {
                         var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(pastureConsumedAtMaximumRateOfLitterRemoval, dmRemovedToday, 0),
-                                                                   maximumPropLitterMovedToSoil);
+                                                                    maximumPropLitterMovedToSoil);
                         surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
                     }
                 }
@@ -798,7 +780,9 @@ namespace Models.AgPasture
             /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
             private static double GetValueFromMonthArray(double[] arr, int month)
             {
-                if (arr.Length == 1)
+                if (arr == null)
+                    return double.NaN;
+                else if (arr.Length == 1)
                     return arr[0];
                 else
                     return arr[month - 1];

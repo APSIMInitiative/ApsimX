@@ -53,7 +53,7 @@ namespace UnitTests.Interop.PdfRendering
             if (numTables <= 0)
                 Assert.Throws<InvalidOperationException>(() => section.GetLastTable());
             else
-                Assert.AreEqual(tables[numTables - 1], section.GetLastTable());
+                Assert.That(section.GetLastTable(), Is.EqualTo(tables[numTables - 1]));
         }
     }
 }

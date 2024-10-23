@@ -51,7 +51,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             window.DeleteEvent += OnDelete;
             window.Destroyed += OnClose;
             window.Resizable = false;
-            VBox container = new VBox(true, 10);
+            Box container = new Box(Orientation.Vertical, 10);
             container.Homogeneous = false;
             container.Margin = 10;
 

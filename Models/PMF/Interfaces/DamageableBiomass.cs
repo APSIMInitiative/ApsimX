@@ -1,4 +1,8 @@
-﻿namespace Models.PMF.Interfaces
+﻿using System;
+using Models.ForageDigestibility;
+using Models.Functions;
+
+namespace Models.PMF.Interfaces
 {
     /// <summary>A class to hold a mass of biomass and its digestibility.</summary>
     public class DamageableBiomass
@@ -16,7 +20,7 @@
             Total = total;
             Consumable = total;
             IsLive = isLive;
-            Digestibility = digestibility;
+            DigestibilityFromModel = digestibility;
         }
 
         /// <summary>
@@ -33,7 +37,7 @@
             Total = total;
             Consumable = total * fractionConsumable;
             IsLive = isLive;
-            Digestibility = digestibility;
+            DigestibilityFromModel = digestibility;
         }
 
         /// <summary>Name of material.</summary>
@@ -48,7 +52,7 @@
         /// <summary>Is biomass live.</summary>
         public bool IsLive { get; }
 
-        /// <summary>Optional digestibility (0-1). Can be null missing digestibility.</summary>
-        public double? Digestibility { get; }
+        /// <summary>Digestibility (0-1) as calculated from a model. Can be null if model doesn't calculate digestibility.</summary>
+        public double? DigestibilityFromModel { get; }
     }
 }

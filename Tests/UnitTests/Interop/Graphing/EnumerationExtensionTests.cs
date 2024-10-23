@@ -30,7 +30,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(LineType.Solid, LineStyle.Solid)]
         public void TestLineStyleConversion(LineType input, LineStyle expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotLineStyle());
+            Assert.That(input.ToOxyPlotLineStyle(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(LineThickness.Thin, 0.25)]
         public void TestLineThicknessConversion(LineThickness input, double expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotThickness());
+            Assert.That(input.ToOxyPlotThickness(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(MarkerType.Triangle, OxyPlot.MarkerType.Triangle)]
         public void TestMarkerTypeConversion(MarkerType input, OxyPlot.MarkerType expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotMarkerType());
+            Assert.That(input.ToOxyPlotMarkerType(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(MarkerSize.Large, 9)]
         public void TestMarkerSizeConversion(MarkerSize input, double expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotMarkerSize());
+            Assert.That(input.ToOxyPlotMarkerSize(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(LegendOrientation.Vertical, OxyPlot.Legends.LegendOrientation.Vertical)]
         public void TestLegendOrientationConversion(LegendOrientation input, OxyPlot.Legends.LegendOrientation expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendOrientation());
+            Assert.That(input.ToOxyPlotLegendOrientation(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(LegendPosition.RightBottom, OxyPlot.Legends.LegendPosition.RightBottom)]
         public void TestLegendPositionConversion(LegendPosition input, OxyPlot.Legends.LegendPosition expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendPosition());
+            Assert.That(input.ToOxyPlotLegendPosition(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace UnitTests.Graphing.SeriesExporters
         [TestCase(AxisPosition.Right, OxyAxisPosition.Right)]
         public void TestAxisPositionConversion(AxisPosition position, OxyAxisPosition expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, position.ToOxyAxisPosition());
+            Assert.That(position.ToOxyAxisPosition(), Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace UnitTests.Graphing.SeriesExporters
         /// <param name="expectedOutput">Expected output.</param>
         private void TestColourConversion(Color input, OxyColor expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, input.ToOxyColour());
+            Assert.That(input.ToOxyColour(), Is.EqualTo(expectedOutput));
         }
     }
 }

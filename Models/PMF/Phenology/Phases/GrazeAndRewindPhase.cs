@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return phenology?.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return "Rewind phase has no end";
             }
         }
 
@@ -45,21 +45,29 @@ namespace Models.PMF.Phen
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
+        [Display(Type = DisplayType.CropStageName)]
         public string PhaseNameToGoto { get; set; }
+
+        /// <summary>
+        /// The type of biomass removal event
+        /// </summary>
+        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        public BiomassRemovalType RemovalType
+        {
+            get { return _removalType; }
+            set { _removalType = value; }
+        }
+
+        [JsonIgnore]
+        private BiomassRemovalType _removalType { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
         [JsonIgnore]
         public double FractionComplete { get; }
 
-        /// <summary>Thermal time target</summary>
-        [JsonIgnore]
-        public double Target { get; set; }
-
         /// <summary>Cutting Event</summary>
-        public event EventHandler<EventArgs> PhenologyCut;
+        public event EventHandler<BiomassRemovalEventArgs> PhenologyDefoliate;
 
-        /// <summary>Grazing Event</summary>
-        public event EventHandler<EventArgs> PhenologyGraze;
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -68,8 +76,9 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
-            PhenologyCut?.Invoke(this, new EventArgs());
-            PhenologyGraze?.Invoke(this, new EventArgs());
+            BiomassRemovalEventArgs breg = new BiomassRemovalEventArgs();
+            breg.RemovalType = RemovalType;
+            PhenologyDefoliate?.Invoke(this, breg);
             return true;
         }
 

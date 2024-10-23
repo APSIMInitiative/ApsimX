@@ -429,12 +429,16 @@ namespace Models.PMF.Organs
             Loss.StructuralN = StartLive.StructuralN * senescedFrac;
             Loss.StorageN = StartLive.StorageN * senescedFrac - StorageNReallocation;
             Loss.MetabolicN = StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation);
-            Loss.StructuralWt = StartLive.StructuralWt * senescedFrac;
-            Loss.MetabolicWt = StartLive.MetabolicWt * senescedFrac;
-            Loss.StorageWt = StartLive.StorageWt * senescedFrac;
+            // NH I imagine that the same sort of code should be used for DM, but we don't have the DM components.  Just check that things don't go negative.
+            // The Loss has not been applied when we bound it so it's relatively safe from breaking mass balance.  Not sure about metabolic though.
+            // This really needs to be looked into.
+            Loss.StructuralWt = Math.Min(StartLive.StructuralWt * senescedFrac, Live.StructuralWt);
+            Loss.MetabolicWt = Math.Min(StartLive.MetabolicWt * senescedFrac, Live.MetabolicWt);
+            Loss.StorageWt = Math.Min(StartLive.StorageWt * senescedFrac, Live.StorageWt);
             Live.Subtract(Loss);
             Dead.Add(Loss);
             Senesced.Add(Loss);
+
         }
 
         /// <summary>Clears this instance.</summary>

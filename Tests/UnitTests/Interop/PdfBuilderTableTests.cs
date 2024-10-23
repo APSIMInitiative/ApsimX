@@ -42,8 +42,8 @@ namespace UnitTests.Interop
         public void TestStartTable()
         {
             builder.StartTable(2);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Table), doc.LastSection.Elements[0].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Table)));
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace UnitTests.Interop
         public void TestStartTableNCols(int numColumns)
         {
             builder.StartTable(numColumns);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Table table = (Table)doc.LastSection.Elements[0];
-            Assert.AreEqual(numColumns, table.Columns.Count);
+            Assert.That(table.Columns.Count, Is.EqualTo(numColumns));
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace UnitTests.Interop
         {
             doc.AddSection().AddParagraph("content before the table.");
             builder.StartTable(1);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Table), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Paragraph)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Table)));
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace UnitTests.Interop
         {
             builder.StartTable(1);
             Table table = (Table)doc.LastSection.Elements[0];
-            Assert.True(table.KeepTogether);
-            Assert.AreEqual(Colors.Black, table.Borders.Color);
-            Assert.Greater(table.Borders.Width, 0);
+            Assert.That(table.KeepTogether, Is.True);
+            Assert.That(table.Borders.Color, Is.EqualTo(Colors.Black));
+            Assert.That(table.Borders.Width.Value, Is.GreaterThan(0));
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace UnitTests.Interop
 
             double width = ((Table)doc.LastSection.Elements[0]).Columns[0].Width.Point;
             // fixme
-            Assert.GreaterOrEqual(width, 250);
+            Assert.That(width, Is.GreaterThanOrEqualTo(250));
         }
 
         /// <summary>
@@ -134,9 +134,9 @@ namespace UnitTests.Interop
             builder.StartTable(1);
             builder.FinishTable();
             builder.AppendText("Text after table", TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Table), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Table)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Paragraph)));
         }
 
 
@@ -150,14 +150,14 @@ namespace UnitTests.Interop
             builder.StartTable(1);
 
             Table table = doc.LastSection.Elements[0] as Table;
-            Assert.NotNull(table);
-            Assert.AreEqual(0, table.Rows.Count);
+            Assert.That(table, Is.Not.Null);
+            Assert.That(table.Rows.Count, Is.EqualTo(0));
 
             builder.StartTableRow(false);
-            Assert.AreEqual(1, table.Rows.Count);
+            Assert.That(table.Rows.Count, Is.EqualTo(1) );
 
             builder.StartTableRow(false);
-            Assert.AreEqual(2, table.Rows.Count);
+            Assert.That(table.Rows.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -173,12 +173,12 @@ namespace UnitTests.Interop
             builder.StartTable(1);
             builder.StartTableRow(false);
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
             Table table0 = (Table)doc.LastSection.Elements[0];
             Table table1 = (Table)doc.LastSection.Elements[1];
 
             AssertEqual(input, table0);
-            Assert.AreEqual(1, table1.Rows.Count);
+            Assert.That(table1.Rows.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace UnitTests.Interop
             builder.StartTable(1);
             builder.StartTableCell();
             Exception error = Assert.Throws<Exception>(() => builder.StartTableRow(false));
-            Assert.AreEqual(typeof(InvalidOperationException), error.InnerException.GetType());
+            Assert.That(error.InnerException.GetType(), Is.EqualTo(typeof(InvalidOperationException)));
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace UnitTests.Interop
         {
             builder.StartTable(0);
             Exception error = Assert.Throws<Exception>(() => builder.StartTableRow(false));
-            Assert.AreEqual(typeof(InvalidOperationException), error.InnerException.GetType());
+            Assert.That(error.InnerException.GetType(), Is.EqualTo(typeof(InvalidOperationException)));
         }
 
         /// <summary>
@@ -217,17 +217,17 @@ namespace UnitTests.Interop
 
             Table table = (Table)doc.LastSection.Elements[0];
             Row row = table.Rows[0];
-            Assert.True(row.HeadingFormat);
-            Assert.AreEqual(Colors.LightBlue, row.Shading.Color);
-            Assert.AreEqual(ParagraphAlignment.Left, row.Format.Alignment);
-            Assert.AreEqual(VerticalAlignment.Center, row.VerticalAlignment);
-            Assert.True(row.Format.Font.Bold);
+            Assert.That(row.HeadingFormat, Is.True);
+            Assert.That(row.Shading.Color, Is.EqualTo(Colors.LightBlue));
+            Assert.That(row.Format.Alignment, Is.EqualTo(ParagraphAlignment.Left));
+            Assert.That(row.VerticalAlignment, Is.EqualTo(VerticalAlignment.Center));
+            Assert.That(row.Format.Font.Bold, Is.True);
             for (int i = 0; i < row.Table.Columns.Count; i++)
             {
                 Cell cell = row.Cells[i];
-                Assert.True(cell.Format.Font.Bold);
-                Assert.AreEqual(ParagraphAlignment.Left, cell.Format.Alignment);
-                Assert.AreEqual(VerticalAlignment.Center, cell.VerticalAlignment);
+                Assert.That(cell.Format.Font.Bold, Is.True);
+                Assert.That(cell.Format.Alignment, Is.EqualTo(ParagraphAlignment.Left));
+                Assert.That(cell.VerticalAlignment, Is.EqualTo(VerticalAlignment.Center));
             }
         }
 
@@ -255,7 +255,7 @@ namespace UnitTests.Interop
             builder.FinishTableCell();
 
             Table table = (Table)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, table.Rows.Count);
+            Assert.That(table.Rows.Count, Is.EqualTo(2));
 
             AssertTextEqual(text00, table.Rows[0].Cells[0]);
             AssertTextEqual(null, table.Rows[0].Cells[1]);
@@ -281,16 +281,16 @@ namespace UnitTests.Interop
             builder.AppendText("more cell contents", TextStyle.Normal);
 
             Table table = (Table)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, table.Rows.Count);
+            Assert.That(table.Rows.Count, Is.EqualTo(1));
             Row row = table.Rows[0];
-            Assert.AreEqual(1, row.Cells.Count);
+            Assert.That(row.Cells.Count, Is.EqualTo(1));
             Cell cell = row.Cells[0];
-            Assert.AreEqual(1, cell.Elements.Count);
+            Assert.That(cell.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = cell.Elements[0] as Paragraph;
-            Assert.NotNull(paragraph);
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[0].GetType());
-            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[1].GetType());
+            Assert.That(paragraph, Is.Not.Null);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0].GetType(), Is.EqualTo(typeof(FormattedText)));
+            Assert.That(paragraph.Elements[1].GetType(), Is.EqualTo(typeof(FormattedText)));
         }
 
         /// <summary>
@@ -350,11 +350,11 @@ namespace UnitTests.Interop
             builder.StartTableCell();
             builder.AppendText("text in new table", TextStyle.Normal);
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
             AssertEqual(table1, (Table)doc.LastSection.Elements[0]);
             Table table2 = (Table)doc.LastSection.Elements[1];
-            Assert.AreEqual(1, table2.Rows.Count);
-            Assert.AreEqual(1, table2.Rows[0].Cells.Count);
+            Assert.That(table2.Rows.Count, Is.EqualTo(1));
+            Assert.That(table2.Rows[0].Cells.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -377,9 +377,9 @@ namespace UnitTests.Interop
             builder.FinishTableCell();
 
             Table table = (Table)doc.LastSection.Elements[0];
-            Assert.AreEqual(1, table.Rows.Count);
+            Assert.That(table.Rows.Count, Is.EqualTo(1));
             Row row = table.Rows[0];
-            Assert.AreEqual(2, row.Cells.Count);
+            Assert.That(row.Cells.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -417,9 +417,9 @@ namespace UnitTests.Interop
         {
             DataTable input = CreateDataTable();
             builder.AppendTable(input);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Table table = doc.LastSection.Elements[0] as Table;
-            Assert.NotNull(table);
+            Assert.That(table, Is.Not.Null);
 
             AssertEqual(input, table);
         }
@@ -433,9 +433,9 @@ namespace UnitTests.Interop
         {
             doc.AddSection().AddParagraph("this is above the table");
             builder.AppendTable(CreateDataTable());
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Table), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Paragraph)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Table)));
         }
 
         /// <summary>
@@ -448,9 +448,9 @@ namespace UnitTests.Interop
         {
             builder.AppendTable(CreateDataTable());
             builder.AppendText("this is above the table", TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Table), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Table)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Paragraph)));
         }
 
         /// <summary>
@@ -463,8 +463,8 @@ namespace UnitTests.Interop
         private void AssertEqual(DataTable expected, Table actual)
         {
             // The inserted table will have 1 extra row, for the headings.
-            Assert.AreEqual(expected.Rows.Count + 1, actual.Rows.Count);
-            Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+            Assert.That(actual.Rows.Count, Is.EqualTo(expected.Rows.Count + 1));
+            Assert.That(actual.Columns.Count, Is.EqualTo(expected.Columns.Count));
 
             // Verify that table contents were inserted correctly.
             for (int i = 0; i < actual.Rows.Count; i++)
@@ -478,7 +478,7 @@ namespace UnitTests.Interop
                     else
                         cellExpected = expected.Rows[i - 1][j];
                     string cellActual = ((Paragraph)actual.Rows[i].Cells[j].Elements[0]).GetRawText();
-                    Assert.AreEqual(cellExpected, cellActual);
+                    Assert.That(cellActual, Is.EqualTo(cellExpected));
                 }
             }
         }
@@ -491,17 +491,17 @@ namespace UnitTests.Interop
         private void AssertTextEqual(string expected, Cell cell)
         {
             if (expected == null)
-                Assert.AreEqual(0, cell.Elements.Count);
+                Assert.That(cell.Elements.Count, Is.EqualTo(0));
             else
             {
-                Assert.AreEqual(1, cell.Elements.Count);
+                Assert.That(cell.Elements.Count, Is.EqualTo(1));
                 Paragraph paragraph = cell.Elements[0] as Paragraph;
-                Assert.NotNull(paragraph);
-                Assert.AreEqual(1, paragraph.Elements.Count);
+                Assert.That(paragraph, Is.Not.Null);
+                Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
                 FormattedText formatted = (FormattedText)paragraph.Elements[0];
-                Assert.AreEqual(1, formatted.Elements.Count);
+                Assert.That(formatted.Elements.Count, Is.EqualTo(1));
                 Text plain = (Text)formatted.Elements[0];
-                Assert.AreEqual(expected, plain.Content);
+                Assert.That(plain.Content, Is.EqualTo(expected));
             }
         }
 

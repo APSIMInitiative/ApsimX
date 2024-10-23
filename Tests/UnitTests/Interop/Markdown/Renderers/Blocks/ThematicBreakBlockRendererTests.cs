@@ -61,7 +61,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             bool hasHR = false;
             mockBuilder.Setup(b => b.AppendHorizontalRule()).Callback(() => hasHR = true);
             renderer.Write(mockBuilder.Object, hr);
-            Assert.True(hasHR);
+            Assert.That(hasHR, Is.True);
         }
     }
 }

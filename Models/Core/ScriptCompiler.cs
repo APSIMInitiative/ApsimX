@@ -128,23 +128,37 @@ namespace Models.Core
                     
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
+                        bool isRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
 
                         IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
                         // We haven't compiled the code so do it now.
                         string sourceName;
-                        Compilation compiled = CompileTextToAssembly(modifiedCode, assemblies, out sourceName);
+                        Compilation compiled = CompileTextToAssembly(modifiedCode, assemblies, isRunningInVS, out sourceName);
 
                         MemoryStream ms = new MemoryStream();
                         MemoryStream xmlDocumentationStream = new MemoryStream();
                         MemoryStream pdbStream = new MemoryStream();
                         
-                        EmitResult emitResult = compiled.Emit(
-                            peStream: ms,
-                            pdbStream: withDebug ? pdbStream : null,
-                            xmlDocumentationStream: xmlDocumentationStream,
-                            options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb)
-                            );
+                        EmitResult emitResult;
+                        if (isRunningInVS) 
+                        {
+                            emitResult = compiled.Emit(
+                                            peStream: ms,
+                                            xmlDocumentationStream: xmlDocumentationStream,
+                                            options: new EmitOptions(debugInformationFormat: DebugInformationFormat.Embedded)
+                                        );
+                        }
+                        else
+                        {
+                            emitResult = compiled.Emit(
+                                            peStream: ms,
+                                            pdbStream: withDebug ? pdbStream : null,
+                                            xmlDocumentationStream: xmlDocumentationStream,
+                                            options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb)
+                                        );
+                        }
+                            
 
                         if (!emitResult.Success)
                         {
@@ -171,36 +185,41 @@ namespace Models.Core
                             // Write the assembly to disk if this is a GUI run.
                             if (Path.GetFileName(Assembly.GetEntryAssembly().Location) == "ApsimNG.dll" && withDebug)
                             {
-                                // Write pdb Documentation file.
+                                if (!isRunningInVS) 
+                                {
+                                    // Write pdb Documentation file.
+                                    ms.Seek(0, SeekOrigin.Begin);
+                                    string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                                    using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                        ms.WriteTo(file);
+
+                                    // Write XML Documentation file.
+                                    string documentationFile = Path.ChangeExtension(fileName, ".xml");
+                                    xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
+                                    using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
+                                        xmlDocumentationStream.WriteTo(documentationWriter);
+
+                                    // Write pdb Documentation file.
+                                    string pdbFile = Path.ChangeExtension(fileName, ".pdb");
+                                    pdbStream.Seek(0, SeekOrigin.Begin);
+                                    using (FileStream pdbWriter = new FileStream(pdbFile, FileMode.Create, FileAccess.Write))
+                                        pdbStream.WriteTo(pdbWriter);
+
+                                    pdbStream.Seek(0, SeekOrigin.Begin);
+                                }
+
                                 ms.Seek(0, SeekOrigin.Begin);
-                                string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
-                                using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-                                    ms.WriteTo(file);
-
-                                // Write XML Documentation file.
-                                string documentationFile = Path.ChangeExtension(fileName, ".xml");
-                                xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
-                                using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
-                                    xmlDocumentationStream.WriteTo(documentationWriter);
-
-                                // Write pdb Documentation file.
-                                string pdbFile = Path.ChangeExtension(fileName, ".pdb");
-                                pdbStream.Seek(0, SeekOrigin.Begin);
-                                using (FileStream pdbWriter = new FileStream(pdbFile, FileMode.Create, FileAccess.Write))
-                                    pdbStream.WriteTo(pdbWriter);
-
                                 compilation.Code = code;
                                 compilation.Reference = compiled.ToMetadataReference();
-                                compilation.CompiledAssembly = Assembly.LoadFile(fileName);
+                                compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
                             }
                             else
                             {
                                 // Set the compilation properties.
                                 ms.Seek(0, SeekOrigin.Begin);
-                                pdbStream.Seek(0, SeekOrigin.Begin);
                                 compilation.Code = code;
                                 compilation.Reference = compiled.ToMetadataReference();
-                                compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
+                                compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
                             }
                             
                             // We have a compiled assembly so get the class name.
@@ -291,9 +310,10 @@ namespace Models.Core
         /// </summary>
         /// <param name="code">The code to compile.</param>
         /// <param name="referencedAssemblies">Any referenced assemblies.</param>
+        /// <param name="embedded">Is it embedded?</param>
         /// <param name="sourceName">Path to a file on disk containing the source.</param>
         /// <returns>Any compile errors or null if compile was successful.</returns>
-        private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies, out string sourceName)
+        private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies, bool embedded, out string sourceName)
         {
             string assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
 
@@ -308,12 +328,23 @@ namespace Models.Core
 
             string readText = File.ReadAllText(fileName);
 
-            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(
-                readText,
-                new CSharpParseOptions(),
-                encoding: encoding,
-                path: fileName
-                );
+            SyntaxTree syntaxTree;
+            if (embedded) {
+                syntaxTree = CSharpSyntaxTree.ParseText(
+                                readText,
+                                new CSharpParseOptions(),
+                                encoding: encoding
+                            );
+            }
+            else
+            {
+                syntaxTree = CSharpSyntaxTree.ParseText(
+                                readText,
+                                new CSharpParseOptions(),
+                                encoding: encoding,
+                                path: fileName
+                            );
+            }
 
             OptimizationLevel optimization = OptimizationLevel.Release;
             if (System.Diagnostics.Debugger.IsAttached)

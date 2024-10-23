@@ -16,7 +16,7 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The arbitrator</summary>
         [Link]
-        ITotalDMFixationSupply arbitrator = null;
+        IArbitrator arbitrator = null;
 
         [Link(Type = LinkType.Ancestor)]
         IOrgan parentOrgan = null;

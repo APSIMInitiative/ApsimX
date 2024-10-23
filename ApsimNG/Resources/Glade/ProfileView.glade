@@ -1,153 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-    <requires lib="gtk+" version="3.0"/>
-    <object class="GtkPaned" id="top">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkPaned" id="top">
+    <property name="visible">True</property>
+    <property name="can-focus">True</property>
+    <property name="orientation">vertical</property>
+    <property name="wide-handle">True</property>
+    <child>
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="wide-handle">True</property>
         <child>
-            <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                    <object class="GtkLabel" id="parametersLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Parameters:</property>
-                        <attributes>
-                            <attribute name="weight" value="bold"/>
-                        </attributes>
-                    </object>
-                    <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">2</property>
-                        <property name="position">0</property>
-                    </packing>
-                </child>
-                <child>
-                    <object class="GtkScrolledWindow" id="properties">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="border-width">0</property>
-                        <child>
-                            <placeholder/>
-                        </child>
-                    </object>
-                    <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                    </packing>
-                </child>
-                <child>
-                    <placeholder/>
-                </child>
-            </object>
-            <packing>
-                <property name="resize">True</property>
-                <property name="shrink">False</property>
-            </packing>
+          <object class="GtkLabel" id="parametersLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Parameters:</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">2</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
-			<object class="GtkPaned" id="bottom">
-				<property name="visible">True</property>
-				<property name="can-focus">True</property>
-				<property name="orientation">horizontal</property>
-				<property name="wide-handle">True</property>
-				<child>
-                    <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                            <object class="GtkLabel" id="layeredLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Layered variables:</property>
-                                <attributes>
-                                    <attribute name="weight" value="bold"/>
-                                </attributes>
-                            </object>
-                            <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">2</property>
-                                <property name="position">0</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <object class="GtkHBox" id="layeredVariables">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="spacing">10</property>
-                                <child>
-                                    <object class="GtkHBox" id="grid">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <child>
-                                            <placeholder/>
-                                        </child>
-                                    </object>
-                                    <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                    </packing>
-                                </child>
-                            </object>
-                            <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <object class="GtkLabel" id="numLayersLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">10 layers</property>
-                                <attributes>
-                                    <attribute name="weight" value="bold"/>     
-                                </attributes>
-                            </object> 
-                            <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">2</property>
-                                <property name="pack-type">end</property>
-                                <property name="position">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <placeholder/>
-                        </child>
-                    </object>
-                    <packing>
-						<property name="resize">True</property>
-						<property name="shrink">True</property>
-                    </packing>
+          <object class="GtkScrolledWindow" id="properties">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="border-width">0</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+      <packing>
+        <property name="resize">True</property>
+        <property name="shrink">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkPaned" id="bottom">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="wide-handle">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="layeredLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">Layered variables:</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">2</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="layeredVariables">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkBox" id="grid">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
                 </child>
-				<child>
-					<object class="GtkVBox" id="graph">
-						<property name="visible">True</property>
-						<property name="can-focus">False</property>
-						<child>
-							<placeholder/>
-						</child>
-					</object>
-					<packing>
-						<property name="resize">True</property>
-						<property name="shrink">True</property>
-					</packing>
-				</child>
-			</object>
-		</child>
-    </object>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="numLayersLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">10 layers</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">2</property>
+                <property name="pack-type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="graph">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="resize">True</property>
+        <property name="shrink">True</property>
+      </packing>
+    </child>
+  </object>
 </interface>

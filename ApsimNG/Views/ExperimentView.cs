@@ -15,7 +15,7 @@ namespace UserInterface.Views
         public ExperimentView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
-            mainWidget = (VBox)builder.GetObject("vbox");
+            mainWidget = (Box)builder.GetObject("vbox");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             menu = (Gtk.Menu)builder.GetObject("popupMenu");

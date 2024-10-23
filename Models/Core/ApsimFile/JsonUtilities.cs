@@ -437,6 +437,53 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Perform a search and replace in graph variables.
+        /// </summary>
+        /// <param name="graph">The graph model.</param>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        public static bool SearchReplaceGraphVariableNames(JObject graph, string searchPattern, string replacePattern)
+        {
+
+            bool replacementMade = false;
+
+            if (graph["XFieldName"] != null)
+            {
+                if (graph["XFieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["XFieldName"] = graph["XFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["X2FieldName"] != null)
+            {
+                if (graph["X2FieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["YFieldName"] != null)
+            {
+                if (graph["YFieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["YFieldName"] = graph["YFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["Y2FieldName"] != null)
+            {
+                if (graph["Y2FieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["y2FieldName"] = graph["Y2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+          
+            return replacementMade;
+        }
+
+        /// <summary>
         /// Add a constant function to the specified JSON model token.
         /// </summary>
         /// <param name="modelToken">The APSIM model token.</param>

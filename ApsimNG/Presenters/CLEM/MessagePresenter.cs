@@ -246,31 +246,13 @@ namespace UserInterface.Presenters
                 "\n</style>\n</head>\n<body>";
 
             // apply theme based settings
-            if (!Utility.Configuration.Settings.DarkTheme)
+            if (!Utility.Configuration.Settings.ThemeRestartRequired)
             {
-                // light theme
-                htmlString = htmlString.Replace("[FontColor]", "#000000");
-
-                htmlString = htmlString.Replace("[ContError]", "#FFFAFA");
-                htmlString = htmlString.Replace("[ContWarn]", "#FFFFFA");
-                htmlString = htmlString.Replace("[ContMessage]", "#FAFAFF");
-                htmlString = htmlString.Replace("[ContOK]", "#FAFFFF");
-                // values
-                htmlString = htmlString.Replace("[ValueSetBack]", "#e8fbfc");
-                htmlString = htmlString.Replace("[ValueSetFont]", "#000000");
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                // dark theme
-                htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
-
-                htmlString = htmlString.Replace("[ContError]", "#490000");
-                htmlString = htmlString.Replace("[ContWarn]", "#A35D00");
-                htmlString = htmlString.Replace("[ContMessage]", "#030028");
-                htmlString = htmlString.Replace("[ContOK]", "#0C440C");
-                // values
-                htmlString = htmlString.Replace("[ValueSetBack]", "#49adc4");
-                htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
 
             }
 
@@ -440,6 +422,39 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+        }
+
+        private static string ModifyHTMLStyle(string htmlString, bool isDarkMode )
+        {
+            string reformattedHTML = htmlString;
+            if ( isDarkMode )
+            {
+                // dark theme
+                reformattedHTML = reformattedHTML.Replace("[FontColor]", "#E5E5E5");
+
+                reformattedHTML = reformattedHTML.Replace("[ContError]", "#490000");
+                reformattedHTML = reformattedHTML.Replace("[ContWarn]", "#A35D00");
+                reformattedHTML = reformattedHTML.Replace("[ContMessage]", "#030028");
+                reformattedHTML = reformattedHTML.Replace("[ContOK]", "#0C440C");
+                // values
+                reformattedHTML = reformattedHTML.Replace("[ValueSetBack]", "#49adc4");
+                reformattedHTML = reformattedHTML.Replace("[ValueSetFont]", "#0e2023");
+            }
+            else
+            {
+                // light theme
+                reformattedHTML = reformattedHTML.Replace("[FontColor]", "#000000");
+
+                reformattedHTML = reformattedHTML.Replace("[ContError]", "#FFFAFA");
+                reformattedHTML = reformattedHTML.Replace("[ContWarn]", "#FFFFFA");
+                reformattedHTML = reformattedHTML.Replace("[ContMessage]", "#FAFAFF");
+                reformattedHTML = reformattedHTML.Replace("[ContOK]", "#FAFFFF");
+                // values
+                reformattedHTML = reformattedHTML.Replace("[ValueSetBack]", "#e8fbfc");
+                reformattedHTML = reformattedHTML.Replace("[ValueSetFont]", "#000000");
+            }
+
+            return reformattedHTML;
         }
 
     }

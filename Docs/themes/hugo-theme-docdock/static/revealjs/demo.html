@@ -12,26 +12,14 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
-
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 	</head>
 
 	<body>
@@ -41,10 +29,12 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>Reveal.js</h1>
+					<a href="https://revealjs.com">
+						<img src="https://static.slid.es/reveal/logo-v1/reveal-white-text.svg" alt="reveal.js logo" style="height: 180px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+					</a>
 					<h3>The HTML Presentation Framework</h3>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> and <a href="https://github.com/hakimel/reveal.js/graphs/contributors">contributors</a></small>
 					</p>
 				</section>
 
@@ -62,8 +52,8 @@
 						<p>Slides can be nested inside of each other.</p>
 						<p>Use the <em>Space</em> key to navigate through all slides.</p>
 						<br>
-						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+						<a href="#/2/1" class="navigate-down">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Down arrow">
 						</a>
 					</section>
 					<section>
@@ -75,7 +65,7 @@
 						<p>That's it, time to go back up.</p>
 						<br>
 						<a href="#/2">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="transform: rotate(180deg); -webkit-transform: rotate(180deg);">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1); transform: rotate(180deg);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Up arrow">
 						</a>
 					</section>
 				</section>
@@ -83,8 +73,64 @@
 				<section>
 					<h2>Slides</h2>
 					<p>
-						Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slides.com" target="_blank">http://slides.com</a>.
+						Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="https://slides.com" target="_blank">https://slides.com</a>.
 					</p>
+				</section>
+
+				<section data-visibility="hidden">
+					<h2>Hidden Slides</h2>
+					<p>
+						This slide is visible in the source, but hidden when the presentation is viewed. You can show all hidden slides by setting the `showHiddenSlides` config option to `true`.
+					</p>
+				</section>
+
+				<section data-auto-animate>
+					<h2 data-id="code-title">Pretty Code</h2>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						import React, { useState } from 'react';
+
+						function Example() {
+						  const [count, setCount] = useState(0);
+
+						  return (
+						    ...
+						  );
+						}
+					</code></pre>
+					<p>Code syntax highlighting courtesy of <a href="https://highlightjs.org/usage/">highlight.js</a>.</p>
+				</section>
+
+				<section data-auto-animate>
+					<h2 data-id="code-title">With Animations</h2>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers="|4,8-11|17|22-24"><script type="text/template">
+						import React, { useState } from 'react';
+
+						function Example() {
+						  const [count, setCount] = useState(0);
+
+						  return (
+						    <div>
+						      <p>You clicked {count} times</p>
+						      <button onClick={() => setCount(count + 1)}>
+						        Click me
+						      </button>
+						    </div>
+						  );
+						}
+
+						function SecondExample() {
+						  const [count, setCount] = useState(0);
+
+						  return (
+						    <div>
+						      <p>You clicked {count} times</p>
+						      <button onClick={() => setCount(count + 1)}>
+						        Click me
+						      </button>
+						    </div>
+						  );
+						}
+					</script></code></pre>
 				</section>
 
 				<section>
@@ -93,8 +139,37 @@
 						Press <strong>ESC</strong> to enter the slide overview.
 					</p>
 					<p>
-						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
+						Hold down the <strong>alt</strong> key (<strong>ctrl</strong> in Linux) and click on any element to zoom towards it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Click again to zoom back out.
 					</p>
+					<p>
+						(NOTE: Use ctrl + click in Linux.)
+					</p>
+				</section>
+
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<h2>Auto-Animate</h2>
+					<p>Automatically animate matching elements across slides with <a href="https://revealjs.com/auto-animate/">Auto-Animate</a>.</p>
+					<div class="r-hstack justify-center">
+						<div data-id="box1" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+						<div data-id="box2" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+						<div data-id="box3" style="background: #999; width: 50px; height: 50px; margin: 10px; border-radius: 5px;"></div>
+					</div>
+				</section>
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<div class="r-hstack justify-center">
+						<div data-id="box1" data-auto-animate-delay="0" style="background: cyan; width: 150px; height: 100px; margin: 10px;"></div>
+						<div data-id="box2" data-auto-animate-delay="0.1" style="background: magenta; width: 150px; height: 100px; margin: 10px;"></div>
+						<div data-id="box3" data-auto-animate-delay="0.2" style="background: yellow; width: 150px; height: 100px; margin: 10px;"></div>
+					</div>
+					<h2 style="margin-top: 20px;">Auto-Animate</h2>
+				</section>
+				<section data-auto-animate data-auto-animate-easing="cubic-bezier(0.770, 0.000, 0.175, 1.000)">
+					<div class="r-stack">
+						<div data-id="box1" style="background: cyan; width: 300px; height: 300px;"></div>
+						<div data-id="box2" style="background: magenta; width: 200px; height: 200px;"></div>
+						<div data-id="box3" style="background: yellow; width: 100px; height: 100px;"></div>
+					</div>
+					<h2 style="margin-top: 20px;">Auto-Animate</h2>
 				</section>
 
 				<section>
@@ -106,20 +181,25 @@
 
 				<section data-markdown>
 					<script type="text/template">
-						## Markdown support
+						## Markdown Support
 
 						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+						Instructions and more info available in the [docs](https://revealjs.com/markdown/).
 
-						```
+						```html []
 						<section data-markdown>
-						  ## Markdown support
+						  ## Markdown Support
 
 						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+						  Instructions and more info available in the [docs](https://revealjs.com/markdown/).
 						</section>
 						```
 					</script>
+				</section>
+
+				<section>
+					<p>Add the <code>r-fit-text</code> class to auto-size text</p>
+					<h2 class="r-fit-text">FIT TEXT</h2>
 				</section>
 
 				<section>
@@ -139,8 +219,14 @@
 						<p class="fragment grow">grow</p>
 						<p class="fragment shrink">shrink</p>
 						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment fade-up">fade-up (also down, left and right!)</p>
-						<p class="fragment current-visible">current-visible</p>
+						<p>
+							<span style="display: inline-block;" class="fragment fade-right">fade-right, </span>
+							<span style="display: inline-block;" class="fragment fade-up">up, </span>
+							<span style="display: inline-block;" class="fragment fade-down">down, </span>
+							<span style="display: inline-block;" class="fragment fade-left">left</span>
+						</p>
+						<p class="fragment fade-in-then-out">fade-in-then-out</p>
+						<p class="fragment fade-in-then-semi-out">fade-in-then-semi-out</p>
 						<p>Highlight <span class="fragment highlight-red">red</span> <span class="fragment highlight-blue">blue</span> <span class="fragment highlight-green">green</span></p>
 					</section>
 				</section>
@@ -163,17 +249,17 @@
 					<p>
 						reveal.js comes with a few themes built in: <br>
 						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/blood.css'); return false;">Blood</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/black.css'); return false;">Black (default)</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/white.css'); return false;">White</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/league.css'); return false;">League</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/sky.css'); return false;">Sky</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/beige.css'); return false;">Beige</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/simple.css'); return false;">Simple</a> <br>
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/serif.css'); return false;">Serif</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/blood.css'); return false;">Blood</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/night.css'); return false;">Night</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/moon.css'); return false;">Moon</a> -
+						<a href="#/themes" onclick="document.getElementById('theme').setAttribute('href','dist/theme/solarized.css'); return false;">Solarized</a>
 					</p>
 				</section>
 
@@ -184,21 +270,26 @@
 							Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
 						</p>
 						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+							<img class="r-frame" style="background: rgba(255,255,255,0.1);" width="178" height="238" data-src="https://static.slid.es/reveal/arrow.png" alt="Down arrow">
 						</a>
 					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
+					<section data-background-gradient="linear-gradient(to bottom, #283b95, #17b2c3)">
+						<h2>Gradient Backgrounds</h2>
+						<pre><code class="hljs html wrap">&lt;section data-background-gradient=
+							"linear-gradient(to bottom, #ddd, #191919)"&gt;</code></pre>
+					</section>
+					<section data-background="https://static.slid.es/reveal/image-placeholder.png">
 						<h2>Image Backgrounds</h2>
-						<pre><code class="hljs">&lt;section data-background="image.png"&gt;</code></pre>
+						<pre><code class="hljs html">&lt;section data-background="image.png"&gt;</code></pre>
 					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
+					<section data-background="https://static.slid.es/reveal/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
 						<h2>Tiled Backgrounds</h2>
-						<pre><code class="hljs" style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
+						<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
 					</section>
-					<section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
+					<section data-background-video="https://static.slid.es/site/homepage/v1/homepage-video-editor.mp4" data-background-color="#000000">
 						<div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
 							<h2>Video Backgrounds</h2>
-							<pre><code class="hljs" style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
+							<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
 						</div>
 					</section>
 					<section data-background="http://i.giphy.com/90F8aUepslB84.gif">
@@ -211,7 +302,7 @@
 					<p>
 						Different background transitions are available via the backgroundTransition option. This one's called "zoom".
 					</p>
-					<pre><code class="hljs">Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
+					<pre><code class="hljs javascript">Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
 				</section>
 
 				<section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
@@ -219,28 +310,14 @@
 					<p>
 						You can override background transitions per-slide.
 					</p>
-					<pre><code class="hljs" style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
+					<pre><code class="hljs html" style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
 				</section>
 
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code class="hljs" data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
-}
-					</code></pre>
-					<p>Code syntax highlighting courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
+				<section data-background-iframe="https://hakim.se" data-background-interactive>
+					<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+						<h2>Iframe Backgrounds</h2>
+						<p>Since reveal.js runs on the web, you can easily embed other web content. Try interacting with the page in the background.</p>
+					</div>
 				</section>
 
 				<section>
@@ -295,8 +372,7 @@ function linkify( selector ) {
 				<section>
 					<h2>Clever Quotes</h2>
 					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
+						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">The nice thing about standards is that there are so many to choose from</q> and block:
 					</p>
 					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
 						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
@@ -314,7 +390,7 @@ function linkify( selector ) {
 
 				<section>
 					<h2>Speaker View</h2>
-					<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
+					<p>There's a <a href="https://revealjs.com/speaker-view/">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
 					<p>Press the <em>S</em> key to try it out.</p>
 
 					<aside class="notes">
@@ -324,7 +400,7 @@ function linkify( selector ) {
 
 				<section>
 					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, here's an example:</p>
+					<p>Presentations can be <a href="https://revealjs.com/pdf-export/">exported to PDF</a>, here's an example:</p>
 					<iframe data-src="https://www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
 				</section>
 
@@ -343,7 +419,7 @@ function linkify( selector ) {
 						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
 					</p>
 					<pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
-Reveal.addEventListener( 'customevent', function() {
+Reveal.on( 'customevent', function() {
 	console.log( '"customevent" has fired' );
 } );
 					</code></pre>
@@ -360,17 +436,17 @@ Reveal.addEventListener( 'customevent', function() {
 					<h2>Much more</h2>
 					<ul>
 						<li>Right-to-left support</li>
-						<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
+						<li><a href="https://revealjs.com/api/">Extensive JavaScript API</a></li>
+						<li><a href="https://revealjs.com/auto-slide/">Auto-progression</a></li>
+						<li><a href="https://revealjs.com/backgrounds/#parallax-background">Parallax backgrounds</a></li>
+						<li><a href="https://revealjs.com/keyboard/">Custom keyboard bindings</a></li>
 					</ul>
 				</section>
 
 				<section style="text-align: left;">
 					<h1>THE END</h1>
 					<p>
-						- <a href="http://slides.com">Try the online editor</a> <br>
+						- <a href="https://slides.com">Try the online editor</a> <br>
 						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
 					</p>
 				</section>
@@ -379,29 +455,24 @@ Reveal.addEventListener( 'customevent', function() {
 
 		</div>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
-
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
 		<script>
 
-			// More info https://github.com/hakimel/reveal.js#configuration
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
 			Reveal.initialize({
 				controls: true,
 				progress: true,
-				history: true,
 				center: true,
+				hash: true,
 
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
-
-				// More info https://github.com/hakimel/reveal.js#dependencies
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
 			});
 
 		</script>
