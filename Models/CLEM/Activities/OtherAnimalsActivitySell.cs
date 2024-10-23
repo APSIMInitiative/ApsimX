@@ -132,37 +132,46 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            List<string> predictedTypes = new ();
+            List<OtherAnimalsType> predictedTypes = new ();
 
             foreach (var filter in filterGroups)
             {
                 foreach (OtherAnimalsTypeCohort cohort in filter.SelectedOtherAnimalsType.Cohorts)
                 {
                     cohort.AdjustedNumber = cohort.Number;
-                    if(!predictedTypes.Contains(cohort.AnimalType.Name))
+                    if(!predictedTypes.Contains(cohort.AnimalType))
                     {
-                        predictedTypes.Add(cohort.AnimalType.Name);
+                        predictedTypes.Add(cohort.AnimalType);
                     }
                 }
             }
 
-            if (predictedTypes.Count() == 1)
-                PredictedAnimalType = string.Join(',', predictedTypes);
+            if (predictedTypes.Count == 0)
+                return;
+
+            if (predictedTypes.Count == 1)
+                PredictedAnimalType = string.Join(',', predictedTypes.Select(a => a.Name));
             else
                 PredictedAnimalType = "Mixed types";
 
             CohortsToBeSold = new HashSet<OtherAnimalsTypeCohort>();
 
+            // reset all alreadyconsidered flags
+            foreach (var oaType in predictedTypes)
+            {
+                oaType.ClearCohortConsideredFlags();
+            }
+
             foreach (var filter in filterGroups)
             {
-                IEnumerable<OtherAnimalsTypeCohort> cohorts = filter.Filter(filter.SelectedOtherAnimalsType.Cohorts);
+                IEnumerable<OtherAnimalsTypeCohort> cohorts = filter.Filter(filter.SelectedOtherAnimalsType.Cohorts.Where(a => a.Considered == false));
 
                 IEnumerable<TakeFromFiltered> takeSkipFilters = filter.FindAllChildren<TakeFromFiltered>();
 
-                if (takeSkipFilters.Any())
+                if (cohorts.Any() && takeSkipFilters.Any())
                 {
                     // adjust the numbers based on take and skip filters
-                    foreach (var child in filter.FindAllChildren<TakeFromFiltered>())
+                    foreach (var child in takeSkipFilters)
                     {
                         int totalNumber = cohorts.Sum(a => a.AdjustedNumber);
                         int numberToTake = 0;
@@ -211,9 +220,9 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                else
+                foreach (var cohort in cohorts)
                 {
-
+                    cohort.Considered = true;
                 }
                 CohortsToBeSold = CohortsToBeSold.Union(cohorts);
             }

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using System.Text.Json.Serialization;
 using Models.CLEM.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Groupings
 {
@@ -81,6 +83,13 @@ namespace Models.CLEM.Groupings
                 Category = (Parent as CLEMActivityBase).TransactionCategory,
                 RelatesToResource = SelectedOtherAnimalsType.Name
             };
+
+            // warning that any take filters will be ignored.
+            if (FindAllDescendants<TakeFromFiltered>().Any())
+            {
+                string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+            }
         }
 
         /// <inheritdoc/>

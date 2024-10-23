@@ -79,6 +79,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Flag to identify individual ready for sale
         /// </summary>
+        [JsonIgnore]
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
@@ -90,7 +91,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current animal price group for this individual 
         /// </summary>
+        [JsonIgnore]
         public (AnimalPriceGroup Buy, AnimalPriceGroup Sell) CurrentPriceGroups { get; set; } = (null, null);
+
+        /// <summary>
+        /// Flag to identify cohorts that have already been considered in this time step
+        /// </summary>
+        [JsonIgnore]
+        public bool Considered { get; set; } = false;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

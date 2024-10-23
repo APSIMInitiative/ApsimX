@@ -109,6 +109,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Reset all AlreadyConsidered flags
+        /// </summary>
+        public void ClearCohortConsideredFlags()
+        {
+            foreach (var cohort in Cohorts)
+            {
+                cohort.Considered = false;
+            }
+        }
+
+        /// <summary>
         /// Total value of resource
         /// </summary>
         public double? Value

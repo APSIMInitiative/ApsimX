@@ -125,6 +125,14 @@ namespace Models.CLEM.Groupings
                     summary.WriteMessage(this, error, MessageType.Error);
                     break;
             }
+
+            // warning that any take filters will be ignored.
+            if (FindAllDescendants<TakeFromFiltered>().Any())
+            {
+                string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+            }
+
         }
 
         /// <inheritdoc/>

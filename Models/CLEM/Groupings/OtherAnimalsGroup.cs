@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/OtherAnimalsGroup.htm")]
     [ValidParent(ParentType = typeof(OtherAnimalsActivitySell))]
+    [ValidParent(ParentType = typeof(OtherAnimalsActivityTask))]
     public class OtherAnimalsGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
         /// <summary>
@@ -53,10 +54,11 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Method to make changes to the adjustednumber of individuals based on the take and skip filters provided
+        /// Method to make changes to the adjustedNumber of individuals in the cohort based on the take and skip filters provided
         /// </summary>
-        /// <param name="cohorts"></param>
-        public void AdjustCohortNumbersWhereTakeSkip(IEnumerable<OtherAnimalsTypeCohort> cohorts)
+        /// <param name="cohorts">The full list of cohorts to use</param>
+        /// <param name="useUniqueCohorts">Only use a cohort once</param>
+        public void AdjustCohortNumbers(IEnumerable<OtherAnimalsTypeCohort> cohorts, bool useUniqueCohorts = false)
         {
             int totalNumber = cohorts.Sum(a => a.Number);
             //int skipNumber = 0;
