@@ -1,0 +1,55 @@
+.docs-wrapper {
+    font-family: 'Montserrat', Arial, sans-serif;
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-top: 0px;
+    padding-bottom: 50px;
+    width: 671px;
+    height: auto;
+    overflow:visible;
+    background-color: white;
+    margin: 0 auto;
+    border-radius: 15px;
+}
+
+.docs-img {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+}
+
+.docs-table {
+    margin-top: 30px;
+    border: 1px solid;
+    border-color: #004d47;
+    margin: 0 auto;
+    border-spacing: 0px;
+}
+
+.docs-th {
+    background-color: #004d47;
+    color: white;
+}
+
+.docs-th, .docs-td {
+    margin: 0px;
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #edfdf0
+}
+
+.docs-tr:hover {
+    background-color: #f4f4f4;
+}
+
+.docs-h1 {
+    margin-top: 30px;
+}
+
+.docs-h2 {
+    padding-top: 20px;
+    margin-bottom: 0px;
+}

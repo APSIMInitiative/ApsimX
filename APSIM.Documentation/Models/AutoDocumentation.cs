@@ -26,6 +26,7 @@ using Models.PMF.OilPalm;
 using M = Models;
 using Models.AgPasture;
 using Models.Soils.Nutrients;
+using APSIM.Interop.Documentation.Helpers;
 
 namespace APSIM.Documentation.Models
 {
@@ -35,6 +36,9 @@ namespace APSIM.Documentation.Models
     /// </summary>
     public class AutoDocumentation
     {
+        /// <summary>BibteX library loaded with APSIM.bib</summary>
+        public static BibTeX Bibilography = new BibTeX(PathUtilities.GetAbsolutePath(Path.Combine("%root%", "APSIM.bib"), null));
+
         private static object lockObject = new object();
 
         /// <summary>Table relating member and summary xml comments.</summary>

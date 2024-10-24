@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Documentation;
 using APSIM.Documentation.Models;
 using APSIM.Interop.Documentation;
 using APSIM.Server.Sensibility;
@@ -998,11 +999,11 @@ namespace UserInterface.Presenters
                 else modelTypeName = modelToDocument.GetType().Name;
 
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
-                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.pdf";
-                // Options allows images in some tutorials to be found.
-                PdfWriter pdf = new(new PdfOptions(Path.GetDirectoryName(fullDocFileName), null));
+                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
 
-                pdf.Write(fullDocFileName, AutoDocumentation.Document(modelToDocument));
+                string html = WebDocs.Generate(modelToDocument);
+
+                File.WriteAllText(fullDocFileName, html);
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fullDocFileName}", Simulation.MessageType.Information);
 
