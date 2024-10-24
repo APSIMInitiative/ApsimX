@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using Models.LifeCycle;
 using Models.PMF.Organs;
 using Microsoft.CodeAnalysis.CSharp;
+using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {
@@ -35,6 +36,7 @@ namespace Models.CLEM.Activities
         private int numberSold = 0;
         private double totalValue = 0;
         private FinanceType bankAccount = null;
+        private OtherAnimals otherAnimals { get; set; }
 
         /// <summary>
         /// Bank account to use
@@ -63,7 +65,7 @@ namespace Models.CLEM.Activities
         /// The list of cohorts remaining to be sold in the current time-step
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<OtherAnimalsTypeCohort> CohortsToBeSold { get; set; }
+        public List<OtherAnimalsTypeCohort> CohortsToBeSold { get; set; }
 
         /// <summary>
         /// Constructor
@@ -89,6 +91,8 @@ namespace Models.CLEM.Activities
             }
             if (BankAccountName != "")
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+
+            otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
         }
 
         /// <inheritdoc/>
@@ -132,100 +136,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            List<OtherAnimalsType> predictedTypes = new ();
-
-            foreach (var filter in filterGroups)
-            {
-                foreach (OtherAnimalsTypeCohort cohort in filter.SelectedOtherAnimalsType.Cohorts)
-                {
-                    cohort.AdjustedNumber = cohort.Number;
-                    if(!predictedTypes.Contains(cohort.AnimalType))
-                    {
-                        predictedTypes.Add(cohort.AnimalType);
-                    }
-                }
-            }
-
-            if (predictedTypes.Count == 0)
-                return;
-
-            if (predictedTypes.Count == 1)
-                PredictedAnimalType = string.Join(',', predictedTypes.Select(a => a.Name));
-            else
-                PredictedAnimalType = "Mixed types";
-
-            CohortsToBeSold = new HashSet<OtherAnimalsTypeCohort>();
-
-            // reset all alreadyconsidered flags
-            foreach (var oaType in predictedTypes)
-            {
-                oaType.ClearCohortConsideredFlags();
-            }
-
-            foreach (var filter in filterGroups)
-            {
-                IEnumerable<OtherAnimalsTypeCohort> cohorts = filter.Filter(filter.SelectedOtherAnimalsType.Cohorts.Where(a => a.Considered == false));
-
-                IEnumerable<TakeFromFiltered> takeSkipFilters = filter.FindAllChildren<TakeFromFiltered>();
-
-                if (cohorts.Any() && takeSkipFilters.Any())
-                {
-                    // adjust the numbers based on take and skip filters
-                    foreach (var child in takeSkipFilters)
-                    {
-                        int totalNumber = cohorts.Sum(a => a.AdjustedNumber);
-                        int numberToTake = 0;
-                        int numberToSkip = 0;
-
-                        switch (child.TakeStyle)
-                        {
-                            case TakeFromFilterStyle.TakeProportion:
-                                numberToTake = Convert.ToInt32(totalNumber * child.Value);
-                                break;
-                            case TakeFromFilterStyle.TakeIndividuals:
-                                numberToTake = Convert.ToInt32(child.Value);
-                                break;
-                            case TakeFromFilterStyle.SkipProportion:
-                                numberToSkip = Convert.ToInt32(totalNumber * child.Value);
-                                numberToTake = totalNumber - numberToSkip;
-                                break;
-                            case TakeFromFilterStyle.SkipIndividuals:
-                                numberToSkip = Convert.ToInt32(child.Value);
-                                numberToTake = totalNumber - numberToSkip;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (numberToSkip == 0 & totalNumber - numberToTake > 0 & child.TakePositionStyle == TakeFromFilteredPositionStyle.End)
-                        {
-                            numberToSkip = totalNumber - numberToTake;
-                        }
-
-                        // step through cohorts and adjust numbers based on skip and take using position start/end
-                        foreach (OtherAnimalsTypeCohort cohort in cohorts)
-                        {
-                            if (numberToSkip > 0)
-                            {
-                                int numberSkipped = Math.Min(numberToSkip, cohort.AdjustedNumber);
-                                numberToSkip -= numberSkipped;
-                                cohort.AdjustedNumber -= numberSkipped;
-                            }
-                            if (cohort.AdjustedNumber > 0 & numberToTake > 0)
-                            {
-                                int numberTaken = Math.Min(numberToTake, cohort.AdjustedNumber);
-                                numberToTake -= numberTaken;
-                                cohort.AdjustedNumber = numberTaken;
-                            }
-                        }
-                    }
-                }
-                foreach (var cohort in cohorts)
-                {
-                    cohort.Considered = true;
-                }
-                CohortsToBeSold = CohortsToBeSold.Union(cohorts);
-            }
+            CohortsToBeSold = otherAnimals.GetCohorts(filterGroups, true).ToList();
 
             // number to sell
             numberToDo = CohortsToBeSold.Sum(a => a.AdjustedNumber);
@@ -318,13 +229,14 @@ namespace Models.CLEM.Activities
                     Age = cohort.Age,
                     Weight = cohort.Weight,
                     Number = cohort.AdjustedNumber,
+                    AdjustedNumber = cohort.AdjustedNumber,
                     Sex = cohort.Sex,
                     SaleFlag = SaleFlagToUse,
                     AnimalType = cohort.AnimalType,
                     AnimalTypeName = cohort.AnimalTypeName
                 };
-                numberSold += newCohort.Number;
-                finalSaleAmount += newCohort.Number * cohort.CurrentPriceGroups.Sell.Value;
+                numberSold += newCohort.AdjustedNumber;
+                finalSaleAmount += newCohort.AdjustedNumber * cohort.CurrentPriceGroups.Sell.Value;
                 cohort.AnimalType.Remove(newCohort, this, SaleFlagToUse.ToString());
             }
 

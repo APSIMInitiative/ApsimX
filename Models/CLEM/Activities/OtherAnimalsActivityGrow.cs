@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using static Models.GrazPlan.GrazType;
+using System.Collections.Generic;
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -22,6 +25,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityGrow : CLEMActivityBase
     {
         private OtherAnimals otherAnimals { get; set; }
+        private IEnumerable<OtherAnimalsType> otherAnimalsTypes { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -31,6 +35,14 @@ namespace Models.CLEM.Activities
         {
             // locate OtherAnimals resource holder
             otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
+            if(otherAnimals != null)
+                otherAnimalsTypes = otherAnimals.FindAllChildren<OtherAnimalsType>();
+
+            if (otherAnimalsTypes == null)
+            {
+                string warn = $"No [r=OtherAnimalType] are available for [a={this.NameWithParent}].{Environment.NewLine}This activity will be ignored.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -42,25 +54,18 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            if (otherAnimals is null)
-                return;
-
             // grow all individuals
-            foreach (OtherAnimalsType otherAnimalType in otherAnimals.FindAllChildren<OtherAnimalsType>())
-                foreach (OtherAnimalsTypeCohort cohort in otherAnimalType.Cohorts.OfType<OtherAnimalsTypeCohort>())
+            foreach (OtherAnimalsTypeCohort cohort in otherAnimals.GetCohorts(null, false))
+            {
+                cohort.Age++;
+                cohort.Weight = cohort.AnimalType.AgeWeightRelationship?.SolveY(cohort.Age) ?? 0.0;
+                // death from old age
+                if (cohort.Age > cohort.AnimalType.MaxAge)
                 {
-                    if (cohort.Number > 0)
-                    {
-                        Status = ActivityStatus.Success;
-                        cohort.Age++;
-                        cohort.Weight = otherAnimalType.AgeWeightRelationship?.SolveY(cohort.Age)??0.0;
-                        // death from old age
-                        if (cohort.Age > otherAnimalType.MaxAge)
-                        {
-                            otherAnimalType.Remove(cohort, this, "Died");
-                        }
-                    }
+                    cohort.AdjustedNumber = cohort.Number;
+                    cohort.AnimalType.Remove(cohort, this, "Died");
                 }
+            }
         }
     }
 }

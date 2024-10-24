@@ -97,7 +97,7 @@ namespace Models.CLEM.Groupings
         {
             currentFeedRequest.Required = 0;
             double feedNeeded = 0;
-            IEnumerable<OtherAnimalsTypeCohort> selectedCohorts = Filter(feedActivityParent.CohortsToBeFed.Where(a => a.Parent == SelectedOtherAnimalsType));
+            IEnumerable<OtherAnimalsTypeCohort> selectedCohorts = Filter(feedActivityParent.CohortsToBeFed.Where(a => a.Parent == SelectedOtherAnimalsType && a.Considered == false));
 
             if (selectedCohorts != null)
             {
@@ -118,8 +118,13 @@ namespace Models.CLEM.Groupings
                 if(feedNeeded > 0)
                 {
                     currentFeedRequest.Required = feedNeeded;
+                    foreach (var cohort in selectedCohorts)
+                    {
+                        // by setting this during the OtherAnimalsActivityFeed it will ensure these fed cohorts are not considered again as they will not be in the IEnumerable on next call.
+                        cohort.Considered = true;
+                    }
                     // remove fed cohorts from temp list to avoid double handling of a cohort in the parent activity
-                    feedActivityParent.CohortsToBeFed = feedActivityParent.CohortsToBeFed.Where(a => !selectedCohorts.Contains(a));
+                    //feedActivityParent.CohortsToBeFed = feedActivityParent.CohortsToBeFed.Where(a => !selectedCohorts.Contains(a));
                 }
             }
         }

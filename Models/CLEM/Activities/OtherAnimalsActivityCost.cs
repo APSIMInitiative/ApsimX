@@ -73,22 +73,8 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
 
             // get all cohorts
-            IEnumerable<OtherAnimalsTypeCohort> CohortsToReport = new HashSet<OtherAnimalsTypeCohort>();
-            foreach (var oaType in otherAnimals.FindAllChildren<OtherAnimalsType>())
-            {
-                oaType.ClearCohortConsideredFlags();
-                CohortsToReport = CohortsToReport.Concat(oaType.Cohorts.Where(a => a.Number > 0));
-            }
-            // apply all filters
-            foreach (var filter in filterGroups)
-            {
-                var filteredCohorts = filter.Filter(CohortsToReport).Where(a => a.Considered == false);
-                foreach (var cohort in filteredCohorts)
-                {
-                    cohort.Considered = true;
-                    numberToDo += cohort.Number;
-                }
-            }
+            IEnumerable<OtherAnimalsTypeCohort> CohortsToReport = otherAnimals.GetCohorts(filterGroups, true);
+            numberToDo = CohortsToReport.Sum(a => a.Number);
         }
 
         /// <inheritdoc/>
@@ -155,10 +141,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"Calculates the number of Other Animal individuals specified by filter groups to apply costs and labour.</br>");
-                if(OnlyUniqueCohorts)
-                    htmlWriter.Write("Each cohort will only be considered once (when first specified) regardless of multiple filter groups.");
-                else
-                    htmlWriter.Write("Individuals will be considered each time they are specified by a filter group such that the same individuals may be included through multiple filter groups.");
+                htmlWriter.Write("Each cohort will only be considered once (when first specified) regardless of multiple filter groups.");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }

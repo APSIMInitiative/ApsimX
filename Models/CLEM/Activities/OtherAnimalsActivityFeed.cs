@@ -10,6 +10,7 @@ using Models.Core.Attributes;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {
@@ -27,6 +28,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private IEnumerable<OtherAnimalsGroup> filterGroups;
+        private OtherAnimals otherAnimals;
         int numberToDo = 0;
         double amountToDo = 0;
         double feedEstimated = 0;
@@ -62,7 +64,7 @@ namespace Models.CLEM.Activities
         /// The list of cohorts remaining to be fed in the current timestep
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<OtherAnimalsTypeCohort> CohortsToBeFed { get; set; }
+        public List<OtherAnimalsTypeCohort> CohortsToBeFed { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -70,6 +72,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
             filterGroups = GetCompanionModelsByIdentifier<OtherAnimalsFeedGroup>(true, false);
 
             // locate FeedType resource
@@ -109,24 +112,10 @@ namespace Models.CLEM.Activities
         {
             amountToDo = 0;
             feedEstimated = 0;
-            CohortsToBeFed  = new List<OtherAnimalsTypeCohort>();
-            List<string> animalsIncluded = new();
-
-            foreach (var filter in filterGroups)
+            CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
+            foreach (var cohort in CohortsToBeFed)
             {
-                if(!animalsIncluded.Contains(filter.SelectedOtherAnimalsType.Name))
-                    animalsIncluded.Add(filter.SelectedOtherAnimalsType.Name);
-                CohortsToBeFed = CohortsToBeFed.Union(filter.Filter(filter.SelectedOtherAnimalsType.Cohorts));
-            }
-
-            numberToDo = CohortsToBeFed.Sum(a => a.Number);
-
-            if (animalsIncluded.Any())
-            {
-                if (animalsIncluded.Count == 1)
-                    PredictedAnimalName = animalsIncluded[0];
-                else
-                    PredictedAnimalName = "Multiple animals";
+                cohort.Considered = false;
             }
         }
 

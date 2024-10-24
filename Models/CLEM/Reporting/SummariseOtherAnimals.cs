@@ -106,23 +106,14 @@ namespace Models.CLEM
             if (!this.TimingOK) return;
 
             // get all cohorts
-            IEnumerable<OtherAnimalsTypeCohort> CohortsToReport = new HashSet<OtherAnimalsTypeCohort>();
-            foreach (var oaType in otherAnimals.FindAllChildren<OtherAnimalsType>())
-            {
-                CohortsToReport = CohortsToReport.Concat(oaType.Cohorts.Where(a => a.Number > 0));
-            }
-
-            // apply all filters
-            foreach (var filter in this.FindAllChildren<OtherAnimalsGroup>())
-            {
-                CohortsToReport = filter.Filter(CohortsToReport);
-            }
+            IEnumerable<OtherAnimalsTypeCohort> cohortsToReport = otherAnimals.GetCohorts(cohortFilters, true);
 
             // weaned
-            foreach (var oaCohort in  CohortsToReport)
+            foreach (var oaCohort in  cohortsToReport.OrderBy(a => a.Sex).ThenBy(a => a.Age))
             {
                 ReportDetails = new HerdReportItemGeneratedEventArgs()
                 {
+                    Group = oaCohort.ID.ToString(),
                     Age = oaCohort.Age,
                     AgeInYears = oaCohort.Age / 12,
                     Sex = oaCohort.Sex.ToString(),

@@ -40,6 +40,13 @@ namespace Models.CLEM.Resources
         public string AnimalTypeName { get; set; }
 
         /// <summary>
+        /// Unique cohort id
+        /// </summary>
+        [Required]
+        [FilterByProperty]
+        public int ID { get; set; }
+
+        /// <summary>
         /// Sex
         /// </summary>
         [Description("Sex")]

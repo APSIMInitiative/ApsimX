@@ -115,11 +115,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
+            IEnumerable<OtherAnimalsTypeCohort> cohorts = SelectedOtherAnimalsType.GetCohorts(null, false).ToList();
+            malebreeders = cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
             breeders = 0;
             if (!UseLocalMales | malebreeders > 0)
             {
-                breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
+                breeders = cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
             }
         }
 
@@ -204,6 +205,7 @@ namespace Models.CLEM.Activities
                             Weight = newweight,
                             Sex = Sex.Male,
                             Number = singlesex,
+                            AdjustedNumber = singlesex,
                             SaleFlag = HerdChangeReason.Born
                         };
                         SelectedOtherAnimalsType.Add(newmales, this, null, "Births");
@@ -224,6 +226,7 @@ namespace Models.CLEM.Activities
                             Weight = newweight,
                             Sex = Sex.Female,
                             Number = singlesex,
+                            AdjustedNumber = singlesex,
                             SaleFlag = HerdChangeReason.Born
                         };
                         SelectedOtherAnimalsType.Add(newfemales, this, null, "Births");

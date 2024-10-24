@@ -4,6 +4,7 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.PMF.Organs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,11 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             cohorts = FindAllChildren<OtherAnimalsTypeCohort>();
+            foreach (var cohort in cohorts)
+            {
+                cohort.AdjustedNumber = cohort.Number;
+            }
+
             var animalTypesPresent = cohorts.Select(a => a.AnimalTypeName.Split('.')[1]).Distinct();
             if (!animalTypesPresent.Any())
                 return;
@@ -96,8 +102,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            purchaseValue = 0;
+            foreach (var cohort in cohorts)
+                cohort.AdjustedNumber = cohort.Number;
             numberToBuy = cohorts.Sum(a => a.Number);
+            purchaseValue = cohorts.Sum(a => a.Number * a.AnimalType.GetPriceGroupOfCohort(a, PurchaseOrSalePricingStyleType.Sale)?.Value ?? 0);
         }
 
         /// <inheritdoc/>
@@ -170,7 +178,6 @@ namespace Models.CLEM.Activities
                 {
                     int reduce = Convert.ToInt32((cohort.Number - cohort.AdjustedNumber) * buyShort.Provided / buyShort.Required);
                     cohort.AdjustedNumber -= reduce;
-                    cohort.AnimalType.Add(cohort, this, null, TransactionCategory);
                     this.Status = ActivityStatus.Partial;
                 }
             }
