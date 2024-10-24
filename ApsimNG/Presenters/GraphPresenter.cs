@@ -142,18 +142,7 @@ namespace UserInterface.Presenters
                 graphView.UpdateView();
 
                 //check if the axes are too small, update if so
-                const double tolerance = 0.00001;
-                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
-                {
-                    double minimum = graphView.AxisMinimum(axis.Position);
-                    double maximum = graphView.AxisMaximum(axis.Position);
-                    if (axis.Maximum - axis.Minimum < tolerance)
-                    {
-                        axis.Minimum -= tolerance / 2;
-                        axis.Maximum += tolerance / 2;
-                    }
-                    FormatAxis(axis);
-                }
+                AdjustAxesboundaries(definitions);
 
                 int pointsOutsideAxis = 0;
                 int pointsInsideAxis = 0;
@@ -186,12 +175,13 @@ namespace UserInterface.Presenters
 
                         valuesX.Add(xDouble);
                     }
+
                     foreach (var y in definition.Y)
                     {
                         double yDouble = 0;
                         if (y is DateTime)
                             yDouble = ((DateTime)y).ToOADate();
-                        else if (y is string) 
+                        else if (y is string)
                             yDouble = 0; //string axis are handled elsewhere, so just set this to 0
                         else
                             yDouble = Convert.ToDouble(y);
@@ -287,6 +277,66 @@ namespace UserInterface.Presenters
             }
         }
 
+        private void AdjustAxesboundaries(IEnumerable<SeriesDefinition> definitions)
+        {
+            const double tolerance = 0.00001;
+            double xAxisLargestErrorValue = 0.0;
+            double yAxisLargestErrorValue = 0.0;
+            foreach (Axis axis in graph.Axis)
+            {
+                double minimum = graphView.AxisMinimum(axis.Position);
+                double maximum = graphView.AxisMaximum(axis.Position);
+                if (axis.Maximum - axis.Minimum < tolerance)
+                {
+                    axis.Minimum -= tolerance / 2;
+                    axis.Maximum += tolerance / 2;
+                }
+                // Add space for error bars if they exist for the axes
+                // Bottom axis (x)
+                if (axis.Position == AxisPosition.Bottom)
+                {
+                    // x is usually at the bottom.
+                    foreach (SeriesDefinition seriesDef in definitions)
+                    {
+                        if (seriesDef.XError != null)
+                        {
+                            double largestErrorValue = MathUtilities.Max(seriesDef.XError);
+                            if (largestErrorValue > xAxisLargestErrorValue)
+                                xAxisLargestErrorValue = largestErrorValue;
+                        }
+                    }
+                    // Add error values to min and max.
+                    if (xAxisLargestErrorValue != 0)
+                    {
+                        axis.Minimum = minimum - (xAxisLargestErrorValue / 2);
+                        axis.Maximum = maximum + (xAxisLargestErrorValue / 2);
+                    }
+
+                }
+                // Left axis (y)
+                if (axis.Position == AxisPosition.Left)
+                {
+                    // x is usually at the bottom.
+                    foreach (SeriesDefinition seriesDef in definitions)
+                    {
+                        if (seriesDef.YError != null)
+                        {
+                            double largestErrorValue = MathUtilities.Max(seriesDef.YError);
+                            if (largestErrorValue > yAxisLargestErrorValue)
+                                yAxisLargestErrorValue = largestErrorValue;
+                        }
+                    }
+                    // Add values to min and max.
+                    if (yAxisLargestErrorValue != 0)
+                    {
+                        axis.Minimum = minimum - (yAxisLargestErrorValue / 2);
+                        axis.Maximum = maximum + (yAxisLargestErrorValue / 2);
+                    }
+                }
+                FormatAxis(axis);
+            }
+        }
+
         /// <summary>Export the contents of this graph to the specified file.</summary>
         /// <param name="folder">The folder.</param>
         /// <returns>The file name</returns>
@@ -341,7 +391,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    System.Drawing.Color colour = GetColour(definition.Colour);
+                    System.Drawing.Color colour = definition.Colour;
 
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
@@ -431,16 +481,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        private System.Drawing.Color GetColour(System.Drawing.Color colour)
-        {
-            // If dark theme is active, and colour is black, use white instead.
-            // This won't help at all if the colour is a dark grey.
-            if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                return System.Drawing.Color.White;
-
-            return colour;
-        }
-
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
@@ -506,7 +546,7 @@ namespace UserInterface.Presenters
                                         textAnnotation.textRotation,
                                         AxisPosition.Bottom,
                                         AxisPosition.Left,
-                                        GetColour(textAnnotation.colour));
+                                        textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -517,7 +557,7 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type,
                                         lineAnnotation.thickness,
-                                        GetColour(lineAnnotation.colour),
+                                        lineAnnotation.colour,
                                         lineAnnotation.InFrontOfSeries,
                                         lineAnnotation.ToolTip);
                 }

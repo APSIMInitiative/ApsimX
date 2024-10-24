@@ -10,6 +10,7 @@ using APSIM.Interop.Graphing.Extensions;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using ApsimNG.Graphing;
 using Gtk;
 using MathNet.Numerics.Statistics;
 using OxyPlot;
@@ -165,10 +166,19 @@ namespace UserInterface.Views
                 captionLabel.Text = null;
                 captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             }
-            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-            ForegroundColour = Utility.Colour.ToOxy(foreground);
-            if (!Utility.Configuration.Settings.DarkTheme)
-                BackColor = Utility.Colour.ToOxy(Color.White);
+
+            Color foregroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                foregroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+            else foregroundColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+            ForegroundColour = Colour.ToOxy(foregroundColor);
+
+            Color backgroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                backgroundColor = Configuration.Settings.DarkTheme ? Color.FromArgb(255,48,48,48) : Color.White;
+            else backgroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.FromArgb(255,48,48,48);
+            BackColor = Colour.ToOxy(backgroundColor);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
@@ -559,11 +569,14 @@ namespace UserInterface.Views
                 this.plot1.Model.Series.Add(series);
                 if (xError != null || yError != null)
                 {
-                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
-                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType);
-                    errorSeries.XAxisKey = xAxisType.ToString();
-                    errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                    NamedScatterErrorSeries errorSeries = new(series.Name)
+                    {
+                        Title = series.Title,
+                        ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType),
+                        XAxisKey = xAxisType.ToString(),
+                        YAxisKey = yAxisType.ToString(),
+                        ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B),
+                    };
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
@@ -1241,21 +1254,26 @@ namespace UserInterface.Views
                     if (reselectedSeriesNames != null)
                         if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            series.Title = (series as INameableSeries).Name;
+                            if (series is NamedScatterErrorSeries == false)
+                            {
+                                series.Title = (series as INameableSeries).Name;
+                            }
                             series.IsVisible = true;
                         }
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
                         foreach (var nameToRemove in namesOfSeriesToRemove)
-                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                            if ((series as INameableSeries).Name == nameToRemove)
                                 series.IsVisible = false;
                 }
                 // Tidy up duplicate names.
                 var matchingSeries = FindMatchingSeries(series);
                 if (matchingSeries != null)
+                {
                     // Make it so it doesn't show in legend.
                     matchingSeries.Title = null;
+                }
             }
         }
 
@@ -1410,27 +1428,13 @@ namespace UserInterface.Views
         {
             foreach (var s in plot1.Model.Series)
             {
-                if (s != series && s.Title == series.Title)
+                if (s != series && s.Title == series.Title && series is NamedScatterErrorSeries == false)
                     return s;
 
             }
             return null;
         }
 
-        /// <summary>
-        /// Find a graph series that has the same title as the specified series.
-        /// </summary>
-        /// <param name="series">The series to match.</param>
-        /// <returns>The series or null if not found.</returns>
-        private INameableSeries FindMatchingSeries(INameableSeries series)
-        {
-            foreach (INameableSeries s in plot1.Model.Series)
-            {
-                if (s != series && s.Name == series.Name)
-                    return s;
-            }
-            return null;
-        }
 
         /// <summary>
         /// Event handler for when user clicks close

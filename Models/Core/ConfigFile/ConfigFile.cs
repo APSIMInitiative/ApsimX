@@ -76,9 +76,23 @@ namespace Models.Core.ConfigFile
                 Match firstSplitResult = rxOverrideTargetNode.Match(commandSplits[0]);
                 if (firstSplitResult.Success)
                 {
+                    string property = commandSplits[0];
+                    string value = "";
+                    for(int i = 1; i < commandSplits.Count; i++)
+                    {
+                        value += commandSplits[i];
+                        if (i < commandSplits.Count-1)
+                            value += "=";
+                    }
+
+                    //check if second part is a filename or value (ends in ; and file exists)
+                    //if so, read contents of that file in as the value
+                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
+                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
+                        value = File.ReadAllText(potentialFilepath);
+
                     // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
-                    //string[] singleLineCommandArray = { string.Join<string>(' ', commandSplits) };
-                    string[] singleLineCommandArray = { string.Join('=', commandSplits) };
+                    string[] singleLineCommandArray = { property + "=" + value };
                     var overrides = Overrides.ParseStrings(singleLineCommandArray);
                     tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
                 }
@@ -293,7 +307,8 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                string message = e.Message + " : " + instruction.keyword + " " +  instruction.NodeToModify + " " + instruction.NodeForAction;
+                throw new Exception(message);
             }
         }
 
@@ -310,6 +325,7 @@ namespace Models.Core.ConfigFile
             Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
             Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
             Regex rxFactorSpecification = new Regex(@"(.)*(\=)(.)*(\=)(.)*");
+            Regex rxNodeWithChild = new Regex(@"(\[{1})([\w\d\s])*(\]){1}(\.){1}([\w\d\s])*");
 
             List<string> normalizedList = new();
             StringBuilder correctedLineString = new();
@@ -369,7 +385,12 @@ namespace Models.Core.ConfigFile
                             else if (rxNode.IsMatch(section))
                             {
                                 if (section.Contains('.'))
-                                    correctedLineString.Append(section);
+                                {
+                                    if (rxNodeWithChild.IsMatch(section) && section != lineSections.Last())
+                                        correctedLineString.Append(section + " ");
+                                    else
+                                        correctedLineString.Append(section);
+                                }
                                 else if (section == lineSections.Last())
                                     correctedLineString.Append(section);
                                 else correctedLineString.Append(section + " ");
@@ -554,7 +575,7 @@ namespace Models.Core.ConfigFile
         {
             if (!commandString.Contains('$'))
                 return commandString;
-            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex); 
+            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex);
         }
     }
 }

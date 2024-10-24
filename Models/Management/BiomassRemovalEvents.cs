@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Utilities;
+using Models.PMF;
 
 namespace Models.Management
 {
@@ -23,19 +24,17 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class BiomassRemovalEvents : Model, IGridModel
+    public class BiomassRemovalEvents : Model
     {
         /// <summary>
         /// Crop to remove biomass from
         /// </summary>
         [Description("Crop to remove biomass from")]
-        public IPlant PlantToRemoveFrom
-        {
-            get { return _plant; }
-            set { _plant = value; LinkCrop(); }
-        }
+        [Display(Type = DisplayType.PlantName)]
+        public string PlantToRemoveBiomassFrom { get; set; }
+
         [JsonIgnore]
-        private IPlant _plant { get; set; }
+        private Plant PlantToRemoveFrom { get; set; }
 
         /// <summary>
         /// The type of biomass removal event
@@ -63,6 +62,7 @@ namespace Models.Management
         public string RemovalDatesInput { get; set; }
 
         /// <summary>Removal Options in Table</summary>
+        [Display]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
 
         /// <summary>Cutting Event</summary>
@@ -100,33 +100,6 @@ namespace Models.Management
                     dates.Add(DateUtilities.GetDate(input));
 
                 return dates.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                LinkCrop();
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("PlantName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("OrganName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("TypeString", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("LiveToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("DeadToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("LiveToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTableColumn("DeadToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
             }
         }
 
@@ -246,11 +219,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>();
+                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>();
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveFrom.Name);
 
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
@@ -266,7 +239,7 @@ namespace Models.Management
                 Folder replacements = sims.FindChild<Folder>("Replacements");
                 if (replacements != null)
                 {
-                    IPlant plant = replacements.FindChild<IPlant>(PlantToRemoveFrom.Name);
+                    Plant plant = replacements.FindChild<Plant>(PlantToRemoveFrom.Name);
                     if (plant != null)
                         PlantToRemoveFrom = plant;
                 }

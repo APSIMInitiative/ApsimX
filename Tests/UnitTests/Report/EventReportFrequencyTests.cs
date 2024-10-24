@@ -1,12 +1,8 @@
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
 using Models;
 using Models.Core;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using UnitTests.Weather;
 
 namespace UnitTests.Reporting
 {
@@ -45,7 +41,7 @@ namespace UnitTests.Reporting
         /// </summary>
         /// <param name="line">Input line - should be any valid reporting frequency using a model event.</param>
         [TestCase("[Clock].DoReport")]
-        [TestCase("[Clock with space].DoReport")]
+        [TestCase("[Clock with space].DoReport")] 
         public void TestReportingFrequency(string line)
         {
             //this is the order lines are parsed by Report.cs
@@ -59,6 +55,7 @@ namespace UnitTests.Reporting
         /// </summary>
         /// <param name="line">Input line - should be any valid reporting frequency using a model event.</param>
         [TestCase("[Clock].Today.Month == 1 && [Clock].Today.Day == 1")]
+        [TestCase("[Clock].DoReport && [Clock].Today.Year > 2000")]
         public void TestReportingExpression(string line)
         {
             Models.Report report = new Models.Report()

@@ -188,9 +188,12 @@ namespace UserInterface.Presenters
                         string fullName = await GetPlacenameFromLatLongAsync();
 
                         //remove the address at start of the name "This business is closed, Dalby"
-                        if (fullName.Contains(','))
-                            fullName = fullName.Substring(fullName.IndexOf(',') + 2);
-                        placeNameEditBox.Text = fullName;
+                        if (fullName != null)
+                        {
+                            if (fullName.Contains(','))
+                                fullName = fullName.Substring(fullName.IndexOf(',') + 2);
+                            placeNameEditBox.Text = fullName;
+                        }
 
                         // Use this to monitor task progress
                         Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
@@ -505,9 +508,12 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            CERESSoilTemperature temperature = new CERESSoilTemperature();
-            temperature.Name = "Temperature";
-            soil.Children.Add(temperature);
+            var temperature = soil.FindChild<CERESSoilTemperature>();
+            if (temperature == null)
+                soil.Children.Add(new CERESSoilTemperature() {Name = "Temperature"});
+            else
+                temperature.Name = "Temperature";
+
             var physical = soil.FindChild<Physical>();
             if (physical != null)
             {

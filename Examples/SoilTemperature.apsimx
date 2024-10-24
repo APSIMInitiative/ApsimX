@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 177,
+  "Version": 180,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -80,147 +80,73 @@
           "Parameters": [
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": true,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": "NaN",
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": false,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             }
           ],
           "Name": "Forages",
@@ -257,7 +183,7 @@
           "Children": [
             {
               "$type": "Models.Operations, Models",
-              "Operation": [
+              "OperationsList": [
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
@@ -1594,8 +1520,8 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today as Date",
-                "[Soil].SoilTemperature.AverageSoilTemp[1] as AveSoilTemp@0075mm",
-                "[Soil].SoilTemperature.AverageSoilTemp[3] as AveSoilTemp@0400mm"
+                "[Soil].SoilTemperature.AverageSoilTemperature[1] as AveSoilTemp@0075mm",
+                "[Soil].SoilTemperature.AverageSoilTemperature[3] as AveSoilTemp@0400mm"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"

@@ -459,7 +459,7 @@ namespace UnitTests.Factorial
                             new Models.Operations()
                             {
                                 Name = "Sowing",
-                                Operation = new List<Models.Operation>()
+                                OperationsList = new List<Models.Operation>()
                                 {
                                     new Models.Operation()
                                     {
@@ -470,7 +470,7 @@ namespace UnitTests.Factorial
                             new Models.Operations()
                             {
                                 Name = "Cutting",
-                                Operation = new List<Models.Operation>()
+                                OperationsList = new List<Models.Operation>()
                                 {
                                     new Models.Operation()
                                     {
@@ -500,7 +500,7 @@ namespace UnitTests.Factorial
                                             new Models.Operations()
                                             {
                                                 Name = "Sowing",
-                                                Operation = new List<Models.Operation>()
+                                                OperationsList = new List<Models.Operation>()
                                                 {
                                                     new Models.Operation()
                                                     {
@@ -511,7 +511,7 @@ namespace UnitTests.Factorial
                                             new Models.Operations()
                                             {
                                                 Name = "Cutting",
-                                                Operation = new List<Models.Operation>()
+                                                OperationsList = new List<Models.Operation>()
                                                 {
                                                     new Models.Operation()
                                                     {
@@ -535,8 +535,8 @@ namespace UnitTests.Factorial
             var sim = sims[0].ToSimulation();
             var sowing = sim.Children[0] as Models.Operations;
             var cutting = sim.Children[1] as Models.Operations;
-            Assert.That(sowing.Operation[0].Action, Is.EqualTo("Sowing1"));
-            Assert.That(cutting.Operation[0].Action, Is.EqualTo("Cutting1"));
+            Assert.That(sowing.OperationsList[0].Action, Is.EqualTo("Sowing1"));
+            Assert.That(cutting.OperationsList[0].Action, Is.EqualTo("Cutting1"));
         }
 
         /// <summary>Ensure disabled simulations aren't run.</summary>
