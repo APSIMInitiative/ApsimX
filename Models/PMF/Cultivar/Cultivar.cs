@@ -23,6 +23,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(ModelOverrides))]
     [ValidParent(ParentType = typeof(Sugarcane))]
+    [ValidParent(ParentType = typeof(AgPasture.PastureSpecies))]
     public class Cultivar : Model, ILineEditor
     {
         /// <summary>Default constructor.</summary>
