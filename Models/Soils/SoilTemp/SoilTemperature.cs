@@ -52,7 +52,7 @@ namespace Models.Soils.SoilTemp
         [Link]
         private IClock clock = null;
 
-        [Link]
+        [Link(IsOptional = true)]   // Simulations without plants don't have a micro climate instance
         private MicroClimate microClimate = null;
 
         [Link]
@@ -514,22 +514,12 @@ namespace Models.Soils.SoilTemp
         /// <summary>Flag whether net radiation is calculated or gotten from input</summary>
         private string netRadiationSource = "calc";
 
-        // from met
-        private double defaultWindSpeed = 3;      // default wind speed (m/s)
+        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        private const double defaultAltitude = 18;    // default altitude (m)
+        #region Input for this model  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        private const double defaultInstrumentHeight = 1.2;  // default instrument height (m)
-
-        private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
-
-        /// <summary>
-        /// Depth to the constant temperature lower boundary condition (m)
-        /// </summary>
-        public double CONSTANT_TEMPdepth { get; set; } = 10.0;    // Metres. Depth to constant temperature zone
-
-
-        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        /// <summary>Depth strings. Wrapper around Thickness</summary>
+        /// <remarks>Use for display only, values taken from thickness</remarks>
         [Display]
         [Summary]
         [Units("mm")]
@@ -747,34 +737,12 @@ namespace Models.Soils.SoilTemp
             doProcess();
 
             SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
-        } // OnProcess
-
-
-
-        /// <summary>
-        /// Initialise soiltemp module
-        /// </summary>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)            // JNGH - changed this from Init1.
-        {
-            doInit1Stuff = true;
-            getIniVariables();
-            getProfileVariables();
-            readParam();
-            doInit1Stuff = true;
-        } // OnInit2
-
-
-        #endregion
-
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            InitialValues = SoilUtilities.MapInterpolation(InitialValues, Thickness, targetThickness, allowMissingValues:true);
         }
 
-        /// <summary>Perform a reset.</summary>
+        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        /// <summary>Performs the tasks to reset the model</summary>
+        /// <param name="values">The value of soil temperature to set the model (optional)</param>
         public void Reset(double[] values = null)
         {
             if (values == null)
@@ -807,8 +775,7 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getIniVariables()
         {
-            BoundCheck(weather.Tav, -30.0, 40.0, "tav (oC)");
-            // 'gTAve = tav
+            boundCheck(weather.Tav, -30.0, 50.0, "tav (oC)");
 
             if ((instrumHeight > 0.00001))
                 instrumentHeight = instrumHeight;
@@ -831,12 +798,6 @@ namespace Models.Soils.SoilTemp
             // set internal thickness array, add layers for zone below bottom layer plus one for surface
             thickness = new double[numLayers + numPhantomNodes + 1];
             physical.Thickness.CopyTo(thickness, 1);
-            BoundCheckArray(thickness, 0.0, 1000.0, "thickness");
-
-            // mapping of layers to nodes -
-            // layer - air surface 1 2 ... NumLayers NumLayers+1
-            // node  - 0   1       2 3 ... Nz        Nz+1
-            // thus the node 1 is at the soil surface and Nz = NumLayers + 1.
 
             // add enough to make last node at 9-10 meters - should always be enough to assume constant temperature
             // Depth added below profile to take last node to constant temperature zone (m)
@@ -872,11 +833,14 @@ namespace Models.Soils.SoilTemp
             var oldSoilWater = soilWater;
             soilWater = new double[numLayers + 1 + numPhantomNodes];
             if (oldSoilWater != null)
-                Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + NUM_PHANTOM_NODES, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
-            for (int layer = 1; layer <= numLayers; layer++)
-                soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
-            for (int layer = numLayers+1; layer <= numLayers + NUM_PHANTOM_NODES; layer++)
-                soilWater[layer] = soilWater[numLayers];
+                Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + numPhantomNodes, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + extra for zone below bottom layer
+            if (waterBalance.SW != null)
+            {
+                for (int layer = 1; layer <= numLayers; layer++)
+                    soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
+                for (int layer = numLayers + 1; layer <= numLayers + numPhantomNodes; layer++)
+                    soilWater[layer] = soilWater[numLayers];
+            }
 
             // Carbon
             carbon = new double[numLayers + 1 + numPhantomNodes];
@@ -979,34 +943,16 @@ namespace Models.Soils.SoilTemp
         /// <remarks></remarks>
         private void getOtherVariables()
         {
-            BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");
-            BoundCheck(weather.MinT, -100.0, weather.MaxT, "mint");
-            maxAirTemp = weather.MaxT;
-            minAirTemp = weather.MinT;
-            tempStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
             waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
-            // Debug(test): multiplyArray(gSW, 0.1)
-
-            BoundCheck(waterBalance.Eo, -30.0, 40.0, "eo");
-            potEvapotrans = waterBalance.Eo;
-
-            BoundCheck(waterBalance.Eos, -30.0, 40.0, "eos");
-            potSoilEvap = waterBalance.Eos;
-
-            BoundCheck(waterBalance.Es, -30.0, 40.0, "es");
-            actualSoilEvap = waterBalance.Es;
-            // BoundCheck(cover_tot, 0.0, 1.0, "cover_tot")
-
-            //if ((weather.Wind > 0.0))
-            //    gWindSpeed = weather.Wind * KM2M / (DAY2HR * HR2SEC);
-            //else
-            windSpeed = defaultWindSpeed;
-            BoundCheck(windSpeed, 0.0, 1000.0, "wind");
-
-            canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) * MM2M;
-            BoundCheck(canopyHeight, 0.0, 20.0, "Height");
-
+            if (microClimate != null)
+            {
+                canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) / 1000.0;
+            }
+            else
+            {
+                canopyHeight = 0.0;
+            }
 
             // Vals HACK. Should be recalculating wind profile.
             instrumentHeight = Math.Max(instrumentHeight, canopyHeight + 0.5);

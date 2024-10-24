@@ -1,10 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-<<<<<<< HEAD:Tests/Validation/SoilTemperature/SoilTemperature.apsimx
-  "Version": 177,
-=======
   "Version": 180,
->>>>>>> 53d9abc3aaa69839594315889efd083f24765d74:Tests/UnderReview/SoilTemperature/SoilTemperature.apsimx
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -150,11 +146,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-<<<<<<< HEAD:Tests/Validation/SoilTemperature/SoilTemperature.apsimx
-      "Name": "Validation",
-=======
       "Name": "ValidationTests",
->>>>>>> 53d9abc3aaa69839594315889efd083f24765d74:Tests/UnderReview/SoilTemperature/SoilTemperature.apsimx
       "ResourceName": null,
       "Children": [
         {
@@ -27384,9 +27376,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "Thickness": null,
-                          "InitialValues": null,
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -29935,9 +29925,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "Thickness": null,
-                          "InitialValues": null,
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -32808,9 +32796,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                          "Thickness": null,
-                          "InitialValues": null,
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
