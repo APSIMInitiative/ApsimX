@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
+    [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("Holds all animal price entries defining the value of individual ruminants")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]

@@ -23,6 +23,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [ValidParent(ParentType = typeof(Labour))]
+    [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]

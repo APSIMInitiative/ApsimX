@@ -334,6 +334,12 @@ namespace Models.CLEM.Activities
                         case "Relationship":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<Relationship>());
                             break;
+                        case "OtherAnimalsGroup":
+                            companionModelsPresent.Add("OtherAnimalsGroup", LocateCompanionModels<OtherAnimalsGroup>());
+                            break;
+                        case "OtherAnimalsFeedGroup":
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<OtherAnimalsFeedGroup>());
+                            break;
                         default:
                             throw new NotSupportedException($"{componentType.Name} not currently supported as activity companion component");
                     }

@@ -20,7 +20,6 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GreenhouseGasesType))]
     [ValidParent(ParentType = typeof(HumanFoodStoreType))]
     [ValidParent(ParentType = typeof(LandType))]
-    [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [ValidParent(ParentType = typeof(ProductStoreType))]
     [ValidParent(ParentType = typeof(ProductStoreTypeManure))]
     [ValidParent(ParentType = typeof(WaterType))]

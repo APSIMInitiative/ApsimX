@@ -293,6 +293,25 @@ namespace Models.CLEM
     /// <summary>
     /// Ruminant feeding styles
     /// </summary>
+    public enum OtherAnimalsFeedActivityTypes
+    {
+        /// <summary>
+        /// A specified amount daily to all individuals
+        /// </summary>
+        SpecifiedDailyAmount,
+        /// <summary>
+        /// A specified amount daily to each individual
+        /// </summary>
+        SpecifiedDailyAmountPerIndividual,
+        /// <summary>
+        /// The proportion of animal weight in selected months
+        /// </summary>
+        ProportionOfWeight,
+    }
+
+    /// <summary>
+    /// Ruminant feeding styles
+    /// </summary>
     public enum LabourFeedActivityTypes
     {
         /// <summary>

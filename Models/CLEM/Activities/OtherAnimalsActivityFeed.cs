@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using DocumentFormat.OpenXml.Office.CustomUI;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {
@@ -21,10 +25,13 @@ namespace Models.CLEM.Activities
     [Description("Manages the feeding of a specified type of other animal based on a feeding style")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityFeed.htm")]
-    public class OtherAnimalsActivityFeed : CLEMActivityBase
+    public class OtherAnimalsActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
-        [Link]
-        private IClock clock = null;
+        private IEnumerable<OtherAnimalsGroup> filterGroups;
+        private OtherAnimals otherAnimals;
+        int numberToDo = 0;
+        double amountToDo = 0;
+        double feedEstimated = 0;
 
         /// <summary>
         /// Name of Feed to use
@@ -40,7 +47,7 @@ namespace Models.CLEM.Activities
         [Description("Feeding style to use")]
         [System.ComponentModel.DefaultValueAttribute(OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount)]
         [Required]
-        public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
+        public OtherAnimalsFeedActivityTypes FeedStyle { get; set; } = OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount;
 
         /// <summary>
         /// Feed type
@@ -49,12 +56,15 @@ namespace Models.CLEM.Activities
         public IFeedType FeedType { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Provides the redicted other animal name based on filtering 
         /// </summary>
-        public OtherAnimalsActivityFeed()
-        {
-            this.SetDefaults();
-        }
+        public string PredictedAnimalName { get; set; } = "NA";
+
+        /// <summary>
+        /// The list of cohorts remaining to be fed in the current timestep
+        /// </summary>
+        [JsonIgnore]
+        public List<OtherAnimalsTypeCohort> CohortsToBeFed { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -62,77 +72,122 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
+            filterGroups = GetCompanionModelsByIdentifier<OtherAnimalsFeedGroup>(true, false);
+
             // locate FeedType resource
             FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-
-            // get feed required
-            // zero based month index for array
-            int month = clock.Today.Month - 1;
-            double allIndividuals = 0;
-            double amount = 0;
-            foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
+            switch (type)
             {
-                double total = 0;
-                foreach (var item in group.Filter(group.SelectedOtherAnimalsType.Cohorts))
-                {
-                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
-                }
-                allIndividuals += total;
-                switch (FeedStyle)
-                {
-                    case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-                        amount += group.MonthlyValues[month] * 30.4 * total;
-                        break;
-                    case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
-                        throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
-                    default:
-                        amount += 0;
-                        break;
-                }
-
-                if (amount > 0)
-                {
-                    resourcesNeeded.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = true,
-                        Required = amount,
-                        Resource = FeedType,
-                        ResourceType = typeof(AnimalFoodStore),
-                        ResourceTypeName = FeedTypeName,
-                        ActivityModel = this,
-                        Category = TransactionCategory,
-                        RelatesToResource = "Other animals",
-                        FilterDetails = null
-                    }
-                    );
-                }
+                case "OtherAnimalsFeedGroup":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() { "Feed provided" }
+                        );
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Number fed",
+                            "Feed provided"
+                        },
+                        measures: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per kg feed"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
             }
-            return resourcesNeeded;
         }
 
-    }
+        /// <inheritdoc/>
+        public override void PrepareForTimestep()
+        {
+            amountToDo = 0;
+            feedEstimated = 0;
+            CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
+            foreach (var cohort in CohortsToBeFed)
+            {
+                cohort.Considered = false;
+            }
+        }
 
-    /// <summary>
-    /// Ruminant feeding styles
-    /// </summary>
-    public enum OtherAnimalsFeedActivityTypes
-    {
-        /// <summary>
-        /// Feed specified amount daily in selected months
-        /// </summary>
-        SpecifiedDailyAmount,
-        /// <summary>
-        /// Feed proportion of animal weight in selected months
-        /// </summary>
-        ProportionOfWeight,
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            Status = ActivityStatus.NotNeeded;
+            feedEstimated = filterGroups.OfType<OtherAnimalsFeedGroup>().Sum(a => a.CurrentResourceRequest.Required);
+
+            foreach (var valueToSupply in valuesForCompanionModels)
+            {
+                int number = numberToDo;
+
+                switch (valueToSupply.Key.type)
+                {
+                    case "OtherAnimalsFeedGroup":
+                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
+                        break;
+                    case "LabourRequirement":
+                    case "ActivityFee":
+                        switch (valueToSupply.Key.identifier)
+                        {
+                            case "Number fed":
+                                switch (valueToSupply.Key.unit)
+                                {
+                                    case "fixed":
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                                        break;
+                                    case "per head":
+                                        valuesForCompanionModels[valueToSupply.Key] = number;
+                                        break;
+                                    default:
+                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                                }
+                                break;
+                            case "Feed provided":
+                                switch (valueToSupply.Key.unit)
+                                {
+                                    case "fixed":
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                                        break;
+                                    case "per kg fed":
+                                        amountToDo = feedEstimated;
+                                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
+                                        break;
+                                    default:
+                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                                }
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            if (feedEstimated > 0)
+            {
+                if (feedEstimated - filterGroups.OfType<OtherAnimalsFeedGroup>().Sum(a => a.CurrentResourceRequest.Required) > 0)
+                {
+                    Status = ActivityStatus.Partial;
+                    return;
+                }
+                Status = ActivityStatus.Success;
+            }
+        }
     }
 }
