@@ -71,7 +71,8 @@ namespace UserInterface.Presenters
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
-            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+            graph.AddContextAction("Copy graph to clipboard (800x600)", (sender, e) => graph.ExportToClipboard(800, 600));
+            graph.AddContextAction("Copy graph to clipboard (1200x800)", (sender, e) => graph.ExportToClipboard(1200, 800));
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");

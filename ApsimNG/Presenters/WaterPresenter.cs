@@ -8,6 +8,7 @@ using Gtk.Sheet;
 using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Commands;
+using UserInterface.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -74,7 +75,8 @@ namespace UserInterface.Presenters
             pawEdit = view.GetControl<EditView>("pawEdit");
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
-            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+            graph.AddContextAction("Copy graph to clipboard (800x600)", (sender, e) => graph.ExportToClipboard(800, 600));
+            graph.AddContextAction("Copy graph to clipboard (1200x800)", (sender, e) => graph.ExportToClipboard(1200, 800));
 
             Refresh();
         }

@@ -342,7 +342,7 @@
         /// <summary>
         /// Export the graph to the clipboard
         /// </summary>
-        void ExportToClipboard();
+        void ExportToClipboard(int width=1200, int height=800);
 
         /// <summary>
         /// Add an action (on context menu) on the memo.

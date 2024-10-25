@@ -67,7 +67,8 @@ namespace UserInterface.Presenters
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnAnnotationClick += OnAnnotationClick;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
-            this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+            graphView.AddContextAction("Copy graph to clipboard (800x600)", (sender, e) => graphView.ExportToClipboard(800, 600));
+            graphView.AddContextAction("Copy graph to clipboard (1200x800)", (sender, e) => graphView.ExportToClipboard(1200, 800));
 
             if (cache == null)
                 DrawGraph();
@@ -766,14 +767,6 @@ namespace UserInterface.Presenters
                     return;
                 }
             }
-        }
-
-        /// <summary>User has clicked "copy graph" menu item.</summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void CopyGraphToClipboard(object sender, EventArgs e)
-        {
-            graphView.ExportToClipboard();
         }
 
         /// <summary>
