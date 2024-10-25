@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models.Core;
 using Models.Functions;
 
@@ -92,35 +93,52 @@ namespace Models
                 return valuesToAggregate.Last();
             }
 
-            double result = double.NaN;
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
-                if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
-                    if (this.valuesToAggregate[0].GetType() == typeof(double))
-                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
-                    else if (this.valuesToAggregate[0].GetType() == typeof(int))
-                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
-                    else
-                        throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
-                else if (this.aggregationFunction.Equals("prod", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Prod(this.valuesToAggregate);
-                else if (this.aggregationFunction.Equals("mean", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Average(this.valuesToAggregate);
-                else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Min(this.valuesToAggregate);
-                else if (this.aggregationFunction.Equals("max", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Max(this.valuesToAggregate);
-                else if (this.aggregationFunction.Equals("first", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
-                else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
-                else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) -
-                                    Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
-                else if (this.aggregationFunction.Equals("stddev", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.SampleStandardDeviation(this.valuesToAggregate.Cast<double>());
+                if (this.aggregationFunction.StartsWith("concat", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // Combines all values into a single string.
+                    object digits = this.aggregationFunction.Replace("concat", "", StringComparison.CurrentCultureIgnoreCase);
+                    digits = digits.Equals("") ? "4" : digits;
+                    string result = string.Join(",", this.valuesToAggregate.Select(x => Math.Round(Convert.ToDouble(x), Convert.ToInt16(digits))).Cast<double>());
+                    return result;
+                }
+                else
+                {
+                    double result = double.NaN;
+
+                    if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
+                        if (this.valuesToAggregate[0].GetType() == typeof(double))
+                            result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
+                        else if (this.valuesToAggregate[0].GetType() == typeof(int))
+                            result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
+                        else
+                            throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
+                    else if (this.aggregationFunction.Equals("prod", StringComparison.CurrentCultureIgnoreCase))
+                        result = MathUtilities.Prod(this.valuesToAggregate);
+                    else if (this.aggregationFunction.Equals("mean", StringComparison.CurrentCultureIgnoreCase))
+                        result = MathUtilities.Average(this.valuesToAggregate);
+                    else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
+                        result = MathUtilities.Min(this.valuesToAggregate);
+                    else if (this.aggregationFunction.Equals("max", StringComparison.CurrentCultureIgnoreCase))
+                        result = MathUtilities.Max(this.valuesToAggregate);
+                    else if (this.aggregationFunction.Equals("first", StringComparison.CurrentCultureIgnoreCase))
+                        result = Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
+                    else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
+                        result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
+                    else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
+                        result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) -
+                                        Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
+                    else if (this.aggregationFunction.Equals("stddev", StringComparison.CurrentCultureIgnoreCase))
+                        result = MathUtilities.SampleStandardDeviation(this.valuesToAggregate.Cast<double>());
+
+                    return result;
+                }
             }
-            return result;
+            else
+            {
+                return double.NaN;
+            }
         }
     }
 
