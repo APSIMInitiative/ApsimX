@@ -17,8 +17,7 @@ namespace APSIM.Documentation.Models
         /// Create a new <see cref="ParamsDocsFromFile"/> instance for the given input file.
         /// </summary>
         /// <param name="output">Name of the file which will be generated.</param>
-        /// <param name="options">Pdf generation options.</param>
-        public ParamsDocsFromModel(string output, PdfOptions options) : base(output, options)
+        public ParamsDocsFromModel(string output) : base(output)
         {
         }
 
@@ -37,7 +36,7 @@ namespace APSIM.Documentation.Models
         /// </summary>
         protected override Document CreateDocument()
         {
-            return PdfWriter.CreateStandardDocument(false);
+            return null;
         }
     }
 }

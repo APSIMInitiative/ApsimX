@@ -1,8 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using System;
-using System.IO;
 
-namespace APSIM.Interop.Documentation.Helpers
+namespace APSIM.Documentation.Bibliography
 {
 
     /// <summary>
@@ -20,17 +19,9 @@ namespace APSIM.Interop.Documentation.Helpers
         private string contents;
 
         /// <summary>Initializes a new instance of the <see cref="BibTeX"/> class.</summary>
-        /// <param name="fileName">Name of the .bib file.</param>
-        public BibTeX(string fileName)
+        public BibTeX()
         {
-            try
-            {
-                contents = File.ReadAllText(fileName).Replace("\r\n", "\n");
-            }
-            catch (Exception err)
-            {
-                throw new Exception($"Unable to open bib file {fileName}", err);
-            }
+            contents = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.APSIM.bib");
         }
 
         /// <summary>Lookups the specified citation name and returns it.</summary>

@@ -1,4 +1,4 @@
-namespace APSIM.Interop.Documentation.Helpers
+namespace APSIM.Documentation.Bibliography
 {
     /// <summary>
     /// An interface for a citation in a bibliography.

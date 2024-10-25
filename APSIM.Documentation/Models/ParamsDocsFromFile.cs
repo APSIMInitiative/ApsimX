@@ -23,10 +23,9 @@ namespace APSIM.Documentation.Models
         /// </summary>
         /// <param name="input">The input file.</param>
         /// <param name="output">Name of the file which will be generated.</param>
-        /// <param name="options">Pdf generation options.</param>
         /// <param name="path">(Optional) path to model to be documented.</param>
-        public ParamsDocsFromFile(string input, string output, PdfOptions options, string path = null) : base("Interface", input, output, options)
-        {
+        public ParamsDocsFromFile(string input, string output, string path = null) : base("Interface", input, output)
+        { 
             this.path = path;
         }
 
@@ -49,7 +48,7 @@ namespace APSIM.Documentation.Models
 
         protected override Document CreateDocument()
         {
-            return PdfWriter.CreateStandardDocument(false);
+            return null;
         }
     }
 }

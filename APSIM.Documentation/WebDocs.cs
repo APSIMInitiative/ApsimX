@@ -12,7 +12,9 @@ using APSIM.Interop.Mapping;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using APSIM.Documentation.Models;
+using APSIM.Documentation.Bibliography;
 using Models.Core.ApsimFile;
+
 
 namespace APSIM.Documentation
 {
@@ -26,8 +28,6 @@ namespace APSIM.Documentation
         /// </summary>
         public static string GetPage(string apsimDirectory, string name)
         {
-            AutoDocumentation.Bibilography = new BibTeX(PathUtilities.GetAbsolutePath(Path.Combine(apsimDirectory, "APSIM.bib"), null));
-
             string validationPath = apsimDirectory + "/Tests/Validation/";
             string[] validations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/");
             for(int i = 0;i < validations.Length; i++)
@@ -90,8 +90,15 @@ namespace APSIM.Documentation
         /// <param name="model">Path to which the file will be generated.</param>
         public static string GenerateWeb(IModel model)
         {
-            List<ITag> tags = AutoDocumentation.Document(model);
-            
+            return TagsToHTMLString(AutoDocumentation.Document(model));
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="tags">Tags to be converted</param>
+        public static string TagsToHTMLString(List<ITag> tags)
+        {            
             string markdown = AddHeaderImage();
             markdown += ConvertToMarkdown(tags, "");
             markdown = ReplaceImagePathWithEncodedString(markdown);

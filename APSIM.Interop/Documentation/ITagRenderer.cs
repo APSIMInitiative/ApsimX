@@ -1,4 +1,3 @@
-using APSIM.Interop.Markdown.Renderers;
 using APSIM.Shared.Documentation;
 
 namespace APSIM.Interop.Documentation
@@ -20,6 +19,6 @@ namespace APSIM.Interop.Documentation
         /// </summary>
         /// <param name="tag">Tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        void Render(ITag tag, PdfBuilder renderer);
+        void Render(ITag tag);
     }
 }

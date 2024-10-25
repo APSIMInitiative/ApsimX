@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace APSIM.Interop.Documentation.Helpers
+namespace APSIM.Documentation.Bibliography
 {
     /// <summary>
     /// A citation in a bibliography.
