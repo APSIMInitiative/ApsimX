@@ -21,7 +21,7 @@ namespace APSIM.Documentation.Bibliography
         /// <summary>Initializes a new instance of the <see cref="BibTeX"/> class.</summary>
         public BibTeX()
         {
-            contents = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.APSIM.bib");
+            contents = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.APSIM.bib").Replace("\r", "");
         }
 
         /// <summary>Lookups the specified citation name and returns it.</summary>

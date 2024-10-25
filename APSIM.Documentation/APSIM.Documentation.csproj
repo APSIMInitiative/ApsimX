@@ -15,7 +15,7 @@
     <ProjectReference Include="../Models/Models.csproj" />
 
     <EmbeddedResource Include="./Resources/*.css" />
-    <EmbeddedResource Include="./Resources/APSIM.bib" />
+    <EmbeddedResource Include="./Resources/*.bib" />
   </ItemGroup>
   
   <PropertyGroup>
