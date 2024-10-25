@@ -1360,10 +1360,10 @@ namespace UserInterface.Views
         /// <summary>
         /// Export the graph to the clipboard
         /// </summary>
-        public void ExportToClipboard()
+        public void ExportToClipboard(int width=1200, int height=800)
         {
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
+            PngExporter.Export(plot1.Model, fileName, width, height, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }
