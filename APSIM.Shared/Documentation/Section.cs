@@ -37,6 +37,25 @@ namespace APSIM.Shared.Documentation
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Section"/> class.
+        /// </summary>
+        /// <param name="title">The section title. Can be null.</param>
+        public Section(string title)
+        {
+            Title = title;
+            this.Children = new List<ITag>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Section"/> class.
+        /// </summary>
+        public Section()
+        {
+            Title = null;
+            this.Children = new List<ITag>();
+        }
+
+        /// <summary>
         /// Create a <see cref="Section"/> instance with a single child.
         /// </summary>
         /// <param name="title">The section title. Can be null.</param>

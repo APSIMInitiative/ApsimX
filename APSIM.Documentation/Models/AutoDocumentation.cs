@@ -376,7 +376,8 @@ namespace APSIM.Documentation.Models
             {
                 if (!initialized)
                 {
-                    string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                    string modelsAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Models.dll");
+                    string fileName = Path.ChangeExtension(modelsAssembly, ".xml");
                     var doc = XDocument.Load(fileName);
                     foreach (var elt in doc.Element("doc").Element("members").Elements())
                     {
