@@ -268,8 +268,6 @@ namespace Models.PMF.Struct
                     0.0
                 );
             }
-
-            CalculatedTillerNumber = Math.Min(CalculatedTillerNumber, 7);
         }
 
         void AddInitialTillers()
