@@ -56,6 +56,12 @@ def kraww(args):
     grist = generate_data(configs)
     generate_csv_from_grist(grist, args.path)
 
+def metompkin(args):
+    """Create a geojson files for Metompkin farm dataset
+    
+    See argparser set_defaults() (https://docs.python.org/3/library/argparse.html#sub-commands)
+    """
+    pass
 
 def entry():
     """Entry point for oasis"""
@@ -78,6 +84,11 @@ def entry():
     config_parser = subparsers.add_parser("config", help="Generates field config csv")
     config_parser.add_argument("path", type=str, help="Path to save csv")
     config_parser.set_defaults(func=kraww)
+    
+    metompkin_parser = subparsers.add_parser("metopkin", help="Convert metopkin dataset")
+    metompkin_parser.add_argument("path", type=str, help="Path to metopkin data")
+    metompkin_parser.add_argument("json", type=str, help="Output path to GeoJSON")
+    metompkin_parser.set_defaults(func=metompkin)
 
     args = parser.parse_args()
     args.func(args)
