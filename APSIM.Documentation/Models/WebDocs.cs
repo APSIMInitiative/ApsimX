@@ -21,15 +21,46 @@ namespace APSIM.Documentation
     /// </summary>
     public static class WebDocs
     {
-
         /// <summary>
         /// 
         /// </summary>
         public static string GetPage(string apsimDirectory, string name)
         {
-            string path = apsimDirectory + "/Tests/Validation/Wheat/Wheat.apsimx";
-            Simulations sims = FileFormat.ReadFromString<Simulations>(path, e => throw e, false).NewModel as Simulations;
-            return Generate(sims);
+            string validationPath = apsimDirectory + "/Tests/Validation/";
+            string[] validations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/");
+            for(int i = 0;i < validations.Length; i++)
+                validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
+
+            string tutorialPath = apsimDirectory + "/Tests/Validation/";
+            string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/");
+            for(int i = 0;i < tutorials.Length; i++)
+                tutorials[i] = tutorials[i].Replace(tutorialPath, "").Replace(".apsimx", "");
+
+            string filename = name;
+            if (filename == "AGPRyegrass" || filename == "AGPWhiteClover")
+                filename = "AgPasture";
+
+            bool isValidation = false;
+            bool isTutorial = false;
+
+            if (validations.Contains(filename))
+                isValidation = true;
+
+            if (tutorials.Contains(name))
+                isTutorial = true;
+
+            filename = filename + ".apsimx";
+            
+            string path = apsimDirectory;
+            if (isValidation)
+                path += "/Tests/Validation/" + name + "/" + filename;
+            else if (isTutorial)
+                path += "/Examples/Tutorials/" + filename;
+            else
+                throw new Exception($"Provided name \"{name}\", does not match any validation folders or tutorial files.");
+
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false).NewModel as Simulations;
+            return GenerateWeb(sims);
         }
 
         /// <summary>
