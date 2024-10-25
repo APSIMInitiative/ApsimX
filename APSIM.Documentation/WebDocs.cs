@@ -106,8 +106,6 @@ namespace APSIM.Documentation
             List<ICitation> citations = ProcessCitations(output1, out string output2);
             output2 += WriteBibliography(citations);
 
-            File.WriteAllText("C:/git/text.txt", output2);
-
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
 
