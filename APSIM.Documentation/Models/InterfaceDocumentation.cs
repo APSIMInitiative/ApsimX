@@ -1,22 +1,22 @@
-﻿namespace APSIM.Interop.Documentation.Formats
-{
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using APSIM.Shared.Extensions;
-    using Newtonsoft.Json.Linq;
-    using Models.Core.ApsimFile;
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using APSIM.Shared.Extensions;
+using Models.Core.ApsimFile;
+using APSIM.Shared.Extensions.Collections;
 
+namespace APSIM.Documentation.Models
+{
     /// <summary>
     /// This class documents a model's parameters, inputs, and outputs.
     /// </summary>
-    public class ParamsInputsOutputs
+    public class InterfaceDocumentation
     {
         /// <summary>The maximum length of a description.</summary>
         private const int maxDescriptionLength = 50;
@@ -33,14 +33,11 @@
         /// <summary>Only document types in this namespace.</summary>
         private string namespaceToDocument;
 
-        /// <summary>List of parameter names for the model being documented.</summary>
-        private IEnumerable<string> parameterNames = Enumerable.Empty<string>();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
+        /// 
         /// </summary>
         /// <param name="model">The model to document.</param>
-        public ParamsInputsOutputs(IModel model)
+        public InterfaceDocumentation(IModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -51,18 +48,14 @@
         /// <summary>
         /// Perform the command
         /// </summary>
-        public IEnumerable<ITag> Document()
+        public IEnumerable<ITag> Document(IModel model)
         {
-            if (string.IsNullOrEmpty(modelToDocument.ResourceName))
-            {
-                var modelAsJson = FileFormat.WriteToString(modelToDocument);
-                parameterNames = Resource.GetModelParameterNamesFromJSON(modelAsJson);
-            }
-            else
-                parameterNames = Resource.GetModelParameterNames(modelToDocument.ResourceName);
 
             // Get a list of tags for each type.
             List<ITag> tags = new List<ITag>();
+
+            //Add Parameters
+            tags.AppendMany(GetParameters(model));
 
             // Document the model.
             tags.AddRange(DocumentObject(modelToDocument));
@@ -80,13 +73,7 @@
         {
             List<ITag> tags = new List<ITag>();
 
-            // If there are parameters then write them to the tags.
-            if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
-            {
-                IEnumerable<IVariable> parameters = GetParameters(objectToDocument);
-                DataTable parameterTable = PropertiesToTable(parameters, objectToDocument);
-                tags.AddRange(DocumentTable("**Parameters (Inputs)**", parameterTable));
-            }
+            
 
             IEnumerable<IVariable> outputs = GetOutputs(objectToDocument.GetType());
 
@@ -197,26 +184,44 @@
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
-        /// <param name="objectToDocument">Object to be documented.</param>
-        private IEnumerable<IVariable> GetParameters(object objectToDocument)
+        /// <param name="model">model to be documented.</param>
+        private static List<ITag> GetParameters(IModel model)
         {
-            List<IVariable> parameters = new List<IVariable>();
+            List<string> parameterNames = null;
 
-            foreach (string parameterName in parameterNames)
+            if (string.IsNullOrEmpty(model.ResourceName))
             {
-                IVariable parameter = (objectToDocument as IModel).FindByPath(parameterName);
-                if (parameter != null)
-                    parameters.Add(parameter);
+                var modelAsJson = FileFormat.WriteToString(model);
+                parameterNames = Resource.GetModelParameterNamesFromJSON(modelAsJson).ToList();
+            }
+            else
+            {
+                parameterNames = Resource.GetModelParameterNames(model.ResourceName).ToList();
             }
 
-            return parameters;
+            List<ITag> tags = new List<ITag>();
+            // If there are parameters then write them to the tags.
+            if (parameterNames.Count > 0 && !(model is Plant))
+            {
+                List<IVariable> parameters = new List<IVariable>();
+                foreach (string parameterName in parameterNames)
+                {
+                    IVariable parameter = model.FindByPath(parameterName);
+                    if (parameter != null)
+                        parameters.Add(parameter);
+                }
+
+                DataTable parameterTable = PropertiesToTable(parameters, model);
+                tags.AddRange(DocumentTable("**Parameters (Inputs)**", parameterTable));
+            }
+
+            return tags;
         }
 
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
         /// <param name="typeToDocument">The type of object to inspect.</param>
-        /// <param name="typeofProperties">The type of properties to include in the return table.</param>
         private IEnumerable<IVariable> GetOutputs(Type typeToDocument)
         {
             List<IVariable> outputs = new List<IVariable>();
@@ -242,7 +247,7 @@
         /// <param name="memberType">The type to get a name for.</param>
         /// <remarks>
         /// todo: consider a way to phase out this function by making use of
-        /// <see cref="TypeExtensions.GetFriendlyName(Type)"/>. The problem is
+        ///. The problem is
         /// we need some way of keeping track of which user-defiend (aka apsim-)
         /// types are referenced by this type.
         /// </remarks>
