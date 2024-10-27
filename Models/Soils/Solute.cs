@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -224,20 +220,6 @@ namespace Models.Soils
             AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
             summary.WriteMessage(this, $"{amount} kg/ha of {Name} added at depth of {depth} mm", MessageType.Information);
         }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            foreach (ITag tag in GetModelDescription())
-                yield return tag;
-        }
-
-
 
         /// <summary>The soil physical node.</summary>
         protected IPhysical Physical
