@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using APSIM.Shared.Documentation;
-using APSIM.Shared.Extensions.Collections;
 using Models.Core;
 using Models.Core.Run;
 using Models.Optimisation;
@@ -81,29 +79,6 @@ namespace Models.Factorial
                     yield return simDescription;
                 }
             }
-        }
-
-        /// <summary>
-        /// Document the model, and any child models which should be documented.
-        /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, DocumentChildren());
-        }
-
-        /// <summary>
-        /// Document the appropriate children of the experiment (memos,
-        /// graphs, and folders).
-        /// </summary>
-        private IEnumerable<ITag> DocumentChildren()
-        {
-            IEnumerable<ITag> result = DocumentChildren<Memo>();
-            result = result.AppendMany(DocumentChildren<Models.Graph>());
-            result = result.AppendMany(DocumentChildren<Folder>());
-            return result;
         }
 
         /// <summary>

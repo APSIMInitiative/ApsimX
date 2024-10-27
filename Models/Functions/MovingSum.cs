@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -56,15 +55,6 @@ namespace Models.Functions
             while (AccumulatedValues.Count > NumberOfDays)
                 AccumulatedValues.Dequeue();
             return MathUtilities.Sum(AccumulatedValues);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            if (FindAllChildren<IFunction>().Count() == 1)
-                yield return new Paragraph($"{Name} is calculated from a moving sum of {ChildFunction.Name} over a series of {NumberOfDays} days.");
         }
     }
 }
