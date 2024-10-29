@@ -683,7 +683,7 @@ save {apsimxFileName}
 
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
             Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
-            Assert.That(new List<string>() { "[Fertilise at sowing].Script.Amount = 0 to 200 step 20" }, Does.Contain(modifiedFactor.Specification));
+            Assert.That(new List<string>() { modifiedFactor.Specification }, Does.Contain("[Fertilise at sowing].Script.Amount = 0 to 200 step 20"));
         }
 
         [Test]
@@ -802,9 +802,9 @@ save {apsimxFileName}
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
             string apsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
             string newFileString = @$"load {apsimxFileName}
-        duplicate [Simulation] Simulation1
-        save {apsimxFileName}
-        run";
+            duplicate [Simulation] Simulation1
+            save {apsimxFileName}
+            run";
 
             File.WriteAllText(newTempConfigFile, newFileString);
             Assert.Throws<Exception>(() => Utilities.RunModels($"--apply {newTempConfigFile} -p playlist"));
