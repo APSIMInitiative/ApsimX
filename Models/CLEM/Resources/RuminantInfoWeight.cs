@@ -28,6 +28,14 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItemProtein Protein { get; set; } = new();
 
         /// <summary>
+        /// Track protein weight of viscera (Oddy, kg)
+        /// </summary>
+        /// <remarks>
+        /// Mass of visceral protein required for Oddy growth
+        /// </remarks>
+        public RuminantTrackingItemProtein ProteinV { get; set; }
+
+        /// <summary>
         /// Track fat weight (kg)
         /// </summary>
         /// <remarks>

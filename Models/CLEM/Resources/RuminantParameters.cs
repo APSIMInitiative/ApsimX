@@ -120,6 +120,18 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public RuminantParametersGrowMortality GrowMortality { get; set; }
 
+        /// <summary>
+        /// Parameters for the SCA07 ruminant growth model
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrowSCA07 GrowSCA07 { get; set; }
+
+        /// <summary>
+        /// Parameters for the Oddy ruminant growth model
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParametersGrowOddy GrowOddy { get; set; }
+
 
         /// <summary>
         /// Initialise by finding available RuminantParameters
