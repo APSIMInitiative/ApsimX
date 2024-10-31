@@ -26,6 +26,10 @@ namespace Models.Soils
         [Link]
         private Water water = null;
 
+        /// <summary>Access the summary model.</summary>
+        [Link]
+        private Summary summary = null;
+
         /// <summary>
         /// An enumeration for specifying soil water units
         /// </summary>
@@ -194,7 +198,28 @@ namespace Models.Soils
                 kgha[i] += delta[i];
         }
 
+        /// <summary>Add an amount of solute to a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="depth">Solute will be added down to this depth (mm).</param>
+        public virtual void AddToDepth(double amount, double depth)
+        {
+            double[] weights = SoilUtilities.ProportionOfCumThickness(physical.Thickness, depth);
+            double[] amountToAdd = MathUtilities.Multiply_Value(weights, amount);
+            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
+            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added to depth of {depth} mm", MessageType.Information);
+        }
 
+        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="depth">Depth (mm) to add solute to.</param>
+        public virtual void AddAtDepth(double amount, double depth)
+        {
+            double[] amountToAdd = new double[physical.Thickness.Length];
+            int i = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depth);
+            amountToAdd[i] = amount;
+            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
+            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added at depth of {depth} mm", MessageType.Information);
+        }
 
         /// <summary>The soil physical node.</summary>
         protected IPhysical Physical
