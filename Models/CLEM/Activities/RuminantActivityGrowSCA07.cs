@@ -225,7 +225,7 @@ namespace Models.CLEM.Activities
 
             //double EBW = -(M0 / pPrpM / 23.6 + V0 / pPrpV / 23.6 + f / 39.3);
             //#EBW <<- (M0/pPrpM/23.6 + V0/pPrpV/23.6+ f/39.3)
-            
+
             double MEI = ind.Intake.ME;
             double MD = ind.Intake.MDSolid;
             double kMaint = 0.02 * MD + 0.5;
@@ -234,9 +234,37 @@ namespace Models.CLEM.Activities
             double W = 1.09 * (ind.Weight.EmptyBodyMass + 2.9);
             double Z = W / ind.Weight.StandardReferenceWeight;
 
+            if (ind.Parameters.GrowSCA07.IncludeWool)
+            {
+                double pwInst = CalculateWool(ind);
+
+                if (ind.Weight.Protein.ForWool == 0)
+                {
+                    ind.Weight.Protein.ForWool = pwInst;
+                }
+                else
+                {
+                    ind.Weight.Protein.ForWool = ind.Weight.Protein.ForWool * 0.96 + Math.Pow(pwInst, 0.04);
+                }
+
+                double newWool = Math.Max(((24 * (ind.Weight.Protein.ForWool - (0.004 * Z))) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3), 0.0);
+
+                double RECleanWool = 0;
+                if (newWool > 0)
+                {
+                    RECleanWool = 24 * ind.Weight.Protein.ForWool;
+                }
+
+                double pwActual = (RECleanWool / 24) * 1000.0 * events.Interval;
+                ind.Energy.ForWool = newWool / 0.18 * events.Interval ;
+
+                ind.Weight.Wool.Adjust(pwActual / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                ind.Weight.WoolClean.Adjust(pwActual);
+            }
+
             double sexFactor = 1;
 
-            double MEMaint = 1.4 * sexFactor * 0.26 * Math.Pow(W, 0.75) * Math.Exp(-0.03 * ind.AgeInYears) / kMaint + 0.09 * MEI; // #units MJ/d SCAHP
+            double MEMaint = ind.Parameters.GrowSCA07.MaintenanceFactor * sexFactor * 0.26 * Math.Pow(W, 0.75) * Math.Exp(-0.03 * ind.AgeInYears) / kMaint + 0.09 * MEI; // #units MJ/d SCAHP
             //double SCAFHP = MEMaint - (0.09 * MEI);
 
             //double XX = -XX + kGain;
@@ -245,11 +273,11 @@ namespace Models.CLEM.Activities
             double NEG;
             if (MEI > MEMaint)
             {
-                NEG = kGain * (MEI - MEMaint);
+                NEG = kGain * (MEI - MEMaint - ind.Energy.ForWool);
             }
             else
             {
-                NEG = 0.8 * (MEI - MEMaint);
+                NEG = 0.8 * (MEI - MEMaint - ind.Energy.ForWool);
             }
 
             //if (t ==1) {
@@ -287,6 +315,17 @@ namespace Models.CLEM.Activities
 
             // manure per time step
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * events.Interval;
+        }
+
+        /// <summary>
+        /// The SCA 2007 equations to calculate wool growth based on GrassGro.
+        /// </summary>
+        /// <param name="ind">The individual being acted upon</param>
+        /// <returns>Determine the energy required for wool growth.</returns>
+        private static double CalculateWool(Ruminant ind)
+        {
+            double woolAgeFac = 0.25 + (0.75 * (1 - Math.Exp(-0.025 * ind.AgeInDays)));
+            return 0.016 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * woolAgeFac * 1 * ind.Intake.ME;
         }
 
         /// <summary>
@@ -339,5 +378,20 @@ namespace Models.CLEM.Activities
 
         #endregion
 
+    }
+
+    /// <summary>
+    /// Type of animal for SCA 2007 equations
+    /// </summary>
+    public enum SCAAnimalType
+    {
+        /// <summary>
+        /// Sheep
+        /// </summary>
+        Sheep,
+        /// <summary>
+        /// Cattle
+        /// </summary>
+        Cattle
     }
 }
