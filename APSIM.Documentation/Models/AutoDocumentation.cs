@@ -147,7 +147,7 @@ namespace APSIM.Documentation.Models
 
             DefineFunctions().TryGetValue(model.GetType(), out Type docType);
 
-            if (docType != null)
+            if (docType != null) 
             {
                 object documentClass = Activator.CreateInstance(docType, new object[]{model});
                 newTags = (documentClass as DocGeneric).Document(0);
@@ -188,8 +188,8 @@ namespace APSIM.Documentation.Models
                 // If still not found throw an error.
                 if (modelToDocument != null)
                 {
-                    // Get the path of the model (relative to parentSimulation) to document so that
-                    // when replacements happen below we will point to the replacement model not the
+                    // Get the path of the model (relative to parentSimulation) to document so that 
+                    // when replacements happen below we will point to the replacement model not the 
                     // one passed into this method.
                     string pathOfSimulation = simulation.FullPath + ".";
                     string pathOfModelToDocument = modelToDocument.FullPath.Replace(pathOfSimulation, "");
@@ -379,7 +379,6 @@ namespace APSIM.Documentation.Models
                     string modelsAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Models.dll");
                     string fileName = Path.ChangeExtension(modelsAssembly, ".xml");
                     var doc = XDocument.Load(fileName);
-
                     foreach (var elt in doc.Element("doc").Element("members").Elements())
                     {
                         var name = elt.Attribute("name")?.Value;
@@ -597,7 +596,7 @@ namespace APSIM.Documentation.Models
                 }
             }
         }
-
+        
         private static string RemoveMacros(IModel model, string line)
         {
             if (model == null || string.IsNullOrEmpty(line))
@@ -637,7 +636,7 @@ namespace APSIM.Documentation.Models
 
             return line;
         }
-
+        
         /// <summary>
         /// Evaluate a path that can include child models, properties or method calls.
         /// </summary>
@@ -675,7 +674,7 @@ namespace APSIM.Documentation.Models
 
             return obj;
         }
-
+        
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
             if (paragraphSoFar.Trim() != string.Empty)
@@ -813,5 +812,5 @@ namespace APSIM.Documentation.Models
         }
         */
     }
-
+    
 }
