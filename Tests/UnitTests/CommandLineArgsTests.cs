@@ -242,7 +242,7 @@ ExperimentY2
         }
 
         [Test]
-        public void TestApplySwitchAddWithModelName()
+        public void TestApplySwitchAdd()
         {
             Simulations file = Utilities.GetRunnableSim();
 
@@ -267,6 +267,35 @@ ExperimentY2
             Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
             Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.That(newReportNode, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestApplySwitchAddWithName()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
+            string newFileString = $"add [Zone] Report MyReport\nsave savingFile.apsimx";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config1.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.That(File.Exists(newTempConfigFile), Is.True);
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(savingFilePath);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("MyReport");
             Assert.That(newReportNode, Is.Not.Null);
         }
 
