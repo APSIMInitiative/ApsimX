@@ -24,14 +24,11 @@ namespace APSIM.Documentation.Models
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
 
-        
-
         /// <summary>
         /// 
         /// </summary>
         public InterfaceDocumentation()
         {
-            
         }
 
         /// <summary>
@@ -54,8 +51,8 @@ namespace APSIM.Documentation.Models
             tags.AddRange(DocumentObject(modelToDocument));
 
             // Document any other referenced types.
-            //foreach (Type type in typesToDocument)
-            //    tags.AddRange(DocumentType(type));
+            foreach (Type type in typesToDocument)
+                tags.AddRange(DocumentType(type));
 
             return tags;
         }
@@ -248,9 +245,9 @@ namespace APSIM.Documentation.Models
         private static string GetTypeName(Type memberType)
         {
             Type type = null;
-            //bool isList = false;
+            bool isList = false;
             bool isArray = false;
-            //bool isEnumerable = false;
+            bool isEnumerable = false;
             if (memberType.IsByRef)
                 return GetTypeName(memberType.GetElementType());
             if (memberType.GetInterface("IList") != null)
@@ -290,7 +287,6 @@ namespace APSIM.Documentation.Models
             if (isArray)
                 typeName += "[]";
 
-            /*
             if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
             {
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
@@ -302,7 +298,7 @@ namespace APSIM.Documentation.Models
                 else if (isEnumerable)
                     typeName = $"IEnumerable&lt;{typeName}&gt;";
             }
-            */
+
             return typeName;
         }
 
