@@ -165,16 +165,7 @@ namespace Models.Core
                         else if (link.Type == LinkType.Scoped)
                             matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
                         else
-                        {
-                            matches = new List<object>();
-                            foreach (IModel child in (obj as IModel).Children)
-                            {
-                                matches.Add(child);
-                                //If the child is a manager, it should also include the script child node when getting children.
-                                if (child as Manager != null)
-                                    matches.Add((child as Manager).Script);
-                            }
-                        }
+                            matches = (obj as IModel).Children.Cast<object>().ToList();
                     }
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(match.GetType()));
                     if (link.ByName)
