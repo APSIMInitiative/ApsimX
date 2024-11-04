@@ -1,12 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 182,
+  "Version": 183,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -335,6 +336,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -936,6 +938,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -1939,6 +1942,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2846,6 +2850,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3272,7 +3277,7 @@
             "            double RainFactor = 1.0;               // The rain factor",
             "    ",
             "            if (ceresSoilTemperature == null)  // to get the soil temperature from SoilTemp, otherwise use SoilN's:",
-            "                SoilTemp = soilTemperature.AverageSoilTemp;",
+            "                SoilTemp = soilTemperature.AverageSoilTemperature;",
             "            else",
             "                SoilTemp = ceresSoilTemperature.Value;",
             "    ",
@@ -3502,7 +3507,52 @@
             "    }",
             "}"
           ],
-          "Parameters": null,
+          "Parameters": [
+            {
+              "Key": "Depth_for_NH3",
+              "Value": "0"
+            },
+            {
+              "Key": "Soil_pH_base",
+              "Value": ""
+            },
+            {
+              "Key": "CEC_strng",
+              "Value": ""
+            },
+            {
+              "Key": "k_BC",
+              "Value": "0"
+            },
+            {
+              "Key": "k_pH_hyd",
+              "Value": "0"
+            },
+            {
+              "Key": "k_pH_nit",
+              "Value": "0"
+            },
+            {
+              "Key": "k_pH_x",
+              "Value": "0"
+            },
+            {
+              "Key": "k_AFPV",
+              "Value": "0"
+            },
+            {
+              "Key": "f_NV_strng",
+              "Value": ""
+            },
+            {
+              "Key": "f_AV",
+              "Value": "0"
+            },
+            {
+              "Key": "CritRain1",
+              "Value": "0"
+            }
+          ],
           "Name": "SWIMNH3Volatilisation",
           "ResourceName": null,
           "Children": [],
@@ -3951,6 +4001,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -4354,6 +4405,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [
