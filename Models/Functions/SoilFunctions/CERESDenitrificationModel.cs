@@ -32,10 +32,10 @@ namespace Models.Functions
         IOrganicPool FOMLignin = null;
 
 
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction CERESDenitrificationTemperatureFactor = null;
 
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction CERESDenitrificationWaterFactor = null;
 
         /// <summary>
