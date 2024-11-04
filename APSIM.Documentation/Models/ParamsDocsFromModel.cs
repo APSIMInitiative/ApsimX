@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using APSIM.Interop.Documentation;
 using Models.Core;
 using APSIM.Shared.Documentation;
-using APSIM.Interop.Documentation.Formats;
-using System.Linq;
 using MigraDocCore.DocumentObjectModel;
 
 namespace APSIM.Documentation.Models
@@ -27,8 +24,8 @@ namespace APSIM.Documentation.Models
         /// <param name="model">Model to be documented.</param>
         protected override IEnumerable<ITag> DocumentModel(IModel model)
         {
-            ParamsInputsOutputs doco = new ParamsInputsOutputs(model);
-            return doco.Document();
+            InterfaceDocumentation doco = new InterfaceDocumentation();
+            return doco.Document(model);
         }
 
         /// <summary>

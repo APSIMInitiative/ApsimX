@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using APSIM.Interop.Documentation;
 using Models.Core;
 using APSIM.Shared.Documentation;
-using APSIM.Interop.Documentation.Formats;
 using System.Linq;
 using MigraDocCore.DocumentObjectModel;
 
@@ -42,8 +40,8 @@ namespace APSIM.Documentation.Models
             else if (model is Simulations && model.Children.Any())
                 model = model.Children[0];
 
-            ParamsInputsOutputs doco = new ParamsInputsOutputs(model);
-            return doco.Document();
+            InterfaceDocumentation doco = new InterfaceDocumentation();
+            return doco.Document(model);
         }
 
         protected override Document CreateDocument()

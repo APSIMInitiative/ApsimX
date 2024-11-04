@@ -1,6 +1,4 @@
 ﻿using APSIM.Cli.Options;
-using APSIM.Interop.Documentation;
-using APSIM.Interop.Documentation.Formats;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using CommandLine;
@@ -107,7 +105,7 @@ namespace APSIM.Cli
                 }
 
                 string htmlFile = Path.ChangeExtension(file, ".html");
-                IEnumerable<ITag> tags = options.ParamsDocs ? new ParamsInputsOutputs(model).Document() : AutoDocumentation.Document(model);
+                IEnumerable<ITag> tags = options.ParamsDocs ? new InterfaceDocumentation().Document(model) : AutoDocumentation.Document(model);
                 string html = APSIM.Documentation.WebDocs.TagsToHTMLString(tags.ToList());
                 File.WriteAllText(htmlFile, html);
             }

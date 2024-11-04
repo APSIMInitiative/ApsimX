@@ -24,25 +24,14 @@ namespace APSIM.Documentation.Models
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
 
-        /// <summary>The model to document.</summary>
-        private IModel modelToDocument;
-
-        /// <summary>A list of types to document.</summary>
-        private IEnumerable<Type> typesToDocument = Enumerable.Empty<Type>();
-
-        /// <summary>Only document types in this namespace.</summary>
-        private string namespaceToDocument;
+        
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="model">The model to document.</param>
-        public InterfaceDocumentation(IModel model)
+        public InterfaceDocumentation()
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-            modelToDocument = model;
-            namespaceToDocument = model.GetType().Namespace;
+            
         }
 
         /// <summary>
@@ -50,6 +39,10 @@ namespace APSIM.Documentation.Models
         /// </summary>
         public IEnumerable<ITag> Document(IModel model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            IModel modelToDocument = model;
+            string namespaceToDocument = model.GetType().Namespace;
 
             // Get a list of tags for each type.
             List<ITag> tags = new List<ITag>();
@@ -61,8 +54,8 @@ namespace APSIM.Documentation.Models
             tags.AddRange(DocumentObject(modelToDocument));
 
             // Document any other referenced types.
-            foreach (Type type in typesToDocument)
-                tags.AddRange(DocumentType(type));
+            //foreach (Type type in typesToDocument)
+            //    tags.AddRange(DocumentType(type));
 
             return tags;
         }
@@ -88,7 +81,7 @@ namespace APSIM.Documentation.Models
             yield return new Section(objectToDocument.Name, tags);
         }
 
-        private IEnumerable<ITag> DocumentTable(string sectionName, DataTable parameterTable)
+        private static IEnumerable<ITag> DocumentTable(string sectionName, DataTable parameterTable)
         {
             if (parameterTable != null && parameterTable.Rows.Count > 0)
             {
@@ -137,7 +130,7 @@ namespace APSIM.Documentation.Models
         /// </summary>
         /// <param name="properties">The list of properties to put into table.</param>
         /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
-        private DataTable PropertiesToTable(IEnumerable<IVariable> properties, object objectToDocument = null)
+        private static DataTable PropertiesToTable(IEnumerable<IVariable> properties, object objectToDocument = null)
         {
             DataTable outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
@@ -211,7 +204,7 @@ namespace APSIM.Documentation.Models
                         parameters.Add(parameter);
                 }
 
-                DataTable parameterTable = PropertiesToTable(parameters, model);
+                DataTable parameterTable = InterfaceDocumentation.PropertiesToTable(parameters, model);
                 tags.AddRange(DocumentTable("**Parameters (Inputs)**", parameterTable));
             }
 
@@ -222,7 +215,7 @@ namespace APSIM.Documentation.Models
         /// Create and return a new Output object for member
         /// </summary>
         /// <param name="typeToDocument">The type of object to inspect.</param>
-        private IEnumerable<IVariable> GetOutputs(Type typeToDocument)
+        private static IEnumerable<IVariable> GetOutputs(Type typeToDocument)
         {
             List<IVariable> outputs = new List<IVariable>();
             foreach (PropertyInfo property in typeToDocument.GetProperties(BindingFlags.Public |
@@ -234,7 +227,8 @@ namespace APSIM.Documentation.Models
                 {
                     // See if property is a parameter. If so then don't put it into
                     // the outputs table.
-                    bool isParameter = parameterNames != null && parameterNames.Contains(property.Name);
+                    //bool isParameter = parameterNames != null && parameterNames.Contains(property.Name);
+                    bool isParameter = false;
 
                     if (!isParameter)
                         outputs.Add(new VariableProperty(null, property));
@@ -251,12 +245,12 @@ namespace APSIM.Documentation.Models
         /// we need some way of keeping track of which user-defiend (aka apsim-)
         /// types are referenced by this type.
         /// </remarks>
-        private string GetTypeName(Type memberType)
+        private static string GetTypeName(Type memberType)
         {
             Type type = null;
-            bool isList = false;
+            //bool isList = false;
             bool isArray = false;
-            bool isEnumerable = false;
+            //bool isEnumerable = false;
             if (memberType.IsByRef)
                 return GetTypeName(memberType.GetElementType());
             if (memberType.GetInterface("IList") != null)
@@ -265,7 +259,7 @@ namespace APSIM.Documentation.Models
                     type = memberType.GenericTypeArguments[0];
                 else
                     type = memberType.GetElementType();
-                isList = true;
+                //isList = true;
             }
             else if (memberType.GetInterface("IEnumerable") != null)
             {
@@ -273,7 +267,7 @@ namespace APSIM.Documentation.Models
                     type = memberType.GenericTypeArguments[0];
                 else
                     type = memberType.GetElementType();
-                isEnumerable = true;
+                //isEnumerable = true;
             }
             else if (memberType.IsArray)
             {
@@ -296,6 +290,7 @@ namespace APSIM.Documentation.Models
             if (isArray)
                 typeName += "[]";
 
+            /*
             if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
             {
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
@@ -307,13 +302,13 @@ namespace APSIM.Documentation.Models
                 else if (isEnumerable)
                     typeName = $"IEnumerable&lt;{typeName}&gt;";
             }
-
+            */
             return typeName;
         }
 
         /// <summary>Return a datatable of links for the specified type.</summary>
         /// <param name="type">The type to document.</param>
-        private DataTable GetLinks(Type type)
+        private static DataTable GetLinks(Type type)
         {
             DataTable links = new DataTable("Links");
             links.Columns.Add("Name", typeof(string));
