@@ -91,6 +91,22 @@ namespace APSIM.Documentation.Models
             return tags;
         }
 
+        /// <summary>Document the specified model.</summary>
+        /// <param name="model"></param>
+        private List<ITag> DocumentType(IModel model)
+        {
+            Type modelType = model.GetType();
+
+            List<ITag> tags = new List<ITag>();
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(modelType)));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(modelType)));
+
+            tags.AddRange(GetOutputs(model));
+            tags.AddRange(DocumentLinksEventsMethods(model));
+
+            return new List<ITag>() {new Section(modelType.GetFriendlyName(), tags)};
+        }
+
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
@@ -283,18 +299,25 @@ namespace APSIM.Documentation.Models
 
             string typeName = "";
 
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
             List<Type> typesToDocument = new List<Type>();
-            if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
+            foreach(PropertyInfo property in properties)
             {
-                if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
-                    typesToDocument.Add(type);
-                typeName = $"[{typeName}](#{type.Name})";
+                Type propertyType = property.PropertyType;
+                if (propertyType.IsClass && propertyType.Namespace != null && propertyType.Namespace.StartsWith(namespaceToDocument))
+                {
+                    if (propertyType != type && !typesToDocument.Contains(propertyType))
+                        typesToDocument.Add(propertyType);
 
-                if (isList)
-                    typeName = $"List&lt;{typeName}&gt;";
-                else if (isEnumerable)
-                    typeName = $"IEnumerable&lt;{typeName}&gt;";
+
+                    typeName = $"[{typeName}](#{propertyType.Name})";
+                    if (isList)
+                        typeName = $"List&lt;{typeName}&gt;";
+                    else if (isEnumerable)
+                        typeName = $"IEnumerable&lt;{typeName}&gt;";
+                }
             }
+            
 
             return typesToDocument;
         }
