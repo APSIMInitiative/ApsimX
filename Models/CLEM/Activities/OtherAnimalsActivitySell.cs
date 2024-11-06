@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
             {
                 OtherAnimalsTypeCohort newCohort = new ()
                 {
-                    Age = cohort.Age,
+                    AgeDetails = new int[] { 0, 0, cohort.AgeDetails.InDays },
                     Weight = cohort.Weight,
                     Number = cohort.AdjustedNumber,
                     AdjustedNumber = cohort.AdjustedNumber,

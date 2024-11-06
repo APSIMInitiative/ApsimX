@@ -109,13 +109,13 @@ namespace Models.CLEM
             IEnumerable<OtherAnimalsTypeCohort> cohortsToReport = otherAnimals.GetCohorts(cohortFilters, true);
 
             // weaned
-            foreach (var oaCohort in  cohortsToReport.OrderBy(a => a.Sex).ThenBy(a => a.Age))
+            foreach (var oaCohort in  cohortsToReport.OrderBy(a => a.Sex).ThenBy(a => a.AgeDetails.InDays))
             {
                 ReportDetails = new HerdReportItemGeneratedEventArgs()
                 {
                     Group = oaCohort.ID.ToString(),
-                    Age = oaCohort.Age,
-                    AgeInYears = oaCohort.Age / 12,
+                    Age = oaCohort.AgeDetails.InDays,
+                    AgeInYears = oaCohort.AgeDetails.InDays / 12.0,
                     Sex = oaCohort.Sex.ToString(),
                     Number = oaCohort.Number,
                     AverageWeight = oaCohort.Weight,

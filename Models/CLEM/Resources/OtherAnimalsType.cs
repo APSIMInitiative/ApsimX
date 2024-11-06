@@ -314,7 +314,7 @@ namespace Models.CLEM.Resources
                     // no price match found.
                     string warningString = warningMessage;
                     if (warningString == "")
-                        warningString = $"No [{purchaseStyle}] price entry was found for [r={cohort.Name}] meeting the required criteria [f=age: {cohort.Age}] [f=sex: {cohort.Sex}] [f=weight: {cohort.Weight:##0}]";
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={cohort.Name}] meeting the required criteria [f=age: {cohort.AgeDetails.InDays} days] [f=sex: {cohort.Sex}] [f=weight: {cohort.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
                 return animalPrice;
@@ -342,7 +342,7 @@ namespace Models.CLEM.Resources
             if (addIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
                 OtherAnimalsTypeCohort cohortToAdd = null;
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortDetails.Age && a.Sex == cohortDetails.Sex).FirstOrDefault();
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
 
                 if (cohortexists == null)
                 {
@@ -372,23 +372,12 @@ namespace Models.CLEM.Resources
         {
             if (removeIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
-<<<<<<< HEAD
-                // tried to remove individuals that do not exist
-                throw new Exception($"Tried to remove individuals from {Name} that do not exist");
-            }
-            else
-            {
-                cohortexists.Number -= cohortToRemove.Number;
-                cohortexists.Number = Math.Max(0, cohortexists.Number);
-            }
-=======
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortDetails.Age && a.Sex == cohortDetails.Sex).FirstOrDefault();
->>>>>>> 8b91a209b92186d45fc072fd12c78a6cbac9db38
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
 
                 if (cohortexists == null)
                 {
                     // tried to remove individuals that do not exist
-                    throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.Age}]");
+                    throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.AgeDetails.InDays} days]");
                 }
 
                 cohortexists.Number = Math.Max(0, cohortexists.Number - cohortDetails.AdjustedNumber);

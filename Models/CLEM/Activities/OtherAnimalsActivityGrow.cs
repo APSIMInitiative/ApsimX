@@ -24,6 +24,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityGrow.htm")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
     {
+        [Link]
+        private const CLEMEvents events = null;
         private OtherAnimals otherAnimals { get; set; }
         private IEnumerable<OtherAnimalsType> otherAnimalsTypes { get; set; }
 
@@ -57,10 +59,10 @@ namespace Models.CLEM.Activities
             // grow all individuals
             foreach (OtherAnimalsTypeCohort cohort in otherAnimals.GetCohorts(null, false))
             {
-                cohort.Age++;
-                cohort.Weight = cohort.AnimalType.AgeWeightRelationship?.SolveY(cohort.Age) ?? 0.0;
+                cohort.AgeDetails.AddDays(events.Interval);
+                cohort.Weight = cohort.AnimalType.AgeWeightRelationship?.SolveY(cohort.AgeDetails.InDays) ?? 0.0;
                 // death from old age
-                if (cohort.Age > cohort.AnimalType.MaxAge)
+                if (cohort.AgeDetails.InDays > cohort.AnimalType.MaxAge.InDays)
                 {
                     cohort.AdjustedNumber = cohort.Number;
                     cohort.AnimalType.Remove(cohort, this, "Died");

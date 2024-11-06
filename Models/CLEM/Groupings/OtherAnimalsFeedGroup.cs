@@ -76,7 +76,7 @@ namespace Models.CLEM.Groupings
             currentFeedRequest = new ResourceRequest()
             {
                 AllowTransmutation = true,
-                Resource = feedActivityParent.FeedType,
+                Resource = feedActivityParent.FeedType as IResourceType,
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,

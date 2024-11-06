@@ -43,6 +43,16 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Method to add days to the age
+        /// </summary>
+        /// <param name="days"></param>
+        public void AddDays(int days)
+        {
+            age += days;
+            Parts = new int[] { 0, 0, age };
+        }
+
+        /// <summary>
         /// Convert from string "y,m,d"
         /// </summary>
         /// <param name="age">Age string representing integers y,m,d</param>
