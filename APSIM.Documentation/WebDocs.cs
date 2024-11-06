@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using Models.Core;
 using System.IO;
 using APSIM.Shared.Documentation;
-using APSIM.Interop.Documentation.Helpers;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Data;
 using System;
 using Markdig;
-using APSIM.Interop.Mapping;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using APSIM.Documentation.Models;
@@ -265,7 +263,7 @@ namespace APSIM.Documentation
                 {
 
                 }
-                else if (tag is MapTag map)
+                else if (tag is Map map)
                 {
                     
                 }

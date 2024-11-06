@@ -27,6 +27,7 @@ using M = Models;
 using Models.AgPasture;
 using Models.Soils.Nutrients;
 using APSIM.Documentation.Bibliography;
+using ModelsMap = Models.Map;
 
 namespace APSIM.Documentation.Models
 {
@@ -71,7 +72,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Phenology), typeof(DocPhenology)},
                 {typeof(Root), typeof(DocRoot)},
                 {typeof(Cultivar), typeof(DocCultivar)},
-                {typeof(Map), typeof(DocMap)},
+                {typeof(ModelsMap), typeof(DocMap)},
                 {typeof(BoundFunction), typeof(DocBoundFunction)},
                 {typeof(Memo), typeof(DocMemo)},
                 {typeof(Structure), typeof(DocStructure)},
