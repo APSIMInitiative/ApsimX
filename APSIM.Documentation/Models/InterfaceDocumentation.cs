@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text;
 using APSIM.Shared.Extensions;
 using Models.Core.ApsimFile;
-using APSIM.Shared.Extensions.Collections;
 
 namespace APSIM.Documentation.Models
 {
@@ -40,26 +39,44 @@ namespace APSIM.Documentation.Models
                 throw new ArgumentNullException(nameof(model));
 
             string namespaceToDocument = model.GetType().Namespace;
+            string[] parameterNames = GetParameterNames(model);
+            Type type = model.GetType();
 
             // Get a list of tags for each type.
             List<ITag> tags = new List<ITag>();
 
             List<ITag> subtags = new List<ITag>();
             //Add Parameters
-            subtags.AddRange(GetParameters(model));
+            subtags.AddRange(GetParameters(model, parameterNames));
 
-            subtags.AddRange(GetOutputs(model));
+            subtags.AddRange(GetOutputs(type, parameterNames));
 
-            subtags.AddRange(DocumentLinksEventsMethods(model));
+            subtags.AddRange(DocumentLinksEventsMethods(type));
 
             tags.Add(new Section(model.Name, subtags));
 
             List<Type> typesToDocument = GetTypes(namespaceToDocument, model);
             // Document any other referenced types.
-            //foreach (Type type in typesToDocument)
-            //    tags.AddRange(DocumentType(type));
-
+            foreach (Type typeDoc in typesToDocument)
+            {
+                tags.AddRange(DocumentType(typeDoc));
+            }
+                
             return tags;
+        }
+
+        /// <summary>Document the specified model.</summary>
+        /// <param name="type"></param>
+        private List<ITag> DocumentType(Type type)
+        {
+            List<ITag> tags = new List<ITag>();
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(type)));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(type)));
+
+            tags.AddRange(GetOutputs(type));
+            tags.AddRange(DocumentLinksEventsMethods(type));
+
+            return new List<ITag>() {new Section(type.GetFriendlyName(), tags)};
         }
 
         private static List<ITag> DocumentTable(string sectionName, DataTable parameterTable)
@@ -74,37 +91,20 @@ namespace APSIM.Documentation.Models
             return tags;
         }
 
-        private List<ITag> DocumentLinksEventsMethods(IModel model)
+        private List<ITag> DocumentLinksEventsMethods(Type type)
         {
-            Type modelType = model.GetType();
             List<ITag> tags = new List<ITag>();
 
-            DataTable links = GetLinks(modelType);
+            DataTable links = GetLinks(type);
             tags.AddRange(DocumentTable("**Links (Dependencies)**", links));
 
-            DataTable events = GetEvents(modelType);
+            DataTable events = GetEvents(type);
             tags.AddRange(DocumentTable("**Events published**", events));
 
-            DataTable methods = GetMethods(modelType);
+            DataTable methods = GetMethods(type);
             tags.AddRange(DocumentTable("**Methods (callable from manager)**", methods));
 
             return tags;
-        }
-
-        /// <summary>Document the specified model.</summary>
-        /// <param name="model"></param>
-        private List<ITag> DocumentType(IModel model)
-        {
-            Type modelType = model.GetType();
-
-            List<ITag> tags = new List<ITag>();
-            tags.Add(new Paragraph(CodeDocumentation.GetSummary(modelType)));
-            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(modelType)));
-
-            tags.AddRange(GetOutputs(model));
-            tags.AddRange(DocumentLinksEventsMethods(model));
-
-            return new List<ITag>() {new Section(modelType.GetFriendlyName(), tags)};
         }
 
         /// <summary>
@@ -159,16 +159,16 @@ namespace APSIM.Documentation.Models
         /// <summary>
         /// </summary>
         /// <param name="model"></param>
-        private static List<string> GetParameterNames(IModel model)
+        private static string[] GetParameterNames(IModel model)
         {
             if (string.IsNullOrEmpty(model.ResourceName))
             {
                 var modelAsJson = FileFormat.WriteToString(model);
-                return Resource.GetModelParameterNamesFromJSON(modelAsJson).ToList();
+                return Resource.GetModelParameterNamesFromJSON(modelAsJson).ToArray();
             }
             else
             {
-                return Resource.GetModelParameterNames(model.ResourceName).ToList();
+                return Resource.GetModelParameterNames(model.ResourceName).ToArray();
             }
         }
 
@@ -176,13 +176,13 @@ namespace APSIM.Documentation.Models
         /// Create and return a new Output object for member
         /// </summary>
         /// <param name="model">model to be documented.</param>
-        private static List<ITag> GetParameters(IModel model)
+        /// <param name="parameterNames">model to be documented.</param>
+        private static List<ITag> GetParameters(IModel model, string[] parameterNames)
         {
-            List<string> parameterNames = GetParameterNames(model);
             List<ITag> tags = new List<ITag>();
 
             //if there are no paramters or this is a plant, don't add anything
-            if (parameterNames.Count == 0 || model is Plant)
+            if (parameterNames.Length == 0 || model is Plant)
                 return tags;
 
             List<IVariable> parameters = new List<IVariable>();
@@ -202,14 +202,12 @@ namespace APSIM.Documentation.Models
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
-        /// <param name="model"></param>
-        private static List<ITag> GetOutputs(IModel model)
+        /// <param name="type"></param>
+        /// <param name="parameterNames"></param>
+        private static List<ITag> GetOutputs(Type type, string[] parameterNames = null)
         {
-            Type modelType = model.GetType();
-            List<string> parameterNames = GetParameterNames(model);
-
             List<IVariable> outputs = new List<IVariable>();
-            PropertyInfo[] properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
             foreach (PropertyInfo property in properties)
             {
                 if (property.DeclaringType != typeof(Model))
@@ -288,36 +286,31 @@ namespace APSIM.Documentation.Models
         /// <param name="modelToDocument"></param>
         private static List<Type> GetTypes(string namespaceToDocument, IModel modelToDocument)
         {
-            Type type = modelToDocument.GetType();
-            bool isList = false;
-            bool isEnumerable = false;
+            Type modelType = modelToDocument.GetType();
             
-            if (type.GetInterface("IList") != null)
-                isList = true;
-            else if (type.GetInterface("IEnumerable") != null)
-                isEnumerable = true;
-
-            string typeName = "";
-
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
             List<Type> typesToDocument = new List<Type>();
+
+            PropertyInfo[] properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
             foreach(PropertyInfo property in properties)
             {
                 Type propertyType = property.PropertyType;
                 if (propertyType.IsClass && propertyType.Namespace != null && propertyType.Namespace.StartsWith(namespaceToDocument))
                 {
-                    if (propertyType != type && !typesToDocument.Contains(propertyType))
+                    if (propertyType != modelType && !typesToDocument.Contains(propertyType))
                         typesToDocument.Add(propertyType);
-
-
-                    typeName = $"[{typeName}](#{propertyType.Name})";
-                    if (isList)
-                        typeName = $"List&lt;{typeName}&gt;";
-                    else if (isEnumerable)
-                        typeName = $"IEnumerable&lt;{typeName}&gt;";
                 }
             }
-            
+
+            FieldInfo[] fields = modelType.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.DeclaredOnly);
+            foreach(FieldInfo field in fields)
+            {
+                Type propertyType = field.FieldType;
+                if (propertyType.IsClass && propertyType.Namespace != null && propertyType.Namespace.StartsWith(namespaceToDocument))
+                {
+                    if (propertyType != modelType && !typesToDocument.Contains(propertyType))
+                        typesToDocument.Add(propertyType);
+                }
+            }
 
             return typesToDocument;
         }
