@@ -96,6 +96,37 @@ namespace Models.CLEM.Resources
         public double kc { get; set; } = 0.133;
 
         /// <summary>
+        /// Oddy pPrpM
+        /// </summary>
+        [Description("Protein content fat-free muscle (Oddy pPrpM)")]
+        public double pPrpM { get; set; } = 0.21;
+
+        /// <summary>
+        /// Oddy pPrpV
+        /// </summary>
+        [Description("Protein content fat-free viscera (Oddy pPrpV)")]
+        public double pPrpV { get; set; } = 0.157;
+
+        /// <summary>
+        /// Oddy leanM
+        /// </summary>
+        [Description("Propotion empty body protein at maturity (Oddy leanM)")]
+        public double leanM { get; set; } = 0.75; //0.70
+
+        /// <summary>
+        /// Oddy shrink
+        /// </summary>
+        [Description("Ratio of EMW to LiveWeight at maturity (Oddy shrink)")]
+        public double shrink { get; set; } = 0.86;
+
+        /// <summary>
+        /// Oddy pMusc
+        /// </summary>
+        [Description("Proportion of mature body protein that is muscel (Oddy pMusc)")]
+        public double pMusc { get; set; } = 0.85;
+
+
+        /// <summary>
         /// Create a clone of this class
         /// </summary>
         /// <returns>A copy of the class</returns>

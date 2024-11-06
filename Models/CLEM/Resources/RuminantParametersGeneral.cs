@@ -215,12 +215,26 @@ namespace Models.CLEM.Resources
         #endregion
 
         /// <summary>
-        /// Conversion from empty body weigh to live weight
+        /// Conversion from empty body weight to live weight
         /// </summary>
-        [Description("Conversion from empty body weigh to live weight")]
+        [Description("Conversion from empty body weight to live weight")]
         [Category("Farm", "Weight")]
         [Required, GreaterThanValue(1.0)]
         public double EBW2LW_CG18 { get; set; } = 1.09;
+
+        /// <summary>
+        /// Energy content of fat (MJ/kg) (Used in Grow24, SAC07 and Oddy Growth models)
+        /// </summary>
+        [Description("MJ energy per kg fat")]
+        [Category("Core", "Energy")]
+        public double MJEnergyPerKgFat { get; set; } = 39.3; //Grow24, 39.6 Oddy;
+
+        /// <summary>
+        /// Energy content of protein (MJ/kg) (Used in Grow24, SAC07 and Oddy Growth models)
+        /// </summary>
+        [Description("MJ energy per kg protein")]
+        [Category("Core", "Energy")]
+        public double MJEnergyPerKgProtein { get; set; } = 23.6; // Grow24, 23.8 Oddy;
 
         /// <summary>
         /// Create a clone of this class

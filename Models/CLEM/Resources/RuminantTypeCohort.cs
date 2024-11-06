@@ -32,9 +32,11 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantTypeCohort : CLEMModel
+    public class RuminantTypeCohort : CLEMModel, IValidatableObject
     {
         private SetPreviousConception setPreviousConception = null;
+        [Link]
+        private RuminantHerd ruminantHerd = null;
 
         /// <summary>
         /// Sex
@@ -75,7 +77,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Starting Weight
         /// </summary>
-        [Description("Weight (kg)")]
+        [Description("Live weight (kg)")]
         [Units("kg")]
         [Required, GreaterThanEqualValue(0)]
         public double Weight { get; set; }
@@ -88,24 +90,22 @@ namespace Models.CLEM.Resources
         public double WeightSD { get; set; }
 
         /// <summary>
-        /// Provide initial fat and protein percent of empty body mass as array of two double values
+        /// Style of calculating the intial fat and protein mass of the indivdiual
         /// </summary>
-        [Description("Provide initial fat and protein percentage of EBW (fat, protein)")]
-        [Percentage]
-        [Units("%")]
-        public double[] ProvideInitialFatProteinPercentage { get; set; }
+        [Description("Style of assigning initial fat and protein")]
+        [Required, GreaterThanEqualValue(0)]
+        public InitialiseFatProteinAssignmentStyle InitialFatProteinStyle { get; set; } = InitialiseFatProteinAssignmentStyle.ProvideMassKg;
 
         /// <summary>
-        /// Provide initial fat and protein mass (kg) as array of two double values
+        /// Values to use in initialising initial fat and protein mass (fat, muscle protein, visceral protein (optional))
         /// </summary>
-        [Description("Provide initial fat and protein mass (kg fat, kg protein)")]
-        [ArrayItemCount(2), GreaterThanEqualValue(0)]
-        public double[] ProvideInitialFatProteinMass { get; set; }
+        [Description("Values for assigning initial fat and protein")]
+        public double[] InitialFatProteinValues { get; set; }
 
         /// <summary>
         /// Is suckling?
         /// </summary>
-        [Description("Still suckling?")]
+        [Description("Still suckling")]
         [Required]
         public bool Suckling { get; set; }
 
@@ -249,12 +249,7 @@ namespace Models.CLEM.Resources
                     foreach (ISetAttribute item in initialAttributes)
                         ruminant.AddNewAttribute(item);
 
-                    if(ProvideInitialFatProteinPercentage is not null)
-                        RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinPercentage, true);
-                    else if (ProvideInitialFatProteinMass is not null)
-                        RuminantInfoWeight.SetInitialFatProtein(ruminant, ProvideInitialFatProteinMass, false);
-                    else
-                       RuminantInfoWeight.SetInitialFatProtein(ruminant, null);
+                    RuminantInfoWeight.SetInitialFatProtein(ruminant, InitialFatProteinStyle, ruminantHerd.RuminantGrowActivity, InitialFatProteinValues);
 
                     individuals.Add(ruminant);
                 }
@@ -489,6 +484,49 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryOpeningTags()
         {
             return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
+        }
+
+        #endregion
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            string[] valueLabels = new string[] { "Fat", "Muscle protein", "Visceral protein" };
+            if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
+                yield break; 
+
+            int entries;
+            if (ruminantHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+            {
+                entries = 3;
+            }
+            else
+            {
+                entries = 2;
+                if (InitialFatProteinValues.Length == 2)
+                {
+                    valueLabels[1] = "Protein";
+                }
+            }
+
+            if (InitialFatProteinValues is not null && InitialFatProteinValues.Length < entries)
+            {
+                yield return new ValidationResult($"Insufficient values provided for initial fat and protein mass. {entries} values are required for specified ruminant growth model", new string[] { "InitialFatProteinValues" });
+            }
+
+            // if proportion check all values are 0-1
+            if (InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass)
+            {
+                for(int i = 0; i < InitialFatProteinValues.Length; i++)
+                {
+                    if (InitialFatProteinValues[i] < 0 | InitialFatProteinValues[i] > 1)
+                    {
+                        yield return new ValidationResult($"Value for initial [{valueLabels[i]}] proportion of empty body weight must be between 0 and 1", new string[] { "InitialFatProteinValues" });
+                    }
+                }
+            }
         }
 
         #endregion
