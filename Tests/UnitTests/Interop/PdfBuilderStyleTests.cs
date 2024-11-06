@@ -41,7 +41,7 @@ namespace UnitTests.Interop
         public void TestNormal()
         {
             Style style = InsertText(TextStyle.Normal);
-            Assert.AreEqual(doc.Styles.Normal, style);
+            Assert.That(style, Is.EqualTo(doc.Styles.Normal));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace UnitTests.Interop
         public void TestItalic()
         {
             Style style = InsertText(TextStyle.Italic);
-            Assert.True(style.Font.Italic);
+            Assert.That(style.Font.Italic, Is.True);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace UnitTests.Interop
         public void TestStrong()
         {
             Style style = InsertText(TextStyle.Strong);
-            Assert.True(style.Font.Bold);
+            Assert.That(style.Font.Bold, Is.True);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace UnitTests.Interop
         public void TestUnderline()
         {
             Style style = InsertText(TextStyle.Underline);
-            Assert.AreEqual(Underline.Single, style.Font.Underline);
+            Assert.That(style.Font.Underline, Is.EqualTo(Underline.Single));
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace UnitTests.Interop
         public void TestSuperscript()
         {
             Style style = InsertText(TextStyle.Superscript);
-            Assert.True(style.Font.Superscript);
+            Assert.That(style.Font.Superscript, Is.True);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace UnitTests.Interop
         public void TestSubscript()
         {
             Style style = InsertText(TextStyle.Subscript);
-            Assert.True(style.Font.Subscript);
+            Assert.That(style.Font.Subscript, Is.True);
         }
 
         /// <summary>
@@ -115,21 +115,21 @@ namespace UnitTests.Interop
             Style style = InsertText(TextStyle.Quote);
 
             // Paragraph should be indented.
-            Assert.Greater(style.ParagraphFormat.FirstLineIndent, 0);
+            Assert.That(style.ParagraphFormat.FirstLineIndent.Value, Is.GreaterThan(0));
 
             // Should not have the "normal" text colour.
-            Assert.AreNotEqual(doc.Styles.Normal.Font.Color, style.Font.Color);
+            Assert.That(style.Font.Color, Is.Not.EqualTo(doc.Styles.Normal.Font.Color));
 
             // Should have a visible left border.
-            Assert.True(style.ParagraphFormat.Borders.Left.Visible);
-            Assert.AreNotEqual(Color.Empty, style.ParagraphFormat.Borders.Left.Color);
-            Assert.Greater(style.ParagraphFormat.Borders.Left.Width, 0);
+            Assert.That(style.ParagraphFormat.Borders.Left.Visible, Is.True);
+            Assert.That(style.ParagraphFormat.Borders.Left.Color, Is.Not.EqualTo(Color.Empty));
+            Assert.That(style.ParagraphFormat.Borders.Left.Width.Value, Is.GreaterThan(0));
 
             // Border should have non-zero distance from bottom.
-            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromBottom, 0);
+            Assert.That(style.ParagraphFormat.Borders.DistanceFromBottom.Value, Is.GreaterThan(0));
 
             // Should have extra space after the paragraph.
-            Assert.Greater(style.ParagraphFormat.SpaceAfter, 0);
+            Assert.That(style.ParagraphFormat.SpaceAfter.Value, Is.GreaterThan(0));
         }
 
         /// <summary>
@@ -141,18 +141,18 @@ namespace UnitTests.Interop
             Style style = InsertText(TextStyle.Code);
 
             // This is not great. Need to fix this in PdfBuilder.
-            Assert.AreEqual("courier", style.Font.Name);
+            Assert.That(style.Font.Name, Is.EqualTo("courier"));
 
             // Code block should have visible borders.
-            Assert.True(style.ParagraphFormat.Borders.Visible);
-            Assert.AreNotEqual(Color.Empty, style.ParagraphFormat.Borders.Color);
-            Assert.Greater(style.ParagraphFormat.Borders.Width, 0);
+            Assert.That(style.ParagraphFormat.Borders.Visible, Is.True);
+            Assert.That(style.ParagraphFormat.Borders.Color, Is.Not.EqualTo(Color.Empty));
+            Assert.That(style.ParagraphFormat.Borders.Width.Value, Is.GreaterThan(0));
 
             // Code blocks should have padding on all sides.
-            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromBottom, 0);
-            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromTop, 0);
-            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromLeft, 0);
-            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromRight, 0);
+            Assert.That(style.ParagraphFormat.Borders.DistanceFromBottom.Value, Is.GreaterThan(0));
+            Assert.That(style.ParagraphFormat.Borders.DistanceFromTop.Value, Is.GreaterThan(0));
+            Assert.That(style.ParagraphFormat.Borders.DistanceFromLeft.Value, Is.GreaterThan(0));
+            Assert.That(style.ParagraphFormat.Borders.DistanceFromRight.Value, Is.GreaterThan(0));
         }
 
         /// <summary>
@@ -171,28 +171,28 @@ namespace UnitTests.Interop
             Style h5 = CreateHeading(5);
             Style h6 = CreateHeading(6);
 
-            Assert.Greater(h1.Font.Size.Point, h2.Font.Size.Point);
-            Assert.Greater(h2.Font.Size.Point, h3.Font.Size.Point);
-            Assert.Greater(h3.Font.Size.Point, h4.Font.Size.Point);
-            Assert.Greater(h4.Font.Size.Point, h5.Font.Size.Point);
-            Assert.Greater(h5.Font.Size.Point, h6.Font.Size.Point);
+            Assert.That(h1.Font.Size.Point, Is.GreaterThan(h2.Font.Size.Point));
+            Assert.That(h2.Font.Size.Point, Is.GreaterThan(h3.Font.Size.Point));
+            Assert.That(h3.Font.Size.Point, Is.GreaterThan(h4.Font.Size.Point));
+            Assert.That(h4.Font.Size.Point, Is.GreaterThan(h5.Font.Size.Point));
+            Assert.That(h5.Font.Size.Point, Is.GreaterThan(h6.Font.Size.Point));
 
-            Assert.True(h1.Font.Bold);
-            Assert.True(h2.Font.Bold);
-            Assert.True(h3.Font.Bold);
-            Assert.True(h4.Font.Bold);
-            Assert.True(h5.Font.Bold);
-            Assert.True(h6.Font.Bold);
+            Assert.That(h1.Font.Bold, Is.True);
+            Assert.That(h2.Font.Bold, Is.True);
+            Assert.That(h3.Font.Bold, Is.True);
+            Assert.That(h4.Font.Bold, Is.True);
+            Assert.That(h5.Font.Bold, Is.True);
+            Assert.That(h6.Font.Bold, Is.True);
 
             // These headings are all at the top level. Outline level is based on
             // nested-ness of the heading, so these headings should all have outline
             // level set to 1.
-            Assert.AreEqual(OutlineLevel.Level1, h1.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level1, h2.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level1, h3.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level1, h4.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level1, h5.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level1, h6.ParagraphFormat.OutlineLevel);
+            Assert.That(h1.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h2.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h3.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h4.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h5.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h6.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
         }
 
         /// <summary>
@@ -214,25 +214,25 @@ namespace UnitTests.Interop
             Style h6 = CreateHeading(6);
             builder.PushSubHeading();
 
-            Assert.Greater(h1.Font.Size.Point, h2.Font.Size.Point);
-            Assert.Greater(h2.Font.Size.Point, h3.Font.Size.Point);
-            Assert.Greater(h3.Font.Size.Point, h4.Font.Size.Point);
-            Assert.Greater(h4.Font.Size.Point, h5.Font.Size.Point);
-            Assert.Greater(h5.Font.Size.Point, h6.Font.Size.Point);
+            Assert.That(h1.Font.Size.Point, Is.GreaterThan(h2.Font.Size.Point));
+            Assert.That(h2.Font.Size.Point, Is.GreaterThan(h3.Font.Size.Point));
+            Assert.That(h3.Font.Size.Point, Is.GreaterThan(h4.Font.Size.Point));
+            Assert.That(h4.Font.Size.Point, Is.GreaterThan(h5.Font.Size.Point));
+            Assert.That(h5.Font.Size.Point, Is.GreaterThan(h6.Font.Size.Point));
 
-            Assert.True(h1.Font.Bold);
-            Assert.True(h2.Font.Bold);
-            Assert.True(h3.Font.Bold);
-            Assert.True(h4.Font.Bold);
-            Assert.True(h5.Font.Bold);
-            Assert.True(h6.Font.Bold);
+            Assert.That(h1.Font.Bold, Is.True);
+            Assert.That(h2.Font.Bold, Is.True);
+            Assert.That(h3.Font.Bold, Is.True);
+            Assert.That(h4.Font.Bold, Is.True);
+            Assert.That(h5.Font.Bold, Is.True);
+            Assert.That(h6.Font.Bold, Is.True);
 
-            Assert.AreEqual(OutlineLevel.Level1, h1.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level2, h2.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level3, h3.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level4, h4.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level5, h5.ParagraphFormat.OutlineLevel);
-            Assert.AreEqual(OutlineLevel.Level6, h6.ParagraphFormat.OutlineLevel);
+            Assert.That(h1.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level1));
+            Assert.That(h2.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level2));
+            Assert.That(h3.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level3));
+            Assert.That(h4.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level4));
+            Assert.That(h5.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level5));
+            Assert.That(h6.ParagraphFormat.OutlineLevel, Is.EqualTo(OutlineLevel.Level6));
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace UnitTests.Interop
             // Links should not have the "Normal" font colour - they should be blue.
             // I'm not going to test the exact shade. As long as it's not the
             // default font colour then we're good.
-            Assert.AreNotEqual(doc.Styles.Normal.Font.Color, style.Font.Color);
+            Assert.That(style.Font.Color, Is.Not.EqualTo(doc.Styles.Normal.Font.Color));
         }
 
         /// <summary>
@@ -269,11 +269,11 @@ namespace UnitTests.Interop
             Style style = doc.Styles[formatted.Style];
 
             // Should have left indent > 0.
-            Assert.Greater(style.ParagraphFormat.LeftIndent.Point, 0);
+            Assert.That(style.ParagraphFormat.LeftIndent.Point, Is.GreaterThan(0));
 
             // Should have 1st line indent = -1 * left indent.
             // This has the effect of indenting all lines except for the first.
-            Assert.AreEqual(style.ParagraphFormat.LeftIndent.Point, -1 * style.ParagraphFormat.FirstLineIndent.Point);
+            Assert.That(-1 * style.ParagraphFormat.FirstLineIndent.Point, Is.EqualTo(style.ParagraphFormat.LeftIndent.Point));
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace UnitTests.Interop
         {
             builder.PushStyle(TextStyle.Strong);
             Style style = InsertText(TextStyle.Normal);
-            Assert.True(style.Font.Bold);
+            Assert.That(style.Font.Bold, Is.True);
         }
 
         /// <summary>
@@ -298,8 +298,8 @@ namespace UnitTests.Interop
             builder.PushStyle(TextStyle.Strong);
             builder.PushStyle(TextStyle.Italic);
             Style style = InsertText(TextStyle.Normal);
-            Assert.True(style.Font.Bold);
-            Assert.True(style.Font.Italic);
+            Assert.That(style.Font.Bold, Is.True);
+            Assert.That(style.Font.Italic, Is.True);
         }
 
         /// <summary>
@@ -312,8 +312,8 @@ namespace UnitTests.Interop
         {
             builder.PushStyle(TextStyle.Superscript);
             Style style = InsertText(TextStyle.Italic);
-            Assert.True(style.Font.Superscript);
-            Assert.True(style.Font.Italic);
+            Assert.That(style.Font.Superscript, Is.True);
+            Assert.That(style.Font.Italic, Is.True);
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace UnitTests.Interop
             builder.PushStyle(TextStyle.Subscript);
             builder.PopStyle();
             Style style = InsertText(TextStyle.Normal);
-            Assert.False(style.Font.Subscript);
+            Assert.That(style.Font.Subscript, Is.False);
         }
 
         /// <summary>

@@ -145,6 +145,13 @@ namespace Models.CLEM.Groupings
                 string error = $"Amount to feed set to [0] so no feeding will occur for [f={NameWithParent}]";
                 summary.WriteMessage(this, error, MessageType.Warning);
             }
+
+            // warning that any take filters will be ignored.
+            if (FindAllDescendants<TakeFromFiltered>().Any())
+            {
+                string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+            }
         }
 
         /// <inheritdoc/>
@@ -176,7 +183,7 @@ namespace Models.CLEM.Groupings
             double value = CurrentValue;
             FeedToSatisfy = 0;
             //FeedToOverSatisfy = 0;
-            double feedNeeed = 0;
+            double feedNeeded = 0;
 
             var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
             {
@@ -191,23 +198,23 @@ namespace Models.CLEM.Groupings
                 switch (feedActivityParent.FeedStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        feedNeeed = value * events.Interval;
+                        feedNeeded = value * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
-                        feedNeeed = (value * events.Interval) * selectedIndividuals.Count;
+                        feedNeeded = (value * events.Interval) * selectedIndividuals.Count;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        feedNeeed = value * selectedIndividuals.Weight * events.Interval;
+                        feedNeeded = value * selectedIndividuals.Weight * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        feedNeeed = value * selectedIndividuals.PotentialIntake;
+                        feedNeeded = value * selectedIndividuals.PotentialIntake;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        feedNeeed = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
+                        feedNeeded = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        feedNeeed = value * feedActivityParent.FeedResource.Amount;
+                        feedNeeded = value * feedActivityParent.FeedResource.Amount;
                         break;
                     default:
                         break;
@@ -221,10 +228,10 @@ namespace Models.CLEM.Groupings
                 if (feedActivityParent.RestrictIntakeAllowed() && feedActivityParent.StopFeedingWhenSatisfied)
                 {
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
-                    feedNeeed = Math.Min(feedNeeed, FeedToSatisfy);
+                    feedNeeded = Math.Min(feedNeeded, FeedToSatisfy);
                 }
-                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeed;
-                currentFeedRequest.Required = feedNeeed;
+                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeded;
+                currentFeedRequest.Required = feedNeeded;
             }
         }
 

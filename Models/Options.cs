@@ -85,6 +85,12 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
+        /// List enabled simulation names without running them.
+        /// </summary>
+        [Option('e', "list-enabled-simulations", HelpText = "List enabled simulation names without running them.")]
+        public bool ListEnabledSimulationNames { get; set; }
+
+        /// <summary>
         /// List all files that are referenced by an .apsimx file(s) with absolute paths.
         /// </summary>
         [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s) as an absolute path.")]

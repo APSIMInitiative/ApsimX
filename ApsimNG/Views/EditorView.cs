@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -341,6 +340,8 @@ namespace UserInterface.Views
             
             textEditor = new SourceView();
             textEditor.DragDataReceived += TextEditorDragDataReceived;
+            textEditor.AutoIndent = true;
+            textEditor.InsertSpacesInsteadOfTabs = true;
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
 
@@ -395,7 +396,10 @@ namespace UserInterface.Views
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
             if (style == null)
             {
-                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                string defaultStyle = "";
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                else defaultStyle = Configuration.Settings.DarkTheme ? defaultLightStyle : defaultDarkStyle;
                 style = StyleSchemeManager.Default.GetScheme(defaultStyle);
             }
             if (style != null)
@@ -690,7 +694,6 @@ namespace UserInterface.Views
         {
             try
             {
-                //textEditor.Document.ReadOnly = false;
                 textEditor.GrabFocus();
             }
             catch (Exception err)
@@ -871,7 +874,7 @@ namespace UserInterface.Views
             {
                 if (args.Popup is Menu menu)
                 {
-                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    MenuItem item = new MenuItem(menuItemText);
                     if (!string.IsNullOrEmpty(shortcut))
                     {
                         string keyName = string.Empty;
@@ -906,6 +909,22 @@ namespace UserInterface.Views
                 }
             };
             return null;
+        }
+
+        /// <summary>
+        /// Hide the Text Editor
+        /// </summary>
+        public void Hide()
+        {
+            textEditor.Visible = false;
+        }
+
+        /// <summary>
+        /// Show the Text Editor
+        /// </summary>
+        public void Show()
+        {
+            textEditor.Visible = true;
         }
 
         /// <summary>

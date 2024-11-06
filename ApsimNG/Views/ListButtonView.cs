@@ -11,22 +11,23 @@ namespace UserInterface.Views
     public class ListButtonView : ViewBase, IListButtonView
     {
         private bool buttonsAreToolbar;
-        private VBox vbox;
+        private Box vbox;
         private ListBoxView listboxView;
         private ScrolledWindow scrolledwindow1;
-        private HBox buttonPanel;
-        private HBox filterPanel;
+        private Box buttonPanel;
+        private Box filterPanel;
         private Entry filterEntry;
         private Toolbar btnToolbar = null;
 
         /// <summary>Constructor</summary>
         public ListButtonView(ViewBase owner) : base(owner)
         {
-            vbox = new VBox(false, 0);
+            vbox = new Box(Orientation.Vertical, 0);
+            vbox.Homogeneous = false;
             mainWidget = vbox;
-            buttonPanel = new HBox();
+            buttonPanel = new Box(Orientation.Horizontal, 0);
             // buttonPanel.Layout = ButtonBoxStyle.Start;
-            filterPanel = new HBox();
+            filterPanel = new Box(Orientation.Horizontal, 0);
             Label filterLabel = new Label("Search: ");
             filterEntry = new Entry();
             filterPanel.PackStart(filterLabel, false, false, 0);

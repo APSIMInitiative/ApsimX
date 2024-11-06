@@ -28,9 +28,9 @@
                 runner.Add(jobs2);
 
                 runner.Run(wait: true);
-                Assert.IsTrue(job1.HasRun);
-                Assert.IsTrue(job2.HasRun);
-                Assert.IsTrue(job3.HasRun);
+                Assert.That(job1.HasRun, Is.True);
+                Assert.That(job2.HasRun, Is.True);
+                Assert.That(job3.HasRun, Is.True);
             }
         }
 
@@ -57,19 +57,19 @@
                 runner.Run(wait: true);
 
                 // Test the runner events.
-                Assert.AreEqual(jobCompleteArgsRunner.Count, 3);
-                Assert.Greater(jobCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, 50);
-                Assert.IsNull(jobCompleteArgsRunner[0].ExceptionThrowByJob);
-                Assert.IsNotNull(jobCompleteArgsRunner[0].Job);
-                Assert.Greater(jobCompleteArgsRunner[1].ElapsedTime.TotalMilliseconds, 50);
-                Assert.IsNull(jobCompleteArgsRunner[1].ExceptionThrowByJob);
-                Assert.IsNotNull(jobCompleteArgsRunner[1].Job);
-                Assert.Greater(jobCompleteArgsRunner[2].ElapsedTime.TotalMilliseconds, 50);
-                Assert.IsNull(jobCompleteArgsRunner[2].ExceptionThrowByJob);
-                Assert.IsNotNull(jobCompleteArgsRunner[2].Job);
+                Assert.That(jobCompleteArgsRunner.Count, Is.EqualTo(3));
+                Assert.That(jobCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, Is.GreaterThan(50));
+                Assert.That(jobCompleteArgsRunner[0].ExceptionThrowByJob, Is.Null);
+                Assert.That(jobCompleteArgsRunner[0].Job, Is.Not.Null);
+                Assert.That(jobCompleteArgsRunner[1].ElapsedTime.TotalMilliseconds, Is.GreaterThan(50));
+                Assert.That(jobCompleteArgsRunner[1].ExceptionThrowByJob, Is.Null);
+                Assert.That(jobCompleteArgsRunner[1].Job, Is.Not.Null);
+                Assert.That(jobCompleteArgsRunner[2].ElapsedTime.TotalMilliseconds, Is.GreaterThan(50));
+                Assert.That(jobCompleteArgsRunner[2].ExceptionThrowByJob, Is.Null);
+                Assert.That(jobCompleteArgsRunner[2].Job, Is.Not.Null);
 
-                Assert.AreEqual(allCompleteArgsRunner.Count, 1);
-                Assert.IsNull(allCompleteArgsRunner[0].ExceptionThrowByRunner);
+                Assert.That(allCompleteArgsRunner.Count, Is.EqualTo(1));
+                Assert.That(allCompleteArgsRunner[0].ExceptionThrowByRunner, Is.Null);
             }
         }
 
@@ -91,14 +91,14 @@
                 runner.Run(wait: true);
 
                 // Test the runner events.
-                Assert.AreEqual(jobCompleteArgsRunner.Count, 1);
-                Assert.Greater(jobCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, 50);
-                Assert.IsNotNull(jobCompleteArgsRunner[0].ExceptionThrowByJob);
-                Assert.IsNotNull(jobCompleteArgsRunner[0].Job);
+                Assert.That(jobCompleteArgsRunner.Count, Is.EqualTo(1));
+                Assert.That(jobCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, Is.GreaterThan(50));
+                Assert.That(jobCompleteArgsRunner[0].ExceptionThrowByJob, Is.Not.Null);
+                Assert.That(jobCompleteArgsRunner[0].Job, Is.Not.Null);
 
-                Assert.AreEqual(allCompleteArgsRunner.Count, 1);
-                Assert.IsNull(allCompleteArgsRunner[0].ExceptionThrowByRunner);
-                Assert.Greater(allCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, 50);
+                Assert.That(allCompleteArgsRunner.Count, Is.EqualTo(1));
+                Assert.That(allCompleteArgsRunner[0].ExceptionThrowByRunner, Is.Null);
+                Assert.That(allCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, Is.GreaterThan(50));
             }
         }
     }

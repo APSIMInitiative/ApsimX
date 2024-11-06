@@ -67,7 +67,7 @@ namespace UnitTests.Interop.Documentation
             // Should be 4 elements in the document - 1 paragraph containing the two
             // citations above, second paragraph for bibliography heading, then two
             // more paragraphs, one for each reference in the bibliography.
-            Assert.AreEqual(4, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(4));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace UnitTests.Interop.Documentation
                 builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Assert.AreEqual(4, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(4));
             Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[2];
             Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[3];
 
@@ -93,8 +93,8 @@ namespace UnitTests.Interop.Documentation
             Text text0 = (Text)formatted0.Elements[0];
             Text text1 = (Text)formatted1.Elements[0];
 
-            Assert.AreEqual(citations.Last().Value.BibliographyText, text0.Content);
-            Assert.AreEqual(citations.First().Value.BibliographyText, text1.Content);
+            Assert.That(text0.Content, Is.EqualTo(citations.Last().Value.BibliographyText));
+            Assert.That(text1.Content, Is.EqualTo(citations.First().Value.BibliographyText));
         }
 
         /// <summary>
@@ -113,9 +113,9 @@ namespace UnitTests.Interop.Documentation
             builder.WriteBibliography();
 
             Paragraph bibliography = (Paragraph)doc.LastSection.Elements[2];
-            Assert.AreEqual(typeof(Hyperlink), bibliography.Elements[0].GetType());
+            Assert.That(bibliography.Elements[0].GetType(), Is.EqualTo(typeof(Hyperlink)));
             Hyperlink link = (Hyperlink)bibliography.Elements[0];
-            Assert.AreEqual(url, link.Name);
+            Assert.That(link.Name, Is.EqualTo(url));
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace UnitTests.Interop.Documentation
             builder.WriteBibliography();
 
             Paragraph bibliography = (Paragraph)doc.LastSection.Elements[1];
-            Assert.AreEqual(typeof(FormattedText), bibliography.Elements[0].GetType());
+            Assert.That(bibliography.Elements[0].GetType(), Is.EqualTo(typeof(FormattedText)));
         }
 
         /// <summary>
@@ -149,9 +149,9 @@ namespace UnitTests.Interop.Documentation
             builder.WriteBibliography();
 
             Paragraph bibliography = (Paragraph)doc.LastSection.Elements[2];
-            Assert.AreEqual(typeof(FormattedText), bibliography.Elements[0].GetType());
+            Assert.That(bibliography.Elements[0].GetType(), Is.EqualTo(typeof(FormattedText)));
             FormattedText formatted = (FormattedText)bibliography.Elements[0];
-            Assert.AreEqual("Bibliography", formatted.Style);
+            Assert.That(formatted.Style, Is.EqualTo("Bibliography"));
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[2];
-            Assert.AreEqual(typeof(BookmarkField), paragraph.Elements[1].GetType());
+            Assert.That(paragraph.Elements[1].GetType(), Is.EqualTo(typeof(BookmarkField)));
             BookmarkField bookmark = (BookmarkField)paragraph.Elements[1];
-            Assert.AreEqual(name, bookmark.Name);
+            Assert.That(bookmark.Name, Is.EqualTo(name));
         }
 
         /// <summary>
@@ -184,13 +184,13 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Assert.AreEqual(3, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(3));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[2];
-            Assert.GreaterOrEqual(paragraph.Elements.Count, 1);
+            Assert.That(paragraph.Elements.Count, Is.GreaterThanOrEqualTo(1));
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text text = (Text)formatted.Elements[0];
-            Assert.AreEqual(citation, text.Content);
+            Assert.That(text.Content, Is.EqualTo(citation));
         }
 
         /// <summary>
@@ -204,13 +204,13 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
-            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[0].GetType());
+            Assert.That(paragraph.Elements[0].GetType(), Is.EqualTo(typeof(FormattedText)));
             FormattedText formatted = (FormattedText)paragraph.Elements[1];
             Style style = doc.Styles[formatted.Style];
-            Assert.Greater(style.Font.Size, doc.Styles.Normal.Font.Size);
-            Assert.AreEqual(typeof(Text), formatted.Elements[0].GetType());
+            Assert.That(style.Font.Size.Value, Is.GreaterThan(doc.Styles.Normal.Font.Size.Value));
+            Assert.That(formatted.Elements[0].GetType(), Is.EqualTo(typeof(Text)));
             Text text = (Text)formatted.Elements[0];
-            Assert.AreEqual("References", text.Content);
+            Assert.That(text.Content, Is.EqualTo("References"));
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace UnitTests.Interop.Documentation
         {
             builder.AppendReference("a citation", TextStyle.Normal);
             builder.WriteBibliography();
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace UnitTests.Interop.Documentation
 
             Mock<PdfBuilder> mockBuilder = new Mock<PdfBuilder>(doc, new PdfOptions("", citationResolver.Object));
             mockBuilder.Setup(b => b.AppendText(citation, It.IsAny<TextStyle>()))
-                       .Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Bibliography, style))
+                       .Callback<string, TextStyle>((_, style) => Assert.That(style, Is.EqualTo(TextStyle.Bibliography)))
                        .CallBase();
             mockBuilder.Setup(b => b.AppendReference(It.IsAny<string>(), It.IsAny<TextStyle>())).CallBase();
 
@@ -245,7 +245,7 @@ namespace UnitTests.Interop.Documentation
             mockBuilder.Object.WriteBibliography();
 
             // Sanity check for the above plumbing code.
-            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(1));
         }
 
         /// <summary>

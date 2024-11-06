@@ -65,10 +65,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feeding style to use
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
         [Description("Feeding style to use")]
         [Required]
-        public RuminantFeedActivityTypes FeedStyle { get; set; }
+        public RuminantFeedActivityTypes FeedStyle { get; set; } = RuminantFeedActivityTypes.SpecifiedDailyAmount;
 
         /// <summary>
         /// Stop feeding when animals are satisfied

@@ -527,7 +527,8 @@ namespace APSIM.Shared.Utilities
                 }
                 else
                 {
-                    Headings = StringUtilities.SplitStringHonouringQuotes(HeadingLines[0], " \t");
+                    Headings = new StringCollection();
+                    Headings.AddRange(StringUtilities.SplitStringHonouringQuotes(HeadingLines[0], " \t").ToArray());
                     Units = new StringCollection();
                     Units.AddRange(StringUtilities.SplitStringHonouringBrackets(HeadingLines[1], " \t", '(', ')'));
                 }
@@ -651,8 +652,11 @@ namespace APSIM.Shared.Utilities
                 //Line = Line.TrimEnd(',');
                 words.AddRange(Line.Split(",".ToCharArray()));
             }
-            else
-                words = StringUtilities.SplitStringHonouringQuotes(Line, " \t");
+            else {
+                words = new StringCollection();
+                words.AddRange(StringUtilities.SplitStringHonouringQuotes(Line, " \t").ToArray());
+            }
+                
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);

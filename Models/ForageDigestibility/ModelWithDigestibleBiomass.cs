@@ -11,14 +11,17 @@ namespace Models.ForageDigestibility
     /// <summary>Encapsulates a model that has zero or more digestible biomass instances.</summary>
     public class ModelWithDigestibleBiomass
     {
+        private readonly Forages forages;
         private readonly IHasDamageableBiomass forageModel;
         private readonly IEnumerable<ForageMaterialParameters> parameters;
 
         /// <summary>Constructor.</summary>
+        /// <param name="forages">Instance of forages model.</param>
         /// <param name="forageModel">A model that has damageable biomass.</param>
         /// <param name="parameters">Parameters for this forage.</param>
-        public ModelWithDigestibleBiomass(IHasDamageableBiomass forageModel, IEnumerable<ForageMaterialParameters> parameters)
+        public ModelWithDigestibleBiomass(Forages forages, IHasDamageableBiomass forageModel, IEnumerable<ForageMaterialParameters> parameters)
         {
+            this.forages = forages;
             this.forageModel = forageModel;
             this.parameters = parameters;
         }
@@ -30,24 +33,20 @@ namespace Models.ForageDigestibility
         public Zone Zone => (forageModel as IModel).FindAncestor<Zone>();
 
         /// <summary>A collection of digestible material that can be grazed.</summary>
-        public IEnumerable<DigestibleBiomass> Material
+        public IEnumerable<DamageableBiomass> Material
         {
             get
             {
                 foreach (var material in forageModel.Material)
                 {
-                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(material.Name, StringComparison.InvariantCultureIgnoreCase)
-                                                                            && p.IsLive == material.IsLive);
-                    if (materialParameters == null)
-                        throw new Exception($"Cannot find forage parameters for {material.Name}");
-                    if (materialParameters.FractionConsumable > 0)
+                    var fractionConsumable = forages.GetFractionConsumable(material);
+                    if (fractionConsumable > 0)
                     {
-                        var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
-                        var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
+                        var minimumConsumable = forages.GetMinimumConsumable(material) / 10; // kg/ha to g/m2
+                        var consumableAmount = Math.Max(0.0, material.Total.Wt * fractionConsumable - minimumConsumable);
                         var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
 
-                        yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
-                                                           materialParameters);
+                        yield return new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.DigestibilityFromModel);
                     }
                 }
             }
@@ -69,10 +68,10 @@ namespace Models.ForageDigestibility
         /// <param name="PreferenceForGreenOverDead">Relative preference for live over dead material during graze (>0.0).</param>
         /// <param name="PreferenceForLeafOverStems">Relative preference for leaf over stem-stolon material during graze (>0.0).</param>
         /// <param name="summary">Optional summary object.</param>
-        public DigestibleBiomass RemoveBiomass(double amountToRemove,
-                                               double PreferenceForGreenOverDead = 1.0,
-                                               double PreferenceForLeafOverStems = 1.0,
-                                               ISummary summary = null)
+        public Forages.MaterialRemoved RemoveBiomass(double amountToRemove,
+                                             double PreferenceForGreenOverDead = 1.0,
+                                             double PreferenceForLeafOverStems = 1.0,
+                                             ISummary summary = null)
         {
             if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0, 0.000000001))
             {
@@ -153,7 +152,7 @@ namespace Models.ForageDigestibility
                 }
 
                 // Get digestibility of DM being harvested (do this before updating pools)
-                double defoliatedDigestibility = fracRemoving.Sum(m => m.Material.Digestibility * m.Fraction);
+                double defoliatedDigestibility = fracRemoving.Sum(m => forages.GetDigestibility(m.Material) * m.Fraction);
 
                 // Iterate through all live material, find the associated dead material and then
                 // tell the forage model to remove it.
@@ -194,12 +193,8 @@ namespace Models.ForageDigestibility
                 {
                     summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM * 10).ToString("#0.0") + "kg/ha", MessageType.Information);
                 }
-
-                return new DigestibleBiomass(new DamageableBiomass(Name, new Biomass()
-                {
-                    StructuralWt = defoliatedDM,
-                    StructuralN = defoliatedN,
-                }, isLive: true), defoliatedDigestibility);
+ 
+                return new Forages.MaterialRemoved(defoliatedDM * 10, defoliatedN * 10, defoliatedDigestibility); // convert mass from g/m2 to kg/ha
             }
             return null;
         }
@@ -244,12 +239,12 @@ namespace Models.ForageDigestibility
 
         private class FractionDigestibleBiomass
         {
-            public FractionDigestibleBiomass(DigestibleBiomass biomass, double frac)
+            public FractionDigestibleBiomass(DamageableBiomass biomass, double frac)
             {
                 Material = biomass;
                 Fraction = frac;
             }
-            public DigestibleBiomass Material { get; set; }
+            public DamageableBiomass Material { get; set; }
             public double Fraction { get; set; }
         }
     }

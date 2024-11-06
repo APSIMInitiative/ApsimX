@@ -52,7 +52,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Metod to calculate the number required based on style and ppoulation zise
+        /// Metod to calculate the number required based on style and population size
         /// </summary>
         /// <param name="groupSize">The number of individuals in the group</param>
         /// <returns>Number to take</returns>

@@ -48,9 +48,9 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             string text = "Test message";
             Section section = new Section(title, new MockTag(p => p.AppendText(text, TextStyle.Normal)));
             renderer.Render(section, pdfBuilder);
-            Assert.AreEqual(1, document.Sections.Count);
-            Assert.AreEqual(1, document.LastSection.Elements.OfType<Paragraph>().Count(), $"Incorrect number of paragraphs when title is set to {(title == null ? "null" : $"'{title}'")}");
-            Assert.AreEqual(text, document.LastSection.LastParagraph.GetRawText());
+            Assert.That(document.Sections.Count, Is.EqualTo(1));
+            Assert.That(document.LastSection.Elements.OfType<Paragraph>().Count(), Is.EqualTo(1), $"Incorrect number of paragraphs when title is set to {(title == null ? "null" : $"'{title}'")}");
+            Assert.That(document.LastSection.LastParagraph.GetRawText(), Is.EqualTo(text));
         }
 
         /// <summary>
@@ -77,18 +77,18 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(section, pdfBuilder);
 
             if (numChildren < 1)
-                Assert.Null(document.LastSection);
+                Assert.That(document.LastSection, Is.Null);
             else
             {
                 List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
 
                 // There should be 1 paragraph for title, plus 1 more paragraph if there are
                 // any children of this section.
-                Assert.AreEqual(2, paragraphs.Count);
-                Assert.AreEqual($"1 {title}", paragraphs[0].GetRawText());
+                Assert.That(paragraphs.Count, Is.EqualTo(2));
+                Assert.That(paragraphs[0].GetRawText(), Is.EqualTo($"1 {title}"));
 
                 if (numChildren > 0)
-                    Assert.AreEqual(paragraphText.ToString(), paragraphs[1].GetRawText());
+                    Assert.That(paragraphs[1].GetRawText(), Is.EqualTo(paragraphText.ToString()));
             }
         }
 
@@ -104,9 +104,9 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(section, pdfBuilder);
 
             List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
-            Assert.AreEqual(2, paragraphs.Count);
-            Assert.AreEqual($"1 {title}", paragraphs[0].GetRawText());
-            Assert.AreEqual($"1.1 {childTitle}", paragraphs[1].GetRawText());
+            Assert.That(paragraphs.Count, Is.EqualTo(2));
+            Assert.That(paragraphs[0].GetRawText(), Is.EqualTo($"1 {title}"));
+            Assert.That(paragraphs[1].GetRawText(), Is.EqualTo($"1.1 {childTitle}"));
         }
 
         /// <summary>
@@ -125,9 +125,9 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(section2, pdfBuilder);
 
             List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
-            Assert.AreEqual(2, paragraphs.Count);
-            Assert.AreEqual($"1 {title1}", paragraphs[0].GetRawText());
-            Assert.AreEqual($"2 {title2}", paragraphs[1].GetRawText());
+            Assert.That(paragraphs.Count, Is.EqualTo(2));
+            Assert.That(paragraphs[0].GetRawText(), Is.EqualTo($"1 {title1}"));
+            Assert.That(paragraphs[1].GetRawText(), Is.EqualTo($"2 {title2}"));
         }
     }
 }

@@ -46,7 +46,8 @@ namespace APSIM.Interop.Documentation.Extensions
                 else if (obj is Character character)
                 {
                     if (character.SymbolName == SymbolName.LineBreak)
-                        yield return Environment.NewLine;
+                        // avoids issue with Windows vs. Linux.
+                        yield return "\n";
                     else
                         // This probably doesn't work.
                         yield return new string(character.Char, character.Count);

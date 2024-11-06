@@ -13,6 +13,7 @@ using Models.Core.ApsimFile;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
 using Models.Storage;
+using Models.Utilities.Extensions;
 
 namespace Models
 {
@@ -79,14 +80,14 @@ namespace Models
             foreach (var error in errors)
             {
                 //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
-                if (error as VersionRequestedError == null && error as HelpRequestedError == null)
+                if (error as VersionRequestedError == null && error as HelpRequestedError == null && error as MissingRequiredOptionError == null)
                 {
                     Console.WriteLine("Console error output: " + error.ToString());
                     Trace.WriteLine("Trace error output: " + error.ToString());
                 }
             }
 
-            if (!(errors.IsHelp() || errors.IsVersion()))
+            if (!(errors.IsHelp() || errors.IsVersion() || errors.Any(e => e is MissingRequiredOptionError)))
                 exitCode = 1;
         }
 
@@ -123,6 +124,13 @@ namespace Models
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
+                else if (options.ListEnabledSimulationNames)
+                {
+                    foreach (string file in files)
+                    {
+                        ListSimulationNames(file, options.SimulationNameRegex, true);
+                    }
+                }
                 else if (options.ListReferencedFileNames)
                 {
                     foreach (string file in files)
@@ -163,7 +171,7 @@ namespace Models
                 {
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
-                    List<string> commandsList = ParseConfigFileCommands(options);
+                    List<string> commandsList = ConfigFile.GetConfigFileCommands(options.Apply);
                     DoCommands(options, files, configFileDirectory, commandsList);
                     CleanUpTempFiles(configFileDirectory);
                 }
@@ -227,21 +235,6 @@ namespace Models
                 exitCode = 1;
             }
         }
-
-        /// <summary>
-        /// Parses and configures commands for use in model run.
-        /// </summary>
-        /// <param name="options">Arguments from Models command.</param>
-        /// <returns></returns>
-        private static List<string> ParseConfigFileCommands(Options options)
-        {
-            List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
-            List<string> commandsWithoutNulls = ConfigFile.GetListWithoutNullCommands(commands);
-            List<string> commandsWithSpacesRemoved = ConfigFile.RemoveConfigFileWhitespace(commandsWithoutNulls.ToList());
-            return ConfigFile.EncodeSpacesInCommandList(commandsWithSpacesRemoved);
-        }
-
-
 
         /// <summary>
         /// Takes an array of commands and runs them in sequence.
@@ -327,7 +320,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
 
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
@@ -396,7 +388,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
 
@@ -474,6 +465,7 @@ namespace Models
 
                 if (string.IsNullOrWhiteSpace(lastSaveFilePath))
                 {
+                    tempSim.Write(filePath);
                     File.Copy(filePath, originalFilePath, true);
                     lastSaveFilePath = originalFilePath;
                 }
@@ -503,9 +495,15 @@ namespace Models
             }
 
             RunSimulations(runner, options);
-            //// An assumption is made here that once a simulation is run a temp file is no longer needed.
-            //// Release database files and clean up. 
             runner.DisposeStorage();
+
+            //dispose of temp datastore
+            if (tempSim != null)
+            {
+                DataStore ds = tempSim.FindDescendant<DataStore>();
+                if (ds != null)
+                    ds.Dispose();
+            }
         }
 
         /// <summary>
@@ -668,13 +666,20 @@ namespace Models
                 File.WriteAllText(file, converter.Root.ToString());
         }
 
-        private static void ListSimulationNames(string fileName, string simulationNameRegex)
+        private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
-            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
-
+            if (showEnabledOnly)
+            {
+                List<Simulation> enabledSims = file.FindAllDescendants<Simulation>().Where(sim => sim.Enabled == true).ToList();
+                enabledSims.ForEach(sim => Console.WriteLine(sim.Name));
+            }
+            else
+            {
+                SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+                jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+            }
         }
 
         private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
@@ -708,7 +713,9 @@ namespace Models
                 string fileName = Path.ChangeExtension(group.FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
                 Report.WriteAllTables(storage, fileName);
-                Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+                if (File.Exists(Path.ChangeExtension(fileName, ".csv")))
+                    Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+                else Console.WriteLine("Unable to make csv file for " + Path.ChangeExtension(fileName, ".csv"));
             }
         }
 
@@ -812,44 +819,22 @@ namespace Models
                 foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
                     if (match != null)
                         matchingTempFiles.Add(match);
-            if (matchingTempFiles.Count > 0)
+            
+            //give up trying to to delete the files if they are blocked for some reason.
+            int breakout = 100;
+            while (matchingTempFiles.Count > 0 && breakout > 0)
             {
-                foreach (string matchingFile in matchingTempFiles)
+                for(int i = matchingTempFiles.Count-1; i >= 0; i --) 
                 {
-                    while (isFileInUse == true)
-                        isFileInUse = IsFileLocked(matchingFile);
-                    File.Delete(matchingFile);
-                    isFileInUse = true;
+                    isFileInUse = (new FileInfo(matchingTempFiles[i])).IsLocked();
+                    if (!isFileInUse)
+                    {
+                        File.Delete(matchingTempFiles[i]);
+                        matchingTempFiles.Remove(matchingTempFiles[i]);
+                    }
                 }
+                breakout -= 1;
             }
-        }
-
-        /// <summary>
-        /// Closes file if in use and returns true otherwise returns false.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns>bool</returns>
-        private static bool IsFileLocked(string filePath)
-        {
-            try
-            {
-                var fileInfo = new FileInfo(filePath);
-                using (FileStream stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-
-            //file is not locked
-            return false;
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Models.CLEM.Groupings
                 {
                     // allow full path names for location by ignoring the GrazeFoodStore component.
                     case "Location":
-                        if(Value.ToString().Contains('.'))
+                        if(Value is not null && Value.ToString().Contains("."))
                             return Value.ToString().Split('.')[1];
                         break;
                 }
@@ -64,20 +64,6 @@ namespace Models.CLEM.Groupings
         {
             base.SetDefaults();
         }
-
-//        ///<inheritdoc/>
-//        [EventSubscribe("CLEMValidate")]
-//        protected void OnValidation(object sender, EventArgs e)
-//        {
-//            List<ValidationResult> results = new List<ValidationResult>();
-//            ValidationContext context = new ValidationContext(this, null, null);
-//            if (Validator.TryValidateObject(this, context, results, true))
-//            {
-////                Initialise();
-//                // rules can only be built on commence not during use in UI (Descriptive summaries)
-////                BuildRule();
-//            }
-//        }
 
         /// <inheritdoc/>
         public override void Initialise()

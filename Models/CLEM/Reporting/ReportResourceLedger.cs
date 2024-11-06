@@ -112,7 +112,7 @@ namespace Models.CLEM.Reporting
         /// Include herd ledger property: Age
         /// </summary>
         [Summary]
-        [Description("Style of reporting Ruminant.Age")]
+        [Description("Style of reporting animal age")]
         [Category("Ruminant", "Report properties")]
         [System.ComponentModel.DefaultValueAttribute(ReportAgeType.Months)]
         [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
@@ -122,7 +122,7 @@ namespace Models.CLEM.Reporting
         /// Include herd ledger property: adult equivalents
         /// </summary>
         [Summary]
-        [Description("Include Ruminant.AE")]
+        [Description("Include Adult Equivalent")]
         [Category("Ruminant", "Report properties")]
         [System.ComponentModel.DefaultValueAttribute(false)]
         [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
@@ -202,21 +202,31 @@ namespace Models.CLEM.Reporting
         /// Include herd ledger property: Sex
         /// </summary>
         [Summary]
-        [Description("Include Ruminant.Sex")]
+        [Description("Include sex of animal")]
         [Category("Ruminant", "Report properties")]
         [System.ComponentModel.DefaultValueAttribute(true)]
-        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        [Core.Display(VisibleCallback = "RuminantOrOtherAnimalPropertiesVisible")]
         public bool IncludeRuminantSex { get; set; }
 
         /// <summary>
         /// Include herd ledger property: weight
         /// </summary>
         [Summary]
-        [Description("Include Ruminant.Weight")]
+        [Description("Include weight of animal")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantOrOtherAnimalPropertiesVisible")]
+        public bool IncludeRuminantWeight { get; set; }
+
+        /// <summary>
+        /// Include daily growth rate from birth
+        /// </summary>
+        [Summary]
+        [Description("Include daily growth rate from birth")]
         [Category("Ruminant", "Report properties")]
         [System.ComponentModel.DefaultValueAttribute(false)]
         [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
-        public bool IncludeRuminantWeight { get; set; }
+        public bool IncludeRuminantGrowthRate { get; set; }
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -298,12 +308,19 @@ namespace Models.CLEM.Reporting
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.HerdName as RelatesTo");
                         if (IncludeRuminantChangeDirection)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.PopulationChangeDirection as Change");
-
+                        if (IncludeRuminantGrowthRate)
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.GrowthRate as GrowthRate");
                         // ToDo: add pricing for ruminants including buy and sell pricing
                         // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
                     }
                     else
                     {
+                        if (model.GetType() == typeof(OtherAnimals))
+                        {
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastCohortChanged.Sex as Sex");
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastCohortChanged.Age as Age");
+                        }
+
                         pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
 
                         if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
@@ -417,5 +434,13 @@ namespace Models.CLEM.Reporting
             return FindInScope<RuminantHerd>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
         }
 
+        /// <summary>
+        /// Determines if a ruminant or other animal type has been selected
+        /// </summary>
+        /// <returns>True if ledger reports ruminant</returns>
+        public bool RuminantOrOtherAnimalPropertiesVisible()
+        {
+            return RuminantPropertiesVisible() || FindInScope<OtherAnimals>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
+        }
     }
 }
