@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
-using Models.Mapping;
+using APSIM.Shared.Documentation.Mapping;
 
-namespace APSIM.Interop.Mapping
+namespace APSIM.Shared.Documentation
 {
     /// <summary>
     /// A map which can be displayed in autodocs.
     /// </summary>
-    public class MapTag : ITag
+    public class Map : ITag
     {
         /// <summary>
         /// Coordinate of the center of the map.
@@ -28,12 +27,12 @@ namespace APSIM.Interop.Mapping
         public IEnumerable<Coordinate> Markers { get; private set; }
 
         /// <summary>
-        /// Create a new <see cref="MapTag"/> instance.
+        /// Create a new <see cref="Map"/> instance.
         /// </summary>
         /// <param name="center">Coordinate of the center of the map.</param>
         /// <param name="zoom">Zoom level of the map.</param>
         /// <param name="markers">Coordinates for markers to be displayed on the map.</param>
-        public MapTag(Coordinate center, double zoom, IEnumerable<Coordinate> markers)
+        public Map(Coordinate center, double zoom, IEnumerable<Coordinate> markers)
         {
             Center = center;
             Zoom = zoom;

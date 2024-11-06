@@ -9,6 +9,7 @@ using System.Data;
 using System;
 using ModelsGraph = Models.Graph;
 using ModelsGraphPage = Models.GraphPage;
+using ModelsMap = Models.Map;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
             if (section.Children.Count >= 2)
                 section.Children.RemoveAt(0);
             
-            foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
+            foreach(ModelsMap map in model.FindAllChildren<ModelsMap>().Where(map => map.Enabled))
             {
                 section.Add(AutoDocumentation.DocumentModel(map));
             }

@@ -55,7 +55,7 @@
     <PackageReference Include="ISO3166" Version="1.0.4" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
-    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="Markdig" Version="0.38.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="GtkSharp" Version="3.24.24.38" />
     <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />
