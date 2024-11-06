@@ -61,7 +61,7 @@ namespace Models.Functions
 
             double inhibitor = 1;
             if (NitrificationInhibition != null)
-                inhibitor = NitrificationInhibition.Value();
+                inhibitor = NitrificationInhibition.Value(arrayIndex);
 
             return PotentialRate * RateModifier * inhibitor;
         }
