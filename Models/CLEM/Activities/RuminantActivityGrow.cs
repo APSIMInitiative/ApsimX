@@ -11,6 +11,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.Utilities;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -33,7 +34,7 @@ namespace Models.CLEM.Activities
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
-    public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject
+    public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject, IRuminantActivityGrow
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -53,6 +54,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+
+        /// <inheritdoc/>
+        public bool IncludeFatAndProtein { get => false; }
+        /// <inheritdoc/>
+        public bool IncludeVisceralProteinMass { get => false; }
 
         /// <summary>
         /// Constructor

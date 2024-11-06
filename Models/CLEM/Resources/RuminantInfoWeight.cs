@@ -2,6 +2,8 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -33,7 +35,7 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// Mass of visceral protein required for Oddy growth
         /// </remarks>
-        public RuminantTrackingItemProtein ProteinV { get; set; }
+        public RuminantTrackingItemProtein ProteinViscera { get; set; }
 
         /// <summary>
         /// Track fat weight (kg)
@@ -263,7 +265,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculate the current fleece weight as a proportion of standard fleece weight
         /// </summary>
-        /// <param name="woolParameters">The object holding the individual's wool parameters</param>
+        /// <param name="woolParameters">The RuminantParametersGrow24CW object holding the individual's wool parameter</param>
         /// <param name="ageInDays">The age of the individual in days</param>
         /// <returns>Current greasy fleece weight as proportion of  </returns>
         public double FleeceWeightAsProportionOfSFW(RuminantParametersGrow24CW woolParameters, int ageInDays)
@@ -278,7 +280,7 @@ namespace Models.CLEM.Resources
         /// Adjust weight by a given live weight change
         /// </summary>
         /// <param name="wtChange">Change in weight (kg)</param>
-        /// <param name="individual">THe individual to change</param>
+        /// <param name="individual">The individual to change</param>
         public void AdjustByWeightChange(double wtChange, Ruminant individual)
         {
             EmptyBodyMassChange = wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09);
@@ -301,7 +303,7 @@ namespace Models.CLEM.Resources
         /// Adjust empty body weight. All other weight will also be adjusted accordingly
         /// </summary>
         /// <param name="ebmChangeFatProtein">Change in empty body weight using fat and protein gain approach (kg)</param>
-        /// <param name="individual">THe individual to change</param>
+        /// <param name="individual">The individual to change</param>
         public void AdjustByEBMChange(double ebmChangeFatProtein, Ruminant individual)
         {
             EmptyBodyMassChange = ebmChangeFatProtein;
@@ -316,6 +318,16 @@ namespace Models.CLEM.Resources
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
             HighestAttained = Math.Max(HighestAttained, Live);
             HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
+        }
+
+        /// <summary>
+        /// Update Empty Body Mass and associated weight measure using the protein and fat pools as per Oddy Grow
+        /// </summary>
+        /// <param name="individual">The individual to change</param>
+        public void UpdateEBM(Ruminant individual)
+        {
+            double change = individual.Weight.Protein.Change + individual.Weight.ProteinViscera.Change + individual.Weight.Fat.Change;
+            AdjustByEBMChange(change, individual);
         }
 
         /// <summary>
@@ -338,28 +350,19 @@ namespace Models.CLEM.Resources
         /// Calculate and set the initial fat and protein weights of the specified individual
         /// </summary>
         /// <param name="individual">The individual ruminant</param>
-        /// <param name="initialFatProtein">Provide initial EBW fat proportion and initial EBW fat proportion (optional)</param>
-        /// <param name="assumeInitialPercentage">If true initialFatProtein is provided as a percentage</param>
-        public static void SetInitialFatProtein(Ruminant individual, double[] initialFatProtein = null, bool assumeInitialPercentage = true)
+        /// <param name="style">The initial fat and protein assignemnt style to be used.</param>
+        /// <param name="growModel">The ruminant growth model being used.</param>
+        /// <param name="initialValues">Initial values to use in the calculation.</param>
+        public static void SetInitialFatProtein(Ruminant individual, InitialiseFatProteinAssignmentStyle style, IRuminantActivityGrow growModel, double[] initialValues = null)
         {
-            double pFat;
-            double pProtein = -1;
-            double initialFactor = 1.0;
-            if (assumeInitialPercentage)
-            {
-                initialFactor = 0.01;
-            }
+            if (!growModel.IncludeFatAndProtein)
+                return;
 
-            if (initialFatProtein is not null)
-            {
-                pFat = initialFatProtein[0]*initialFactor;
+            double pFat = 0;
+            double pProtein = 0;
+            double vProtein = 0;
 
-                if (initialFatProtein.Length >= 2)
-                {
-                    pProtein = initialFatProtein[1]*initialFactor;
-                }
-            }
-            else
+            if (style == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
             {
                 double RC = individual.Weight.RelativeCondition;
                 if (individual.Weight.IsStillGrowing)
@@ -370,29 +373,63 @@ namespace Models.CLEM.Resources
                     sexFactor = 0.85;
 
                 double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
-                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC-1) * RCFatSlope)) * sexFactor;
-            }
-
-            if(!assumeInitialPercentage)
-                individual.Weight.Fat.Set(pFat);
-            else
-                individual.Weight.Fat.Set(pFat * individual.Weight.EmptyBodyMass);
-
-            if (pProtein >= 0)
-            {
-                if (!assumeInitialPercentage)
-                    individual.Weight.Protein.Set(pProtein);
-                else
-                    individual.Weight.Protein.Set(pProtein * individual.Weight.EmptyBodyMass);
+                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC - 1) * RCFatSlope)) * sexFactor;
             }
             else
             {
-                individual.Weight.Protein.Set(0.22 * (individual.Weight.EmptyBodyMass - individual.Weight.Fat.Amount));
+                pFat = initialValues[0];
+                pProtein = initialValues[1];
+                if (initialValues.Length == 3)
+                {
+                    if (growModel.IncludeVisceralProteinMass)
+                        vProtein = initialValues[2];
+                    else
+                        pProtein += initialValues[2];
+                }
             }
 
-            // set fat and protein energy based on initial amounts
-            individual.Energy.Fat.Set(individual.Weight.Fat.Amount * 39.3);
-            individual.Energy.Protein.Set(individual.Weight.Protein.Amount * 23.6);
+            switch (style)
+            {
+                case InitialiseFatProteinAssignmentStyle.ProvideMassKg:
+                    break;
+                case InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass:
+                    pFat *= individual.Weight.EmptyBodyMass;
+                    pProtein *= individual.Weight.EmptyBodyMass;
+                    vProtein *= individual.Weight.EmptyBodyMass;
+                    break;
+                case InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ:
+                    pFat /= individual.Parameters.General.MJEnergyPerKgFat * 1000.0;
+                    pProtein /= individual.Parameters.General.MJEnergyPerKgProtein * 1000.0;
+                    vProtein /= individual.Parameters.General.MJEnergyPerKgProtein * 1000.0;
+                    break;
+                case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
+                    pFat *= individual.Weight.EmptyBodyMass;
+                    pProtein = 0.22 * (individual.Weight.EmptyBodyMass - pFat);
+                    if (growModel.IncludeVisceralProteinMass)
+                        throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
+                    break;
+                default:
+                    break;
+            }
+
+            individual.Weight.Fat.Set(pFat);
+            individual.Energy.Fat.Set(individual.Weight.Fat.Amount * individual.Parameters.General.MJEnergyPerKgFat);
+            individual.Weight.Protein.Set(pProtein);
+            individual.Energy.Protein.Set(individual.Weight.Protein.Amount * individual.Parameters.General.MJEnergyPerKgProtein);
+
+            if (growModel.IncludeVisceralProteinMass)
+            {
+                if (individual.Weight.ProteinViscera is null)
+                {
+                    individual.Weight.ProteinViscera = new();
+                    individual.Energy.ProteinViscera = new();
+                }
+                if (vProtein > 0)
+                {
+                    individual.Weight.ProteinViscera.Set(vProtein);
+                    individual.Energy.ProteinViscera.Set(individual.Weight.ProteinViscera.Amount * individual.Parameters.General.MJEnergyPerKgProtein);
+                }
+            }
         }
     }
 }

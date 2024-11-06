@@ -15,6 +15,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Models.PMF.Phen;
 using Models.Utilities;
 using static Models.Core.ScriptCompiler;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -37,11 +38,16 @@ namespace Models.CLEM.Activities
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
-    public class RuminantActivityGrowSCA07 : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrowSCA07 : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private ProductStoreTypeManure manureStore;
+
+        /// <inheritdoc/>
+        public bool IncludeFatAndProtein { get => true; }
+        /// <inheritdoc/>
+        public bool IncludeVisceralProteinMass { get => false; }
 
         /// <summary>
         /// Perform Activity with partial resources available.

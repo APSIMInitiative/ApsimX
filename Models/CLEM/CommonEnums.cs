@@ -1246,4 +1246,26 @@ namespace Models.CLEM
         Protein,
     }
 
+    /// <summary>
+    /// Methods available to calculate the initial protein (muscle and optional visceral) and fat mass of an individual
+    /// </summary>
+    public enum InitialiseFatProteinAssignmentStyle
+    {
+        /// <summary>
+        /// Provide mass (kg) of fat, muscle protein and visceral protein
+        /// </summary>
+        ProvideMassKg,
+        /// <summary>
+        /// Provide proportion of EBM for fat, muscle protein and visceral protein
+        /// </summary>
+        ProportionOfEmptyBodyMass,
+        /// <summary>
+        /// Provide energy (MJ) of fat, muscle protein and visceral protein
+        /// </summary>
+        ProvideEnergyMJ,
+        /// <summary>
+        /// Estimate fat and protein from relative condition
+        /// </summary>
+        EstimateFromRelativeCondition
+    }
 }

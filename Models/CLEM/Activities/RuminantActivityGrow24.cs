@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using StdUnits;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -30,7 +31,7 @@ namespace Models.CLEM.Activities
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow24) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
-    public class RuminantActivityGrow24 : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrow24 : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
@@ -47,6 +48,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Perform unfed individuals warning")]
         public bool ReportUnfed { get; set; } = false;
+
+        /// <inheritdoc/>
+        public bool IncludeFatAndProtein { get => true; }
+        /// <inheritdoc/>
+        public bool IncludeVisceralProteinMass { get => false; }
 
         // =============================================================================================
         // This activity uses the equations of Freer et al. (2012) The GRAZPLAN animal biology model
@@ -307,8 +313,6 @@ namespace Models.CLEM.Activities
         public void CalculateEnergy(Ruminant ind)
         {
             const double proteinContentOfFatFreeTissueGainWetBasis = 0.21;
-            const double mJEnergyPerKgFat = 39.3;
-            const double mJEnergyPerKgProtein = 23.6;
 
             kl = 0;
             double milkProtein = 0; // just a local store
@@ -467,21 +471,21 @@ namespace Models.CLEM.Activities
                 }
 
                 // remove protein gain energy so remainder can be used for fat gain/loss
-                energyAvailableForGain -= finalprotein * mJEnergyPerKgProtein;
+                energyAvailableForGain -= finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
             }
             else // insufficient protein to meet demands even after potential lactation reduction
             {
                 finalprotein = proteinAvailableForGain; // lose from body stores
             }
 
-            double MJProteinChange = finalprotein * mJEnergyPerKgProtein;
+            double MJProteinChange = finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
             double MJFatChange = energyAvailableForGain;
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
-            ind.Weight.Protein.Adjust(MJProteinChange / mJEnergyPerKgProtein * events.Interval); // for time step
+            ind.Weight.Protein.Adjust(MJProteinChange / ind.Parameters.General.MJEnergyPerKgProtein * events.Interval); // for time step
             ind.Energy.Protein.Adjust(MJProteinChange * events.Interval); // for time step
 
-            ind.Weight.Fat.Adjust(MJFatChange / mJEnergyPerKgFat * events.Interval); // for time step
+            ind.Weight.Fat.Adjust(MJFatChange / ind.Parameters.General.MJEnergyPerKgFat * events.Interval); // for time step
             ind.Energy.Fat.Adjust(MJFatChange * events.Interval); // for time step
 
             ind.Weight.AdjustByEBMChange(((ind.Weight.Protein.Change / proteinContentOfFatFreeTissueGainWetBasis) + ind.Weight.Fat.Change) * events.Interval, ind);
