@@ -61,9 +61,36 @@ namespace Models.CLEM.Resources
         public double ForMaintenance { get { return ForBasalMetabolism + ForHPViscera + ForGrazing; } }
 
         /// <summary>
+        /// Energetic cost of depsoiting protein and fat. Heat for product formation 
+        /// </summary>
+        public double ForProductFormation { get; set; } = 0.0;
+
+        /// <summary>
+        /// Averaged time-step Energetic cost of depsoiting protein and fat. Heat for product formation
+        /// </summary>
+        public double ForProductFormationAverage { get; set; } = 0.0;
+
+        /// <summary>
+        /// Method to calulate running ME Average for today and last timestep
+        /// </summary>
+        public void UpdateProductFormationAverage()
+        {
+            if (ForProductFormationAverage == 0)
+                ForProductFormationAverage = ForProductFormation;
+            else
+                ForProductFormationAverage = (ForProductFormationAverage + ForProductFormation) / 2.0;
+        }
+
+        /// <summary>
+        /// Total energetic cost of heat production
+        /// </summary>
+        public double ForHeatProduction { get { return ForBasalMetabolism + ForHPViscera + ForProductFormationAverage;} } 
+
+
+        /// <summary>
         /// Energy available after maintenance
         /// </summary>
-        public double AfterMaintenance { get { return FromIntake - ForMaintenance; } }
+        public double AfterMaintenance { get { return FromIntake - ForMaintenance - ForProductFormationAverage; } }
 
         /// <summary>
         /// Energy used for fetal development
@@ -111,17 +138,17 @@ namespace Models.CLEM.Resources
         public double ForGain { get; set; }
 
         /// <summary>
-        /// Energy used for protein
+        /// Energy used for protein (non-viscera protein in Oddy)
         /// </summary>
         public RuminantTrackingItem Protein { get; set; } = new();
 
         /// <summary>
-        /// Track protein energy for viscera (Oddy, kg)
+        /// Track protein energy of viscera (empty gut, liver, kidneys, heart, and lungs) used in Oddy
         /// </summary>
         /// <remarks>
         /// Energy for visceral protein required for Oddy growth
         /// </remarks>
-        public RuminantTrackingItemProtein ProteinV { get; set; }
+        public RuminantTrackingItemProtein ProteinViscera { get; set; }
 
         /// <summary>
         /// Energy used for fat

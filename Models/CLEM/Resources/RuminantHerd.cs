@@ -1,6 +1,7 @@
 using Docker.DotNet.Models;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
 using Models.Core.Attributes;
@@ -25,7 +26,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantHerd : ResourceBaseWithTransactions
+    public class RuminantHerd : ResourceBaseWithTransactions, IValidatableObject
     {
         private int id = 1;
 
@@ -70,6 +71,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         public int NextUniqueID { get { return id++; } }
 
+        /// <summary>
+        /// The ruminant grow activity used in the simulation
+        /// </summary>
+        [JsonIgnore]
+        public IRuminantActivityGrow RuminantGrowActivity { get; set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -79,9 +86,11 @@ namespace Models.CLEM.Resources
             id = 1;
             Herd = new List<Ruminant>();
             PurchaseIndividuals = new List<Ruminant>();
+            RuminantGrowActivity = FindInScope<IRuminantActivityGrow>();
 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
                 rType.Parameters.Initialise(rType);
+
         }
 
         /// <summary>An event handler to allow us to perform final initialise after RuminantTypes have intialised.</summary>
@@ -429,6 +438,29 @@ namespace Models.CLEM.Resources
             }
             html += "</div>";
             return html;
+        }
+
+        #endregion
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!FindAllChildren<RuminantType>().Any())
+                yield break;
+
+            if(RuminantGrowActivity is null)
+            {
+                // check that a grow activity is present for the herd if ruminant types are present.
+                string warn = $"[r={Name}] requires at least one [a=RuminantGrow_____] to manage growth and aging of individuals.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+            }
+            else if (FindAllAncestors<IRuminantActivityGrow>().Count() > 1)
+            {
+                // error if more than one
+                yield return new ValidationResult("Only one [a=RuminantGrow_____] activity is permitted in the simulation", new string[] { "Ruminant Herd" });
+            }
         }
 
         #endregion

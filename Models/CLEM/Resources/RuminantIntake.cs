@@ -246,6 +246,22 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Method to calulate running ME Average for today and last timestep
+        /// </summary>
+        public void UpdateMEAverage()
+        {
+            if (MEAverage == 0)
+                MEAverage = ME;
+            else
+                MEAverage = (MEAverage + ME)/ 2.0;
+        }
+
+        /// <summary>
+        /// Track average ME over today and yesterday.
+        /// </summary>
+        public double MEAverage { get; set; } = 0.0;
+
+        /// <summary>
         /// Metabolisable energy from Milk intake.
         /// </summary>
         public double MilkME
