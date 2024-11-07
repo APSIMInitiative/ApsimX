@@ -54,3 +54,8 @@ tr:nth-child(even) {
     padding-top: 20px;
     margin-bottom: 0px;
 }
+
+/* Required to stop non-wrapping code tags. */
+pre{
+    white-space: pre-wrap;
+}
