@@ -14,7 +14,7 @@
 
 .docs-img {
     padding-top: 30px;
-    padding-bottom: 30px;
+    padding-bottom: 0px;
     width: 100%;
 }
 
@@ -24,6 +24,7 @@
     border-color: #004d47;
     margin: 0 auto;
     border-spacing: 0px;
+    width: 100%;
 }
 
 .docs-th {

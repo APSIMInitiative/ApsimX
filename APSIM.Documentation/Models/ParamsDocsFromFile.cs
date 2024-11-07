@@ -40,8 +40,7 @@ namespace APSIM.Documentation.Models
             else if (model is Simulations && model.Children.Any())
                 model = model.Children[0];
 
-            InterfaceDocumentation doco = new InterfaceDocumentation();
-            return doco.Document(model);
+            return InterfaceDocumentation.Document(model);
         }
 
         protected override Document CreateDocument()
