@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Graph = Models.Graph;
@@ -103,6 +102,8 @@ namespace APSIM.Documentation.Models.Types
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
+            tags.AddRange(AddAdditionals(name));
+
             return tags;
         }
 
@@ -132,6 +133,79 @@ namespace APSIM.Documentation.Models.Types
             }
 
             return tags;
+        }
+
+        /// <summary>
+        /// Adds extra documents or media for specific apsimx file documents.
+        /// </summary>
+        private static List<ITag> AddAdditionals(string modelName)
+        {
+            List<ITag> additionsTags = new();
+
+            // TODO: Handle AgPasture file names 
+            if (modelName == "AgPasture")
+            {
+
+            }
+
+            Dictionary<string, DocAdditions> validationAdditions = new()
+            {
+                {"AGPRyegrass", new DocAdditions(
+                    "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
+                    "https://builds.apsim.info/api/nextgen/docs/SpeciesTable.pdf")},
+                {"AGPWhiteClover", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf")},
+                {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
+                {"MicroClimate", new DocAdditions("https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf")},
+                {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
+                {"Stock", new DocAdditions("https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf")},
+                {"SWIM", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/SWIMv21UserManual.pdf")},
+            };
+
+            if(validationAdditions.ContainsKey(modelName))
+            {
+                DocAdditions additions = validationAdditions[modelName];
+                if(additions.ScienceDocLink != null)
+                {
+                    Section scienceSection = new Section("Science Documentation", new Paragraph($"![View science documentation here]({additions.ScienceDocLink})"));   
+                    additionsTags.Add(scienceSection);
+                }
+            }
+
+            return additionsTags;
+        }
+
+        /// <summary>
+        /// Stores additional resources for model documentation.
+        /// </summary>
+        public class DocAdditions
+        {
+            /// <summary>
+            /// Link to science documentation.
+            /// </summary>
+            public string ScienceDocLink {get; private set;}
+
+            /// <summary>
+            /// Link to a related video.
+            /// </summary>
+            public string VideoLink {get; private set;}
+
+            /// <summary>
+            /// Extra resource link.
+            /// </summary>
+            public string ExtraLink {get; private set;}
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="scienceDocLink"></param>
+            /// <param name="videoLink"></param>
+            /// <param name="extraLink"></param>
+            public DocAdditions(string scienceDocLink = null, string videoLink = null, string extraLink = null)
+            {
+                ScienceDocLink = scienceDocLink;
+                VideoLink = videoLink;
+                ExtraLink = extraLink;
+            }
         }
     }
 }

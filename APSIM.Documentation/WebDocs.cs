@@ -15,7 +15,6 @@ using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
 
-
 namespace APSIM.Documentation
 {
     /// <summary>
@@ -103,7 +102,8 @@ namespace APSIM.Documentation
             // tagList.AddRange(tags);
             string markdown = ConvertToMarkdown(tags, "");
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
-            markdown = headerImg + markdown;
+            string video = ConvertToMarkdown(new List<ITag>(){new Video("https://www.youtube.com/watch?v=nyDZkT1JTXw")},"");
+            markdown = headerImg + markdown + video;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
             output2 += WriteBibliography(citations);
@@ -277,6 +277,10 @@ namespace APSIM.Documentation
                     SKImage mapImage = map.ToImage(800);
                     string imgMarkdown = GetMarkdownImageFromSKImage(mapImage);
                     output += imgMarkdown;
+                }
+                else if (tag is Video video)
+                {
+                    output += $"![]({video.Source})";
                 }
             }
             return output;
