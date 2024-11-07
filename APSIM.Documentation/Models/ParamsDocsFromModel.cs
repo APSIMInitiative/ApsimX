@@ -24,8 +24,7 @@ namespace APSIM.Documentation.Models
         /// <param name="model">Model to be documented.</param>
         protected override IEnumerable<ITag> DocumentModel(IModel model)
         {
-            InterfaceDocumentation doco = new InterfaceDocumentation();
-            return doco.Document(model);
+            return InterfaceDocumentation.Document(model);
         }
 
         /// <summary>
