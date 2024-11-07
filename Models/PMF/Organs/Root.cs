@@ -333,7 +333,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] uptake = new double[Zones.Count];  
+                double[] uptake = new double[Zones.Count];
                 int i = 0;
                 foreach (ZoneState zone in Zones)
                 {
@@ -610,7 +610,7 @@ namespace Models.PMF.Organs
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
             }
         }
-        
+
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
@@ -696,10 +696,10 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = dryMatter.Structural * dMCE;
             Allocated.StorageWt = dryMatter.Storage * dMCE;
             Allocated.MetabolicWt = dryMatter.Metabolic * dMCE;
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / dMCE", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / dMCE", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
@@ -1053,8 +1053,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -1119,8 +1118,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                Detached.Add(Live);
-                Detached.Add(Dead);
+                //Detached.Add(Live);
+                //Detached.Add(Dead);
                 RemoveBiomass(liveToResidue: 1.0);
             }
 
