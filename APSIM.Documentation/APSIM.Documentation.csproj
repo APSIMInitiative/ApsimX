@@ -25,4 +25,8 @@
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>  
 
+  <ItemGroup>
+    <EmbeddedResource Include="./Resources/*.png" />
+  </ItemGroup>
+
 </Project>

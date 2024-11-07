@@ -12,6 +12,8 @@ using APSIM.Shared.Utilities;
 using APSIM.Documentation.Models;
 using APSIM.Documentation.Bibliography;
 using Models.Core.ApsimFile;
+using APSIM.Shared.Mapping;
+using SkiaSharp;
 
 
 namespace APSIM.Documentation
@@ -96,10 +98,12 @@ namespace APSIM.Documentation
         /// </summary>
         /// <param name="tags">Tags to be converted</param>
         public static string TagsToHTMLString(List<ITag> tags)
-        {            
-            string markdown = AddHeaderImage();
-            markdown += ConvertToMarkdown(tags, "");
-            markdown = ReplaceImagePathWithEncodedString(markdown);
+        {
+            // List<ITag> tagList = new(){ )};
+            // tagList.AddRange(tags);
+            string markdown = ConvertToMarkdown(tags, "");
+            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
+            markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
             output2 += WriteBibliography(citations);
@@ -118,9 +122,10 @@ namespace APSIM.Documentation
         /// <summary>
         /// 
         /// </summary>
-        public static string AddHeaderImage() 
+        public static Image AddHeaderImageTag() 
         {
-            return $"![APSIM Initiative](AIBanner.png)\n\n";
+            // return $"![APSIM Initiative](AIBanner.png)\n\n";
+            return new Image("AIBanner.png");
         }
 
         /// <summary>
@@ -195,7 +200,9 @@ namespace APSIM.Documentation
                 }
                 else if (tag is Paragraph paragraph) 
                 {
+
                     List<string> lines = paragraph.text.Split("\n").ToList();
+                    lines = ConvertPDFCodeToMarkdownCode(lines);
                     foreach (string line in lines)
                     {
                         string text = line.Trim();
@@ -210,6 +217,7 @@ namespace APSIM.Documentation
                         output += $"{text}\n";
                     }
                     output += "\n";
+                    output = ReplaceImagePathWithEncodedString(output);
                 }
                 else if (tag is Table table) 
                 {
@@ -261,11 +269,14 @@ namespace APSIM.Documentation
                 }
                 else if (tag is Image img)
                 {
-
+                    string imgMarkdown = GetMarkdownImageFromSKImage(img.GetRaster());
+                    output += imgMarkdown;
                 }
                 else if (tag is Map map)
                 {
-                    
+                    SKImage mapImage = map.ToImage(800);
+                    string imgMarkdown = GetMarkdownImageFromSKImage(mapImage);
+                    output += imgMarkdown;
                 }
             }
             return output;
@@ -351,10 +362,8 @@ namespace APSIM.Documentation
                 string caption = match.Groups[1].ToString();
                 string filename = match.Groups[2].ToString();
 
-                SkiaSharp.SKImage headerImg = LoadFromResource(filename);
-                var bytes = headerImg.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
-                string base64String = Convert.ToBase64String(bytes.ToArray());
-                string replacement = $"![{caption}](data:image/png;base64,{base64String})\n\n";
+                SKImage headerImg = LoadFromResource(filename);
+                string replacement = GetMarkdownImageFromSKImage(headerImg);
                 output = output.Replace(match.Value, replacement);
             }
             return output;
@@ -449,6 +458,56 @@ namespace APSIM.Documentation
             output += "</body>\n";
             output += "</html>\n";
             return output;
+        }
+
+        /// <summary>
+        /// Converts a SKImage to an Markdown image string.
+        /// </summary>
+        /// <param name="skimage"> A <see cref="SKImage"/> object</param>
+        /// <returns></returns>
+        public static string GetMarkdownImageFromSKImage(SKImage skimage)
+        {
+            var bytes = skimage.Encode(SKEncodedImageFormat.Png, 100);
+            string base64String = Convert.ToBase64String(bytes.ToArray());
+            string replacement = $"![](data:image/png;base64,{base64String})\n\n";
+            return replacement;
+        }
+
+        /// <summary>
+        /// Converts code in Memo(Paragraph ITags) to markdown format.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> ConvertPDFCodeToMarkdownCode(List<string> paraLines)
+        {
+            // Get consecutive lines that start with triple tabs.
+            bool inCodeBlock = false;
+            List<string> formattedLines = new();
+            string pdfCodeLine = @"(\t{3})(.*)";
+
+            foreach (string line in paraLines)
+            {
+                if(Regex.IsMatch(line, pdfCodeLine))
+                {
+                    if(!inCodeBlock)
+                    {
+                        formattedLines.Add("");
+                        formattedLines.Add("```");
+                        inCodeBlock = true;
+                    }
+                    formattedLines.Add(line);
+                }
+                else
+                {
+                    if(inCodeBlock)
+                    {
+                        formattedLines.Add("```");
+                        formattedLines.Add("");
+                        inCodeBlock = false;
+                    }
+                    formattedLines.Add(line);
+                }
+            }
+            return formattedLines.ToList();
         }
 
     }
