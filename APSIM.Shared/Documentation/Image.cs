@@ -28,7 +28,7 @@ namespace APSIM.Shared.Documentation
         public string name;
 
         /// <summary>The image to put into the doc.</summary>
-        public SkiaSharp.SKImage GetRaster(string relativePath)
+        public SkiaSharp.SKImage GetRaster(string relativePath = "")
         {
             if (raster != null)
                 return raster;

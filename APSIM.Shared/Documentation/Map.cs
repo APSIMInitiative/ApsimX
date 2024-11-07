@@ -8,6 +8,7 @@ namespace APSIM.Shared.Documentation
     /// </summary>
     public class Map : ITag
     {
+
         /// <summary>
         /// Coordinate of the center of the map.
         /// </summary>
