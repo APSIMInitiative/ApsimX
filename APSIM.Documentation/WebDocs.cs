@@ -110,11 +110,9 @@ namespace APSIM.Documentation
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
-
             html = RestoreHTMLSegments(html, htmlSegments);
-
             html = AddCSSClasses(html);
-            html = AddContentWrapper(html);
+            html = AddContentWrapper(GetNavigationHTML(tags), html); 
 
             return html;
         }
@@ -126,6 +124,27 @@ namespace APSIM.Documentation
         {
             // return $"![APSIM Initiative](AIBanner.png)\n\n";
             return new Image("AIBanner.png");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string GetNavigationHTML(List<ITag> tags)
+        {
+
+            string html = "<div class=\"docs-navcontainer\">\n";
+            html += "<div class=\"docs-navbar\">\n";
+            foreach(ITag tag in tags)
+            {
+                if (tag is Section section)
+                {
+                    string id = section.Title.ToLower().Replace(" ", "-");
+                    html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
+                }
+            }
+            html += "</div>\n";
+            html += "</div>\n";
+            return html;
         }
 
         /// <summary>
@@ -411,24 +430,27 @@ namespace APSIM.Documentation
         public static string AddCSSClasses(string html)
         {
             string output = html;
-            output = output.Replace("<h1 ", "<h1 class=\"docs-h1\"");
-            output = output.Replace("<h2 ", "<h2 class=\"docs-h2\"");
-            output = output.Replace("<img ", "<img class=\"docs-img\"");
-            output = output.Replace("<table>", "<table class=\"docs-table\"");
-            output = output.Replace("<th>", "<th class=\"docs-th\">");
-            output = output.Replace("<td>", "<td class=\"docs-td\">");
-            output = output.Replace("<tr>", "<tr class=\"docs-tr\">");        
+            output = output.Replace("<h1 ", "<h1 class=\"docs-h1\" ");
+            output = output.Replace("<h2 ", "<h2 class=\"docs-h2\" ");
+            output = output.Replace("<img ", "<img class=\"docs-img\" ");
+            output = output.Replace("<table>", "<table class=\"docs-table\" ");
+            output = output.Replace("<th>", "<th class=\"docs-th\"> ");
+            output = output.Replace("<td>", "<td class=\"docs-td\"> ");
+            output = output.Replace("<tr>", "<tr class=\"docs-tr\"> ");        
             return output;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public static string AddContentWrapper(string content)
+        public static string AddContentWrapper(string navigation, string content)
         {
             string output = "";
             output += "<div class=\"docs-wrapper\">\n";
+            output += navigation;
+            output += "<div class=\"docs-content\">\n";
             output += content;
+            output += "</div>\n";
             output += "</div>\n";
             return output;
         }

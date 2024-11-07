@@ -103,6 +103,9 @@ namespace APSIM.Documentation.Models.Types
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
+            //Add Interface section
+            tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument)));
+
             return tags;
         }
 

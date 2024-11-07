@@ -137,9 +137,11 @@ namespace APSIM.Documentation.Models
             }
 
             DataTable parameterTable = ConvertPropertiesToDataTable(parameters, model);
-            parameterTable.TableName = "Parameters (Inputs)";
-            tags.AddRange(ConvertToITags(parameterTable));
-
+            if (parameterTable != null)
+            {
+                parameterTable.TableName = "Parameters (Inputs)";
+                tags.AddRange(ConvertToITags(parameterTable));
+            }
             return tags;
         }
 
