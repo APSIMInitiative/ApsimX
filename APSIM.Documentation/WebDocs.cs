@@ -32,14 +32,17 @@ namespace APSIM.Documentation
             for(int i = 0;i < validations.Length; i++)
                 validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
 
-            string tutorialPath = apsimDirectory + "/Tests/Validation/";
+            string tutorialPath = apsimDirectory + "/Examples/Tutorials";
             string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/");
             for(int i = 0;i < tutorials.Length; i++)
                 tutorials[i] = tutorials[i].Replace(tutorialPath, "").Replace(".apsimx", "");
 
             string filename = name;
             if (filename == "AGPRyegrass" || filename == "AGPWhiteClover")
+            {
                 filename = "AgPasture";
+                name = "AgPasture";
+            }
 
             bool isValidation = false;
             bool isTutorial = false;
@@ -50,7 +53,7 @@ namespace APSIM.Documentation
             if (tutorials.Contains(filename))
                 isTutorial = true;
 
-            filename = filename + ".apsimx";
+            filename += ".apsimx";
             
             string path = apsimDirectory;
             if (isValidation)
@@ -98,12 +101,10 @@ namespace APSIM.Documentation
         /// <param name="tags">Tags to be converted</param>
         public static string TagsToHTMLString(List<ITag> tags)
         {
-            // List<ITag> tagList = new(){ )};
-            // tagList.AddRange(tags);
             string markdown = ConvertToMarkdown(tags, "");
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
-            string video = ConvertToMarkdown(new List<ITag>(){new Video("https://www.youtube.com/watch?v=nyDZkT1JTXw")},"");
-            markdown = headerImg + markdown + video;
+            // string video = ConvertToMarkdown(new List<ITag>(){new Video("https://www.youtube.com/watch?v=nyDZkT1JTXw")},"");
+            markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
             output2 += WriteBibliography(citations);
@@ -222,7 +223,7 @@ namespace APSIM.Documentation
                 {
 
                     List<string> lines = paragraph.text.Split("\n").ToList();
-                    lines = ConvertPDFCodeToMarkdownCode(lines);
+                    lines = ConvertMarkdownCode(lines);
                     foreach (string line in lines)
                     {
                         string text = line.Trim();
@@ -234,10 +235,10 @@ namespace APSIM.Documentation
                                     hashes += "#";
                             text = hashes + text.Replace("#", "");
                         }
+                        text = ReplaceImagePathWithEncodedString(text);
                         output += $"{text}\n";
                     }
                     output += "\n";
-                    output = ReplaceImagePathWithEncodedString(output);
                 }
                 else if (tag is Table table) 
                 {
@@ -300,7 +301,7 @@ namespace APSIM.Documentation
                 }
                 else if (tag is Video video)
                 {
-                    output += $"![]({video.Source})";
+                    output += $"![Video]({video.Source})\n";
                 }
             }
             return output;
@@ -381,6 +382,12 @@ namespace APSIM.Documentation
             Regex regex = new Regex(@"\!\[(.*)\]\((.*)\)");
             MatchCollection matches = regex.Matches(output);
 
+            Regex linkRegex = new(@"(\(http){+}");
+            MatchCollection linkMatches = regex.Matches(output);
+
+            if (linkMatches.Count > 0)
+                return output;
+            
             foreach(Match match in matches)
             {
                 string caption = match.Groups[1].ToString();
@@ -515,7 +522,7 @@ namespace APSIM.Documentation
         /// Converts code in Memo(Paragraph ITags) to markdown format.
         /// </summary>
         /// <returns></returns>
-        public static List<string> ConvertPDFCodeToMarkdownCode(List<string> paraLines)
+        public static List<string> ConvertMarkdownCode(List<string> paraLines)
         {
             // Get consecutive lines that start with triple tabs.
             bool inCodeBlock = false;
