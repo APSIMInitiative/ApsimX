@@ -21,6 +21,12 @@
     width: 100%;
 }
 
+.docs-table-container {
+	width: 100%;
+	overflow: scroll;
+	overflow-y: hidden;
+}
+
 .docs-table {
     margin-top: 30px;
     border: 1px solid;
