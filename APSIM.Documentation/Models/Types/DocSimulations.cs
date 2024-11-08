@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Shared.Documentation;
 using Models;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Graph = Models.Graph;
 
 namespace APSIM.Documentation.Models.Types
@@ -132,7 +133,7 @@ namespace APSIM.Documentation.Models.Types
             }
             // Add any (if available for a validation file) science documentation, 
             // media or other supporting docs.
-            tags.AddRange(AddAdditionals(name));
+            tags.AddRange(AddAdditionals(m));
             return tags;
         }
 
@@ -167,22 +168,21 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Adds extra documents or media for specific apsimx file documents.
         /// </summary>
-        private static List<ITag> AddAdditionals(string modelName)
+        private static List<ITag> AddAdditionals(IModel model)
         {
+            string filename = (model as Simulations).FileName.Replace('\\','/');
+            string directory = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar;
+            string name = Path.GetFileNameWithoutExtension(filename);
+
+
             List<ITag> additionsTags = new();
-
-            // TODO: Handle AgPasture file names 
-            if (modelName == "AgPasture")
-            {
-
-            }
 
             Dictionary<string, DocAdditions> validationAdditions = new()
             {
-                {"AGPRyegrass", new DocAdditions(
-                    "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
-                    "https://builds.apsim.info/api/nextgen/docs/SpeciesTable.pdf")},
-                {"AGPWhiteClover", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf")},
+                {"AgPasture", new DocAdditions(
+                    scienceDocLink:"https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
+                    extraLinkName: "Species Table",
+                    extraLink: directory + "SpeciesTable.apsimx")},
                 {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
                 {"MicroClimate", new DocAdditions("https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf")},
                 {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
@@ -190,9 +190,9 @@ namespace APSIM.Documentation.Models.Types
                 {"SWIM", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/SWIMv21UserManual.pdf")},
             };
 
-            if(validationAdditions.ContainsKey(modelName))
+            if(validationAdditions.ContainsKey(name))
             {
-                DocAdditions additions = validationAdditions[modelName];
+                DocAdditions additions = validationAdditions[name];
                 if(additions.ScienceDocLink != null)
                 {
                     Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));   
@@ -207,7 +207,8 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Section extraSection = new($"{additions.ExtraLinkName}", new Paragraph($"<a href=\"{additions.ExtraLink}\" target=\"_blank\">View document here</a>"));
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink, e => throw e, false).NewModel as Simulations;
+                    Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
                 }
             }
