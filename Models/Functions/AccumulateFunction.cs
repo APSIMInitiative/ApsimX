@@ -124,11 +124,11 @@ namespace Models.Functions
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
         }
 
-        /// <summary>Called when harvest.</summary>
+        /// <summary>Called on PlantEnding.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvest(object sender, EventArgs e)
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
         {
             AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
         }
