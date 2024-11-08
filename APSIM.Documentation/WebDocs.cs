@@ -82,7 +82,7 @@ namespace APSIM.Documentation
         public static string Generate(IModel model)
         {
             string html = GenerateWeb(model);
-            html = AddBoilerplate("Test", GetCSS(), html);
+            html = AddBoilerplate(model.Name + " Documentation", GetCSS(), html);
             return html;
         }
 
@@ -111,6 +111,7 @@ namespace APSIM.Documentation
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
             html = RestoreHTMLSegments(html, htmlSegments);
+            html = AddTableWrappers(html);
             html = AddCSSClasses(html);
             html = AddContentWrapper(GetNavigationHTML(tags), html); 
 
@@ -461,6 +462,17 @@ namespace APSIM.Documentation
             output += content;
             output += "</div>\n";
             output += "</div>\n";
+            return output;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string AddTableWrappers(string html)
+        {
+            string output = html;
+            output = output.Replace("<table>", "<div class=\"docs-table-container\">\n<table>");
+            output = output.Replace("</table>", "</table>\n</div>");
             return output;
         }
 
