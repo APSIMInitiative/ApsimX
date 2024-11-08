@@ -103,7 +103,6 @@ namespace APSIM.Documentation
         {
             string markdown = ConvertToMarkdown(tags, "");
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
-            // string video = ConvertToMarkdown(new List<ITag>(){new Video("https://www.youtube.com/watch?v=nyDZkT1JTXw")},"");
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
@@ -124,7 +123,6 @@ namespace APSIM.Documentation
         /// </summary>
         public static Image AddHeaderImageTag() 
         {
-            // return $"![APSIM Initiative](AIBanner.png)\n\n";
             return new Image("AIBanner.png");
         }
 
