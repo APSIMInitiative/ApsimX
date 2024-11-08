@@ -23,7 +23,7 @@
 
 .docs-table-container {
 	width: 100%;
-	overflow: scroll;
+	overflow: auto;
 	overflow-y: hidden;
 }
 
