@@ -1117,11 +1117,7 @@ namespace Models.PMF.Organs
         private void OnPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
-            {
-                //Detached.Add(Live);
-                //Detached.Add(Dead);
                 RemoveBiomass(liveToResidue: 1.0);
-            }
 
             Clear();
         }
