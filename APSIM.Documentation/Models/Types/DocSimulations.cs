@@ -71,11 +71,27 @@ namespace APSIM.Documentation.Models.Types
                     foreach (IModel child in memos)
                         memoTags.AddRange(AutoDocumentation.DocumentModel(child));
 
-            // Find a single instance of all unique Plant models.
-            IModel modelToDocument = m.FindDescendant(name);
-            if (modelToDocument != null)
+            // Special handling for AgPasture. It will document both types of AGP plant models.
+            // Rationale: Handling this situation properly would require passing an optional plant model name through various layers, just for AgPasture file.
+            IModel modelToDocument = null;
+            List<IModel> modelsToDocument = new();
+            if(name == "AgPasture")
             {
-                modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
+                IModel agpRyegrassModel = m.FindDescendant("AGPRyegrass");
+                IModel agpWhiteCloverModel = m.FindDescendant("AGPWhiteClover");
+                modelsToDocument.Add(agpRyegrassModel);
+                modelsToDocument.Add(agpWhiteCloverModel);
+                modelTags.AddRange(AutoDocumentation.DocumentModel(agpRyegrassModel));
+                modelTags.AddRange(AutoDocumentation.DocumentModel(agpWhiteCloverModel));
+            }
+            else
+            {
+                // Find a single instance of all unique Plant models.
+                modelToDocument = m.FindDescendant(name);
+                if (modelToDocument != null)
+                {
+                    modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
+                }
             }
 
             //Sort out heading
@@ -102,11 +118,21 @@ namespace APSIM.Documentation.Models.Types
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
-            tags.AddRange(AddAdditionals(name));
-
             //Add Interface section
-            tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument)));
-
+            if(modelToDocument != null)
+            {
+                tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument)));
+            }
+            else
+            {
+                foreach(IModel agPastureModel in modelsToDocument)
+                {
+                    tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel)));
+                }
+            }
+            // Add any (if available for a validation file) science documentation, 
+            // media or other supporting docs.
+            tags.AddRange(AddAdditionals(name));
             return tags;
         }
 
@@ -169,11 +195,22 @@ namespace APSIM.Documentation.Models.Types
                 DocAdditions additions = validationAdditions[modelName];
                 if(additions.ScienceDocLink != null)
                 {
-                    Section scienceSection = new Section("Science Documentation", new Paragraph($"![View science documentation here]({additions.ScienceDocLink})"));   
+                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));   
                     additionsTags.Add(scienceSection);
                 }
-            }
 
+                if(additions.VideoLink != null)
+                {
+                    Section videoSection = new("Media", new Video(additions.VideoLink));
+                    additionsTags.Add(videoSection);
+                }
+
+                if(additions.ExtraLink != null)
+                {
+                    Section extraSection = new($"{additions.ExtraLinkName}", new Paragraph($"<a href=\"{additions.ExtraLink}\" target=\"_blank\">View document here</a>"));
+                    additionsTags.Add(extraSection);
+                }
+            }
             return additionsTags;
         }
 
@@ -193,20 +230,27 @@ namespace APSIM.Documentation.Models.Types
             public string VideoLink {get; private set;}
 
             /// <summary>
+            /// Name of an optional extra link.
+            /// </summary>
+            public string ExtraLinkName {get; private set;}
+
+            /// <summary>
             /// Extra resource link.
             /// </summary>
             public string ExtraLink {get; private set;}
 
             /// <summary>
-            /// Constructor
+            /// Constructor.
             /// </summary>
             /// <param name="scienceDocLink"></param>
             /// <param name="videoLink"></param>
+            /// <param name="extraLinkName"></param>
             /// <param name="extraLink"></param>
-            public DocAdditions(string scienceDocLink = null, string videoLink = null, string extraLink = null)
+            public DocAdditions(string scienceDocLink = null, string videoLink = null, string extraLinkName = null, string extraLink = null)
             {
                 ScienceDocLink = scienceDocLink;
                 VideoLink = videoLink;
+                ExtraLinkName = extraLinkName;
                 ExtraLink = extraLink;
             }
         }
