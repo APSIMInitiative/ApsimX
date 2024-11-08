@@ -101,12 +101,22 @@ namespace APSIM.Documentation
         /// <param name="tags">Tags to be converted</param>
         public static string TagsToHTMLString(List<ITag> tags)
         {
+            tags.Add(new Section("References"));
             string markdown = ConvertToMarkdown(tags, "");
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
-            output2 += WriteBibliography(citations);
+            if (citations.Count > 0)
+            {
+                output2 += WriteBibliography(citations);
+            }
+            else
+            {
+                int lastHash =  output2.LastIndexOf("#");
+                output2 = output2.Substring(0, lastHash);
+                output2 = output2.Replace("<a href=\"#references\"><div class=\"docs-nav\">References</div></a>\n", "");
+            }
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
@@ -114,6 +124,7 @@ namespace APSIM.Documentation
             html = AddTableWrappers(html);
             html = AddCSSClasses(html);
             html = AddContentWrapper(GetNavigationHTML(tags), html); 
+            
 
             return html;
         }
@@ -347,9 +358,6 @@ namespace APSIM.Documentation
             // Ensure references in bibliography are sorted alphabetically
             // by their full text.
             IEnumerable<ICitation> sorted = citations.OrderBy(c => c.BibliographyText);
-
-            if (sorted.Any())
-                output += "# References\n\n";
 
             foreach (ICitation citation in sorted)
             {
