@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 183; } }
+        public static int LatestVersion { get { return 184; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5804,11 +5804,47 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Replace old CERES soil temperature model with new one.
+        /// Reparents graphs incorrectly placed under a Simulation under an Experiment
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion183(JObject root, string fileName)
+        {
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                var graphParent = JsonUtilities.Parent(graph);
+                if(JsonUtilities.Type(graphParent) == "Simulation")
+                {
+                    var simParent = JsonUtilities.Parent(graphParent);
+                    if(JsonUtilities.Type(simParent) == "Experiment")
+                    {
+                        JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
+                        var experimentChildren = (simParent as JObject).Children();
+
+                        bool duplicateGraphExists = false;
+                        var experiment = FileFormat.ReadFromString<Experiment>(simParent.ToString(), e => throw e, false).NewModel as Experiment;
+                        foreach(IModel child in experiment.Children)
+                        {
+                            // TODO: Needs to not add a graph to an experiment if another object
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work)
+                            // that causes issues.
+                            if (child.Name.Equals(graph["Name"].ToString()))
+                                duplicateGraphExists = true;
+                        }
+
+                        if (duplicateGraphExists == false)
+                            JsonUtilities.AddChild((JObject)simParent, graph);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace old CERES soil temperature model with new one.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion184(JObject root, string fileName)
         {
             foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
             {
@@ -5833,6 +5869,7 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
-
     }
+
 }
+

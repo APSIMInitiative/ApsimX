@@ -1,4 +1,6 @@
-﻿namespace Models.Core.ConfigFile
+﻿using System.Collections.Generic;
+
+namespace Models.Core.ConfigFile
 {
     /// <summary>
     /// A config file instruction.
@@ -8,53 +10,40 @@
         /// <summary>
         /// A insturction keyword describing the instructions action.
         /// </summary>
-        public Keyword keyword { get; set; }
-
-        /// <summary>
-        /// An optional node that will be modified.
-        /// </summary> 
-        /// <remarks>
-        /// May not be needed in the future with the use of Locator.
-        /// </remarks>
-        public string NodeToModify { get; set; }
-
-        /// <summary>
-        /// An optional file path where a node to copy or add is located.
-        /// </summary>
-        public string FileContainingNode { get; set; }
-
-        /// <summary>
-        /// An optional path to file to save to.
-        /// </summary>
-        public string SavePath { get; set; }
-
-        /// <summary>
-        /// An optional path to file to load from.
-        /// </summary>
-        public string LoadPath { get; set; }
+        public Keyword Keyword { get; set; }
 
         /// <summary>
         /// A string representing a node to either add, delete or copy.
         /// </summary>
-        /// <remarks>
-        /// May not be needed in the future with the use of Locator.
-        /// </remarks>
-        public string NodeForAction { get; set; }
+        public string ActiveNode { get; set; }
+
+        /// <summary>
+        /// An optional node that will be modified.
+        /// </summary> 
+        public string NewNode { get; set; }
+
+        /// <summary>
+        /// An optional path to file to save to.
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<string> Parameters { get; set; }
 
         /// <summary>
         /// Creates a new Instruction instance with all arguments.
         /// </summary>
         /// 
-        public Instruction(Keyword keyword, string nodeToModify, string fileContainingNode, string SavePath, string LoadPath, string nodeForAction)
+        public Instruction(Keyword keyword, string activeNode, string newNode, string path, List<string> parameters)
         {
-            this.keyword = keyword;
-            this.NodeToModify = nodeToModify;
-            this.FileContainingNode = fileContainingNode;
-            this.NodeForAction = nodeForAction;
-            this.SavePath = SavePath;
-            this.LoadPath = LoadPath;
+            this.Keyword = keyword;
+            this.ActiveNode = activeNode;
+            this.NewNode = newNode;
+            this.Path = path;
+            this.Parameters = parameters;
         }
-
     }
 
     /// <summary>
