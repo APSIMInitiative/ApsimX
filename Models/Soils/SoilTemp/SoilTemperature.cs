@@ -1383,7 +1383,7 @@ namespace Models.Soils.SoilTemp
             }
 
 
-            // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance
+            // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
             boundaryLayerCond = 20; 
 
 
