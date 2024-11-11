@@ -104,6 +104,8 @@ namespace UserInterface.Views
             {
                 if (property.PropertyType == typeof(bool))
                     displayType = PropertyType.Checkbox;
+                else if (property.PropertyType == typeof(string))
+                    displayType = PropertyType.SingleLineText;
                 else if (ReflectionUtilities.IsNumericType(property.PropertyType))
                     displayType = PropertyType.Numeric;
                 else

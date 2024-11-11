@@ -171,7 +171,7 @@ namespace Models
                 {
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
-                    List<string> commandsList = ParseConfigFileCommands(options);
+                    List<string> commandsList = ConfigFile.GetConfigFileCommands(options.Apply);
                     DoCommands(options, files, configFileDirectory, commandsList);
                     CleanUpTempFiles(configFileDirectory);
                 }
@@ -235,21 +235,6 @@ namespace Models
                 exitCode = 1;
             }
         }
-
-        /// <summary>
-        /// Parses and configures commands for use in model run.
-        /// </summary>
-        /// <param name="options">Arguments from Models command.</param>
-        /// <returns></returns>
-        private static List<string> ParseConfigFileCommands(Options options)
-        {
-            List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
-            List<string> commandsWithoutNulls = ConfigFile.GetListWithoutNullCommands(commands);
-            List<string> commandsWithSpacesRemoved = ConfigFile.RemoveConfigFileWhitespace(commandsWithoutNulls.ToList());
-            return ConfigFile.EncodeSpacesInCommandList(commandsWithSpacesRemoved);
-        }
-
-
 
         /// <summary>
         /// Takes an array of commands and runs them in sequence.
@@ -335,7 +320,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
 
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
@@ -404,7 +388,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
 
