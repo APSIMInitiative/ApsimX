@@ -12,11 +12,26 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class RuminantTrackingItemProtein: IRuminantTrackingItem
     {
+        /// <summary>
+        /// Ruminant Parameter containing proportion of total mass that is protein
+        /// </summary>
+        public double ProportionProtein { get; set; } = 1.0;
+
         /// <inheritdoc/>
         public double Amount { get; set; }
 
+        /// <summary>
+        /// The total mass of protein and other associated components (skin, hoof, bone etc) as used by Oddy et a Model
+        /// </summary>
+        public double AmountIncludingOther { get { return Amount / ProportionProtein; } }
+
         /// <inheritdoc/>
         public double Change { get; private set; }
+
+        /// <summary>
+        /// The total mass of protein and other associated components (skin, hoof, bone etc)
+        /// </summary>
+        public double ChangeIncludingOther { get { return Change / ProportionProtein; } }
 
         /// <inheritdoc/>
         public double Previous { get { return Amount - Change; } }
@@ -30,7 +45,7 @@ namespace Models.CLEM.Resources
         public double ForMaintenence { get; set; }
 
         /// <summary>
-        /// Report protein for maintenance (kg)
+        /// Report protein for wool (kg)
         /// </summary>
         public double ForWool { get; set; }
 
@@ -48,6 +63,14 @@ namespace Models.CLEM.Resources
         /// Report protein avalable after leaving stomach and accounting for other protein use (kg)
         /// </summary>
         public double AvailableForGain { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantTrackingItemProtein(double proportion = 1.0)
+        {
+            ProportionProtein = proportion;
+        }
 
         /// <inheritdoc/>
         public void Adjust(double change)

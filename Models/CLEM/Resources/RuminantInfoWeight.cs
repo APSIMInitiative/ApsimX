@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Interfaces;
@@ -326,7 +327,7 @@ namespace Models.CLEM.Resources
         /// <param name="individual">The individual to change</param>
         public void UpdateEBM(Ruminant individual)
         {
-            double change = individual.Weight.Protein.Change + individual.Weight.ProteinViscera.Change + individual.Weight.Fat.Change;
+            double change = individual.Weight.Protein.ChangeIncludingOther + individual.Weight.ProteinViscera.ChangeIncludingOther + individual.Weight.Fat.Change;
             AdjustByEBMChange(change, individual);
         }
 
@@ -387,7 +388,7 @@ namespace Models.CLEM.Resources
                         pProtein += initialValues[2];
                 }
             }
-
+            
             switch (style)
             {
                 case InitialiseFatProteinAssignmentStyle.ProvideMassKg:
@@ -412,22 +413,29 @@ namespace Models.CLEM.Resources
                     break;
             }
 
+            // pFat and pProtein are now in kg
             individual.Weight.Fat.Set(pFat);
             individual.Energy.Fat.Set(individual.Weight.Fat.Amount * individual.Parameters.General.MJEnergyPerKgFat);
-            individual.Weight.Protein.Set(pProtein);
-            individual.Energy.Protein.Set(individual.Weight.Protein.Amount * individual.Parameters.General.MJEnergyPerKgProtein);
+
+            if (growModel is RuminantActivityGrowOddy)
+            {
+                individual.Weight.Protein.ProportionProtein = individual.Parameters.GrowOddy.pPrpM;
+            }
+
+            individual.Energy.Protein.Set(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+            individual.Weight.Protein.Set(pProtein); // this is fat free protein weight only. Other mass included with Protein.AmountIncludingOther
 
             if (growModel.IncludeVisceralProteinMass)
             {
                 if (individual.Weight.ProteinViscera is null)
                 {
-                    individual.Weight.ProteinViscera = new();
+                    individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV);
                     individual.Energy.ProteinViscera = new();
                 }
                 if (vProtein > 0)
                 {
-                    individual.Weight.ProteinViscera.Set(vProtein);
-                    individual.Energy.ProteinViscera.Set(individual.Weight.ProteinViscera.Amount * individual.Parameters.General.MJEnergyPerKgProtein);
+                    individual.Energy.ProteinViscera.Set(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+                    individual.Weight.ProteinViscera.Set(vProtein);  // this is fat free protein weight only. Other mass included with Protein.AmountIncludingOther
                 }
             }
         }

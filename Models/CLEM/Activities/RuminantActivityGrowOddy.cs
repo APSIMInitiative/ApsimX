@@ -8,17 +8,16 @@ using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Models.CLEM.Interfaces;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Ruminant growth activity (Oddy model phase ver RAAN)
-    /// 
-    /// This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).
+    /// Ruminant growth activity (Oddy et al, 2023 model phase ver RAAN)
+    /// This class represents the functionality of a ruminant growth model (see RuminantActivityGrow24).
     /// </summary>
-    /// <remarks>Rumiant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
-    /// <authors>Animal physiology and equations for this methodology, Based on Oddy V.H., Dougherty, J.C.H., Evered, M., Clayton, E.H. and Oltjen, J.W. (2024) A revised model of energy transactions and body composition in sheep. Journal of Animal Science, Volume 102, https://doi.org/10.1093/jas/skad403</authors>
-    /// <authors>Implementation of R script based equations, Adam Liedloff, CSIRO</authors>
+    /// <authors>Animal physiology and equations for this methodology based on Oddy V.H., Dougherty, J.C.H., Evered, M., Clayton, E.H. and Oltjen, J.W. (2024) A revised model of energy transactions and body composition in sheep. Journal of Animal Science, Volume 102, https://doi.org/10.1093/jas/skad403</authors>
+    /// <authors>CLEM implementation to include R script based equations and approach, Adam Liedloff, CSIRO</authors>
     /// <authors>Quality control, Thomas Keogh, CSIRO</authors>
     /// <acknowledgements>This animal production component is based upon the equations developed by V.H. Oddy and J.W. Oltjen</acknowledgements>
     [Serializable]
@@ -38,6 +37,7 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private ProductStoreTypeManure manureStore;
+        private double dwdt = 0;
 
         /// <inheritdoc/>
         public bool IncludeFatAndProtein { get => true; }
@@ -193,6 +193,10 @@ namespace Models.CLEM.Activities
                 // work on herd sorted descending age to ensure mothers are processed before sucklings.
                 foreach (Ruminant ind in breed)
                 {
+                    // spin-up to get change in mass working. 
+                    if (events.IntervalIndex == 1)
+                        CalculateEnergy(ind);
+
                     Status = ActivityStatus.Success;
 
                     if (ind is RuminantFemale female && (female.IsPregnant | female.IsLactating))
@@ -263,12 +267,14 @@ namespace Models.CLEM.Activities
 
             double alphaM = ind.Weight.StandardReferenceWeight * ind.Parameters.GrowOddy.shrink * ind.Parameters.GrowOddy.leanM * ind.Parameters.GrowOddy.pPrpM * ind.Parameters.GrowOddy.pMusc * ind.Parameters.General.MJEnergyPerKgProtein;
             double alphaV = ind.Parameters.GrowOddy.cs1 * ind.Intake.ME + ind.Parameters.GrowOddy.cs2 * Math.Pow(ind.Energy.Protein.Amount, 0.41) - ind.Parameters.GrowOddy.cs3 * ind.Intake.MDSolid;
-            double NEG = CalculateNEG(ind, out double dwdt);
+            double NEG = CalculateNEG(ind);
 
             // Pool energy change by time-step
+            double dcdt = 0;
+            double dldt = 0;
             double dmdt = (NEG * ind.Parameters.GrowOddy.pm + ind.Parameters.GrowOddy.e0) * (1 - ind.Energy.Protein.Amount / alphaM);
             double dvdt = ind.Parameters.GrowOddy.pv * (alphaV - ind.Energy.ProteinViscera.Amount);
-            double dfdt = NEG - dmdt - dvdt - dwdt;
+            double dfdt = NEG - dmdt - dvdt - dcdt - dldt - dwdt;
 
             // Oddy tracks total energy in pools which includes the energy used to lay down the other structures (bone etc)
             // ToDo: but can this energy be lost from the individual like fat and protein?
@@ -280,49 +286,53 @@ namespace Models.CLEM.Activities
             // ToDo: A loss in protein energy has an equal loss in the other body components associated with it (e.g the bone etc of pPrpM and pPrpV)
             // Is this correct. I assume you lose bone structure etc in same way gained?
 
-
             // ToDo: the paper states energy is kJ, where is this converted to MJ?
 
             ind.Energy.Protein.Adjust(dmdt * events.Interval); // total energy in the non-visceral tissues and structures 
             ind.Energy.ProteinViscera.Adjust(dvdt * events.Interval); // total energy in the visceral tissues and structures 
             ind.Energy.Fat.Adjust(dfdt * events.Interval);
 
-            // ToDO: where do we account for the other structures hoof, head, bone etc so it is available in our EMB reported by model?
+            // ToDo: where do we account for the other structures hoof, head, bone etc so it is available in our EMB reported by model? Should these me an an associated pool WeightProtein.Other calculated as Amount/converter? 
             // Currently these are stored in the weight pools, but may not match values expected in validation datasets as different to other CLEM models.
-            ind.Weight.Protein.Adjust(dmdt / ind.Parameters.GrowOddy.pPrpM / ind.Parameters.General.MJEnergyPerKgProtein);
-            ind.Weight.ProteinViscera.Adjust(dvdt / ind.Parameters.GrowOddy.pPrpV / ind.Parameters.General.MJEnergyPerKgProtein);
-            ind.Weight.Fat.Adjust(dfdt / ind.Parameters.General.MJEnergyPerKgFat);
+            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein);
+            ind.Weight.ProteinViscera.Adjust(ind.Energy.ProteinViscera.Change / ind.Parameters.General.MJEnergyPerKgProtein);
+            ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat);
+
+            if (dwdt > 0)
+            {
+                ind.Energy.ForWool = dwdt * events.Interval;
+                ind.Weight.WoolClean.Adjust(dwdt / ind.Parameters.General.MJEnergyPerKgProtein * events.Interval); //gets total cwg (cumulative) in g -- / 1000 removed as this converts to g and we work in kg
+                ind.Weight.Wool.Adjust(ind.Weight.WoolClean.Change / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+            }
 
             ind.Weight.UpdateEBM(ind);
 
             // manure per time step
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * events.Interval;
+
+            // no urine prodction in Oddy model
         }
 
         /// <summary>
         /// The Oddy Ruminant model method to calculate net t energy gain.
         /// </summary>
         /// <param name="ind">The individual being acted upon</param>
-        /// <param name="dwdt">Change in wool for time step</param>
         /// <returns>Net energy gain</returns>
-        private double CalculateNEG(Ruminant ind, out double dwdt)
+        private double CalculateNEG(Ruminant ind)
         {
-            // conceptus when added
-            // double bc = 1 / ind.Parameters.GrowOddy.kc - 1;
-            // lactation when added
-            // double bl = 1 / ind.Parameters.GrowOddy.kl - 1;
+            // for conceptus when added
+            double bc = 1 / ind.Parameters.GrowOddy.kc - 1;
+            // for lactation when added
+            double bl = 1 / ind.Parameters.GrowOddy.kl - 1;
 
             dwdt = 0;
             if (ind.Parameters.GrowOddy.IncludeWool)
             {
                 double WInst = CalculateWool(ind);
                 if (ind.Energy.ForWool == 0)
-                    dwdt = WInst; //no previous woolchange so just use this step, units MJ/d
+                    dwdt = WInst; //no previous wool change so just use this step, units MJ/d
                 else
-                    dwdt = ind.Energy.ForWool * 0.96 + WInst * 0.04; //units MJ/d
-
-                ind.Weight.WoolClean.Adjust(dwdt * 1000 / ind.Parameters.General.MJEnergyPerKgProtein); //gets total cwg (cumulative) in g
-                ind.Weight.Wool.Adjust(ind.Weight.WoolClean.Change * ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                    dwdt = (ind.Energy.ForWool / events.Interval) * 0.96 + WInst * 0.04; //units MJ/d
             }
 
             double bf = 1 / ind.Parameters.GrowOddy.kf - 1;
@@ -334,10 +344,13 @@ namespace Models.CLEM.Activities
             if (ind.Energy.Protein.Change < 0) bpm = ind.Parameters.GrowOddy.lp;
             if (ind.Energy.ProteinViscera.Change < 0) bpv = ind.Parameters.GrowOddy.lp;
 
+            //ToDo: work out what energy is reported as daily amounts.
+            //Are the following all working at per day? If so then the stored dxdt (change) values need to be converted back to daily.
+
             // change in energy is from previous timestep and will be updated in parent function
             ind.Energy.ForBasalMetabolism = ind.Parameters.GrowOddy.bm * ind.Energy.Protein.Amount + ind.Parameters.GrowOddy.bv * ind.Energy.ProteinViscera.Amount;
             ind.Energy.ForHPViscera = (1 - ind.Parameters.GrowOddy.km) * ind.Intake.ME;
-            ind.Energy.ForProductFormation = bpm * ind.Energy.Protein.Change + bpv * ind.Energy.ProteinViscera.Change + bf * ind.Energy.Protein.Change + bpw * dwdt; //+ bc*dcdt + bl*dldt
+            ind.Energy.ForProductFormation = (bpm * (ind.Energy.Protein.Change / events.Interval)) + (bpv * (ind.Energy.ProteinViscera.Change / events.Interval)) + (bf * (ind.Energy.Fat.Change / events.Interval)) + (bpw * dwdt) + (bc * 0) + (bl * 0);
             ind.Energy.UpdateProductFormationAverage();
             ind.Intake.UpdateMEAverage();
             return ind.Intake.MEAverage - ind.Energy.ForHeatProduction;
@@ -350,10 +363,10 @@ namespace Models.CLEM.Activities
         /// <returns>EmptyBodyWeight</returns>
         private double CalculateEBW(Ruminant ind)
         {
-            // Total mass of protein and associated structures is stored in Protein, ProteinViscera and Fat stores (ind.Weight) as per Oddy.
-            // therefore EBM is the sum of protein and fat pools.
+            // Total mass of protein and associated structures is calculated from Weight.Protein.Amount and Weight.ProteinViscera.Amount adjusted to include other components (ind.Weight) as per Oddy.
+            // Therefore EBM is the sum of protein.AmountIncludingOther and fat pools.
 
-            return ind.Weight.Protein.Amount + ind.Weight.ProteinViscera.Amount + ind.Weight.Fat.Amount;
+            return ind.Weight.Protein.AmountIncludingOther + ind.Weight.ProteinViscera.AmountIncludingOther + ind.Weight.Fat.Amount;
 
             //ToDO: Logical issue here. If an animal has lost protein the the lost energy does not contain the production factor. Better to track MJ pf protein deposited.
             //ToDo: this can be omitted as we are tracking the EBM of individuals separately.
@@ -375,7 +388,7 @@ namespace Models.CLEM.Activities
             double shr = 1 - (0.35 * Math.Pow(ind.Intake.MDSolid, 2) - 9 * ind.Intake.MDSolid + 70) / 100;
             double Z = CalculateEBW(ind) / shr / ind.Weight.StandardReferenceWeight;
             double WZ = Z * 0.82 + 0.18;
-            double WBr = (ind.Parameters.Grow24_CW.StandardFleeceWeight * 1000 / 365) / (0.26 * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) / 0.7 * 1.3);
+            double WBr = (ind.Parameters.Grow24_CW.StandardFleeceWeight * 1000 / 365) / (0.26 * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) / 0.7 * 1.3); 
             double PWout = WBr * WZ * ind.Intake.ME * ind.Parameters.General.MJEnergyPerKgProtein / 1000; //units here are MJ/d internally, converted from kJ
             return PWout;
         }
