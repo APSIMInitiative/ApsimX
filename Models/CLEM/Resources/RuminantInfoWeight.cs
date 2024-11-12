@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         private double live = 0;
 
         /// <summary>
-        /// Track protein weight (kg)
+        /// Track dry protein weight (kg)
         /// </summary>
         /// <remarks>
         /// Mass of protein excluding conceptus and fleece
@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItemProtein Protein { get; set; } = new();
 
         /// <summary>
-        /// Track protein weight of viscera (Oddy, kg)
+        /// Track dry protein weight of viscera (Oddy, kg)
         /// </summary>
         /// <remarks>
         /// Mass of visceral protein required for Oddy growth
@@ -327,7 +327,7 @@ namespace Models.CLEM.Resources
         /// <param name="individual">The individual to change</param>
         public void UpdateEBM(Ruminant individual)
         {
-            double change = individual.Weight.Protein.ChangeIncludingOther + individual.Weight.ProteinViscera.ChangeIncludingOther + individual.Weight.Fat.Change;
+            double change = individual.Weight.Protein.ChangeWet + individual.Weight.ProteinViscera.ChangeWet + individual.Weight.Fat.Change;
             AdjustByEBMChange(change, individual);
         }
 
@@ -399,9 +399,9 @@ namespace Models.CLEM.Resources
                     vProtein *= individual.Weight.EmptyBodyMass;
                     break;
                 case InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ:
-                    pFat /= individual.Parameters.General.MJEnergyPerKgFat * 1000.0;
-                    pProtein /= individual.Parameters.General.MJEnergyPerKgProtein * 1000.0;
-                    vProtein /= individual.Parameters.General.MJEnergyPerKgProtein * 1000.0;
+                    pFat /= individual.Parameters.General.MJEnergyPerKgFat;
+                    pProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
+                    vProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
                     break;
                 case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
                     pFat *= individual.Weight.EmptyBodyMass;

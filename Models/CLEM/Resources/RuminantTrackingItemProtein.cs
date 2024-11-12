@@ -21,17 +21,17 @@ namespace Models.CLEM.Resources
         public double Amount { get; set; }
 
         /// <summary>
-        /// The total mass of protein and other associated components (skin, hoof, bone etc) as used by Oddy et a Model
+        /// The total mass of wet protein (plus water and ash) as used by Oddy et a Model
         /// </summary>
-        public double AmountIncludingOther { get { return Amount / ProportionProtein; } }
+        public double AmountWet { get { return Amount / ProportionProtein; } }
 
         /// <inheritdoc/>
         public double Change { get; private set; }
 
         /// <summary>
-        /// The total mass of protein and other associated components (skin, hoof, bone etc)
+        /// Change in the total mass of wet protein
         /// </summary>
-        public double ChangeIncludingOther { get { return Change / ProportionProtein; } }
+        public double ChangeWet { get { return Change / ProportionProtein; } }
 
         /// <inheritdoc/>
         public double Previous { get { return Amount - Change; } }
