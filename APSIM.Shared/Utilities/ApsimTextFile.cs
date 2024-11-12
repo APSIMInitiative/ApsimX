@@ -560,25 +560,8 @@ namespace APSIM.Shared.Utilities
                 // the correct format and make it explicit.
                 if (Types[w] == typeof(DateTime) && (Units[w] == "" || Units[w] == "()"))
                 {
-                    // First try our traditional default format
-                    DateTime dtValue;
-                    if (DateTime.TryParseExact(words[w], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dtValue))
-                    {
-                        Units[w] = "(yyyy-MM-dd)";
-                    }
-                    else
-                    {
-                        // We know something in the current culture works. Step through the patterns until we find it.
-                        string[] dateFormats = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAllDateTimePatterns();
-                        foreach (string dateFormat in dateFormats)
-                        {
-                            if (DateTime.TryParseExact(words[w], dateFormat, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out dtValue))
-                            {
-                                Units[w] = "(" + dateFormat + ")";
-                                break;
-                            }
-                        }
-                    }
+                    words[w] = DateUtilities.ValidateDateStringWithYear(words[w]);
+                    Units[w] = "(yyyy-MM-dd)";
                 }
 
             }
@@ -604,7 +587,6 @@ namespace APSIM.Shared.Utilities
 
                     else if (columnTypes[w] == typeof(DateTime))
                     {
-                        // Need to get a sanitised date e.g. d/M/yyyy 
                         values[w] = DateUtilities.GetDate(words[w]);
                     }
                     else if (columnTypes[w] == typeof(float))
@@ -709,9 +691,9 @@ namespace APSIM.Shared.Utilities
                     if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (ColumnTypes[Col] == typeof(DateTime))
-                            return (DateTime)values[Col];
-                        else
-                            return DateTime.Parse(values[Col].ToString(), CultureInfo.InvariantCulture);
+                            return DateUtilities.GetDate(DateUtilities.GetDateAsString((DateTime)values[Col]));
+                        else if (ColumnTypes[Col] == typeof(string))
+                            return DateUtilities.GetDate(values[Col].ToString());
                     }
                     else if (ColumnName.Equals("year", StringComparison.CurrentCultureIgnoreCase))
                         Year = Convert.ToInt32(values[Col], CultureInfo.InvariantCulture);
@@ -757,12 +739,7 @@ namespace APSIM.Shared.Utilities
             {
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    if (table.Columns[col].DataType == typeof(DateTime) || ColumnTypes[col] == typeof(DateTime))
-                        return (DateTime)table.Rows[rowIndex][col];
-                    else
-                        return DateTime.Parse(table.Rows[rowIndex][col].ToString(), CultureInfo.InvariantCulture);
-                }
+                    DateUtilities.GetDate(table.Rows[rowIndex][col].ToString());
                 else if (ColumnName.Equals("year", StringComparison.CurrentCultureIgnoreCase))
                     Year = Convert.ToInt32(table.Rows[rowIndex][col], CultureInfo.InvariantCulture);
                 else if (ColumnName.Equals("month", StringComparison.CurrentCultureIgnoreCase))
@@ -794,7 +771,7 @@ namespace APSIM.Shared.Utilities
         public void SeekToDate(DateTime date)
         {
             if (date < _FirstDate)
-                throw new Exception("Date " + date.ToString() + " doesn't exist in file: " + _FileName);
+                throw new Exception("Date " + DateUtilities.GetDateAsString(date) + " doesn't exist in file: " + _FileName);
 
             //check if we've looked at this date before
             ApsimPositionCacheEntry previousEntry = null; //used as a starting point to save searching from the start of the file if entries exist
