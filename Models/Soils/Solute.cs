@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -29,6 +25,10 @@ namespace Models.Soils
         /// <summary>Access the water model.</summary>
         [Link]
         private Water water = null;
+
+        /// <summary>Access the summary model.</summary>
+        [Link]
+        private Summary summary = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -198,52 +198,27 @@ namespace Models.Soils
                 kgha[i] += delta[i];
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
+        /// <summary>Add an amount of solute to a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="depth">Solute will be added down to this depth (mm).</param>
+        public virtual void AddToDepth(double amount, double depth)
         {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            foreach (ITag tag in GetModelDescription())
-                yield return tag;
+            double[] weights = SoilUtilities.ProportionOfCumThickness(physical.Thickness, depth);
+            double[] amountToAdd = MathUtilities.Multiply_Value(weights, amount);
+            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
+            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added to depth of {depth} mm", MessageType.Information);
         }
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
+        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="depth">Depth (mm) to add solute to.</param>
+        public virtual void AddAtDepth(double amount, double depth)
         {
-            // Define default ppm value to use below bottom layer of this solute if necessary.
-            double defaultValue = 0;
-
-            SetThickness(targetThickness, defaultValue);
-
-            if (FIP != null) FIP = MathUtilities.FillMissingValues(FIP, Thickness.Length, FIP.Last());
-            if (Exco != null) Exco = MathUtilities.FillMissingValues(Exco, Thickness.Length, Exco.Last());
-            InitialValues = MathUtilities.FillMissingValues(InitialValues, Thickness.Length, defaultValue);
-            Reset();
-        }
-
-        /// <summary>Sets the sample thickness.</summary>
-        /// <param name="thickness">The thickness to change the sample to.</param>
-        /// <param name="defaultValue">Default value for missing values.</param>
-        private void SetThickness(double[] thickness, double defaultValue)
-        {
-            if (!MathUtilities.AreEqual(thickness, Thickness))
-            {
-                if (Exco != null)
-                    Exco = SoilUtilities.MapConcentration(Exco, Thickness, thickness, 0.2);
-                if (FIP != null)
-                    FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
-
-                if (InitialValuesUnits == UnitsEnum.kgha)
-                    InitialValues = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
-                InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, defaultValue);
-                Thickness = thickness;
-                if (InitialValuesUnits == UnitsEnum.kgha)
-                    InitialValues = SoilUtilities.ppm2kgha(Thickness, SoluteBD, InitialValues);
-            }
+            double[] amountToAdd = new double[physical.Thickness.Length];
+            int i = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depth);
+            amountToAdd[i] = amount;
+            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
+            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added at depth of {depth} mm", MessageType.Information);
         }
 
         /// <summary>The soil physical node.</summary>

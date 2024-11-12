@@ -242,7 +242,7 @@ ExperimentY2
         }
 
         [Test]
-        public void TestApplySwitchAddWithModelName()
+        public void TestApplySwitchAdd()
         {
             Simulations file = Utilities.GetRunnableSim();
 
@@ -267,6 +267,35 @@ ExperimentY2
             Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
             Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.That(newReportNode, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestApplySwitchAddWithName()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
+            string newFileString = $"add [Zone] Report MyReport\nsave savingFile.apsimx";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config1.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.That(File.Exists(newTempConfigFile), Is.True);
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(savingFilePath);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("MyReport");
             Assert.That(newReportNode, Is.Not.Null);
         }
 
@@ -683,7 +712,7 @@ save {apsimxFileName}
 
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
             Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
-            Assert.That(new List<string>() { "[Fertilise at sowing].Script.Amount = 0 to 200 step 20" }, Does.Contain(modifiedFactor.Specification));
+            Assert.That(new List<string>() { modifiedFactor.Specification }, Does.Contain("[Fertilise at sowing].Script.Amount = 0 to 200 step 20"));
         }
 
         [Test]
@@ -802,9 +831,9 @@ save {apsimxFileName}
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
             string apsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
             string newFileString = @$"load {apsimxFileName}
-        duplicate [Simulation] Simulation1
-        save {apsimxFileName}
-        run";
+            duplicate [Simulation] Simulation1
+            save {apsimxFileName}
+            run";
 
             File.WriteAllText(newTempConfigFile, newFileString);
             Assert.Throws<Exception>(() => Utilities.RunModels($"--apply {newTempConfigFile} -p playlist"));
@@ -1068,6 +1097,30 @@ run";
 
         }
 
+        [Test]
+        public void TestReadingInputValueFromFile()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            string tempPath = Path.GetTempPath();
+            
+            string inputFile = tempPath + "input.txt";
+            string newName = "New Name";
+            File.WriteAllText(inputFile, newName);
+
+            string outputFile = "test.apsimx";
+
+            string configFile = tempPath + "config.txt";
+            File.WriteAllText(configFile, "[Simulation].Name=input.txt;\nsave " + outputFile);
+
+            Utilities.RunModels(file, $"--apply {configFile}");
+
+            // Reload simulation from file text. Needed to see changes made.
+            string text = File.ReadAllText(tempPath + outputFile);
+            Simulations result = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            Assert.That(result.FindInScope<Simulation>().Name, Is.EqualTo(newName));
+        }
 
     }
 }

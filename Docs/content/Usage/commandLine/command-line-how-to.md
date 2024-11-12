@@ -52,12 +52,15 @@ A config file is simply a text file with a simple command on each line.
     - This requires no further text. It will run the apsimx file loaded with a load command.
 - add
     - ```add [ParentNodeName] childNodeName```
+    - ```add [ParentNodeName] childNodeName Name```
     - ```add [ParentNodeName] exampleApsimFile.apsimx;[nodeName]```
+    - ```add [ParentNodeName] exampleApsimFile.apsimx;[nodeName] Name```
         - note: the apsimx file path must be relative to the configFile path.
 - delete
     - ```delete [ParentNodeName].childNodeName```
 - copy
     - ```copy [NodeName] [AnotherNodesName]```
+    - ```copy [NodeName] [AnotherNodesName] Name```
 - duplicate
     - ```duplicate [NodeName].ChildNodeName.ChildNodeName NewName```
 - You can also edit a node's properties by using the node's name followed by a period-separated path to the property you would like to change followed by a equals sign and the new value. E.g. ```[Weather].FileName=Dalby.met```
