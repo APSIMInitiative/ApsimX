@@ -5861,7 +5861,16 @@ namespace Models.Core.ApsimFile
                 // Add new soil temperature model if necessary
                 if (JsonUtilities.ChildrenOfType(soil, "SoilTemperature").Count == 0)
                 {
-                    soilChildren.Add(new JObject()
+                    // Need to make sure NutrientPatchManger is last child.
+                    // Try and get index of NutrientPatchManger
+                    int i;
+                    for (i = 0; i < soilChildren.Count; i++)
+                    {
+                        if (soilChildren[i]["$type"].ToString().Contains(".NutrientPatchManager"))
+                            break;
+                    }
+
+                    soilChildren.Insert(i, new JObject()
                     {
                         ["$type"] = "Models.Soils.SoilTemp.SoilTemperature, Models",
                         ["Name"] = name ?? "Temperature"
