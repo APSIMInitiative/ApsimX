@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 183,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -51,7 +51,16 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = FromHarvest",
+                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false,true",
+                  "Name": "Type",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = SetMonthly",
                   "Name": "Return",
                   "ResourceName": null,
                   "Children": [],
@@ -60,7 +69,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 5",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
                   "Name": "Num",
                   "ResourceName": null,
                   "Children": [],
@@ -121,15 +130,6 @@
                                 150.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                24.0,
-                                39.0,
-                                44.0,
-                                44.0,
-                                19.0,
-                                19.0
-                              ],
                               "ParticleSizeSand": [
                                 14.5,
                                 18.0,
@@ -147,6 +147,15 @@
                                 55.0,
                                 66.0,
                                 66.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                24.0,
+                                39.0,
+                                44.0,
+                                44.0,
+                                19.0,
+                                19.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -839,15 +848,6 @@
                                 150.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                24.0,
-                                39.0,
-                                44.0,
-                                44.0,
-                                19.0,
-                                19.0
-                              ],
                               "ParticleSizeSand": [
                                 14.5,
                                 18.0,
@@ -865,6 +865,15 @@
                                 55.0,
                                 66.0,
                                 66.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                24.0,
+                                39.0,
+                                44.0,
+                                44.0,
+                                19.0,
+                                19.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -1591,15 +1600,6 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                15.0,
-                                12.0,
-                                8.0,
-                                6.0,
-                                5.0,
-                                5.0
-                              ],
                               "ParticleSizeSand": [
                                 15.0,
                                 20.0,
@@ -1617,6 +1617,15 @@
                                 54.0,
                                 55.0,
                                 55.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                15.0,
+                                12.0,
+                                8.0,
+                                6.0,
+                                5.0,
+                                5.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -2565,15 +2574,6 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                15.0,
-                                12.0,
-                                8.0,
-                                6.0,
-                                5.0,
-                                5.0
-                              ],
                               "ParticleSizeSand": [
                                 15.0,
                                 20.0,
@@ -2591,6 +2591,15 @@
                                 54.0,
                                 55.0,
                                 55.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                15.0,
+                                12.0,
+                                8.0,
+                                6.0,
+                                5.0,
+                                5.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -3491,15 +3500,6 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                15.0,
-                                12.0,
-                                8.0,
-                                6.0,
-                                5.0,
-                                5.0
-                              ],
                               "ParticleSizeSand": [
                                 15.0,
                                 20.0,
@@ -3517,6 +3517,15 @@
                                 54.0,
                                 55.0,
                                 55.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                15.0,
+                                12.0,
+                                8.0,
+                                6.0,
+                                5.0,
+                                5.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -4417,15 +4426,6 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeClay": [
-                                20.0,
-                                15.0,
-                                12.0,
-                                8.0,
-                                6.0,
-                                5.0,
-                                5.0
-                              ],
                               "ParticleSizeSand": [
                                 15.0,
                                 20.0,
@@ -4443,6 +4443,15 @@
                                 54.0,
                                 55.0,
                                 55.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                15.0,
+                                12.0,
+                                8.0,
+                                6.0,
+                                5.0,
+                                5.0
                               ],
                               "Rocks": [
                                 0.0,
@@ -5276,16 +5285,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false,true",
-                  "Name": "Type",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=2.5",
+                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=1, 2, 3, 4, 5, 6",
                   "Name": "EffN",
                   "ResourceName": null,
                   "Children": [],
@@ -5330,6 +5330,9 @@
               "ConstantsFile": null,
               "FileName": "VCS_Lincoln.met",
               "ExcelWorkSheetName": "",
+              "Latitude": -43.6,
+              "Tav": 11.8,
+              "Amp": 11.3,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -5355,7 +5358,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -5600,7 +5603,8 @@
                 "            }",
                 "            else",
                 "            {",
-                "                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())    ",
+                "                // leave the effective values at the defauls",
+                "                /*foreach (Zone zone in this.Parent.FindAllInScope<Zone>())    ",
                 "                {",
                 "                    double[] ArrayForMaxEffConc = new double[soilPhysical.Thickness.Length];",
                 "                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
@@ -5611,7 +5615,7 @@
                 "\t                   \tpatchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
                 "\t                   \tpatchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
                 "\t                }",
-                "                }",
+                "                } */",
                 "            }",
                 "",
                 "            if (Verbose)",
@@ -5918,6 +5922,10 @@
               ],
               "Parameters": [
                 {
+                  "Key": "UrineReturnType",
+                  "Value": "SetMonthly"
+                },
+                {
                   "Key": "Verbose",
                   "Value": "False"
                 },
@@ -5928,10 +5936,6 @@
                 {
                   "Key": "ZoneCount",
                   "Value": "0"
-                },
-                {
-                  "Key": "UrineReturnType",
-                  "Value": "FromHarvest"
                 },
                 {
                   "Key": "UrineReturnPattern",
@@ -7042,15 +7046,6 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeClay": [
-                        20.0,
-                        15.0,
-                        12.0,
-                        8.0,
-                        6.0,
-                        5.0,
-                        5.0
-                      ],
                       "ParticleSizeSand": [
                         15.0,
                         20.0,
@@ -7068,6 +7063,15 @@
                         54.0,
                         55.0,
                         55.0
+                      ],
+                      "ParticleSizeClay": [
+                        20.0,
+                        15.0,
+                        12.0,
+                        8.0,
+                        6.0,
+                        5.0,
+                        5.0
                       ],
                       "Rocks": [
                         0.0,
