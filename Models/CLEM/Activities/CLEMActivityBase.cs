@@ -853,7 +853,7 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
+                            errorMessage = $"Insufficient resources [r={string.Join(", ", shortfallsToTransmute.Select(a => (a.Resource as CLEMModel).NameWithParent))}] for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
                             Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
                             throw new ApsimXException(this, errorMessage);
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
