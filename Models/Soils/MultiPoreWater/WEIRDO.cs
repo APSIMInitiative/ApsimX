@@ -751,9 +751,6 @@ namespace Models.Soils
             if (Math.Abs(CheckMass) > FloatingPointTolerance)
                 throw new Exception(this + " Mass balance violated");
 
-            // Ensure water doesn't go below airdry
-            SW = MathUtilities.Constrain(SW, soilPhysical.AirDry, soilPhysical.SAT);
-
             // Update the variable in the water model.
             water.Volumetric = SW;
         }

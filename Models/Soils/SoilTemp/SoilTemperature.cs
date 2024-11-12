@@ -311,7 +311,7 @@ namespace Models.Soils.SoilTemp
             if (v < 0)
                 throw new Exception(
                     "Please check your soil physical node. The rock content, bulk density and/or saturated water content " +
-                    "are inconsitent with each other. You will need to fix your soil properties before proceeding. " +
+                    "are inconsistent with each other. You will need to fix your soil properties before proceeding. " +
                     "Note that if you have rocks in the soil, the bulk density is on a fine earth basis " +
                     "(g fine earth/cc whole soil volume)");
             return v;
