@@ -396,6 +396,16 @@ namespace APSIM.Shared.Utilities
             return GetNextDate(dateToChange, date);
         }
 
+        /// <summary>
+        /// Converts a DateTime object to the standard yyyy-mm-dd we use in APSIM
+        /// </summary>
+        /// <param name="date">A DateTime Object</param>
+        /// <returns>Date as string in (yyyy-mm-dd)</returns>
+        public static string GetDateAsString(DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd");
+        }
+
         /////////////////////////////////////////////////////////////////////////////   
         /////////////////////////////////////////////////////////////////////////////  
         /////////////////////////////////////////////////////////////////////////////  
