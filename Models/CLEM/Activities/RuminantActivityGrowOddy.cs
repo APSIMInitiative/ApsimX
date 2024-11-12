@@ -276,23 +276,10 @@ namespace Models.CLEM.Activities
             double dvdt = ind.Parameters.GrowOddy.pv * (alphaV - ind.Energy.ProteinViscera.Amount);
             double dfdt = NEG - dmdt - dvdt - dcdt - dldt - dwdt;
 
-            // Oddy tracks total energy in pools which includes the energy used to lay down the other structures (bone etc)
-            // ToDo: but can this energy be lost from the individual like fat and protein?
-
-            // Other models are recording the total energy of the protein in the pool so we move the conversion factor to saving energy, not calculation of mass
-            // Note: the energy used for other compoonents is not preported anywhere if not included in the protein pool so there will be a difference in balance.
-
-            // ToDo: This doesn't work for losses in protein as the loss energy is adjusted by PrpM and PrpV.
-            // ToDo: A loss in protein energy has an equal loss in the other body components associated with it (e.g the bone etc of pPrpM and pPrpV)
-            // Is this correct. I assume you lose bone structure etc in same way gained?
-
-            // ToDo: the paper states energy is kJ, where is this converted to MJ?
-
             ind.Energy.Protein.Adjust(dmdt * events.Interval); // total energy in the non-visceral tissues and structures 
             ind.Energy.ProteinViscera.Adjust(dvdt * events.Interval); // total energy in the visceral tissues and structures 
             ind.Energy.Fat.Adjust(dfdt * events.Interval);
 
-            // ToDo: where do we account for the other structures hoof, head, bone etc so it is available in our EMB reported by model? Should these me an an associated pool WeightProtein.Other calculated as Amount/converter? 
             // Currently these are stored in the weight pools, but may not match values expected in validation datasets as different to other CLEM models.
             ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein);
             ind.Weight.ProteinViscera.Adjust(ind.Energy.ProteinViscera.Change / ind.Parameters.General.MJEnergyPerKgProtein);
@@ -340,12 +327,9 @@ namespace Models.CLEM.Activities
             double bpv = bpm;
             double bpw = bpm;
 
-            if (ind.Energy.Fat.Change < 0) bf = ind.Parameters.GrowOddy.lf;
-            if (ind.Energy.Protein.Change < 0) bpm = ind.Parameters.GrowOddy.lp;
-            if (ind.Energy.ProteinViscera.Change < 0) bpv = ind.Parameters.GrowOddy.lp;
-
-            //ToDo: work out what energy is reported as daily amounts.
-            //Are the following all working at per day? If so then the stored dxdt (change) values need to be converted back to daily.
+            if (ind.Energy.Fat.Change < 0) bf = ind.Parameters.GrowOddy.lf;  // lf = 0
+            if (ind.Energy.Protein.Change < 0) bpm = ind.Parameters.GrowOddy.lp; // lp = 0
+            if (ind.Energy.ProteinViscera.Change < 0) bpv = ind.Parameters.GrowOddy.lp; // lp = 0
 
             // change in energy is from previous timestep and will be updated in parent function
             ind.Energy.ForBasalMetabolism = ind.Parameters.GrowOddy.bm * ind.Energy.Protein.Amount + ind.Parameters.GrowOddy.bv * ind.Energy.ProteinViscera.Amount;
@@ -366,9 +350,9 @@ namespace Models.CLEM.Activities
             // Total mass of protein and associated structures is calculated from Weight.Protein.Amount and Weight.ProteinViscera.Amount adjusted to include other components (ind.Weight) as per Oddy.
             // Therefore EBM is the sum of protein.AmountIncludingOther and fat pools.
 
-            return ind.Weight.Protein.AmountIncludingOther + ind.Weight.ProteinViscera.AmountIncludingOther + ind.Weight.Fat.Amount;
+            return ind.Weight.Protein.AmountWet + ind.Weight.ProteinViscera.AmountWet + ind.Weight.Fat.Amount;
 
-            //ToDO: Logical issue here. If an animal has lost protein the the lost energy does not contain the production factor. Better to track MJ pf protein deposited.
+            //ToDO: Logical issue here. If an animal has lost protein the the lost energy does not contain the production factor. Better to track MJ of protein deposited.
             //ToDo: this can be omitted as we are tracking the EBM of individuals separately.
 
             // the proportion of the energy going to protein (pPrpM and pPrpV) is handled at the adjusting of energy not mass
