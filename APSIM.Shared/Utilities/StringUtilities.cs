@@ -128,9 +128,9 @@ namespace APSIM.Shared.Utilities
         ///           words[2] = value3
         /// All values returned have been trimmed of spaces and double quotes.
         /// </summary>
-        public static StringCollection SplitStringHonouringQuotes(string text, string delimiters)
+        public static List<string> SplitStringHonouringQuotes(string text, string delimiters)
         {
-            StringCollection ReturnStrings = new StringCollection();
+            List<string> ReturnStrings = new List<string>();
             if (text.Trim() == "")
                 return ReturnStrings;
 
@@ -614,7 +614,7 @@ namespace APSIM.Shared.Utilities
             Dictionary<string, string> options = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             for (int i = 0; i < args.Length; i++)
             {
-                StringCollection bits = SplitStringHonouringQuotes(args[i], "=");
+                List<string> bits = SplitStringHonouringQuotes(args[i], "=");
                 if (bits.Count > 0)
                 {
                     string name = bits[0].Replace("\"", "");

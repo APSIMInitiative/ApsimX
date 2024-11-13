@@ -61,6 +61,7 @@ namespace Models.Soils
         [Summary]
         [Bounds(Lower = 0.1, Upper = 10.0)]
         [Display(Format = "N3")]
+        [Units("%")]
         public double[] Carbon { get; set; }
 
         /// <summary>The units of organic carbon.</summary>
