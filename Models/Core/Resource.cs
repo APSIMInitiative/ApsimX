@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.EMMA;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -203,12 +202,12 @@ namespace Models.Core
                 lock (cacheLock)
                 {
                     if (!cache.TryGetValue(resourceName, out modelFromResource))
-                    {
-                        string contents = GetString(resourceName);
-                        if (string.IsNullOrEmpty(contents))
-                            return null;
+            {
+                string contents = GetString(resourceName);
+                if (string.IsNullOrEmpty(contents))
+                    return null;
 
-                        modelFromResource = new ResourceModel(contents);
+                modelFromResource = new ResourceModel(contents);
                         cache.Add(resourceName, modelFromResource);
                     }
                 }

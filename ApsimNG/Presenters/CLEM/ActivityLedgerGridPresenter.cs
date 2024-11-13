@@ -115,7 +115,10 @@
         public void Refresh()
         {
             // now get report model to create data as we need to generate the HTML report independent of ApsimNG
-            Grid.DataSource = (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);
+            Grid.DataSource = !Utility.Configuration.Settings.ThemeRestartRequired ?
+                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme) :
+                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), !Utility.Configuration.Settings.DarkTheme);
+
             this.Grid.LockLeftMostColumns(1);  // lock activity name.
         }
 

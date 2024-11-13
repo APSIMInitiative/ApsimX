@@ -1,127 +1,12 @@
-﻿namespace APSIM.Shared.Graphing
-{
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System;
-    using System.Linq;
+﻿using System.Collections.Generic;
+using System;
 
-    /// <summary>Encapsulates a node on a directed graph</summary>
-    [Serializable]
-    public class Node
-    {
-        /// <summary>Name of node</summary>
-        public string Name { get; set; }
-
-        /// <summary>Location of node (centre point)</summary>
-        public Point Location { get; set; }
-
-        /// <summary>Fill colour of node</summary>
-        public Color Colour { get; set; }
-
-        /// <summary>Outline colour of node</summary>
-        public Color OutlineColour { get; set; }
-
-        /// <summary>
-        /// If true, the node's background and outline will be the same colour
-        /// as the canvas' background.
-        /// </summary>
-        public bool Transparent { get; set; }
-
-        /// <summary>Constructor</summary>
-        public Node()
-        {
-            Colour = Color.Beige;
-            OutlineColour = Color.Black;
-        }
-
-        /// <summary>
-        /// Copy all properties of a node into this node.
-        /// </summary>
-        /// <param name="x">The node to be copied.</param>
-        public void CopyFrom(Node x)
-        {
-            Colour = x.Colour;
-            OutlineColour = x.OutlineColour;
-            Location = x.Location;
-            Name = x.Name;
-            Transparent = x.Transparent;
-        }
-
-        /// <summary>
-        /// Constructor - creates a copy of x.
-        /// </summary>
-        /// <param name="x">The node to be copied.</param>
-        public Node(Node x)
-        {
-            if (x != null)
-                CopyFrom(x);
-            else
-            {
-                Colour = Color.Beige;
-                OutlineColour = Color.Black;
-            }
-        }
-    }
-
-    /// <summary>Encapsulates an arc on a directed graph</summary>
-    [Serializable]
-    public class Arc
-    {
-        /// <summary>Source node (where arc starts)</summary>
-        public string SourceName { get; set; }
-
-        /// <summary>Destination node (where arc finishes)</summary>
-        public string DestinationName { get; set; }
-
-        /// <summary>Location of arc (centre/control point)</summary>
-        public Point Location { get; set; }
-
-        /// <summary>Colour of arc</summary>
-        public Color Colour { get; set; }
-
-        /// <summary>Text to show on arc</summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Arc()
-        {
-        }
-
-        /// <summary>
-        /// Create a copy of the given arc.
-        /// </summary>
-        /// <param name="x">An arc to be copied.</param>
-        public Arc(Arc x)
-        {
-            if (x != null)
-                CopyFrom(x);
-        }
-
-        /// <summary>
-        /// Copy all properties from a given arc.
-        /// </summary>
-        /// <param name="x">An <see cref="Arc" />.</param>
-        public void CopyFrom(Arc x)
-        {
-            SourceName = x.SourceName;
-            DestinationName = x.DestinationName;
-            Location = x.Location;
-            Colour = x.Colour;
-            Name = x.Name;
-        }
-    }
-
+namespace APSIM.Shared.Graphing
+{ 
     /// <summary>Encapsulates a directed graph</summary>
     [Serializable]
     public class DirectedGraph
     {
-        private Point nextNodePosition = new Point(50, 50);
-        private List<Node> nodesToKeep = new List<Node>();
-        private List<Arc> arcsToKeep = new List<Arc>();
-
-
         /// <summary>A collection of nodes</summary>
         public List<Node> Nodes { get; set; }
 
@@ -136,71 +21,22 @@
         }
 
         /// <summary>Begin constrction of graph</summary>
-        public void Begin()
+        public void Clear()
         {
-            nodesToKeep.Clear();
-            arcsToKeep.Clear();
-        }
-
-        /// <summary>End constrction of graph</summary>
-        public void End()
-        {
-            // Remove unwanted nodes and arcs.
-            Nodes.RemoveAll(node => !nodesToKeep.Contains(node));
-            Arcs.RemoveAll(arc => !arcsToKeep.Contains(arc));
-        }
-
-        /// <summary>Add a new node to the graph</summary>
-        public void AddTransparentNode(string name)
-        {
-            Node newNode = Nodes.Find(node => node.Name == name);
-            if (newNode == null)
-            {
-                newNode = new Node();
-                newNode.Location = nextNodePosition;
-                nextNodePosition.X += 150;
-                if (nextNodePosition.X > 500)
-                {
-                    nextNodePosition.X = 50;
-                    nextNodePosition.Y = nextNodePosition.Y + 150;
-                }
-                Nodes.Add(newNode);
-            }
-            newNode.Name = name;
-            newNode.Transparent = true;
-            nodesToKeep.Add(newNode);
-        }
-
-        /// <summary>Add a new node to the graph</summary>
-        public void AddNode(string name, Color colour, Color outlineColour, Point location = new Point())
-        {
-            Node newNode = Nodes.Find(node => node.Name == name);
-            if (newNode == null)
-            {
-                newNode = new Node();
-                newNode.Location = nextNodePosition;
-                nextNodePosition.X += 150;
-                if (nextNodePosition.X > 500)
-                {
-                    nextNodePosition.X = 50;
-                    nextNodePosition.Y = nextNodePosition.Y + 150;
-                }
-                Nodes.Add(newNode);
-            }
-            newNode.Name = name;
-            newNode.Colour = colour;
-            newNode.Location = location;
-            newNode.OutlineColour = outlineColour;
-            nodesToKeep.Add(newNode);
+            Nodes.Clear();
+            Arcs.Clear();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="node"></param>
-        public void AddNode(Node node)
+        public Node AddNode(Node node)
         {
-            AddNode(node.Name, node.Colour, node.OutlineColour, node.Location);
+            Node newNode = new Node();
+            newNode.CopyFrom(node);
+            Nodes.Add(newNode);
+            return newNode;
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -209,32 +45,17 @@
             Node nodeToDelete = Nodes.Find(node => node.Name == name);
             if (nodeToDelete != null)
             {
-                nodesToKeep.Remove(nodeToDelete);
                 Nodes.Remove(nodeToDelete);
             }
         }
 
         /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(Arc arc)
+        public Arc AddArc(Arc arc)
         {
-            AddArc(arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
-        }
-
-        /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(string text, string source, string destination, Color colour, Point location = new Point())
-        {
-            Arc newArc = Arcs.Find(arc => arc.SourceName == source && arc.DestinationName == destination && arc.Name == text);
-            if (newArc == null)
-            {
-                newArc = new Arc();
-                newArc.Name = text;
-                newArc.SourceName = source;
-                newArc.DestinationName = destination;
-                Arcs.Add(newArc);
-            }
-            newArc.Colour = colour;
-            newArc.Location = location;
-            arcsToKeep.Add(newArc);
+            Arc newArc = new Arc();
+            newArc.CopyFrom(arc);
+            Arcs.Add(newArc);
+            return newArc;
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -243,33 +64,79 @@
             Arc arcToDelete = Arcs.Find(arc => arc.Name == name);
             if (arcToDelete != null)
             {
-                arcsToKeep.Remove(arcToDelete);
                 Arcs.Remove(arcToDelete);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string NextArcID()
+        /// <summary>Get a reference to the node with the given ID. Null if not found</summary>
+        public Node GetNodeByID(int id)
         {
-            int i = 1;
-            while (Arcs.Any(a => a.Name == $"Arc {i}"))
-                i++;
-            return $"Arc {i}";
+            foreach (Node node in Nodes)
+                if (node.ID == id)
+                    return node;
+            return null;
+        }
+
+        /// <summary>Get a reference to the arc with the given ID. Null if not found</summary>
+        public Arc GetArcByID(int id)
+        {
+            foreach (Arc arc in Arcs)
+                if (arc.ID == id)
+                    return arc;
+            return null;
+        }
+
+        /// <summary>Get a reference to the node with the given ID. Null if not found</summary>
+        public Node GetNodeByName(string name)
+        {
+            foreach (Node node in Nodes)
+                if (node.Name.CompareTo(name) == 0)
+                    return node;
+            return null;
+        }
+
+        /// <summary>Get a reference to the arc with the given ID. Null if not found</summary>
+        public Arc GetArcByID(string sourceName, string destName)
+        {
+            foreach (Arc arc in Arcs)
+                if (arc.Source.Name.CompareTo(sourceName) == 0 && arc.Destination.Name.CompareTo(destName) == 0)
+                    return arc;
+            return null;
         }
 
         /// <summary>
-        /// 
+        /// Gets the next available ID for a Node or Arc.
+        /// A restricted list can be provided for cases where multiple ID must be requested in a row.
         /// </summary>
         /// <returns></returns>
-        public string NextNodeID()
+        public int NextID(List<int> restricted = null)
         {
-            int i = 1;
-            while (Nodes.Any(a => a.Name == $"Node {i}"))
-                i++;
-            return $"Node {i}";
+            int id = 0;
+            bool found = true;
+            while(found)
+            {
+                id += 1;
+                found = false;
+                for (int i = 0; i < Nodes.Count && !found; i++)
+                {
+                    if (id == Nodes[i].ID)
+                        found = true;
+                }
+                for (int i = 0; i < Arcs.Count && !found; i++)
+                {
+                    if (id == Arcs[i].ID)
+                        found = true;
+                }
+                if (restricted != null)
+                {
+                    for (int i = 0; i < restricted.Count && !found; i++)
+                    {
+                        if (id == restricted[i])
+                            found = true;
+                    }
+                }
+            }
+            return id;
         }
     }
 }

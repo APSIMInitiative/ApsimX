@@ -32,11 +32,11 @@ namespace Models.Functions
         IOrganicPool FOMLignin = null;
 
 
-        [Link(Type = LinkType.Child)]
-        CERESDenitrificationTemperatureFactor CERESTF = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction CERESDenitrificationTemperatureFactor = null;
 
-        [Link(Type = LinkType.Child)]
-        CERESDenitrificationWaterFactor CERESWF = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction CERESDenitrificationWaterFactor = null;
 
         /// <summary>
         /// Rate modifier on the CERES denitrification model. Default = 0.0006.
@@ -67,7 +67,7 @@ namespace Models.Functions
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
-            return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
+            return PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);
         }
 
         /// <summary>

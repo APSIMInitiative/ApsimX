@@ -31,15 +31,20 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
-        /// A phase name selector.
+        /// A stage name selector.
         /// </summary>
         CropStageName,
+
+        /// <summary>
+        /// A list of crops parameterised as columns in a csv input file
+        /// </summary>
+        CSVCrops,
 
         /// <summary>
         /// A phase name selector.
         /// </summary>
         CropPhaseName,
-        
+
         /// <summary>
         /// A LifePhase name editor.
         /// </summary>
@@ -108,11 +113,26 @@ namespace Models.Core
         /// This is a list of SCRUMcrop model harvest stages.
         /// </summary>
         ScrumHarvestStages,
-        
+
         /// <summary>
-        /// This is a list of STRUM tree types.
+        /// List of plant organs that have damagable organs returned in plant.organ format.
         /// </summary>
-        StrumTreeTypes
+        PlantOrganList,
+
+		/// <summary>
+        /// Provides a EditorView object for display
+        /// </summary>
+        Code,
+
+        /// <summary>
+        /// Provides a GTK Colour Picker dialog
+        /// </summary>
+        ColourPicker,
+
+        /// <summary>
+        /// Provides a plant name.
+        /// </summary>
+        PlantName
     }
 
     /// <summary>
@@ -121,6 +141,11 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Property)]
     public class DisplayAttribute : System.Attribute
     {
+        /// <summary>
+        /// Gets or sets the name to display in the grid.
+        /// </summary>
+        public string DisplayName { get; set; }
+
         /// <summary>
         /// Gets or sets the display format (e.g. 'N3') that the user interface should
         /// use when showing values in the related property.

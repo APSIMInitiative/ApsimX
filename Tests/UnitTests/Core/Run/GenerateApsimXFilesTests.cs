@@ -14,6 +14,7 @@
     using System.Linq;
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
+    using Models.Utilities.Extensions;
 
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]
@@ -71,13 +72,13 @@
             Runner runner = new Runner(folder);
             IEnumerable<string> generatedFiles = GenerateApsimXFiles.Generate(runner, 1, path, (s) => { progress.Add(s); });
 
-            Assert.AreEqual(2, progress.Count);
-            Assert.AreEqual(0.5, progress[0]);
-            Assert.AreEqual(1, progress[1]);
+            Assert.That(progress.Count, Is.EqualTo(2));
+            Assert.That(progress[0], Is.EqualTo(0.5));
+            Assert.That(progress[1], Is.EqualTo(1));
 
-            Assert.AreEqual(2, generatedFiles.Count());
-            Assert.AreEqual("generated-0.apsimx", Path.GetFileName(generatedFiles.First()));
-            Assert.AreEqual("generated-1.apsimx", Path.GetFileName(generatedFiles.Last()));
+            Assert.That(generatedFiles.Count(), Is.EqualTo(2));
+            Assert.That(Path.GetFileName(generatedFiles.First()), Is.EqualTo("generated-0.apsimx"));
+            Assert.That(Path.GetFileName(generatedFiles.Last()), Is.EqualTo("generated-1.apsimx"));
             Directory.Delete(path, true);
         }
 
@@ -141,15 +142,20 @@
             try
             {
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
-                Assert.AreEqual(1, files.Count());
+                Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
                 sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
-                Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
+                Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally
             {
                 if (Directory.Exists(temp))
-                    Directory.Delete(temp, true);
+                {
+                    string fileName = "generated-0.db";
+                    FileInfo file = new(temp + Path.DirectorySeparatorChar + fileName);
+                    while(!file.IsLocked())
+                        Directory.Delete(temp, true);
+                }
             }
         }
     }

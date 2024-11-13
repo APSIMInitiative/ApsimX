@@ -1,18 +1,18 @@
-﻿using APSIM.Shared.Utilities;
-using UserInterface.Commands;
-using UserInterface.Interfaces;
-using Models;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Utility;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
 using UserInterface.Views;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -141,7 +141,7 @@ namespace UserInterface.Presenters
             }
             return GetPathToNode(model.Parent) + "." + model.Name;
         }
-        
+
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
@@ -281,7 +281,7 @@ namespace UserInterface.Presenters
 
                     if (!File.Exists(ApsimXFile.FileName))
                     {
-                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
+                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) +
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
                     else if (FileHasPendingChanges())
@@ -327,7 +327,7 @@ namespace UserInterface.Presenters
             }
             finally
             {
-                ShowRightHandPanel();       
+                ShowRightHandPanel();
             }
 
             return false;
@@ -381,7 +381,7 @@ namespace UserInterface.Presenters
         public void SelectNode(string nodePath, bool refreshRightHandPanel = true)
         {
             this.view.Tree.SelectedNode = nodePath;
-            while (GLib.MainContext.Iteration());
+            while (GLib.MainContext.Iteration()) ;
             if (refreshRightHandPanel)
             {
                 this.HideRightHandPanel();
@@ -594,7 +594,7 @@ namespace UserInterface.Presenters
                 view.Tree.ContextMenu = new MenuView();
 
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
-            
+
             // Get the selected model.
             object selectedModel = this.ApsimXFile.FindByPath(nodePath, LocatorFlags.ModelsOnly)?.Value;
 
@@ -802,7 +802,7 @@ namespace UserInterface.Presenters
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
             ShowInRightHandPanel(model,
-                                 newView: (ViewBase) Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null),
+                                 newView: (ViewBase)Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null),
                                  presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter);
         }
 
@@ -858,9 +858,10 @@ namespace UserInterface.Presenters
         {
             return this.view as ExplorerView;
         }
-        
+
         public void KeepFilter(string columnFilters, string rowFilters)
         {
+            tempColumnAndRowFilters.Clear();
             tempColumnAndRowFilters.Add(columnFilters);
             tempColumnAndRowFilters.Add(rowFilters);
         }
@@ -1160,7 +1161,7 @@ namespace UserInterface.Presenters
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
             string resourceNameForImage = null;
-            bool exists =false;
+            bool exists = false;
             if (!string.IsNullOrEmpty(resourceName))
             {
                 (exists, resourceNameForImage) = CheckIfIconExists(resourceName);

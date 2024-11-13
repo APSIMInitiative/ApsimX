@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using MathNet.Numerics;
 using Microsoft.IdentityModel.Tokens;
 using Models;
@@ -96,7 +97,8 @@ namespace UserInterface.Presenters
         private void SetSimulationNamesInView()
         {
             // populate the simulation names in the view.
-            IModel scopedParent = ScopingRules.FindScopedParentModel(summaryModel);
+            ScopingRules scope = new();
+            IModel scopedParent = scope.FindScopedParentModel(summaryModel);
 
             if (scopedParent is Simulation parentSimulation)
             {

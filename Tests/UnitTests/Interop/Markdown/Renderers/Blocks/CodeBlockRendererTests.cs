@@ -66,7 +66,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             CodeBlock block = new FencedCodeBlock(new FencedCodeBlockParser());
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(0, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             CodeBlock block = CreateCodeBlock(empty);
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             string text = "contents";
             CodeBlock block = CreateCodeBlock(text);
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(text, paragraph.GetRawText());
+            Assert.That(paragraph.GetRawText(), Is.EqualTo(text));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             FormattedText text = (FormattedText)paragraph.Elements[0];
 
             // todo: need to check if this is really the best way.
-            Assert.AreEqual("courier", document.Styles[text.Style].Font.Name);
+            Assert.That(document.Styles[text.Style].Font.Name, Is.EqualTo("courier"));
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
 
             string codeFont = document.Styles[codeText.Style].Font.Name;
             string plainFont = document.Styles[plainText.Style].Font.Name;
-            Assert.AreNotEqual(codeFont, plainFont);
+            Assert.That(plainFont, Is.Not.EqualTo(codeFont));
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             pdfBuilder.AppendText("a pre-existing, non-empty paragraph", TextStyle.Normal);
             renderer.Write(pdfBuilder, block);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
         {
             renderer.Write(pdfBuilder, block);
             pdfBuilder.AppendText("This should go into a new paragraph.", TextStyle.Normal);
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>

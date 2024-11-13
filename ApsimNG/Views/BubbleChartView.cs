@@ -1,20 +1,16 @@
+using System;
+using System.Collections.Generic;
+using UserInterface.Interfaces;
+using Gtk;
+using Utility;
+using APSIM.Shared.Graphing;
+using Node = APSIM.Shared.Graphing.Node;
+using APSIM.Shared.Utilities;
+using Gdk;
+using ApsimNG.EventArguments.DirectedGraph;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using APSIM.Interop.Visualisation;
-    using Gtk;
-    using Models.Management;
-    using Models;
-    using Extensions;
-    using Utility;
-    using APSIM.Shared.Graphing;
-    using Node = APSIM.Shared.Graphing.Node;
-
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -29,242 +25,137 @@ namespace UserInterface.Views
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
         /// <summary>Invoked when the user changes the selection</summary>
-        public event EventHandler<GraphChangedEventArgs> OnGraphChanged;
+        public event EventHandler<GraphObjectsArgs> GraphObjectSelected;
+
+        /// <summary>Invoked when the user changes the selection</summary>
+        public event EventHandler<GraphChangedEventArgs> GraphChanged;
 
         /// <summary>Invoked when the user adds a node</summary>
         public event EventHandler<AddNodeEventArgs> AddNode;
 
         /// <summary>Invoked when the user deletes a node</summary>
-        public event EventHandler<DelNodeEventArgs> DelNode;
+        public event EventHandler<GraphObjectsArgs> DelNode;
 
         /// <summary>Invoked when the user adds an arc</summary>
-        public event EventHandler<AddArcEventArgs> AddArc;
+        public event EventHandler<AddArcEventArgs> AddArcEnd;
 
         /// <summary>Invoked when the user deletes an arc</summary>
-        public event EventHandler<DelArcEventArgs> DelArc;
+        public event EventHandler<GraphObjectsArgs> DelArc;
 
-        private Paned vpaned1 = null;
-        private ListStore comboModel = new ListStore(typeof(string));
-        private CellRendererText comboRender = new CellRendererText();
-
+        private Paned topPaned;
+        private Box chartBox = null;
+        private Paned settingsPaned = null;
+        private Box propertiesBox = null;
+        private Frame objectFrame = null;
+        private Box objectBox = null;
+        private Label instructionsLabel = null;
         private DirectedGraphView graphView;
-        private ContextMenuHelper contextMenuHelper;
-        private Frame ctxFrame;
-        private Widget arcSelWdgt = null;
-        public IEditorView RuleList { get; private set; } = null;
-        public IEditorView ActionList { get; private set; } = null;
-        private Widget nodeSelWdgt = null;
-        private Entry nameEntry = null;
-        private Entry descEntry = null;
-        private ColorButton colourChooser = null;
-        private Widget infoWdgt = null;
-        private HPaned hpaned1;
-        private HPaned hpaned2;
 
-        private Box ctxBox = null;
         private Menu ContextMenu = new Menu();
+        private ContextMenuHelper contextMenuHelper;
 
-        private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
-        private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
-        private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
+        private Dictionary<int, List<string>> rules = new Dictionary<int, List<string>>();
+        private Dictionary<int, List<string>> actions = new Dictionary<int, List<string>>();
+
+        private bool isDrawingArc = false;
 
         /// <summary>
         /// Properties editor.
         /// </summary>
         public IPropertyView PropertiesView { get; private set; }
+        /// <summary>
+        /// Node Properties editor.
+        /// </summary>
+        public IPropertyView ObjectPropertiesView { get; private set; }
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
-            vpaned1 = new VPaned();
-            mainWidget = vpaned1;
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.BubbleChartView.glade");
+            mainWidget = (Widget)builder.GetObject("main_widget");
             mainWidget.Destroyed += OnDestroyed;
 
+            System.Drawing.Rectangle explorererBounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
+            int topOfWindow = explorererBounds.Y;
+            int bottomOfWindow = explorererBounds.Y + explorererBounds.Height;
+            int heightOfWindow = explorererBounds.Height;
+            int splitterPosition = (int)(heightOfWindow * 0.7);
+
+            int widthOfWindow = explorererBounds.Width;
+            int horizontalSplitterPosition = (int)(widthOfWindow * 0.6);
+
+            (mainWidget as Paned).Position = splitterPosition;
+
+            topPaned = (Gtk.Paned)builder.GetObject("top_paned");
+            topPaned.Position = horizontalSplitterPosition;
+
+            chartBox = (Gtk.Box)builder.GetObject("chart_box");
+            settingsPaned = (Gtk.Paned)builder.GetObject("settings_paned");
+            settingsPaned.Position = (int)(widthOfWindow * 0.4);
+
+            propertiesBox = (Gtk.Box)builder.GetObject("properties_box");
+            objectBox = (Gtk.Box)builder.GetObject("object_box");
+            Box instructionsBox = (Gtk.Box)builder.GetObject("instructions_box");
+
             graphView = new DirectedGraphView(this);
-            vpaned1.Pack1(graphView.MainWidget, true, true );
+            graphView.AddArc += OnAddArcEnd;
+            chartBox.Add(graphView.MainWidget);
 
-            VBox vbox1 = new VBox(false, 0);
-            ctxBox = new VBox(false, 0);
+            PropertiesView = new PropertyView(this);
+            Gtk.Frame propertyFrame = new Gtk.Frame(" Properties: ");
+            propertyFrame.LabelXalign = 0.01f;
+            propertyFrame.Add(((ViewBase)PropertiesView).MainWidget);
+            propertiesBox.PackStart(propertyFrame, true, true, 2);
 
-            // Arc selection: rules & actions
-            VBox arcSelBox = new VBox();
+            ObjectPropertiesView = new PropertyView(this);
+            objectFrame = new Gtk.Frame(" Properties: ");
+            objectFrame.LabelXalign = 0.01f;
+            objectFrame.Add(((ViewBase)ObjectPropertiesView).MainWidget);
+            objectBox.PackStart(objectFrame, true, true, 2);
 
-            Label l1 = new Label("Rules");
-            l1.Xalign = 0;
-            arcSelBox.PackStart(l1, true, true, 0);
-            RuleList = new EditorView(owner);
-            RuleList.TextHasChangedByUser += OnRuleChanged;
-            //RuleList.ScriptMode = false;
-
-            ScrolledWindow rules = new ScrolledWindow();
-            rules.ShadowType = ShadowType.EtchedIn;
-            rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-
-            rules.Add((RuleList as ViewBase).MainWidget);
-
-            (RuleList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(rules, true, true, 0);
-            rules.Show();
-
-            Label l2 = new Label("Actions");
-            l2.Xalign = 0;
-            arcSelBox.PackStart(l2, true, true, 0);
-            ActionList = new EditorView(owner);
-            ActionList.TextHasChangedByUser += OnActionChanged;
-            //ActionList.ScriptMode = false;
-
-            ScrolledWindow actions = new ScrolledWindow();
-            actions.ShadowType = ShadowType.EtchedIn;
-            actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-
-            actions.Add((ActionList as ViewBase).MainWidget);
-
-            (ActionList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(actions, true, true, 0); actions.Show();
-            arcSelWdgt = arcSelBox as Widget;
-            arcSelWdgt.Hide();
-            ctxBox.PackStart(arcSelWdgt, true, true, 0);
-
-            // Node selection: 
-
-            Grid t1 = new Grid();
-
-            Label l3 = new Label("Name");
-            l3.Xalign = 0;
-            t1.Attach(l3, 0, 0, 1, 1);
-
-            Label l4 = new Label("Description");
-            l4.Xalign = 0;
-            t1.Attach(l4, 0, 1, 1, 1);
-
-            Label l5 = new Label("Colour");
-            l5.Xalign = 0;
-            t1.Attach(l5, 0, 2, 1, 1);
-
-            nameEntry = new Entry();
-            nameEntry.Changed += OnNameChanged;
-            nameEntry.Xalign = 0;
-
-            // Setting the WidthRequest to 350 will effectively
-            // set the minimum size, beyond which it cannot be further
-            // shrunk by dragging the HPaned's splitter.
-            nameEntry.WidthRequest = 350;
-            t1.Attach(nameEntry, 1, 0, 1, 1);
-
-            descEntry = new Entry();
-            descEntry.Xalign = 0;
-            descEntry.Changed += OnDescriptionChanged;
-            descEntry.WidthRequest = 350;
-            t1.Attach(descEntry, 1, 1, 1, 1);
-            colourChooser = new ColorButton();
-            colourChooser.Xalign = 0;
-            colourChooser.ColorSet += OnColourChanged;
-            colourChooser.WidthRequest = 350;
-            t1.Attach(colourChooser, 1, 2, 1, 1);
-            nodeSelWdgt = t1;
-            ctxBox.PackStart(t1, true, true, 0);
-
-            // Info
-            Label l6 = new Label();
-            l6.LineWrap = true;
-            l6.Text = "<left-click>: select a node or arc.\n" +
+            instructionsLabel = new Gtk.Label();
+            instructionsLabel.Text = "<left-click>: select a node or arc.\n" +
             "<right-click>: shows a context-sensitive menu.\n\n" +
             "Once a node/arc is selected, it can be dragged to a new position.\n\n" +
             "Nodes are created by right-clicking on a blank area.\n\n" +
-            "Transition arcs are created by firstly selecting a source node,\n" +
-            "then right-clicking over a target node.";
-            infoWdgt = l6 as Widget;
-            infoWdgt.ShowAll();
-            l6.Xalign = 0;
-            l6.Yalign = 0;
-            l6.Wrap = false;
-            Alignment infoWdgtWrapper = new Alignment(0, 0, 1, 0);
-            infoWdgtWrapper.Add(infoWdgt);
-            //ctxBox.PackStart(infoWdgt, true, true, 0);
-            //vbox1.PackStart(ctxBox, false, false, 0);
-
-            PropertiesView = new PropertyView(this);
-            ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
-            // settingsBox = new Table(2, 2, false);
-            // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            // combobox1 = new ComboBox();
-            // combobox1.PackStart(comboRender, false);
-            // combobox1.AddAttribute(comboRender, "text", 0);
-            // combobox1.Model = comboModel;
-            // settingsBox.Attach(combobox1, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            // chkVerbose = new CheckButton();
-            // chkVerbose.Toggled += OnToggleVerboseMode;
-            // settingsBox.Attach(new Label("Verbose Mode"), 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            // settingsBox.Attach(chkVerbose, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            hpaned1 = new HPaned();
-            hpaned2 = new HPaned();
-            Frame frame1 = new Frame("Rotation Settings");
-            frame1.Add(((ViewBase)PropertiesView).MainWidget);
-            frame1.ShadowType = ShadowType.In;
-            Frame frame2 = new Frame();
-            frame2.Add(hpaned2);
-            frame2.ShadowType = ShadowType.In;
-            ctxFrame = new Frame();
-            ctxFrame.Add(ctxBox);
-            ctxFrame.ShadowType = ShadowType.In;
-            Frame frame4 = new Frame("Instructions");
-            frame4.Add(infoWdgtWrapper);
-            frame4.ShadowType = ShadowType.In;
-            hpaned1.Pack1(frame1, false, false);
-            hpaned1.Pack2(frame2, true, false);
-            hpaned2.Pack1(ctxFrame, true, false);
-            hpaned2.Pack2(frame4, true, false);
-            hpaned1.ShowAll();
-            Alignment halign = new Alignment(0, 0, 1, 1);
-            halign.Add(hpaned1);
-
-            vpaned1.Pack2(halign, false, false);
-            vpaned1.Show();
+            "Transition arcs are created by right clicking a node and selecting\n" +
+            "\"Add Arc\", then clicking on the target node.";
+            instructionsLabel.Xalign = 0;
+            instructionsLabel.Yalign = 0;
+            Gtk.Frame instructionsFrame = new Gtk.Frame(" Instructions: ");
+            instructionsFrame.Add(instructionsLabel);
+            instructionsFrame.LabelXalign = 0.01f;
+            instructionsBox.PackEnd(instructionsFrame, true, true, 2);
 
             graphView.OnGraphObjectSelected += OnGraphObjectSelected;
             graphView.OnGraphObjectMoved += OnGraphObjectMoved;
-            //combobox1.Changed += OnComboBox1SelectedValueChanged;
 
             contextMenuHelper = new ContextMenuHelper(graphView.MainWidget);
             contextMenuHelper.ContextMenu += OnPopup;
 
             ContextMenu.SelectionDone += OnContextMenuDeactivated;
             ContextMenu.Mapped += OnContextMenuRendered;
-
-            // Ensure the menu is populated
-            Select(null);
-        }
+    }
 
         /// <summary>
-        /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
+        /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{Node}, List{Arc})" />.
         /// </summary>
-        public List<StateNode> Nodes
+        public List<Node> Nodes
         {
             get
             {
-                return graphView.DirectedGraph.Nodes.Select(n => new StateNode(n, nodeDescriptions[n.Name])).ToList();
+                return graphView.DirectedGraph.Nodes;
             }
         }
 
         /// <summary>
-        /// Arcs in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
+        /// Arcs in the directed graph. To change them, use <see cref="SetGraph(List{Node}, List{Arc})" />.
         /// </summary>
         /// <value></value>
-        public List<RuleAction> Arcs
+        public List<Arc> Arcs
         {
             get
             {
-                List<RuleAction> arcs = new List<RuleAction>();
-                foreach (var a in graphView.DirectedGraph.Arcs)
-                {
-                    Arc ga = graphView.DirectedGraph.Arcs.Find(x => x.Name == a.Name);
-                    var na = new RuleAction(ga);
-                    na.Conditions = rules[na.Name];
-                    na.Actions = actions[na.Name];
-                    arcs.Add(na);
-                }
-                return arcs;
+                return graphView.DirectedGraph.Arcs;
             }
         }
 
@@ -273,79 +164,73 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
-        public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
+        public void SetGraph(List<Node> nodes, List<Arc> arcs)
         {
             rules.Clear();
             actions.Clear();
-            nodeDescriptions.Clear();
-            comboModel.Clear();
-            var graph = new DirectedGraph();
 
-            nodes.ForEach(node =>
+            graphView.DirectedGraph.Nodes = nodes;
+            graphView.DirectedGraph.Arcs = arcs;
+            foreach (Arc a in arcs)
             {
-                graph.AddNode(node);
-                //NodeNames[node.Name] = node.NodeName;
-                comboModel.AppendValues (node.Name);
-                nodeDescriptions[node.Name] = node.Description;
-            });
-            arcs.ForEach(arc =>
-            {
-                rules[arc.Name] = arc.Conditions;
-                actions[arc.Name] = arc.Actions;
-                graph.AddArc(arc);
-            });
-            graphView.DirectedGraph = graph;
+                a.Source = graphView.DirectedGraph.GetNodeByID(a.SourceID);
+                a.Destination = graphView.DirectedGraph.GetNodeByID(a.DestinationID);
+            }
+
             graphView.MainWidget.QueueDraw();
         }
 
         /// <summary>
         /// A graph object has been selected. Make the (middle part of) UI relevant to it
         /// </summary>
-        /// <param name="objectName">Name of the object to be selected.</param>
-        public void Select(string objectName)
+        /// <param name="objectID">ID of the object to be selected.</param>
+        public void Select(int objectID)
         {
-            ctxBox.Foreach(c => ctxBox.Remove(c)); 
-
-            Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
-            if (node != null)
+            if (isDrawingArc)
             {
-                //ctxLabel.Text = "State";
-                ctxFrame.Label = $"{node.Name} settings";
-                // Need to detach the event handlers before changing the entries.
-                // Otherwise a changed event will fire which we don't really want.
-                nameEntry.Changed -= OnNameChanged;
-                // Setting an entry's text to null doesn't seem to have an effect.
-                nameEntry.Text = objectName ?? "";
-                nameEntry.Changed += OnNameChanged;
-                if (nodeDescriptions.ContainsKey(objectName))
+                isDrawingArc = false;
+                mainWidget.Window.Cursor = new Cursor(Gdk.Display.Default, CursorType.Arrow);
+                return;
+            }
+
+            if (objectID == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < graphView.DirectedGraph.Nodes.Count; i++)
+            {
+                Node node = graphView.DirectedGraph.Nodes[i];
+                if (node.ID == objectID)
                 {
-                    descEntry.Changed -= OnDescriptionChanged;
-                    descEntry.Text = nodeDescriptions[objectName] ?? "";
-                    descEntry.Changed += OnDescriptionChanged;
+                    //The node property is held by the presenter, which also listens for this event and
+                    //will update the properties being displayed.
+                    objectFrame.Label = $" {node.Name} Properties ";
+                    objectBox.Show();
+                    return;
                 }
-                colourChooser.ColorSet -= OnColourChanged;
-
-                colourChooser.Rgba = node.Colour.ToRGBA();
-
-                colourChooser.ColorSet += OnColourChanged;
-
-                ctxBox.PackStart(nodeSelWdgt, true, true, 0);
             }
-            else if (arc != null)
+
+            for (int i = 0; i < graphView.DirectedGraph.Arcs.Count; i++)
             {
-                ctxFrame.Label = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
-                RuleList.Text = String.Join('\n', rules[arc.Name].ToArray()) ;
-                ActionList.Text = String.Join('\n', actions[arc.Name].ToArray());
-                ctxBox.PackStart(arcSelWdgt, true, true, 0);
+                Arc arc = graphView.DirectedGraph.Arcs[i];
+                if (arc.ID == objectID)
+                {
+                    //The node property is held by the presenter, which also listens for this event and
+                    //will update the properties being displayed.
+                    objectFrame.Label = $" {arc.SourceID} to {arc.DestinationID} Properties ";
+                    objectBox.Show();
+                    return;
+                }
             }
-            else
-            {
-                //ctxLabel.Text = "Information";
-                //ctxBox.PackStart(infoWdgt, true, true, 0);
-                ctxFrame.Label = "";
-            }
-            ctxBox.ShowAll();
+        }
+
+        /// <summary>
+        /// Unselect all objects
+        /// </summary>
+        public void ClearSelection()
+        {
+            this.graphView.UnSelect();
         }
 
         /// <summary>
@@ -356,7 +241,7 @@ namespace UserInterface.Views
             ContextMenu.Foreach(mi => ContextMenu.Remove(mi));
             MenuItem item;
             EventHandler handler;
-            if (graphView.SelectedObject == null)
+            if (graphView.SelectedObjects == null || graphView.SelectedObjects.Count == 0)
             {
                 // User has right-clicked in empty space.
                 item = new MenuItem("Add Node");
@@ -364,35 +249,39 @@ namespace UserInterface.Views
                 item.Activated += handler;
                 ContextMenu.Append(item);
             }
-            else if (graphView.SelectedObject is DGNode)
+            else if (graphView.SelectedObjects.Count == 1)
             {
-                // User has right-clicked on a node.
-                item = new MenuItem($"Duplicate {graphView.SelectedObject.Name}");
-                handler = OnDuplicateNode;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                GraphObject selectedObj = graphView.SelectedObjects[0];
+                if (selectedObj is Node)
+                {
+                    // User has right-clicked on a node.
+                    item = new MenuItem($"Add Arc");
+                    handler = OnAddArcStart;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
 
-                string name = graphView.SelectedObject2?.Name ?? graphView.SelectedObject.Name;
-                item = new MenuItem($"Add Arc from {graphView.SelectedObject.Name} to {name}");
-                handler = OnAddArc;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                    item = new MenuItem($"Duplicate {selectedObj.Name}");
+                    handler = OnDuplicateNode;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
 
-                item = new MenuItem($"Delete {graphView.SelectedObject.Name}");
+                    item = new MenuItem($"Delete {selectedObj.Name}");
+                    handler = OnDeleteNode;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
+                }
+                else if (selectedObj is Arc arc)
+                {
+                    item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Destination.Name}");
+                    handler = OnDeleteArc;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
+                }
+            } 
+            else
+            {
+                item = new MenuItem($"Delete Selected");
                 handler = OnDeleteNode;
-                item.Activated += handler;
-                ContextMenu.Append(item);
-            }
-            else if (graphView.SelectedObject is DGArc arc)
-            {
-                // User has right-clicked on an arc.
-                item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Target.Name}");
-                handler = OnDuplicateArc;
-                item.Activated += handler;
-                ContextMenu.Append(item);
-
-                item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Target.Name}");
-                handler = OnDeleteArc;
                 item.Activated += handler;
                 ContextMenu.Append(item);
             }
@@ -415,13 +304,6 @@ namespace UserInterface.Views
             {
                 (PropertiesView as ViewBase).Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
-                
-                RuleList.TextHasChangedByUser -= OnRuleChanged;
-                ActionList.TextHasChangedByUser -= OnActionChanged;
-
-                nameEntry.Changed -= OnNameChanged;
-                descEntry.Changed -= OnDescriptionChanged;
-                colourChooser.ColorSet -= OnColourChanged;
 
                 graphView.OnGraphObjectSelected -= OnGraphObjectSelected;
                 graphView.OnGraphObjectMoved -= OnGraphObjectMoved;
@@ -432,120 +314,6 @@ namespace UserInterface.Views
                 ContextMenu.Mapped -= OnContextMenuRendered;
                 ContextMenu.Clear();
                 ContextMenu.Dispose();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// User has changed a node name.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        public void OnNameChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(nameEntry.Text))
-                {
-                    // We need to rename the node in the directed graph in order
-                    // for the Nodes property to return the correct name for the
-                    // changed node. We also need to add a description for the new
-                    // name to the dict.
-                    nodeDescriptions[nameEntry.Text] = nodeDescriptions[graphView.SelectedObject.Name];
-                    graphView.SelectedObject.Name = nameEntry.Text;
-                    ctxFrame.Label = $"{nameEntry.Text} settings";
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a node's description.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnDescriptionChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-                    nodeDescriptions[graphView.SelectedObject.Name] = descEntry.Text;
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a node's colour.
-        /// </summary>
-        /// <param name="sender">Sending object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnColourChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-
-                    var colour = colourChooser.Rgba.ToColour().ToGdk();
-
-                    graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a rule.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        public void OnRuleChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-                    rules[graphView.SelectedObject.Name] = RuleList.Text.Split('\n').ToList();
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed an action.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        public void OnActionChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-                    actions[graphView.SelectedObject.Name] = ActionList.Text.Split('\n').ToList();
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
             }
             catch (Exception err)
             {
@@ -574,20 +342,14 @@ namespace UserInterface.Views
         /// <summary>
         /// Called after the user has selected something in the context menu.
         /// Unselects the currently selected node or arc.
+        /// This is useful when a new node is created from the menu
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
         private void OnContextMenuDeactivated(object sender, EventArgs args)
         {
-            try
-            {
+            if (!isDrawingArc)
                 graphView.UnSelect();
-                //PopulateMenus();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         /// <summary>
@@ -601,14 +363,13 @@ namespace UserInterface.Views
         {
             try
             {
-                // Get the point clicked by the mouse.
-                // FIXME - need to test if the user right-clicked on an object or the root window
-                //Cairo.PointD clickPoint = new PointD(args.X, args.Y);
-                // Look through nodes & arcs for the click point
-                //DGObject clickedObject = Graph.DirectedGraph.Nodes.FindLast(node => node.HitTest(clickPoint));
-
+                //pass right click over to the graph to update selection
+                graphView.SelectedObjects.Clear();
+                graphView.ProcessClick(new System.Drawing.Point((int)args.X, (int)args.Y));
+                
                 PopulateMenus();
-                if (ContextMenu.Children.Length > 0) ContextMenu.Popup();
+                if (ContextMenu.Children.Length > 0)
+                    ContextMenu.Popup();
             }
             catch (Exception err)
             {
@@ -622,11 +383,11 @@ namespace UserInterface.Views
         /// <remarks>This is called from the directed graph code (not directly by gtk).</remarks>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnGraphObjectMoved(object sender, ObjectMovedArgs args)
+        private void OnGraphObjectMoved(object sender, GraphObjectsArgs args)
         {
             try
             {
-                OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
+                GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
             }
             catch (Exception err)
             {
@@ -640,16 +401,18 @@ namespace UserInterface.Views
         /// <remarks>This is called from the directed graph code.</remarks>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnGraphObjectSelected(object o, GraphObjectSelectedArgs args)
+        private void OnGraphObjectSelected(object o, GraphObjectsArgs args)
         {
-            try
+            if (args.Objects != null)
             {
-                Select(args.Object1?.Name);
+                this.GraphObjectSelected.Invoke(o, args);
+                if (args.Objects.Count == 1)
+                    Select(args.Objects[0].ID);
+                else
+                    Select(0);
             }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+            else
+                Select(0);
         }
 
         /// <summary>
@@ -661,9 +424,17 @@ namespace UserInterface.Views
         {
             try
             {
-                // todo: set location to context menu location
-                var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
-                StateNode newNode = new StateNode(node);
+                Node newNode = new Node();
+                //randomize colour of node
+                System.Drawing.Color[] colours = ColourUtilities.Colours;
+                Random rand = new Random();
+                int randomIndex = rand.Next(colours.Length-1) + 1; //remove black as an option
+                newNode.Colour = colours[randomIndex];
+
+                newNode.ID = graphView.DirectedGraph.NextID();
+                newNode.Name = $"Node {newNode.ID}";
+
+                newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }
             catch (Exception err)
@@ -681,7 +452,7 @@ namespace UserInterface.Views
         {
             try
             {
-                DelNode?.Invoke(this, new DelNodeEventArgs { nodeNameToDelete = graphView.SelectedObject.Name });
+                DelNode?.Invoke(this, new GraphObjectsArgs(graphView.SelectedObjects));
             }
             catch (Exception err)
             {
@@ -694,28 +465,64 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnAddArc(object sender, EventArgs args)
+        private void OnAddArcStart(object sender, EventArgs args)
         {
-            try
+            if (graphView.SelectedObjects.Count == 1)
             {
-                if (graphView.SelectedObject == null)
-                    // This is almost certainly indicative of an internal error, NOT user error.
-                    throw new Exception("Unable to add arc - at least one node needs to be selected");
+                mainWidget.Window.Cursor = new Cursor(Gdk.Display.Default, CursorType.DiamondCross);
+                isDrawingArc = true;
 
-                Arc newArc = new Arc();
-                newArc.Name = graphView.DirectedGraph.NextArcID();
-                newArc.SourceName = graphView.SelectedObject.Name;
-                if (graphView.SelectedObject2 == null)
-                    // Loopback arc
-                    newArc.DestinationName = graphView.SelectedObject.Name;
-                else
-                    newArc.DestinationName = graphView.SelectedObject2.Name;
+                graphView.isDrawingArc = true;
 
-                AddArc?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+                Node cursorNode = new Node();
+                cursorNode.ID = 0;
+                cursorNode.Name = "_cursor_";
+                cursorNode.Location = graphView.lastPos;
+
+                //We make a dummy node here so that it doesn't actually link to a real node until it's created
+                Node startNode = new Node();
+                startNode.ID = graphView.SelectedObjects[0].ID;
+                startNode.Name = graphView.SelectedObjects[0].Name;
+                startNode.Location = graphView.SelectedObjects[0].Location;
+
+                Arc arc = new Arc();
+                arc.ID = 0;
+                arc.Name = "Arc";
+                arc.SourceID = graphView.SelectedObjects[0].ID;
+                arc.DestinationID = 0;
+                arc.Location = startNode.Location;
+                arc.Source = startNode;
+                arc.Destination = cursorNode;
+                arc.Conditions = new List<string>();
+                arc.Actions = new List<string>();
+                arc.BezierPoints = new List<System.Drawing.Point>();
+
+                graphView.tempArc = new Arc(arc);
             }
-            catch (Exception err)
+        }
+
+        /// <summary>
+        /// Callback for when an arc is added to the graph
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnAddArcEnd(object sender, EventArgs args)
+        {
+            if (graphView.SelectedObjects.Count == 1)
             {
-                ShowError(err);
+                Arc newArc = new Arc();
+                newArc.ID = graphView.DirectedGraph.NextID();
+                newArc.Name = $"Arc {newArc.ID}";
+                newArc.SourceID = graphView.tempArc.SourceID;
+                newArc.DestinationID = graphView.SelectedObjects[0].ID;
+                newArc.Location = graphView.tempArc.Location;
+                newArc.Source = graphView.tempArc.Source;
+                newArc.Destination = graphView.tempArc.Destination;
+                newArc.Conditions = new List<string>();
+                newArc.Actions = new List<string>();
+                newArc.BezierPoints = new List<System.Drawing.Point>();
+
+                AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new Arc(newArc) });
             }
         }
 
@@ -726,117 +533,60 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnDeleteArc(object sender, EventArgs args)
         {
-            try
-            {
-                if (!(graphView.SelectedObject is DGArc))
-                    // This is almost certainly indicative of an internal error, NOT user error.
-                    throw new Exception("Unable to add arc - no arc is selected");
-                DelArc?.Invoke(this, new DelArcEventArgs { arcNameToDelete = graphView.SelectedObject.Name });
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+            DelArc?.Invoke(this, new GraphObjectsArgs(graphView.SelectedObjects));
         }
 
         /// <summary>
         /// Callback for the 'duplicate node' context menu option.
         /// </summary>
-        /// <remarks>
-        /// Does this belong in the presenter?
-        /// </remarks>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
         private void OnDuplicateNode(object sender, EventArgs args)
         {
             try
             {
-                if (graphView.SelectedObject is DGNode node)
+                Node node = graphView.SelectedObjects[0] as Node;
+                List<int> restrictedIDs = new List<int>();
+
+                Node newNode = new Node(node);
+                //randomize colour of node
+                System.Drawing.Color[] colours = ColourUtilities.Colours;
+                Random rand = new Random();
+                int randomIndex = rand.Next(colours.Length - 1) + 1; //remove black as an option
+                newNode.Colour = colours[randomIndex];
+
+                newNode.ID = graphView.DirectedGraph.NextID();
+                restrictedIDs.Add(newNode.ID);
+                newNode.Name += " 2";
+
+                newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
+                AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
+
+                List<Arc> newArcs = new List<Arc>();
+                foreach (Arc a in Arcs)
                 {
-                    List<StateNode> nodes = Nodes;
-                    List<RuleAction> arcs = Arcs;
-
-                    // Create a copy of the existing node.
-                    StateNode newNode = new StateNode(node.ToNode());
-                    newNode.Location = new System.Drawing.Point(newNode.Location.X + node.Width / 2, newNode.Location.Y);
-                    newNode.Name = graphView.DirectedGraph.NextNodeID();
-                    if (nodeDescriptions.ContainsKey(node.Name))
-                        newNode.Description = nodeDescriptions[node.Name];
-
-                    nodes.Add(newNode);
-
-                    // Copy all arcs moving to/from the existing node.
-                    DirectedGraph graph = graphView.DirectedGraph;
-                    foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.SourceName == node.Name))
+                    if (a.SourceID == node.ID || a.DestinationID == node.ID)
                     {
-                        RuleAction newArc = new RuleAction(arc);
-                        newArc.Name = graph.NextArcID();
-                        newArc.SourceName = newNode.Name;
-                        if (rules.ContainsKey(arc.Name))
-                            newArc.Conditions = rules[arc.Name];
-                        if (actions.ContainsKey(arc.Name))
-                            newArc.Actions = actions[arc.Name];
-                        arcs.Add(newArc);
-                        
-                        // Add the arc to the local copy of the directed graph.
-                        // Need to do this to ensure that NextArcID() doesn't
-                        // generate the same name when we call it multiple times.
-                        graph.AddArc(newArc);
+                        Arc newArc = new Arc(a);
+                        newArc.ID = graphView.DirectedGraph.NextID(restrictedIDs);
+                        newArc.BezierPoints = new List<System.Drawing.Point>();
+                        restrictedIDs.Add(newArc.ID);
+
+                        if (a.SourceID == node.ID)
+                            newArc.SourceID = newNode.ID;
+                        if (a.DestinationID == node.ID)
+                            newArc.DestinationID = newNode.ID;
+
+                        //give the new arcs default names if the original arc had a default name
+                        if (a.Name.CompareTo($"Arc {a.ID}") == 0)
+                            newArc.Name = $"Arc {newArc.ID}";
+
+                        newArcs.Add(newArc);
                     }
-                    foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.DestinationName == graphView.SelectedObject.Name))
-                    {
-                        RuleAction newArc = new RuleAction(arc);
-                        newArc.Name = graph.NextArcID();
-                        newArc.DestinationName = newNode.Name;
-                        if (rules.ContainsKey(arc.Name))
-                            newArc.Conditions = rules[arc.Name];
-                        if (actions.ContainsKey(arc.Name))
-                            newArc.Actions = actions[arc.Name];
-                        arcs.Add(newArc);
-
-                        // Add the arc to the local copy of the directed graph.
-                        // Need to do this to ensure that NextArcID() doesn't
-                        // generate the same name when we call it multiple times.
-                        graph.AddArc(newArc);
-                    }
-
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, nodes));
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
-        /// <summary>
-        /// Callback for the 'duplicate arc' context menu option.
-        /// </summary>
-        /// <remarks>
-        /// Does this belong in the presenter?
-        /// </remarks>
-        /// <param name="sender">Sending object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnDuplicateArc(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject is DGArc arc)
-                {
-                    RuleAction newArc = new RuleAction(arc.ToArc());
-                    newArc.Name = graphView.DirectedGraph.NextArcID();
-                    newArc.Location = new System.Drawing.Point(newArc.Location.X + 10, newArc.Location.Y);
-
-                    // Copy across rules and actions from selected arc.
-                    if (rules.ContainsKey(arc.Name))
-                        rules[newArc.Name] = rules[arc.Name];
-                    if (actions.ContainsKey(arc.Name))
-                        actions[newArc.Name] = actions[arc.Name];
-                    
-                    List<RuleAction> arcs = Arcs;
-                    arcs.Add(newArc);
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, Nodes));
-                }
+                foreach (Arc a in newArcs)
+                    AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = a });
             }
             catch (Exception err)
             {

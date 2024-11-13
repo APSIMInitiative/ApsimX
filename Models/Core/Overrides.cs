@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
+using JetBrains.Annotations;
 using Models.Core.ApsimFile;
 
 namespace Models.Core
@@ -108,6 +109,11 @@ namespace Models.Core
 
                 undos.Add(new Override(undoPath, oldValue, Override.MatchTypeEnum.NameAndType));
             }
+
+            // Updates the parameters from the manager model.
+            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            if (pathObject is Manager manager)
+                manager.GetParametersFromScriptModel();
 
             // Reverse the order of the undos so that get applied in the correct order.
             undos.Reverse();
@@ -306,6 +312,10 @@ namespace Models.Core
         [Serializable]
         public class Override
         {
+            /// <summary>
+            /// Parameterless constructor for serialization
+            /// </summary>
+            public Override() { }
             /// <summary>Constructor.</summary>
             /// <param name="path">The path of the property/model to override.</param>
             /// <param name="value">The new value of the property/model.</param>
@@ -328,13 +338,13 @@ namespace Models.Core
             }
 
             /// <summary>The path of the property/model to override.</summary>
-            public string Path { get; }
+            public string Path { get; set; }
 
             /// <summary>The new value of the property/model.</summary>
-            public object Value { get; }
+            public object Value { get; set; }
 
             /// <summary>Type of matching to use.</summary>
-            public MatchTypeEnum MatchType { get; }
+            public MatchTypeEnum MatchType { get; set; }
 
             /// <summary>
             /// Equality method.

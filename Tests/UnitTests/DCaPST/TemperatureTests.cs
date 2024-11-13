@@ -9,7 +9,7 @@ namespace UnitTests.DCaPST
     [TestFixture]
     public class TemperatureTests
     {
-        [TestCaseSource(typeof(TemperatureTestData), "InvalidTimeTestCases")]
+        [TestCaseSource(typeof(TemperatureTestData), nameof(TemperatureTestData.InvalidTimeTestCases))]
         public void UpdateAirTemperature_IfInvalidTime_ThrowsException(double time)
         {
             // Arrange
@@ -28,7 +28,7 @@ namespace UnitTests.DCaPST
             Assert.Throws<Exception>(() => temp.UpdateAirTemperature(time));
         }
 
-        [TestCaseSource(typeof(TemperatureTestData), "ValidTimeTestCases")]
+        [TestCaseSource(typeof(TemperatureTestData), nameof(TemperatureTestData.ValidTimeTestCases))]
         public void UpdateAirTemperature_IfValidTime_SetsCorrectTemperature(double time, double expected)
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace UnitTests.DCaPST
             var actual = temp.AirTemperature;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             mock.Verify();
         }        
     }
