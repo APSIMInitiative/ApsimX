@@ -16,6 +16,7 @@ dependencies = [
   "msgpack",
   "matplotlib",
   "numpy",
+  "fiona",
 ]
 requires-python = ">=3.7"
 

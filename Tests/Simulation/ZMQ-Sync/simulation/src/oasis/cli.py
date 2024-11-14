@@ -9,6 +9,7 @@ from .apsim import ApsimController
 from .simulation import Simulation
 from .plots import plot_vwc_layer, plot_vwc_field_grid
 from .config import generate_csv_from_grist, generate_data
+from .metompkin import MetompkinConverter
 
 
 def client(args):
@@ -61,7 +62,9 @@ def metompkin(args):
     
     See argparser set_defaults() (https://docs.python.org/3/library/argparse.html#sub-commands)
     """
-    pass
+
+    converter = MetompkinConverter()
+    converter.convert(args.path, args.json)
 
 def entry():
     """Entry point for oasis"""
@@ -85,7 +88,7 @@ def entry():
     config_parser.add_argument("path", type=str, help="Path to save csv")
     config_parser.set_defaults(func=kraww)
     
-    metompkin_parser = subparsers.add_parser("metopkin", help="Convert metopkin dataset")
+    metompkin_parser = subparsers.add_parser("metompkin", help="Convert metompkin dataset")
     metompkin_parser.add_argument("path", type=str, help="Path to metopkin data")
     metompkin_parser.add_argument("json", type=str, help="Output path to GeoJSON")
     metompkin_parser.set_defaults(func=metompkin)
