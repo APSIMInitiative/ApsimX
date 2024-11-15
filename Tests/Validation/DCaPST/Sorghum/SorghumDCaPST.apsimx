@@ -461,8 +461,6 @@
             "\t\t\t\t// but by the end of the simulation their phenology was reset due to ",
             "\t\t\t\t// a frost event.",
             "\t\t\t\t{ \"HE3CultivarQL41xQL36\", 8.9 },",
-            "\t\t\t\t{ \"HE7CultivarCSH13R\" , 8.9 },",
-            "\t\t\t\t{ \"HE8CultivarCSH13R\" , 8.8 },",
             "\t\t\t};",
             "\t\t}",
             "    }",
@@ -1151,20 +1149,6 @@
                           "Paths": null,
                           "Values": null,
                           "Name": "Buster",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[SowingRule].Script.Ftn = 0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2113,6 +2097,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -2190,52 +2176,6 @@
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[FertiliserSchedule]"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Operations, Models",
-                              "OperationsList": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1996-12-20",
-                                  "Action": "[Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1996-12-20 [Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1996-12-23",
-                                  "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1996-12-23 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1996-12-23",
-                                  "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1996-12-23 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
-                                }
-                              ],
-                              "Name": "FertiliserSchedule",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -3168,6 +3108,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -3218,7 +3160,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule].Script.Cultivar = QL41xQL36, Buster, M35-1",
+                      "Specification": "[SowingRule].Script.Cultivar = QL41xQL36, Buster",
                       "Name": "Cultivar",
                       "ResourceName": null,
                       "Children": [],
@@ -4115,6 +4057,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -4194,21 +4138,6 @@
                           "Paths": null,
                           "Values": null,
                           "Name": "Buster",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[SowingRule].Script.Ftn = 0",
-                            "[SowingRule].Script.Depth = 30"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -5108,6 +5037,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -5146,7 +5077,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: HE5\n\nDescription: HE5 - High N/Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE5_T1       |Buster  |\n|Sorghum_HE5_T2       |M35-1   |\n|Sorghum_HE5_T3       |CSH13R  |",
+                  "Text": "Experiment: HE5\n\nDescription: HE5 - High N/Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE5_T1       |Buster  |",
                   "Name": "HE5 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -5175,67 +5106,6 @@
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[SowingRule].Script.Ftn = 0.2"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = CSH13R",
-                            "[SowingRule].Script.Ftn = 0",
-                            "[FertiliserSchedule]"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "CSH13R",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Operations, Models",
-                              "OperationsList": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1998-02-20",
-                                  "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1998-02-20 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
-                                }
-                              ],
-                              "Name": "FertiliserSchedule",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -6182,6 +6052,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -6220,7 +6092,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: HE6\n\nDescription: HE6 - Low N/Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE6_T1       |Buster  |\n|Sorghum_HE6_T2       |M35-1   |\n|Sorghum_HE6_T3       |CSH13R  |",
+                  "Text": "Experiment: HE6\n\nDescription: HE6 - Low N/Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE6_T1       |Buster  |",
                   "Name": "HE6 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -6234,7 +6106,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule].Script.Cultivar = Buster, M35-1, CSH13R",
+                      "Specification": "[SowingRule].Script.Cultivar = Buster",
                       "Name": "Cultivar",
                       "ResourceName": null,
                       "Children": [],
@@ -7166,6 +7038,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -7204,7 +7078,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: HE7\n\nDescription: HE7 - High N/No Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE7_T1       |Buster  |\n|Sorghum_HE7_T2       |M35-1   |\n|Sorghum_HE7_T3       |CSH13R  |",
+                  "Text": "Experiment: HE7\n\nDescription: HE7 - High N/No Irrig. - 3 Indian/Aust. Cultivars\n\nStart Date: 18/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE7_T1       |Buster  |",
                   "Name": "HE7 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -7259,34 +7133,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[Soil].Water.InitialValues = 0.323, 0.407, 0.388, 0.342, 0.341, 0.321, 0.324, 0.332, 0.339, 0.341"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = CSH13R",
-                            "[Soil].Water.InitialValues = 0.307, 0.377, 0.385, 0.382, 0.376, 0.337, 0.346, 0.359, 0.348, 0.35"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "CSH13R",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -8156,6 +8002,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -8194,7 +8042,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: HE8\n\nDescription: HE8 - Low N/No Irrig - 3 Indian/Aust. Cultivars\n\nStart Date: 17/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE8_T1       |Buster  |\n|Sorghum_HE8_T2       |M35-1   |\n|Sorghum_HE8_T3       |CSH13R  |",
+                  "Text": "Experiment: HE8\n\nDescription: HE8 - Low N/No Irrig - 3 Indian/Aust. Cultivars\n\nStart Date: 17/11/1997\n\nEnd Date: 15/04/1998\n\n|SimulationName       |Cultivar|\n|---------------------|--------|\n|Sorghum_HE8_T1       |Buster  |",
                   "Name": "HE8 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -8249,34 +8097,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[Soil].Water.InitialValues = 0.338, 0.364, 0.359, 0.376, 0.364, 0.351, 0.358, 0.351, 0.346, 0.343"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = CSH13R",
-                            "[Soil].Water.InitialValues = 0.31, 0.387, 0.329, 0.308, 0.317, 0.33, 0.329, 0.348, 0.341, 0.345"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "CSH13R",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -9146,6 +8966,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -9192,7 +9014,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: LE14\n\nDescription: Early Sow - 3 Indian/Aust Cultivars\n\nStart Date: 5/09/1996\n\nEnd Date: 19/02/1997\n\n|SimulationName             |Cultivar |\n|---------------------------|---------|\n|Lawes1996EarlyCvBuster     |Buster   |\n|Lawes1996EarlyCvM351       |M35-1    |\n|Lawes1996EarlyCvQL41xQL36  |QL41xQL36|",
+                  "Text": "Experiment: LE14\n\nDescription: Early Sow - 3 Indian/Aust Cultivars\n\nStart Date: 5/09/1996\n\nEnd Date: 19/02/1997\n\n|SimulationName             |Cultivar |\n|---------------------------|---------|\n|Lawes1996EarlyCvBuster     |Buster   |\n|Lawes1996EarlyCvQL41xQL36  |QL41xQL36|",
                   "Name": "LE14 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -9218,20 +9040,6 @@
                           "Paths": null,
                           "Values": null,
                           "Name": "Buster",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[SowingRule].Script.Ftn = 0.1"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -10146,6 +9954,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -10182,7 +9992,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: LE15\n\nDescription: Late Sow - 3 Indian/Aust Cultivars\n\nStart Date: 5/09/1996\n\nEnd Date: 8/05/1997\n\n!! This experiment had severe storm at flowering. Question mark over post anthesis data !!\n\n\n|SimulationName             |Cultivar |\n|---------------------------|---------|\n|Lawes1996LateCvBuster      |Buster   |\n|Lawes1996LateCvM351       |M35-1    |\n|Lawes1996LateCvQL41xQL36   |QL41xQL36|\n",
+                  "Text": "Experiment: LE15\n\nDescription: Late Sow - 3 Indian/Aust Cultivars\n\nStart Date: 5/09/1996\n\nEnd Date: 8/05/1997\n\n!! This experiment had severe storm at flowering. Question mark over post anthesis data !!\n\n\n|SimulationName             |Cultivar |\n|---------------------------|---------|\n|Lawes1996LateCvBuster      |Buster   |\n|Lawes1996LateCvQL41xQL36   |QL41xQL36|\n",
                   "Name": "LE15 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -10209,20 +10019,6 @@
                           "Paths": null,
                           "Values": null,
                           "Name": "Buster",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[SowingRule].Script.Ftn = 0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -11156,6 +10952,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -11194,7 +10992,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: LE17\n\nDescription: LE17 Growth Analysis- Late Sow - 2 Indian/ 1 Aust. Cultivars\n\nStart Date: 27/11/1997\n\nEnd Date: 27/04/1998\n\n|SimulationName             |Cultivar|\n|---------------------------|--------|\n|Lawes1997LateCvBuster      |Buster  |\n|Lawes1997LateCvM351        |M35-1   |\n|Lawes1997LateCvCSH13R      |CSH13R  |",
+                  "Text": "Experiment: LE17\n\nDescription: LE17 Growth Analysis- Late Sow - 2 Indian/ 1 Aust. Cultivars\n\nStart Date: 27/11/1997\n\nEnd Date: 27/04/1998\n\n|SimulationName             |Cultivar|\n|---------------------------|--------|\n|Lawes1997LateCvBuster      |Buster  |",
                   "Name": "LE17 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -11220,32 +11018,6 @@
                           "Paths": null,
                           "Values": null,
                           "Name": "Buster",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "M35-1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.Cultivar = CSH13R"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "CSH13R",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -12203,6 +11975,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -12244,7 +12018,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: LE19\n\nDescription: LE19 - Genotypic variation in Radiation Use Efficiency\n\nStart Date: 9/11/1998\n\nEnd Date: 7/03/1999\n\n|SimulationName             |N Rates        |Cultivar|\n|---------------------------|---------------|--------|\n|Lawes1998FertOffBuster     |0 kg/ha        |Buster  |\n|Lawes1998FertLowBuster     |120 kg/ha      |Buster  |\n|Lawes1998FertMedBuster     |240 kg/ha      |Buster  |\n|Lawes1998FertHighBuster    |360 kg/ha      |Buster  |\n|Lawes1998FertOffCSH13R     |0 kg/ha        |CSH13R  |\n|Lawes1998FertLowCSH13R     |120 kg/ha      |CSH13R  |\n|Lawes1998FertMedCSH13R     |240 kg/ha      |CSH13R  |\n|Lawes1998FertHighCSH13R    |360 kg/ha      |CSH13R  |",
+                  "Text": "Experiment: LE19\n\nDescription: LE19 - Genotypic variation in Radiation Use Efficiency\n\nStart Date: 9/11/1998\n\nEnd Date: 7/03/1999\n\n|SimulationName             |N Rates        |Cultivar|\n|---------------------------|---------------|--------|\n|Lawes1998FertOffBuster     |0 kg/ha        |Buster  |\n|Lawes1998FertLowBuster     |120 kg/ha      |Buster  |\n|Lawes1998FertMedBuster     |240 kg/ha      |Buster  |\n|Lawes1998FertHighBuster    |360 kg/ha      |Buster  |",
                   "Name": "LE19 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -12396,158 +12170,6 @@
                               "Date": "1999-01-14",
                               "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
                               "Line": "1999-01-14 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
-                            }
-                          ],
-                          "Name": "FertiliserSchedule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.Cultivar = CSH13R",
-                        "[SowingRule].Script.Ftn = 0",
-                        "[FertiliserSchedule]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "FertOffCvCSH13R",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": null,
-                          "Name": "FertiliserSchedule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.Cultivar = CSH13R",
-                        "[SowingRule].Script.Ftn = 0.2",
-                        "[FertiliserSchedule]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "FertLowCvCSH13R",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
-                            }
-                          ],
-                          "Name": "FertiliserSchedule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.Cultivar = CSH13R",
-                        "[SowingRule].Script.Ftn = 0.3",
-                        "[FertiliserSchedule]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "FertMedCvCSH13R",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1998-12-17",
-                              "Action": "[Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-12-17 [Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1999-01-23",
-                              "Action": "[Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1999-01-23 [Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);"
-                            }
-                          ],
-                          "Name": "FertiliserSchedule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.Cultivar = CSH13R",
-                        "[SowingRule].Script.Ftn = 0.3",
-                        "[FertiliserSchedule]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "FertHighCvCSH13R",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1998-12-17",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-12-17 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1999-01-23",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1999-01-23 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -13416,6 +13038,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -14877,6 +14501,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
@@ -14917,7 +14543,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: Gatton_RUE\n\nDescription: N Rates x Genotype LE21\n\nStart Date: 22/11/1999\n\nEnd Date: 3/04/2000\n\n|SimulationName                 |Cultivar       |N Rates |\n|-------------------------------|---------------|--------|\n|Lawes1999FertLowCvCSH13R       |CSH13R         |0kg/ha  |\n|Lawes1999FertLowCvA35xQL36     |A35xQL36       |0kg/ha  |\n|Lawes1999FertLowCvQL39xQL36    |QL39xQL36      |0kg/ha  |\n|Lawes1999FertMedCvCSH13R       |CSH13R         |45kg/ha |\n|Lawes1999FertMedCvA35xQL36     |A35xQL36       |45kg/ha |\n|Lawes1999FertMedCvQL39xQL36    |QL39xQL36      |45kg/ha |\n|Lawes1999FertHighCvCSH13R      |CSH13R         |360kg/ha|\n|Lawes1999FertHighCvA35xQL36    |A35xQL36       |360kg/ha|\n|Lawes1999FertHighCvQL39xQL36   |QL39xQL36      |360kg/ha|",
+                  "Text": "Experiment: Gatton_RUE\n\nDescription: N Rates x Genotype LE21\n\nStart Date: 22/11/1999\n\nEnd Date: 3/04/2000\n\n|SimulationName                 |Cultivar       |N Rates |\n|-------------------------------|---------------|--------|\n|Lawes1999FertLowCvA35xQL36     |A35xQL36       |0kg/ha  |\n|Lawes1999FertLowCvQL39xQL36    |QL39xQL36      |0kg/ha  |\n|Lawes1999FertMedCvA35xQL36     |A35xQL36       |45kg/ha |\n|Lawes1999FertMedCvQL39xQL36    |QL39xQL36      |45kg/ha |\n|Lawes1999FertHighCvA35xQL36    |A35xQL36       |360kg/ha|\n|Lawes1999FertHighCvQL39xQL36   |QL39xQL36      |360kg/ha|",
                   "Name": "LE21 Description",
                   "ResourceName": null,
                   "Children": [],
@@ -14936,7 +14562,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[SowingRule].Script.Cultivar = CSH13R, A35xQL36, QL39xQL36",
+                          "Specification": "[SowingRule].Script.Cultivar = A35xQL36, QL39xQL36",
                           "Name": "Cv",
                           "ResourceName": null,
                           "Children": [],
@@ -15854,6 +15480,8 @@
                           "CropName": "Sorghum",
                           "Biolimit": 0.0,
                           "Reduction": 0.0,
+                          "RubiscoLimitedModifier": 1.0,
+                          "ElectronTransportLimitedModifier": 1.0,
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
