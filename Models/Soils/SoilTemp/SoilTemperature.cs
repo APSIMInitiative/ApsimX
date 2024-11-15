@@ -1290,8 +1290,18 @@ namespace Models.Soils.SoilTemp
             const double specificHeatOfAir = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
             const double surfaceEmissivity = 0.98;
             double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, weather.AirPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
-                                                                                                  // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
-                                                                                                  // gTNew_zb = TN; gAirT = TA;
+                                                                                                          // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
+                                                                                                          // gTNew_zb = TN; gAirT = TA;
+
+
+            // VOS 11Nov24 note that these calculations are been effectively disabled just before the return
+            //               this is a temporary fix for the instability that was resulting
+            //               once there is an energy balance through residue adn evaporation it should be
+            //               reinstated and tested more
+
+
+
+
 
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
@@ -1371,6 +1381,12 @@ namespace Models.Soils.SoilTemp
                     stabilityCorrectionMomentum = 0.6 * stabilityCorrectionHeat;                // Eqn 12.17
                 }
             }
+
+
+            // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
+            boundaryLayerCond = 20; 
+
+
             return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
         }
 
